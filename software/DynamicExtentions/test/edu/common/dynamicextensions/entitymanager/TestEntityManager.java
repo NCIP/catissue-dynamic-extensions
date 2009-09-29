@@ -36,7 +36,6 @@ import edu.common.dynamicextensions.domain.databaseproperties.TableProperties;
 import edu.common.dynamicextensions.domain.userinterface.Container;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
-import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.CaDSRValueDomainInfoInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
@@ -93,6 +92,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	/**
 	 * @see edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCaseUtility#setUp()
 	 */
+	@Override
 	protected void setUp()
 	{
 		super.setUp();
@@ -101,6 +101,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	/**
 	 * @see edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCaseUtility#tearDown()
 	 */
+	@Override
 	protected void tearDown()
 	{
 		super.tearDown();
@@ -593,14 +594,14 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		{
 			//Step 1
 			Entity entity = (Entity) new MockEntityManager().initializeEntity(entityGroup);
-			SemanticPropertyInterface semanticPropertyInterface = (SemanticPropertyInterface) new MockEntityManager()
+			SemanticPropertyInterface semanticPropertyInterface = new MockEntityManager()
 					.initializeSemanticProperty();
 			entity.addSemanticProperty(semanticPropertyInterface);
 			//Step 2
 			entity = (Entity) EntityManagerInterface.persistEntity(entity);
 
 			//Step 3
-			Collection entityCollection = (Collection) EntityManagerInterface
+			Collection entityCollection = EntityManagerInterface
 					.getEntitiesByConceptCode(semanticPropertyInterface.getConceptCode());
 			assertTrue(entityCollection != null && entityCollection.size() > 0);
 		}
@@ -633,7 +634,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			//Step 2
 			entity = (Entity) EntityManagerInterface.persistEntity(entity);
 			//Step 3
-			EntityInterface entityInterface = (EntityInterface) EntityManagerInterface
+			EntityInterface entityInterface = EntityManagerInterface
 					.getEntityByName(entity.getName());
 			assertNotNull(entityInterface);
 		}
@@ -664,9 +665,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			user.addAbstractAttribute(userNameAttribute);
 			entityGroup.addEntity(user);
 			user.setEntityGroup(entityGroup);
-			user = (Entity) EntityManagerInterface.persistEntity(user);
+			user = EntityManagerInterface.persistEntity(user);
 
-			AttributeInterface attributeInterface = (AttributeInterface) EntityManagerInterface
+			AttributeInterface attributeInterface = EntityManagerInterface
 					.getAttribute("user", "user name");
 			assertNotNull(attributeInterface);
 		}
@@ -725,7 +726,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			entityGroup.addEntity(address);
 			address.setEntityGroup(entityGroup);
 
-			user = (Entity) EntityManagerInterface.persistEntity(user);
+			user = EntityManagerInterface.persistEntity(user);
 
 			Entity savedEntity = (Entity) EntityManagerInterface.getEntityByIdentifier(user.getId()
 					.toString());
@@ -1073,9 +1074,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			entityGroup.addEntity(address);
 			address.setEntityGroup(entityGroup);
 
-			user = (Entity) EntityManagerInterface.persistEntity(user);
+			user = EntityManagerInterface.persistEntity(user);
 
-			userGroup = (Entity) EntityManagerInterface.persistEntity(userGroup);
+			userGroup = EntityManagerInterface.persistEntity(userGroup);
 
 			Entity savedEntity = (Entity) EntityManagerInterface.getEntityByIdentifier(user.getId()
 					.toString());
@@ -1670,7 +1671,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			attr.setEntity(entity);
 			entity.addAbstractAttribute(attr);
 			entity = (Entity) EntityManagerInterface.persistEntity(entity);
-			attr = (AttributeInterface) entity.getAttributeByIdentifier(attr.getId());
+			attr = entity.getAttributeByIdentifier(attr.getId());
 			attr.setIsNullable(new Boolean(false));
 			entity = (Entity) EntityManagerInterface.persistEntity(entity);
 			Attribute savedAttribute = (Attribute) entity.getAttributeByIdentifier(attr.getId());
@@ -2150,7 +2151,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				Entity entity = (Entity) mock.initializeEntity(entityGroup);
 				entityGroup.addEntity(entity);
 			}
-			entityGroup = (EntityGroup) entityGroupManager.persistEntityGroup(entityGroup);
+			entityGroupManager.persistEntityGroup(entityGroup);
 			Iterator iterator = entityGroup.getEntityCollection().iterator();
 			while (iterator.hasNext())
 			{
@@ -2195,7 +2196,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				entityGroup.addEntity(entity);
 			}
 			//Step 3
-			entityGroup = (EntityGroup) entityGroupManager.persistEntityGroupMetadata(entityGroup);
+			entityGroupManager.persistEntityGroupMetadata(entityGroup);
 			//Step 4
 			Collection entityCollection = entityGroup.getEntityCollection();
 			assertEquals(10, entityCollection.size());
@@ -2354,10 +2355,10 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			//            managerContainer = entityManager.persistContainer(managerContainer);
 			//            studyContainer = entityManager.persistContainer(studyContainer);
 			//            javaStudyContainer = entityManager.persistContainer(javaStudyContainer);
-			EntityGroup entityGroup = (EntityGroup) entityGroupManager
+			entityGroupManager
 					.persistEntityGroup(studyGroup);
 
-			Collection studyGroupContainerCollection = entityGroup.getEntityCollection();
+			Collection studyGroupContainerCollection = studyGroup.getEntityCollection();
 
 			assertEquals(2, studyGroupContainerCollection.size());
 		}
@@ -2377,7 +2378,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
 		try
 		{
-			ContainerInterface containerInterface = (Container) new MockEntityManager()
+			ContainerInterface containerInterface = new MockEntityManager()
 					.getContainer("abc");
 			EntityInterface entityInterface = (EntityInterface) containerInterface
 					.getAbstractEntity();
@@ -2986,7 +2987,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dateTime.getRuleCollection().add(allowfuturedate);
 			yearOnlyDate.getRuleCollection().add(allowfuturedate);
 			monthYearDate.getRuleCollection().add(allowfuturedate);
-			
+
 			entity.addAbstractAttribute(dateOnly);
 			entity.addAbstractAttribute(dateTime);
 			entity.addAbstractAttribute(yearOnlyDate);
@@ -3001,25 +3002,25 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			{
 				ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
 						.getValidatorRule(rule.getName());
-				validatorRule.validate((AttributeMetadataInterface) dateOnly, "08-16-2020", null, "Date");
+				validatorRule.validate(dateOnly, "08-16-2020", null, "Date");
 			}
 			for (RuleInterface rule : dateTime.getRuleCollection())
 			{
 				ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
 						.getValidatorRule(rule.getName());
-				validatorRule.validate((AttributeMetadataInterface) dateTime, "11-12-2020 10:11", null, "Date");
+				validatorRule.validate(dateTime, "11-12-2020 10:11", null, "Date");
 			}
 			for (RuleInterface rule : yearOnlyDate.getRuleCollection())
 			{
 				ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
 						.getValidatorRule(rule.getName());
-				validatorRule.validate((AttributeMetadataInterface) yearOnlyDate, "2020", null, "Date");
+				validatorRule.validate(yearOnlyDate, "2020", null, "Date");
 			}
 			for (RuleInterface rule : monthYearDate.getRuleCollection())
 			{
 				ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
 						.getValidatorRule(rule.getName());
-				validatorRule.validate((AttributeMetadataInterface) monthYearDate, "09-2020", null, "Date");
+				validatorRule.validate(monthYearDate, "09-2020", null, "Date");
 			}
 
 			Map dataValue = new HashMap();
@@ -3048,7 +3049,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			fail();
 		}
 	}
-	
+
 	/**
 	 * Create a date only attribute, create and set allowfuturedate rule to this attribute.
 	 * And try to insert a date less than or equal to today's date,
@@ -4387,7 +4388,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		entityGroup.setName("DuplicateFormsValidations");
 
 		// Create an entity.
-		mainForm = (Entity) createAndPopulateEntity();
+		mainForm = createAndPopulateEntity();
 		mainForm.setName("mainForm");
 
 		entityGroup.addEntity(mainForm);
@@ -4399,7 +4400,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		mainFormContainer.setAbstractEntity(mainForm);
 		mainForm.getContainerCollection().add(mainFormContainer);
 
-		subForm = (Entity) createAndPopulateEntity();
+		subForm = createAndPopulateEntity();
 		subForm.setName("mainForm");
 
 		subFormContainer = factory.createContainer();
@@ -4512,10 +4513,10 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			fail();
 		}
 	}
-	
+
 	/**
-	 * Module tested: DE sql auditing of update queries generated by the DE 
-	 * Verifying conditions: Insert data for an entity, check contents of table DYXTN_SQL_AUDIT 
+	 * Module tested: DE sql auditing of update queries generated by the DE
+	 * Verifying conditions: Insert data for an entity, check contents of table DYXTN_SQL_AUDIT
 	 * Classes involved : EntityManager, CatgeoryManager, DynamicExtensionBaseQueryBuilder
 	 */
 	public void testSqlAudit()
@@ -4530,7 +4531,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		{
 			fail("Queries for data of type 'Date' are not audited!!");
 		}
-		
+
 		//Test for auditing of data of type File
 		rowCountBeforeExecutingQuery = (Integer) executeQuery(
 				"select count(*) from dyextn_sql_audit", INT_TYPE, 1);
@@ -4552,7 +4553,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		{
 			fail("Queries for data of type 'Object' are not audited!!");
 		}
-		
+
 	}
 
 }

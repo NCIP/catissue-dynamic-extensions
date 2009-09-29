@@ -59,6 +59,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 	/**
 	 * @see edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCaseUtility#setUp()
 	 */
+	@Override
 	protected void setUp()
 	{
 		super.setUp();
@@ -67,6 +68,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 	/**
 	 * @see edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCaseUtility#tearDown()
 	 */
+	@Override
 	protected void tearDown()
 	{
 		super.tearDown();
@@ -129,7 +131,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			study.setEntityGroup(entityGroup);
 			EntityManager m1 = new EntityManager();
 
-			EntityGroupInterface savedUser = entityGroupManager.persistEntityGroup(entityGroup);
+			entityGroupManager.persistEntityGroup(entityGroup);
 
 			Collection<Container> coll = study.getContainerCollection();
 
@@ -1398,7 +1400,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 	 * @param sourceRole
 	 * @param targetRole
 	 * @return
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private AssociationInterface getAssociation(EntityInterface targetEntity,
 			AssociationDirection associationDirection, String assoName, RoleInterface sourceRole,
@@ -1987,7 +1989,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			study.setEntityGroup(entityGroup);
 			entityGroup.addEntity(institution);
 			institution.setEntityGroup(entityGroup);
-			user = (Entity) entityManager.persistEntity(user);
+			user = entityManager.persistEntity(user);
 			Collection<AssociationInterface> associationInterface = entityManager.getAssociation(
 					"user", "primaryInvestigator");
 			assertNotNull(associationInterface);
@@ -3416,7 +3418,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 	 * @param sourceRole
 	 * @param targetRole
 	 * @return
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private AssociationInterface getAssociation(EntityInterface sourceEntity,
 			EntityInterface targetEntity, AssociationDirection associationDirection,

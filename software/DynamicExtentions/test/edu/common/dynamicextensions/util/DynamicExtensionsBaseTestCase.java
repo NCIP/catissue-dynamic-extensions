@@ -24,7 +24,6 @@ import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
-import edu.common.dynamicextensions.xmi.importer.XMIImporter;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.global.Constants;
@@ -53,6 +52,10 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 			e.printStackTrace();
 		}
 	}
+	protected final static String XMI_FILE_PATH="./src/resources/xmi/";
+	protected final static String CSV_FILE_PATH="./src/resources/csv/";
+	protected final static String PV_FILE_PATH="./src/resources/pvs/";
+	protected final static String EDITED_XMI_FILE_PATH="./src/resources/edited_xmi/";
 	protected int noOfDefaultColumns = 2;
 
 	//1:ACTIVITY_STATUS 2:IDENTIFIER 3:FILE NAME 4:CONTENTE_TYPE 5:ACTUAL_CONTENTS
@@ -83,6 +86,7 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	/**
 	 * @see junit.framework.TestCase#setUp()
 	 */
+	@Override
 	protected void setUp()
 	{
 
@@ -93,6 +97,7 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	/**
 	 * @see junit.framework.TestCase#tearDown()
 	 */
+	@Override
 	protected void tearDown()
 	{
 		Variables.containerFlag = true;
@@ -145,7 +150,7 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public EntityInterface createAndPopulateEntity()
@@ -433,9 +438,8 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	 */
 	protected void importModel(String xmi, String mainContainerList, String packageName)
 	{
-		String[] args1 = {xmi, packageName, mainContainerList};
-		XMIImporter xmImporter = new XMIImporter();
-		xmImporter.main(args1);
+		String[] args1 = {xmi,mainContainerList,packageName," "};
+		XMIImporter.main(args1);
 
 	}
 }

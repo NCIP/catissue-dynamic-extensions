@@ -344,7 +344,7 @@
 									</UML:TaggedValue.type>
 								</UML:TaggedValue>
 								<UML:TaggedValue xmi.id="EAID_C89B54E5_0D7A_46f8_9121_B5D072690B75" isSpecification="false">
-									<UML:TaggedValue.dataValue>Parent.Pk,Parent.Pk5</UML:TaggedValue.dataValue>
+									<UML:TaggedValue.dataValue>Parent.Pk</UML:TaggedValue.dataValue>
 									<UML:TaggedValue.type>
 										<UML:TagDefinition xmi.idref="EAID_0023E443_92F8_468c_B359_29BA0835F848"/>
 									</UML:TaggedValue.type>

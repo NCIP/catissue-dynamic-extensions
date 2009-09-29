@@ -2,7 +2,7 @@
 package edu.common.dynamicextensions;
 
 /**
- * 
+ *
  */
 
 import junit.framework.Test;
@@ -14,11 +14,13 @@ import edu.common.dynamicextensions.entitymanager.TestEntityManagerForInheritanc
 import edu.common.dynamicextensions.entitymanager.TestEntityManagerWithPrimaryKey;
 import edu.common.dynamicextensions.entitymanager.TestEntityMangerForXMIImportExport;
 import edu.common.dynamicextensions.entitymanager.TestImportPermissibleValues;
+import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
+import edu.common.dynamicextensions.util.XMIImporter;
 
 /**
  * Test Suite for testing all DE  related classes.
  */
-public class TestAll
+public class TestAll extends DynamicExtensionsBaseTestCase
 {
 
 	/**
@@ -35,6 +37,9 @@ public class TestAll
 	public static Test suite()
 	{
 		TestSuite suite = new TestSuite("Test suite for Query Interface Classes");
+		System.out.println("uploadig static metadata");
+		String[] args = {XMI_FILE_PATH+"TestStaticModel.xmi",CSV_FILE_PATH + "staticModelContainers.csv","staticModel","none","false"};
+		XMIImporter.main(args);
 		suite.addTestSuite(TestEntityManager.class);
 		suite.addTestSuite(TestEntityManagerForAssociations.class);
 		suite.addTestSuite(TestEntityManagerForInheritance.class);

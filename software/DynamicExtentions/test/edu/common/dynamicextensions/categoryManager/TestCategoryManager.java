@@ -45,8 +45,10 @@ import edu.common.dynamicextensions.entitymanager.EntityGroupManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.CategoryCreator;
+import edu.common.dynamicextensions.util.CiderXMIImporter;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.XMIImporter;
 import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationDirection;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
@@ -54,7 +56,6 @@ import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
 import edu.common.dynamicextensions.util.parser.CategoryGenerator;
 import edu.common.dynamicextensions.util.parser.ImportPermissibleValues;
-import edu.common.dynamicextensions.xmi.importer.XMIImporter;
 import edu.wustl.common.bizlogic.DefaultBizLogic;
 import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.util.global.ApplicationProperties;
@@ -89,6 +90,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	/**
 	 * @see edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCaseUtility#setUp()
 	 */
+	@Override
 	protected void setUp()
 	{
 		super.setUp();
@@ -97,6 +99,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	/**
 	 * @see edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCaseUtility#tearDown()
 	 */
+	@Override
 	protected void tearDown()
 	{
 		super.tearDown();
@@ -199,7 +202,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 
 			if (entityGroupCollection != null && entityGroupCollection.size() > 0)
 			{
-				entityGroup = (EntityGroupInterface) entityGroupCollection.iterator().next();
+				entityGroup = entityGroupCollection.iterator().next();
 			}
 		}
 		catch (BizLogicException e)
@@ -217,11 +220,10 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 
 		try
 		{
-			String[] args1 = {"./xmi/newsurgery.xmi", "Surgery", "./csv/surgery.csv"};
-			XMIImporter xmImporter = new XMIImporter();
-			xmImporter.main(args1);
+			String[] args1 = {XMI_FILE_PATH+"newsurgery.xmi",CSV_FILE_PATH+"surgery.csv","Surgery","  "};
+			XMIImporter.main(args1);
 
-			String[] args2 = {"./csv/cat_RULES.csv"};
+			String[] args2 = {CSV_FILE_PATH+"cat_RULES.csv"};
 			CategoryCreator categoryCreator = new CategoryCreator();
 			categoryCreator.main(args2);
 
@@ -979,7 +981,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 
 			if (entityGroupCollection != null && entityGroupCollection.size() > 0)
 			{
-				entityGroup = (EntityGroupInterface) entityGroupCollection.iterator().next();
+				entityGroup = entityGroupCollection.iterator().next();
 			}
 
 			// Fetch the user, study and experiment entities.
@@ -1148,7 +1150,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 
 			if (entityGroupCollection != null && entityGroupCollection.size() > 0)
 			{
-				entityGroup = (EntityGroupInterface) entityGroupCollection.iterator().next();
+				entityGroup = entityGroupCollection.iterator().next();
 			}
 
 			// Fetch the user, study and experiment entities.
@@ -1354,12 +1356,10 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		CategoryInterface category = null;
 		try
 		{
-			String[] args1 = {"./xmi/scg.xmi", "edu.wustl.catissuecore.domain.PathAnnotation_SCG",
-					"./csv/SCG.csv"};
-			XMIImporter xmImporter = new XMIImporter();
-			xmImporter.main(args1);
+			String[] args1 = {XMI_FILE_PATH +"scg.xmi",CSV_FILE_PATH+"SCG.csv","edu.wustl.catissuecore.domain.PathAnnotation_SCG"," "};
+			XMIImporter.main(args1);
 
-			String[] args2 = {"./csv/Category_PathAnnoModel.csv"};
+			String[] args2 = {CSV_FILE_PATH+ "Category_PathAnnoModel.csv"};
 			CategoryCreator categoryCreator = new CategoryCreator();
 			categoryCreator.main(args2);
 
@@ -1413,12 +1413,10 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		CategoryInterface category = null;
 		try
 		{
-			String[] args1 = {"./xmi/scg.xmi", "edu.wustl.catissuecore.domain.PathAnnotation_SCG",
-					"./csv/SCG.csv"};
-			XMIImporter xmImporter = new XMIImporter();
-			//xmImporter.main(args1);
+			String[] args1 = {XMI_FILE_PATH+"scg.xmi",CSV_FILE_PATH+"SCG.csv", "edu.wustl.catissuecore.domain.PathAnnotation_SCG","  "};
+			XMIImporter.main(args1);
 
-			String[] args2 = {"./csv/Category_NeedleBiopsy.csv"};
+			String[] args2 = {CSV_FILE_PATH + "Category_NeedleBiopsy.csv"};
 			CategoryCreator categoryCreator = new CategoryCreator();
 			categoryCreator.main(args2);
 
@@ -1472,11 +1470,13 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		CategoryInterface category = null;
 		try
 		{
-			String[] args = {"./xmi/cider.xmi", "edu.wustl.cider.domain", "./csv/cider.csv",
-					"CIDER"};
-			XMIImporter.main(args);
 
-			String[] args2 = {"./csv/Lab_category.csv", "true"};
+
+
+			String[] args = {XMI_FILE_PATH+"cider.xmi", CSV_FILE_PATH+"cider.csv","edu.wustl.cider.domain","none"};
+			CiderXMIImporter.main(args);
+
+			String[] args2 = {CSV_FILE_PATH+"Lab_category.csv", "true"};
 			CategoryCreator categoryCreator = new CategoryCreator();
 			categoryCreator.main(args2);
 
@@ -1506,10 +1506,10 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		CategoryInterface category = null;
 		try
 		{
-			String[] args = {"./xmi/BMI.xmi", "BMI", "./csv/BMIMainContainer.csv"};
+			String[] args = {XMI_FILE_PATH+"BMI.xmi", CSV_FILE_PATH+"BMIMainContainer.csv","BMI","  "};
 			XMIImporter.main(args);
 
-			String[] args2 = {"./csv/BMI.csv"};
+			String[] args2 = {CSV_FILE_PATH + "BMI.csv"};
 			CategoryCreator categoryCreator = new CategoryCreator();
 			categoryCreator.main(args2);
 
@@ -1539,10 +1539,10 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		CategoryInterface category = null;
 		try
 		{
-			String[] args = {"./xmi/BMI.xmi", "BMI", "./csv/BMIMainContainer.csv"};
+			String[] args = {XMI_FILE_PATH + "BMI.xmi", CSV_FILE_PATH+"BMIMainContainer.csv", "BMI"," "};
 			XMIImporter.main(args);
 
-			String[] args2 = {"./csv/BMIRelatedAttribute.csv"};
+			String[] args2 = {CSV_FILE_PATH+"BMIRelatedAttribute.csv"};
 			CategoryCreator categoryCreator = new CategoryCreator();
 			categoryCreator.main(args2);
 
@@ -1572,10 +1572,10 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		CategoryInterface category = null;
 		try
 		{
-			String[] args = {"./xmi/BMI.xmi", "BMI", "./csv/BMIMainContainer.csv"};
+			String[] args = {XMI_FILE_PATH+"BMI.xmi", CSV_FILE_PATH+"BMIMainContainer.csv","BMI" , "  "};
 			XMIImporter.main(args);
 
-			String[] args2 = {"./csv/BMI_DifferentClass.csv"};
+			String[] args2 = {CSV_FILE_PATH + "BMI_DifferentClass.csv"};
 			CategoryCreator categoryCreator = new CategoryCreator();
 			categoryCreator.main(args2);
 
@@ -1605,10 +1605,10 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		CategoryInterface category = null;
 		try
 		{
-			String[] args = {"./xmi/BMIDate.xmi", "BMI", "./csv/BMIMainContainer.csv"};
+			String[] args = {XMI_FILE_PATH + "BMIDate.xmi",CSV_FILE_PATH + "BMIMainContainer.csv", "BMI", " "};
 			XMIImporter.main(args);
 
-			String[] args2 = {"./csv/BMI_Date.csv"};
+			String[] args2 = {CSV_FILE_PATH + "BMI_Date.csv"};
 			CategoryCreator categoryCreator = new CategoryCreator();
 			categoryCreator.main(args2);
 
@@ -1637,18 +1637,18 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		CategoryInterface category = null;
 		try
 		{
-			String[] args = {"./xmi/test.xmi", "annotations", "./csv/Skip_Logic_Main.csv"};
+			String[] args = {XMI_FILE_PATH + "test.xmi",CSV_FILE_PATH + "Skip_Logic_Main.csv", "annotations", "  "};
 			XMIImporter.main(args);
 
-			ImportPermissibleValues importPermissibleValues = new ImportPermissibleValues("./csv/TestModel_pv.csv");
+			ImportPermissibleValues importPermissibleValues = new ImportPermissibleValues(CSV_FILE_PATH + "TestModel_pv.csv");
 			importPermissibleValues.importValues();
-			
-			String[] args2 = {"./csv/SkipLogic.csv"};
+
+			String[] args2 = {CSV_FILE_PATH + "SkipLogic.csv"};
 			CategoryCreator categoryCreator = new CategoryCreator();
 			categoryCreator.main(args2);
 
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
-			
+
 			category = (CategoryInterface) categoryManager.getObjectByName(
 					Category.class.getName(), "SkipLogic_Test");
 
@@ -2304,7 +2304,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	 */
 	public void testDataEntryForCategoryEntityWithRelatedAttributes()
 	{
-		String filePath = "./csv/catMedicalHistoryRadiologicalDiagnosis.csv";
+		String filePath = CSV_FILE_PATH + "catMedicalHistoryRadiologicalDiagnosis.csv";
 
 		try
 		{
@@ -2387,7 +2387,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	 * Make a entity group from following entities:
 	 * Entities : user (1)------>(*) study
 	 * @return EntityGroupInterface
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private EntityGroupInterface createEntityGroup1() throws DynamicExtensionsSystemException
 	{
@@ -2496,7 +2496,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	 * Make a entity group from following entities:
 	 * Entities : user (1)------>(*) study (1) ------>(*) experiment
 	 * @return EntityGroupInterface
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private EntityGroupInterface createEntityGroup2() throws DynamicExtensionsSystemException
 	{
@@ -2660,7 +2660,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	/**
 	 * Create entity group from pathology annotation model.
 	 * @return EntityGroupInterface
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private EntityGroupInterface createEntityGroup3() throws DynamicExtensionsSystemException
 	{
@@ -2931,7 +2931,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	 * Create entity group from pathology annotation model.
 	 * Add permissible values to tumourTissueSite attribute.
 	 * @return EntityGroupInterface
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private EntityGroupInterface createEntityGroup4() throws DynamicExtensionsSystemException
 	{
@@ -3249,17 +3249,17 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	}
 
 	/**
-	 * use case: Display of controls in a single line for the attributes of the same class 
+	 * use case: Display of controls in a single line for the attributes of the same class
 	 */
 	public void testSingleLineDisplay1()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			importModel("./xmi/scg.xmi", "./csv/SCG.csv",
+			importModel(XMI_FILE_PATH + "scg.xmi", CSV_FILE_PATH + "SCG.csv",
 					"edu.wustl.catissuecore.domain.PathAnnotation_SCG");
 
-			createCaegory("./csv/singleLineDsiplaySameClassl.csv");
+			createCaegory(CSV_FILE_PATH + "singleLineDsiplaySameClassl.csv");
 
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 			category = (CategoryInterface) categoryManager.getObjectByName(
@@ -3276,7 +3276,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	}
 
 	/**
-	 * use case: Single line display controls validations 
+	 * use case: Single line display controls validations
 	 * Two controls on the sinlge line should of the same type
 	 */
 	public void testSingleLineDisplay2()
@@ -3284,10 +3284,10 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		CategoryInterface category = null;
 		try
 		{
-			importModel("./xmi/scg.xmi", "./csv/SCG.csv",
+			importModel(XMI_FILE_PATH + "scg.xmi", CSV_FILE_PATH + "SCG.csv",
 					"edu.wustl.catissuecore.domain.PathAnnotation_SCG");
 
-			createCaegory("./csv/singleLineDsiplaySameClass2.csv");
+			createCaegory(CSV_FILE_PATH + "singleLineDsiplaySameClass2.csv");
 
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 			category = (CategoryInterface) categoryManager.getObjectByName(
@@ -3316,10 +3316,10 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		CategoryInterface category = null;
 		try
 		{
-			importModel("./xmi/scg.xmi", "./csv/SCG.csv",
+			importModel(XMI_FILE_PATH + "scg.xmi", CSV_FILE_PATH + "SCG.csv",
 					"edu.wustl.catissuecore.domain.PathAnnotation_SCG");
 
-			createCaegory("./csv/singleLineDsiplaySameClass4.csv");
+			createCaegory(CSV_FILE_PATH + "singleLineDsiplaySameClass4.csv");
 
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 			category = (CategoryInterface) categoryManager.getObjectByName(
@@ -3348,10 +3348,10 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		CategoryInterface category = null;
 		try
 		{
-			importModel("./xmi/scg.xmi", "./csv/SCG.csv",
+			importModel(XMI_FILE_PATH + "scg.xmi", CSV_FILE_PATH + "SCG.csv",
 					"edu.wustl.catissuecore.domain.PathAnnotation_SCG");
 
-			createCaegory("./csv/singleLineDsiplaySameClass5.csv");
+			createCaegory(CSV_FILE_PATH + "singleLineDsiplaySameClass5.csv");
 
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 			category = (CategoryInterface) categoryManager.getObjectByName(
@@ -3368,7 +3368,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	}
 
 	/**
-	 * use case: Single line display controls validations 
+	 * use case: Single line display controls validations
 	 * Two controls on the sinlge line should of the same type
 	 * Allowed control type are displayed in the error message
 	 */
@@ -3377,10 +3377,10 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		CategoryInterface category = null;
 		try
 		{
-			importModel("./xmi/scg.xmi", "./csv/SCG.csv",
+			importModel(XMI_FILE_PATH + "scg.xmi", CSV_FILE_PATH + "SCG.csv",
 					"edu.wustl.catissuecore.domain.PathAnnotation_SCG");
 
-			createCaegory("./csv/singleLineDsiplaySameClass3.csv");
+			createCaegory(CSV_FILE_PATH + "singleLineDsiplaySameClass3.csv");
 
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 			category = (CategoryInterface) categoryManager.getObjectByName(
@@ -3395,17 +3395,17 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	}
 
 	/**
-	 * Use case: Single line display for the attibutes of the differnt class 
+	 * Use case: Single line display for the attibutes of the differnt class
 	 */
 	public void testSingleLineDisplayDiffrentClass1()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			importModel("./xmi/scg.xmi", "./csv/SCG.csv",
+			importModel(XMI_FILE_PATH + "scg.xmi", CSV_FILE_PATH + "SCG.csv",
 					"edu.wustl.catissuecore.domain.PathAnnotation_SCG");
 
-			createCaegory("./csv/singleLineDsiplayDifferentClassl.csv");
+			createCaegory(CSV_FILE_PATH + "singleLineDsiplayDifferentClassl.csv");
 
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 			category = (CategoryInterface) categoryManager.getObjectByName(
@@ -3422,7 +3422,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 
 	/**
 	 * Negative Use case: Single line display for the attibutes of the differnt class
-	 * subcategory used has multiple entities under same diplay label and 
+	 * subcategory used has multiple entities under same diplay label and
 	 * show=false
 	 */
 	public void testSingleLineDisplayDiffrentClass2()
@@ -3430,10 +3430,10 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		CategoryInterface category = null;
 		try
 		{
-			importModel("./xmi/scg.xmi", "./csv/SCG.csv",
+			importModel(XMI_FILE_PATH + "scg.xmi", CSV_FILE_PATH + "SCG.csv",
 					"edu.wustl.catissuecore.domain.PathAnnotation_SCG");
 
-			createCaegory("./csv/singleLineDsiplayDifferentClass2.csv");
+			createCaegory(CSV_FILE_PATH + "singleLineDsiplayDifferentClass2.csv");
 
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 			category = (CategoryInterface) categoryManager.getObjectByName(
@@ -3591,9 +3591,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		CategoryInterface category = null;
 		try
 		{
-			importModel("./xmi/test_date.xmi", "./csv/test_date.csv", "TestAnnotations");
+			importModel(XMI_FILE_PATH + "test_date.xmi", CSV_FILE_PATH + "test_date.csv", "TestAnnotations");
 
-			createCaegory("./csv/categoryFutureDate.csv");
+			createCaegory(CSV_FILE_PATH + "categoryFutureDate.csv");
 
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 			category = (CategoryInterface) categoryManager.getObjectByName(
@@ -3639,8 +3639,8 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 			try
 			{
-				importModel("./xmi/test_date.xmi", "./csv/test_date.csv", "TestAnnotations");
-				createCaegory("./csv/categoryFutureDate1.csv");
+				importModel(XMI_FILE_PATH + "test_date.xmi", CSV_FILE_PATH + "test_date.csv", "TestAnnotations");
+				createCaegory(CSV_FILE_PATH + "categoryFutureDate1.csv");
 				category = (CategoryInterface) categoryManager.getObjectByName(Category.class
 						.getName(), "Test category - future_date");
 			}
@@ -3670,8 +3670,8 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 			try
 			{
-				importModel("./xmi/test_date.xmi", "./csv/test_date.csv", "TestAnnotations");
-				createCaegory("./csv/categoryFutureDate3.csv");
+				importModel(XMI_FILE_PATH + "test_date.xmi", CSV_FILE_PATH + "test_date.csv", "TestAnnotations");
+				createCaegory(CSV_FILE_PATH + "categoryFutureDate3.csv");
 				category = (CategoryInterface) categoryManager.getObjectByName(Category.class
 						.getName(), "Category_Lab Information");
 			}

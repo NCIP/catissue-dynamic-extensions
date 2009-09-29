@@ -6,20 +6,20 @@ import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
 import edu.common.dynamicextensions.util.parser.ImportPermissibleValues;
 
 /**
- * 
+ *
  * @author mandar_shidhore
  *
  */
 public class TestImportPermissibleValues extends DynamicExtensionsBaseTestCase
 {
 	/**
-	 * 
+	 *
 	 */
 	public void testAddPermissibleValues()
 	{
 		try
 		{
-			File file = new File("./pvs/PermissibleValues.csv");
+			File file = new File(PV_FILE_PATH+"PermissibleValues.csv");
 			ImportPermissibleValues.main(new String[] {file.getCanonicalPath()});
 		}
 		catch (Exception e)
