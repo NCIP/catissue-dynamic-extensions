@@ -1667,7 +1667,7 @@ function setDefaultValues(tableId, obj, containerId)
 						obj.innerHTML = replaceAll(obj.innerHTML,
 								childObjectName, str);
 					}
-					if ("auto_complete_dropdown_"+containerId == childObject.id) 
+					if ("auto_complete_dropdown" == childObject.id) 
 					{
 						var childNodes2 = childObject.childNodes;
 
@@ -1693,12 +1693,12 @@ function setDefaultValues(tableId, obj, containerId)
 			}
 			obj.innerHTML = replaceAll(obj.innerHTML, childObjectName, str);
 		}
-		if ("auto_complete_dropdown_"+containerId == childObject.id) 
+		if ("auto_complete_dropdown" == childObject.id) 
 		{
 			var childNodes2 = childObject.childNodes;
 			if(!window.component && document.all)
 			{
-				childNodes2 = document.getElementById("auto_complete_dropdown_"+containerId).childNodes;
+				childNodes2 = document.getElementById("auto_complete_dropdown").childNodes;
 			}
 						var oldName = childNodes2[2].childNodes[0].childNodes[0].name;
 						var newName = oldName + "_" + rowIndex;
@@ -2664,7 +2664,7 @@ function paster(response)
 
 function executeComboScripts()
 {
-	var temp = document.getElementsByName("auto_complete_dropdown_"+conatinerId);
+	var temp = document.getElementsByName("auto_complete_dropdown");
 	for(var i = rowCount+1;i<temp.length;i++)
 	{
 		eval(temp[i].childNodes[1].innerHTML);
@@ -2673,7 +2673,7 @@ function executeComboScripts()
 
 function executeCombos()
 {
-	var temp = document.getElementsByName("auto_complete_dropdown_"+conatinerId);
+	var temp = document.getElementsByName("auto_complete_dropdown");
 	var newRowCount =  document.getElementById(conatinerId+"_table").rows.length -1;
 	var newRowsAdded = newRowCount -rowCount;
 	var length = temp.length;
