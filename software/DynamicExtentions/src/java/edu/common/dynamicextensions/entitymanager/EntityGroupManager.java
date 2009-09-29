@@ -24,10 +24,12 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.AssociationTreeObject;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.xmi.DynamicQueryList;
 import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.bizlogic.DefaultBizLogic;
 import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.DBTypes;
@@ -78,6 +80,7 @@ public class EntityGroupManager extends AbstractMetadataManager
 	/**
 	 *
 	 */
+	@Override
 	protected DynamicExtensionBaseQueryBuilder getQueryBuilderInstance()
 	{
 		return queryBuilder;
@@ -86,27 +89,29 @@ public class EntityGroupManager extends AbstractMetadataManager
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.entitymanager.EntityGroupManagerInterface#persistEntityGroup(edu.common.dynamicextensions.domaininterface.EntityGroupInterface)
 	 */
-	public EntityGroupInterface persistEntityGroup(EntityGroupInterface group)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	public DynamicQueryList persistEntityGroup(EntityGroupInterface group ,HibernateDAO... hibernateDAO)
+	throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
-		EntityGroupInterface entityGroup = (EntityGroupInterface) persistDynamicExtensionObject(group);
-		return entityGroup;
+		DynamicQueryList queryList =  persistDynamicExtensionObject(group,hibernateDAO);
+		return queryList;
 	}
+
 
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.entitymanager.EntityGroupManagerInterface#persistEntityGroupMetadata(edu.common.dynamicextensions.domaininterface.EntityGroupInterface)
 	 */
-	public EntityGroupInterface persistEntityGroupMetadata(EntityGroupInterface entityGroup)
+	public DynamicQueryList persistEntityGroupMetadata(EntityGroupInterface entityGroup,HibernateDAO... hibernateDAO)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		addTaggedValue(entityGroup);
-		EntityGroupInterface entGroup = (EntityGroupInterface) persistDynamicExtensionObjectMetdata(entityGroup);
-		return entGroup;
+		DynamicQueryList queryList =  persistDynamicExtensionObjectMetdata(entityGroup,hibernateDAO);
+		return queryList;
 	}
 
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.entitymanager.AbstractMetadataManager#preProcess(edu.common.dynamicextensions.domaininterface.DynamicExtensionBaseDomainObjectInterface, java.util.List, java.util.List)
 	 */
+	@Override
 	protected void preProcess(DynamicExtensionBaseDomainObjectInterface dyExtBsDmnObj,
 			List<String> revQueries, List<String> queries) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
@@ -165,6 +170,7 @@ public class EntityGroupManager extends AbstractMetadataManager
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.entitymanager.AbstractMetadataManager#postProcess(java.util.List, java.util.List, java.util.Stack)
 	 */
+	@Override
 	protected void postProcess(List<String> queries, List<String> revQueries,
 			Stack<String> rlbkQryStack) throws DynamicExtensionsSystemException
 	{
@@ -174,6 +180,7 @@ public class EntityGroupManager extends AbstractMetadataManager
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.entitymanager.AbstractMetadataManager#logFatalError(java.lang.Exception, edu.common.dynamicextensions.domaininterface.AbstractMetadataInterface)
 	 */
+	@Override
 	protected void logFatalError(Exception exception, AbstractMetadataInterface abstrMetadata)
 	{
 		String name = "";
@@ -203,8 +210,8 @@ public class EntityGroupManager extends AbstractMetadataManager
 			return entityGroup;
 		}
 
-		// Get the instance of the default biz logic class which has the method 
-		// that returns the particular object depending on the value of a particular 
+		// Get the instance of the default biz logic class which has the method
+		// that returns the particular object depending on the value of a particular
 		// column of the associated table.
 		DefaultBizLogic defBizLogic = BizLogicFactory.getDefaultBizLogic();
 		defBizLogic.setAppName(DynamicExtensionDAO.getInstance().getAppName());
@@ -367,7 +374,7 @@ public class EntityGroupManager extends AbstractMetadataManager
 				else
 				{
 					EntityInterface dbaseCpy = getEntityFromGroup(dbaseCopy, entity.getId());
-					if (EntityManagerUtil.isParentChanged((Entity) entity, (Entity) dbaseCpy))
+					if (EntityManagerUtil.isParentChanged(entity, (Entity) dbaseCpy))
 					{
 						checkParentChangeAllowed(entity);
 					}

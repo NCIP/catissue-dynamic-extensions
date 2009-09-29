@@ -26,6 +26,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.common.dynamicextensions.xmi.DynamicQueryList;
 import edu.wustl.common.bizlogic.AbstractBizLogic;
 import edu.wustl.common.bizlogic.DefaultBizLogic;
 import edu.wustl.common.exception.BizLogicException;
@@ -270,7 +271,7 @@ public abstract class AbstractMetadataManager
 				jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
 				while (!revQryStack.empty())
 				{
-					String query = (String) revQryStack.pop();
+					String query = revQryStack.pop();
 					try
 					{
 						jdbcDao.executeUpdate(query);
@@ -318,7 +319,7 @@ public abstract class AbstractMetadataManager
 	/**
 	 * This method executes the HQL query given the query name and query parameters.
 	 * The queries are specified in the EntityManagerHQL.hbm.xml file. For each query, a name is given.
-	 * Each query is replaced with parameters before execution.The parameters are given by each calling 
+	 * Each query is replaced with parameters before execution.The parameters are given by each calling
 	 * method.
 	 * @param queryName
 	 * @param substParams
@@ -370,7 +371,7 @@ public abstract class AbstractMetadataManager
 	{
 		for (int counter = 0; counter < substParams.size(); counter++)
 		{
-			HQLPlaceHolderObject plcHolderObj = (HQLPlaceHolderObject) substParams.get(Integer
+			HQLPlaceHolderObject plcHolderObj = substParams.get(Integer
 					.toBinaryString(counter));
 			String objectType = plcHolderObj.getType();
 			if ("string".equals(objectType))
@@ -421,13 +422,49 @@ public abstract class AbstractMetadataManager
 
 	/**
 	 * This method persists an entity group and the associated entities and also creates the data table
+	 * for the entities only if the hibernateDao is not provided.
+	 * if HibernateDao is provided then its the responsibility of the caller to execute all
+	 * the Queries which are returned from this method just before commiting the hibernate Dao.
+	 * @param abstrMetadata object to be save
+	 * @param hibernateDAO dao which should be used (optional).
+	 * @return queryList to be executed.
+	 * @throws DynamicExtensionsSystemException exception
+	 * @throws DynamicExtensionsApplicationException exception
+	 */
+	protected DynamicQueryList persistDynamicExtensionObject(
+			AbstractMetadataInterface abstrMetadata,HibernateDAO... hibernateDAO ) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
+	{
+		List<String> revQueries = new LinkedList<String>();
+		List<String> queries = new ArrayList<String>();
+		Stack<String> rlbkQryStack = new Stack<String>();
+		DynamicQueryList dynamicQueryList = new DynamicQueryList();
+		if(hibernateDAO!=null && hibernateDAO.length>0)
+		{
+			preProcess(abstrMetadata, revQueries, queries);
+
+			saveDynamicExtensionObject(abstrMetadata, hibernateDAO[0], rlbkQryStack);
+			dynamicQueryList.setQueryList(queries);
+			dynamicQueryList.setRevQueryList(revQueries);
+		}
+		else
+		{
+			dynamicQueryList = persistDynamicExtensionObject(abstrMetadata);
+		}
+
+		return dynamicQueryList;
+	}
+
+
+	/**
+	 * This method persists an entity group and the associated entities and also creates the data table
 	 * for the entities.
 	 * @param abstrMetadata
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	protected AbstractMetadataInterface persistDynamicExtensionObject(
+	private DynamicQueryList persistDynamicExtensionObject(
 			AbstractMetadataInterface abstrMetadata) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
@@ -470,48 +507,55 @@ public abstract class AbstractMetadataManager
 			}
 		}
 
-		return abstrMetadata;
+		return null;
 	}
 
 	/**
 	 * This method persists an entity group and the associated entities without creating the data table
 	 * for the entities.
-	 * @param abstrMetadata
-	 * @return
-	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
+	 * @param entityGroup entity group to be save
+	 * @param hibernatedao dao which should be used (optional).
+	 * @return queryList to be executed
+	 * @throws DynamicExtensionsSystemException exception
+	 * @throws DynamicExtensionsApplicationException exception
 	 */
-	public AbstractMetadataInterface persistDynamicExtensionObjectMetdata(
-			AbstractMetadataInterface abstrMetadata) throws DynamicExtensionsSystemException,
+	public DynamicQueryList persistDynamicExtensionObjectMetdata(
+			AbstractMetadataInterface abstrMetadata,HibernateDAO... hibernateDAO) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
 		Stack<String> rlbkQryStack = new Stack<String>();
-		HibernateDAO hibernateDAO = null;
-		try
+		HibernateDAO newHibernateDAO=null;
+		if(hibernateDAO!=null && hibernateDAO.length>0)
 		{
-			hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
-			saveDynamicExtensionObject(abstrMetadata, hibernateDAO, rlbkQryStack);
-
-			hibernateDAO.commit();
+			newHibernateDAO=hibernateDAO[0];
+			saveDynamicExtensionObject(abstrMetadata, newHibernateDAO, rlbkQryStack);
 		}
-		catch (DAOException e)
-		{
-			rollbackQueries(rlbkQryStack, null, e, hibernateDAO);
-			throw new DynamicExtensionsSystemException(e.getMessage(), e, DYEXTN_S_003);
-		}
-		finally
+		else
 		{
 			try
 			{
-				DynamicExtensionsUtility.closeHibernateDAO(hibernateDAO);
+				newHibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
+				saveDynamicExtensionObject(abstrMetadata, newHibernateDAO, rlbkQryStack);
+				newHibernateDAO.commit();
 			}
 			catch (DAOException e)
 			{
+				rollbackQueries(rlbkQryStack, null, e, newHibernateDAO);
 				throw new DynamicExtensionsSystemException(e.getMessage(), e, DYEXTN_S_003);
 			}
+			finally
+			{
+				try
+				{
+					DynamicExtensionsUtility.closeHibernateDAO(newHibernateDAO);
+				}
+				catch (DAOException e)
+				{
+					throw new DynamicExtensionsSystemException(e.getMessage(), e, DYEXTN_S_003);
+				}
+			}
 		}
-
-		return abstrMetadata;
+		return null;
 	}
 
 	/**
@@ -689,7 +733,7 @@ public abstract class AbstractMetadataManager
 			QueryWhereClause queryWhereClause = new QueryWhereClause(tableName);
 			queryWhereClause.getWhereCondition(whereColName, whereColCndtn, whereColValue,
 					Constants.AND_JOIN_CONDITION);
-			results = (List) jdbcDao.retrieve(tableName, selectColName, queryWhereClause);
+			results = jdbcDao.retrieve(tableName, selectColName, queryWhereClause);
 			/*results = jdbcDao.retrieve(tableName, selectColName, whereColName, whereColCndtn,
 					whereColValue, null);*/
 			records = getRecordList(results);

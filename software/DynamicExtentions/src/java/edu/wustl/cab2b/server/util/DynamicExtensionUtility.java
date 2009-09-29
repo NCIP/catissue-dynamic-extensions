@@ -9,14 +9,12 @@ import static edu.wustl.cab2b.server.ServerConstants.LOAD_STATUS;
 import static edu.wustl.cab2b.server.path.PathConstants.CREATE_TABLE_FOR_ENTITY;
 import static edu.wustl.cab2b.server.path.PathConstants.METADATA_ENTITY_GROUP;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
-import edu.common.dynamicextensions.bizlogic.BizLogicFactory;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.SemanticAnnotatableInterface;
 import edu.common.dynamicextensions.domaininterface.AbstractMetadataInterface;
@@ -52,8 +50,7 @@ import edu.wustl.cab2b.common.errorcodes.ErrorCodeConstants;
 import edu.wustl.cab2b.common.exception.RuntimeException;
 import edu.wustl.cab2b.common.util.Utility;
 import edu.wustl.cab2b.server.cache.EntityCache;
-import edu.wustl.common.bizlogic.AbstractBizLogic;
-import edu.wustl.common.exception.BizLogicException;
+import edu.wustl.cab2b.server.path.PathConstants;
 import edu.wustl.common.querysuite.queryobject.DataType;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.HibernateDAO;
@@ -61,7 +58,7 @@ import edu.wustl.dao.exception.DAOException;
 import gov.nih.nci.cagrid.metadata.common.SemanticMetadata;
 
 /**
- * This class decides whether to create a storage table for entity or not based on 
+ * This class decides whether to create a storage table for entity or not based on
  * {@link edu.wustl.cab2b.server.path.PathConstants#CREATE_TABLE_FOR_ENTITY}
  * To create a table for entity set this to TRUE before calling this code else set it to false.
  * @author Chandrakant Talele
@@ -73,8 +70,8 @@ public class DynamicExtensionUtility
 
 	/**
 	 * Persist given entity using dynamic extension APIs.
-	 * Whether to create data space (table) for this entity or not is decided by 
-	 * {@link PathConstants.CREATE_TABLE_FOR_ENTITY} 
+	 * Whether to create data space (table) for this entity or not is decided by
+	 * {@link PathConstants.CREATE_TABLE_FOR_ENTITY}
 	 * @param entity Entity to persist.
 	 * @return The saved entity
 	 */
@@ -103,8 +100,8 @@ public class DynamicExtensionUtility
 
 	/**
 	 * Persist given entity Group using dynamic extension APIs.
-	 * Whether to store only metadata for this entity Group is decided by 
-	 * {@link PathConstants.CREATE_TABLE_FOR_ENTITY} 
+	 * Whether to store only metadata for this entity Group is decided by
+	 * {@link PathConstants.CREATE_TABLE_FOR_ENTITY}
 	 * @param entityGroup entity Group to persist.
 	 * @return The saved entity Group
 	 */
@@ -125,12 +122,12 @@ public class DynamicExtensionUtility
 
 	/**
 	 * Persist given entity Group using dynamic extension APIs.
-	 * Whether to store only metadata for this entity Group is decided by 
-	 * {@link PathConstants.CREATE_TABLE_FOR_ENTITY} 
+	 * Whether to store only metadata for this entity Group is decided by
+	 * {@link PathConstants.CREATE_TABLE_FOR_ENTITY}
 	 * @param entityGroup entity Group to persist.
 	 * @return The saved entity Group
-	 * @throws DynamicExtensionsApplicationException 
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public static EntityGroupInterface persistEGroup(EntityGroupInterface entityGroup)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
@@ -139,13 +136,13 @@ public class DynamicExtensionUtility
 		EntityGroupInterface entityGroupObject;
 		if (CREATE_TABLE_FOR_ENTITY)
 		{
-			entityGroupObject = entityGroupManager.persistEntityGroup(entityGroup);
+			entityGroupManager.persistEntityGroup(entityGroup);
 		}
 		else
 		{
-			entityGroupObject = entityGroupManager.persistEntityGroupMetadata(entityGroup);
+			entityGroupManager.persistEntityGroupMetadata(entityGroup);
 		}
-		return entityGroupObject;
+		return entityGroup;
 	}
 
 	/**
@@ -196,11 +193,11 @@ public class DynamicExtensionUtility
 	}
 
 	/**
-	 * Returns the AttributeInterface whose name matches with given "attributeName" and 
-	 * whose parent name matches with "entityName" 
+	 * Returns the AttributeInterface whose name matches with given "attributeName" and
+	 * whose parent name matches with "entityName"
 	 * @param entityName name of parent entity.
 	 * @param attributeName name of required attribute.
-	 * @return Returns Attribute satisfying given conditions. 
+	 * @return Returns Attribute satisfying given conditions.
 	 */
 	public static AttributeInterface getAttribute(String entityName, String attributeName)
 	{
@@ -254,7 +251,7 @@ public class DynamicExtensionUtility
 	}
 
 	/**
-	 * This method adds a tag to entity group to distinguish it as metadata entity group. 
+	 * This method adds a tag to entity group to distinguish it as metadata entity group.
 	 * @param entityGroup
 	 */
 	public static void markMetadataEntityGroup(EntityGroupInterface entityGroup)
@@ -266,7 +263,7 @@ public class DynamicExtensionUtility
 	}
 
 	/**
-	 * This method searches for is there any entity group present with given name. 
+	 * This method searches for is there any entity group present with given name.
 	 * If present it returns the entity group.If not present then it creates a entity group with given name.
 	 * Saves it, and returns the saved Entity Group.
 	 * @param name Name of the entity group.
@@ -487,7 +484,7 @@ public class DynamicExtensionUtility
 	 * @param srcEntity source entity of the new association
 	 * @param tarEntity target enetiyt of the new association
 	 * @return new association
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public static AssociationInterface createNewOneToManyAsso(EntityInterface srcEntity,
 			EntityInterface tarEntity) throws DynamicExtensionsSystemException
@@ -532,7 +529,7 @@ public class DynamicExtensionUtility
 	 * Returns Cab2b Entity Groups
 	 * @param hibernateDAO
 	 * @return Cab2b Entity Groups
-	 * @throws DAOException 
+	 * @throws DAOException
 	 */
 	public static Collection<EntityGroupInterface> getSystemGeneratedEntityGroups(
 			HibernateDAO hibernateDAO) throws DAOException
@@ -555,7 +552,7 @@ public class DynamicExtensionUtility
 	 * It will retrieve all the categories present in the dataBase.
 	 * @param hibernateDAO
 	 * @return List Of the categories present in the DB.
-	 * @throws DAOException 
+	 * @throws DAOException
 	 */
 	public static List<CategoryInterface> getAllCategories(HibernateDAO hibernateDAO)
 			throws DAOException

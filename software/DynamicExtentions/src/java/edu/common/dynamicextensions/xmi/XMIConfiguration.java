@@ -14,13 +14,13 @@ public class XMIConfiguration
 {
 
 	/**
-	 * This flag is used to indicate weather tables should be created For DynamicExtensions or 
+	 * This flag is used to indicate weather tables should be created For DynamicExtensions or
 	 * only metadata should be saved
 	 */
 	private boolean isCreateTable = true;
 
 	/**
-	 * This flag indicates weather the new column should be added in child as foreignKey or not. 
+	 * This flag indicates weather the new column should be added in child as foreignKey or not.
 	 */
 	private boolean isAddCol4InhInChild = false;
 
@@ -44,38 +44,38 @@ public class XMIConfiguration
 
 	/**
 	 * This is used for  that the default package is set or not by end-user  at the time of importxmi ,
-	 * by default it is set to true.  
+	 * by default it is set to true.
 	 */
 	private boolean isDefaultPackage = true;
 	/**
 	 * This is used to indicate the name of Entity group to skip,for which do not create entity
-	 * by default it is set to null.  
+	 * by default it is set to null.
 	 */
 	private String skipEntityGroup = null;
 	/**
-	 * This is used to indicate the list of name of Skip entity ,for which do not create entity 
-	 * by default it is set to empty list.  
+	 * This is used to indicate the list of name of Skip entity ,for which do not create entity
+	 * by default it is set to empty list.
 	 */
 	private List<String> skipEntityNames = new ArrayList<String>();
 
 	/**
 	 * This is used to set the default package name  by end-user  at the time of importxmi ,
-	 * by default it is set to catissue package.  
+	 * by default it is set to catissue package.
 	 */
 	private String defaultPackagePrefix = XMIConstants.CATISSUE_PACKAGE;
 
 	/**
-	 * 
+	 *
 	 */
 	private static XMIConfiguration xmiConfiguration;
 
 	/**
-	 * 
+	 *
 	 */
 	private List<Long> newEntitiesIds = new ArrayList<Long>();
 
 	/**
-	 * 
+	 *
 	 */
 	private XMIConfiguration()
 	{
@@ -147,7 +147,7 @@ public class XMIConfiguration
 	}
 
 	/**
-	 * This method will create an object of the XMIConfiguration if it does not exist and return that object 
+	 * This method will create an object of the XMIConfiguration if it does not exist and return that object
 	 * @return xmiConfiguration object
 	 */
 	public static synchronized XMIConfiguration getInstance()
@@ -175,7 +175,7 @@ public class XMIConfiguration
 	 */
 	public void setAddIdAttr(boolean isAddIdAttr)
 	{
-		this.isAdddIdAttr = isAddIdAttr;
+		isAdddIdAttr = isAddIdAttr;
 	}
 
 	/**
@@ -193,7 +193,7 @@ public class XMIConfiguration
 	 */
 	public void setEntityGroupSystemGenerated(boolean isEntityGroupSystemGenerated)
 	{
-		this.isEntGrpSysGen = isEntityGroupSystemGenerated;
+		isEntGrpSysGen = isEntityGroupSystemGenerated;
 	}
 
 	/**
@@ -229,7 +229,7 @@ public class XMIConfiguration
 	 */
 	public void setAddColumnForInherianceInChild(boolean isAddColumnForInheriance)
 	{
-		this.isAddCol4InhInChild = isAddColumnForInheriance;
+		isAddCol4InhInChild = isAddColumnForInheriance;
 	}
 
 	/**
@@ -247,7 +247,7 @@ public class XMIConfiguration
 	 */
 	public void setAddInheritedAttribute(boolean isAddInheritedAttribute)
 	{
-		this.isAddInheritedAttr = isAddInheritedAttribute;
+		isAddInheritedAttr = isAddInheritedAttribute;
 	}
 
 	/**

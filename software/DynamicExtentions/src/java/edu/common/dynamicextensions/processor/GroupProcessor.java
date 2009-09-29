@@ -25,7 +25,7 @@ public class GroupProcessor extends BaseDynamicExtensionsProcessor
 {
 
 	/**
-	 * 
+	 *
 	 *
 	 */
 	private GroupProcessor()
@@ -34,7 +34,7 @@ public class GroupProcessor extends BaseDynamicExtensionsProcessor
 	}
 
 	/**
-	 * 
+	 *
 	 * @return new instance of GroupProcessor
 	 */
 	public static GroupProcessor getInstance()
@@ -43,8 +43,8 @@ public class GroupProcessor extends BaseDynamicExtensionsProcessor
 	}
 
 	/**
-	 * 
-	 * @return new object of entity group 
+	 *
+	 * @return new object of entity group
 	 */
 	public EntityGroupInterface createEntityGroup()
 	{
@@ -52,11 +52,11 @@ public class GroupProcessor extends BaseDynamicExtensionsProcessor
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entityGroup : Entity Group object to be populated
 	 * @param groupUIBean : Group UI Bean containing information entered by the user
-	 * @throws DynamicExtensionsSystemException 
-	 * @throws DynamicExtensionsApplicationException 
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
 	 */
 	public void populateEntityGroupDetails(EntityGroupInterface entityGroup,
 			GroupUIBeanInterface groupUIBean) throws DynamicExtensionsApplicationException,
@@ -72,7 +72,7 @@ public class GroupProcessor extends BaseDynamicExtensionsProcessor
 	}
 
 	/**
-	 * 
+	 *
 	 * @param groupUIBean : Group UI Bean object to be populated
 	 * @param entityGroup : Entity Group object containing group details
 	 */
@@ -90,8 +90,8 @@ public class GroupProcessor extends BaseDynamicExtensionsProcessor
 	 * Create entity group object, populate its details and save to DB
 	 * @param groupUIBean  : Bean containing group information added by user on UI
 	 * @return
-	 * @throws DynamicExtensionsApplicationException 
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public EntityGroupInterface createAndSaveGroup(GroupUIBeanInterface groupUIBean)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
@@ -103,27 +103,26 @@ public class GroupProcessor extends BaseDynamicExtensionsProcessor
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entityGroup Entity group to be saved to the DB
 	 * @return
-	 * @throws DynamicExtensionsApplicationException 
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public EntityGroupInterface saveEntityGroup(EntityGroupInterface entityGroupInterface)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		EntityGroupManagerInterface entityGroupManager = EntityGroupManager.getInstance();
-		EntityGroupInterface savedEntityGroup = entityGroupManager
-				.persistEntityGroup(entityGroupInterface);
-		return savedEntityGroup;
+		entityGroupManager.persistEntityGroup(entityGroupInterface);
+		return entityGroupInterface;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param groupName Name of the group
 	 * @return EntityGroup with given name
-	 * @throws DynamicExtensionsApplicationException 
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public EntityGroupInterface getEntityGroupByIdentifier(String entityGroupIdentifier)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException

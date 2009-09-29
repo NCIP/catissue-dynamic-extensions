@@ -137,8 +137,10 @@ public class XMIConstants
 	public static final String TAGGED_VALUE_ASSN_ENTITY = "association-entity";
 	public static final String ASSN_SRC_ENTITY = "SRC_ENTITY";
 	public static final String ASSN_TGT_ENTITY = "TGT_ENTITY";
-	
+
 	public final static String CONFLICTING_RULES_PRESENT = "conflictingRulesPresent";
 	public final static String XMI_IMPORT_FAILED = "xmiImportFailed";
+
+	public static final String NONE = "none";
 
 }

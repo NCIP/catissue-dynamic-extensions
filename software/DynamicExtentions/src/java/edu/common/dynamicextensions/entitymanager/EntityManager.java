@@ -130,6 +130,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.entitymanager.AbstractMetadataManager#getQueryBuilderInstance()
 	 */
+	@Override
 	protected DynamicExtensionBaseQueryBuilder getQueryBuilderInstance()
 	{
 		return queryBuilder;
@@ -190,7 +191,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	}
 
 	/**
-	 * This method is used to save the meta data information  
+	 * This method is used to save the meta data information
 	 * of the given entity without creating its data table.
 	 * @param entityInterface entity to be persisted
 	 * @return entity persisted entity
@@ -237,6 +238,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.entitymanager.AbstractMetadataManager#preProcess(edu.common.dynamicextensions.domaininterface.DynamicExtensionBaseDomainObjectInterface, java.util.List, java.util.List)
 	 */
+	@Override
 	protected void preProcess(DynamicExtensionBaseDomainObjectInterface dyExtBsDmnObj,
 			List<String> revQueries, List<String> queries) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
@@ -264,6 +266,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.entitymanager.AbstractMetadataManager#postProcess(java.util.List, java.util.List, java.util.Stack)
 	 */
+	@Override
 	protected void postProcess(List<String> queries, List<String> revQueries,
 			Stack<String> rlbkQryStack) throws DynamicExtensionsSystemException
 	{
@@ -289,6 +292,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.entitymanager.AbstractMetadataManager#LogFatalError(java.lang.Exception, edu.common.dynamicextensions.domaininterface.AbstractMetadataInterface)
 	 */
+	@Override
 	protected void logFatalError(Exception exception, AbstractMetadataInterface abstrMetadata)
 	{
 		String table = "";
@@ -326,8 +330,8 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		substParams.put("0", new NamedQueryParam(DBTypes.LONG, srcEntityId));
 		substParams.put("1", new NamedQueryParam(DBTypes.LONG, tgtEntityId));
 
-		// Following method is called to execute the stored HQL, the name of which is given as 
-		// the first parameter. The second parameter is the map which contains the actual values 
+		// Following method is called to execute the stored HQL, the name of which is given as
+		// the first parameter. The second parameter is the map which contains the actual values
 		// that are replaced for the place holders.
 		Collection<AssociationInterface> associations = executeHQL("getAssociations", substParams);
 
@@ -353,8 +357,8 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		substParams.put("0", new NamedQueryParam(DBTypes.LONG, srcEntityId));
 		substParams.put("1", new NamedQueryParam(DBTypes.LONG, tgtEntityId));
 
-		// Following method is called to execute the stored HQL, the name of which is given as 
-		// the first parameter. The second parameter is the map which contains the actual values 
+		// Following method is called to execute the stored HQL, the name of which is given as
+		// the first parameter. The second parameter is the map which contains the actual values
 		// that are replaced for the place holders.
 		Collection<AssociationInterface> associations = executeHQL(hibernatedao, "getAssociations",
 				substParams);
@@ -379,8 +383,8 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		substParams.put("0", new NamedQueryParam(DBTypes.LONG, srcEntityId));
 		substParams.put("1", new NamedQueryParam(DBTypes.LONG, tgtEntityId));
 
-		// Following method is called to execute the stored HQL, the name of which is given as 
-		// the first parameter. The second parameter is the map which contains the actual values 
+		// Following method is called to execute the stored HQL, the name of which is given as
+		// the first parameter. The second parameter is the map which contains the actual values
 		// that are replaced for the place holders.
 		Collection<Long> associationIds = executeHQL("getAssociationIds", substParams);
 
@@ -431,7 +435,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		substParams.put("0", new NamedQueryParam(DBTypes.STRING, entityName));
 		substParams.put("1", new NamedQueryParam(DBTypes.STRING, srcRoleName));
 
-		// Following method is called to execute the stored HQL, the name of which is given as 
+		// Following method is called to execute the stored HQL, the name of which is given as
 		// the first parameter. The second parameter is the map which contains the actual values
 		// that are replaced for the place holders.
 		Collection<AssociationInterface> associations = executeHQL("getAssociation", substParams);
@@ -453,7 +457,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
 		substParams.put("0", new NamedQueryParam(DBTypes.STRING, assoName));
 
-		// Following method is called to execute the stored HQL, the name of which is given as 
+		// Following method is called to execute the stored HQL, the name of which is given as
 		// the first parameter. The second parameter is the map which contains the actual values
 		// that are replaced for the place holders.
 		Collection<AssociationInterface> associations = executeHQL("getAssociationByName",
@@ -484,7 +488,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		substParams.put("1", new NamedQueryParam(DBTypes.STRING, assoName));
 		substParams.put("2", new NamedQueryParam(DBTypes.STRING, tgtEntName));
 
-		// Following method is called to execute the stored HQL, the name of which is given as 
+		// Following method is called to execute the stored HQL, the name of which is given as
 		// the first parameter. The second parameter is the map which contains the actual values
 		// that are replaced for the place holders.
 		Collection<AssociationInterface> associations = executeHQL(
@@ -513,7 +517,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
 		substParams.put("0", new NamedQueryParam(DBTypes.STRING, conceptCode));
 
-		// Following method is called to execute the stored HQL, the name of which is given as 
+		// Following method is called to execute the stored HQL, the name of which is given as
 		// the first parameter. The second parameter is the map which contains the actual values
 		// that are replaced for the place holders.
 		Collection<EntityInterface> entities = executeHQL("getEntitiesByConceptCode", substParams);
@@ -823,7 +827,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			{
 				List<Long> recordIds = null;
 
-				// In case of associations, separate queries need to be fired 
+				// In case of associations, separate queries need to be fired
 				// depending on the cardinalities.
 				AssociationInterface association = (AssociationInterface) attribute;
 				if (association.getSourceRole().getAssociationsType().equals(
@@ -1198,7 +1202,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 
 		try
 		{
-			// Shift the below code into the jdbcdao			
+			// Shift the below code into the jdbcdao
 			if (!columnNames.isEmpty())
 			{
 				StringBuffer query = new StringBuffer("UPDATE " + tableName + " SET ");
@@ -1379,7 +1383,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		return recordValues;
 	}
 
-	/** 
+	/**
 	 * The actual values of the multi select attribute are not stored in the entity's data table because there can
 	 * be more than one values associated with a particular multi select attribute. For this reason, these values
 	 * are stored in a different table. AttributeRecord is the hibernate object that maps to this table.
@@ -1403,13 +1407,13 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		Collection records = null;
 		if (hibernateDao == null)
 		{
-			// The following method takes the name of the query and the actual values 
+			// The following method takes the name of the query and the actual values
 			// for the place holders as the parameters.
 			records = executeHQL("getCollectionAttributeRecord", substParams);
 		}
 		else
 		{
-			// The following method takes the name of the query and the actual values 
+			// The following method takes the name of the query and the actual values
 			// for the place holders as the parameters.
 			records = executeHQL(hibernateDao, "getCollectionAttributeRecord", substParams);
 		}
@@ -1428,7 +1432,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 * @throws SQLException
-	 * @throws DAOException 
+	 * @throws DAOException
 	 */
 	private Map<AbstractAttributeInterface, Object> getAttributeValues(List<String> selColNames,
 			String query, Map<String, AttributeInterface> columnNames, JDBCDAO... dao)
@@ -1550,7 +1554,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			}
 		}
 
-		// All objects on the UI are handled as String, so string values  
+		// All objects on the UI are handled as String, so string values
 		// of objects need to be stored in the map.
 		if (!(((AttributeInterface) attribute).getAttributeTypeInformation() instanceof FileAttributeTypeInformation)
 				&& !(((AttributeInterface) attribute).getAttributeTypeInformation() instanceof ObjectAttributeTypeInformation))
@@ -1593,7 +1597,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		Iterator<AttributeInterface> attributeIter = attributes.iterator();
 		while (attributeIter.hasNext())
 		{
-			AttributeInterface attribute = (AttributeInterface) attributeIter.next();
+			AttributeInterface attribute = attributeIter.next();
 
 			// For the other attributes, create select query.
 			String dbColumnName = attribute.getColumnProperties().getName();
@@ -1648,7 +1652,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	 * @throws SQLException
 	 * @throws IOException
 	 * @throws ClassNotFoundException
-	 * @throws DAOException 
+	 * @throws DAOException
 	 */
 	private List<EntityRecordInterface> getEntityRecordList(List<String> selColNames, String query,
 			Map<String, AttributeInterface> columnNames, EntityRecordMetadata recMetadata)
@@ -1675,7 +1679,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 				{
 					String dbColumnName = selColNames.get(i - 1);
 					Object value = getValueFromResultSet(resultSet, columnNames, dbColumnName, i);
-					AttributeInterface attribute = (AttributeInterface) columnNames
+					AttributeInterface attribute = columnNames
 							.get(dbColumnName);
 					int indexOfAttribute = recMetadata.getAttributeList().indexOf(attribute);
 					values[indexOfAttribute] = value;
@@ -1819,7 +1823,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 				Iterator<AttributeInterface> attrIter = attributes.iterator();
 				while (attrIter.hasNext())
 				{
-					AttributeInterface attribute = (AttributeInterface) attrIter.next();
+					AttributeInterface attribute = attrIter.next();
 					AttributeTypeInformationInterface typeInfo = attribute
 							.getAttributeTypeInformation();
 
@@ -2203,7 +2207,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			// In case of category creation form caption is optional.
 			if ((String) contBeans[1] != null)
 			{
-				nameValueBeans.add(new NameValueBean((String) contBeans[1], (Long) contBeans[0]));
+				nameValueBeans.add(new NameValueBean(contBeans[1], contBeans[0]));
 			}
 		}
 
@@ -2232,7 +2236,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			// In case of category creation form caption is optional.
 			if ((String) contBeans[1] != null)
 			{
-				nameValueBeans.add(new NameValueBean((String) contBeans[1], (Long) contBeans[0]));
+				nameValueBeans.add(new NameValueBean(contBeans[1], contBeans[0]));
 			}
 		}
 
@@ -2392,7 +2396,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		rootCategoryEntityId = executeHQL("getRootCategoryEntityId", substParams);
 		if (rootCategoryEntityId != null && !rootCategoryEntityId.isEmpty())
 		{
-			return (Long) rootCategoryEntityId.iterator().next();
+			return rootCategoryEntityId.iterator().next();
 		}
 		return null;
 	}
@@ -2406,7 +2410,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		containerIds = executeHQL("getContainerIdFromEntityId", substParams);
 		if (containerIds != null && !containerIds.isEmpty())
 		{
-			return (Long) containerIds.iterator().next();
+			return containerIds.iterator().next();
 		}
 		return null;
 	}
@@ -2462,10 +2466,11 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		{
 			if (!rlbkQryStack.isEmpty())
 			{
-				rollbackQueries(rlbkQryStack, (Entity) association.getEntity(), e, null);
+				rollbackQueries(rlbkQryStack, association.getEntity(), e, null);
 			}
 		}
 	}
+
 
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.entitymanager.EntityManagerInterface#associateEntityRecords(edu.common.dynamicextensions.domaininterface.AssociationInterface, java.lang.Long, java.lang.Long)
@@ -3158,7 +3163,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		catch (Exception e)
 		{
 			// If there is any exception while storing the meta data,
-			// we need to roll back the queries that were fired. 
+			// we need to roll back the queries that were fired.
 			// So calling the following method to do that.
 			//rollbackQueries(stack, entity, e, hibernateDAO);
 
@@ -3175,14 +3180,14 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		{
 			try
 			{
-				// In any case, after all the operations, hibernate session needs to be closed. 
+				// In any case, after all the operations, hibernate session needs to be closed.
 				// So this call has been added in the finally clause.
 				DynamicExtensionsUtility.closeHibernateDAO(hibernateDAO);
 			}
 			catch (DAOException e)
 			{
-				// If there is any exception while storing the meta data, 
-				// we need to roll back the queries that were fired. So calling the 
+				// If there is any exception while storing the meta data,
+				// we need to roll back the queries that were fired. So calling the
 				// following method to do that.
 				//rollbackQueries(stack, entity, e, hibernateDAO);
 				Logger.out.error("The cause of the exception is - " + e.getMessage());
@@ -3227,7 +3232,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		catch (Exception e)
 		{
 			// If there is any exception while storing the meta data,
-			// we need to roll back the queries that were fired. 
+			// we need to roll back the queries that were fired.
 			// So calling the following method to do that.
 			//rollbackQueries(stack, entity, e, hibernateDAO);
 
@@ -3442,7 +3447,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		Collection<Long> containerIds = executeHQL("getContainerIdByName", substParams);
 		if (containerIds != null && !containerIds.isEmpty())
 		{
-			containerId = (Long) containerIds.iterator().next();
+			containerId = containerIds.iterator().next();
 		}
 
 		return containerId;
@@ -3499,7 +3504,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 				substitutionParameterMap);
 		if (containerIdCollection != null && !containerIdCollection.isEmpty())
 		{
-			containerId = (Long) containerIdCollection.iterator().next();
+			containerId = containerIdCollection.iterator().next();
 		}
 
 		return containerId;
@@ -3717,7 +3722,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		rootCategoryEntityName = executeHQL("getCategoryEntityNameByCategoryEntityId", substParams);
 		if (rootCategoryEntityName != null && !rootCategoryEntityName.isEmpty())
 		{
-			return (String) rootCategoryEntityName.iterator().next();
+			return rootCategoryEntityName.iterator().next();
 		}
 		return null;
 	}

@@ -236,7 +236,7 @@ public class DynamicExtensionsUtility
 	}
 
 	/**
-	 * It will add the taggedValue to the given attribute in parameter with key "derived" and its value also"derived" 
+	 * It will add the taggedValue to the given attribute in parameter with key "derived" and its value also"derived"
 	 * @param attribute
 	 */
 	public static void addInheritedTaggedValue(AttributeInterface attribute)
@@ -405,7 +405,7 @@ public class DynamicExtensionsUtility
 
 	}
 	/**
-	 * 
+	 *
 	 * @param controlIdentifier
 	 * @param containerInterface
 	 * @return
@@ -440,7 +440,7 @@ public class DynamicExtensionsUtility
 
 	}
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public static ContainerInterface getContainerForAbstractEntity(AbstractEntityInterface abstractEntityInterface)
@@ -934,7 +934,7 @@ public class DynamicExtensionsUtility
 		EntityInterface targetEntity = association.getTargetEntity();
 		if (entityList.contains(targetEntity))
 		{
-			association.setTargetEntity((EntityInterface) entityList.get(entityList
+			association.setTargetEntity(entityList.get(entityList
 					.indexOf(targetEntity)));
 			return;
 		}
@@ -943,7 +943,7 @@ public class DynamicExtensionsUtility
 			EntityInterface entity = tagretEntityAssociation.getTargetEntity();
 			if (entityList.contains(entity))
 			{
-				tagretEntityAssociation.setTargetEntity((EntityInterface) entityList.get(entityList
+				tagretEntityAssociation.setTargetEntity(entityList.get(entityList
 						.indexOf(entity)));
 			}
 		}
@@ -1407,7 +1407,7 @@ public class DynamicExtensionsUtility
 
 			if (entityGroupCollection != null && !entityGroupCollection.isEmpty())
 			{
-				entityGroup = (EntityGroupInterface) entityGroupCollection.iterator().next();
+				entityGroup = entityGroupCollection.iterator().next();
 			}
 		}
 		catch (BizLogicException e)
@@ -1547,10 +1547,10 @@ public class DynamicExtensionsUtility
 	}
 
 	/**
-	 * This method populates the constraint properties for the childEntity 
+	 * This method populates the constraint properties for the childEntity
 	 * @param childEntity whose constraint properties is to be updated
-	 * @param isAddColumnForInheritance 
-	 * @throws DynamicExtensionsSystemException 
+	 * @param isAddColumnForInheritance
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public static void getConstraintKeyPropertiesForInheritance(EntityInterface childEntity,
 			boolean isAddColumnForInheritance) throws DynamicExtensionsSystemException
@@ -1583,11 +1583,11 @@ public class DynamicExtensionsUtility
 	}
 
 	/**
-	 * This method populates the constraint properties of the child depending on the parentEntity primary key 
+	 * This method populates the constraint properties of the child depending on the parentEntity primary key
 	 * @param childEntity whose constraintProperties is to be populated
 	 * @param parentEntity
-	 * @param isAddColumnForInheritance 
-	 * @throws DynamicExtensionsSystemException 
+	 * @param isAddColumnForInheritance
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private static void getConstraintKeyProperties(EntityInterface childEntity,
 			EntityInterface parentEntity, boolean isAddColumnForInheritance)
@@ -1637,11 +1637,11 @@ public class DynamicExtensionsUtility
 
 	/**
 	 * This method sets the constraintProperties of the association depending
-	 * on weather it is edited one or not 
-	 * 
+	 * on weather it is edited one or not
+	 *
 	 * @param association
 	 * @return ConstraintPropertiesInterface
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public static ConstraintPropertiesInterface getConstraintPropertiesForAssociation(
 			AssociationInterface association) throws DynamicExtensionsSystemException
@@ -1682,8 +1682,8 @@ public class DynamicExtensionsUtility
 	}
 
 	/**
-	 * It will verify weather the attributeColl is not empty 
-	 * @param attributeColl collection of attribute to check 
+	 * It will verify weather the attributeColl is not empty
+	 * @param attributeColl collection of attribute to check
 	 * @throws DynamicExtensionsSystemException if attributeColl is Empty
 	 */
 	private static boolean isPrimaryKeyAttributeCollectionEmpty(
@@ -1699,10 +1699,10 @@ public class DynamicExtensionsUtility
 
 	/**
 	 * This method sets the constraintProperties of the association depending on
-	 * whether the association is one-to-one, one-to-many or many-to-one. 
+	 * whether the association is one-to-one, one-to-many or many-to-one.
 	 * @param association
 	 * @return
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private static ConstraintPropertiesInterface getConstraintKeyPropertiesForAssociation(
 			AssociationInterface association) throws DynamicExtensionsSystemException
@@ -1916,7 +1916,7 @@ public class DynamicExtensionsUtility
 		JDBCDAO jdbcDao = null;
 		try
 		{
-			jdbcDao = (JDBCDAO) DAOConfigFactory.getInstance().getDAOFactory(appName).getJDBCDAO();
+			jdbcDao = DAOConfigFactory.getInstance().getDAOFactory(appName).getJDBCDAO();
 		}
 		catch (DAOException e)
 		{
@@ -2006,16 +2006,16 @@ public class DynamicExtensionsUtility
 	}
 
 	/**
-	 * If a sub-form is selected using the XML tree, and its name is changed, 
+	 * If a sub-form is selected using the XML tree, and its name is changed,
 	 * and if an entity already exists with the same name, then throw an exception.
-	 * e.g. If a new entity group by the name 'TestGroup' is added and a new form 
+	 * e.g. If a new entity group by the name 'TestGroup' is added and a new form
 	 * by the name 'FA' is added, and a sub form by the name 'FB' is added to 'FA',
-	 * and previous is clicked, 'FB' is selected from XML tree and name of 'FB' 
-	 * is changed to 'FA', then this block is executed. 
+	 * and previous is clicked, 'FB' is selected from XML tree and name of 'FB'
+	 * is changed to 'FA', then this block is executed.
 	 * also if a new entity group by the name 'TestGroup' is added and a new form by the
 	 * name 'FA' is added and a sub form 'FB' is added to 'FA' and 'FA' is saved. Then in
-	 * edit mode, 'FB' is opened again and its name is changed to 'FA', then this block 
-	 * is executed. Call delegation from editSubForm method of ApplyFormDefinitionAction or 
+	 * edit mode, 'FB' is opened again and its name is changed to 'FA', then this block
+	 * is executed. Call delegation from editSubForm method of ApplyFormDefinitionAction or
 	 * call delegation from addSubForm method of ApplyFormDefinitionAction.
 	 * @param entityGroup
 	 * @param caption
@@ -2033,14 +2033,14 @@ public class DynamicExtensionsUtility
 	}
 
 	/**
-	 * If a new sub-form is being added, and if an entity with the same name 
+	 * If a new sub-form is being added, and if an entity with the same name
 	 * already exists in the entity group, then throw an exception.
-	 * e.g. If a new entity group by the name 'TestGroup' is added and a new form 
+	 * e.g. If a new entity group by the name 'TestGroup' is added and a new form
 	 * by the name 'FA' is added, and a sub-form by the same name 'FA' is added to
 	 * main form 'FA', then this block is executed. Call delegation from addSubForm
 	 * method of ApplyFormDefinitionAction.
-	 * e.g. If a new entity group by the name 'TestGroup' is added and a new form 
-	 * by the name 'FA' is added, and a sub form by the name 'FB' is added to 
+	 * e.g. If a new entity group by the name 'TestGroup' is added and a new form
+	 * by the name 'FA' is added, and a sub form by the name 'FB' is added to
 	 * main form 'FA', then this block is executed. Call delegation from addSubForm
 	 * method of ApplyFormDefinitionAction.
 	 * @param entityGroup
@@ -2065,11 +2065,11 @@ public class DynamicExtensionsUtility
 
 	/**
 	 * If a entity whose parent is a persistent object is selected using the XML tree
-	 * and its name is not changed, then check if the entity already exists 
+	 * and its name is not changed, then check if the entity already exists
 	 * and if it exists, then throw an exception.
 	 * e.g. If a new entity group by the name 'TestGroup' is added and a new form by the
 	 * name 'FA' is added, or if 'FA' is previously saved and a sub form 'FB' is added
-	 * to 'FA', then this block is executed. Call delegation from applyFormDefinition 
+	 * to 'FA', then this block is executed. Call delegation from applyFormDefinition
 	 * method of ApplyFormDefinitionAction
 	 * @param entityGroup
 	 * @param formName

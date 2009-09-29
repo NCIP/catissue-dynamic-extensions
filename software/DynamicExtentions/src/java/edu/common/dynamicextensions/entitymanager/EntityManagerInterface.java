@@ -48,7 +48,7 @@ public interface EntityManagerInterface
 			DynamicExtensionsApplicationException;
 
 	/**
-	 * This method is used to save the meta data information  
+	 * This method is used to save the meta data information
 	 * of the given entity without creating its data table.
 	 * @param entityInterface entity to be persisted
 	 */
@@ -359,6 +359,7 @@ public interface EntityManagerInterface
 	void addAssociationColumn(AssociationInterface association)
 			throws DynamicExtensionsSystemException;
 
+
 	/**
 	 * @param associationInterface
 	 * @param sourceEntityRecordId
@@ -479,9 +480,9 @@ public interface EntityManagerInterface
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
-	 * @throws DAOException 
-	 * @throws SQLException 
-	 * @throws IOException 
+	 * @throws DAOException
+	 * @throws SQLException
+	 * @throws IOException
 	 */
 	FileAttributeRecordValue getFileAttributeRecordValueByRecordId(AttributeInterface attribute,
 			Long recordId) throws DynamicExtensionsSystemException,

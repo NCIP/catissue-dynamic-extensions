@@ -37,12 +37,10 @@ import org.omg.uml.foundation.core.Generalization;
 import org.omg.uml.foundation.core.ModelElement;
 import org.omg.uml.foundation.core.UmlAssociation;
 import org.omg.uml.foundation.core.UmlClass;
-import org.omg.uml.modelmanagement.UmlPackage;
 import org.openide.util.Lookup;
 
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
-import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.wustl.common.util.logger.Logger;
 
@@ -50,12 +48,13 @@ import edu.wustl.common.util.logger.Logger;
  * @author preeti_lodha
  * @author ashish_gupta
  *
- * Utility functions for XMI import/XMI 
+ * Utility functions for XMI import/XMI
  */
 public class XMIUtilities
 {/*
  //Common Utility functions
  */
+
 
 	/**
 	 * @return MDRepository object
@@ -65,19 +64,10 @@ public class XMIUtilities
 		return MDRManager.getDefault().getDefaultRepository();
 	}
 
-	/**
-	 * Get UML Package
-	 * @param repository
-	 * @param extent
-	 * @return
-	 */
-	public static RefPackage getUMLPackage(MDRepository repository, String extent)
-	{
-		return null;
-	}
+
 
 	/**
-	 * Get MOF Package 
+	 * Get MOF Package
 	 * @param repository
 	 * @param extent
 	 * @return
@@ -87,16 +77,6 @@ public class XMIUtilities
 		return null;
 	}
 
-	//XMI Export Related
-	/**
-	 * 
-	 * @param entityGroup
-	 * @return
-	 */
-	public static UmlPackage getUMLPackage(EntityGroupInterface entityGroup)
-	{
-		return null;
-	}
 
 	/**
 	 * Return a UML Class object for given Entity Domain Object
@@ -109,7 +89,7 @@ public class XMIUtilities
 	}
 
 	/**
-	 * 
+	 *
 	 * @param attribute
 	 * @return
 	 */
@@ -136,11 +116,12 @@ public class XMIUtilities
 
 	public static String getClassNameForEntity(EntityInterface entity)
 	{
+		String name = null;
 		if (entity != null)
 		{
-			return entity.getName();
+			name = entity.getName();
 		}
-		return null;
+		return name;
 	}
 
 	/**
@@ -148,11 +129,12 @@ public class XMIUtilities
 	 */
 	public static String getAttributeName(AttributeInterface attribute)
 	{
+		String name = null;
 		if (attribute != null)
 		{
-			return attribute.getName();
+			name= attribute.getName();
 		}
-		return null;
+		return name;
 	}
 
 	/***
@@ -218,7 +200,7 @@ public class XMIUtilities
 			Source xsltSource = new StreamSource(xsltFileStream);
 			FileOutputStream targetFile = new FileOutputStream(targetXmiFileName);
 			Result result = new StreamResult(targetFile);
-			//create an instance of TransformerFactory 
+			//create an instance of TransformerFactory
 			TransformerFactory transFact = TransformerFactory.newInstance();
 			if ((transFact != null) && (xsltSource != null) && (xmlSource != null))
 			{
@@ -264,7 +246,7 @@ public class XMIUtilities
 	}
 
 	/**
-	 * This method deletes unwanted repository files 
+	 * This method deletes unwanted repository files
 	 */
 	public static void cleanUpRepository()
 	{
@@ -290,27 +272,7 @@ public class XMIUtilities
 		Collection atts = new ArrayList();
 		if (includeInherited)
 		{
-			Map attsMap = new HashMap();
-			UmlClass superClass = klass;
-			do
-			{
-				for (Iterator i = superClass.getFeature().iterator(); i.hasNext();)
-				{
-					Object o = i.next();
-					if (o instanceof Attribute)
-					{
-						Attribute att = (Attribute) o;
-						if (attsMap.get(att.getName()) == null)
-						{
-							attsMap.put(att.getName(), att);
-						}
-					}
-				}
-				superClass = getSuperClass(superClass);
-			}
-			while (superClass != null);
-
-			atts = attsMap.values();
+			atts = getAttributeCollectionWithInheritedAttr(klass);
 		}
 		else
 		{
@@ -323,6 +285,33 @@ public class XMIUtilities
 				}
 			}
 		}
+		return atts;
+	}
+
+	private static Collection getAttributeCollectionWithInheritedAttr(UmlClass klass)
+	{
+		Collection atts;
+		Map attsMap = new HashMap();
+		UmlClass superClass = klass;
+		do
+		{
+			for (Iterator i = superClass.getFeature().iterator(); i.hasNext();)
+			{
+				Object obj = i.next();
+				if (obj instanceof Attribute)
+				{
+					Attribute att = (Attribute) obj;
+					if (attsMap.get(att.getName()) == null)
+					{
+						attsMap.put(att.getName(), att);
+					}
+				}
+			}
+			superClass = getSuperClass(superClass);
+		}
+		while (superClass != null);
+
+		atts = attsMap.values();
 		return atts;
 	}
 

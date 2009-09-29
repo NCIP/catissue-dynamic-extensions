@@ -82,6 +82,7 @@ import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationDirection;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
+import edu.common.dynamicextensions.xmi.DynamicQueryList;
 import edu.common.dynamicextensions.xmi.XMIConfiguration;
 import edu.common.dynamicextensions.xmi.XMIConstants;
 import edu.common.dynamicextensions.xmi.XMIUtilities;
@@ -146,27 +147,37 @@ public class XMIImportProcessor
 	/**
 	 * List for retrieved containers corresponding to entity group.
 	 */
-	private Collection<ContainerInterface> retrievedContainerList = new ArrayList<ContainerInterface>();
+	private final Collection<ContainerInterface> retrievedContainerList = new ArrayList<ContainerInterface>();
 
 	/**
-	 * It will store the list of primary key attribute names of the entity which are belonging to the another entity 
+	 * It will store the list of primary key attribute names of the entity which are belonging to the another entity
 	 */
-	private Map<EntityInterface, List<String>> entityVsPrimaryKeyNameList = new HashMap<EntityInterface, List<String>>();
+	private final Map<EntityInterface, List<String>> entityVsPrimaryKeyNameList = new HashMap<EntityInterface, List<String>>();
 
-	private List<ContainerInterface> mainContainerList = new ArrayList<ContainerInterface>();
+	private final List<ContainerInterface> mainContainerList = new ArrayList<ContainerInterface>();
 
-	private Map<AttributeInterface, Map<String, String>> attrVsMapTagValues = new HashMap<AttributeInterface, Map<String, String>>();
+	private final Map<AttributeInterface, Map<String, String>> attrVsMapTagValues = new HashMap<AttributeInterface, Map<String, String>>();
 
-	private Map<EntityInterface, Map<String, String>> entityVsMapTagValues = new HashMap<EntityInterface, Map<String, String>>();
+	private final Map<EntityInterface, Map<String, String>> entityVsMapTagValues = new HashMap<EntityInterface, Map<String, String>>();
 
-	private Map<AssociationInterface, Map<String, String>> associationVsMapTagValues = new HashMap<AssociationInterface, Map<String, String>>();
+	private final Map<AssociationInterface, Map<String, String>> associationVsMapTagValues = new HashMap<AssociationInterface, Map<String, String>>();
 
-	private Map<String, Map<String, String>> columnNameVsMapTagValues = new HashMap<String, Map<String, String>>();
+	private final Map<String, Map<String, String>> columnNameVsMapTagValues = new HashMap<String, Map<String, String>>();
 
-	private Map<AssociationInterface, String> multiselectMigartionScripts = new HashMap<AssociationInterface, String>();
+	private final Map<AssociationInterface, String> multiselectMigartionScripts = new HashMap<AssociationInterface, String>();
 
-	private Map<String, Set<String>> entityNameVsAttributeNames = new HashMap<String, Set<String>>();
+	private final Map<String, Set<String>> entityNameVsAttributeNames = new HashMap<String, Set<String>>();
 
+
+	public Map<AssociationInterface, String> getMultiselectMigartionScripts()
+	{
+		return multiselectMigartionScripts;
+	}
+
+	public List<ContainerInterface> getMainContainerList()
+	{
+		return mainContainerList;
+	}
 	/**
 	 * @return
 	 */
@@ -186,15 +197,19 @@ public class XMIImportProcessor
 
 	/**
 	 * It will import the given xmi & create the DynamicExtensions Accordingly.
-	 * @param umlPackage
-	 * @param entityGroupName the Name of the group which is to be Created For DynamicExtensions 
+	 * If hibernateDao is passed as argument then it will only save the model using that DAO & will return the
+	 * QueryList outSide to the Caller.
+	 * Its the responsibility of the caller to create all the tables just before commiting the Work.
+	 * @param umlPackage umlPackage
+	 * @param entityGroupName the Name of the group which is to be Created For DynamicExtensions
 	 * @param packageName name of the package which is to be imported From EA Model
 	 * @param containerNames list of the names of Entities which are to be processed
-	 * @return
-	 * @throws Exception
+	 * @param hibernatedao dao
+	 * @return dynamic QueryList for table creation & their rollback queries
+	 * @throws Exception exception
 	 */
-	public List<ContainerInterface> processXmi(UmlPackage umlPackage, String entityGroupName,
-			String packageName, List<String> containerNames) throws Exception
+	public DynamicQueryList processXmi(UmlPackage umlPackage, String entityGroupName,
+			String packageName, List<String> containerNames, HibernateDAO... hibernatedao) throws Exception
 	{
 		List<UmlClass> umlClassColl = new ArrayList<UmlClass>();
 		List<UmlAssociation> umlAssociationColl = new ArrayList<UmlAssociation>();
@@ -212,7 +227,7 @@ public class XMIImportProcessor
 
 		validate();
 
-		List<EntityGroupInterface> entityGroupColl = retrieveEntityGroup(entityGroupName);
+		List<EntityGroupInterface> entityGroupColl =retrieveEntityGroup(entityGroupName);
 
 		if (entityGroupColl == null || entityGroupColl.isEmpty())
 		{//Add
@@ -248,7 +263,7 @@ public class XMIImportProcessor
 			}
 			EntityInterface entity = null;
 			//If umlclass name is among  the skip entity names ,then it means that the entity is a part of default catissuepackage.
-			//so get it from the skip entity group,do not create the new entity 
+			//so get it from the skip entity group,do not create the new entity
 
 			if (!xmiConfigurationObject.getSkipEntityNames().isEmpty()
 					&& isSkipEntity(umlClass.getName(),
@@ -286,7 +301,7 @@ public class XMIImportProcessor
 			populateEntityProperties(entity, umlClass, entityVsMapTagValues);
 			//For System generated models ,which are not of CATISSUE default package set isDefaultPackage =False
 			//This is the case when we import the exported Catissue dynamic model ,there package is not  CATISSUE default package,but they are sysgenerated
-			//By default this flag will be true. 
+			//By default this flag will be true.
 
 			//			For static models
 			if (xmiConfigurationObject.isEntityGroupSystemGenerated())
@@ -321,18 +336,17 @@ public class XMIImportProcessor
 			populateMultiselectAttribute(entity);
 		}
 
-		// Populate entity for generating constraint properties if it has any parent set.
-		XMIImporterUtil.populateEntityForConstraintProperties(entityGroup, xmiConfigurationObject);
-
 		// Add associations.
 		addAssociation(umlAssociationColl, parentIdVsChildrenIds);
 
-		//TODO Uncomment check about processinheritance method call 
+		//TODO Uncomment check about processinheritance method call
 		if (!umlGeneralisationColl.isEmpty())
 		{
 			processInheritance(parentIdVsChildrenIds);
 			//			markInheritedAttributes(entityGroup);
 		}
+		// Populate entity for generating constraint properties if it has any parent set.
+		XMIImporterUtil.populateEntityForConstraintProperties(entityGroup, xmiConfigurationObject);
 
 		//Retrieving  all containers corresponding to the given entity group.
 		if (entityGroup.getId() != null)
@@ -364,31 +378,32 @@ public class XMIImportProcessor
 				xmiConfigurationObject.getDefaultPackagePrefix());
 
 		// Persist container in DB.
-		Logger.out.info("Now creating DE tables....");
+		Logger.out.info("Now SAVING DYNAMIC MODEL....");
 		Logger.out.info(" ");
-		processPersistence(containerNames, xmiConfigurationObject.isEntityGroupSystemGenerated(),
+		DynamicQueryList dynamicQueryList = processPersistence(containerNames, xmiConfigurationObject.isEntityGroupSystemGenerated(),
 				xmiConfigurationObject.isCreateTable(), xmiConfigurationObject.isDefaultPackage(),
-				xmiConfigurationObject.getDefaultPackagePrefix());
+				xmiConfigurationObject.getDefaultPackagePrefix(),hibernatedao);
 
 		List<Long> newEntitiesIds = xmiConfigurationObject.getNewEntitiesIds();
 		for (EntityInterface newEntity : newEntities)
 		{
 			newEntitiesIds.add(newEntity.getId());
 		}
-
-		// Execute data migration scripts for attributes that were changed from a normal attribute to 
-		// a multiselect attribute.
-		List<String> multiSelMigrationQueries = EntityManagerUtil
+		// Execute data migration scripts for attributes that were changed from a normal attribute to
+		// a multiselect attribute.IF dao is provided then its the resposibility of the host to execute these Queries.
+		if(hibernatedao==null || hibernatedao.length==0)
+		{
+			List<String> multiSelMigrationQueries = EntityManagerUtil
 				.updateSqlScriptToMigrateOldDataForMultiselectAttribute(multiselectMigartionScripts);
-		EntityManagerUtil.executeDML(multiSelMigrationQueries);
-
-		return mainContainerList;
+			EntityManagerUtil.executeDML(multiSelMigrationQueries);
+		}
+		return dynamicQueryList;
 	}
 
 	/**
 	 * @param umlAssociationColl
 	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException 
+	 * @throws DynamicExtensionsApplicationException
 	 */
 	private void addAssociation(List<UmlAssociation> umlAssociationColl,
 			Map<String, List<String>> parentIdVsChildrenIds)
@@ -431,7 +446,7 @@ public class XMIImportProcessor
 	}
 
 	/**
-	 * It will search the primary key attribute which is in another entity and will add it to own 
+	 * It will search the primary key attribute which is in another entity and will add it to own
 	 * composite collection
 	 * @param entity whose composite key is to be processed
 	 * @throws DynamicExtensionsSystemException
@@ -473,7 +488,7 @@ public class XMIImportProcessor
 	 * @param umlClass
 	 * @param entityVsMapTagValues2
 	 * @throws DynamicExtensionsApplicationException
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private void populateEntityProperties(EntityInterface entity, UmlClass umlClass,
 			Map<EntityInterface, Map<String, String>> entityVsMapTagValues)
@@ -506,13 +521,13 @@ public class XMIImportProcessor
 
 	/**
 	 * It will check the tagValue & depending on it will make the corresponding
-	 * attribute as primary key if it is in the same entity and if it is in different entity 
+	 * attribute as primary key if it is in the same entity and if it is in different entity
 	 * it will save its name in the list which is stored in the entityVsPrimaryKeyNameList map
 	 * which will be processed when processing the composite key for the entity
-	 * @param entity whose primary key is to be processed 
+	 * @param entity whose primary key is to be processed
 	 * @param taggedValueMap map of tagKey and tagValue of the entity
 	 * @throws DynamicExtensionsApplicationException
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private void processPrimaryKey(EntityInterface entity, Map<String, String> taggedValueMap)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
@@ -521,7 +536,7 @@ public class XMIImportProcessor
 		AttributeInterface primaryAttribute = null;
 		Collection<AttributeInterface> primKeyAttrColl = entity.getPrimaryKeyAttributeCollection();
 		resetPrimaryKeyAttributes(primKeyAttrColl);
-		//Deleting primary key collection only in case of edited xmi true and isAddIdAttribute=false 
+		//Deleting primary key collection only in case of edited xmi true and isAddIdAttribute=false
 		//This is specific to CIDER only.As inside Clinportal and Catissue the primarykey will never going to be edited,
 		//so keep the primary key collection  same ,do not clear it.
 
@@ -530,7 +545,7 @@ public class XMIImportProcessor
 			primKeyAttrColl.clear();
 		}
 
-		primaryKey = (String) taggedValueMap.get(XMIConstants.TAGGED_VALUE_PRIMARYKEY);
+		primaryKey = taggedValueMap.get(XMIConstants.TAGGED_VALUE_PRIMARYKEY);
 		List<String> primaryKeyAttributeNameList = new ArrayList<String>();
 		if (primaryKey != null && !"".equals(primaryKey))
 		{
@@ -944,10 +959,10 @@ public class XMIImportProcessor
 	 * name,description,semanticMetadata,permissible values
 	 * @param umlClass
 	 *            The UMLClass from which to form the Dynamic Extension Entity
-	 * @param umlPackage 
+	 * @param umlPackage
 	 * @return the unsaved entity for given UML class
-	 * @throws DynamicExtensionsSystemException 
-	 * @throws DynamicExtensionsApplicationException 
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
 	 */
 	private EntityInterface createEntity(UmlClass umlClass)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
@@ -970,8 +985,8 @@ public class XMIImportProcessor
 	/**
 	 * @param attrColl
 	 * @param entity
-	 * @throws DynamicExtensionsSystemException 
-	 * @throws DynamicExtensionsApplicationException 
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
 	 */
 	private AttributeInterface createAttribute(Attribute umlAttribute, EntityInterface entity)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
@@ -1044,8 +1059,8 @@ public class XMIImportProcessor
 	 * @param klass
 	 * @param entity in which to add the attributes
 	 * @return collection of attributes names
-	 * @throws DynamicExtensionsSystemException 
-	 * @throws DynamicExtensionsApplicationException 
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
 	 */
 	public Collection<String> addAttributes(UmlClass klass, EntityInterface entity)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
@@ -1126,7 +1141,7 @@ public class XMIImportProcessor
 	 * addMultiselectAttribute.
 	 * @param attribute
 	 * @param umlAttribute
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private AssociationInterface addMultiselectAttribute(AttributeInterface attribute,
 			Attribute umlAttribute, Map<String, String> taggedValueMap, EntityInterface entity)
@@ -1169,7 +1184,7 @@ public class XMIImportProcessor
 					Cardinality.MANY));
 		}
 		entity.addAbstractAttribute(association);
-		// Commented the line as it does not set constraint properties -- because the primarykey attribute 
+		// Commented the line as it does not set constraint properties -- because the primarykey attribute
 		// collection is empty at this stage
 		//association.populateAssociationForConstraintProperties();
 		Map<String, String> valueMap = new HashMap<String, String>();
@@ -1238,14 +1253,14 @@ public class XMIImportProcessor
 						// it will retrieve the tag which is already present on the  abstrMetaDataObj in case of edit xmi
 						tag = getTaggedValueObject(abstrMetaDataObj.getTaggedValueCollection(),
 								tagName);
-						//if tag not found then create the new one 
+						//if tag not found then create the new one
 						if (tag == null)
 						{
 							tag = factory.createTaggedValue();
 							tag.setKey(tagName);
 							tag.setValue(value);
 						}
-						// if tag found then only change the value of the tag with current value.  
+						// if tag found then only change the value of the tag with current value.
 						else
 						{
 							tag.setValue(value);
@@ -1454,8 +1469,8 @@ public class XMIImportProcessor
 	 * It taggs replicated association to identify them later on and mark them inherited.
 	 * Also a back pointer is added to replicated association go get original association.
 	 * @param umlAssociation umlAssociation to process
-	 * @throws DynamicExtensionsSystemException 
-	 * @throws DynamicExtensionsApplicationException 
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
 	 */
 	private void addAssociation(UmlAssociation umlAssociation, HibernateDAO hibernateDao,
 			Map<String, List<String>> parentIdVsChildrenIds)
@@ -1811,7 +1826,7 @@ public class XMIImportProcessor
 	/**
 	 * Processes inheritance relation ship present in domain model
 	 * @param parentIdVsChildrenIds Map with key as UML-id of parent class and value as list of UML-id of all children classes.
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private void processInheritance(Map<String, List<String>> parentIdVsChildrenIds)
 			throws DynamicExtensionsSystemException
@@ -2072,8 +2087,8 @@ public class XMIImportProcessor
 				controlModel.setName(editedAttribute.getName());
 				setTaggedValue(controlModel, editedAttribute);
 
-				// If original attribute's default value is "--Select--", and attribute default value of  
-				// control model is "" since no tag has been specified, then keep the 
+				// If original attribute's default value is "--Select--", and attribute default value of
+				// control model is "" since no tag has been specified, then keep the
 				// attribute default value as "--Select--"
 				setDefaultValueForAttribute(controlModel, originalAttributeColl, editedAttribute);
 
@@ -2112,7 +2127,7 @@ public class XMIImportProcessor
 	}
 
 	/**
-	 * This method sets the default value of attribute in following scenario. If original attribute's 
+	 * This method sets the default value of attribute in following scenario. If original attribute's
 	 * default value is "--Select--", and attribute default value of control model is ""
 	 * since no tag has been specified, then keep the attribute default value as "--Select--"
 	 * @param controlModel
@@ -2157,7 +2172,7 @@ public class XMIImportProcessor
 	}
 
 	/**
-	 * 
+	 *
 	 * @param attribute
 	 * @param controlModel
 	 */
@@ -2591,11 +2606,11 @@ public class XMIImportProcessor
 	}
 
 	/**
-	 * @param attributeInterface 
+	 * @param attributeInterface
 	 * @param taggedValueMap
 	 * @return
-	 * @throws DynamicExtensionsSystemException 
-	 * @throws DynamicExtensionsApplicationException 
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
 	 */
 	private String getDefaultValueForBooleanTagValue(
 			AbstractAttributeInterface abstractAttributeInterface,
@@ -2802,7 +2817,7 @@ public class XMIImportProcessor
 		{
 			EntityInterface parent = umlClassIdVsEntity.get(entry.getKey());
 
-			List parentContainerList = (ArrayList) entityNameVsContainers.get(parent.getName());
+			List parentContainerList = entityNameVsContainers.get(parent.getName());
 			ContainerInterface parentContainer = null;
 			if (parentContainerList == null || parentContainerList.isEmpty())
 			{
@@ -2816,7 +2831,7 @@ public class XMIImportProcessor
 			{
 				EntityInterface child = umlClassIdVsEntity.get(childId);
 
-				List childContainerList = (ArrayList) entityNameVsContainers.get(child.getName());
+				List childContainerList = entityNameVsContainers.get(child.getName());
 				ContainerInterface childContainer = null;
 				if (childContainerList == null || childContainerList.isEmpty())
 				{
@@ -2841,7 +2856,7 @@ public class XMIImportProcessor
 		Set<String> entityIdKeySet = entityNameVsContainers.keySet();
 		for (String entityId : entityIdKeySet)
 		{
-			List containerList = (ArrayList) entityNameVsContainers.get(entityId);
+			List containerList = entityNameVsContainers.get(entityId);
 			ContainerInterface containerInterface = (ContainerInterface) containerList.get(0);
 			Collection<ControlInterface> controlCollection = containerInterface
 					.getControlCollection();
@@ -2856,7 +2871,7 @@ public class XMIImportProcessor
 
 					String targetEntityId = associationInterface.getTargetEntity().getName();
 
-					List targetContainerInterfaceList = (ArrayList) entityNameVsContainers
+					List targetContainerInterfaceList = entityNameVsContainers
 							.get(targetEntityId);
 
 					//					TODO remove this condition to delete association with deleted or renamed entities.
@@ -3379,11 +3394,13 @@ public class XMIImportProcessor
 	 * @param isCreateTable
 	 * @param isDefaultPackage
 	 * @param defaultPackagePrefix
+	 * @param hibernatedao
+	 * @param hibernatedao
 	 * @throws Exception
 	 */
-	protected void processPersistence(List<String> containerNames,
+	protected DynamicQueryList processPersistence(List<String> containerNames,
 			boolean isEntityGroupSystemGenerated, boolean isCreateTable, boolean isDefaultPackage,
-			String defaultPackagePrefix) throws Exception
+			String defaultPackagePrefix, HibernateDAO... hibernatedao) throws Exception
 	{
 		//Collection<ContainerInterface> containerColl = new HashSet<ContainerInterface>();
 
@@ -3400,7 +3417,7 @@ public class XMIImportProcessor
 					containerName = defaultPackagePrefix + containerName;
 				}
 			}
-			List containerList = (ArrayList) entityNameVsContainers.get(containerName);
+			List containerList = entityNameVsContainers.get(containerName);
 			if (containerList == null || containerList.size() < 1)
 			{
 				throw new DynamicExtensionsApplicationException("The container name "
@@ -3410,7 +3427,7 @@ public class XMIImportProcessor
 			ContainerInterface containerInterface = (ContainerInterface) containerList.get(0);
 			mainContainerList.add(containerInterface);
 		}
-
+		DynamicQueryList dynamicQueryList ;
 		EntityGroupManagerInterface entityGroupManager = EntityGroupManager.getInstance();
 		try
 		{
@@ -3423,15 +3440,15 @@ public class XMIImportProcessor
 			if (xmiConfigurationObject.isEntityGroupSystemGenerated()
 					|| !xmiConfigurationObject.isCreateTable())
 			{//Static Model. Hence saving only metadata
-				entityGroupManager.persistEntityGroupMetadata(entityGroup);
+				dynamicQueryList =entityGroupManager.persistEntityGroupMetadata(entityGroup,hibernatedao);
 				if (skipentityGroup != null)
 				{
-					entityGroupManager.persistEntityGroupMetadata(skipentityGroup);
+					dynamicQueryList = entityGroupManager.persistEntityGroupMetadata(skipentityGroup,hibernatedao);
 				}
 			}
 			else
 			{//Dynamic model
-				entityGroupManager.persistEntityGroup(entityGroup);
+				dynamicQueryList = entityGroupManager.persistEntityGroup(entityGroup,hibernatedao);
 			}
 		}
 		catch (DynamicExtensionsApplicationException e)
@@ -3442,6 +3459,7 @@ public class XMIImportProcessor
 		{
 			throw new DynamicExtensionsSystemException(e.getMessage(), e);
 		}
+		return dynamicQueryList;
 	}
 
 	/**
@@ -3572,7 +3590,7 @@ public class XMIImportProcessor
 					if (supEntityTargetEntityName.equalsIgnoreCase(assonTargetEntityName)
 							&& srcEntity.equalsIgnoreCase(assonSourceEntityName))
 					{
-						//TO DO falguni see how to set constraint properties						
+						//TO DO falguni see how to set constraint properties
 						asson.getConstraintProperties().getTgtEntityConstraintKeyProperties()
 								.getTgtForiegnKeyColumnProperties().setName(assonColName);
 						break;
@@ -3588,18 +3606,18 @@ public class XMIImportProcessor
 
 	/**
 	 * It will process the dependencies that are present in the table (in data model) & corresponding
-	 * umlClasses (in the logical model) and update the TableProperties and ColumnProperties of the 
+	 * umlClasses (in the logical model) and update the TableProperties and ColumnProperties of the
 	 * corresponding entity as given in the data model table class.
 	 * @param umlDependency
 	 * @param packageName
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private EntityInterface processDependency(Dependency umlDependency, String packageName,
 			List<String> skipEntityNames, List<String> associationName, String defaultPackagePrefix)
 			throws DynamicExtensionsSystemException
 	{
 		// here client means the dataclass which is src of dependency
-		// & supplier means the umlclass on which this dataclass depends 
+		// & supplier means the umlclass on which this dataclass depends
 		//set asson foregin key colum in updateattributecolname function.
 
 		Collection<UmlClass> clientColl = umlDependency.getClient();
@@ -3659,8 +3677,8 @@ public class XMIImportProcessor
 	 */
 	private String getAssociationTypeTV(Collection taggedValueColl)
 	{
-		//check for associationtype tag ,first check whether containment type tag is present 
-		//If not then check whether containment unspecified type tag is present 
+		//check for associationtype tag ,first check whether containment type tag is present
+		//If not then check whether containment unspecified type tag is present
 		String assnType = getTaggedValue(taggedValueColl, XMIConstants.TAGGED_VALUE_CONTAINMENT);
 		if (assnType != null && assnType.equals(""))
 		{
@@ -3704,14 +3722,14 @@ public class XMIImportProcessor
 	}
 
 	/**
-	 * It will verify weather the mapped-attributes tag is present on the newColumn Attribute 
+	 * It will verify weather the mapped-attributes tag is present on the newColumn Attribute
 	 * if present it will update the given attribute which is given in the mapped-attribute tag as a value
-	 * It will  first verify given tagValue is valid, if not will throw the exception   
+	 * It will  first verify given tagValue is valid, if not will throw the exception
 	 * @param supplierEntity the entity on which the dependency depends
-	 * @param tagNameVsTagValue map of taggedvalues of newColumn attribute 
+	 * @param tagNameVsTagValue map of taggedvalues of newColumn attribute
 	 * @param packageName package name of the current model
 	 * @param newColumn umlAttribute in the Data Model table class
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 
 	private void updateAttributeColumnName(EntityInterface supplierEntity,
@@ -3746,8 +3764,8 @@ public class XMIImportProcessor
 	}
 
 	/**
-	 * It will retrieve the attribute with the name given in token from the supplierEntity and will 
-	 * update the columnProperties. 
+	 * It will retrieve the attribute with the name given in token from the supplierEntity and will
+	 * update the columnProperties.
 	 * @param token attribute name
 	 * @param supplierEntity entity in which the attribute is to be searched
 	 * @param newColumn umlAttribute corresponding to the token attribute
@@ -3771,7 +3789,7 @@ public class XMIImportProcessor
 
 	/**
 	 * It will verify weather the token and the name are same or not.
-	 * if not will throw the exception  
+	 * if not will throw the exception
 	 * @param token
 	 * @param name
 	 * @throws DynamicExtensionsSystemException
@@ -3789,7 +3807,7 @@ public class XMIImportProcessor
 
 	/**
 	 * It will verify weather the tokens present in the packageTokenizer and tokens are same
-	 * if not will throw the exception  
+	 * if not will throw the exception
 	 * @param tokens
 	 * @param packageTokenizer
 	 * @throws DynamicExtensionsSystemException
