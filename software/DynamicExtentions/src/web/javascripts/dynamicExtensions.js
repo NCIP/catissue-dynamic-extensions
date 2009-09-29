@@ -1667,7 +1667,7 @@ function setDefaultValues(tableId, obj, containerId)
 						obj.innerHTML = replaceAll(obj.innerHTML,
 								childObjectName, str);
 					}
-					if ("auto_complete_dropdown" == childObject.id) 
+					if ("auto_complete_dropdown_"+containerId == childObject.id) 
 					{
 						var childNodes2 = childObject.childNodes;
 
@@ -1693,9 +1693,13 @@ function setDefaultValues(tableId, obj, containerId)
 			}
 			obj.innerHTML = replaceAll(obj.innerHTML, childObjectName, str);
 		}
-		if ("auto_complete_dropdown" == childObject.id) 
+		if ("auto_complete_dropdown_"+containerId == childObject.id) 
 		{
 			var childNodes2 = childObject.childNodes;
+			if(!window.component && document.all)
+			{
+				childNodes2 = document.getElementById("auto_complete_dropdown_"+containerId).childNodes;
+			}
 						var oldName = childNodes2[2].childNodes[0].childNodes[0].name;
 						var newName = oldName + "_" + rowIndex;
 						var newScript = replaceAll(childNodes2[1].innerHTML,
@@ -2565,12 +2569,7 @@ function pasteData(conatinerId_temp,cardinality_temp)
 	cardinality = cardinality_temp;
 	conatinerId = conatinerId_temp;
 	start=rowIndex*batch;
-	end = start + batch;
-
-	if( end >noOfRecordsCopied)
-	{
-		end = noOfRecordsCopied;
-	}
+	end = noOfRecordsCopied;
 	slice= chkTable.split("\n").slice(start,end);	
 
 	if(cardinality == "many")
@@ -2596,7 +2595,7 @@ function paster(response)
 	{
 		if(errors[i].length>0)
 		{
-			errorHTML +=  "<tr><th align=\"center\" class=\"font_bl_nor\"><img src=\"de/images/ic_error.gif\" alt=\"Error\" width=\"28\" height=\"25\" hspace=\"3\" align=\"absmiddle\">"
+			errorHTML +=  "<tr><th align=\"center\" class=\"font_bl_nor\"><img src=\"images/de/ic_error.gif\" alt=\"Error\" width=\"28\" height=\"25\" hspace=\"3\" align=\"absmiddle\">"
 			+errors[i]+"<br />"
 		}
 
@@ -2611,12 +2610,43 @@ function paster(response)
 
 	if(!window.Components && document.all)
 	{
-		removeElement(conatinerId+"_table");
-		//var newRow = existingTable.insertRow(-1);
 		var reg = /<SCRIPT defer>/ig
 		existingTableHTML=	existingTableHTML.replace(reg,"<SCRIPT>");
 		var replaceDiv = document.getElementById("wrapper_div_"+conatinerId);
-		replaceDiv.innerHTML = "<table id='"+conatinerId+"_table'>"+existingTableHTML+generatedHTML+"</table>";
+		var rows = existingTable.rows;
+		var divName = "";
+		divName = divName + conatinerId + "_substitutionDiv";
+		var div = document.getElementById(divName);
+		var tab = div.childNodes[0];
+		var rowTobeCopied = tab.rows[0];
+		var counter = existingTable.rows.length;
+		var cells = rowTobeCopied.cells;
+		replaceDiv.innerHTML = "<table id='"+conatinerId+"_tbl'>"+generatedHTML+"</table>";
+		var wrapperDivName = "wrapper_div_"+conatinerId;
+		var wrapperDiv = document.getElementById(wrapperDivName);
+		var newtab = wrapperDiv.childNodes[0];
+		for(j=0; j<newtab.rows.length; j++)
+		{
+			var newRow = existingTable.insertRow(-1);
+			if(counter%2==0)
+			{
+				newRow.className="td_color_f0f2f6";
+			}
+			else
+			{
+				newRow.className="formField_withoutBorder";
+			}
+			var newRowTobeCopied = newtab.rows[j];
+			var newcells = newRowTobeCopied.cells;
+			for(i = 0 ; i < newcells.length ; i++)
+			{
+				var newCell = newRow.insertCell(i);
+				newCell.className = newcells[i].className;
+				newCell.innerHTML = newcells[i].innerHTML;
+			}
+			counter = existingTable.rows.length;
+		}
+		replaceDiv.innerHTML ="";
 	}
 	else
 	{
@@ -2634,7 +2664,7 @@ function paster(response)
 
 function executeComboScripts()
 {
-	var temp = document.getElementsByName("auto_complete_dropdown");
+	var temp = document.getElementsByName("auto_complete_dropdown_"+conatinerId);
 	for(var i = rowCount+1;i<temp.length;i++)
 	{
 		eval(temp[i].childNodes[1].innerHTML);
@@ -2643,34 +2673,26 @@ function executeComboScripts()
 
 function executeCombos()
 {
-	var temp = document.getElementsByName("auto_complete_dropdown");
+	var temp = document.getElementsByName("auto_complete_dropdown_"+conatinerId);
 	var newRowCount =  document.getElementById(conatinerId+"_table").rows.length -1;
 	var newRowsAdded = newRowCount -rowCount;
-	if(window.Components)
+	var length = temp.length;
+	if(length!=0)
 	{
-		var length = temp.length;
 		while(newRowsAdded!=0)
 		{
-			eval(temp[length-1].childNodes[1].innerHTML);
+			if(window.Components)
+			{
+				eval(temp[length-1].childNodes[1].innerHTML);
+			}
+			else
+			{
+				eval(temp[length-1].childNodes[2].innerHTML);
+			}
 			length = length -1;
 			newRowsAdded = newRowsAdded -1;
-		}
+		}	
 	}
-	else
-	{
-		for(var i =rowCount+1;i<temp.length;i++)
-		{
-			eval(temp[i].childNodes[1].innerHTML);
-		}
-		
-		for(var i = 0;i<=rowCount;i++)
-		{
-			
-			temp[i].childNodes[0].innerHTML=temp[i].childNodes[0].innerHTML.replace(/(<IMG).*/ig, "");
-			eval(temp[i].childNodes[1].innerHTML);
-		}
-	}
-	
 }
 
 function removeElement(id)
