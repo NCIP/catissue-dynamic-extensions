@@ -8,7 +8,7 @@
 <html>
 	<head>
 		<title>Dynamic Extensions</title>
-		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/de/css/styleSheet.css"/>
+		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/styleSheet.css"/>
 	</head>
 	<body onload = "setContextParameter('<%=request.getContextPath()%>')"; class='bodyStyle'>
 		<table width="100%" align="center">

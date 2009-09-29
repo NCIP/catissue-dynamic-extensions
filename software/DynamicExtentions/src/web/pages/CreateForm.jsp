@@ -22,13 +22,13 @@
 	<head>
 		<title>Dynamic Extensions</title>
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/styleSheet.css"/>
-		<link rel="STYLESHEET" type="text/css" href="<%=request.getContextPath()%>/de/dhtml_comp/css/dhtmlXTree.css"/>
+		<link rel="STYLESHEET" type="text/css" href="<%=request.getContextPath()%>/dhtml/de/css/dhtmlXTree.css"/>
 
 		<script src="<%=request.getContextPath()%>/javascripts/de/dynamicExtensions.js" type="text/javascript"></script>
 		<script src="<%=request.getContextPath()%>/javascripts/de/script.js" type="text/javascript"></script>
 		<script src="<%=request.getContextPath()%>/javascripts/de/ajax.js" type="text/javascript"></script>
-		<script src="<%=request.getContextPath()%>/de/dhtml_comp/jss/dhtmlXCommon.js"></script>
-		<script src="<%=request.getContextPath()%>/de/dhtml_comp/jss/dhtmlXTree.js"></script>
+		<script src="<%=request.getContextPath()%>/dhtml/de/jss/dhtmlXCommon.js"></script>
+		<script src="<%=request.getContextPath()%>/dhtml/de/jss/dhtmlXTree.js"></script>
 
 		<script>
 			resetTimeoutCounter();
@@ -46,14 +46,14 @@
 				for(var i=0;i<imSrcAr.length;i++)
 				{
 					imAr[imAr.length] = new Image();
-					imAr[imAr.length-1].src = "/de/dhtml_comp/imgs/"+imSrcAr[i]
+					imAr[imAr.length-1].src = "/dhtml/de/imgs/"+imSrcAr[i]
 				}
 			}
 			function loadCurrentEntityTree()
 			{
 				preLoadImages();
 				currentEntityTree=new dhtmlXTreeObject(document.getElementById('currentEntityTreeDiv'),"100%","100%",0);
-				currentEntityTree.setImagePath("<%=request.getContextPath()%>/de/dhtml_comp/imgs/");
+				currentEntityTree.setImagePath("<%=request.getContextPath()%>/dhtml/de/imgs/");
 				currentEntityTree.enableTreeImages(0);
 				currentEntityTree.setOnClickHandler(treeNodeSelected);
 				currentEntityTree.loadXMLString("<%=currentEntityXML%>");
@@ -62,7 +62,7 @@
 			{
 				preLoadImages();
 				definedEntitiesTree=new dhtmlXTreeObject(document.getElementById('definedEntitiesTreeDiv'),"100%","100%",0);
-				definedEntitiesTree.setImagePath("<%=request.getContextPath()%>/de/dhtml_comp/imgs/");
+				definedEntitiesTree.setImagePath("<%=request.getContextPath()%>/dhtml/de/imgs/");
 				definedEntitiesTree.enableTreeImages(0);
 				definedEntitiesTree.setOnClickHandler(definedEntitySelected);
 				definedEntitiesTree.loadXMLString("<%=definedEntitiesTreeXML%>");
