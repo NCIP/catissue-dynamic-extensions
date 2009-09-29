@@ -94,7 +94,7 @@ public class RadioButton extends Control implements RadioButtonInterface
 							+ htmlComponentName
 							+ "\">"
 							+ optionName
-							+ "</label> <img src='de/images/spacer.gif' width='2' height='2'>";
+							+ "</label> <img src='images/de/spacer.gif' width='2' height='2'>";
 				}
 				else
 				{
@@ -120,7 +120,7 @@ public class RadioButton extends Control implements RadioButtonInterface
 							+ htmlComponentName
 							+ "\">"
 							+ optionName
-							+ "</label> <img src='de/images/spacer.gif' width='2' height='2'>";
+							+ "</label> <img src='images/de/spacer.gif' width='2' height='2'>";
 				}
 			}
 		}

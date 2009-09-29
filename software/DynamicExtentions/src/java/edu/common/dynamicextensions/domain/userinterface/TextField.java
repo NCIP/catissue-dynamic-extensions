@@ -147,7 +147,7 @@ public class TextField extends Control implements TextFieldInterface
 			htmlString += "/>";
 			if (this.isCalculated != null && this.isCalculated)
 			{
-				htmlString += "<img src=\"de/images/b_calculate.gif\" alt=\"Calculate\" width=\"62\" height=\"21\" hspace=\"3\" align=\"absmiddle\" onClick=\"calculateAttributes();\" >";
+				htmlString += "<img src=\"images/de/b_calculate.gif\" alt=\"Calculate\" width=\"62\" height=\"21\" hspace=\"3\" align=\"absmiddle\" onClick=\"calculateAttributes();\" >";
 				htmlString += "<map alt=\"Calculate\">";
 				htmlString += "<area href=\"javascript:calculateAttributes()\" shape=\"default\">";
 				htmlString += "</map>";

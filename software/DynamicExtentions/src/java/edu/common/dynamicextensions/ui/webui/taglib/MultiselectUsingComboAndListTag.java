@@ -42,7 +42,7 @@ public class MultiselectUsingComboAndListTag extends TagSupport
 		try
 		{
 			pageContext.getRequest().setAttribute("addNewUserActionName", addNewUserActionName);
-			pageContext.include("../../../de/pages/MultiSelectUsingCombo.jsp");
+			pageContext.include("../../../pages/de/MultiSelectUsingCombo.jsp");
 		}
 		catch (Exception e)
 		{

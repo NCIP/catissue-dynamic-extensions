@@ -172,11 +172,11 @@ public class UserInterfaceiUtility
 		{
 			htmlForGrid
 					.append("<table cellpadding='3' cellspacing='0' align='center' width='100%' class='td_color_e3e2e7'><tr><td align='left'>");
-					htmlForGrid.append("<input type='button' style='border: 0px; background-image: url(de/images/b_delete.gif); height: 20px; width: 59px;' align='middle' onClick=\"removeCheckedRow('"
+					htmlForGrid.append("<input type='button' style='border: 0px; background-image: url(images/de/b_delete.gif); height: 20px; width: 59px;' align='middle' onClick=\"removeCheckedRow('"
 					+ subContainer.getId() + "')\"/>");
 
 			htmlForGrid.append("</td><td align='right'>");
-			htmlForGrid.append("<input type='button' style='border: 0px; background-image: url(de/images/b_add_more.gif); height: 20px; width: 76px;' align='middle' onClick=\"addRow('"
+			htmlForGrid.append("<input type='button' style='border: 0px; background-image: url(images/de/b_add_more.gif); height: 20px; width: 76px;' align='middle' onClick=\"addRow('"
 					+ subContainer.getId() + "')\"/>");
 			
 			//stringBuffer.append("<button type='button' class='actionButton' id='removeRow' onclick=\"removeCheckedRow('" + subContainer.getId()

@@ -43,7 +43,7 @@ public class TreeGenerator
 	public TreeData getTreeData(String rootName, ContainerInterface container)
 	{
 		TreeData treedata = new TreeData();
-		treedata.setImagesUrl("/de/images/");
+		treedata.setImagesUrl("/images/de/");
 		int counter = 0;
 		TreeNode node = new TreeNode(rootName, counter++);
 

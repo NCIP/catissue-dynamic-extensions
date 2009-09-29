@@ -3,8 +3,8 @@
 	<!-- rules for text control start-->
 	<control name="TextControl"
 		display-label="eav.caption.TextControlCaption"
-		jspName="/de/pages/toolTypeHTML/TextControl.jsp"
-		image-path="de/images/controlimages/TextControlImage.jpeg">
+		jspName="/pages/de/toolTypeHTML/TextControl.jsp"
+		image-path="images/de/controlimages/TextControlImage.jpeg">
 		<validations>
 			<common-validation-rule name="unique" isImplicit="false" />
 			<common-validation-rule name="required" isImplicit="false" />
@@ -28,8 +28,8 @@
 	<!-- rules for Checkbox control start-->
 	<control name="CheckboxControl"
 		display-label="eav.caption.CheckboxControlCaption"
-		jspName="/de/pages/toolTypeHTML/CheckboxControl.jsp"
-		image-path="de/images/controlimages/CheckBoxImage.jpeg">
+		jspName="/pages/de/toolTypeHTML/CheckboxControl.jsp"
+		image-path="images/de/controlimages/CheckBoxImage.jpeg">
 		<validations>
 		</validations>
 	</control>
@@ -38,16 +38,16 @@
 	<!-- rules for Radio button control start-->
 	<control name="RadioButtonControl"
 		display-label="eav.caption.RadioButtonControlCaption"
-		jspName="/de/pages/toolTypeHTML/RadioButtonControl.jsp"
-		image-path="de/images/controlimages/RadioButtonImage.jpeg">
+		jspName="/pages/de/toolTypeHTML/RadioButtonControl.jsp"
+		image-path="images/de/controlimages/RadioButtonImage.jpeg">
 	</control>
 	<!-- rules for Radio button  control end-->
 
 	<!-- rules for ComboboxControl control start-->
 	<control name="ComboboxControl"
 		display-label="eav.caption.ComboboxControlCaption"
-		jspName="/de/pages/toolTypeHTML/ComboboxControl.jsp"
-		image-path="de/images/controlimages/ComboboxImage.jpeg">
+		jspName="/pages/de/toolTypeHTML/ComboboxControl.jsp"
+		image-path="images/de/controlimages/ComboboxImage.jpeg">
 		<validations>
 			<common-validation-rule name="required" isImplicit="false" />
 		</validations>
@@ -68,8 +68,8 @@
 	<!-- rules for Date control start-->
 	<control name="DateControl"
 		display-label="eav.caption.DateControlCaption"
-		jspName="/de/pages/toolTypeHTML/DateControl.jsp"
-		image-path="de/images/controlimages/DateControlImage.jpeg">
+		jspName="/pages/de/toolTypeHTML/DateControl.jsp"
+		image-path="images/de/controlimages/DateControlImage.jpeg">
 		<validations>
 			<common-validation-rule name="date" isImplicit="true" />
 			<common-validation-rule name="required" isImplicit="false" />
@@ -85,8 +85,8 @@
 	<!-- rules for File Upload control start -->
 	<control name="FileUploadControl"
 		display-label="eav.caption.FileUploadControlCaption"
-		jspName="/de/pages/toolTypeHTML/FileUploadControl.jsp"
-		image-path="de/images/controlimages/FileUploadImage.jpeg">
+		jspName="/pages/de/toolTypeHTML/FileUploadControl.jsp"
+		image-path="images/de/controlimages/FileUploadImage.jpeg">
 		<validations>
 			<common-validation-rule name="required" isImplicit="false" />
 		</validations>

@@ -19,7 +19,7 @@ public class TreeData
 	private static final String EXPANDED_CLASS_NAME = "folderOpen";
 	private static final String COLLAPSED_CLASS_NAME = "folder";
 
-	private String folder = "/de/images";
+	private String folder = "/images/de";
 	private String color = "navy";
 	private TreeNodesList nodes;
 	private String target = "";
@@ -48,7 +48,7 @@ public class TreeData
 	 */
 	public TreeData()
 	{
-		folder = "/de/images/";
+		folder = "/images/de/";
 		nodes = new TreeNodesList();
 	}
 

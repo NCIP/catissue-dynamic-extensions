@@ -167,14 +167,14 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ ", 'MM-dd-yyyy', 'dataEntryForm', '"
 					+ htmlComponentName
 					+ "', event, 1900, 2020);\" href=\"javascript://\">"
-					+ "&nbsp;<IMG alt=\"" + dateFormatString + " [MM-DD-YYYY]\" src=\"de/images/calendar.gif\" border=0 /></A>"
+					+ "&nbsp;<IMG alt=\"" + dateFormatString + " [MM-DD-YYYY]\" src=\"images/de/calendar.gif\" border=0 /></A>"
 					+ "<DIV id=slcalcod"
 					+ htmlComponentName
 					+ " style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">";
 			if(this.getParentContainer().isAjaxRequest())
 			{
-				String imgsrc = this.getParentContainer().getRequest().getContextPath()+"/de/images/";
-				String filePath = this.getParentContainer().getRequest().getSession().getServletContext().getRealPath("/de/jss/CalendarComponent.js");
+				String imgsrc = this.getParentContainer().getRequest().getContextPath()+"/images/de/";
+				String filePath = this.getParentContainer().getRequest().getSession().getServletContext().getRealPath("/javascripts/de/CalendarComponent.js");
 				String jsFunctionName = DEConstants.PROCESS_AJAX_CAL_SCRIPT;
 				Object[] jsFunctionParameters = {htmlComponentName,DynamicExtensionsUtility.getCurrentDay(),DynamicExtensionsUtility.getCurrentMonth(),DynamicExtensionsUtility.getCurrentYear(),imgsrc};
 				String jsOutput = DynamicExtensionsUtility.executeJavaScriptFunc(filePath,jsFunctionName,jsFunctionParameters);
@@ -218,14 +218,14 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ ", 'MM-dd-yyyy', 'dataEntryForm', '"
 					+ htmlComponentName
 					+ "', event, 1900, 2020);\" href=\"javascript://\">"
-					+ "&nbsp;<IMG alt=\"" + dateFormatString + " [MM-DD-YYYY HH:MM]\" src=\"de/images/calendar.gif\" border=0 />&nbsp;</A>"
+					+ "&nbsp;<IMG alt=\"" + dateFormatString + " [MM-DD-YYYY HH:MM]\" src=\"images/de/calendar.gif\" border=0 />&nbsp;</A>"
 					+ "<DIV id=slcalcod"
 					+ htmlComponentName
 					+ " style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">";
 			if(this.getParentContainer().isAjaxRequest())
 			{
-				String imgsrc = this.getParentContainer().getRequest().getContextPath()+"/de/images/";
-				String filePath = this.getParentContainer().getRequest().getSession().getServletContext().getRealPath("/de/jss/CalendarComponent.js");
+				String imgsrc = this.getParentContainer().getRequest().getContextPath()+"/images/de/";
+				String filePath = this.getParentContainer().getRequest().getSession().getServletContext().getRealPath("/javascripts/de/CalendarComponent.js");
 				String jsFunctionName = DEConstants.PRINT_TIME_CAL_FOR_AJAX;
 				Object[] jsFunctionParameters = {htmlComponentName,DynamicExtensionsUtility.getCurrentDay(),DynamicExtensionsUtility.getCurrentMonth(),DynamicExtensionsUtility.getCurrentYear(), DynamicExtensionsUtility.getCurrentHours(),DynamicExtensionsUtility.getCurrentMinutes(),imgsrc };
 				String jsOutput = DynamicExtensionsUtility.executeJavaScriptFunc(filePath,jsFunctionName,jsFunctionParameters);
@@ -270,14 +270,14 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ 0
 					+ ", 'MM-yyyy', 'dataEntryForm', '"
 					+ htmlComponentName
-					+ "', event, 1900, 2020);\" href=\"javascript://\">&nbsp;<IMG alt=\"" + dateFormatString + "[MM-YYYY]\" src=\"de/images/calendar.gif\" border=0 />&nbsp;</A>"
+					+ "', event, 1900, 2020);\" href=\"javascript://\">&nbsp;<IMG alt=\"" + dateFormatString + "[MM-YYYY]\" src=\"images/de/calendar.gif\" border=0 />&nbsp;</A>"
 					+ "<DIV id=slcalcod"
 					+ htmlComponentName
 					+ " style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">";
 			if(this.getParentContainer().isAjaxRequest())
 			{
-				String imgsrc = this.getParentContainer().getRequest().getContextPath()+"/de/images/";
-				String filePath = this.getParentContainer().getRequest().getSession().getServletContext().getRealPath("/de/jss/CalendarComponent.js");
+				String imgsrc = this.getParentContainer().getRequest().getContextPath()+"/images/de/";
+				String filePath = this.getParentContainer().getRequest().getSession().getServletContext().getRealPath("/javascripts/de/CalendarComponent.js");
 				String jsFunctionName = DEConstants.PRINT_MON_YEAR_CAL_FOR_AJAX;
 				Object[] jsFunctionParameters = {htmlComponentName,DynamicExtensionsUtility.getCurrentMonth(),DynamicExtensionsUtility.getCurrentYear(),imgsrc};
 				String jsOutput = DynamicExtensionsUtility.executeJavaScriptFunc(filePath,jsFunctionName,jsFunctionParameters);
@@ -320,14 +320,14 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ 0
 					+ ", 'yyyy', 'dataEntryForm', '"
 					+ htmlComponentName
-					+ "', event, 1900, 2020);\" href=\"javascript://\">&nbsp;<IMG alt=\"" + dateFormatString + " [YYYY]\" src=\"de/images/calendar.gif\" border=0 />&nbsp;</A>"
+					+ "', event, 1900, 2020);\" href=\"javascript://\">&nbsp;<IMG alt=\"" + dateFormatString + " [YYYY]\" src=\"images/de/calendar.gif\" border=0 />&nbsp;</A>"
 					+ "<DIV id=slcalcod"
 					+ htmlComponentName
 					+ " style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">";
 			if(this.getParentContainer().isAjaxRequest())
 			{
-				String imgsrc = this.getParentContainer().getRequest().getContextPath()+"/de/images/";
-				String filePath = this.getParentContainer().getRequest().getSession().getServletContext().getRealPath("/de/jss/CalendarComponent.js");
+				String imgsrc = this.getParentContainer().getRequest().getContextPath()+"/images/de/";
+				String filePath = this.getParentContainer().getRequest().getSession().getServletContext().getRealPath("/javascripts/de/CalendarComponent.js");
 				String jsFunctionName = DEConstants.PRINT_YEAR_CAL_FOR_AJAX;
 				Object[] jsFunctionParameters = {htmlComponentName, DynamicExtensionsUtility.getCurrentYear(),imgsrc};
 				String jsOutput = DynamicExtensionsUtility.executeJavaScriptFunc(filePath,jsFunctionName,jsFunctionParameters);
