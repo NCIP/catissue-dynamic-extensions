@@ -32,7 +32,7 @@
       -->
       <ignore regex="org.apache.log4j.*"/>
 
-      <fileset dir="./WEB-INF/classes">
+    <fileset dir="./binaries/classes">
         	<include name="**/entitymanager/*.class"/>
       		<exclude name="**/entitymanager/*Test.class"/>
       		<exclude name="**/entitymanager/DynamicExtensionDb2QueryBuilder.class"/>
