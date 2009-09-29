@@ -17,7 +17,6 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.CiderXMIImporter;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
-import edu.common.dynamicextensions.util.XMIImporter;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationDirection;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
@@ -557,37 +556,28 @@ public class TestEntityManagerWithPrimaryKey extends DynamicExtensionsBaseTestCa
 	 */
 	public void testXMIImportInvalidPrimaryKeyDataType()
 	{
-		try
-		{
-			//String[] args = {"F:/SCGModel/scg1.xmi","edu.wustl.catissuecore.domain.PathAnnotation_SCG", "F:/SCGModel/scg.csv"};
-			String[] args = {XMI_FILE_PATH + "test_primaryKey_InvalidDataType.xmi",
-					CSV_FILE_PATH + "test_primaryKey.csv","test_id","none","false"};
+		//String[] args = {"F:/SCGModel/scg1.xmi","edu.wustl.catissuecore.domain.PathAnnotation_SCG", "F:/SCGModel/scg.csv"};
+			String[] args = {XMI_FILE_PATH+"test_primaryKey_InvalidDataType.xmi",
+					CSV_FILE_PATH+"test_primaryKey.csv","test_id","none","false"};
 			try
 			{
-				XMIImporter.main(args);
+				CiderXMIImporter.main(args);
 
 				EntityGroupInterface entityGroup = EntityGroupManager.getInstance()
 						.getEntityGroupByName("test_primaryKey_InvalidDataType");
-				EntityInterface entity = entityGroup.getEntityByName("child");
-				assertEquals(noOfDefaultColumns, getColumnCount("select * from "
-						+ entity.getTableProperties().getName()));
-				//exception should occur
-				fail();
+				if(entityGroup!=null)
+				{
+					fail();
+				}
 
 			}
 			catch (Exception e)
-			{
+			{fail();
 				System.out
 						.println("--------------- Test Case to import XMI successful ------------");
 			}
 
 		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail("Exception occured");
-		}
-	}
 
 	/**
 	 * Import xmi which contains primary key tag as a attribute which is not present in the entity

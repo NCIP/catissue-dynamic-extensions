@@ -401,7 +401,7 @@
 							<UML:Classifier.feature>
 								<UML:Attribute name="Pk" xmi.id="EAID_9889E52A_CCE7_41a2_84B8_08E14CC61FF7" visibility="private" ownerScope="instance" changeability="changeable" ordering="unordered" targetScope="instance">
 									<UML:StructuralFeature.type>
-										<UML:DataType xmi.idref="eaxmiid0"/>
+										<UML:DataType xmi.idref="eaxmiid2"/>
 									</UML:StructuralFeature.type>
 									<UML:StructuralFeature.multiplicity>
 										<UML:Multiplicity xmi.id="EAID_1C221666_9044_46fe_ADAB_77F58E149934">
@@ -2271,8 +2271,8 @@
 				<UML:TagDefinition xmi.id="EAID_FF1086A6_36C4_4b27_9424_66AD164F6C9C" name="mt" isSpecification="false" tagType="String"/>
 				<UML:DataType xmi.id="eaxmiid2" name="String" visibility="private" isRoot="false" isLeaf="false" isAbstract="false"/>
 				<UML:DataType xmi.id="eaxmiid1" name="Double" visibility="private" isRoot="false" isLeaf="false" isAbstract="false"/>
-				<UML:DataType xmi.id="eaxmiid3" name="Integer" visibility="private" isRoot="false" isLeaf="false" isAbstract="false"/>
-				<UML:DataType xmi.id="eaxmiid0" name="Long" visibility="private" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<UML:DataType xmi.id="eaxmiid3" name="Boolean" visibility="private" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<UML:DataType xmi.id="eaxmiid0" name="Boolean" visibility="private" isRoot="false" isLeaf="false" isAbstract="false"/>
 			</UML:Namespace.ownedElement>
 			<UML:ModelElement.taggedValue>
 				<UML:TaggedValue xmi.id="EAID_DB7166F9_E5BD_44d7_9580_FFD5863B1997" isSpecification="false">
