@@ -47,7 +47,7 @@ public class CheckBox extends Control implements CheckBoxInterface
 		}
 
 		String htmlComponentName = getHTMLComponentName();
-		if (checked != null && (checked.equalsIgnoreCase("true") || checked.equals("1")))
+		if (checked != null && (checked.equalsIgnoreCase("true") || checked.equals("1")|| checked.equals("y") || checked.equals("yes")))
 		{
 			htmlString += "<input type='checkbox' class='" + this.cssClass + "' name='"
 					+ htmlComponentName + "' checkedValue='"
