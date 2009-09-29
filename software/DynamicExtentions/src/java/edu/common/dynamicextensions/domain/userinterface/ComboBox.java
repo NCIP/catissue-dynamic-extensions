@@ -108,7 +108,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 			htmlString = htmlString
 					+ "});</script>";
 		}
-		htmlString += "<div style='float:left' id='auto_complete_dropdown_"+this.getParentContainer().getId()+"' name='auto_complete_dropdown_"+this.getParentContainer().getId()+"'>"
+		htmlString += "<div style='float:left' id='auto_complete_dropdown' name='auto_complete_dropdown'>"
 				+ "<input type='text' onmouseover=\"showToolTip('"
 				+ htmlComponentName
 				+ "')\" id='"
