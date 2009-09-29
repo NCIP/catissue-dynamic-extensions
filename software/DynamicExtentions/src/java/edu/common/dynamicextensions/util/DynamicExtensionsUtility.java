@@ -83,6 +83,7 @@ import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
+import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
@@ -164,6 +165,33 @@ public class DynamicExtensionsUtility
 		{
 			containerInterface = EntityCache.getInstance().getContainerById(
 					Long.valueOf(containerIdentifier));
+		}
+		return containerInterface;
+	}
+	/**
+	 * This method fetches the Container instance from the Database given the corresponding Container Identifier.
+	 * @param containerIdentifier The Identifier of the Container.
+	 * @return the ContainerInterface
+	 * @throws DynamicExtensionsSystemException on System exception
+	 * @throws DynamicExtensionsApplicationException on Application exception
+	 */
+	public static ContainerInterface getContainerByIdentifier(String containerIdentifier,ContainerInterface mainContainer)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
+		ContainerInterface containerInterface = null;
+		if (containerIdentifier != null && mainContainer.getId() != null)
+		{
+			if (containerIdentifier.equals(mainContainer.getId().toString()))
+			{
+				containerInterface = mainContainer;
+			}
+			else
+			{
+				AbstractContainmentControlInterface containmentControl = UserInterfaceiUtility
+						.getAssociationControl(mainContainer,
+								containerIdentifier);
+				containerInterface = containmentControl.getContainer();
+			}
 		}
 		return containerInterface;
 	}

@@ -53,6 +53,8 @@ public class CategoryConstants
 	public final static String NO_PV_FOR_ATTR = "noPVForAttribute";
 
 	public final static String ATTR_NOT_PRESENT = "attributeNotPresent";
+	
+	public final static String PV_ATTR_NOT_PRESENT = "noPVForSkipLogicAttribute";
 
 	public final static String ATTR = "attribute";
 

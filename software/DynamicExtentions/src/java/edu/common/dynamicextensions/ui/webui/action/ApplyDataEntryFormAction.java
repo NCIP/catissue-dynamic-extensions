@@ -199,7 +199,76 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 			}
 		}
 	}
-
+	/**
+	 * @throws ParseException 
+	 * @throws DynamicExtensionsApplicationException 
+	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException 
+	 * 
+	 */
+	public void populateAttributeValueMapForSkipLogicAttributes(
+			Map<BaseAbstractAttributeInterface, Object> fullValueMap,
+			Map<BaseAbstractAttributeInterface, Object> valueMap,
+			Integer rowNumber,List<ControlInterface> controlsList)
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+	{
+		for (Map.Entry<BaseAbstractAttributeInterface, Object> entry : valueMap.entrySet())
+		{
+			BaseAbstractAttributeInterface attribute = entry.getKey();
+			if (attribute instanceof CategoryAttributeInterface)
+			{
+				CategoryAttributeInterface categoryAttributeInterface = (CategoryAttributeInterface) attribute;
+				if (categoryAttributeInterface != null)
+				{
+					ContainerInterface controlContainerInterface = DynamicExtensionsUtility
+					.getContainerForAbstractEntity(categoryAttributeInterface
+							.getCategoryEntity());
+					
+					ControlInterface control = DynamicExtensionsUtility
+					.getControlForAbstractAttribute(
+							(AttributeMetadataInterface) categoryAttributeInterface,
+							controlContainerInterface);
+					if (control != null)
+					{
+						if (control.getIsSkipLogic()
+								|| control.getIsSkipLogicTargetControl()) 
+						{
+							boolean found = false;
+							for (ControlInterface targetSkipControl : controlsList) 
+							{
+								if (control.equals(targetSkipControl)) 
+								{
+									found = true;
+									break;
+								}
+							}
+							if (found && control.getIsSkipLogicTargetControl()) 
+							{
+								entry.setValue(null);
+							}
+							if (control.getIsSkipLogic())
+							{
+								control.setValue(entry.getValue());
+								control.setSkipLogicControls(rowNumber);
+							}
+						}
+					}
+				}
+			}
+			else if (attribute instanceof CategoryAssociationInterface)
+			{
+				List<Map<BaseAbstractAttributeInterface, Object>> attributeValueMapList = (List<Map<BaseAbstractAttributeInterface, Object>>) entry
+						.getValue();
+				Integer entryNumber = 0;
+				for (Map<BaseAbstractAttributeInterface, Object> map : attributeValueMapList)
+				{
+					entryNumber++;
+					populateAttributeValueMapForSkipLogicAttributes(fullValueMap, map,
+							entryNumber,controlsList);
+				}
+			}
+		}
+	}
 	/**
 	 * @throws ParseException 
 	 * @throws DynamicExtensionsApplicationException 
@@ -431,6 +500,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				processedContainersList);
 		Map<BaseAbstractAttributeInterface, Object> valueMap = (Map<BaseAbstractAttributeInterface, Object>) valueMapStack
 				.peek();
+		
 		valueMap = generateAttributeValueMap(containerInterface, request, dataEntryForm, "",
 				valueMap, true);
 
@@ -440,6 +510,21 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 		AbstractEntityInterface abstractEntityInterface = containerInterface.getAbstractEntity();
 		if (abstractEntityInterface instanceof CategoryEntityInterface)
 		{
+			if ("skipLogicAttributes".equals(dataEntryForm.getDataEntryOperation()))
+			{
+				String containerId = request.getParameter("containerId");
+				String controlId = request.getParameter("controlId");
+				String[] controlValue = request.getParameterValues("controlValue");
+				ContainerInterface skipLogicContainer = DynamicExtensionsUtility
+						.getContainerByIdentifier(containerId,
+								containerInterface);
+				ControlInterface skipLogicControl = DynamicExtensionsUtility
+						.getControlByIdentifier(controlId, skipLogicContainer);
+				List<ControlInterface> targetSkipControlsList = skipLogicControl
+						.setSkipLogicControls(null, controlValue);
+				populateAttributeValueMapForSkipLogicAttributes(valueMap,
+						valueMap, -1, targetSkipControlsList);
+			}
 			populateAttributeValueMapForCalculatedAttributes(valueMap, valueMap,
 					containerInterface, 0);
 		}
@@ -629,15 +714,6 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 			{
 				attributeValueMap.put(abstractAttribute, valueList);
 			}
-			String[] selectedValues = (String[]) request.getParameterValues(controlName);
-			if (rowId != null && !rowId.equals(""))
-			{
-				control.setSkipLogicControls(Integer.valueOf(rowId),selectedValues);
-			}
-			else
-			{
-				control.setSkipLogicControls(Integer.valueOf(-1),selectedValues);
-			}
 		}
 	}
 
@@ -782,18 +858,6 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 
 			attributeValue = value;
 			attributeValueMap.put(abstractAttribute, attributeValue);
-			if (control instanceof SelectInterface && control instanceof RadioButtonInterface)
-			{
-				String[] selectedValues = (String[]) request.getParameterValues(controlName);
-				if (rowId != null && !rowId.equals(""))
-				{
-					control.setSkipLogicControls(Integer.valueOf(rowId),selectedValues);
-				}
-				else
-				{
-					control.setSkipLogicControls(Integer.valueOf(-1),selectedValues);
-				}
-			}
 		}
 	}
 

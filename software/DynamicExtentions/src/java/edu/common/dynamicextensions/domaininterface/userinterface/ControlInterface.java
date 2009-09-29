@@ -255,7 +255,7 @@ public interface ControlInterface extends DynamicExtensionBaseDomainObjectInterf
 	 * @param rowId
 	 * @param valueArray
 	 */
-	void setSkipLogicControls(Integer rowId,String[] valueArray);
+	List<ControlInterface> setSkipLogicControls(Integer rowId,String[] valueArray);
 	/**
 	 * 
 	 * @param isSkipLogicTargetControl

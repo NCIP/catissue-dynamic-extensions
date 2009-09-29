@@ -392,25 +392,25 @@ public class CategoryGenerator
 
 				categoryValidator.isRootEntityUsedTwice(category.getRootCategoryElement(), category
 						.getRootCategoryElement().getEntity());
-
 				if (categoryFileParser.hasRelatedAttributes())
 				{
 					handleRelatedAttributes(entityGroup, category, entityNameAssociationMap,
 							containerCollection);
-				}
-				else if (!categoryFileParser.hasRelatedAttributes() && categoryFileParser.hasSkipLogicAttributes())
-				{
-					throw new DynamicExtensionsSystemException(ApplicationProperties
-							.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-							+ categoryFileParser.getLineNumber()
-							+ " "
-							+ ApplicationProperties.getValue("relatedAttributeNotDefined"));
+					if (categoryFileParser.hasSkipLogicAttributes())
+					{
+						handleSkipLogicAttributes(entityGroup, category, entityNameAssociationMap,
+								containerCollection);
+					}
 				}
 				if (categoryFileParser.hasSkipLogicAttributes())
 				{
 					handleSkipLogicAttributes(entityGroup, category, entityNameAssociationMap,
 							containerCollection);
+					if (categoryFileParser.hasRelatedAttributes())
+					{
+						handleRelatedAttributes(entityGroup, category, entityNameAssociationMap,
+								containerCollection);
+					}
 				}
 				CategoryGenerationUtil.setDefaultValueForCalculatedAttributes(category,category
 						.getRootCategoryElement(), categoryFileParser.getLineNumber());
@@ -834,9 +834,9 @@ public class CategoryGenerator
 					ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
 							+ categoryFileParser.getLineNumber() + " "
 							+ ApplicationProperties.getValue(CategoryConstants.ATTR)
-							+ sourceAttributeName + " "
-							+ ApplicationProperties.getValue(CategoryConstants.ATTR_NOT_PRESENT)
-							+ sourceEntity.getName());
+							+ permissibleValue + " "
+							+ ApplicationProperties.getValue(CategoryConstants.PV_ATTR_NOT_PRESENT)
+							+ sourceAttributeName);
 			SkipLogicAttributeInterface skipLogicAttributeInterface = DomainObjectFactory.getInstance().createSkipLogicAttribute();
 			skipLogicAttributeInterface.setSourceSkipLogicAttribute(sourceCategoryAttribute);
 			skipLogicAttributeInterface.setTargetSkipLogicAttribute(targetCategoryAttribute);

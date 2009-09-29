@@ -110,7 +110,7 @@
 		</script>
 	</head>
 
-	<body onload="executeComboScripts();loadPreviewForm('<%=request.getContextPath()%>');setFocusToFirstControl();insertBreadCrumbForSubForm(<%=containerInterface.getId()%>,'<%=request.getSession().getAttribute("application_name")%>')" onclick="window.parent.parent.detectApplicationUsageActivity()" onkeydown="window.parent.parent.detectApplicationUsageActivity()">
+	<body onload="executeComboScriptsForSkipLogic();loadPreviewForm('<%=request.getContextPath()%>');setFocusToFirstControl();insertBreadCrumbForSubForm(<%=containerInterface.getId()%>,'<%=request.getSession().getAttribute("application_name")%>')" onclick="window.parent.parent.detectApplicationUsageActivity()" onkeydown="window.parent.parent.detectApplicationUsageActivity()">
 		<html:form styleId="dataEntryForm" action="/ApplyDataEntryFormAction" enctype="multipart/form-data" method="post">
 		<c:if test='${showInDiv == "false"}'>
 			<div id="dataEntryFormDiv" style="position:absolute;overflow:auto;height:100%;width:100%;">

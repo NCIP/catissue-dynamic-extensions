@@ -686,8 +686,9 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	/**
 	 * 
 	 */
-	private void setSkipLogicControlValues(Integer rowId,List<String> values)
+	private List<ControlInterface> setSkipLogicControlValues(Integer rowId,List<String> values)
 	{ 
+		List<ControlInterface> controlList = null;
 		try 
 		{
 			if (values == null)
@@ -715,7 +716,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 							permissibleValueList.add(selectedPermissibleValue);
 						}
 				}
-				getSkipLogicControls(permissibleValueList,rowId,values);
+				controlList = getSkipLogicControls(permissibleValueList,rowId,values);
 			}
 
 		} 
@@ -724,6 +725,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return controlList;
 	}
 	/**
 	 * 
@@ -735,14 +737,16 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	/**
 	 * 
 	 */
-	public void setSkipLogicControls(Integer rowId,String[] valueArray)
+	public List<ControlInterface> setSkipLogicControls(Integer rowId,String[] valueArray)
 	{
+		List<ControlInterface> controlList = null;
 		List<String> values = new ArrayList <String>();
 		for (String controlValue : valueArray)
 		{
 			values.add(controlValue);
 		}
-		setSkipLogicControlValues(rowId,values);
+		controlList = setSkipLogicControlValues(rowId,values);
+		return controlList;
 	}
 	/**
 	 * 
@@ -821,7 +825,10 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 				}
 				targetControl
 						.setIsSkipLogicTargetControl(Boolean.valueOf(true));
-				targetControl.addSourceSkipControlValue(rowId, values);
+				if (rowId != null)
+				{
+					targetControl.addSourceSkipControlValue(rowId, values);
+				}
 				skipLogicControls.add(targetControl);
 			}
 		}
