@@ -37,7 +37,7 @@
 
 	<property name="junit.report.dir" value="${base.dir}/reports/junit"/>
 	<property name="de_release_dir" value="${basedir}/binaries/de_release"/>
-	<property name="is_generate_schema" value="false"/>
+	<property name="is_generate_schema" value="true"/>
 	<property name="temp.dir" value="../dynamicExtentions/tmp"/>
 	<tstamp>
 	    <format property="TODAY_IND" pattern="d-MMMM-yyyy" locale="en,IND"/>
@@ -442,8 +442,7 @@
 	    <echo message="${is_generate_schema}"></echo>	
 		<java classname="edu.common.dynamicextensions.util.GenerateSchema">
 	    		<arg value="${is_generate_schema}"/>
-				<arg value="D:/BDA/DynamicExtentions/software/DynamicExtentions/src/conf/db.properties"/>
-	            <classpath>
+				<classpath>
 		            <pathelement location="${build.dir}/cawebeav.jar"/>
 	            	<fileset dir="${lib.dir}">
 	                  <include name="*.jar"/>
@@ -464,11 +463,77 @@
 									<include name="*.jar"/>
 								</fileset>
 						</classpath>
-						<transaction  src="${base.dir}/db/db-install/MySql/dynamicextension.sql"/>
+						<transaction  src="${mysql.dir}/DynamicExtensions_MYSQL.SQL"/>
 					</sql>
 				</then>
 			</if>
+		<antcall target="append_cab2bTaleScripts"></antcall>
 	    </target>
+	
+	<target name="append_cab2bTaleScripts">
+
+			<if>
+				<equals arg1="oracle" arg2="${hibernate.database.type}" casesensitive="false"/>
+				<then>
+					<concat destfile="${base.dir}/query.sql" append="true">
+						<fileset file="${oracle.dir}/cab2b_table_generation_oracle.sql" />
+					</concat>
+					<sql driver="${hibernate.connection.driver_class}"
+														password="${hibernate.connection.password}"
+														url="${hibernate.connection.url}"
+														userid="${hibernate.connection.username}"
+														onerror="continue">
+						<classpath>
+							<pathelement location="${build.dir}/cawebeav.jar"/>
+							<fileset dir="${lib.dir}">
+								<include name="*.jar"/>
+							</fileset>
+						</classpath>
+						<transaction  src="${oracle.dir}/cab2b_table_generation_oracle.sql"/>
+					</sql>
+				</then>
+			</if>
+			<if>
+				<equals  arg1="mysql" arg2="${hibernate.database.type}" casesensitive="false"/>
+				<then>
+					<concat destfile="${base.dir}/query.sql" append="true">
+						<fileset file="${mysql.dir}/cab2b_table_generation_mysql.sql" />
+					</concat>
+					<sql driver="${hibernate.connection.driver_class}"
+														password="${hibernate.connection.password}"
+														url="${hibernate.connection.url}"
+														userid="${hibernate.connection.username}"
+														onerror="continue">
+						<classpath>
+							<pathelement location="${build.dir}/cawebeav.jar" />
+							<fileset dir="${lib.dir}">
+								<include name="*.jar" />
+							</fileset>
+						</classpath>
+						<transaction src="${mysql.dir}/cab2b_table_generation_mysql.sql" />
+					</sql>
+				</then>
+
+			</if>
+
+			<if>
+				<equals arg1="db2" arg2="${hibernate.database.type}" casesensitive="false" />
+				<then>
+					<concat destfile="${base.dir}/query.sql" append="true">
+						<fileset file="${db2.dir}/cab2b_table_generation_db2.sql" />
+					</concat>
+					<sql driver="${hibernate.connection.driver_class}" password="${hibernate.connection.password}" url="${hibernate.connection.url}" userid="${hibernate.connection.username}" onerror="continue">
+						<classpath>
+							<pathelement location="${build.dir}/cawebeav.jar"/>
+							<fileset dir="${lib.dir}">
+								<include name="*.jar"/>
+							</fileset>
+						</classpath>
+						<transaction  src="${db2.dir}/cab2b_table_generation_db2.sql"/>
+					</sql>
+				</then>
+			</if>
+		</target>
 	<!-- Generates schema for DE API release.The longblob changes are done for MYSQL using regular expressions -->
 		<target name="generate_schema_de_api_release" depends="generate_hbm,build_jar">
 
