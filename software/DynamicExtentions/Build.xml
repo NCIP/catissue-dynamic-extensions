@@ -284,31 +284,76 @@
 	</target>
 
 	<!-- Creates the Dynamic Extensions zip of the application -->
-	<target name="create_dynamic_extensions_zip" depends="create_dyn_ext_web_jar,version_info" >
+	<target name="create_dynamic_extensions_zip" depends="create_dyn_ext_web_jar,version_info,init_zip" >
 		<delete  file="binaries/dynamicextensions.zip"/>
 		<zip destfile="binaries/dynamicextensions.zip" >
-			<fileset dir="${base.dir}">
-				<include name="src/web/stylesheets/**/*"/>
-				<include name="src/web/images/**/*"/>
-				<include name="src/web/javascripts/**/*"/>
-				<include name="src/web/pages/**/*"/>
-				<include name="src/web/dhtml/**/*"/>
-				<include name="runtime/**/*"/>
-				<include name="src/conf/dynamicextensions-struts-config.xml"/>
-				<include name="src/web/taglibs/dynamicExtensions.tld"/>
-				<include name="binaries/DynamicExtensionsInterface/DynamicExtensions.jar" />
-				<include name="META-INF/MANIFEST.MF" />
+			<fileset dir="${temp.dir}">
+				<include name="**/*"/>
 			</fileset>
-	   </zip>
+	    </zip>
+		<delete   dir="${temp.dir}"/>
 	</target>
 	<!-- Creates the Dynamic Extensions zip of the application -->
 
+	<target name="init_zip">
+		<delete dir="${temp.dir}" />
+		<mkdir dir="${temp.dir}" />
+		<mkdir dir="${temp.dir}/META-INF" />
+		<mkdir dir="${temp.dir}/web" />
+		<mkdir dir="${temp.dir}/web/javascripts/de" />
+		<mkdir dir="${temp.dir}/web/stylesheets/de" />
+		<mkdir dir="${temp.dir}/web/images/de" />
+		<mkdir dir="${temp.dir}/web/dhtml/de" />
+		<mkdir dir="${temp.dir}/web/pages/de" />
+		<mkdir dir="${temp.dir}/web/taglibs" />
+		<mkdir dir="${temp.dir}/binaries/DynamicExtensionsInterface" />
+		
+		<copy todir="${temp.dir}/META-INF">
+			<fileset dir="${base.dir}" >
+				<include name="META-INF/MANIFEST.MF" />
+			</fileset>
+		</copy>
+		<copy todir="${temp.dir}/web/stylesheets/de">
+			<fileset dir="src/web/stylesheets" >
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		<copy todir="${temp.dir}/web/javascripts/de">
+			<fileset dir="src/web/javascripts" >
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		<copy todir="${temp.dir}/web/images/de">
+			<fileset dir="src/web/images" >
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		<copy todir="${temp.dir}/web/dhtml/de">
+			<fileset dir="src/web/dhtml" >
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		<copy todir="${temp.dir}/web/pages/de">
+			<fileset dir="src/web/pages" >
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		<copy todir="${temp.dir}/web/conf" file="src/conf/dynamicextensions-struts-config.xml">
+		</copy>
+		<copy todir="${temp.dir}/META-INF" file="binaries/META-INF/MANIFEST.MF">
+		</copy>
+		<copy todir="${temp.dir}/web/taglibs" file="src/web/taglibs/dynamicExtensions.tld">
+		</copy>
+		<copy todir="${temp.dir}/binaries/DynamicExtensionsInterface" file="binaries/DynamicExtensionsInterface/DynamicExtensions.jar">
+		</copy>
+	</target>
+	
 	<!-- Creates the WAR (Web Application Archive) file of the application -->
-	<target name="build__war" depends="compile">
+	<target name="build_war" depends="compile">
 		<delete file="dynamicExtensions.war"/>
 		<war destfile="dynamicExtensions.war" webxml="src/conf/web.xml">
 			<fileset dir="${base.dir}">
-<include name="src/web/stylesheets/**/*"/>
+				<include name="src/web/stylesheets/**/*"/>
 				<include name="src/web/images/**/*"/>
 				<include name="src/web/javascripts/**/*"/>
 				<include name="src/web/pages/**/*"/>
