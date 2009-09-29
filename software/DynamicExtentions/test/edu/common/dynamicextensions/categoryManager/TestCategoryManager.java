@@ -3385,11 +3385,12 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 			category = (CategoryInterface) categoryManager.getObjectByName(
 					Category.class.getName(), "singleLineDisplaySameClass3");
-			fail();
+
 
 		}
 		catch (Exception e)
 		{
+			fail();
 			e.printStackTrace();
 		}
 	}

@@ -1,17 +1,17 @@
 Entity_Group
 test
 
-PhysicianInformation:hospitals,Permissible_Values_File~D:/template/template/bug_import/bug_import/PVs/Hospitals.csv,Dependent_Permissible_Values_File
+PhysicianInformation:hospitals,Permissible_Values_File~./src/resources/csv/PVs/Hospitals.csv,Dependent_Permissible_Values_File
 PhysicianInformation:physicianName,Permissible_Values~Pawan:Edgar:Alan:Smith:McCain:Obama:Palin
-HealthAnnotations:agent,Permissible_Values_File~D:/template/template/bug_import/bug_import/PVs/Agent.csv
-LabInfo:source,Permissible_Values_File~D:/template/template/bug_import/bug_import/PVs/source.csv
-PrimaryDiagnosis:result,Permissible_Values_File~D:/template/template/bug_import/bug_import/PVs/result.csv
-PrimaryDiagnosis:testPerformed,Permissible_Values_File~D:/template/template/bug_import/bug_import/PVs/LabTestName.csv
-FungalInfections:nameOfFungus,Permissible_Values_File~D:/template/template/bug_import/bug_import/PVs/fungai.csv
-BacterialInfections:nameOfBacteria,Permissible_Values_File~D:/template/template/bug_import/bug_import/PVs/bacteria.csv
+HealthAnnotations:agent,Permissible_Values_File~./src/resources/csv/PVs/Agent.csv
+LabInfo:source,Permissible_Values_File~./src/resources/csv/PVs/source.csv
+PrimaryDiagnosis:result,Permissible_Values_File~./src/resources/csv/PVs/result.csv
+PrimaryDiagnosis:testPerformed,Permissible_Values_File~./src/resources/csv/PVs/LabTestName.csv
+FungalInfections:nameOfFungus,Permissible_Values_File~./src/resources/csv/PVs/fungai.csv
+BacterialInfections:nameOfBacteria,Permissible_Values_File~./src/resources/csv/PVs/bacteria.csv
 ##The PVs are directly specified here
 ViralInfections:nameOfVirus,Permissible_Values~Rhinovirus:HIV:Hepatitis A:Hepatitis B:Hepatitis C:Hepatitis A/B:Polio:Chicken pox:Bird Flu:Leprosy:Neuronal Virus
-LabTest:testName,Permissible_Values_File~D:/template/template/bug_import/bug_import/PVs/LabTestName.csv
+LabTest:testName,Permissible_Values_File~./src/resources/csv/PVs/LabTestName.csv
 Hazards:hazardType,Permissible_Values~Alcohol:Tobacco:Smoke:Asbestos:Cocaine
 override_pv=true
 Hazards:noYearsExposed,Permissible_Values~1.2:32.4:33.7:4.88:7.44
