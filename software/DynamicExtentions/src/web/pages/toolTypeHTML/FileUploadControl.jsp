@@ -4,7 +4,7 @@
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c" %>
 <%@page import="edu.common.dynamicextensions.processor.ProcessorConstants" %>
 
-<script>var imgsrc="<%=request.getContextPath()%>/de/images/";</script>
+<script>var imgsrc="<%=request.getContextPath()%>/images/de/";</script>
 
 <c:set var="supportedFileFormatsList" value="${controlsForm.supportedFileFormatsList}"/>
 <jsp:useBean id="supportedFileFormatsList" type="java.util.List"/>
@@ -66,4 +66,4 @@
 		</td>
 	</tr>
 </table>
-<jsp:include page="/de/pages/ValidationRules.jsp" />
+<jsp:include page="/pages/de/ValidationRules.jsp" />

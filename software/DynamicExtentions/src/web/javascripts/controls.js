@@ -601,7 +601,7 @@ Autocompleter.Local.prototype = Object.extend(new Autocompleter.Base(), {
 
 	</script> 
 	TEST:<input type="text" id="name-field"/>
-	<image id='name-arrow' src="/de/images/combo_box_arrow.png"/>
+	<image id='name-arrow' src="/images/de/combo_box_arrow.png"/>
 	<div class="auto_complete" id="lookup_auto_complete"></div> 
 	<%= javascript_tag("new Autocompleter.Combobox('name-field',
 	'lookup_auto_complete', 'name-arrow',

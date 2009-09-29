@@ -15,29 +15,29 @@
 <%@ page import="org.apache.struts.action.ActionMessages" %>
 
 <%-- Stylesheet --%>
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/de/css/styleSheet.css" />
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/de/css/de_style.css" />
-<link rel="stylesheet" type="text/css" href="de/css/ext-all.css" />
-<link href="<%=request.getContextPath()%>/de/css/calanderComponent.css" type=text/css rel=stylesheet />
-<link rel="stylesheet" type="text/css" href="de/css/xtheme-gray.css" />
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/styleSheet.css" />
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/de_style.css" />
+<link rel="stylesheet" type="text/css" href="stylesheets/de/ext-all.css" />
+<link href="<%=request.getContextPath()%>/stylesheets/de/calanderComponent.css" type=text/css rel=stylesheet />
+<link rel="stylesheet" type="text/css" href="stylesheets/de/xtheme-gray.css" />
 
-<script src="<%=request.getContextPath()%>/de/jss/calendarComponent.js"></script>
-<script src="<%=request.getContextPath()%>/de/jss/script.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/calendarComponent.js"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/script.js" type="text/javascript"></script>
 
-<script>var imgsrc="<%=request.getContextPath()%>/de/images/";</script>
-<script src="<%=request.getContextPath()%>/de/jss/dynamicExtensions.js" type="text/javascript"></script>
-<script src="<%=request.getContextPath()%>/de/jss/overlib_mini.js" type="text/javascript"></script>
-<script src="<%=request.getContextPath()%>/de/jss/calender.js" type="text/javascript"></script>
-<script src="<%=request.getContextPath()%>/de/jss/calendarComponent.js"></script>
-<script src="<%=request.getContextPath()%>/de/jss/ajax.js"></script>
+<script>var imgsrc="<%=request.getContextPath()%>/images/de/";</script>
+<script src="<%=request.getContextPath()%>/javascripts/de/dynamicExtensions.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/overlib_mini.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/calender.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/calendarComponent.js"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/ajax.js"></script>
 
-<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/de/jss/prototype.js"></script>
-<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/de/jss/scriptaculous.js"></script>
-<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/de/jss/scr.js"></script>
-<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/de/jss/combobox.js"></script>
-<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/de/jss/ext-base.js"></script>
-<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/de/jss/ext-all.js"></script>
-<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/de/jss/combos.js"></script>
+<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/prototype.js"></script>
+<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/scriptaculous.js"></script>
+<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/scr.js"></script>
+<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/combobox.js"></script>
+<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/ext-base.js"></script>
+<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/ext-all.js"></script>
+<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/combos.js"></script>
 
 <c:set var="containerInterface" value="${dataEntryForm.containerInterface}"/>
 <jsp:useBean id="containerInterface" type="edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface"/>
@@ -99,7 +99,7 @@
 										<tr height="5"></tr>
 										<tr>
 											<td align='right'>
-												<input type="image" src="<%=request.getContextPath()%>/de/images/b_back.gif" width="62" height="21" align="middle" onClick="showParentContainerInsertDataPage()"/>												
+												<input type="image" src="<%=request.getContextPath()%>/images/de/b_back.gif" width="62" height="21" align="middle" onClick="showParentContainerInsertDataPage()"/>												
 											</td>
 										</tr>
 									</table>

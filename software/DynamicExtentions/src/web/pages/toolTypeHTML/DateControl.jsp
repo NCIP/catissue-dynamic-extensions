@@ -6,7 +6,7 @@
 <%@page import="edu.common.dynamicextensions.util.DynamicExtensionsUtility" %>
 <%@page import="java.util.Date" %>
 
-<script>var imgsrc="<%=request.getContextPath()%>/de/images/";</script>
+<script>var imgsrc="<%=request.getContextPath()%>/images/de/";</script>
 
 <c:set var="dataTypeList" value="${controlsForm.dataTypeList}"/>
 <jsp:useBean id="dataTypeList" type="java.util.List"/>
@@ -67,7 +67,7 @@
 					<td>
 						<html:text styleId='attributeDefaultValue' property='attributeDefaultValue' styleClass="formFieldVerySmallSized" maxlength="100" size="60" readonly="true"/>
 						<A onclick="showCalendar('attributeDefaultValue',<%=DynamicExtensionsUtility.getCurrentYear()%>,<%=DynamicExtensionsUtility.getCurrentMonth()%>,<%=DynamicExtensionsUtility.getCurrentDay()%>,'MM-dd-yyyy','controlsForm','attributeDefaultValue',event,1900,2020);" href="javascript://">
-							<IMG alt="This is a Calendar" src="<%=request.getContextPath()%>/de/images/calendar.gif" border=0>
+							<IMG alt="This is a Calendar" src="<%=request.getContextPath()%>/images/de/calendar.gif" border=0>
 						</A>
 						<DIV id=slcalcodattributeDefaultValue style="Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px">
 							<SCRIPT>printCalendar('attributeDefaultValue', <%=DynamicExtensionsUtility.getCurrentDay()%>,<%=DynamicExtensionsUtility.getCurrentMonth()%>,<%=DynamicExtensionsUtility.getCurrentYear()%>);</SCRIPT>
@@ -135,5 +135,5 @@
 	<SCRIPT>printMonthYearCalendar('max', <%=DynamicExtensionsUtility.getCurrentMonth()%>, <%=DynamicExtensionsUtility.getCurrentYear()%>);</SCRIPT>
 </div>
 
-<jsp:include page="/de/pages/ValidationRules.jsp" />
+<jsp:include page="/pages/de/ValidationRules.jsp" />
 

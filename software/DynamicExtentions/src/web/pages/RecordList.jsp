@@ -8,8 +8,8 @@
 %>
 
 <%-- Stylesheet --%>
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/de/css/styleSheet.css" />
-<script src="<%=request.getContextPath()%>/de/jss/dynamicExtensions.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/styleSheet.css" />
+<script src="<%=request.getContextPath()%>/javascripts/de/dynamicExtensions.js" type="text/javascript"></script>
 
 <c:set var="containerIdentifier" value="${recordListForm.containerIdentifier}"/>
 <jsp:useBean id="containerIdentifier" type="java.lang.String"/>

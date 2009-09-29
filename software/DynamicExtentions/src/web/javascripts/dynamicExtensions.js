@@ -145,7 +145,7 @@ function closeWindow()
 
 function showNextActionConfirmDialog()
 {
-    var  url= contextParam + "/de/pages/confirmNextActionDialog.jsp";
+    var  url= contextParam + "/pages/de/confirmNextActionDialog.jsp";
 	//for bug 5933
 	if(navigator.userAgent.indexOf("Firefox")!= -1 )
 	{

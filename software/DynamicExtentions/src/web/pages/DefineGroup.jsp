@@ -5,11 +5,11 @@
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c" %>
 <%@page import="java.util.List" %>
 
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/de/css/styleSheet.css" />
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/styleSheet.css" />
 
-<script src="<%=request.getContextPath()%>/de/jss/script.js" type="text/javascript"></script>
-<script src="<%=request.getContextPath()%>/de/jss/ajax.js" type="text/javascript"></script>
-<script src="<%=request.getContextPath()%>/de/jss/dynamicExtensions.js" type="text/javascript">
+<script src="<%=request.getContextPath()%>/javascripts/de/script.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/ajax.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/dynamicExtensions.js" type="text/javascript">
 </script>
 
 <html>

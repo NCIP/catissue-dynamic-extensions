@@ -22,7 +22,7 @@
 	function initOptionGrid()
 	{
 		optionGrid = new dhtmlXGridObject('optiongrid');
-		optionGrid.setImagePath("<%=request.getContextPath()%>/de/dhtml_comp/imgs/");
+		optionGrid.setImagePath("<%=request.getContextPath()%>/dhtml/de/imgs/");
 		optionGrid.setHeader("#,Option Name,Concept Code(s),Definiton");
 		optionGrid.setInitWidthsP("5,35,30,30");
 		optionGrid.setColAlign("center,left,left,left");

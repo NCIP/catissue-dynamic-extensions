@@ -15,31 +15,31 @@
 <%@ page import="org.apache.struts.action.ActionMessages" %>
 
 <%-- Stylesheet --%>
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/de/css/styleSheet.css" />
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/de/css/de_style.css" />
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/de/css/ext-all.css" />
-<link href="<%=request.getContextPath()%>/de/css/calanderComponent.css" type=text/css rel=stylesheet />
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/de/css/xtheme-gray.css" />
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/styleSheet.css" />
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/de_style.css" />
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/ext-all.css" />
+<link href="<%=request.getContextPath()%>/stylesheets/de/calanderComponent.css" type=text/css rel=stylesheet />
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/xtheme-gray.css" />
 
-<script src="<%=request.getContextPath()%>/de/jss/calendarComponent.js"></script>
-<script src="<%=request.getContextPath()%>/de/jss/script.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/calendarComponent.js"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/script.js" type="text/javascript"></script>
 
 <script>var imgsrc="<%=request.getContextPath()%>/de/images/";</script>
-<script src="<%=request.getContextPath()%>/de/jss/jquery-1.3.2.js" type="text/javascript"></script>
-<script src="<%=request.getContextPath()%>/de/jss/form_plugin.js" type="text/javascript"></script>
-<script src="<%=request.getContextPath()%>/de/jss/dynamicExtensions.js" type="text/javascript"></script>
-<script src="<%=request.getContextPath()%>/de/jss/overlib_mini.js" type="text/javascript"></script>
-<script src="<%=request.getContextPath()%>/de/jss/calender.js" type="text/javascript"></script>
-<script src="<%=request.getContextPath()%>/de/jss/calendarComponent.js"></script>
-<script src="<%=request.getContextPath()%>/de/jss/ajax.js"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/jquery-1.3.2.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/form_plugin.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/dynamicExtensions.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/overlib_mini.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/calender.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/calendarComponent.js"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/ajax.js"></script>
 
-<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/de/jss/prototype.js"></script>
-<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/de/jss/scriptaculous.js"></script>
-<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/de/jss/scr.js"></script>
-<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/de/jss/combobox.js"></script>
-<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/de//jss/ext-base.js"></script>
-<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/de/jss/ext-all.js"></script>
-<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/de/jss/combos.js"></script>
+<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/prototype.js"></script>
+<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/scriptaculous.js"></script>
+<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/scr.js"></script>
+<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/combobox.js"></script>
+<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/ext-base.js"></script>
+<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/ext-all.js"></script>
+<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/combos.js"></script>
 
 
 <c:set var="containerInterface" value="${dataEntryForm.containerInterface}"/>
@@ -175,7 +175,7 @@
 													<c:forEach items="${errorList}" var="error">
 														<jsp:useBean id="error" type="java.lang.String"/>
 														 <tr>
-														<th align="center" class="font_bl_nor"><img src="<%=request.getContextPath()%>/de/images/ic_error.gif" alt="Error" width="28" height="25" hspace="3" align="absmiddle">
+														<th align="center" class="font_bl_nor"><img src="<%=request.getContextPath()%>/images/de/ic_error.gif" alt="Error" width="28" height="25" hspace="3" align="absmiddle">
 															<c:out value="${error}"/><br />
 													</c:forEach>
 														</th>
@@ -196,7 +196,7 @@
 																		<th align="left" class="font_bl_nor">
 																		<ul>
 																			<html:messages id="msg" message="true"> 
-																			<img src="<%=request.getContextPath()%>/de/images/ic_success.gif" alt="Success" width="28" height="25" hspace="3" align="absmiddle"><bean:write name="msg"/>
+																			<img src="<%=request.getContextPath()%>/images/de/ic_success.gif" alt="Success" width="28" height="25" hspace="3" align="absmiddle"><bean:write name="msg"/>
 																			</html:messages>
 																		</ul>
 																		</th>
@@ -238,13 +238,13 @@
 														
 														<c:if test='${(isTopLevelEntity=="false") && ((showInDiv=="null") || (showInDiv=="true"))}'>
 															<td align='center'>
-																<input type="image" src="<%=request.getContextPath()%>/de/images/b_submit.gif" width="62" height="21" align="middle" onClick="return showParentContainerInsertDataPage()"/>
+																<input type="image" src="<%=request.getContextPath()%>/images/de/b_submit.gif" width="62" height="21" align="middle" onClick="return showParentContainerInsertDataPage()"/>
 															</td>
 														</c:if>
 																												
 														<c:if test='${(mode=="edit") && (isTopLevelEntity=="true") && ((showInDiv=="null") || (showInDiv=="true"))}'>
 															<td align='center'>
-																<input type="image" src="<%=request.getContextPath()%>/de/images/b_submit.gif" width="62" height="21" align="middle" onClick="return setInsertDataOperation()"/>
+																<input type="image" src="<%=request.getContextPath()%>/images/de/b_submit.gif" width="62" height="21" align="middle" onClick="return setInsertDataOperation()"/>
 															</td>
 														<!-- BUG 7662 FIXED. Each Cancel should take you one level up in the containment hierarchy and finally the Cancel on Main Class should take you to the Add Records page.-->
 														</c:if>
@@ -257,7 +257,7 @@
 								
 														<c:if test='${!((mode=="view") && (isTopLevelEntity=="false"))  && ((showInDiv=="null") || (showInDiv=="true"))}'>
 															<td align='center'>
-																<input type="button" style="border: 0px; background-image: url(<%=request.getContextPath()%>/de/images/b_cancel.gif); height: 21px; width: 62px;" align="middle" onClick="cancelInsertData()"/>
+																<input type="button" style="border: 0px; background-image: url(<%=request.getContextPath()%>/images/de/b_cancel.gif); height: 21px; width: 62px;" align="middle" onClick="cancelInsertData()"/>
 															</td>															
 														</c:if>
 													</c:otherwise>

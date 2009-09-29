@@ -8,9 +8,9 @@
 <%@page import="java.util.Iterator" %>
 <%@page import="java.util.Map" %>
 <%@page import="java.util.List" %>
-<script src="<%=request.getContextPath()%>/de/jss/calender.js" type="text/javascript"></script>
-<script src="<%=request.getContextPath()%>/de/jss/calendarComponent.js"></script>
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/de/css/styleSheet.css" />
+<script src="<%=request.getContextPath()%>/javascripts/de/calender.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/calendarComponent.js"></script>
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/styleSheet.css" />
 <%@page import="edu.common.dynamicextensions.ui.util.RuleConfigurationObject" %>
 <%@page import="edu.wustl.common.beans.NameValueBean" %>
 <%@page import="edu.common.dynamicextensions.util.DynamicExtensionsUtility" %>
@@ -102,7 +102,7 @@
 										%>
 											<html:text styleId="<%=tempParamName%>" styleClass="formFieldSized5" maxlength="100" size="60" property="<%=tempParamName%>" readonly="true"/>
 											<A onclick="showCalendar('<%=tempParamName%>',<%=DynamicExtensionsUtility.getCurrentYear()%>,<%=DynamicExtensionsUtility.getCurrentMonth()%>,<%=DynamicExtensionsUtility.getCurrentDay()%>,'MM-dd-yyyy','controlsForm','<%=tempParamName%>',event,1900,2020);" href="javascript://">
-												<IMG alt="This is a Calendar" src="<%=request.getContextPath()%>/de/images/calendar.gif" border=0>
+												<IMG alt="This is a Calendar" src="<%=request.getContextPath()%>/images/de/calendar.gif" border=0>
 											</A>
 											<div id=<%=divId%> style="Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px">
 												<SCRIPT>printCalendar('<%=tempParamName%>',<%=DynamicExtensionsUtility.getCurrentDay()%>,<%=DynamicExtensionsUtility.getCurrentMonth()%>,<%=DynamicExtensionsUtility.getCurrentYear()%>);</SCRIPT>

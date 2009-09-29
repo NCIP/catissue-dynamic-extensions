@@ -44,5 +44,5 @@
 	</tr>
 </table>
 <html:hidden styleId='dataType' property="dataType" value="<%=ProcessorConstants.DATATYPE_STRING%>"/>
-<jsp:include page="/de/pages/toolTypeHTML/ListValuesSpecification.jsp"/>
-<jsp:include page="/de/pages/ValidationRules.jsp" />
+<jsp:include page="/pages/de/toolTypeHTML/ListValuesSpecification.jsp"/>
+<jsp:include page="/pages/de/ValidationRules.jsp" />

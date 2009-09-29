@@ -15,7 +15,7 @@ PUBLIC
 	</form-beans>
 	
 	<global-forwards>
-		<forward name="systemException" path="/de/pages/ForwardToError.jsp" />
+		<forward name="systemException" path="/pages/de/ForwardToError.jsp" />
 	</global-forwards>
 	
 	<action-mappings>
@@ -26,7 +26,7 @@ PUBLIC
 			validate="false"
 			input="/LoadFormsIndexAction.do"
 			scope="request">
-			<forward name="showDynamicExtensionsHomePage" path="/de/pages/DynamicExtensionHomePage.jsp" />
+			<forward name="showDynamicExtensionsHomePage" path="/pages/de/DynamicExtensionHomePage.jsp" />
 		</action>-->
 		
 		<action path="/DisplayContainer" 
@@ -51,7 +51,7 @@ PUBLIC
 			validate="false"
 			input="/DynamicExtensionHomePage.do"
 			scope="request">
-			<forward name="showRecordListPage" path="/de/pages/RecordList.jsp" />
+			<forward name="showRecordListPage" path="/pages/de/RecordList.jsp" />
 		</action>
 		<action path="/ApplyRecordListAction" 
 			type="edu.common.dynamicextensions.ui.webui.action.ApplyEditRecordsAction"
@@ -59,7 +59,7 @@ PUBLIC
 			validate="false"
 			input="/LoadRecordListAction.do"
 			scope="request">
-			<forward name="success" path="/de/pages/RecordList.jsp" />
+			<forward name="success" path="/pages/de/RecordList.jsp" />
 		</action>
 		<action path="/LoadGroupDefinitionAction" 
 			type="edu.common.dynamicextensions.ui.webui.action.LoadGroupDefinitionAction"
@@ -67,7 +67,7 @@ PUBLIC
 			validate="false"
 			input="/DynamicExtensionHomePage.do"
 			scope="request">
-			<forward name="success" path="/de/pages/DefineGroup.jsp" />
+			<forward name="success" path="/pages/de/DefineGroup.jsp" />
 		</action>
 		<action path="/ApplyGroupDefinitionAction" 
 			type="edu.common.dynamicextensions.ui.webui.action.ApplyGroupDefinitionAction"
@@ -91,9 +91,9 @@ PUBLIC
 		    type="edu.common.dynamicextensions.ui.webui.action.LoadFormDefinitionAction" 
 		    name="formDefinitionForm"
 			validate="false"
-			input="/de/pages/CreateForm.jsp"
+			input="/pages/de/CreateForm.jsp"
 			scope="request">
-			<forward name="success" path="/de/pages/CreateForm.jsp" />
+			<forward name="success" path="/pages/de/CreateForm.jsp" />
 		</action>
 		<action path="/ApplyFormDefinitionAction"
 			type="edu.common.dynamicextensions.ui.webui.action.ApplyFormDefinitionAction"
@@ -111,7 +111,7 @@ PUBLIC
 			validate="false"
 			input="/LoadFormControlsAction.do"
 			scope="request">
-			<forward name="showBuildFormJSP" path="/de/pages/BuildForm.jsp" />
+			<forward name="showBuildFormJSP" path="/pages/de/BuildForm.jsp" />
 			<forward name="editSubForm" path="/LoadFormDefinitionAction.do" />
 		</action>
 		<action path="/SelectControlAction" 
@@ -120,7 +120,7 @@ PUBLIC
 			validate="false"
 			input="/LoadFormControlsAction.do"
 			scope="request">
-			<forward name="success" path="/de/pages/BuildForm.jsp" />
+			<forward name="success" path="/pages/de/BuildForm.jsp" />
 			<forward name="addSubForm" path="/LoadFormDefinitionAction.do" />
 		</action>
 		<action path="/AddControlsAction" 
@@ -146,7 +146,7 @@ PUBLIC
 			validate="false"
 			input="/LoadFormPreviewAction.do"
 			scope="request">
-			<forward name="success" path="/de/pages/dataEntry/DataEntryPreview.jsp" />
+			<forward name="success" path="/pages/de/dataEntry/DataEntryPreview.jsp" />
 			<forward name="LoadFormControls" path="/LoadFormControlsAction.do" />
 		</action>
 		<action path="/ApplyFormPreviewAction" 
@@ -164,7 +164,7 @@ PUBLIC
 			input="/LoadFormControlsAction.do"
 			scope="request">
 			<forward name="success" path="/DynamicExtensionHomePage.do" />
-			<forward name="failure" path="/de/pages/ErrorPage.jsp" />
+			<forward name="failure" path="/pages/de/ErrorPage.jsp" />
 		</action>
 		<action path="/LoadDataEntryFormAction" 
 		    type="edu.common.dynamicextensions.ui.webui.action.LoadDataEntryFormAction" 
@@ -172,7 +172,7 @@ PUBLIC
 			validate="false"
 			input="/LoadDataEntryFormAction.do"
 			scope="request">
-			<forward name="Success" path="/de/pages/dataEntry/dataEntry.jsp" />
+			<forward name="Success" path="/pages/de/dataEntry/dataEntry.jsp" />
 			<forward name="LoadFormControls" path="/LoadFormControlsAction.do" />
 		</action>
 		<action path="/ApplyDataEntryFormAction" 
@@ -208,7 +208,7 @@ PUBLIC
 			validate="false"
 			input="/LoadFormDefinitionAction.do"
 			scope="request">
-			<forward name="success" path="/de/pages/FetchXMLString.jsp"/>
+			<forward name="success" path="/pages/de/FetchXMLString.jsp"/>
 		</action>
 		<action path="/DeleteRecordAction" 
 			type="edu.common.dynamicextensions.ui.webui.action.DeleteRecordAction"

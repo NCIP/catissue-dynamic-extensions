@@ -13,13 +13,13 @@
 %>
 
 <%-- Stylesheet --%>
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/de/css/styleSheet.css"/>
-<link href="<%=request.getContextPath()%>/de/css/calanderComponent.css" type=text/css rel=stylesheet/>
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/styleSheet.css"/>
+<link href="<%=request.getContextPath()%>/stylesheets/de/calanderComponent.css" type=text/css rel=stylesheet/>
 
-<script src="<%=request.getContextPath()%>/de/jss/calendarComponent.js"></script>
-<script src="<%=request.getContextPath()%>/de/jss/script.js" type="text/javascript"></script>
-<script>var imgsrc="<%=request.getContextPath()%>/de/images/";</script>
-<script src="<%=request.getContextPath()%>/de/jss/dynamicExtensions.js" type="text/javascript"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/calendarComponent.js"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/script.js" type="text/javascript"></script>
+<script>var imgsrc="<%=request.getContextPath()%>/images/de/";</script>
+<script src="<%=request.getContextPath()%>/javascripts/de/dynamicExtensions.js" type="text/javascript"></script>
 
 <c:set var="containerInterface" value="${previewForm.containerInterface}"/>
 <jsp:useBean id="containerInterface" type="edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface"/>

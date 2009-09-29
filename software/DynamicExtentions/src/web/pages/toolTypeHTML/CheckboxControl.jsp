@@ -5,7 +5,7 @@
 <%@page import="edu.common.dynamicextensions.processor.ProcessorConstants" %>
 <%@page import="edu.common.dynamicextensions.util.DynamicExtensionsUtility"%>
 
-<script>var imgsrc="<%=request.getContextPath()%>/de/images/";</script>
+<script>var imgsrc="<%=request.getContextPath()%>/images/de/";</script>
 
 <html:hidden styleId = 'dataType'  property="dataType" value="<%=ProcessorConstants.DATATYPE_BOOLEAN%>"/>
 
@@ -39,4 +39,4 @@
 	<tr height="94%">
 	</tr>
 </table>
-<jsp:include page="/de/pages/ValidationRules.jsp" />
+<jsp:include page="/pages/de/ValidationRules.jsp" />

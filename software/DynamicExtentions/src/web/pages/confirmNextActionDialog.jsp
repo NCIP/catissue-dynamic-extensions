@@ -4,12 +4,12 @@
 
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/de/css/styleSheet.css"/>
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/stylesheets/de/styleSheet.css"/>
 
 <html>
 	<head>
 		<title>Dynamic Extensions</title>
-		 <script language="javascript" src="<%= request.getContextPath()%>/de/jss/dynamicExtensions.js"></script>
+		 <script language="javascript" src="<%= request.getContextPath()%>/javascripts/de/dynamicExtensions.js"></script>
 	</head>
 	<body onload = 'setContextParameter('<%=request.getContextPath()%>')';>
 		<html:form styleId = "controlsForm" action="/LoadFormControlsAction" >
