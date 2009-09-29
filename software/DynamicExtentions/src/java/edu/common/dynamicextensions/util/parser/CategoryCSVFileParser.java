@@ -630,7 +630,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	{
 		boolean flag = false;
 		Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
-		if (readLine()[0].trim().toLowerCase(locale).startsWith(
+		if (readLine() != null && readLine()[0].trim().toLowerCase(locale).startsWith(
 				CategoryCSVConstants.RELATED_ATTIBUTE.toLowerCase(locale)))
 		{
 			flag = true;
@@ -645,7 +645,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	{
 		boolean flag = false;
 		Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
-		if (readLine()[0].trim().toLowerCase(locale).startsWith(
+		if (readLine() != null && readLine()[0].trim().toLowerCase(locale).startsWith(
 				CategoryCSVConstants.SKIP_LOGIC_ATTIBUTE.toLowerCase(locale)))
 		{
 			flag = true;
