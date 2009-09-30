@@ -20,12 +20,12 @@ LabAnnotation:quantitativeResult,textField,Bone Density Score 3,options~Columns=
 
 Display_Label:Radiological Procedure,show=false
 instance:Annotations[1]->HealthExaminationAnnotation[1]
-HealthExaminationAnnotation:nameOfProcedure,comboBox,Procedure,Permissible_Values_File~./pvs/radProcedure_pv.txt,defaultValue=--Select--,PermVal_Options~IsOrdered=false
+HealthExaminationAnnotation:nameOfProcedure,comboBox,Procedure,Permissible_Values_File~./src/resources/pvs/radProcedure_pv.txt,defaultValue=--Select--,PermVal_Options~IsOrdered=false
 HealthExaminationAnnotation:otherProcedure,textField,Other Procedure,options~Columns=20
 
 Display_Label:Radiological Diagnosis,show=true
 instance:Annotations[1]->PastMedicalHistory[1]
-PastMedicalHistory:diagnosis,comboBox,Radiological Diagnosis,Permissible_Values_File~./pvs/radDiagnosis_pv.txt,defaultValue=--Select--,PermVal_Options~IsOrdered=false
+PastMedicalHistory:diagnosis,comboBox,Radiological Diagnosis,Permissible_Values_File~./src/resources/pvs/radDiagnosis_pv.txt,defaultValue=--Select--,PermVal_Options~IsOrdered=false
 PastMedicalHistory:otherDiagnosis,textField,Other Diagnosis,options~Columns=20
 PastMedicalHistory:laterality,comboBox,Laterality,defaultValue=--Select--
 subcategory:Bone Density Score 1:single
