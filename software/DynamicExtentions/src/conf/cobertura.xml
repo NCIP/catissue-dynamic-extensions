@@ -54,7 +54,7 @@
    	<mkdir dir="./cobertura/report"/>
   		
     <cobertura-report datafile="./cobertura/coverage.ser"
-                      srcdir="./src"
+                      srcdir="./src/java"
                       destdir="./cobertura/report"
                       format="html"/>
 
