@@ -1696,17 +1696,13 @@ function setDefaultValues(tableId, obj, containerId)
 		if ("auto_complete_dropdown" == childObject.id) 
 		{
 			var childNodes2 = childObject.childNodes;
-			if(!window.component && document.all)
-			{
-				childNodes2 = document.getElementById("auto_complete_dropdown").childNodes;
-			}
-						var oldName = childNodes2[2].childNodes[0].childNodes[0].name;
-						var newName = oldName + "_" + rowIndex;
-						var newScript = replaceAll(childNodes2[1].innerHTML,
-								oldName, newName);
-						obj.innerHTML = replaceAll(childNodes2[2].innerHTML,
-								oldName, newName);
-						eval(newScript);
+			var oldName = childNodes2[2].childNodes[0].childNodes[0].name;
+			var newName = oldName + "_" + rowIndex;
+			var newScript = replaceAll(childNodes2[1].innerHTML,
+					oldName, newName);
+			obj.innerHTML = (replaceAll(childNodes2[2].innerHTML,
+								oldName, newName))+ '<div id="skipLogicControlScript" name="skipLogicControlScript" />';
+			eval(newScript);
 		}
 	}
 	return obj;
@@ -2673,25 +2669,31 @@ function executeComboScripts()
 
 function executeCombos()
 {
-	var temp = document.getElementsByName("auto_complete_dropdown");
-	var newRowCount =  document.getElementById(conatinerId+"_table").rows.length -1;
-	var newRowsAdded = newRowCount -rowCount;
-	var length = temp.length;
-	if(length!=0)
+	var comboScriptDiv= document.getElementsByName("skipLogicControlScript");
+	if (comboScriptDiv != null)
 	{
-		while(newRowsAdded!=0)
+		var totalRowCount =  document.getElementById(conatinerId+"_table").rows.length -1;
+		var newRowsAdded = totalRowCount - rowCount;
+		var divCount = comboScriptDiv.length;
+		var combosPerRow = divCount/totalRowCount;
+		//alert(divCount+"  "+totalRowCount+"  "+newRowsAdded+" "+combosPerRow);
+		if(divCount!=0)
 		{
-			if(window.Components)
+			var totalCombosToBeExecuted = newRowsAdded * combosPerRow;
+			//alert(totalCombosToBeExecuted+" "+divCount);
+			for(var i = 0;i<totalCombosToBeExecuted;i++)
 			{
-				eval(temp[length-1].childNodes[1].innerHTML);
+				if (comboScriptDiv[(divCount-1)].value != null)
+				{
+					var comboScript = document.getElementById(comboScriptDiv[(divCount-1)].value)
+					if (comboScript != null)
+					{
+						eval(comboScript.innerHTML);
+					}
+				}
+				divCount = divCount-1;			
 			}
-			else
-			{
-				eval(temp[length-1].childNodes[2].innerHTML);
-			}
-			length = length -1;
-			newRowsAdded = newRowsAdded -1;
-		}	
+		}
 	}
 }
 

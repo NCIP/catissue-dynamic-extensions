@@ -55,7 +55,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		{
 			identifier = this.getId().toString();
 		}
-		if (getIsSkipLogicTargetControl())
+		if (getIsSkipLogicTargetControl() || this.getParentContainer().isAjaxRequest())
 		{
 			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
 					+ getHTMLComponentName()
@@ -108,7 +108,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 			htmlString = htmlString
 					+ "});</script>";
 		}
-		htmlString += "<div style='float:left' id='auto_complete_dropdown' name='auto_complete_dropdown'>"
+		htmlString += "<div style='float:left' id='auto_complete_dropdown'>"
 				+ "<input type='text' onmouseover=\"showToolTip('"
 				+ htmlComponentName
 				+ "')\" id='"
@@ -156,7 +156,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				+ "')\" id='" + htmlComponentName + "' " + " name='" + htmlComponentName
 				+ "' value ='" + defaultValue + "' size='20' class='font_bl_nor' />" + "</div>"
 				+ "</div>" + "</div>";
-		if (getIsSkipLogicTargetControl())
+		if (getIsSkipLogicTargetControl() || this.getParentContainer().isAjaxRequest())
 		{
 			htmlString += "</div>";
 		}
