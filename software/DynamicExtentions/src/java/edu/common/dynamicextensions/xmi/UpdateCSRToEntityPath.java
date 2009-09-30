@@ -52,8 +52,7 @@ public class UpdateCSRToEntityPath
 			if(associationListSize >= 1)
 			{
 				firstEntityId = startAssociationList.get(0).getEntity().getId();
-				lastEntityId = startAssociationList.get(associationListSize-1).getEntity().getId();
-
+				lastEntityId = startAssociationList.get(associationListSize-1).getTargetEntity().getId();
 				staticEntAssnId = getStaticEntityAssnIds(startAssociationList);
 				addPathForEntityGroup(staticEntAssnId, newEntitiesIds);
 			}
@@ -90,7 +89,7 @@ public class UpdateCSRToEntityPath
 	private static void removeLastUnderscore(StringBuffer strIntramoelAssnId)
 	{
 		int lastIndex = strIntramoelAssnId.length()-1;
-		if(strIntramoelAssnId.charAt(lastIndex)=='-')
+		if(strIntramoelAssnId.charAt(lastIndex)=='_')
 		{
 			strIntramoelAssnId.deleteCharAt(lastIndex);
 		}
@@ -267,7 +266,7 @@ public class UpdateCSRToEntityPath
 			String sql;
 			long nextIdPath = getNextId("path", "PATH_ID", jdbcdao);
 			sql = "insert into PATH (PATH_ID, FIRST_ENTITY_ID,"
-			+ "INTERMEDIATE_PATH, LAST_ENTITY_ID) values " + nextIdPath + "," + firstEntityId + ",'"
+			+ "INTERMEDIATE_PATH, LAST_ENTITY_ID) values (" + nextIdPath + "," + firstEntityId + ",'"
 					+ newinterPathid + "'," + secondEntityId + ")";
 			jdbcdao.executeUpdate(sql);
 
