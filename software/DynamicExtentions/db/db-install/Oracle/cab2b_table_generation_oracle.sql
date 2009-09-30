@@ -34,6 +34,6 @@ CREATE TABLE ID_TABLE(
     PRIMARY KEY (NEXT_ASSOCIATION_ID)
 );
 
-insert into ID_TABLE(NEXT_ASSOCIATION_ID) value(1);
+insert into ID_TABLE(NEXT_ASSOCIATION_ID) values(1);
 
 commit;
