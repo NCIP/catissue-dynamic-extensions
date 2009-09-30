@@ -168,6 +168,7 @@ public class DynamicExtensionsUtility
 		}
 		return containerInterface;
 	}
+
 	/**
 	 * This method fetches the Container instance from the Database given the corresponding Container Identifier.
 	 * @param containerIdentifier The Identifier of the Container.
@@ -175,8 +176,9 @@ public class DynamicExtensionsUtility
 	 * @throws DynamicExtensionsSystemException on System exception
 	 * @throws DynamicExtensionsApplicationException on Application exception
 	 */
-	public static ContainerInterface getContainerByIdentifier(String containerIdentifier,ContainerInterface mainContainer)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	public static ContainerInterface getContainerByIdentifier(String containerIdentifier,
+			ContainerInterface mainContainer) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
 		ContainerInterface containerInterface = null;
 		if (containerIdentifier != null && mainContainer.getId() != null)
@@ -188,8 +190,7 @@ public class DynamicExtensionsUtility
 			else
 			{
 				AbstractContainmentControlInterface containmentControl = UserInterfaceiUtility
-						.getAssociationControl(mainContainer,
-								containerIdentifier);
+						.getAssociationControl(mainContainer, containerIdentifier);
 				containerInterface = containmentControl.getContainer();
 			}
 		}
@@ -358,6 +359,7 @@ public class DynamicExtensionsUtility
 		}
 		return null;
 	}
+
 	/**
 	 *
 	 * @param abstractAttribute
@@ -385,7 +387,8 @@ public class DynamicExtensionsUtility
 			{
 				if (controlInterface.getBaseAbstractAttribute().getId() != null)
 				{
-					if (controlInterface.getBaseAbstractAttribute().equals(attributeMetadataInterface))
+					if (controlInterface.getBaseAbstractAttribute().equals(
+							attributeMetadataInterface))
 					{
 						control = controlInterface;
 						break;
@@ -393,7 +396,8 @@ public class DynamicExtensionsUtility
 				}
 				else
 				{
-					if (controlInterface.getBaseAbstractAttribute().getName().equals(attributeMetadataInterface.getName()))
+					if (controlInterface.getBaseAbstractAttribute().getName().equals(
+							attributeMetadataInterface.getName()))
 					{
 						control = controlInterface;
 						break;
@@ -404,14 +408,14 @@ public class DynamicExtensionsUtility
 		return control;
 
 	}
+
 	/**
 	 *
 	 * @param controlIdentifier
 	 * @param containerInterface
 	 * @return
 	 */
-	public static ControlInterface getControlByIdentifier(
-			String controlIdentifier,
+	public static ControlInterface getControlByIdentifier(String controlIdentifier,
 			ContainerInterface containerInterface)
 	{
 		ControlInterface control = null;
@@ -439,11 +443,13 @@ public class DynamicExtensionsUtility
 		return control;
 
 	}
+
 	/**
 	 *
 	 * @return
 	 */
-	public static ContainerInterface getContainerForAbstractEntity(AbstractEntityInterface abstractEntityInterface)
+	public static ContainerInterface getContainerForAbstractEntity(
+			AbstractEntityInterface abstractEntityInterface)
 	{
 		ContainerInterface containerInterface = null;
 		List<ContainerInterface> containerList = new ArrayList<ContainerInterface>();
@@ -454,6 +460,7 @@ public class DynamicExtensionsUtility
 		}
 		return containerInterface;
 	}
+
 	/**
 	 * @param controlCollection collection of controls
 	 * @param sequenceNumber sequence number
@@ -934,8 +941,7 @@ public class DynamicExtensionsUtility
 		EntityInterface targetEntity = association.getTargetEntity();
 		if (entityList.contains(targetEntity))
 		{
-			association.setTargetEntity(entityList.get(entityList
-					.indexOf(targetEntity)));
+			association.setTargetEntity(entityList.get(entityList.indexOf(targetEntity)));
 			return;
 		}
 		for (AssociationInterface tagretEntityAssociation : targetEntity.getAssociationCollection())
@@ -943,8 +949,7 @@ public class DynamicExtensionsUtility
 			EntityInterface entity = tagretEntityAssociation.getTargetEntity();
 			if (entityList.contains(entity))
 			{
-				tagretEntityAssociation.setTargetEntity(entityList.get(entityList
-						.indexOf(entity)));
+				tagretEntityAssociation.setTargetEntity(entityList.get(entityList.indexOf(entity)));
 			}
 		}
 	}
@@ -2381,28 +2386,31 @@ public class DynamicExtensionsUtility
 
 		return constraintProperties;
 	}
+
 	/**
 	 * @param filePath
 	 * @param jsFunctionName
 	 * @param jsFunctParameters
 	 * @return
 	 */
-	public static String executeJavaScriptFunc(String filePath, String jsFunctionName, Object[] jsFunctParameters)
+	public static String executeJavaScriptFunc(String filePath, String jsFunctionName,
+			Object[] jsFunctParameters)
 	{
 		String output = null;
-		FileReader reader =null;
+		FileReader reader = null;
 		try
 		{
 			ScriptEngineManager manager = new ScriptEngineManager();
-			if(manager!=null)
+			if (manager != null)
 			{
 				ScriptEngine engine = manager.getEngineByName("javascript");
 				reader = new FileReader(filePath);
-				if(reader!=null && engine!=null)
+				if (reader != null && engine != null)
 				{
 					engine.eval(reader);
 					Invocable invokeEngine = (Invocable) engine;
-				    output = invokeEngine.invokeFunction(jsFunctionName, jsFunctParameters).toString();    
+					output = invokeEngine.invokeFunction(jsFunctionName, jsFunctParameters)
+							.toString();
 				}
 			}
 		}
@@ -2410,20 +2418,43 @@ public class DynamicExtensionsUtility
 		{
 			Logger.out.error(e.getMessage());
 		}
-		 finally
-		 {
-			 try
+		finally
+		{
+			try
 			{
-				 if(reader!=null)
-				 {
-					 reader.close();
-				 }
+				if (reader != null)
+				{
+					reader.close();
+				}
 			}
 			catch (IOException e)
 			{
 				Logger.out.error(e.getMessage());
 			}
-		 }
-		 return output;
+		}
+		return output;
+	}
+
+	/**
+	 * This function will return the next sequence number for control by incrementing the maximum sequence number within current control collection.  
+	 * @param container
+	 * @return
+	 */
+	public static int getSequenceNumberForNextControl(ContainerInterface container)
+	{
+		int nextSeqNumber = 0;
+		if (container.getControlCollection() != null)
+		{
+			List<ControlInterface> controls = new ArrayList<ControlInterface>(container
+					.getControlCollection());
+
+			for (ControlInterface control : controls)
+			{
+				nextSeqNumber = nextSeqNumber > control.getSequenceNumber()
+						? nextSeqNumber
+						: control.getSequenceNumber();
+			}
+		}
+		return nextSeqNumber + 1;
 	}
 }

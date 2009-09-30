@@ -168,7 +168,6 @@ public class XMIImportProcessor
 
 	private final Map<String, Set<String>> entityNameVsAttributeNames = new HashMap<String, Set<String>>();
 
-
 	public Map<AssociationInterface, String> getMultiselectMigartionScripts()
 	{
 		return multiselectMigartionScripts;
@@ -178,6 +177,7 @@ public class XMIImportProcessor
 	{
 		return mainContainerList;
 	}
+
 	/**
 	 * @return
 	 */
@@ -209,7 +209,8 @@ public class XMIImportProcessor
 	 * @throws Exception exception
 	 */
 	public DynamicQueryList processXmi(UmlPackage umlPackage, String entityGroupName,
-			String packageName, List<String> containerNames, HibernateDAO... hibernatedao) throws Exception
+			String packageName, List<String> containerNames, HibernateDAO... hibernatedao)
+			throws Exception
 	{
 		List<UmlClass> umlClassColl = new ArrayList<UmlClass>();
 		List<UmlAssociation> umlAssociationColl = new ArrayList<UmlAssociation>();
@@ -227,7 +228,7 @@ public class XMIImportProcessor
 
 		validate();
 
-		List<EntityGroupInterface> entityGroupColl =retrieveEntityGroup(entityGroupName);
+		List<EntityGroupInterface> entityGroupColl = retrieveEntityGroup(entityGroupName);
 
 		if (entityGroupColl == null || entityGroupColl.isEmpty())
 		{//Add
@@ -380,9 +381,10 @@ public class XMIImportProcessor
 		// Persist container in DB.
 		Logger.out.info("Now SAVING DYNAMIC MODEL....");
 		Logger.out.info(" ");
-		DynamicQueryList dynamicQueryList = processPersistence(containerNames, xmiConfigurationObject.isEntityGroupSystemGenerated(),
-				xmiConfigurationObject.isCreateTable(), xmiConfigurationObject.isDefaultPackage(),
-				xmiConfigurationObject.getDefaultPackagePrefix(),hibernatedao);
+		DynamicQueryList dynamicQueryList = processPersistence(containerNames,
+				xmiConfigurationObject.isEntityGroupSystemGenerated(), xmiConfigurationObject
+						.isCreateTable(), xmiConfigurationObject.isDefaultPackage(),
+				xmiConfigurationObject.getDefaultPackagePrefix(), hibernatedao);
 
 		List<Long> newEntitiesIds = xmiConfigurationObject.getNewEntitiesIds();
 		for (EntityInterface newEntity : newEntities)
@@ -391,10 +393,10 @@ public class XMIImportProcessor
 		}
 		// Execute data migration scripts for attributes that were changed from a normal attribute to
 		// a multiselect attribute.IF dao is provided then its the resposibility of the host to execute these Queries.
-		if(hibernatedao==null || hibernatedao.length==0)
+		if (hibernatedao == null || hibernatedao.length == 0)
 		{
 			List<String> multiSelMigrationQueries = EntityManagerUtil
-				.updateSqlScriptToMigrateOldDataForMultiselectAttribute(multiselectMigartionScripts);
+					.updateSqlScriptToMigrateOldDataForMultiselectAttribute(multiselectMigartionScripts);
 			EntityManagerUtil.executeDML(multiSelMigrationQueries);
 		}
 		return dynamicQueryList;
@@ -2247,7 +2249,8 @@ public class XMIImportProcessor
 		ControlInterface newcontrol = getControlForAttribute(editedAttribute, controlModel);
 		if (newcontrol != null)
 		{ //no control created for id attribute
-			int sequenceNumber = containerInterface.getControlCollection().size() + 1;
+			int sequenceNumber = DynamicExtensionsUtility
+					.getSequenceNumberForNextControl(containerInterface);
 			newcontrol.setSequenceNumber(sequenceNumber);
 			//containerInterface.addControl(newcontrol);
 			newcontrol.setParentContainer((Container) containerInterface);
@@ -2871,8 +2874,7 @@ public class XMIImportProcessor
 
 					String targetEntityId = associationInterface.getTargetEntity().getName();
 
-					List targetContainerInterfaceList = entityNameVsContainers
-							.get(targetEntityId);
+					List targetContainerInterfaceList = entityNameVsContainers.get(targetEntityId);
 
 					//					TODO remove this condition to delete association with deleted or renamed entities.
 					//getting container corresponding to renamed or deleted entity which is associated with some association from the retrieved entity group
@@ -3427,7 +3429,7 @@ public class XMIImportProcessor
 			ContainerInterface containerInterface = (ContainerInterface) containerList.get(0);
 			mainContainerList.add(containerInterface);
 		}
-		DynamicQueryList dynamicQueryList ;
+		DynamicQueryList dynamicQueryList;
 		EntityGroupManagerInterface entityGroupManager = EntityGroupManager.getInstance();
 		try
 		{
@@ -3440,15 +3442,17 @@ public class XMIImportProcessor
 			if (xmiConfigurationObject.isEntityGroupSystemGenerated()
 					|| !xmiConfigurationObject.isCreateTable())
 			{//Static Model. Hence saving only metadata
-				dynamicQueryList =entityGroupManager.persistEntityGroupMetadata(entityGroup,hibernatedao);
+				dynamicQueryList = entityGroupManager.persistEntityGroupMetadata(entityGroup,
+						hibernatedao);
 				if (skipentityGroup != null)
 				{
-					dynamicQueryList = entityGroupManager.persistEntityGroupMetadata(skipentityGroup,hibernatedao);
+					dynamicQueryList = entityGroupManager.persistEntityGroupMetadata(
+							skipentityGroup, hibernatedao);
 				}
 			}
 			else
 			{//Dynamic model
-				dynamicQueryList = entityGroupManager.persistEntityGroup(entityGroup,hibernatedao);
+				dynamicQueryList = entityGroupManager.persistEntityGroup(entityGroup, hibernatedao);
 			}
 		}
 		catch (DynamicExtensionsApplicationException e)

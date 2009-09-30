@@ -645,8 +645,8 @@ public class CategoryHelper implements CategoryHelperInterface
 	 */
 	public Long getInsatnce(String categoryEntityName)
 	{
-		return Long.parseLong(categoryEntityName.substring(
-				categoryEntityName.indexOf('[') + 1, categoryEntityName.indexOf(']')));	
+		return Long.parseLong(categoryEntityName.substring(categoryEntityName.indexOf('[') + 1,
+				categoryEntityName.indexOf(']')));
 	}
 
 	/* (non-Javadoc)
@@ -654,14 +654,7 @@ public class CategoryHelper implements CategoryHelperInterface
 	 */
 	public int getNextSequenceNumber(ContainerInterface container)
 	{
-		int nextSequenceNumber = 1;
-
-		if (container.getAllControls() != null)
-		{
-			nextSequenceNumber = container.getAllControls().size() + 1;
-		}
-
-		return nextSequenceNumber;
+		return DynamicExtensionsUtility.getSequenceNumberForNextControl(container);
 	}
 
 	/**
@@ -1324,7 +1317,7 @@ public class CategoryHelper implements CategoryHelperInterface
 			else
 			{
 				permissibleValues = getSubsetOfPermissibleValues(attributeName, entity.getName(),
-						userDefinedDE, lineNo, desiredPermissibleValues,true);
+						userDefinedDE, lineNo, desiredPermissibleValues, true);
 			}
 		}
 		catch (ParseException parseException)
@@ -1334,6 +1327,7 @@ public class CategoryHelper implements CategoryHelperInterface
 
 		return permissibleValues;
 	}
+
 	/**
 	 * 
 	 * @param attributeName
@@ -1345,18 +1339,15 @@ public class CategoryHelper implements CategoryHelperInterface
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public List<PermissibleValueInterface> createPermissibleValuesList(
-			String attributeName,
-			String entityName,
-			SkipLogicAttributeInterface skipLogicAttributeInterface,
-			Long lineNo,
-			Map<String, Collection<SemanticPropertyInterface>> desiredPermissibleValues)
-			throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException
+	public List<PermissibleValueInterface> createPermissibleValuesList(String attributeName,
+			String entityName, SkipLogicAttributeInterface skipLogicAttributeInterface,
+			Long lineNo, Map<String, Collection<SemanticPropertyInterface>> desiredPermissibleValues)
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
 		UserDefinedDEInterface userDefinedDE = null;
 		List<PermissibleValueInterface> permissibleValues = null;
-		AttributeMetadataInterface attributeMetadataInterface = (AttributeMetadataInterface) skipLogicAttributeInterface.getTargetSkipLogicAttribute();
+		AttributeMetadataInterface attributeMetadataInterface = (AttributeMetadataInterface) skipLogicAttributeInterface
+				.getTargetSkipLogicAttribute();
 		if (attributeMetadataInterface != null)
 		{
 			DataElementInterface dataElementInterface = attributeMetadataInterface.getDataElement();
@@ -1365,15 +1356,15 @@ public class CategoryHelper implements CategoryHelperInterface
 				userDefinedDE = (UserDefinedDEInterface) dataElementInterface;
 			}
 		}
-		if (desiredPermissibleValues != null
-				&& !desiredPermissibleValues.isEmpty() && userDefinedDE != null) 
+		if (desiredPermissibleValues != null && !desiredPermissibleValues.isEmpty()
+				&& userDefinedDE != null)
 		{
-			permissibleValues = getSubsetOfPermissibleValues(attributeName,
-					entityName, userDefinedDE, lineNo,
-					desiredPermissibleValues, false);
+			permissibleValues = getSubsetOfPermissibleValues(attributeName, entityName,
+					userDefinedDE, lineNo, desiredPermissibleValues, false);
 		}
 		return permissibleValues;
 	}
+
 	/**
 	 *
 	 * @param attributeTypeInformation
@@ -1383,8 +1374,8 @@ public class CategoryHelper implements CategoryHelperInterface
 	 */
 	private List<PermissibleValueInterface> getSubsetOfPermissibleValues(String attributeName,
 			String entityName, UserDefinedDEInterface userDefinedDE, Long lineNo,
-			Map<String, Collection<SemanticPropertyInterface>> desiredPermissibleValues,boolean isClonePermissibleValues)
-			throws DynamicExtensionsApplicationException
+			Map<String, Collection<SemanticPropertyInterface>> desiredPermissibleValues,
+			boolean isClonePermissibleValues) throws DynamicExtensionsApplicationException
 	{
 		List<PermissibleValueInterface> permissibleValues = new ArrayList<PermissibleValueInterface>();
 
@@ -1497,7 +1488,8 @@ public class CategoryHelper implements CategoryHelperInterface
 							+ attributeName + " OF THE ENTITY " + entityName + " IS DIFFERENT.");
 		}
 
-		return isClonePermissibleValues ? clonePermissibleValueList(permissibleValues)
+		return isClonePermissibleValues
+				? clonePermissibleValueList(permissibleValues)
 				: permissibleValues;
 	}
 
@@ -1551,7 +1543,7 @@ public class CategoryHelper implements CategoryHelperInterface
 
 		return permissibleValues;
 	}
-	
+
 	/**
 	 * 
 	 * @param permissibleValueCollection
@@ -1559,8 +1551,7 @@ public class CategoryHelper implements CategoryHelperInterface
 	 * @return
 	 */
 	public PermissibleValueInterface getPermissibleValue(
-			Collection<PermissibleValueInterface> permissibleValueCollection,
-			String value)
+			Collection<PermissibleValueInterface> permissibleValueCollection, String value)
 	{
 		PermissibleValueInterface permissibleValueInterface = null;
 		if (permissibleValueCollection != null && value != null)

@@ -23,7 +23,6 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterfa
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.actionform.FormDefinitionForm;
-import edu.common.dynamicextensions.ui.webui.util.WebUIManager;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationDirection;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
@@ -292,7 +291,7 @@ public class ApplyFormDefinitionProcessor extends BaseDynamicExtensionsProcessor
 			ControlProcessor controlProcessor = ControlProcessor.getInstance();
 			ControlInterface subFormControl = controlProcessor.createContainmentAssociationControl(
 					subFormContainer, association);
-			subFormControl.setSequenceNumber(WebUIManager
+			subFormControl.setSequenceNumber(DynamicExtensionsUtility
 					.getSequenceNumberForNextControl(mainFormContainer));
 			if (subFormControl != null)
 			{

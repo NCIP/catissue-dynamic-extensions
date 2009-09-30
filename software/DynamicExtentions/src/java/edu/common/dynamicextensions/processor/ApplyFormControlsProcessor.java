@@ -13,7 +13,6 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.interfaces.AbstractAttributeUIBeanInterface;
 import edu.common.dynamicextensions.ui.interfaces.ControlUIBeanInterface;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
-import edu.common.dynamicextensions.ui.webui.util.WebUIManager;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 
 /**
@@ -103,7 +102,8 @@ public class ApplyFormControlsProcessor extends BaseDynamicExtensionsProcessor
 				//Control Interface : Add control
 				control = controlProcessor.createAndPopulateControl(controlUIBean
 						.getUserSelectedTool(), controlUIBean, entityGroup);
-				control.setSequenceNumber(WebUIManager.getSequenceNumberForNextControl(container));
+				control.setSequenceNumber(DynamicExtensionsUtility
+						.getSequenceNumberForNextControl(container));
 
 				//Entity Interface  : Add attribute
 				if ((entity != null) && (abstractAttribute != null))
@@ -209,19 +209,19 @@ public class ApplyFormControlsProcessor extends BaseDynamicExtensionsProcessor
 	{
 		//if combobox/optionbutton control has been selected then set the DataElement object for set of permissible values
 		String userSelectedControl = controlUIBean.getUserSelectedTool();
-		if ((userSelectedControl != null)&& ((userSelectedControl.equalsIgnoreCase(ProcessorConstants.COMBOBOX_CONTROL))
-				|| (userSelectedControl
+		if ((userSelectedControl != null)
+				&& ((userSelectedControl.equalsIgnoreCase(ProcessorConstants.COMBOBOX_CONTROL)) || (userSelectedControl
 						.equalsIgnoreCase(ProcessorConstants.RADIOBUTTON_CONTROL))))
 		{
-				AttributeTypeInformationInterface attributeTypeInformation = DynamicExtensionsUtility
-						.getAttributeTypeInformation(abstractAttribute);
-				if (attributeTypeInformation != null)
-				{
-					attributeTypeInformation.removeDataElement(attributeTypeInformation
-							.getDataElement());
-					attributeTypeInformation.setDataElement(attributeProcessor
-							.getDataElementInterface(attributeUIBean));
-				}
+			AttributeTypeInformationInterface attributeTypeInformation = DynamicExtensionsUtility
+					.getAttributeTypeInformation(abstractAttribute);
+			if (attributeTypeInformation != null)
+			{
+				attributeTypeInformation.removeDataElement(attributeTypeInformation
+						.getDataElement());
+				attributeTypeInformation.setDataElement(attributeProcessor
+						.getDataElementInterface(attributeUIBean));
+			}
 		}
 
 	}
@@ -247,7 +247,7 @@ public class ApplyFormControlsProcessor extends BaseDynamicExtensionsProcessor
 					word = wordsInCaption[i];
 					if ((word != null) && (!word.trim().equalsIgnoreCase("")))
 					{
-						attributeName=word;
+						attributeName = word;
 					}
 				}
 			}
