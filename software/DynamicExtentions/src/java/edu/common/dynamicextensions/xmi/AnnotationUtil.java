@@ -752,10 +752,9 @@ public class AnnotationUtil
 							ispathAdded = isPathAdded(entity.getId(), last_entity_id, jdbcdao);
 							if (!ispathAdded)
 							{
-								sql = "INSERT INTO path values(" + maxPathId + "," + entity.getId()
-										+ ",'" + intermediatePath + "'," + last_entity_id + ")";
-								String uniquepathStr = entity.getId() + "_" + intermediatePath
-										+ "_" + last_entity_id;
+								sql = "insert into PATH (PATH_ID, FIRST_ENTITY_ID, INTERMEDIATE_PATH, LAST_ENTITY_ID) values ("
+									+ maxPathId + "," + entity.getId() + ",'" + intermediatePath + "'," + last_entity_id + ")";
+								String uniquepathStr = entity.getId() + "_" + intermediatePath + "_" + last_entity_id;
 								if (!mapQuery.containsKey(uniquepathStr))
 								{
 									mapQuery.put(uniquepathStr, null);
@@ -794,11 +793,9 @@ public class AnnotationUtil
 							ispathAdded = isPathAdded(first_entity_id, entity.getId(), jdbcdao);
 							if (!ispathAdded)
 							{
-								sql = "INSERT INTO path values(" + maxPathId + ","
-										+ first_entity_id + ",'" + intermediatePath + "',"
-										+ entity.getId() + ")";
-								String uniquepathStr = first_entity_id + "_" + intermediatePath
-										+ "_" + entity.getId();
+								sql = "insert into PATH (PATH_ID, FIRST_ENTITY_ID, INTERMEDIATE_PATH, LAST_ENTITY_ID) values ("
+									+ maxPathId + ","+ first_entity_id + ",'" + intermediatePath + "'," + entity.getId() + ")";
+								String uniquepathStr = first_entity_id + "_" + intermediatePath	+ "_" + entity.getId();
 
 								if (!mapQuery.containsKey(uniquepathStr))
 								{
@@ -911,7 +908,7 @@ public class AnnotationUtil
 
 			for (String query : queryList)
 			{
-					//LOGGER.info("Query :"+query);
+					LOGGER.info("Query :"+query);
 					jdbcdao.executeUpdate(query);
 			}
 			jdbcdao.commit();
@@ -1011,7 +1008,7 @@ public class AnnotationUtil
 
 		return returnVal;
 	}
-	
+
 	/**
 	 * @param entityName
 	 * @return
