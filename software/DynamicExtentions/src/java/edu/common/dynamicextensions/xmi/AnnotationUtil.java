@@ -30,6 +30,7 @@ import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.RoleInterface;
 import edu.common.dynamicextensions.domaininterface.databaseproperties.ConstraintPropertiesInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
+import edu.common.dynamicextensions.entitymanager.EntityManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
@@ -1009,6 +1010,29 @@ public class AnnotationUtil
 		}
 
 		return returnVal;
+	}
+	
+	/**
+	 * @param entityName
+	 * @return
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
+	 */
+	public static Long getEntityId(String entityName) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
+	{
+		Long entityId = Long.valueOf(0);
+		if (entityName != null)
+		{
+			EntityManagerInterface entityManager = EntityManager.getInstance();
+			EntityInterface entity;
+			entity = entityManager.getEntityByName(entityName);
+			if (entity != null)
+			{
+				entityId = entity.getId();
+			}
+		}
+		return entityId;
 	}
 
 }
