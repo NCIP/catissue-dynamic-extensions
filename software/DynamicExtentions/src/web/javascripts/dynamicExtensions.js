@@ -1700,8 +1700,8 @@ function setDefaultValues(tableId, obj, containerId)
 			var newName = oldName + "_" + rowIndex;
 			var newScript = replaceAll(childNodes2[1].innerHTML,
 					oldName, newName);
-			obj.innerHTML = (replaceAll(childNodes2[2].innerHTML,
-								oldName, newName))+ '<div id="skipLogicControlScript" name="skipLogicControlScript" />';
+			obj.innerHTML = replaceAll(childNodes2[2].innerHTML,
+								oldName, newName);
 			eval(newScript);
 		}
 	}
@@ -2499,6 +2499,7 @@ var startTime= new Date(), endTime;
 var rowIndex=0;
 var rowCount = 0;
 var conatinerId;
+var numCombosInPastedData;
 
 
 function intVariables()
@@ -2513,7 +2514,7 @@ endTime="";
 rowIndex=0;
 rowCount = 0;
 conatinerId=0;
-
+numCombosInPastedData=0;
 }
 
 function pasteDataPart(clipboardData,index)
@@ -2582,6 +2583,11 @@ function paster(response)
 {
 	var reponseList  = response.split("~ErrorList");
 	var generatedHTML  = reponseList[0];
+	var matches = generatedHTML.match(/skipLogicControlScript/g);
+	if(matches!=null && matches!='undefined')
+	{
+		numCombosInPastedData = (matches.length)/2;
+	}
 	var errorString = reponseList[1];
 	//PRINT ERRORS IF ANY 
 	var errorHTML = "<table width=\"100%\" height=\"30\"  border=\"0\" cellpadding=\"4\" cellspacing=\"4\" class=\"td_color_FFFFCC\">";
@@ -2674,13 +2680,11 @@ function executeCombos()
 	{
 		var totalRowCount =  document.getElementById(conatinerId+"_table").rows.length -1;
 		var newRowsAdded = totalRowCount - rowCount;
+		var combosPerRow = numCombosInPastedData/newRowsAdded;
 		var divCount = comboScriptDiv.length;
-		var combosPerRow = divCount/totalRowCount;
-		//alert(divCount+"  "+totalRowCount+"  "+newRowsAdded+" "+combosPerRow);
 		if(divCount!=0)
 		{
 			var totalCombosToBeExecuted = newRowsAdded * combosPerRow;
-			//alert(totalCombosToBeExecuted+" "+divCount);
 			for(var i = 0;i<totalCombosToBeExecuted;i++)
 			{
 				if (comboScriptDiv[(divCount-1)].value != null)

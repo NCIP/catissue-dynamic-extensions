@@ -24,7 +24,7 @@
 <script src="<%=request.getContextPath()%>/javascripts/de/calendarComponent.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/script.js" type="text/javascript"></script>
 
-<script>var imgsrc="<%=request.getContextPath()%>/de/images/";</script>
+<script>var imgsrc="<%=request.getContextPath()%>/images/de/";</script>
 <script src="<%=request.getContextPath()%>/javascripts/de/jquery-1.3.2.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/form_plugin.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/dynamicExtensions.js" type="text/javascript"></script>

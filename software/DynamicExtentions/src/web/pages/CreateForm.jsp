@@ -22,13 +22,13 @@
 	<head>
 		<title>Dynamic Extensions</title>
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/styleSheet.css"/>
-		<link rel="STYLESHEET" type="text/css" href="<%=request.getContextPath()%>/dhtml/de/css/dhtmlXTree.css"/>
+		<link rel="STYLESHEET" type="text/css" href="<%=request.getContextPath()%>/dhtml/stylesheets/de/dhtmlXTree.css"/>
 
 		<script src="<%=request.getContextPath()%>/javascripts/de/dynamicExtensions.js" type="text/javascript"></script>
 		<script src="<%=request.getContextPath()%>/javascripts/de/script.js" type="text/javascript"></script>
 		<script src="<%=request.getContextPath()%>/javascripts/de/ajax.js" type="text/javascript"></script>
-		<script src="<%=request.getContextPath()%>/dhtml/de/jss/dhtmlXCommon.js"></script>
-		<script src="<%=request.getContextPath()%>/dhtml/de/jss/dhtmlXTree.js"></script>
+		<script src="<%=request.getContextPath()%>/dhtml/javascripts/de/dhtmlXCommon.js"></script>
+		<script src="<%=request.getContextPath()%>/dhtml/javascripts/de/dhtmlXTree.js"></script>
 
 		<script>
 			resetTimeoutCounter();

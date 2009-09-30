@@ -13,7 +13,7 @@
 	<head>
 		<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/styleSheet.css"/>
 		<link href="<%=request.getContextPath()%>/stylesheets/de/calanderComponent.css" type="text/css" rel=stylesheet/>
-		<link rel="STYLESHEET" type="text/css" href="<%=request.getContextPath()%>/dhtml/de/css/dhtmlXGrid.css"/>
+		<link rel="STYLESHEET" type="text/css" href="<%=request.getContextPath()%>/dhtml/stylesheets/de/dhtmlXGrid.css"/>
 
 		<script src="<%=request.getContextPath()%>/javascripts/de/dynamicExtensions.js" type="text/javascript"></script>
 		<script src="<%=request.getContextPath()%>/javascripts/de/script.js" type="text/javascript"></script>
@@ -22,11 +22,11 @@
 		<script src="<%=request.getContextPath()%>/javascripts/de/calendarComponent.js"></script>
 		<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/ajax.js"></script>
 
-		<script src="<%=request.getContextPath()%>/dhtml/de/jss/dhtmlXCommon.js"></script>
-		<script src="<%=request.getContextPath()%>/dhtml/de/jss/dhtmlXGrid.js"></script>
-		<script src="<%=request.getContextPath()%>/dhtml/de/jss/dhtmlXGrid_nxml.js"></script>
-		<script src="<%=request.getContextPath()%>/dhtml/de/jss/dhtmlXGrid_drag.js"></script>
-		<script src="<%=request.getContextPath()%>/dhtml/de/jss/dhtmlXGridCell.js"></script>
+		<script src="<%=request.getContextPath()%>/dhtml/javascripts/de/dhtmlXCommon.js"></script>
+		<script src="<%=request.getContextPath()%>/dhtml/javascripts/de/dhtmlXGrid.js"></script>
+		<script src="<%=request.getContextPath()%>/dhtml/javascripts/de/dhtmlXGrid_nxml.js"></script>
+		<script src="<%=request.getContextPath()%>/dhtml/javascripts/de/dhtmlXGrid_drag.js"></script>
+		<script src="<%=request.getContextPath()%>/dhtml/javascripts/de/dhtmlXGridCell.js"></script>
 
 		<title>Dynamic Extensions</title>
 		<!--Java Script Function Start -->
