@@ -815,7 +815,7 @@
       		fork="no" maxmemory="512m">
 
       		<sysproperty key="net.sourceforge.cobertura.datafile"
-      				file="../tools/cobertura/cobertura/coverage.ser" />
+      				file="./cobertura/coverage.ser" />
 
 
       		<!--formatter type="plain" usefile="false"/-->
