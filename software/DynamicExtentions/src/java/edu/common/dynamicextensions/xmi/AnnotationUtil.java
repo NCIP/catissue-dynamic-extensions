@@ -908,7 +908,7 @@ public class AnnotationUtil
 
 			for (String query : queryList)
 			{
-					LOGGER.info("Query :"+query);
+					//LOGGER.info("Query :"+query);
 					jdbcdao.executeUpdate(query);
 			}
 			jdbcdao.commit();
