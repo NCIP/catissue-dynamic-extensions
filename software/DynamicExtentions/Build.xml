@@ -812,7 +812,7 @@
 	 	<mkdir dir="${junit.report.dir}"/>
 
       	<junit printsummary="yes" haltonerror="no" haltonfailure="no"
-      		fork="no" maxmemory="512m">
+      		fork="yes" maxmemory="1024m">
 
       		<sysproperty key="net.sourceforge.cobertura.datafile"
       				file="./cobertura/coverage.ser" />
@@ -828,7 +828,7 @@
 
 			<classpath>
 			<!--	<pathelement location="${junit.classes.dir}"/> -->
-				<pathelement location="../tools/cobertura/cobertura/instrumented/"/>
+				<pathelement location="./cobertura/instrumented/"/>
 				<pathelement location="${target.dir}"/>
 				 <fileset dir="${lib.dir}">
 	                  <include name="*.jar"/>
