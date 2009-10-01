@@ -88,9 +88,9 @@ public class UserInterfaceiUtility
 			htmlForGrid.append("</td></tr>");
 		}
 
-		htmlForGrid.append("<tr>" + "<td width='5%'><input type='button' id='paste_"+subContainer.getId()+"' value='Paste' " +
+		htmlForGrid.append("<tr>" + "<td width='5%'><input type='button' style='border: 0px; background-image: url(images/de/b_paste.gif);height: 20px; width: 59px;' align='middle'  id='paste_"+subContainer.getId()+"' " +
 				"onclick='pasteData(\""+subContainer.getId()+"\",\"many\")'/>"+
-				"</td><td class='formField_withoutBorder' width='95%'>&nbsp;</td></tr>");
+				"</td><td class='formField_withoutBorder' style='background-color:#E3E2E7;' width='95%'>&nbsp;</td></tr>");
 		
 		
 		htmlForGrid.append("<tr width='100%'><td colspan='3' width='100%'>");
