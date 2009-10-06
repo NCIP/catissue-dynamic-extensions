@@ -1050,8 +1050,8 @@
 				</if>
 			</else>
 		</if>
-		<copy file="${temp.hdoclet.dir}/project/dynamicExtensions.zip" todir="${de_release_dir}" overwrite="true"/>
-		<copy file="${temp.hdoclet.dir}/project/DynamicExtensionsInterface/dynamicExtensions.jar" todir="${de_release_dir}" overwrite="true"/>
+		<copy file="${temp.hdoclet.dir}/project/software/DynamicExtentions/binaries/dynamicExtensions.zip" todir="${de_release_dir}" overwrite="true"/>
+		<copy file="${temp.hdoclet.dir}/project/software/DynamicExtentions/binaries/DynamicExtensionsInterface/dynamicExtensions.jar" todir="${de_release_dir}" overwrite="true"/>
 	</target>
 	<!-- DE release target end-->
 
@@ -1085,7 +1085,7 @@
 			</else>
 		</if>
 		<copy todir="${de_release_dir}/junit_report/">
-			<fileset dir="${temp.hdoclet.dir}/project/junit/edu/common/dynamicextensions">
+			<fileset dir="${temp.hdoclet.dir}/project/software/DynamicExtentions/reports/junit/edu/common/dynamicextensions">
 				<include name="**/**/*.htm*"/> 
 				<include name="**/**/*.css"/> 
 				<include name="**/**/*.txt"/> 

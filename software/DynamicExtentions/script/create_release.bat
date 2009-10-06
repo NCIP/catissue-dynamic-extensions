@@ -1,4 +1,4 @@
-cd ./../temp/project
+cd ../temp/project/software/DynamicExtentions
 
 echo ===============================================================================
 
