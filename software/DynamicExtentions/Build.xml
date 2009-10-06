@@ -201,6 +201,8 @@
 						<include name="**/wustl/common/**/*.class"/>
     					<include name="**/wustl/metadata/**/*.class"/>
 		    			<exclude name="**/*Test*.class"/>
+	    				<exclude name="**/TestHibernate.cfg.xml"/>
+	    				<exclude name="**/*ApplicationDAOProperties.xml"/>
 
 
 	   		    </fileset>
@@ -250,6 +252,8 @@
 					<include name="**/wustl/common/**/*.class"/>
 					<include name="**/wustl/metadata/**/*.class"/>
 	    			<exclude name="**/*Test*.class"/>
+    				<exclude name="**/TestHibernate.cfg.xml"/>
+    				<exclude name="**/*ApplicationDAOProperties.xml"/>
    		    </fileset>
 	   		<manifest>
    				<section name="${DynamicExtensions.jar.details}">

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package edu.common.dynamicextensions.util;
@@ -16,7 +16,7 @@ import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.global.DEConstants;
-import edu.wustl.common.util.global.ApplicationProperties;
+
 
 /**
  * this class upgrades the category entity name to the newer names of format
@@ -31,7 +31,7 @@ public class UpgradeCategoryEntityName implements DynamicExtensionsQueryBuilderC
 	 * @param args
 	 * @throws DynamicExtensionsSystemException
 	 * @throws SQLException
-	 * @throws DynamicExtensionsApplicationException 
+	 * @throws DynamicExtensionsApplicationException
 	 */
 	public static void main(String[] args) throws DynamicExtensionsSystemException,SQLException, DynamicExtensionsApplicationException
 	{
@@ -44,14 +44,13 @@ public class UpgradeCategoryEntityName implements DynamicExtensionsQueryBuilderC
 	 * @throws DynamicExtensionsSystemException fails to retrieve objects
 	 * @throws DAOException fails to execute query
 	 * @throws SQLException fails to execute query
-	 * @throws DynamicExtensionsApplicationException 
+	 * @throws DynamicExtensionsApplicationException
 	 */
 	private static void upgradeCategoryEntityNames() throws DynamicExtensionsSystemException,
 			SQLException, DynamicExtensionsApplicationException
 	{
 		EntityManagerInterface entityManager = EntityManager.getInstance();
 		Collection<Long> categoryEntityIdColl = entityManager.getAllCategoryEntityId();
-		ApplicationProperties.initBundle(DEConstants.APPLICATION_RESOURCES);
 		EntityManagerUtil entityManagerUtil = new EntityManagerUtil();
 		if (categoryEntityIdColl != null && !categoryEntityIdColl.isEmpty())
 		{
@@ -60,9 +59,9 @@ public class UpgradeCategoryEntityName implements DynamicExtensionsQueryBuilderC
 				StringBuffer query = new StringBuffer();
 				query.append(SELECT_KEYWORD + WHITESPACE + IDENTIFIER);
 				query.append(WHITESPACE + FROM_KEYWORD + WHITESPACE
-						+ (ApplicationProperties.getValue(DEConstants.PATH_TABLE_NAME)) + WHITESPACE);
+						+ DEConstants.PATH_TABLE_NAME + WHITESPACE);
 				query.append(WHITESPACE + WHERE_KEYWORD + WHITESPACE
-						+ (ApplicationProperties.getValue(DEConstants.CATEGORY_ENTITY_ID)) + EQUAL
+						+ DEConstants.CATEGORY_ENTITY_ID + EQUAL
 						+ categoryEntityId);
 				List<Long> pathIdColl = entityManagerUtil.getResultInList(query.toString());
 				if (pathIdColl != null && !pathIdColl.isEmpty())
@@ -106,8 +105,8 @@ public class UpgradeCategoryEntityName implements DynamicExtensionsQueryBuilderC
 	 * this method updates the categoryEntity Name
 	 * @param categoryEntityName name of category Entity
 	 * @param categoryEntityId Identifier of category Entity
-	 * @throws SQLException 
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws SQLException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private static void updateCategoryName(String categoryEntityName, Long categoryEntityId)
 			throws DynamicExtensionsSystemException, SQLException
@@ -116,15 +115,15 @@ public class UpgradeCategoryEntityName implements DynamicExtensionsQueryBuilderC
 		List<String> queryList = new ArrayList<String>();
 		query.append(UPDATE_KEYWORD);
 		query.append(WHITESPACE
-				+ (ApplicationProperties.getValue(DEConstants.ABSTRACT_METADATA_TABLE_NAME)));
+				+ DEConstants.ABSTRACT_METADATA_TABLE_NAME);
 		query.append(WHITESPACE + SET_KEYWORD + WHITESPACE
-				+ (ApplicationProperties.getValue(DEConstants.NAME)) + EQUAL + "'"
+				+ DEConstants.NAME + EQUAL + "'"
 				+ categoryEntityName + "'" + WHITESPACE);
 		query.append(WHERE_KEYWORD + WHITESPACE + IDENTIFIER + EQUAL + categoryEntityId);
 		queryList.add(query.toString());
 		EntityManagerUtil.executeDML(queryList);
 	}
-	
+
 	/**
 	 * This method retrieves the category names from pathAssociationRelationIds
 	 * @param pathAssociationRelationIds

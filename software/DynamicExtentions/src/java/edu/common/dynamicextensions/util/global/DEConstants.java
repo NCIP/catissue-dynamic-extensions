@@ -106,10 +106,10 @@ public class DEConstants
 	public static final String AUDIT_USER_ID_COLUMN = "USER_ID";
 	public static final String OPENING_SQUARE_BRACKET = "[";
 	public static final String CLOSING_SQUARE_BRACKET = "]";
-	public static final String CATEGORY_ENTITY_ID = "category.entity.id.column.name";
-	public static final String PATH_TABLE_NAME = "dyextn.path.table.name";
-	public static final String ABSTRACT_METADATA_TABLE_NAME = "abstract.metadata.table.name";
-	public static final String NAME = "name.column.name";
+	public static final String CATEGORY_ENTITY_ID = "CATEGORY_ENTITY_ID";
+	public static final String PATH_TABLE_NAME = "DYEXTN_PATH";
+	public static final String ABSTRACT_METADATA_TABLE_NAME = "DYEXTN_ABSTRACT_METADATA";
+	public static final String NAME = "NAME";
 	public static final String APPLICATION_RESOURCES = "ApplicationResources";
 	public static final int TWO = 2;
 	public static String DATE = "date";
@@ -138,7 +138,6 @@ public class DEConstants
 	public static final String COMMA = ",";
 	public static final String CONTAINER_ID = "containerId";
 
-	
 	public enum Cardinality {
 		ZERO(0), ONE(1), MANY(100);
 
@@ -230,7 +229,7 @@ public class DEConstants
 	}
 
 	/**
-	 * enum to define strategies of the inheritance 
+	 * enum to define strategies of the inheritance
 	 */
 	public enum InheritanceStrategy {
 		TABLE_PER_CONCRETE_CLASS(1), TABLE_PER_HEIRARCHY(2), TABLE_PER_SUB_CLASS(3);
