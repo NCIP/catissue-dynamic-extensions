@@ -706,6 +706,27 @@
             column="IS_SKIP_LOGIC"
         />
 
+        <set
+            name="dependentSkipLogicAttributes"
+            table="DYEXTN_SKIP_LOGIC_ATTRIBUTE"
+            lazy="false"
+            inverse="false"
+            cascade="all-delete-orphan"
+            sort="unsorted"
+        >
+            <cache 
+                usage="read-write" 
+             />
+
+              <key
+                  column="CAT_ATTR_ID"
+              />
+
+              <one-to-many
+                  class="edu.common.dynamicextensions.domain.SkipLogicAttribute"
+              />
+        </set>
+
         </joined-subclass>
         <joined-subclass
             name="edu.common.dynamicextensions.domain.SkipLogicAttribute"

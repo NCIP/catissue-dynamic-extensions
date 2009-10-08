@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import edu.common.dynamicextensions.domain.BooleanAttributeTypeInformation;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
@@ -440,40 +441,65 @@ public class ControlsUtility
 			AttributeMetadataInterface targetAttributeMetadataInterface) 
 	{
 		SkipLogicAttributeInterface skipLogicAttributeInterface = null;
-		for (PermissibleValueInterface selectedPermissibleValue : selectedPermissibleValues) 
+		if (sourceAttributeMetadataInterface.getAttributeTypeInformation() instanceof BooleanAttributeTypeInformation)
 		{
-			Collection<PermissibleValueInterface> skipLogicPermissibleValues = sourceAttributeMetadataInterface
-					.getSkipLogicPermissibleValues();
-			if (skipLogicPermissibleValues != null) 
+			CategoryAttributeInterface categoryAttributeInterface = null;
+			if (sourceAttributeMetadataInterface instanceof CategoryAttributeInterface)
 			{
-				for (PermissibleValueInterface skipLogicValue : skipLogicPermissibleValues) 
+				categoryAttributeInterface = (CategoryAttributeInterface) sourceAttributeMetadataInterface;
+			}
+			if (categoryAttributeInterface != null)
+			{
+				for (SkipLogicAttributeInterface skipLogicAttribute : categoryAttributeInterface.getDependentSkipLogicAttributes())
 				{
-					for (SkipLogicAttributeInterface skipLogicAttribute : skipLogicValue
-							.getDependentSkipLogicAttributes()) 
+					if (skipLogicAttribute.getSourceSkipLogicAttribute()
+							.equals(sourceAttributeMetadataInterface)
+							&& skipLogicAttribute.getTargetSkipLogicAttribute()
+									.equals(targetAttributeMetadataInterface)) 
 					{
-						if (skipLogicValue.equals(selectedPermissibleValue)
-								&& skipLogicAttribute
-										.getSourceSkipLogicAttribute()
-										.equals(
-												sourceAttributeMetadataInterface)
-								&& skipLogicAttribute
-										.getTargetSkipLogicAttribute()
-										.equals(
-												targetAttributeMetadataInterface)) 
-						{
-							skipLogicAttributeInterface = skipLogicAttribute;
-							break;
-						}
-					}
-					if (skipLogicAttributeInterface != null)
-					{
+						skipLogicAttributeInterface = skipLogicAttribute;
 						break;
 					}
 				}
 			}
-			if (skipLogicAttributeInterface != null)
+		}
+		else
+		{
+			for (PermissibleValueInterface selectedPermissibleValue : selectedPermissibleValues) 
 			{
-				break;
+				Collection<PermissibleValueInterface> skipLogicPermissibleValues = sourceAttributeMetadataInterface
+						.getSkipLogicPermissibleValues();
+				if (skipLogicPermissibleValues != null) 
+				{
+					for (PermissibleValueInterface skipLogicValue : skipLogicPermissibleValues) 
+					{
+						for (SkipLogicAttributeInterface skipLogicAttribute : skipLogicValue
+								.getDependentSkipLogicAttributes()) 
+						{
+							if (skipLogicValue.equals(selectedPermissibleValue)
+									&& skipLogicAttribute
+											.getSourceSkipLogicAttribute()
+											.equals(
+													sourceAttributeMetadataInterface)
+									&& skipLogicAttribute
+											.getTargetSkipLogicAttribute()
+											.equals(
+													targetAttributeMetadataInterface)) 
+							{
+								skipLogicAttributeInterface = skipLogicAttribute;
+								break;
+							}
+						}
+						if (skipLogicAttributeInterface != null)
+						{
+							break;
+						}
+					}
+				}
+				if (skipLogicAttributeInterface != null)
+				{
+					break;
+				}
 			}
 		}
 		return skipLogicAttributeInterface;
@@ -506,6 +532,27 @@ public class ControlsUtility
 		}
 		return skipLogicAttributes;
 	}
+	/**
+	 * 
+	 * @param selectedPermissibleValues
+	 * @return
+	 */
+	public static List<SkipLogicAttributeInterface> getSkipLogicAttributesForCheckBox(
+						AttributeMetadataInterface attributeMetadataInterface) 
+	{
+		List<SkipLogicAttributeInterface> skipLogicAttributes = new ArrayList<SkipLogicAttributeInterface>();
+		CategoryAttributeInterface categoryAttributeInterface = null;
+		if (attributeMetadataInterface instanceof CategoryAttributeInterface)
+		{
+			categoryAttributeInterface = (CategoryAttributeInterface) attributeMetadataInterface;
+		}
+		if (categoryAttributeInterface != null)
+		{
+			skipLogicAttributes.addAll(categoryAttributeInterface.getDependentSkipLogicAttributes());
+		}
+		return skipLogicAttributes;
+	}
+	
 	/**
 	 * @throws ParseException
 	 * 

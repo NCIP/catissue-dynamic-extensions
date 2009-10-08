@@ -17,6 +17,7 @@ import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.NumericAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.UserDefinedDE;
+import edu.common.dynamicextensions.domain.userinterface.CheckBox;
 import edu.common.dynamicextensions.domain.userinterface.TextField;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
@@ -778,6 +779,11 @@ public class CategoryGenerator
 							DynamicExtensionsUtility
 									.getContainerForAbstractEntity(category
 											.getRootCategoryElement()));
+			boolean isEnumeratedSourceControl = true;
+			if (sourceControl instanceof CheckBox)
+			{
+				isEnumeratedSourceControl = false;
+			}
 			sourceControl.setIsSkipLogic(Boolean.valueOf(true));
 			sourceCategoryAttribute.setIsSkipLogic(Boolean.valueOf(true));
 
@@ -819,24 +825,27 @@ public class CategoryGenerator
 							.getContainerForAbstractEntity(category
 									.getRootCategoryElement()));
 			targetControl.setIsSkipLogicTargetControl(Boolean.valueOf(true));
-			String permissibleValue = categoryFileParser.getSkipLogicPermissibleValueName();
-			
-			DataElementInterface dataElementInterface = ((AttributeMetadataInterface)sourceCategoryAttribute).getDataElement();
-			UserDefinedDEInterface userDefinedDEInterface = (UserDefinedDEInterface) dataElementInterface;
-			
-			PermissibleValueInterface permissibleValueInterface = categoryHelper
-					.getPermissibleValue(userDefinedDEInterface
-							.getPermissibleValueCollection(), permissibleValue);
-			
-			sourceCategoryAttribute.addSkipLogicPermissibleValue(permissibleValueInterface);
-			
-			CategoryValidator.checkForNullRefernce(permissibleValueInterface,
-					ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-							+ categoryFileParser.getLineNumber() + " "
-							+ ApplicationProperties.getValue(CategoryConstants.ATTR)
-							+ permissibleValue + " "
-							+ ApplicationProperties.getValue(CategoryConstants.PV_ATTR_NOT_PRESENT)
-							+ sourceAttributeName);
+			PermissibleValueInterface permissibleValueInterface = null;
+			if (isEnumeratedSourceControl)
+			{
+				String permissibleValue = categoryFileParser.getSkipLogicPermissibleValueName();
+				DataElementInterface dataElementInterface = ((AttributeMetadataInterface)sourceCategoryAttribute).getDataElement();
+				UserDefinedDEInterface userDefinedDEInterface = (UserDefinedDEInterface) dataElementInterface;
+				
+				permissibleValueInterface = categoryHelper
+						.getPermissibleValue(userDefinedDEInterface
+								.getPermissibleValueCollection(), permissibleValue);
+				
+				sourceCategoryAttribute.addSkipLogicPermissibleValue(permissibleValueInterface);
+				
+				CategoryValidator.checkForNullRefernce(permissibleValueInterface,
+						ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
+								+ categoryFileParser.getLineNumber() + " "
+								+ ApplicationProperties.getValue(CategoryConstants.ATTR)
+								+ permissibleValue + " "
+								+ ApplicationProperties.getValue(CategoryConstants.PV_ATTR_NOT_PRESENT)
+								+ sourceAttributeName);
+			}
 			SkipLogicAttributeInterface skipLogicAttributeInterface = DomainObjectFactory.getInstance().createSkipLogicAttribute();
 			skipLogicAttributeInterface.setSourceSkipLogicAttribute(sourceCategoryAttribute);
 			skipLogicAttributeInterface.setTargetSkipLogicAttribute(targetCategoryAttribute);
@@ -856,16 +865,24 @@ public class CategoryGenerator
 							+ " "
 							+ ApplicationProperties.getValue("mandatoryDValueForRO") + targetAttributeName);
 				}
-				return;
 			}
-			skipLogicAttributeInterface
+			else
+			{
+				skipLogicAttributeInterface
 					.setDefaultValue(((AttributeMetadataInterface) targetCategoryAttribute)
 							.getAttributeTypeInformation()
 							.getPermissibleValueForString(
 									DynamicExtensionsUtility
 											.getEscapedStringValue(defaultValue)));
-			
-			permissibleValueInterface.addDependentSkipLogicAttribute(skipLogicAttributeInterface);
+			}
+			if (isEnumeratedSourceControl)
+			{
+				permissibleValueInterface.addDependentSkipLogicAttribute(skipLogicAttributeInterface);
+			}
+			else
+			{
+				sourceCategoryAttribute.addDependentSkipLogicAttribute(skipLogicAttributeInterface);
+			}
 			Map<String, Collection<SemanticPropertyInterface>> permissibleValues = categoryFileParser
 					.getPermissibleValues();
 
@@ -878,7 +895,7 @@ public class CategoryGenerator
 									.getLineNumber(), permissibleValues);
 			
 			skipLogicAttributeInterface.clearDataElementCollection();
-			if (permissibleValues != null)
+			if (permissibleValuesList != null && !permissibleValuesList.isEmpty())
 			{
 				UserDefinedDEInterface userDefinedDE = DomainObjectFactory.getInstance()
 						.createUserDefinedDE();

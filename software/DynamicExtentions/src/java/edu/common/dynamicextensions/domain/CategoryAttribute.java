@@ -14,6 +14,7 @@ import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.DataElementInterface;
 import edu.common.dynamicextensions.domaininterface.FormulaInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
+import edu.common.dynamicextensions.domaininterface.SkipLogicAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.databaseproperties.ColumnPropertiesInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
@@ -97,6 +98,10 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	 * Collection of category attributes where in this category attribute is used in formula.
 	 */
 	protected Collection<CategoryAttributeInterface> calculatedDependentCategoryAttributes = new HashSet<CategoryAttributeInterface>();
+	/**
+	 * Collection of category attributes.
+	 */
+	protected Collection<SkipLogicAttributeInterface> dependentSkipLogicAttributes = new HashSet<SkipLogicAttributeInterface>();
 	/**
 	 * This method returns the Collection of Column Properties of the Attribute.
 	 * @hibernate.set name="columnPropertiesCollection" table="DYEXTN_COLUMN_PROPERTIES" cascade="all" inverse="false" lazy="false"
@@ -674,6 +679,62 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	public boolean isValuePresent(Object value) throws DynamicExtensionsSystemException
 	{
 		return ((AttributeMetadataInterface) this.getAbstractAttribute()).isValuePresent(value);
+	}
+	/**
+	 * @hibernate.set name="dependentSkipLogicAttributes" table="DYEXTN_SKIP_LOGIC_ATTRIBUTE"
+	 * cascade="all-delete-orphan" inverse="false" lazy="false"
+	 * @hibernate.collection-key column="CAT_ATTR_ID"
+	 * @hibernate.cache  usage="read-write"
+	 * @hibernate.collection-one-to-many class="edu.common.dynamicextensions.domain.SkipLogicAttribute"
+	 * @return Returns the dependentSkipLogicAttributes.
+	 */
+	public Collection<SkipLogicAttributeInterface> getDependentSkipLogicAttributes()
+	{
+		return dependentSkipLogicAttributes;
+	}
+	/**
+	 * 
+	 * @param dependentSkipLogicAttributes
+	 */
+	public void setDependentSkipLogicAttributes(
+			Collection<SkipLogicAttributeInterface> dependentSkipLogicAttributes)
+	{
+		this.dependentSkipLogicAttributes = dependentSkipLogicAttributes;
+	}
+	/**
+	 * This method adds a skip logic attribute.
+	 * @param skipLogicAttributeInterface
+	 */
+	public void addDependentSkipLogicAttribute(SkipLogicAttributeInterface skipLogicAttributeInterface)
+	{
+		if (dependentSkipLogicAttributes == null)
+		{
+			dependentSkipLogicAttributes = new HashSet<SkipLogicAttributeInterface>();
+		}
+		dependentSkipLogicAttributes.add(skipLogicAttributeInterface);
+	}
+	/**
+	 * This method removes a SkipLogic Attribute.
+	 * @param skipLogicAttributeInterface.
+	 */
+	public void removeDependentSkipLogicAttribute(SkipLogicAttributeInterface skipLogicAttributeInterface)
+	{
+		if ((dependentSkipLogicAttributes != null)
+				&& (dependentSkipLogicAttributes.contains(skipLogicAttributeInterface)))
+		{
+			dependentSkipLogicAttributes.remove(skipLogicAttributeInterface);
+		}
+	}
+
+	/**
+	 * This method removes all SkipLogic Attributes.
+	 */
+	public void removeAllDependentSkipLogicAttributes()
+	{
+		if (dependentSkipLogicAttributes != null)
+		{
+			dependentSkipLogicAttributes.clear();
+		}
 	}
 
 }

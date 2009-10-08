@@ -305,6 +305,13 @@
         <key
             column="IDENTIFIER"
         />
+        <property
+            name="showCalendar"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="SHOWCALENDAR"
+        />
 
         <property
             name="dateValueType"
@@ -313,15 +320,7 @@
             insert="true"
             column="DATE_VALUE_TYPE"
         />
-     
-        <property
-            name="showCalendar"
-            type="boolean"
-            update="true"
-            insert="true"
-            column="SHOWCALENDAR"
-        />
-        
+
         </joined-subclass>
         <joined-subclass
             name="edu.common.dynamicextensions.domain.userinterface.SelectControl"

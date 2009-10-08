@@ -185,4 +185,29 @@ public interface CategoryAttributeInterface extends BaseAbstractAttributeInterfa
 	 * @return
 	 */
 	PermissibleValueInterface getSkipLogicPermissibleValue(PermissibleValueInterface permissibleValue);
+	/**
+	 * 
+	 * @return
+	 */
+	Collection<SkipLogicAttributeInterface> getDependentSkipLogicAttributes();
+	/**
+	 * 
+	 * @param dependentSkipLogicAttributes
+	 */
+	void setDependentSkipLogicAttributes(
+			Collection<SkipLogicAttributeInterface> dependentSkipLogicAttributes);
+	/**
+	 * This method adds a skip logic attribute.
+	 * @param skipLogicAttributeInterface
+	 */
+	void addDependentSkipLogicAttribute(SkipLogicAttributeInterface skipLogicAttributeInterface);
+	/**
+	 * This method removes a SkipLogic Attribute.
+	 * @param skipLogicAttributeInterface.
+	 */
+	void removeDependentSkipLogicAttribute(SkipLogicAttributeInterface skipLogicAttributeInterface);
+	/**
+	 * This method removes all SkipLogic Attributes.
+	 */
+	void removeAllDependentSkipLogicAttributes();
 }
