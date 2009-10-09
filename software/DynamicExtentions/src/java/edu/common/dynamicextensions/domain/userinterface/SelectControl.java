@@ -1,12 +1,18 @@
 
 package edu.common.dynamicextensions.domain.userinterface;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
+import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationDisplayAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.AssociationControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.SelectInterface;
+import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 
 /**
  * @author rahul_ner
@@ -87,4 +93,52 @@ public abstract class SelectControl extends Control
 	{
 		associationDisplayAttributeCollection.clear();
 	}
+	
+	/**
+	 * getValueList
+	 * @param association
+	 * @param valueList
+	 */
+	protected void getValueList(AssociationInterface association, List<String> valueList)
+	{
+		if (association.getIsCollection())
+		{
+			Collection<AbstractAttributeInterface> attributes = association.getTargetEntity()
+					.getAllAbstractAttributes();
+			Collection<AbstractAttributeInterface> filteredAttributes = EntityManagerUtil
+					.filterSystemAttributes(attributes);
+			List<AbstractAttributeInterface> attributesList = new ArrayList<AbstractAttributeInterface>(
+					filteredAttributes);
+			List<Map> values = (List<Map>) this.value;
+			if (values != null)
+			{
+				for (Map valueMap : values)
+				{
+					String value = (String) valueMap.get(attributesList.get(0));
+					valueList.add(value);
+				}
+			}
+		}
+		else
+		{
+			if (!(value instanceof List) && value != null)
+			{
+				List<String> temp = new ArrayList<String>();
+				temp.add((String) value);
+				valueList = temp;
+			}
+			else
+			{
+				if (this.value != null)
+				{
+					for (Long obj : (List<Long>) this.value)
+					{
+						valueList.add(obj.toString());
+					}
+				}
+			}
+		}
+		
+	}
+	
 }

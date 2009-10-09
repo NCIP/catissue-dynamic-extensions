@@ -26,6 +26,7 @@ import edu.common.dynamicextensions.domain.userinterface.DatePicker;
 import edu.common.dynamicextensions.domain.userinterface.FileUploadControl;
 import edu.common.dynamicextensions.domain.userinterface.Label;
 import edu.common.dynamicextensions.domain.userinterface.ListBox;
+import edu.common.dynamicextensions.domain.userinterface.MultiSelectCheckBox;
 import edu.common.dynamicextensions.domain.userinterface.RadioButton;
 import edu.common.dynamicextensions.domain.userinterface.TextArea;
 import edu.common.dynamicextensions.domain.userinterface.TextField;
@@ -74,6 +75,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.DataGridInterf
 import edu.common.dynamicextensions.domaininterface.userinterface.DatePickerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.FileUploadInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ListBoxInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.MultiSelectCheckBoxInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.RadioButtonInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.TextAreaInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.TextFieldInterface;
@@ -611,6 +613,17 @@ public class DomainObjectFactory
 		return new ListBox();
 	}
 
+	/**
+	 * This method creates an object of MultiSelectCheckBox.
+	 *
+	 * @return an instance of ListBox.
+	 */
+	public MultiSelectCheckBoxInterface createMultiSelectCheckBox()
+	{
+		return new MultiSelectCheckBox();
+	}
+
+	
 	/**
 	 * This method creates an object of RadioButton.
 	 *

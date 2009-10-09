@@ -25,6 +25,8 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ComboBoxInterf
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ListBoxInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.MultiSelectCheckBoxInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.MultiSelectInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.TextFieldInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleParameterInterface;
@@ -500,11 +502,15 @@ public class CategoryValidator
 		AbstractAttributeInterface abstractAttribute = entity
 				.getAbstractAttributeByName(attributeName);
 
-		if (control instanceof ListBoxInterface)
+		if (control instanceof MultiSelectInterface)
 		{
-			Boolean isMultiSelect = ((ListBoxInterface) control).getIsMultiSelect();
-			Boolean IsUsingAutoCompleteDropdown = ((ListBoxInterface) control)
+			Boolean isMultiSelect = ((MultiSelectInterface) control).getIsMultiSelect();
+			Boolean IsUsingAutoCompleteDropdown = false;
+			if(control instanceof ListBoxInterface)
+			{
+				IsUsingAutoCompleteDropdown = ((ListBoxInterface) control)
 					.getIsUsingAutoCompleteDropdown();
+			}
 
 			if (IsUsingAutoCompleteDropdown != null && IsUsingAutoCompleteDropdown)
 			{

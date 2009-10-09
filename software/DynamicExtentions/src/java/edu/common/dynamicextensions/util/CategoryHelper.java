@@ -24,6 +24,7 @@ import edu.common.dynamicextensions.domain.userinterface.ComboBox;
 import edu.common.dynamicextensions.domain.userinterface.Container;
 import edu.common.dynamicextensions.domain.userinterface.Label;
 import edu.common.dynamicextensions.domain.userinterface.ListBox;
+import edu.common.dynamicextensions.domain.userinterface.MultiSelectCheckBox;
 import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
@@ -51,6 +52,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.DatePickerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.FileUploadInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.MultiSelectCheckBoxInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.RadioButtonInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.SelectInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.TextAreaInterface;
@@ -442,7 +444,12 @@ public class CategoryHelper implements CategoryHelperInterface
 				break;
 			case LABEL_CONTROL :
 				control = (CheckBoxInterface) control;
-
+			case MULTISELECT_CHECKBOX_CONTROL :
+				control = createOrUpdateSelectControl(container, categoryAttribute,
+								createPermissibleValuesList(entity, attributeName, lineNumber,
+								permissibleValueNameList), controlType, permValueOptions,
+								lineNumber);
+				break;
 			default :
 				throw new DynamicExtensionsSystemException("ERROR: INCORRECT CONTROL TYPE");
 		}
@@ -844,7 +851,7 @@ public class CategoryHelper implements CategoryHelperInterface
 		{
 			if ((control instanceof ComboBox && controlType.equals(controlType.COMBO_BOX_CONTROL))
 					|| (control instanceof ListBox && controlType
-							.equals(controlType.LIST_BOX_CONTROL)))
+							.equals(controlType.LIST_BOX_CONTROL)) || (control instanceof MultiSelectCheckBox && controlType.equals(controlType.MULTISELECT_CHECKBOX_CONTROL)))
 
 			{
 				selectControl = (SelectInterface) control;
@@ -868,6 +875,11 @@ public class CategoryHelper implements CategoryHelperInterface
 				{
 					selectControl = DomainObjectFactory.getInstance().createComboBox();
 				}
+			}
+			else if (controlType.equals(controlType.MULTISELECT_CHECKBOX_CONTROL) 
+					&& (categoryAttribute.getAbstractAttribute() instanceof AssociationInterface))
+			{
+				selectControl = DomainObjectFactory.getInstance().createMultiSelectCheckBox();
 			}
 			else if (controlType.equals(controlType.COMBO_BOX_CONTROL))
 			{
@@ -1668,6 +1680,11 @@ public class CategoryHelper implements CategoryHelperInterface
 					break;
 				case LABEL_CONTROL :
 					control = (CheckBoxInterface) control;
+					break;
+				case MULTISELECT_CHECKBOX_CONTROL :
+					MultiSelectCheckBoxInterface multiSelectControl = (MultiSelectCheckBoxInterface) control;
+					multiSelectControl.setIsHidden(false);
+					multiSelectControl.setIsReadOnly(false);
 					break;
 				default :
 					throw new DynamicExtensionsSystemException("ERROR: INCORRECT CONTROL TYPE");

@@ -391,7 +391,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 
 		if (this.showLabel != null && this.showLabel)
 		{
-			controlHTML.append("<div style='float:left'>");
+			controlHTML.append("<div>");
 			controlHTML.append(((BaseAbstractAttribute) this.getBaseAbstractAttribute())
 					.getCapitalizedName(this.getCaption()));
 			controlHTML.append("</div>");

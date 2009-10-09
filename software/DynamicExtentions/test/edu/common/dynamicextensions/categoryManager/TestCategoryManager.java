@@ -2384,6 +2384,38 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	}
 
 	/**
+	 * Create category where attributes from a particular class are not chosen,
+	 * i.e. not selecting attributes from GleasonScore entity.
+	 * Refer to pathology annotation model.
+	 */
+	public void testCreateCategoryWithMultiselectCheckBox()
+	{
+		CategoryInterface category = null;
+		try
+		{
+			String[] args1 = {XMI_FILE_PATH + "test.xmi",CSV_FILE_PATH + "Skip_Logic_Main.csv", "annotations", "  "};
+			XMIImporter.main(args1);
+
+			String[] args2 = {CSV_FILE_PATH + "category_multiselectCheckBox.csv"};
+			CategoryCreator categoryCreator = new CategoryCreator();
+			categoryCreator.main(args2);
+
+			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
+			category = (CategoryInterface) categoryManager.getObjectByName(
+					Category.class.getName(), "Test_Cat_Rad_therapy_multiselectCheckbox");
+
+			assertNotNull(category.getId());
+			assertNotNull(category.getRootCategoryElement());
+			assertEquals(category.getName(), "Test_Cat_Rad_therapy_multiselectCheckbox");
+			
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail();
+		}
+	}
+	/**
 	 * Make a entity group from following entities:
 	 * Entities : user (1)------>(*) study
 	 * @return EntityGroupInterface

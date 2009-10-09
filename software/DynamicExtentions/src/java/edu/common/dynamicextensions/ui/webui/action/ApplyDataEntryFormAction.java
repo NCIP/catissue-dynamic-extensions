@@ -46,6 +46,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.FileUploadInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ListBoxInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.MultiSelectInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.SelectInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
@@ -657,15 +658,15 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 
 			attributeValueMap.put(abstractAttribute, associationValueMaps);
 		}
-		else if (control instanceof SelectInterface)
+		else if (control instanceof SelectInterface || control instanceof MultiSelectInterface)
 		{
 			AssociationInterface association = null;
 			List valueList = new ArrayList();
-			if (control instanceof ListBoxInterface)
+			if (control instanceof MultiSelectInterface)
 			{
 				String[] selectedValues = (String[]) request.getParameterValues(controlName);
-				ListBoxInterface listBox = (ListBoxInterface) control;
-				association = listBox.getBaseAbstractAttributeAssociation();
+				MultiSelectInterface multiSelectInt = (MultiSelectInterface) control;
+				association = multiSelectInt.getBaseAbstractAttributeAssociation();
 				if (association != null)
 				{
 					if (association.getIsCollection())
@@ -684,6 +685,10 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 								dataMap.put(attributesList.get(0), id);
 								valueList.add(dataMap);
 							}
+						}
+						else
+						{
+							valueList.add(new HashMap());
 						}
 					}
 					else

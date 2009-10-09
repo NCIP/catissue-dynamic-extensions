@@ -41,7 +41,7 @@ public interface CategoryHelperInterface
 		TEXT_FIELD_CONTROL("textField"), LIST_BOX_CONTROL("listBox"), DATE_PICKER_CONTROL(
 				"datePicker"), FILE_UPLOAD_CONTROL("fileUpload"), RADIO_BUTTON_CONTROL(
 				"radioButton"), TEXT_AREA_CONTROL("textArea"), CHECK_BOX_CONTROL("checkBox"), COMBO_BOX_CONTROL(
-				"comboBox"), LABEL_CONTROL("label");
+				"comboBox"), LABEL_CONTROL("label"), MULTISELECT_CHECKBOX_CONTROL("multiselectCheckBox");
 
 		String value;
 

@@ -2045,6 +2045,67 @@ function changeValueForCheckBox(checkbox)
     }
 }
 
+function changeValueForMultiSelectCheckBox(checkbox)
+{
+    if (checkbox != null)
+    {
+        if (checkbox.checked == true)
+        {
+            checkbox.value = checkbox.id;
+        }
+        else
+        {
+            checkbox.value = false;
+        }
+    }
+}
+function changeValueForAllCheckBoxes(checkbox)
+{
+	var elements  = document.getElementsByName(checkbox.name);
+	if(elements!=null && elements!='undefined')
+	{
+		var isAllSelected=0;
+		for(var i=0;i<elements.length;i++)
+		{
+			var chckbox = elements[i];
+			if (chckbox != null && chckbox.checked == true)
+			{
+				isAllSelected = isAllSelected+1;
+			}
+		}
+		if(isAllSelected == (elements.length-1))
+		{
+			selectAllCheckBoxes(false,elements);
+		}
+		else
+		{
+			selectAllCheckBoxes(true,elements);
+		}
+		
+	}   
+}
+function selectAllCheckBoxes(selectAllchkboxes, elements)
+{
+	
+	for(var i=0;i<elements.length;i++)
+	{
+		var chkbox = elements[i];
+		if (chkbox != null)
+		{
+			if (selectAllchkboxes == true)
+			{
+				chkbox.value = chkbox.id;
+				chkbox.checked="yes";
+			}
+			else
+			{
+				chkbox.value = false;
+				chkbox.checked=null;
+			}
+		}
+
+	}
+}
 function cancelInsertData()
 {
     document.getElementById('dataEntryOperation').value = document.getElementById('operation_mode').value;
