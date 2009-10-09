@@ -412,11 +412,11 @@
 		<delete dir="${temp.dir}" />
 		<mkdir dir="${temp.dir}" />
 		<mkdir dir="${temp.dir}/WEB-INF/classes" />
-		<mkdir dir="${temp.dir}/de" />
 		<mkdir dir="${temp.dir}/WEB-INF/lib" />
-		<mkdir dir="${temp.dir}/de/css" />
-		<mkdir dir="${temp.dir}/de/jss" />
-		<mkdir dir="${temp.dir}/de/dhtml_comp" />
+		<mkdir dir="${temp.dir}/stylesheets/de" />
+		<mkdir dir="${temp.dir}/javascripts/de" />
+		<mkdir dir="${temp.dir}/dhtml/de" />
+		<mkdir dir="${temp.dir}/images/de" />
 		<copy todir="${temp.dir}/WEB-INF/classes">
 			<fileset dir="binaries/classes" >
 				<include name="**/*"/>
@@ -438,23 +438,28 @@
 				<exclude name="taglibs/**/*"/>
 			</fileset>
 		</copy>
-		<copy todir="${temp.dir}/de">
-			<fileset dir="src/web" >
-				<include name="images/**/*"/>
-				<include name="pages/**/*"/>
+		<copy todir="${temp.dir}/images/de">
+			<fileset dir="src/web/images" >
+				<include name="**/*"/>
 			</fileset>
 		</copy>
-		<copy todir="${temp.dir}/de/css">
+		<copy todir="${temp.dir}/pages/de">
+					<fileset dir="src/web/pages" >
+						<include name="**/*"/>
+					</fileset>
+		</copy>
+		
+		<copy todir="${temp.dir}/stylesheets/de">
 			<fileset dir="src/web/stylesheets" >
 				<include name="**/*"/>
 			</fileset>
 		</copy>
-		<copy todir="${temp.dir}/de/jss">
+		<copy todir="${temp.dir}/javascripts/de">
 			<fileset dir="src/web/javascripts" >
 				<include name="**/*"/>
 			</fileset>
 		</copy>
-		<copy todir="${temp.dir}/de/dhtml_comp">
+		<copy todir="${temp.dir}/dhtml/de">
 					<fileset dir="src/web/dhtml" >
 						<include name="**/*"/>
 					</fileset>
