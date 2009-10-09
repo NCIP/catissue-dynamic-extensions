@@ -398,6 +398,8 @@ public class DatePicker extends Control implements DatePickerInterface
 
 	/**
 	 * Generate HTML for viewing data
+	 * @param rowId
+	 * @return htmlString for view mode
 	 */
 	protected String generateViewModeHTML(Integer rowId) throws DynamicExtensionsSystemException
 	{
@@ -411,7 +413,19 @@ public class DatePicker extends Control implements DatePickerInterface
 	}
 
 	/**
-	 * 
+	 * set value as string for a control
+	 * @param listOfValues list of permissible value
+	 */
+	public void setValueAsStrings(List<String> listOfValues) 
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/**
+	 * get value for a control
+	 * @param rowId
+	 * @return value for a control
 	 */
 	public List<String> getValueAsStrings(Integer rowId) 
 	{
@@ -419,15 +433,8 @@ public class DatePicker extends Control implements DatePickerInterface
 	}
 
 	/**
-	 * 
-	 */
-	public void setValueAsStrings(List<String> listOfValues) 
-	{
-		// TODO Auto-generated method stub
-		
-	}
-	/**
-	 * 
+	 * This method return default value for a control
+	 * @param rowId
 	 * @return
 	 */
 	private String getDefaultValueForControl(Integer rowId)

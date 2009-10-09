@@ -67,6 +67,16 @@ public class TextArea extends Control implements TextAreaInterface
 	}
 
 	/**
+	 * get values as strings
+	 * @param rowId
+	 * @return list of values as strings
+	 */
+	public List<String> getValueAsStrings(Integer rowId) 
+	{
+		return null;
+	}
+	
+	/**
 	 * This method generates the HTML code for TextArea control on the HTML form
 	 * @return HTML code for TextArea
 	 * @throws DynamicExtensionsSystemException 
@@ -158,34 +168,19 @@ public class TextArea extends Control implements TextAreaInterface
 	protected String generateViewModeHTML(Integer rowId) throws DynamicExtensionsSystemException
 	{
 
-		String htmlString = "&nbsp;";
+		String htmlgenerated = "&nbsp;";
 		if (value != null)
 		{
-			htmlString = "<span class = 'font_bl_nor'> " + this.value.toString() + "</span>";
+			htmlgenerated = "<span class = 'font_bl_nor'> " + this.value.toString() + "</span>";
 		}
-		return htmlString;
+		return htmlgenerated;
 
 	}
 
-	/**
-	 * 
-	 */
-	public List<String> getValueAsStrings(Integer rowId) 
-	{
-		return null;
-	}
 
 	/**
-	 * 
-	 */
-	public void setValueAsStrings(List<String> listOfValues) 
-	{
-		// TODO Auto-generated method stub
-		
-	}
-	/**
-	 * 
-	 * @return
+	 * @param rowId
+	 * @return default value for control
 	 */
 	private String getDefaultValueForControl(Integer rowId)
 	{
@@ -205,5 +200,14 @@ public class TextArea extends Control implements TextAreaInterface
 			}
 		}
 		return defaultValue;
+	}
+	
+	/**
+	 * set value for a control
+	 */
+	public void setValueAsStrings(List<String> listOfValues) 
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }
