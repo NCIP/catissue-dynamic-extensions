@@ -1,3 +1,4 @@
+
 package edu.common.dynamicextensions.domain.userinterface;
 
 import java.util.ArrayList;
@@ -15,7 +16,6 @@ import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.beans.NameValueBean;
 
-
 /**
  * This class is used to create new control of multiselectCheckBox type
  * @author suhas_khot
@@ -26,6 +26,7 @@ import edu.wustl.common.beans.NameValueBean;
  */
 public class MultiSelectCheckBox extends SelectControl implements MultiSelectCheckBoxInterface
 {
+
 	/**
 	 * Serial Version Unique Identifier
 	 */
@@ -35,7 +36,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 	 * check if checkBox is of multiSelect type or not
 	 */
 	private Boolean isMultiSelect = false;
-	
+
 	/**
 	 * @return the listOfValues
 	 */
@@ -43,7 +44,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 	{
 		return listOfValues;
 	}
-	
+
 	/**
 	 * @param listOfValues the listOfValues to set
 	 */
@@ -52,7 +53,6 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 		this.listOfValues = listOfValues;
 	}
 
-	
 	/**
 	 * This method returns whether the multiSelectCheckBox has a multiselect property or not.
 	 * @hibernate.property name="isMultiSelect" type="boolean" column="MULTISELECT"
@@ -63,8 +63,6 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 		return isMultiSelect;
 	}
 
-
-	
 	/**
 	 * @param isMultiSelect the isMultiSelect to set
 	 */
@@ -76,8 +74,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 	/**
 	 * List of values for multiSelectCheckBox.
 	 */
-	List listOfValues = null;
-	
+	private List listOfValues = null;
 
 	/**
 	 * This method generates the HTML code to display the MultiselectCheckBox Control on the form.
@@ -91,7 +88,8 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 		List<String> values = getValueAsStrings(rowId);
 		String disabled = "";
 		//		If control is defined as readonly through category CSV file,make it Disabled
-		if ((this.isReadOnly != null && getIsReadOnly()) || (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly))
+		if ((this.isReadOnly != null && getIsReadOnly())
+				|| (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly))
 		{
 			disabled = ProcessorConstants.DISABLED;
 		}
@@ -99,9 +97,9 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 
 		if (listOfValues == null)
 		{
-			nameValueBeans = ControlsUtility.populateListOfValues(this,rowId);
+			nameValueBeans = ControlsUtility.populateListOfValues(this, rowId);
 		}
-		
+
 		if (nameValueBeans != null && !nameValueBeans.isEmpty())
 		{
 			for (NameValueBean nameValueBean : nameValueBeans)
@@ -109,27 +107,52 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 				if (values != null && !values.isEmpty()
 						&& values.contains(nameValueBean.getValue()))
 				{
-					htmlString += "<input type='checkbox' class='" + this.cssClass + "' name='"
-					+ htmlComponentName + "' checkedValue='"
-					+ DynamicExtensionsUtility.getValueForCheckBox(true) + "' uncheckedValue='"
-					+ DynamicExtensionsUtility.getValueForCheckBox(false) + "'" + " value='"
-					+ nameValueBean.getValue() + "' " + "id='"
-					+ nameValueBean.getValue() + "'" + " checked" + disabled
-					+ " onchange='isDataChanged();' ondblclick='changeValueForAllCheckBoxes(this);' onclick='changeValueForMultiSelectCheckBox(this);' /><img src='images/de/spacer.gif' width='2' height='2'>"+"<label for=\""+htmlComponentName+"\">"+nameValueBean.getName()+"</label> <img src='images/de/spacer.gif' width='3' height='3'>";
+					htmlString += "<input type='checkbox' class='"
+							+ this.cssClass
+							+ "' name='"
+							+ htmlComponentName
+							+ "' checkedValue='"
+							+ DynamicExtensionsUtility.getValueForCheckBox(true)
+							+ "' uncheckedValue='"
+							+ DynamicExtensionsUtility.getValueForCheckBox(false)
+							+ "'"
+							+ " value='"
+							+ nameValueBean.getValue()
+							+ "' "
+							+ "id='"
+							+ nameValueBean.getValue()
+							+ "'"
+							+ " checked"
+							+ disabled
+							+ " onchange='isDataChanged();' ondblclick='changeValueForAllCheckBoxes(this);' onclick='changeValueForMultiSelectCheckBox(this);' /><img src='images/de/spacer.gif' width='2' height='2'>"
+							+ "<label for=\"" + htmlComponentName + "\">" + nameValueBean.getName()
+							+ "</label> <img src='images/de/spacer.gif' width='3' height='3'>";
 				}
 				else
 				{
-					htmlString += "<input type='checkbox' class='" + this.cssClass + "' name='"
-					+ htmlComponentName + "' checkedValue='"
-					+ DynamicExtensionsUtility.getValueForCheckBox(true) + "' uncheckedValue='"
-					+ DynamicExtensionsUtility.getValueForCheckBox(false) + "'" + " value='"
-					+ DynamicExtensionsUtility.getValueForCheckBox(false) + "' "+ disabled + "id='"
-					+ nameValueBean.getValue() + "'"
-					+ " onchange='isDataChanged();' ondblclick='changeValueForAllCheckBoxes(this);' onclick='changeValueForMultiSelectCheckBox(this);' /><img src='images/de/spacer.gif' width='2' height='2'>"+"<label for=\""+htmlComponentName+"\">"+nameValueBean.getName()+"</label> <img src='images/de/spacer.gif' width='3' height='3'>";
+					htmlString += "<input type='checkbox' class='"
+							+ this.cssClass
+							+ "' name='"
+							+ htmlComponentName
+							+ "' checkedValue='"
+							+ DynamicExtensionsUtility.getValueForCheckBox(true)
+							+ "' uncheckedValue='"
+							+ DynamicExtensionsUtility.getValueForCheckBox(false)
+							+ "'"
+							+ " value='"
+							+ DynamicExtensionsUtility.getValueForCheckBox(false)
+							+ "' "
+							+ disabled
+							+ "id='"
+							+ nameValueBean.getValue()
+							+ "'"
+							+ " onchange='isDataChanged();' ondblclick='changeValueForAllCheckBoxes(this);' onclick='changeValueForMultiSelectCheckBox(this);' /><img src='images/de/spacer.gif' width='2' height='2'>"
+							+ "<label for=\"" + htmlComponentName + "\">" + nameValueBean.getName()
+							+ "</label> <img src='images/de/spacer.gif' width='3' height='3'>";
 				}
 			}
 		}
-		return htmlString.toString();
+		return htmlString;
 	}
 
 	/**
@@ -175,6 +198,15 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 	}
 
 	/**
+	 * setValues for a control
+	 */
+	public void setValueAsStrings(List<String> listOfValues)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
 	 * get all permissible values for this control
 	 * @param rowId
 	 * @return List of  all permissible values for this control
@@ -200,47 +232,33 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 		{
 			getValueList(association, values);
 		}
-		if (!getIsSkipLogicTargetControl())
+		if ((!getIsSkipLogicTargetControl()) && (values == null || values.isEmpty()))
 		{
-			if (values == null || values.isEmpty())
+			String defaultValue = null;
+			values = new ArrayList<String>();
+			AttributeMetadataInterface attrMetadataInterface = this.getAttibuteMetadataInterface();
+			if (attrMetadataInterface != null)
 			{
-				String defaultValue = null;
-				values = new ArrayList<String>();
-	
-				AttributeMetadataInterface attributeMetadata = this.getAttibuteMetadataInterface();
-				if (attributeMetadata != null)
+				if (attrMetadataInterface instanceof CategoryAttributeInterface)
 				{
-					if (attributeMetadata instanceof CategoryAttributeInterface)
+					AbstractAttributeInterface abstractAttributeInterface = ((CategoryAttributeInterface) attrMetadataInterface)
+							.getAbstractAttribute();
+					if (abstractAttributeInterface instanceof AttributeInterface)
 					{
-						AbstractAttributeInterface abstractAttribute = ((CategoryAttributeInterface) attributeMetadata)
-								.getAbstractAttribute();
-						if (abstractAttribute instanceof AttributeInterface)
-						{
-							defaultValue = attributeMetadata.getDefaultValue();
-						}
+						defaultValue = attrMetadataInterface.getDefaultValue();
 					}
-					else
-					{
-						defaultValue = attributeMetadata.getDefaultValue();
-					}
-	
-					if (defaultValue != null && defaultValue.trim().length() != 0)
-					{
-						values.add(defaultValue);
-					}
+				}
+				else
+				{
+					defaultValue = attrMetadataInterface.getDefaultValue();
+				}
+				if (defaultValue != null && defaultValue.trim().length() != 0)
+				{
+					values.add(defaultValue);
 				}
 			}
 		}
 		return values;
-	}
-
-	/**
-	 * setValues for a control
-	 */
-	public void setValueAsStrings(List<String> listOfValues)
-	{
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
@@ -249,10 +267,10 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 	 */
 	public AssociationInterface getBaseAbstractAttributeAssociation()
 	{
-		AssociationInterface associationInt = null;
+		AssociationInterface associationInterface = null;
 		if (baseAbstractAttribute instanceof AssociationInterface)
 		{
-			associationInt = (AssociationInterface) baseAbstractAttribute;
+			associationInterface = (AssociationInterface) baseAbstractAttribute;
 		}
 		else if (baseAbstractAttribute instanceof CategoryAttributeInterface)
 		{
@@ -260,9 +278,9 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 			AbstractAttributeInterface abstractAttr = categoryAttr.getAbstractAttribute();
 			if (abstractAttr instanceof AssociationInterface)
 			{
-				associationInt = (AssociationInterface) abstractAttr;
+				associationInterface = (AssociationInterface) abstractAttr;
 			}
 		}
-		return associationInt;
+		return associationInterface;
 	}
 }
