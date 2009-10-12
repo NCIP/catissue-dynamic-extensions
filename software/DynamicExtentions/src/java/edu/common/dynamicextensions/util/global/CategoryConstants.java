@@ -77,5 +77,7 @@ public class CategoryConstants
 	public final static String NO_OVERRIDE_FUTURE_DATE_RULE = "cannotOverrideFutureDateRule";
 	
 	public final static String CONFLICTING_RULES_PRESENT = "conflictingRulesPresent";
+	
+	public final static String ALL = "all";
 
 }

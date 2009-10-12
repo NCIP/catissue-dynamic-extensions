@@ -791,6 +791,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 				if (targetControl.getIsShowHide())
 				{
 					targetControl.setIsSkipLogicShowHideTargetControl(Boolean.valueOf(true));
+					targetControl.setIsSkipLogicReadOnly(Boolean.valueOf(true));
 				}
 				targetControl.setIsSkipLogicLoadPermValues(Boolean
 						.valueOf(false));

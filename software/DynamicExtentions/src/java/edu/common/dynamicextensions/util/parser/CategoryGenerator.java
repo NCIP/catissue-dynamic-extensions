@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import edu.common.dynamicextensions.domain.CategoryAttribute;
 import edu.common.dynamicextensions.domain.CategoryEntity;
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
@@ -23,6 +24,7 @@ import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
@@ -782,6 +784,7 @@ public class CategoryGenerator
 					.getControlForAbstractAttribute(
 							(AttributeMetadataInterface) sourceCategoryAttribute,
 							sourceContainerInterface,sourceCategoryEntityName);
+			
 			boolean isEnumeratedSourceControl = true;
 			if (sourceControl instanceof CheckBox)
 			{
@@ -789,49 +792,6 @@ public class CategoryGenerator
 			}
 			sourceControl.setIsSkipLogic(Boolean.valueOf(true));
 			sourceCategoryAttribute.setIsSkipLogic(Boolean.valueOf(true));
-
-			String targetAttributeName = categoryFileParser.getSkipLogicTargetAttributeName();
-			
-			CategoryValidator.checkForNullRefernce(targetEntity.getAttributeByName(targetAttributeName),
-					ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-							+ categoryFileParser.getLineNumber() + " "
-							+ ApplicationProperties.getValue(CategoryConstants.ATTR)
-							+ targetAttributeName + " "
-							+ ApplicationProperties.getValue(CategoryConstants.ATTR_NOT_PRESENT)
-							+ targetEntity.getName());
-			 isAttributePresent = targetEntity.isAttributePresent(targetAttributeName);
-
-			// If this is the parent attribute and currently the parent category
-			// entity is not created
-			// for given category entity, create parent category hierarchy up to
-			// where attribute is found.
-			if (!isAttributePresent)
-			{
-				EntityInterface parentEntity = targetEntity.getParentEntity();
-				EntityInterface childEntity = targetEntity;
-				CategoryEntityInterface parentCategoryEntity = targetCategoryEntity
-						.getParentCategoryEntity();
-
-				targetCategoryEntity = processInheritance(parentEntity, childEntity,
-						parentCategoryEntity, targetCategoryEntity, targetAttributeName, containerCollection);
-				targetEntity = targetCategoryEntity.getEntity();
-
-			}
-
-			CategoryAttributeInterface targetCategoryAttribute = categoryHelper.getCategoryAttribute(
-					targetEntity, targetAttributeName, targetCategoryEntity);
-			
-			ContainerInterface targetContainerInterface = DynamicExtensionsUtility
-					.getContainerForAbstractEntity(targetCategoryAttribute
-							.getCategoryEntity());
-
-			ControlInterface targetControl = DynamicExtensionsUtility
-					.getControlForAbstractAttribute(
-							(AttributeMetadataInterface) targetCategoryAttribute,
-							targetContainerInterface,targetCategoryEntityName);
-			
-			targetControl.setIsSkipLogicTargetControl(Boolean.valueOf(true));
-			targetControl.setSourceSkipControl(sourceControl);
 			PermissibleValueInterface permissibleValueInterface = null;
 			if (isEnumeratedSourceControl)
 			{
@@ -853,73 +813,129 @@ public class CategoryGenerator
 								+ ApplicationProperties.getValue(CategoryConstants.PV_ATTR_NOT_PRESENT)
 								+ sourceAttributeName);
 			}
-			SkipLogicAttributeInterface skipLogicAttributeInterface = DomainObjectFactory.getInstance().createSkipLogicAttribute();
-			skipLogicAttributeInterface.setSourceSkipLogicAttribute(sourceCategoryAttribute);
-			skipLogicAttributeInterface.setTargetSkipLogicAttribute(targetCategoryAttribute);
+			ContainerInterface targetContainerInterface = DynamicExtensionsUtility
+					.getContainerForAbstractEntity(targetCategoryEntity);
 			
-			String defaultValue = categoryFileParser.getDefaultValue();
-			if (defaultValue == null)
+			String targetAttributeName = categoryFileParser.getSkipLogicTargetAttributeName();
+			
+			if (targetAttributeName != null  && targetAttributeName.equals(CategoryConstants.ALL))
 			{
-				// Validation-If category attribute is of type Read-only its default
-				// value must be specified
-				if ((targetControl.getIsReadOnly() != null && targetControl.getIsReadOnly())
-						|| (targetControl.getIsCalculated() != null && targetControl.getIsCalculated()))
+				//Setting control options
+				Map<String, String> controlOptions = categoryFileParser.getControlOptions();
+				
+				setSkipLogicForAllSubFormAttributes(targetCategoryEntity,
+						sourceControl, sourceCategoryAttribute,
+						permissibleValueInterface, isEnumeratedSourceControl,
+						controlOptions);
+			}
+			else
+			{
+				CategoryValidator.checkForNullRefernce(targetEntity.getAttributeByName(targetAttributeName),
+						ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
+								+ categoryFileParser.getLineNumber() + " "
+								+ ApplicationProperties.getValue(CategoryConstants.ATTR)
+								+ targetAttributeName + " "
+								+ ApplicationProperties.getValue(CategoryConstants.ATTR_NOT_PRESENT)
+								+ targetEntity.getName());
+				
+				isAttributePresent = targetEntity.isAttributePresent(targetAttributeName);
+	
+				// If this is the parent attribute and currently the parent category
+				// entity is not created
+				// for given category entity, create parent category hierarchy up to
+				// where attribute is found.
+				if (!isAttributePresent)
 				{
-					throw new DynamicExtensionsSystemException(ApplicationProperties
-							.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-							+ categoryFileParser.getLineNumber()
-							+ " "
-							+ ApplicationProperties.getValue("mandatoryDValueForRO") + targetAttributeName);
+					EntityInterface parentEntity = targetEntity.getParentEntity();
+					EntityInterface childEntity = targetEntity;
+					CategoryEntityInterface parentCategoryEntity = targetCategoryEntity
+							.getParentCategoryEntity();
+	
+					targetCategoryEntity = processInheritance(parentEntity, childEntity,
+							parentCategoryEntity, targetCategoryEntity, targetAttributeName, containerCollection);
+					targetEntity = targetCategoryEntity.getEntity();
+	
 				}
-			}
-			else
-			{
-				skipLogicAttributeInterface
-					.setDefaultValue(((AttributeMetadataInterface) targetCategoryAttribute)
-							.getAttributeTypeInformation()
-							.getPermissibleValueForString(
-									DynamicExtensionsUtility
-											.getEscapedStringValue(defaultValue)));
-			}
-			//Setting control options
-			Map<String, String> controlOptions = categoryFileParser.getControlOptions();
-			
-			categoryHelper.setOptions(targetControl, controlOptions, categoryFileParser.getLineNumber());
-			
-			if (isEnumeratedSourceControl)
-			{
-				permissibleValueInterface.addDependentSkipLogicAttribute(skipLogicAttributeInterface);
-			}
-			else
-			{
-				sourceCategoryAttribute.addDependentSkipLogicAttribute(skipLogicAttributeInterface);
-			}
-			Map<String, Collection<SemanticPropertyInterface>> permissibleValues = categoryFileParser
-					.getPermissibleValues();
+	
+				CategoryAttributeInterface targetCategoryAttribute = categoryHelper.getCategoryAttribute(
+						targetEntity, targetAttributeName, targetCategoryEntity);
+				
+				ControlInterface targetControl = DynamicExtensionsUtility
+						.getControlForAbstractAttribute(
+								(AttributeMetadataInterface) targetCategoryAttribute,
+								targetContainerInterface,targetCategoryEntityName);
+				
+				targetControl.setIsSkipLogicTargetControl(Boolean.valueOf(true));
+				targetControl.setSourceSkipControl(sourceControl);
 
-			Map<String, String> permissibleValueOptions = categoryFileParser
-					.getPermissibleValueOptions();
-			
-			List<PermissibleValueInterface> permissibleValuesList = categoryHelper
-					.createPermissibleValuesList(targetAttributeName, targetAttributeClassName,
-							skipLogicAttributeInterface, categoryFileParser
-									.getLineNumber(), permissibleValues);
-			
-			skipLogicAttributeInterface.clearDataElementCollection();
-			if (permissibleValuesList != null && !permissibleValuesList.isEmpty())
-			{
-				UserDefinedDEInterface userDefinedDE = DomainObjectFactory.getInstance()
-						.createUserDefinedDE();
-				for (PermissibleValueInterface pv : permissibleValuesList)
+				SkipLogicAttributeInterface skipLogicAttributeInterface = DomainObjectFactory.getInstance().createSkipLogicAttribute();
+				skipLogicAttributeInterface.setSourceSkipLogicAttribute(sourceCategoryAttribute);
+				skipLogicAttributeInterface.setTargetSkipLogicAttribute(targetCategoryAttribute);
+				
+				String defaultValue = categoryFileParser.getDefaultValue();
+				if (defaultValue == null)
 				{
-					userDefinedDE.addPermissibleValue(pv);
+					// Validation-If category attribute is of type Read-only its default
+					// value must be specified
+					if ((targetControl.getIsReadOnly() != null && targetControl.getIsReadOnly())
+							|| (targetControl.getIsCalculated() != null && targetControl.getIsCalculated()))
+					{
+						throw new DynamicExtensionsSystemException(ApplicationProperties
+								.getValue(CategoryConstants.CREATE_CAT_FAILS)
+								+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
+								+ categoryFileParser.getLineNumber()
+								+ " "
+								+ ApplicationProperties.getValue("mandatoryDValueForRO") + targetAttributeName);
+					}
 				}
+				else
+				{
+					skipLogicAttributeInterface
+						.setDefaultValue(((AttributeMetadataInterface) targetCategoryAttribute)
+								.getAttributeTypeInformation()
+								.getPermissibleValueForString(
+										DynamicExtensionsUtility
+												.getEscapedStringValue(defaultValue)));
+				}
+				//Setting control options
+				Map<String, String> controlOptions = categoryFileParser.getControlOptions();
+				
+				categoryHelper.setOptions(targetControl, controlOptions, categoryFileParser.getLineNumber());
+				
+				if (isEnumeratedSourceControl)
+				{
+					permissibleValueInterface.addDependentSkipLogicAttribute(skipLogicAttributeInterface);
+				}
+				else
+				{
+					sourceCategoryAttribute.addDependentSkipLogicAttribute(skipLogicAttributeInterface);
+				}
+				Map<String, Collection<SemanticPropertyInterface>> permissibleValues = categoryFileParser
+						.getPermissibleValues();
 	
-				//add new permissible values
-				skipLogicAttributeInterface.setDataElement(userDefinedDE);
-	
-				categoryHelper.setOptions(userDefinedDE, permissibleValueOptions, categoryFileParser.getLineNumber());
+				Map<String, String> permissibleValueOptions = categoryFileParser
+						.getPermissibleValueOptions();
+				
+				List<PermissibleValueInterface> permissibleValuesList = categoryHelper
+						.createPermissibleValuesList(targetAttributeName, targetAttributeClassName,
+								skipLogicAttributeInterface, categoryFileParser
+										.getLineNumber(), permissibleValues);
+				
+				skipLogicAttributeInterface.clearDataElementCollection();
+				if (permissibleValuesList != null && !permissibleValuesList.isEmpty())
+				{
+					UserDefinedDEInterface userDefinedDE = DomainObjectFactory.getInstance()
+							.createUserDefinedDE();
+					for (PermissibleValueInterface pv : permissibleValuesList)
+					{
+						userDefinedDE.addPermissibleValue(pv);
+					}
+		
+					//add new permissible values
+					skipLogicAttributeInterface.setDataElement(userDefinedDE);
+		
+					categoryHelper.setOptions(userDefinedDE, permissibleValueOptions, categoryFileParser.getLineNumber());
+				}
 			}
 		}
 	}
@@ -935,6 +951,57 @@ public class CategoryGenerator
 			}
 		}
 		return instancePathInformation;
+	}
+	/**
+	 * 
+	 * @param targetCategoryEntity
+	 * @param targetContainerInterface
+	 * @param sourceControl
+	 * @param sourceCategoryAttribute
+	 * @param permissibleValueInterface
+	 * @throws DynamicExtensionsSystemException 
+	 */
+	private void setSkipLogicForAllSubFormAttributes(
+			CategoryEntityInterface targetCategoryEntity,
+			ControlInterface sourceControl,
+			CategoryAttributeInterface sourceCategoryAttribute,
+			PermissibleValueInterface permissibleValueInterface,
+			boolean isEnumeratedSourceControl,
+			Map<String, String> controlOptions)
+			throws DynamicExtensionsSystemException
+	{
+		ContainerInterface targetContainerInterface = DynamicExtensionsUtility
+		.getContainerForAbstractEntity(targetCategoryEntity);
+		
+		for (CategoryAttributeInterface targetCategoryAttribute : targetCategoryEntity.getAllCategoryAttributes())
+		{
+			ControlInterface targetControl = DynamicExtensionsUtility
+			.getControlForAbstractAttribute(
+					(AttributeMetadataInterface) targetCategoryAttribute,
+					targetContainerInterface,targetCategoryEntity.getName());
+			
+			targetControl.setIsSkipLogicTargetControl(Boolean.valueOf(true));
+			targetControl.setSourceSkipControl(sourceControl);
+			SkipLogicAttributeInterface skipLogicAttributeInterface = DomainObjectFactory.getInstance().createSkipLogicAttribute();
+			skipLogicAttributeInterface.setSourceSkipLogicAttribute(sourceCategoryAttribute);
+			skipLogicAttributeInterface.setTargetSkipLogicAttribute(targetCategoryAttribute);
+			if (isEnumeratedSourceControl)
+			{
+				permissibleValueInterface.addDependentSkipLogicAttribute(skipLogicAttributeInterface);
+			}
+			else
+			{
+				sourceCategoryAttribute.addDependentSkipLogicAttribute(skipLogicAttributeInterface);
+			}
+			categoryHelper.setOptions(targetControl, controlOptions, categoryFileParser.getLineNumber());
+		}
+		for (CategoryAssociationInterface targetCategoryAssociation : targetCategoryEntity.getCategoryAssociationCollection())
+		{
+			setSkipLogicForAllSubFormAttributes(targetCategoryAssociation
+					.getTargetCategoryEntity(), sourceControl,
+					sourceCategoryAttribute, permissibleValueInterface,
+					isEnumeratedSourceControl,controlOptions);
+		}
 	}
 	/**
 	 * 
