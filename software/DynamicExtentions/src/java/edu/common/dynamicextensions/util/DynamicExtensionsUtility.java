@@ -394,10 +394,56 @@ public class DynamicExtensionsUtility
 						break;
 					}
 				}
+			}
+		}
+		return control;
+
+	}
+	/**
+	 *
+	 * @param abstractAttribute
+	 * @param containerInterface
+	 * @return
+	 */
+	public static ControlInterface getControlForAbstractAttribute(
+			AttributeMetadataInterface attributeMetadataInterface,
+			ContainerInterface containerInterface,String categoryEntityName)
+	{
+		ControlInterface control = null;
+		Collection<ControlInterface> controlCollection = containerInterface.getAllControls();
+		for (ControlInterface controlInterface : controlCollection)
+		{
+			if (controlInterface instanceof AbstractContainmentControlInterface)
+			{
+				control = getControlForAbstractAttribute(attributeMetadataInterface,
+						((AbstractContainmentControlInterface) controlInterface).getContainer());
+				if (control != null)
+				{
+					return control;
+				}
+			}
+			else if (controlInterface.getBaseAbstractAttribute() != null)
+			{
+				if (controlInterface.getBaseAbstractAttribute().getId() != null)
+				{
+					if (controlInterface.getBaseAbstractAttribute().equals(
+							attributeMetadataInterface))
+					{
+						control = controlInterface;
+						break;
+					}
+				}
 				else
 				{
-					if (controlInterface.getBaseAbstractAttribute().getName().equals(
-							attributeMetadataInterface.getName()))
+					if (controlInterface.getParentContainer()
+							.getAbstractEntity().getName() != null
+							&& controlInterface.getParentContainer()
+									.getAbstractEntity().getName().equals(
+											categoryEntityName)
+							&& controlInterface.getBaseAbstractAttribute()
+									.getName().equals(
+											attributeMetadataInterface
+													.getName())) 
 					{
 						control = controlInterface;
 						break;

@@ -27,6 +27,7 @@ import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInte
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.BooleanTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.BooleanValueInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.DataElementInterface;
 import edu.common.dynamicextensions.domaininterface.DateTypeInformationInterface;
@@ -407,34 +408,6 @@ public class ControlsUtility
 	 * @param selectedPermissibleValues
 	 * @return
 	 */
-	public static List<SkipLogicAttributeInterface> getNonReadOnlySkipLogicAttributes(
-			List<PermissibleValueInterface> selectedPermissibleValues,
-			AttributeMetadataInterface attributeMetadataInterface) 
-	{
-		List<SkipLogicAttributeInterface> skipLogicAttributes = new ArrayList<SkipLogicAttributeInterface>();
-		for (PermissibleValueInterface selectedPermissibleValue : selectedPermissibleValues) 
-		{
-			Collection<PermissibleValueInterface> skipLogicPermissibleValues = attributeMetadataInterface
-					.getSkipLogicPermissibleValues();
-			if (skipLogicPermissibleValues != null)
-			{
-				for (PermissibleValueInterface skipLogicValue : skipLogicPermissibleValues) 
-				{
-					if (skipLogicValue.equals(selectedPermissibleValue)) 
-					{
-						skipLogicAttributes.addAll(skipLogicValue
-								.getDependentSkipLogicAttributes());
-					}
-				}
-			}
-		}
-		return skipLogicAttributes;
-	}
-	/**
-	 * 
-	 * @param selectedPermissibleValues
-	 * @return
-	 */
 	public static SkipLogicAttributeInterface getSkipLogicAttributeForAttribute(
 			List<PermissibleValueInterface> selectedPermissibleValues,
 			AttributeMetadataInterface sourceAttributeMetadataInterface,
@@ -509,38 +482,10 @@ public class ControlsUtility
 	 * @param selectedPermissibleValues
 	 * @return
 	 */
-	public static List<SkipLogicAttributeInterface> getReadOnlySkipLogicAttributes(
-			List<PermissibleValueInterface> selectedPermissibleValues,
-			AttributeMetadataInterface attributeMetadataInterface) 
-	{
-		List<SkipLogicAttributeInterface> skipLogicAttributes = new ArrayList<SkipLogicAttributeInterface>();
-		for (PermissibleValueInterface selectedPermissibleValue : selectedPermissibleValues) 
-		{
-			Collection<PermissibleValueInterface> skipLogicPermissibleValues = attributeMetadataInterface
-					.getSkipLogicPermissibleValues();
-			if (skipLogicPermissibleValues != null)
-			{
-				for (PermissibleValueInterface skipLogicValue : skipLogicPermissibleValues) 
-				{
-					if (!skipLogicValue.equals(selectedPermissibleValue)) 
-					{
-						skipLogicAttributes.addAll(skipLogicValue
-								.getDependentSkipLogicAttributes());
-					}
-				}
-			}
-		}
-		return skipLogicAttributes;
-	}
-	/**
-	 * 
-	 * @param selectedPermissibleValues
-	 * @return
-	 */
-	public static List<SkipLogicAttributeInterface> getSkipLogicAttributesForCheckBox(
+	public static Collection<SkipLogicAttributeInterface> getSkipLogicAttributesForCheckBox(
 						AttributeMetadataInterface attributeMetadataInterface) 
 	{
-		List<SkipLogicAttributeInterface> skipLogicAttributes = new ArrayList<SkipLogicAttributeInterface>();
+		Collection<SkipLogicAttributeInterface> skipLogicAttributes = null;
 		CategoryAttributeInterface categoryAttributeInterface = null;
 		if (attributeMetadataInterface instanceof CategoryAttributeInterface)
 		{
@@ -548,7 +493,7 @@ public class ControlsUtility
 		}
 		if (categoryAttributeInterface != null)
 		{
-			skipLogicAttributes.addAll(categoryAttributeInterface.getDependentSkipLogicAttributes());
+			skipLogicAttributes = categoryAttributeInterface.getDependentSkipLogicAttributes();
 		}
 		return skipLogicAttributes;
 	}
@@ -1008,5 +953,40 @@ public class ControlsUtility
 		}
 		return null;
 	}
-
+	/**
+	 * @throws ParseException 
+	 * @throws DynamicExtensionsApplicationException 
+	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException 
+	 * 
+	 */
+	public static Object getAttributeValueForSkipLogicAttributesFromValueMap(
+			Map<BaseAbstractAttributeInterface, Object> fullValueMap,
+			Map<BaseAbstractAttributeInterface, Object> valueMap,
+			BaseAbstractAttributeInterface skipLogicAttribute,List <Object> values)
+	{
+		for (Map.Entry<BaseAbstractAttributeInterface, Object> entry : valueMap.entrySet())
+		{
+			BaseAbstractAttributeInterface attribute = entry.getKey();
+			if (attribute instanceof CategoryAttributeInterface)
+			{
+				if (skipLogicAttribute.equals(attribute))
+				{
+					values.add(entry.getValue());
+					return entry.getValue();
+				}
+			}
+			else if (attribute instanceof CategoryAssociationInterface)
+			{
+				List<Map<BaseAbstractAttributeInterface, Object>> attributeValueMapList = (List<Map<BaseAbstractAttributeInterface, Object>>) entry
+						.getValue();
+				for (Map<BaseAbstractAttributeInterface, Object> map : attributeValueMapList)
+				{
+					getAttributeValueForSkipLogicAttributesFromValueMap(fullValueMap, map,
+							skipLogicAttribute,values);
+				}
+			}
+		}
+		return null;
+	}
 }

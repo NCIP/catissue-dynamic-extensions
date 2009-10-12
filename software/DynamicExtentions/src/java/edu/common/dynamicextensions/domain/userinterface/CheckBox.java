@@ -6,6 +6,7 @@ import java.util.List;
 
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.DataElementInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.SkipLogicAttributeInterface;
@@ -36,7 +37,7 @@ public class CheckBox extends Control implements CheckBoxInterface
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domain.userinterface.Control#generateEditModeHTML()
 	 */
-	protected String generateEditModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	protected String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String checked = getDefaultValueForControl(rowId);
 		String parentContainerId = "";
@@ -102,7 +103,7 @@ public class CheckBox extends Control implements CheckBoxInterface
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domain.userinterface.Control#generateViewModeHTML()
 	 */
-	protected String generateViewModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String htmlString = "&nbsp;";
 		if (value != null)
@@ -166,97 +167,39 @@ public class CheckBox extends Control implements CheckBoxInterface
 	}
 	/**
 	 * 
+	 * @param selectedPermissibleValues
+	 * @return
 	 */
-	public List<ControlInterface> getSkipLogicControls(
-			List<PermissibleValueInterface> selectedPermissibleValues,Integer rowId,List<String> values) 
+	public List<SkipLogicAttributeInterface> getNonReadOnlySkipLogicAttributes(
+			List<PermissibleValueInterface> selectedPermissibleValues,
+			AttributeMetadataInterface attributeMetadataInterface,Integer rowId) 
 	{
-		List<ControlInterface> skipLogicControls = new ArrayList<ControlInterface>();
-		if (isSkipLogic) 
+		List<SkipLogicAttributeInterface> skipLogicAttributes = new ArrayList<SkipLogicAttributeInterface>();
+		String checked = getDefaultValueForControl(rowId);
+		if (checked.equalsIgnoreCase("true") || checked.equals("1")|| checked.equals("y") || checked.equals("yes"))
 		{
-			AttributeMetadataInterface attributeMetadataInterface = ControlsUtility
-					.getAttributeMetadataInterface(getBaseAbstractAttribute());
-			String checked = getDefaultValueForControl(rowId);
-			
-			List<SkipLogicAttributeInterface> skipLogicAttributes = ControlsUtility
-					.getSkipLogicAttributesForCheckBox(
-							attributeMetadataInterface);
-			for (SkipLogicAttributeInterface skipLogicAttributeInterface : skipLogicAttributes) 
-			{
-				ContainerInterface targetContainerInterface = DynamicExtensionsUtility
-						.getContainerForAbstractEntity(skipLogicAttributeInterface
-								.getTargetSkipLogicAttribute()
-								.getCategoryEntity());
-				ControlInterface targetControl = DynamicExtensionsUtility
-						.getControlForAbstractAttribute(
-								(AttributeMetadataInterface) skipLogicAttributeInterface
-										.getTargetSkipLogicAttribute(),
-								targetContainerInterface);
-				ContainerInterface sourceContainerInterface = DynamicExtensionsUtility
-						.getContainerForAbstractEntity(skipLogicAttributeInterface
-								.getSourceSkipLogicAttribute()
-								.getCategoryEntity());
-				ControlInterface sourceControl = DynamicExtensionsUtility
-						.getControlForAbstractAttribute(
-								(AttributeMetadataInterface) skipLogicAttributeInterface
-										.getSourceSkipLogicAttribute(),
-								sourceContainerInterface);
-				if (checked != null)
-				{
-					if (checked.equalsIgnoreCase("true") || checked.equals("1")|| checked.equals("y") || checked.equals("yes"))
-					{
-						targetControl.setIsSkipLogicReadOnly(Boolean.valueOf(false));
-					}
-					else
-					{
-						targetControl.setIsSkipLogicReadOnly(Boolean.valueOf(true));
-					}
-				}
-				DataElementInterface dataElementInterface = skipLogicAttributeInterface
-						.getDataElement();
-				UserDefinedDEInterface userDefinedDEInterface = null;
-				if (dataElementInterface instanceof UserDefinedDEInterface) 
-				{
-					userDefinedDEInterface = (UserDefinedDEInterface) dataElementInterface;
-				}
-				if (userDefinedDEInterface != null
-						&& userDefinedDEInterface
-								.getPermissibleValueCollection() != null
-						&& !userDefinedDEInterface
-								.getPermissibleValueCollection().isEmpty()) 
-				{
-					targetControl.setIsSkipLogicLoadPermValues(Boolean
-							.valueOf(true));
-				}
-				targetControl.setSourceSkipControl(sourceControl);
-				if (!sourceControl.getParentContainer().equals(targetControl.getParentContainer()))
-				{
-					rowId = Integer.valueOf(-1);
-				}
-				targetControl
-						.setIsSkipLogicTargetControl(Boolean.valueOf(true));
-				if (rowId != null)
-				{
-					targetControl.addSourceSkipControlValue(rowId, values);
-				}
-				skipLogicControls.add(targetControl);
-			}
+			skipLogicAttributes.addAll(ControlsUtility
+					.getSkipLogicAttributesForCheckBox(attributeMetadataInterface));
 		}
-		return skipLogicControls;
+		return skipLogicAttributes;
 	}
-
 	/**
 	 * 
+	 * @param selectedPermissibleValues
+	 * @return
 	 */
-	public List<ControlInterface> setSkipLogicControls(Integer rowId,String[] valueArray)
+	public List<SkipLogicAttributeInterface> getReadOnlySkipLogicAttributes(
+			List<PermissibleValueInterface> selectedPermissibleValues,
+			AttributeMetadataInterface attributeMetadataInterface,Integer rowId) 
 	{
-		List<ControlInterface> controlList = null;
-		List<String> values = new ArrayList <String>();
-		for (String controlValue : valueArray)
+		List<SkipLogicAttributeInterface> skipLogicAttributes = new ArrayList<SkipLogicAttributeInterface>();
+		String checked = getDefaultValueForControl(rowId);
+		if (!checked.equalsIgnoreCase("true") && !checked.equals("1") && !checked.equals("y") && !checked.equals("yes"))
 		{
-			values.add(controlValue);
+			skipLogicAttributes.addAll(ControlsUtility
+					.getSkipLogicAttributesForCheckBox(attributeMetadataInterface));
 		}
-		controlList = setSkipLogicControlValues(rowId,values);
-		return controlList;
+		return skipLogicAttributes;
 	}
 	/**
 	 * 

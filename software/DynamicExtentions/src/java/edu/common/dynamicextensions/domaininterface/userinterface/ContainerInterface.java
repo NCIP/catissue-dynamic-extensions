@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import edu.common.dynamicextensions.domain.userinterface.Container;
 import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.DynamicExtensionBaseDomainObjectInterface;
@@ -152,13 +153,13 @@ public interface ContainerInterface extends DynamicExtensionBaseDomainObjectInte
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException
 	 */
-	String generateControlsHTML(String caption,String dataEntryOperation) throws DynamicExtensionsSystemException;
+	String generateControlsHTML(String caption,String dataEntryOperation,ContainerInterface container) throws DynamicExtensionsSystemException;
 
 	/**
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 */
-	String generateControlsHTMLAsGrid(List<Map<BaseAbstractAttributeInterface, Object>> valueMap,String dataEntryOperation)
+	String generateControlsHTMLAsGrid(List<Map<BaseAbstractAttributeInterface, Object>> valueMap,String dataEntryOperation,ContainerInterface container)
 			throws DynamicExtensionsSystemException;
 
 	/**

@@ -13,6 +13,7 @@ import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.DateTypeInformationInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.DatePickerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
@@ -72,7 +73,7 @@ public class DatePicker extends Control implements DatePickerInterface
 	 * @throws DynamicExtensionsSystemException
 	 *             if couldn't generate the HTML name for the Control.
 	 */
-	protected String generateEditModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	protected String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		AttributeTypeInformationInterface attributeTypeInformation = ((AttributeMetadataInterface) this
 				.getBaseAbstractAttribute()).getAttributeTypeInformation();
@@ -401,7 +402,7 @@ public class DatePicker extends Control implements DatePickerInterface
 	 * @param rowId
 	 * @return htmlString for view mode
 	 */
-	protected String generateViewModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String htmlString = "";
 		if (value != null)
@@ -413,16 +414,6 @@ public class DatePicker extends Control implements DatePickerInterface
 	}
 
 	/**
-	 * set value as string for a control
-	 * @param listOfValues list of permissible value
-	 */
-	public void setValueAsStrings(List<String> listOfValues) 
-	{
-		// TODO Auto-generated method stub
-		
-	}
-	
-	/**
 	 * get value for a control
 	 * @param rowId
 	 * @return value for a control
@@ -431,7 +422,15 @@ public class DatePicker extends Control implements DatePickerInterface
 	{
 		return null;
 	}
-
+	/**
+	 * set value as string for a control
+	 * @param listOfValues list of permissible value
+	 */
+	public void setValueAsStrings(List<String> listOfValues) 
+	{
+		// TODO Auto-generated method stub
+		
+	}
 	/**
 	 * This method return default value for a control
 	 * @param rowId

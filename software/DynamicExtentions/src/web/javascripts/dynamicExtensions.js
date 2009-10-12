@@ -2501,6 +2501,25 @@ function getSkipLogicControl(controlName, controlId, containerId)
 					            }
 					            executeComboScriptsForSkipLogic();
 							}
+							var skipLogicHideControlsArray =  iframeDocument.getElementsByName("skipLogicHideControls");
+							if (skipLogicHideControlsArray != null)
+							{
+								var len = skipLogicHideControlsArray.length;
+					            for(var inputIndex = 0; inputIndex < len; inputIndex++)
+					            {
+					            	var skipLogicHideControl = skipLogicHideControlsArray[inputIndex];
+					            	if (skipLogicHideControl != null)
+					            	{
+					            		var skipLogicHideControlValue = skipLogicHideControl.value;
+					            		var skipLogicHideControlObject = document.getElementById(skipLogicHideControlValue);
+					            		var skipLogicHideControlIframeObject = iframeDocument.getElementById(skipLogicHideControlValue);
+					            		if (skipLogicHideControlObject != null && skipLogicHideControlIframeObject != null)
+					            		{
+					            			skipLogicHideControlObject.style.display = skipLogicHideControlIframeObject.style.display;
+					            		}
+					            	}
+					            }
+							}
 						}
 					}
 				}

@@ -53,6 +53,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ApplyDataEntryFormProcessor;
 import edu.common.dynamicextensions.processor.DeleteRecordProcessor;
+import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
@@ -230,8 +231,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 							controlContainerInterface);
 					if (control != null)
 					{
-						if (control.getIsSkipLogic()
-								|| control.getIsSkipLogicTargetControl()) 
+						if (control.getIsSkipLogicTargetControl()) 
 						{
 							boolean found = false;
 							for (ControlInterface targetSkipControl : controlsList) 
@@ -245,11 +245,6 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 							if (found && control.getIsSkipLogicTargetControl()) 
 							{
 								entry.setValue(null);
-							}
-							if (control.getIsSkipLogic())
-							{
-								control.setValue(entry.getValue());
-								control.setSkipLogicControls(rowNumber);
 							}
 						}
 					}

@@ -8,6 +8,7 @@ import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.DoubleTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.FloatTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.LongTypeInformationInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.RadioButtonInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
@@ -33,7 +34,7 @@ public class RadioButton extends Control implements RadioButtonInterface
 	 * @return HTML code for RadioButton
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public String generateEditModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	public String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		List<NameValueBean> nameValueBeanList = null;
 		String htmlString = "";
@@ -192,7 +193,7 @@ public class RadioButton extends Control implements RadioButtonInterface
 		// TODO Auto-generated constructor stub
 	}
 
-	public String generateViewModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	public String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String htmlString = "&nbsp;";
 		if (value != null)

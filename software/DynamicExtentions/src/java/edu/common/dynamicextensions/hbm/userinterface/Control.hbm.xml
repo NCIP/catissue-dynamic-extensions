@@ -171,6 +171,32 @@
             column="SKIP_LOGIC_TARGET_CONTROL"
         />
 
+        <many-to-one
+            name="sourceSkipControl"
+            class="edu.common.dynamicextensions.domain.userinterface.Control"
+            cascade="save-update"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="SOURCE_CONTROL_ID"
+        />
+
+        <property
+            name="isShowHide"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="SHOW_HIDE"
+        />
+
+        <property
+            name="isSelectiveReadOnly"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="SELECTIVE_READ_ONLY"
+        />
+
         <!--
             To add non XDoclet property mappings, create a file named
                 hibernate-properties-Control.xml

@@ -4,6 +4,7 @@ package edu.common.dynamicextensions.domain.userinterface;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -71,7 +72,10 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	 * Decides whether the control should be disabled or not
 	 */
 	protected Boolean isSkipLogicReadOnly = false;
-
+	/**
+	 * Decides whether the control should be disabled or not
+	 */
+	protected Boolean isSelectiveReadOnly = false;
 	/**
 	 * Decides whether the control should be autocalculated
 	 */
@@ -84,6 +88,14 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	 * Decides whether the control should use skip logic
 	 */
 	protected Boolean isSkipLogicTargetControl = false;
+	/**
+	 * Decides whether the control should use skip logic
+	 */
+	protected Boolean isSkipLogicShowHideTargetControl = false;
+	/**
+	 * Decides whether the control should use skip logic
+	 */
+	protected Boolean isShowHide = false;
 	/**
 	 * Decides whether the control should use skip logic
 	 */
@@ -298,20 +310,19 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException  exception
 	 */
-	public final String generateHTML(Integer rowId) throws DynamicExtensionsSystemException
+	public final String generateHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
-		setSkipLogicControls(rowId);
 		String htmlString = "";
 
 		String innerHTML = "";
 		if (getParentContainer().getMode() != null
 				&& getParentContainer().getMode().equalsIgnoreCase(WebUIManagerConstants.VIEW_MODE))
 		{
-			innerHTML = generateViewModeHTML(rowId);
+			innerHTML = generateViewModeHTML(rowId,container);
 		}
 		else
 		{
-			innerHTML = generateEditModeHTML(rowId);
+			innerHTML = generateEditModeHTML(rowId,container);
 		}
 
 		if (this.isSubControl)
@@ -416,13 +427,13 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	 * @return String html
 	 * @throws DynamicExtensionsSystemException exception
 	 */
-	protected abstract String generateViewModeHTML(Integer rowId) throws DynamicExtensionsSystemException;
+	protected abstract String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException;
 
 	/**
 	 * @return String html
 	 * @throws DynamicExtensionsSystemException exception
 	 */
-	protected abstract String generateEditModeHTML(Integer rowId) throws DynamicExtensionsSystemException;
+	protected abstract String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException;
 
 	/**
 	 * @return
@@ -759,9 +770,9 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		{
 			AttributeMetadataInterface attributeMetadataInterface = ControlsUtility
 					.getAttributeMetadataInterface(getBaseAbstractAttribute());
-			List<SkipLogicAttributeInterface> readOnlySkipLogicAttributes = ControlsUtility
-			.getReadOnlySkipLogicAttributes(selectedPermissibleValues,
-					attributeMetadataInterface);
+			List<SkipLogicAttributeInterface> readOnlySkipLogicAttributes = 
+			getReadOnlySkipLogicAttributes(selectedPermissibleValues,
+					attributeMetadataInterface,rowId);
 			for (SkipLogicAttributeInterface skipLogicAttributeInterface : readOnlySkipLogicAttributes) 
 			{
 				ContainerInterface targetContainerInterface = DynamicExtensionsUtility
@@ -773,14 +784,21 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 								(AttributeMetadataInterface) skipLogicAttributeInterface
 										.getTargetSkipLogicAttribute(),
 								targetContainerInterface);
-				targetControl.setIsSkipLogicReadOnly(Boolean.valueOf(true));
+				if (targetControl.getIsSelectiveReadOnly())
+				{
+					targetControl.setIsSkipLogicReadOnly(Boolean.valueOf(true));
+				}
+				if (targetControl.getIsShowHide())
+				{
+					targetControl.setIsSkipLogicShowHideTargetControl(Boolean.valueOf(true));
+				}
 				targetControl.setIsSkipLogicLoadPermValues(Boolean
 						.valueOf(false));
 			}
-			List<SkipLogicAttributeInterface> nonReadOnlySkipLogicAttributes = ControlsUtility
-					.getNonReadOnlySkipLogicAttributes(
+			List<SkipLogicAttributeInterface> nonReadOnlySkipLogicAttributes = 
+					getNonReadOnlySkipLogicAttributes(
 							selectedPermissibleValues,
-							attributeMetadataInterface);
+							attributeMetadataInterface,rowId);
 			for (SkipLogicAttributeInterface skipLogicAttributeInterface : nonReadOnlySkipLogicAttributes) 
 			{
 				ContainerInterface targetContainerInterface = DynamicExtensionsUtility
@@ -803,6 +821,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 								sourceContainerInterface);
 
 				targetControl.setIsSkipLogicReadOnly(Boolean.valueOf(false));
+				targetControl.setIsSkipLogicShowHideTargetControl(Boolean.valueOf(false));
 				DataElementInterface dataElementInterface = skipLogicAttributeInterface
 						.getDataElement();
 				UserDefinedDEInterface userDefinedDEInterface = null;
@@ -818,7 +837,6 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 					targetControl.setIsSkipLogicLoadPermValues(Boolean
 							.valueOf(true));
 				}
-				targetControl.setSourceSkipControl(sourceControl);
 				if (!sourceControl.getParentContainer().equals(targetControl.getParentContainer()))
 				{
 					rowId = Integer.valueOf(-1);
@@ -833,6 +851,62 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 			}
 		}
 		return skipLogicControls;
+	}
+	/**
+	 * 
+	 * @param selectedPermissibleValues
+	 * @return
+	 */
+	public List<SkipLogicAttributeInterface> getNonReadOnlySkipLogicAttributes(
+			List<PermissibleValueInterface> selectedPermissibleValues,
+			AttributeMetadataInterface attributeMetadataInterface,Integer rowId) 
+	{
+		List<SkipLogicAttributeInterface> skipLogicAttributes = new ArrayList<SkipLogicAttributeInterface>();
+		for (PermissibleValueInterface selectedPermissibleValue : selectedPermissibleValues) 
+		{
+			Collection<PermissibleValueInterface> skipLogicPermissibleValues = attributeMetadataInterface
+					.getSkipLogicPermissibleValues();
+			if (skipLogicPermissibleValues != null)
+			{
+				for (PermissibleValueInterface skipLogicValue : skipLogicPermissibleValues) 
+				{
+					if (skipLogicValue.equals(selectedPermissibleValue)) 
+					{
+						skipLogicAttributes.addAll(skipLogicValue
+								.getDependentSkipLogicAttributes());
+					}
+				}
+			}
+		}
+		return skipLogicAttributes;
+	}
+	/**
+	 * 
+	 * @param selectedPermissibleValues
+	 * @return
+	 */
+	public List<SkipLogicAttributeInterface> getReadOnlySkipLogicAttributes(
+			List<PermissibleValueInterface> selectedPermissibleValues,
+			AttributeMetadataInterface attributeMetadataInterface,Integer rowId) 
+	{
+		List<SkipLogicAttributeInterface> skipLogicAttributes = new ArrayList<SkipLogicAttributeInterface>();
+		for (PermissibleValueInterface selectedPermissibleValue : selectedPermissibleValues) 
+		{
+			Collection<PermissibleValueInterface> skipLogicPermissibleValues = attributeMetadataInterface
+					.getSkipLogicPermissibleValues();
+			if (skipLogicPermissibleValues != null)
+			{
+				for (PermissibleValueInterface skipLogicValue : skipLogicPermissibleValues) 
+				{
+					if (!skipLogicValue.equals(selectedPermissibleValue)) 
+					{
+						skipLogicAttributes.addAll(skipLogicValue
+								.getDependentSkipLogicAttributes());
+					}
+				}
+			}
+		}
+		return skipLogicAttributes;
 	}
 	/**
 	 * 
@@ -903,8 +977,8 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		this.isSkipLogicTargetControl = isSkipLogicTargetControl;
 	}
 	/**
-	 * 
-	 * @return
+	 * @hibernate.many-to-one column="SOURCE_CONTROL_ID" class="edu.common.dynamicextensions.domain.userinterface.Control" constrained="true"
+	 *                        cascade="save-update"
 	 */
 	public ControlInterface getSourceSkipControl() 
 	{
@@ -982,4 +1056,54 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	{
 		return this.sourceSkipControlValues.get(rowId);
 	}
+	/**
+	 * 
+	 * @return
+	 */
+	public Boolean getIsSkipLogicShowHideTargetControl() 
+	{
+		return isSkipLogicShowHideTargetControl;
+	}
+	/**
+	 * 
+	 * @param isSkipLogicShowHideTargetControl
+	 */
+	public void setIsSkipLogicShowHideTargetControl(
+			Boolean isSkipLogicShowHideTargetControl) 
+	{
+		this.isSkipLogicShowHideTargetControl = isSkipLogicShowHideTargetControl;
+	}
+	/**
+	 * @hibernate.property name="isShowHide" type="boolean" column="SHOW_HIDE"
+	 * @return
+	 */
+	public Boolean getIsShowHide() 
+	{
+		return isShowHide;
+	}
+	/**
+	 * 
+	 * @param isShowHide
+	 */
+	public void setIsShowHide(Boolean isShowHide)
+	{
+		this.isShowHide = isShowHide;
+	}
+	/**
+	 * @hibernate.property name="isSelectiveReadOnly" type="boolean" column="SELECTIVE_READ_ONLY"
+	 * @return
+	 */
+	public Boolean getIsSelectiveReadOnly()
+	{
+		return isSelectiveReadOnly;
+	}
+	/**
+	 * 
+	 * @param isSelectiveReadOnly
+	 */
+	public void setIsSelectiveReadOnly(Boolean isSelectiveReadOnly)
+	{
+		this.isSelectiveReadOnly = isSelectiveReadOnly;
+	}
+	
 }

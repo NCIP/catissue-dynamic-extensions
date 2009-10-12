@@ -5,6 +5,7 @@ import java.util.List;
 
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.TextAreaInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
@@ -81,7 +82,7 @@ public class TextArea extends Control implements TextAreaInterface
 	 * @return HTML code for TextArea
 	 * @throws DynamicExtensionsSystemException 
 	 */
-	public String generateEditModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	public String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String htmlString = "";
 		String defaultValue = getDefaultValueForControl(rowId);
@@ -165,7 +166,7 @@ public class TextArea extends Control implements TextAreaInterface
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domain.userinterface.Control#generateViewModeHTML()
 	 */
-	protected String generateViewModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 
 		String htmlgenerated = "&nbsp;";

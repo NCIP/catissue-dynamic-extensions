@@ -9,6 +9,7 @@ import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ListBoxInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
@@ -109,7 +110,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 	 * @return HTML code for ListBox Control.
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public String generateEditModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	public String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		StringBuffer htmlString = new StringBuffer("");
 		List<NameValueBean> nameValueBeans = null;
@@ -284,7 +285,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domain.userinterface.Control#generateViewModeHTML()
 	 */
-	protected String generateViewModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		List<String> selectedOptions = new ArrayList<String>();
 

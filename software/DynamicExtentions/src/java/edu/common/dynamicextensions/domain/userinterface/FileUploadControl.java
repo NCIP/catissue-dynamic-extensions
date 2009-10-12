@@ -8,6 +8,7 @@ package edu.common.dynamicextensions.domain.userinterface;
 
 import java.util.List;
 
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.FileUploadInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.util.global.ApplicationProperties;
@@ -30,7 +31,7 @@ public class FileUploadControl extends Control implements FileUploadInterface
 	 * @return 
 	 * @throws DynamicExtensionsSystemException
 	 */
-	protected String generateEditModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	protected String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String htmlString = "";
 		if (getIsSkipLogicTargetControl())
@@ -75,7 +76,7 @@ public class FileUploadControl extends Control implements FileUploadInterface
 		this.columns = columns;
 	}
 
-	protected String generateViewModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 //		FileAttributeRecordValue fileAttributeRecordValue = (FileAttributeRecordValue) this.value;
 		String htmlString = "&nbsp;";

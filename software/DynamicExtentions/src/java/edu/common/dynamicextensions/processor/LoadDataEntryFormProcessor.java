@@ -8,16 +8,24 @@ import java.util.List;
 import java.util.Map;
 
 import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
+import edu.common.dynamicextensions.domaininterface.AssociationMetadataInterface;
+import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.AbstractContainmentControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainmentAssociationControlInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.entitymanager.CategoryManager;
 import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.entitymanager.EntityManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.actionForm.AbstractActionForm;
@@ -77,6 +85,8 @@ public class LoadDataEntryFormProcessor
 				processedContainersList);
 
 		dataEntryForm.setContainerInterface(containerInterface);
+		
+
 		if (dataEntryForm.getErrorList() == null)
 		{
 			List<String> errorList = new ArrayList<String>();
@@ -96,7 +106,6 @@ public class LoadDataEntryFormProcessor
 		}
 		return containerInterface;
 	}
-
 	/**
 	 *
 	 * @param entityInterface

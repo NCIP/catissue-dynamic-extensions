@@ -113,7 +113,7 @@ public interface ControlInterface extends DynamicExtensionBaseDomainObjectInterf
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException
 	 */
-	String generateHTML(Integer rowId) throws DynamicExtensionsSystemException;
+	String generateHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException;
 
 	/**
 	 * @return
@@ -317,4 +317,35 @@ public interface ControlInterface extends DynamicExtensionBaseDomainObjectInterf
 	  * @return
 	  */
 	 List<String> getSourceSkipControlValue(Integer rowId);
+	 /**
+	  * 
+	  * @param isSkipLogicShowHideTargetControl
+	  */
+	 void setIsSkipLogicShowHideTargetControl(
+			Boolean isSkipLogicShowHideTargetControl);
+	 /**
+	  * 
+	  * @return
+	  */
+	Boolean getIsSkipLogicShowHideTargetControl();
+	/**
+	 * 
+	 * @return
+	 */
+	Boolean getIsShowHide();
+	/**
+	 * 
+	 * @param isShowHide
+	 */
+	void setIsShowHide(Boolean isShowHide);
+	/**
+	 * 
+	 * @return
+	 */
+	Boolean getIsSelectiveReadOnly();
+	/**
+	 * 
+	 * @param isSelectiveReadOnly
+	 */
+	void setIsSelectiveReadOnly(Boolean isSelectiveReadOnly);
 }

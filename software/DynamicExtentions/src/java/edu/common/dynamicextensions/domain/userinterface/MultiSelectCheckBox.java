@@ -9,6 +9,7 @@ import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.MultiSelectCheckBoxInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
@@ -81,7 +82,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 	 * @return HTML code for MultiselectCheckBox Control.
 	 * @throws DynamicExtensionsSystemException
 	 */
-	protected String generateEditModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	protected String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String htmlString = "";
 		List<NameValueBean> nameValueBeans = null;
@@ -160,7 +161,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 	 * @return HTML code for MultiselectCheckBox Control.
 	 * @throws DynamicExtensionsSystemException
 	 */
-	protected String generateViewModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		List<String> selectedOptions = new ArrayList<String>();
 

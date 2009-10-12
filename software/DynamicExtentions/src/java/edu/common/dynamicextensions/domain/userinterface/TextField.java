@@ -5,6 +5,7 @@ import java.util.List;
 
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.TextFieldInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
@@ -79,7 +80,7 @@ public class TextField extends Control implements TextFieldInterface
 	 * @return HTML code for TextField
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public String generateEditModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	public String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String defaultValue = getDefaultValueForControl(rowId);
 
@@ -201,7 +202,7 @@ public class TextField extends Control implements TextFieldInterface
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domain.userinterface.Control#generateViewModeHTML()
 	 */
-	protected String generateViewModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String defaultValue = getDefaultValueForControl(rowId);
 		String htmlString = "&nbsp;";

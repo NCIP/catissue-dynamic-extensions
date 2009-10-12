@@ -773,12 +773,15 @@ public class CategoryGenerator
 
 			CategoryAttributeInterface sourceCategoryAttribute = categoryHelper.getCategoryAttribute(
 					sourceEntity, sourceAttributeName, sourceCategoryEntity);
+			
+			ContainerInterface sourceContainerInterface = DynamicExtensionsUtility
+			.getContainerForAbstractEntity(sourceCategoryAttribute
+					.getCategoryEntity());
+			
 			ControlInterface sourceControl = DynamicExtensionsUtility
 					.getControlForAbstractAttribute(
 							(AttributeMetadataInterface) sourceCategoryAttribute,
-							DynamicExtensionsUtility
-									.getContainerForAbstractEntity(category
-											.getRootCategoryElement()));
+							sourceContainerInterface,sourceCategoryEntityName);
 			boolean isEnumeratedSourceControl = true;
 			if (sourceControl instanceof CheckBox)
 			{
@@ -818,13 +821,17 @@ public class CategoryGenerator
 			CategoryAttributeInterface targetCategoryAttribute = categoryHelper.getCategoryAttribute(
 					targetEntity, targetAttributeName, targetCategoryEntity);
 			
+			ContainerInterface targetContainerInterface = DynamicExtensionsUtility
+					.getContainerForAbstractEntity(targetCategoryAttribute
+							.getCategoryEntity());
+
 			ControlInterface targetControl = DynamicExtensionsUtility
-			.getControlForAbstractAttribute(
-					(AttributeMetadataInterface) targetCategoryAttribute,
-					DynamicExtensionsUtility
-							.getContainerForAbstractEntity(category
-									.getRootCategoryElement()));
+					.getControlForAbstractAttribute(
+							(AttributeMetadataInterface) targetCategoryAttribute,
+							targetContainerInterface,targetCategoryEntityName);
+			
 			targetControl.setIsSkipLogicTargetControl(Boolean.valueOf(true));
+			targetControl.setSourceSkipControl(sourceControl);
 			PermissibleValueInterface permissibleValueInterface = null;
 			if (isEnumeratedSourceControl)
 			{
@@ -875,6 +882,11 @@ public class CategoryGenerator
 									DynamicExtensionsUtility
 											.getEscapedStringValue(defaultValue)));
 			}
+			//Setting control options
+			Map<String, String> controlOptions = categoryFileParser.getControlOptions();
+			
+			categoryHelper.setOptions(targetControl, controlOptions, categoryFileParser.getLineNumber());
+			
 			if (isEnumeratedSourceControl)
 			{
 				permissibleValueInterface.addDependentSkipLogicAttribute(skipLogicAttributeInterface);

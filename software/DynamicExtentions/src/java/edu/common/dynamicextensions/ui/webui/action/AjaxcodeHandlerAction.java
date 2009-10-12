@@ -801,7 +801,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 						containerInterface));
 				containerInterface.setContainerValueMap(rowValueMap);
 				returnString.append(UserInterfaceiUtility.getContainerHTMLAsARow(
-						containerInterface, rwoIndex, null));
+						containerInterface, rwoIndex, null,containerInterface));
 				rwoIndex++;
 			}
 			resetContainerParameters(containerInterface);

@@ -29,6 +29,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 
@@ -47,7 +48,7 @@ public class UserInterfaceiUtility
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public static String generateHTMLforGrid(ContainerInterface subContainer,
-			List<Map<BaseAbstractAttributeInterface, Object>> valueMaps,String dataEntryOperation)
+			List<Map<BaseAbstractAttributeInterface, Object>> valueMaps,String dataEntryOperation,ContainerInterface mainContainer)
 			throws DynamicExtensionsSystemException
 	{
 		StringBuffer htmlForGrid = new StringBuffer();
@@ -68,7 +69,7 @@ public class UserInterfaceiUtility
 		htmlForGrid.append(subContainer.getId());
 		htmlForGrid.append("_substitutionDiv'><table>");
 		subContainer.setContainerValueMap(new HashMap<BaseAbstractAttributeInterface, Object>()); //empty hashmap to generate hidden row
-		htmlForGrid.append(getContainerHTMLAsARow(subContainer, -1,dataEntryOperation));
+		htmlForGrid.append(getContainerHTMLAsARow(subContainer, -1,dataEntryOperation,mainContainer));
 		htmlForGrid.append("</table></div><input type='hidden' name='");
 
 		htmlForGrid.append(subContainer.getId());
@@ -159,7 +160,7 @@ public class UserInterfaceiUtility
 			for (Map<BaseAbstractAttributeInterface, Object> rowValueMap : valueMaps)
 			{
 				subContainer.setContainerValueMap(rowValueMap);
-				htmlForGrid.append(getContainerHTMLAsARow(subContainer, index,dataEntryOperation));
+				htmlForGrid.append(getContainerHTMLAsARow(subContainer, index,dataEntryOperation,mainContainer));
 				index++;
 			}
 		}
@@ -278,7 +279,7 @@ public class UserInterfaceiUtility
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public static String getContainerHTMLAsARow(ContainerInterface container, int rowId,String dataEntryOperation)
+	public static String getContainerHTMLAsARow(ContainerInterface container, int rowId,String dataEntryOperation,ContainerInterface mainContainer)
 			throws DynamicExtensionsSystemException
 	{
 		StringBuffer contHtmlAsARow = new StringBuffer();
@@ -310,9 +311,26 @@ public class UserInterfaceiUtility
 		}
 
 		contHtmlAsARow.append("</td>");
-
 		for (ControlInterface control : controls)
 		{
+			if (control.getIsSkipLogicTargetControl())
+			{
+				Object value = null;
+				List<Object> values = new ArrayList<Object>();
+				
+				ControlsUtility
+						.getAttributeValueForSkipLogicAttributesFromValueMap(
+								mainContainer.getContainerValueMap(), mainContainer
+										.getContainerValueMap(), control
+										.getSourceSkipControl()
+										.getBaseAbstractAttribute(), values);
+				if (!values.isEmpty())
+				{
+					value = values.get(0);
+				}
+				control.getSourceSkipControl().setValue(value);
+				control.getSourceSkipControl().setSkipLogicControls(Integer.valueOf(rowId));
+			}
 			String controlHTML = "";
 			control.setDataEntryOperation(dataEntryOperation);
 			control.setIsSubControl(true);
@@ -328,7 +346,7 @@ public class UserInterfaceiUtility
 					Object value = containerValues.get(control.getBaseAbstractAttribute());
 					control.setValue(value);
 				}
-				controlHTML = control.generateHTML(rowId);
+				controlHTML = control.generateHTML(rowId,mainContainer);
 				if (rowId != -1)
 				{
 					String oldName = control.getHTMLComponentName();

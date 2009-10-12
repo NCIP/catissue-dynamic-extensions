@@ -4,6 +4,7 @@ package edu.common.dynamicextensions.domain.userinterface;
 import java.util.List;
 
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.DataGridInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 
@@ -24,13 +25,13 @@ public class DataGrid extends Control implements DataGridInterface
 		// TODO Auto-generated method stub
 	}
 
-	protected String generateViewModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		// TODO Auto-generated method stub
 		return "";
 	}
 
-	protected String generateEditModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	protected String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		// TODO Auto-generated method stub
 		return "&nbsp;";

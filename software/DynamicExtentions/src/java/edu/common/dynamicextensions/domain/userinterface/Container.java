@@ -20,6 +20,7 @@ import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterfa
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.wustl.common.util.global.ApplicationProperties;
@@ -495,7 +496,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 			}
 		}
 		
-		containerHTML.append(generateControlsHTML(caption,dataEntryOperation));
+		containerHTML.append(generateControlsHTML(caption,dataEntryOperation,this));
 		containerHTML.append("</table>");
 
 		return containerHTML.toString();
@@ -505,7 +506,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public String generateControlsHTML(String caption,String dataEntryOperation) throws DynamicExtensionsSystemException
+	public String generateControlsHTML(String caption,String dataEntryOperation,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		StringBuffer controlHTML = new StringBuffer();
 
@@ -514,13 +515,29 @@ public class Container extends DynamicExtensionBaseDomainObject
 		List<ControlInterface> controls = getAllControlsUnderSameDisplayLabel(); //UnderSameDisplayLabel();
 		int lastRow = 0;
 		int i = 0;
-
 		for (ControlInterface control : controls)
 		{
+			if (control.getIsSkipLogicTargetControl())
+			{
+				Object value = null;
+				List<Object> values = new ArrayList<Object>();
+				
+				ControlsUtility
+						.getAttributeValueForSkipLogicAttributesFromValueMap(
+								container.getContainerValueMap(), container
+										.getContainerValueMap(), control
+										.getSourceSkipControl()
+										.getBaseAbstractAttribute(), values);
+				if (!values.isEmpty())
+				{
+					value = values.get(0);
+				}
+				control.getSourceSkipControl().setValue(value);
+				control.getSourceSkipControl().setSkipLogicControls(Integer.valueOf(-1));
+			}
 			control.setDataEntryOperation(dataEntryOperation);
 			Object value = containerValueMap.get(control.getBaseAbstractAttribute());
 			control.setValue(value);
-
 			if (lastRow == control.getSequenceNumber())
 			{
 				controlHTML.append("<div style='float:left'>&nbsp;</div>");
@@ -532,16 +549,36 @@ public class Container extends DynamicExtensionBaseDomainObject
 				{
 					controlHTML.append("</td></tr><tr><td height='7'></td></tr>");
 				}
+				controlHTML.append("<tr valign='center' ");
+				if (control.getIsSkipLogicTargetControl())
+				{
+					controlHTML.append("id='"
+							+ control.getHTMLComponentName() + "_row_div' name='"
+							+ control.getHTMLComponentName() + "_row_div'");
 
-				controlHTML.append("<tr valign='center'>");
+				}
+				if (control.getIsSkipLogicTargetControl())
+				{
+					if (control.getIsSkipLogicShowHideTargetControl())
+					{
+						controlHTML.append(" style='display:none'");
+					}
+				}
+				else
+				{
+					controlHTML.append(" style='display:block'");
+				}
+				controlHTML.append(">");
+				if (control.getIsSkipLogicTargetControl())
+				{
+					controlHTML.append("<input type='hidden' name='skipLogicHideControls' id='skipLogicHideControls' value = '"
+						+ control.getHTMLComponentName() + "_row_div' />");
+				}
 			}
-
-			controlHTML.append(control.generateHTML(Integer.valueOf(-1)));
-
+			controlHTML.append(control.generateHTML(Integer.valueOf(-1), container));
 			i++;
 			lastRow = control.getSequenceNumber();
 		}
-
 		controlHTML.append("</td></tr>");
 		this.showAssociationControlsAsLink = false;
 
@@ -581,10 +618,10 @@ public class Container extends DynamicExtensionBaseDomainObject
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public String generateControlsHTMLAsGrid(
-			List<Map<BaseAbstractAttributeInterface, Object>> valueMaps,String dataEntryOperation)
+			List<Map<BaseAbstractAttributeInterface, Object>> valueMaps,String dataEntryOperation,ContainerInterface container)
 			throws DynamicExtensionsSystemException
 	{
-		return UserInterfaceiUtility.generateHTMLforGrid(this, valueMaps,dataEntryOperation);
+		return UserInterfaceiUtility.generateHTMLforGrid(this, valueMaps,dataEntryOperation,container);
 	}
 
 	/**

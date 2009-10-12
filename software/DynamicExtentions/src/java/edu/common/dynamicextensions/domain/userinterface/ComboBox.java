@@ -6,6 +6,7 @@ import java.util.List;
 
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ComboBoxInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
@@ -35,7 +36,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	 * @return HTML code for ComboBox
 	 * @throws DynamicExtensionsSystemException if HTMLComponentName() fails.
 	 */
-	public String generateEditModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	public String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String defaultValue = getDefaultValueForControl(rowId);
 		String isDisabled = "";
@@ -183,7 +184,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		listOfValues = choiceList;
 	}
 
-	protected String generateViewModeHTML(Integer rowId) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String htmlString = "&nbsp;";
 
