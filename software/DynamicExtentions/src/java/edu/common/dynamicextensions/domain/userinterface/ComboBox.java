@@ -120,14 +120,17 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					+ "',valueNotFoundText:'',"
 					+ "selectOnFocus:'true',applyTo: '"
 					+ htmlComponentName
-					+ "'});combo.on(\"select\", function() {isDataChanged();}), combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"210\");combo.innerList.setStyle(\"width\", \"210\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});";
-	
+					+ "'});combo.on(\"select\", function() {"
+					+ (this.isSkipLogic ? "getSkipLogicControl('"
+							+ htmlComponentName + "','" + identifier + "','"
+							+ parentContainerId + "');isDataChanged();"
+							: "isDataChanged();")
+					+ "}), combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"210\");combo.innerList.setStyle(\"width\", \"210\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});";
+
 			htmlString = htmlString
-					+ (this.isSkipLogic ? "combo.on(\"change\", function() {getSkipLogicControl('"+ htmlComponentName +"','"+ identifier +"','"+ parentContainerId +"')});" :"") +
-							"ds.on('load',function(){if (this.getAt(0) != null && this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50;} else {combo.typeAheadDelay=60000}});";
-	
-			htmlString = htmlString
-					+ "});</script>";
+					+ "ds.on('load',function(){if (this.getAt(0) != null && this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50;} else {combo.typeAheadDelay=60000}});";
+
+			htmlString = htmlString + "});</script>";
 		}
 		htmlString += "<div style='float:left' id='auto_complete_dropdown'>"
 				+ "<input type='text' onmouseover=\"showToolTip('"
@@ -171,14 +174,30 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				+ "',valueNotFoundText:'',"
 				+ "selectOnFocus:'true',applyTo: '"
 				+ htmlComponentName
-				+ "'});combo.on(\"select\", function() {isDataChanged();}), combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"210\");combo.innerList.setStyle(\"width\", \"210\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});" +
-				(this.isSkipLogic ? "combo.on(\"change\", function() {getSkipLogicControl('"+ htmlComponentName +"','"+ identifier +"','"+ parentContainerId +"')});" :"") +
-								"ds.on('load',function(){if (this.getAt(0) != null) {if (this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50} else {combo.typeAheadDelay=60000}}});"
-				+ "});" + "</div>" + "<div name=\"comboHtml\" style='display:none'>" + "<div style='float:left'>"
-				+ "<input type='text' onmouseover=\"showToolTip('" + htmlComponentName
-				+ "')\" id='" + htmlComponentName + "' " + " name='" + htmlComponentName
-				+ "' value ='" + defaultValue + "' size='20' class='font_bl_nor' />" + "</div>"
-				+ "</div>" + "</div>";
+				+ "'});combo.on(\"select\", function() {"
+				+ (this.isSkipLogic ? "getSkipLogicControl('"
+						+ htmlComponentName + "','" + identifier + "','"
+						+ parentContainerId + "');isDataChanged();"
+						: "isDataChanged();")
+				+ "}), combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"210\");combo.innerList.setStyle(\"width\", \"210\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});"
+				+ "ds.on('load',function(){if (this.getAt(0) != null) {if (this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50} else {combo.typeAheadDelay=60000}}});"
+				+ "});"
+				+ "</div>"
+				+ "<div name=\"comboHtml\" style='display:none'>"
+				+ "<div style='float:left'>"
+				+ "<input type='text' onmouseover=\"showToolTip('"
+				+ htmlComponentName
+				+ "')\" id='"
+				+ htmlComponentName
+				+ "' "
+				+ " name='"
+				+ htmlComponentName
+				+ "' value ='"
+				+ defaultValue
+				+ "' size='20' class='font_bl_nor' />"
+				+ "</div>"
+				+ "</div>"
+				+ "</div>";
 		if (getIsSkipLogicTargetControl() || this.getParentContainer().isAjaxRequest())
 		{
 			htmlString += "</div>";
