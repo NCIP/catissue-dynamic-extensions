@@ -230,7 +230,11 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		List<NameValueBean> nameValueBeanList = null;
 		if (listOfValues == null)
 		{
-			List<String> sourceControlValues = this.getSourceSkipControl().getValueAsStrings(rowId);
+			List<String> sourceControlValues = null;
+			if (this.getSourceSkipControl() != null)
+			{
+				sourceControlValues = this.getSourceSkipControl().getValueAsStrings(rowId);
+			}
 			nameValueBeanList = ControlsUtility.populateListOfValues(this,rowId,sourceControlValues);
 		}
 

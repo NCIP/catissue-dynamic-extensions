@@ -164,7 +164,11 @@ public class ListBox extends SelectControl implements ListBoxInterface
 
 		if (listOfValues == null)
 		{
-			List<String> sourceControlValues = this.getSourceSkipControl().getValueAsStrings(rowId);
+			List<String> sourceControlValues = null;
+			if (this.getSourceSkipControl() != null)
+			{
+				sourceControlValues = this.getSourceSkipControl().getValueAsStrings(rowId);
+			}
 			nameValueBeans = ControlsUtility.populateListOfValues(this,rowId,sourceControlValues);
 		}
 
