@@ -510,8 +510,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 	{
 		StringBuffer controlHTML = new StringBuffer();
 		List<Object> values = new ArrayList<Object>();
-		boolean isSameContainerControl = false;
-		
+	
 		addCaption(controlHTML, caption);
 
 		List<ControlInterface> controls = getAllControlsUnderSameDisplayLabel(); //UnderSameDisplayLabel();
@@ -523,24 +522,16 @@ public class Container extends DynamicExtensionBaseDomainObject
 			{
 				Object value = null;
 				values.clear();
-				if (control.getSourceSkipControl().getParentContainer().equals(
-						control.getParentContainer()))
-				{
-					isSameContainerControl = true;
-				}
-				else
-				{
-					isSameContainerControl = false;
-				}
-				
+			
 				ControlsUtility
 						.getAttributeValueForSkipLogicAttributesFromValueMap(
 								container.getContainerValueMap(), container
 										.getContainerValueMap(), control
 										.getSourceSkipControl()
-										.getBaseAbstractAttribute(),
-								isSameContainerControl, values, Integer
-										.valueOf(-1), Integer.valueOf(-1));
+										.getBaseAbstractAttribute(), false,
+								values, Integer.valueOf(-1), Integer
+										.valueOf(-1));
+				
 				if (!values.isEmpty())
 				{
 					value = values.get(0);
