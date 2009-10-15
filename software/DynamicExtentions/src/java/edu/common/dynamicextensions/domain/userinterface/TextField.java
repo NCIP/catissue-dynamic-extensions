@@ -226,7 +226,7 @@ public class TextField extends Control implements TextFieldInterface
 	private String getDefaultValueForControl(Integer rowId)
 	{
 		String defaultValue = (String) this.value;
-		if (!getIsSkipLogicTargetControl())
+		if (!getIsSkipLogicDefaultValue())
 		{
 			if (this.value == null) 
 			{

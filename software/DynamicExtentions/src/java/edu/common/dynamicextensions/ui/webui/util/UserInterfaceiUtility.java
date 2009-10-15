@@ -283,7 +283,8 @@ public class UserInterfaceiUtility
 			throws DynamicExtensionsSystemException
 	{
 		StringBuffer contHtmlAsARow = new StringBuffer();
-
+		List<Object> values = new ArrayList<Object>();
+		boolean isSameContainerControl = false;
 		Map<BaseAbstractAttributeInterface, Object> containerValues = container
 				.getContainerValueMap();
 		List<ControlInterface> controls = new ArrayList<ControlInterface>(container
@@ -316,14 +317,24 @@ public class UserInterfaceiUtility
 			if (control.getIsSkipLogicTargetControl())
 			{
 				Object value = null;
-				List<Object> values = new ArrayList<Object>();
-				
+				values.clear();
+				if (control.getSourceSkipControl().getParentContainer().equals(
+						control.getParentContainer()))
+				{
+					isSameContainerControl = true;
+				}
+				else
+				{
+					isSameContainerControl = false;
+				}
 				ControlsUtility
 						.getAttributeValueForSkipLogicAttributesFromValueMap(
-								mainContainer.getContainerValueMap(), mainContainer
-										.getContainerValueMap(), control
+								mainContainer.getContainerValueMap(),
+								mainContainer.getContainerValueMap(), control
 										.getSourceSkipControl()
-										.getBaseAbstractAttribute(), values);
+										.getBaseAbstractAttribute(),
+								isSameContainerControl, values, Integer
+										.valueOf(rowId), Integer.valueOf(rowId));
 				if (!values.isEmpty())
 				{
 					value = values.get(0);

@@ -307,18 +307,6 @@ public interface ControlInterface extends DynamicExtensionBaseDomainObjectInterf
 	 String getDataEntryOperation();
 	 /**
 	  * 
-	  * @param rowId
-	  * @param values
-	  */
-	 void addSourceSkipControlValue(Integer rowId,List<String> values);
-	 /**
-	  * 
-	  * @param rowId
-	  * @return
-	  */
-	 List<String> getSourceSkipControlValue(Integer rowId);
-	 /**
-	  * 
 	  * @param isSkipLogicShowHideTargetControl
 	  */
 	 void setIsSkipLogicShowHideTargetControl(
@@ -348,4 +336,14 @@ public interface ControlInterface extends DynamicExtensionBaseDomainObjectInterf
 	 * @param isSelectiveReadOnly
 	 */
 	void setIsSelectiveReadOnly(Boolean isSelectiveReadOnly);
+	/**
+	 * 
+	 * @return
+	 */
+	Boolean getIsSkipLogicDefaultValue();
+	/**
+	 * 
+	 * @param isSkipLogicDefaultValue
+	 */
+	void setIsSkipLogicDefaultValue(Boolean isSkipLogicDefaultValue);
 }

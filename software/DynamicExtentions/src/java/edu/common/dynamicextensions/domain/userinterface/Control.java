@@ -101,13 +101,13 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	 */
 	protected Boolean isSkipLogicLoadPermValues = false;
 	/**
-	 * 
+	 * Decides whether the control should use skip logic
 	 */
-	protected ControlInterface sourceSkipControl = null;
+	protected Boolean isSkipLogicDefaultValue = false;
 	/**
 	 * 
 	 */
-	protected Map<Integer,List<String>> sourceSkipControlValues = new HashMap <Integer,List<String>>();
+	protected ControlInterface sourceSkipControl = null;
 	/**
 	 * 
 	 */
@@ -795,6 +795,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 				}
 				targetControl.setIsSkipLogicLoadPermValues(Boolean
 						.valueOf(false));
+				targetControl.setIsSkipLogicDefaultValue(Boolean.valueOf(false));
 			}
 			List<SkipLogicAttributeInterface> nonReadOnlySkipLogicAttributes = 
 					getNonReadOnlySkipLogicAttributes(
@@ -820,7 +821,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 								(AttributeMetadataInterface) skipLogicAttributeInterface
 										.getSourceSkipLogicAttribute(),
 								sourceContainerInterface);
-
+				targetControl.setIsSkipLogicDefaultValue(Boolean.valueOf(true));
 				targetControl.setIsSkipLogicReadOnly(Boolean.valueOf(false));
 				targetControl.setIsSkipLogicShowHideTargetControl(Boolean.valueOf(false));
 				DataElementInterface dataElementInterface = skipLogicAttributeInterface
@@ -844,10 +845,6 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 				}
 				targetControl
 						.setIsSkipLogicTargetControl(Boolean.valueOf(true));
-				if (rowId != null)
-				{
-					targetControl.addSourceSkipControlValue(rowId, values);
-				}
 				skipLogicControls.add(targetControl);
 			}
 		}
@@ -917,7 +914,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	protected String getSkipLogicDefaultValue(Integer rowId)
 	{
 		String defaultValue = "";
-		List<String> values = this.getSourceSkipControlValue(rowId);
+		List<String> values = this.getSourceSkipControl().getValueAsStrings(rowId);
 		List<PermissibleValueInterface> permissibleValueList = new ArrayList<PermissibleValueInterface>();
 		if (values != null)
 		{
@@ -953,7 +950,9 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 							.getBaseAbstractAttribute(),
 					(AttributeMetadataInterface) this
 							.getBaseAbstractAttribute());
-			if (!this.getIsSkipLogicReadOnly() && skipLogicAttributeInterface.getDefaultValue() != null)
+			if (!this.getIsSkipLogicReadOnly()
+					&& skipLogicAttributeInterface != null
+					&& skipLogicAttributeInterface.getDefaultValue() != null)
 			{
 				defaultValue = skipLogicAttributeInterface.getDefaultValue();
 			}
@@ -1027,38 +1026,6 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	}
 	/**
 	 * 
-	 */
-	private Map <Integer,List<String>> getSourceSkipControlValues() 
-	{
-		return sourceSkipControlValues;
-	}
-	/**
-	 * 
-	 * @param sourceSkipControlValues
-	 */
-	private void setSourceSkipControlValues(Map<Integer,List<String>> sourceSkipControlValues) 
-	{
-		this.sourceSkipControlValues = sourceSkipControlValues;
-	}
-	/**
-	 * 
-	 * @param rowId
-	 * @param values
-	 */
-	public void addSourceSkipControlValue(Integer rowId,List<String> values)
-	{
-		this.sourceSkipControlValues.put(rowId, values);
-	}
-	/**
-	 * 
-	 * @return
-	 */
-	public List<String> getSourceSkipControlValue(Integer rowId)
-	{
-		return this.sourceSkipControlValues.get(rowId);
-	}
-	/**
-	 * 
 	 * @return
 	 */
 	public Boolean getIsSkipLogicShowHideTargetControl() 
@@ -1106,5 +1073,20 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	{
 		this.isSelectiveReadOnly = isSelectiveReadOnly;
 	}
-	
+	/**
+	 * 
+	 * @return
+	 */
+	public Boolean getIsSkipLogicDefaultValue() 
+	{
+		return isSkipLogicDefaultValue;
+	}
+	/**
+	 * 
+	 * @param isSkipLogicDefaultValue
+	 */
+	public void setIsSkipLogicDefaultValue(Boolean isSkipLogicDefaultValue) 
+	{
+		this.isSkipLogicDefaultValue = isSkipLogicDefaultValue;
+	}
 }

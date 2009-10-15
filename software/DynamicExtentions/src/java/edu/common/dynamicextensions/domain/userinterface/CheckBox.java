@@ -149,7 +149,7 @@ public class CheckBox extends Control implements CheckBoxInterface
 	private String getDefaultValueForControl(Integer rowId)
 	{
 		String defaultValue = String.valueOf(this.value);
-		if (!getIsSkipLogicTargetControl())
+		if (!getIsSkipLogicDefaultValue())
 		{
 			if (this.value == null)
 			{

@@ -509,7 +509,9 @@ public class Container extends DynamicExtensionBaseDomainObject
 	public String generateControlsHTML(String caption,String dataEntryOperation,ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		StringBuffer controlHTML = new StringBuffer();
-
+		List<Object> values = new ArrayList<Object>();
+		boolean isSameContainerControl = false;
+		
 		addCaption(controlHTML, caption);
 
 		List<ControlInterface> controls = getAllControlsUnderSameDisplayLabel(); //UnderSameDisplayLabel();
@@ -520,14 +522,25 @@ public class Container extends DynamicExtensionBaseDomainObject
 			if (control.getIsSkipLogicTargetControl())
 			{
 				Object value = null;
-				List<Object> values = new ArrayList<Object>();
+				values.clear();
+				if (control.getSourceSkipControl().getParentContainer().equals(
+						control.getParentContainer()))
+				{
+					isSameContainerControl = true;
+				}
+				else
+				{
+					isSameContainerControl = false;
+				}
 				
 				ControlsUtility
 						.getAttributeValueForSkipLogicAttributesFromValueMap(
 								container.getContainerValueMap(), container
 										.getContainerValueMap(), control
 										.getSourceSkipControl()
-										.getBaseAbstractAttribute(), values);
+										.getBaseAbstractAttribute(),
+								isSameContainerControl, values, Integer
+										.valueOf(-1), Integer.valueOf(-1));
 				if (!values.isEmpty())
 				{
 					value = values.get(0);

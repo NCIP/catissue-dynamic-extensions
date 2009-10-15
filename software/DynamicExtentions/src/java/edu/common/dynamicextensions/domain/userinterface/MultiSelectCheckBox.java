@@ -98,7 +98,8 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 
 		if (listOfValues == null)
 		{
-			nameValueBeans = ControlsUtility.populateListOfValues(this, rowId);
+			List<String> sourceControlValues = this.getSourceSkipControl().getValueAsStrings(rowId);
+			nameValueBeans = ControlsUtility.populateListOfValues(this, rowId,sourceControlValues);
 		}
 
 		if (nameValueBeans != null && !nameValueBeans.isEmpty())
@@ -233,7 +234,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 		{
 			getValueList(association, values);
 		}
-		if ((!getIsSkipLogicTargetControl()) && (values == null || values.isEmpty()))
+		if ((!getIsSkipLogicDefaultValue()) && (values == null || values.isEmpty()))
 		{
 			String defaultValue = null;
 			values = new ArrayList<String>();

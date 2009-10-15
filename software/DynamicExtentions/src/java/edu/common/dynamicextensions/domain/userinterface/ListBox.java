@@ -164,7 +164,8 @@ public class ListBox extends SelectControl implements ListBoxInterface
 
 		if (listOfValues == null)
 		{
-			nameValueBeans = ControlsUtility.populateListOfValues(this,rowId);
+			List<String> sourceControlValues = this.getSourceSkipControl().getValueAsStrings(rowId);
+			nameValueBeans = ControlsUtility.populateListOfValues(this,rowId,sourceControlValues);
 		}
 
 		if (nameValueBeans != null && !nameValueBeans.isEmpty())
@@ -372,7 +373,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 				values = (List<String>) this.value;
 			}
 		}
-		if (!getIsSkipLogicTargetControl())
+		if (!getIsSkipLogicDefaultValue())
 		{
 			if (values == null || values.isEmpty())
 			{

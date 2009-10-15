@@ -40,6 +40,23 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 		String controlId = request.getParameter("controlId").split("~")[0].trim();
 		String containerId = request.getParameter("controlId").split("~")[1].split("=")[1].trim();
 		String rowId = request.getParameter("controlId").split("~")[2].split("=")[1].trim();
+		String[] sourceValues = request.getParameter("controlId").split("~")[3].split("=");
+		String[] sourceHtmlComponentValues = null;
+		if (sourceValues.length > 1)
+		{
+			sourceHtmlComponentValues = sourceValues[1].split("~");
+		}
+		List<String> sourceControlValues = new ArrayList<String>();
+		if (sourceHtmlComponentValues != null)
+		{
+			for (String sourceValue : sourceHtmlComponentValues)
+			{
+				if (sourceValue != null && sourceValue.length() > 0)
+				{
+					sourceControlValues.add(sourceValue);
+				}
+			}
+		}
 		if (rowId == null)
 		{
 			rowId = "-1";
@@ -57,7 +74,7 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 		{
 			if (Long.parseLong(controlId) == control.getId())
 			{
-				nameValueBeans = ControlsUtility.populateListOfValues(control,Integer.valueOf(rowId));
+				nameValueBeans = ControlsUtility.populateListOfValues(control,Integer.valueOf(rowId),sourceControlValues);
 			}
 		}
 

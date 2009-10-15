@@ -46,6 +46,24 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 			isDisabled = ",disabled:'" + ProcessorConstants.TRUE + "'";
 		}
 		String htmlComponentName = getHTMLComponentName();
+		StringBuffer sourceHtmlComponentValues = null;
+		if (this.getSourceSkipControl()!= null)
+		{
+			sourceHtmlComponentValues = new StringBuffer();
+			List<String> sourceControlValues = this.getSourceSkipControl().getValueAsStrings(rowId);
+			if (sourceControlValues != null)
+			{
+				for (String value : sourceControlValues)
+				{
+					sourceHtmlComponentValues.append(value);
+					sourceHtmlComponentValues.append("~");
+				}
+			}
+		}
+		else
+		{
+			sourceHtmlComponentValues = new StringBuffer("~");
+		}
 		String parentContainerId = "";
 		if (this.getParentContainer() != null && this.getParentContainer().getId() != null)
 		{
@@ -83,6 +101,8 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					+ parentContainerId
 					+ "~rowId="
 					+ rowId
+					+ "~sourceControlValues="
+					+ sourceHtmlComponentValues.toString()
 					+ "';"
 					+ "var ds = new Ext.data.Store({"
 					+ "proxy: new Ext.data.HttpProxy({url: myUrl}),"
@@ -133,6 +153,8 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				+ parentContainerId
 				+ "~rowId="
 				+ rowId
+				+ "~sourceControlValues="
+				+ sourceHtmlComponentValues.toString()
 				+ "';var ds = new Ext.data.Store({"
 				+ "proxy: new Ext.data.HttpProxy({url: myUrl}),"
 				+ "reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, "
@@ -208,7 +230,8 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		List<NameValueBean> nameValueBeanList = null;
 		if (listOfValues == null)
 		{
-			nameValueBeanList = ControlsUtility.populateListOfValues(this,rowId);
+			List<String> sourceControlValues = this.getSourceSkipControl().getValueAsStrings(rowId);
+			nameValueBeanList = ControlsUtility.populateListOfValues(this,rowId,sourceControlValues);
 		}
 
 		if (nameValueBeanList != null && !nameValueBeanList.isEmpty())
@@ -232,7 +255,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	private String getDefaultValueForControl(Integer rowId)
 	{
 		String defaultValue = "";
-		if (!getIsSkipLogicTargetControl())
+		if (!getIsSkipLogicDefaultValue())
 		{
 			if (this.value == null)
 			{

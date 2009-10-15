@@ -62,7 +62,8 @@ public class RadioButton extends Control implements RadioButtonInterface
 		{
 			identifier = this.getId().toString();
 		}
-		nameValueBeanList = ControlsUtility.populateListOfValues(this,rowId);
+		List<String> sourceControlValues = this.getSourceSkipControl().getValueAsStrings(rowId);
+		nameValueBeanList = ControlsUtility.populateListOfValues(this,rowId,sourceControlValues);
 
 		String htmlComponentName = getHTMLComponentName();
 		if (nameValueBeanList != null)
@@ -138,7 +139,7 @@ public class RadioButton extends Control implements RadioButtonInterface
 	private String getDefaultValueForControl(Integer rowId)
 	{
 		String defaultValue = (String) this.value;
-		if (!getIsSkipLogicTargetControl())
+		if (!getIsSkipLogicDefaultValue())
 		{
 			if (defaultValue == null)
 			{

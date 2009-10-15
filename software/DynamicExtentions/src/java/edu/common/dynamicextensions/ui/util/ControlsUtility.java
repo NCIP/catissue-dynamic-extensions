@@ -319,7 +319,7 @@ public class ControlsUtility
 	 * This method populates the List of Values of the ListBox in the NameValueBean Collection.
 	 * @return List of pair of Name and its corresponding Value.
 	 */
-	public static List<NameValueBean> populateListOfValues(ControlInterface control,Integer rowId)
+	public static List<NameValueBean> populateListOfValues(ControlInterface control,Integer rowId,List<String> sourceControlValue)
 	{
 		AttributeMetadataInterface attributeMetadataInterface = null;
 		List<NameValueBean> nameValueBeanList = null;
@@ -337,7 +337,7 @@ public class ControlsUtility
 					}
 					else
 					{
-						List<PermissibleValueInterface> permissibleValueList = getSkipLogicPermissibleValues(control.getSourceSkipControl(),control,rowId);
+						List<PermissibleValueInterface> permissibleValueList = getSkipLogicPermissibleValues(control.getSourceSkipControl(),control,rowId,sourceControlValue);
 						nameValueBeanList = getPermissibleValues(permissibleValueList, attributeMetadataInterface);
 					}
 				}
@@ -361,7 +361,7 @@ public class ControlsUtility
 						}
 						else
 						{
-							List<PermissibleValueInterface> permissibleValueList = getSkipLogicPermissibleValues(control.getSourceSkipControl(),control,rowId);
+							List<PermissibleValueInterface> permissibleValueList = getSkipLogicPermissibleValues(control.getSourceSkipControl(),control,rowId,sourceControlValue);
 							nameValueBeanList = getPermissibleValues(permissibleValueList, attributeMetadataInterface);
 						}
 					}
@@ -503,14 +503,13 @@ public class ControlsUtility
 	 * 
 	 */
 	public static List<PermissibleValueInterface> getSkipLogicPermissibleValues(
-			ControlInterface sourceControl, ControlInterface targetControl,Integer rowId)
+			ControlInterface sourceControl, ControlInterface targetControl,Integer rowId,List<String> values)
 			throws ParseException 
 	{
 		if (!sourceControl.getParentContainer().equals(targetControl.getParentContainer()))
 		{
 			rowId = Integer.valueOf(-1);
 		}
-		List<String> values = targetControl.getSourceSkipControlValue(rowId);
 		List<PermissibleValueInterface> skipLogicPermissibleValueList = new ArrayList<PermissibleValueInterface>();
 		List<PermissibleValueInterface> permissibleValueList = new ArrayList<PermissibleValueInterface>();
 		if (values != null) 
@@ -963,27 +962,46 @@ public class ControlsUtility
 	public static Object getAttributeValueForSkipLogicAttributesFromValueMap(
 			Map<BaseAbstractAttributeInterface, Object> fullValueMap,
 			Map<BaseAbstractAttributeInterface, Object> valueMap,
-			BaseAbstractAttributeInterface skipLogicAttribute,List <Object> values)
+			BaseAbstractAttributeInterface skipLogicAttribute,
+			boolean isSameContainerControl, List<Object> values,
+			Integer entryNumber, Integer mapentryNumber)
 	{
+		if (!values.isEmpty())
+		{
+			return values.get(0);
+		}
 		for (Map.Entry<BaseAbstractAttributeInterface, Object> entry : valueMap.entrySet())
 		{
 			BaseAbstractAttributeInterface attribute = entry.getKey();
 			if (attribute instanceof CategoryAttributeInterface)
 			{
-				if (skipLogicAttribute.equals(attribute))
+				CategoryAttributeInterface categoryAttribute = (CategoryAttributeInterface) attribute;
+				if ((!isSameContainerControl && categoryAttribute
+						.equals(skipLogicAttribute))
+						|| (isSameContainerControl
+								&& categoryAttribute
+										.equals(skipLogicAttribute) && entryNumber
+								.equals(mapentryNumber)))
 				{
-					values.add(entry.getValue());
+					if (entry.getValue() != null)
+					{
+						values.add(entry.getValue());
+					}
 					return entry.getValue();
 				}
 			}
 			else if (attribute instanceof CategoryAssociationInterface)
 			{
+				Integer rowNumber = 0;
 				List<Map<BaseAbstractAttributeInterface, Object>> attributeValueMapList = (List<Map<BaseAbstractAttributeInterface, Object>>) entry
 						.getValue();
 				for (Map<BaseAbstractAttributeInterface, Object> map : attributeValueMapList)
 				{
-					getAttributeValueForSkipLogicAttributesFromValueMap(fullValueMap, map,
-							skipLogicAttribute,values);
+					rowNumber++;
+					getAttributeValueForSkipLogicAttributesFromValueMap(
+							fullValueMap, map, skipLogicAttribute,
+							isSameContainerControl, values, entryNumber,
+							rowNumber);
 				}
 			}
 		}

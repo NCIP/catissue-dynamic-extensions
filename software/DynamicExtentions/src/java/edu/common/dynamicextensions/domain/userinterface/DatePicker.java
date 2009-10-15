@@ -439,7 +439,7 @@ public class DatePicker extends Control implements DatePickerInterface
 	private String getDefaultValueForControl(Integer rowId)
 	{
 		String defaultValue = (String) this.value;
-		if (!getIsSkipLogicTargetControl())
+		if (!getIsSkipLogicDefaultValue())
 		{
 			if (this.value == null)
 			{
