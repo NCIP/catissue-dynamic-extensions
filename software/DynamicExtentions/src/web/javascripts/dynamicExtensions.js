@@ -1606,7 +1606,6 @@ function ignoreResponseHandler(str)
 function setDefaultValues(tableId, obj, containerId) 
 {
 	var children = obj.childNodes;
-
 	var rowIndex = document.getElementById(tableId).rows.length;
 	rowIndex = parseInt(rowIndex) - 1;
 
@@ -1675,7 +1674,7 @@ function setDefaultValues(tableId, obj, containerId)
 						var newName = oldName + "_" + rowIndex;
 						var newScript = replaceAll(childNodes2[1].innerHTML,
 								oldName, newName);
-						obj.innerHTML = replaceAll(childNodes2[2].innerHTML,
+						obj.innerHTML = replaceAll(obj.innerHTML,
 								oldName, newName);
 						eval(newScript);
 					}
@@ -1702,6 +1701,7 @@ function setDefaultValues(tableId, obj, containerId)
 					oldName, newName);
 			obj.innerHTML = replaceAll(childNodes2[2].innerHTML,
 								oldName, newName);
+
 			eval(newScript);
 		}
 	}
