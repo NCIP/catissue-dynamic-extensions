@@ -110,11 +110,11 @@ public class ListBox extends SelectControl implements ListBoxInterface
 	 * @return HTML code for ListBox Control.
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	public String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		StringBuffer htmlString = new StringBuffer("");
 		List<NameValueBean> nameValueBeans = null;
-		List<String> values = getValueAsStrings(rowId);
+		List<String> values = getValueAsStrings();
 		String parentContainerId = "";
 		if (this.getParentContainer() != null && this.getParentContainer().getId() != null)
 		{
@@ -167,9 +167,9 @@ public class ListBox extends SelectControl implements ListBoxInterface
 			List<String> sourceControlValues = null;
 			if (this.getSourceSkipControl() != null)
 			{
-				sourceControlValues = this.getSourceSkipControl().getValueAsStrings(rowId);
+				sourceControlValues = this.getSourceSkipControl().getValueAsStrings();
 			}
-			nameValueBeans = ControlsUtility.populateListOfValues(this,rowId,sourceControlValues);
+			nameValueBeans = ControlsUtility.populateListOfValues(this,sourceControlValues);
 		}
 
 		if (nameValueBeans != null && !nameValueBeans.isEmpty())
@@ -290,7 +290,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domain.userinterface.Control#generateViewModeHTML()
 	 */
-	protected String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		List<String> selectedOptions = new ArrayList<String>();
 
@@ -356,7 +356,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 	/**
 	 * 
 	 */
-	public List<String> getValueAsStrings(Integer rowId) 
+	public List<String> getValueAsStrings() 
 	{
 		List<String> values = new ArrayList<String>();
 		AssociationInterface association = getBaseAbstractAttributeAssociation();
@@ -412,7 +412,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		{
 			if (values == null || values.isEmpty())
 			{
-				values.add(getSkipLogicDefaultValue(rowId));
+				values.add(getSkipLogicDefaultValue());
 			}
 		}
 		return values;

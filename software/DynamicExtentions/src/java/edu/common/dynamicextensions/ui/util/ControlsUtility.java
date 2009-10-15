@@ -319,7 +319,7 @@ public class ControlsUtility
 	 * This method populates the List of Values of the ListBox in the NameValueBean Collection.
 	 * @return List of pair of Name and its corresponding Value.
 	 */
-	public static List<NameValueBean> populateListOfValues(ControlInterface control,Integer rowId,List<String> sourceControlValue)
+	public static List<NameValueBean> populateListOfValues(ControlInterface control,List<String> sourceControlValue)
 	{
 		AttributeMetadataInterface attributeMetadataInterface = null;
 		List<NameValueBean> nameValueBeanList = null;
@@ -330,6 +330,11 @@ public class ControlsUtility
 			{
 				if (attribute instanceof AttributeMetadataInterface)
 				{
+					if (control.getIsSkipLogicTargetControl())
+					{
+						control.getSourceSkipControl().setSkipLogicControls(
+								sourceControlValue);
+					}
 					attributeMetadataInterface = (AttributeMetadataInterface) attribute;
 					if (!control.getIsSkipLogicLoadPermValues())
 					{
@@ -337,7 +342,7 @@ public class ControlsUtility
 					}
 					else
 					{
-						List<PermissibleValueInterface> permissibleValueList = getSkipLogicPermissibleValues(control.getSourceSkipControl(),control,rowId,sourceControlValue);
+						List<PermissibleValueInterface> permissibleValueList = getSkipLogicPermissibleValues(control.getSourceSkipControl(),control,sourceControlValue);
 						nameValueBeanList = getPermissibleValues(permissibleValueList, attributeMetadataInterface);
 					}
 				}
@@ -355,13 +360,18 @@ public class ControlsUtility
 
 						attributeMetadataInterface = (AttributeMetadataInterface) attributesList
 								.get(0);
+						if (control.getIsSkipLogicTargetControl())
+						{
+							control.getSourceSkipControl().setSkipLogicControls(
+									sourceControlValue);
+						}
 						if (!control.getIsSkipLogicLoadPermValues())
 						{
 							nameValueBeanList = getListOfPermissibleValues(attributeMetadataInterface);
 						}
 						else
 						{
-							List<PermissibleValueInterface> permissibleValueList = getSkipLogicPermissibleValues(control.getSourceSkipControl(),control,rowId,sourceControlValue);
+							List<PermissibleValueInterface> permissibleValueList = getSkipLogicPermissibleValues(control.getSourceSkipControl(),control,sourceControlValue);
 							nameValueBeanList = getPermissibleValues(permissibleValueList, attributeMetadataInterface);
 						}
 					}
@@ -503,13 +513,9 @@ public class ControlsUtility
 	 * 
 	 */
 	public static List<PermissibleValueInterface> getSkipLogicPermissibleValues(
-			ControlInterface sourceControl, ControlInterface targetControl,Integer rowId,List<String> values)
+			ControlInterface sourceControl, ControlInterface targetControl,List<String> values)
 			throws ParseException 
 	{
-		if (!sourceControl.getParentContainer().equals(targetControl.getParentContainer()))
-		{
-			rowId = Integer.valueOf(-1);
-		}
 		List<PermissibleValueInterface> skipLogicPermissibleValueList = new ArrayList<PermissibleValueInterface>();
 		List<PermissibleValueInterface> permissibleValueList = new ArrayList<PermissibleValueInterface>();
 		if (values != null) 

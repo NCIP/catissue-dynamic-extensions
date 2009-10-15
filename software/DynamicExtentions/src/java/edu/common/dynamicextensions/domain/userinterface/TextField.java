@@ -80,9 +80,9 @@ public class TextField extends Control implements TextFieldInterface
 	 * @return HTML code for TextField
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	public String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
-		String defaultValue = getDefaultValueForControl(rowId);
+		String defaultValue = getDefaultValueForControl();
 
 		String htmlComponentName = getHTMLComponentName();
 		String htmlString = "";
@@ -202,9 +202,9 @@ public class TextField extends Control implements TextFieldInterface
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domain.userinterface.Control#generateViewModeHTML()
 	 */
-	protected String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
-		String defaultValue = getDefaultValueForControl(rowId);
+		String defaultValue = getDefaultValueForControl();
 		String htmlString = "&nbsp;";
 		if (defaultValue != null)
 		{
@@ -223,7 +223,7 @@ public class TextField extends Control implements TextFieldInterface
 		return htmlString;
 	}
 
-	private String getDefaultValueForControl(Integer rowId)
+	private String getDefaultValueForControl()
 	{
 		String defaultValue = (String) this.value;
 		if (!getIsSkipLogicDefaultValue())
@@ -258,7 +258,7 @@ public class TextField extends Control implements TextFieldInterface
 		{
 			if (defaultValue == null || defaultValue.length() == 0)
 			{
-				defaultValue = getSkipLogicDefaultValue(rowId);
+				defaultValue = getSkipLogicDefaultValue();
 			}
 		}
 		return defaultValue;
@@ -267,7 +267,7 @@ public class TextField extends Control implements TextFieldInterface
 	/**
 	 * 
 	 */
-	public List<String> getValueAsStrings(Integer rowId) 
+	public List<String> getValueAsStrings() 
 	{
 		return null;
 	}

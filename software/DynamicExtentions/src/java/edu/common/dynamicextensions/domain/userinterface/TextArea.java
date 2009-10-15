@@ -72,7 +72,7 @@ public class TextArea extends Control implements TextAreaInterface
 	 * @param rowId
 	 * @return list of values as strings
 	 */
-	public List<String> getValueAsStrings(Integer rowId) 
+	public List<String> getValueAsStrings() 
 	{
 		return null;
 	}
@@ -82,10 +82,10 @@ public class TextArea extends Control implements TextAreaInterface
 	 * @return HTML code for TextArea
 	 * @throws DynamicExtensionsSystemException 
 	 */
-	public String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	public String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String htmlString = "";
-		String defaultValue = getDefaultValueForControl(rowId);
+		String defaultValue = getDefaultValueForControl();
 
 		String htmlComponentName = getHTMLComponentName();
 		if (getIsSkipLogicTargetControl())
@@ -166,7 +166,7 @@ public class TextArea extends Control implements TextAreaInterface
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domain.userinterface.Control#generateViewModeHTML()
 	 */
-	protected String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 
 		String htmlgenerated = "&nbsp;";
@@ -183,7 +183,7 @@ public class TextArea extends Control implements TextAreaInterface
 	 * @param rowId
 	 * @return default value for control
 	 */
-	private String getDefaultValueForControl(Integer rowId)
+	private String getDefaultValueForControl()
 	{
 		String defaultValue = (String) this.value;
 		if (!getIsSkipLogicDefaultValue())
@@ -197,7 +197,7 @@ public class TextArea extends Control implements TextAreaInterface
 		{
 			if (defaultValue == null || defaultValue.length() == 0)
 			{
-				defaultValue = getSkipLogicDefaultValue(rowId);
+				defaultValue = getSkipLogicDefaultValue();
 			}
 		}
 		return defaultValue;

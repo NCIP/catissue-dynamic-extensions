@@ -36,9 +36,9 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	 * @return HTML code for ComboBox
 	 * @throws DynamicExtensionsSystemException if HTMLComponentName() fails.
 	 */
-	public String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	public String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
-		String defaultValue = getDefaultValueForControl(rowId);
+		String defaultValue = getDefaultValueForControl();
 		String isDisabled = "";
 		String htmlString = "";
 		if ((this.isReadOnly != null && this.isReadOnly) || (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly))
@@ -50,7 +50,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		if (this.getSourceSkipControl()!= null)
 		{
 			sourceHtmlComponentValues = new StringBuffer();
-			List<String> sourceControlValues = this.getSourceSkipControl().getValueAsStrings(rowId);
+			List<String> sourceControlValues = this.getSourceSkipControl().getValueAsStrings();
 			if (sourceControlValues != null)
 			{
 				for (String value : sourceControlValues)
@@ -99,8 +99,6 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					+ identifier
 					+ "~containerIdentifier="
 					+ parentContainerId
-					+ "~rowId="
-					+ rowId
 					+ "~sourceControlValues="
 					+ sourceHtmlComponentValues.toString()
 					+ "';"
@@ -154,8 +152,6 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				+ identifier
 				+ "~containerIdentifier="
 				+ parentContainerId
-				+ "~rowId="
-				+ rowId
 				+ "~sourceControlValues="
 				+ sourceHtmlComponentValues.toString()
 				+ "';var ds = new Ext.data.Store({"
@@ -225,7 +221,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		listOfValues = choiceList;
 	}
 
-	protected String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String htmlString = "&nbsp;";
 
@@ -252,9 +248,9 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 			List<String> sourceControlValues = null;
 			if (this.getSourceSkipControl() != null)
 			{
-				sourceControlValues = this.getSourceSkipControl().getValueAsStrings(rowId);
+				sourceControlValues = this.getSourceSkipControl().getValueAsStrings();
 			}
-			nameValueBeanList = ControlsUtility.populateListOfValues(this,rowId,sourceControlValues);
+			nameValueBeanList = ControlsUtility.populateListOfValues(this,sourceControlValues);
 		}
 
 		if (nameValueBeanList != null && !nameValueBeanList.isEmpty())
@@ -275,7 +271,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	 * 
 	 * @return
 	 */
-	private String getDefaultValueForControl(Integer rowId)
+	private String getDefaultValueForControl()
 	{
 		String defaultValue = "";
 		if (!getIsSkipLogicDefaultValue())
@@ -329,7 +325,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 			}
 			if (controlvalue == null || controlvalue.length() == 0)
 			{
-				defaultValue = getSkipLogicDefaultValue(rowId);
+				defaultValue = getSkipLogicDefaultValue();
 			}
 			else
 			{
@@ -342,10 +338,10 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	/**
 	 * 
 	 */
-	public List<String> getValueAsStrings(Integer rowId) 
+	public List<String> getValueAsStrings() 
 	{
 		List<String> values = new ArrayList<String>();
-		values.add(getDefaultValueForControl(rowId));
+		values.add(getDefaultValueForControl());
 		return values;
 	}
 

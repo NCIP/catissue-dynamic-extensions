@@ -340,7 +340,7 @@ public class UserInterfaceiUtility
 					value = values.get(0);
 				}
 				control.getSourceSkipControl().setValue(value);
-				control.getSourceSkipControl().setSkipLogicControls(Integer.valueOf(rowId));
+				control.getSourceSkipControl().setSkipLogicControls();
 			}
 			String controlHTML = "";
 			control.setDataEntryOperation(dataEntryOperation);
@@ -357,7 +357,7 @@ public class UserInterfaceiUtility
 					Object value = containerValues.get(control.getBaseAbstractAttribute());
 					control.setValue(value);
 				}
-				controlHTML = control.generateHTML(rowId,mainContainer);
+				controlHTML = control.generateHTML(mainContainer);
 				if (rowId != -1)
 				{
 					String oldName = control.getHTMLComponentName();

@@ -37,9 +37,9 @@ public class CheckBox extends Control implements CheckBoxInterface
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domain.userinterface.Control#generateEditModeHTML()
 	 */
-	protected String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
-		String checked = getDefaultValueForControl(rowId);
+		String checked = getDefaultValueForControl();
 		String parentContainerId = "";
 		if (this.getParentContainer() != null && this.getParentContainer().getId() != null)
 		{
@@ -103,7 +103,7 @@ public class CheckBox extends Control implements CheckBoxInterface
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domain.userinterface.Control#generateViewModeHTML()
 	 */
-	protected String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String htmlString = "&nbsp;";
 		if (value != null)
@@ -127,10 +127,10 @@ public class CheckBox extends Control implements CheckBoxInterface
 	/**
 	 * 
 	 */
-	public List<String> getValueAsStrings(Integer rowId) 
+	public List<String> getValueAsStrings() 
 	{
 		List<String> values = new ArrayList<String>();
-		values.add(getDefaultValueForControl(rowId));
+		values.add(getDefaultValueForControl());
 		return values;
 	}
 
@@ -146,7 +146,7 @@ public class CheckBox extends Control implements CheckBoxInterface
 	 * 
 	 * @return
 	 */
-	private String getDefaultValueForControl(Integer rowId)
+	private String getDefaultValueForControl()
 	{
 		String defaultValue = String.valueOf(this.value);
 		if (!getIsSkipLogicDefaultValue())
@@ -160,7 +160,7 @@ public class CheckBox extends Control implements CheckBoxInterface
 		{
 			if (defaultValue == null || defaultValue.length() == 0)
 			{
-				defaultValue = getSkipLogicDefaultValue(rowId);
+				defaultValue = getSkipLogicDefaultValue();
 			}
 		}
 		return defaultValue;
@@ -175,7 +175,7 @@ public class CheckBox extends Control implements CheckBoxInterface
 			AttributeMetadataInterface attributeMetadataInterface,Integer rowId) 
 	{
 		List<SkipLogicAttributeInterface> skipLogicAttributes = new ArrayList<SkipLogicAttributeInterface>();
-		String checked = getDefaultValueForControl(rowId);
+		String checked = getDefaultValueForControl();
 		if (checked.equalsIgnoreCase("true") || checked.equals("1")|| checked.equals("y") || checked.equals("yes"))
 		{
 			skipLogicAttributes.addAll(ControlsUtility
@@ -193,7 +193,7 @@ public class CheckBox extends Control implements CheckBoxInterface
 			AttributeMetadataInterface attributeMetadataInterface,Integer rowId) 
 	{
 		List<SkipLogicAttributeInterface> skipLogicAttributes = new ArrayList<SkipLogicAttributeInterface>();
-		String checked = getDefaultValueForControl(rowId);
+		String checked = getDefaultValueForControl();
 		if (!checked.equalsIgnoreCase("true") && !checked.equals("1") && !checked.equals("y") && !checked.equals("yes"))
 		{
 			skipLogicAttributes.addAll(ControlsUtility
@@ -216,11 +216,11 @@ public class CheckBox extends Control implements CheckBoxInterface
 		List<ControlInterface> controlList = null;
 		if (values == null)
 		{
-			values = getValueAsStrings(rowId);
+			values = getValueAsStrings();
 		}
 		if (values != null)
 		{
-			controlList = getSkipLogicControls(null,rowId,values);
+			controlList = getSkipLogicControls(null,values);
 		}
 		return controlList;
 	}

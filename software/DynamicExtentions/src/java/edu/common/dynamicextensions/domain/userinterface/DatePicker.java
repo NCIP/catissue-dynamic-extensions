@@ -73,13 +73,13 @@ public class DatePicker extends Control implements DatePickerInterface
 	 * @throws DynamicExtensionsSystemException
 	 *             if couldn't generate the HTML name for the Control.
 	 */
-	protected String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		AttributeTypeInformationInterface attributeTypeInformation = ((AttributeMetadataInterface) this
 				.getBaseAbstractAttribute()).getAttributeTypeInformation();
 		String dateFormat = ControlsUtility.getDateFormat(attributeTypeInformation);
 
-		String defaultValue = getDefaultValueForControl(rowId);
+		String defaultValue = getDefaultValueForControl();
 		if (value == null)
 		{
 			
@@ -402,7 +402,7 @@ public class DatePicker extends Control implements DatePickerInterface
 	 * @param rowId
 	 * @return htmlString for view mode
 	 */
-	protected String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String htmlString = "";
 		if (value != null)
@@ -418,7 +418,7 @@ public class DatePicker extends Control implements DatePickerInterface
 	 * @param rowId
 	 * @return value for a control
 	 */
-	public List<String> getValueAsStrings(Integer rowId) 
+	public List<String> getValueAsStrings() 
 	{
 		return null;
 	}
@@ -436,7 +436,7 @@ public class DatePicker extends Control implements DatePickerInterface
 	 * @param rowId
 	 * @return
 	 */
-	private String getDefaultValueForControl(Integer rowId)
+	private String getDefaultValueForControl()
 	{
 		String defaultValue = (String) this.value;
 		if (!getIsSkipLogicDefaultValue())
@@ -450,7 +450,7 @@ public class DatePicker extends Control implements DatePickerInterface
 		{
 			if (defaultValue == null || defaultValue.length() == 0)
 			{
-				defaultValue = getSkipLogicDefaultValue(rowId);
+				defaultValue = getSkipLogicDefaultValue();
 			}
 		}
 		return defaultValue;

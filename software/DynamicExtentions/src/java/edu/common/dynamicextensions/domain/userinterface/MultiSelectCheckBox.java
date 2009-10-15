@@ -82,11 +82,11 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 	 * @return HTML code for MultiselectCheckBox Control.
 	 * @throws DynamicExtensionsSystemException
 	 */
-	protected String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String htmlString = "";
 		List<NameValueBean> nameValueBeans = null;
-		List<String> values = getValueAsStrings(rowId);
+		List<String> values = getValueAsStrings();
 		String disabled = "";
 		//		If control is defined as readonly through category CSV file,make it Disabled
 		if ((this.isReadOnly != null && getIsReadOnly())
@@ -101,9 +101,9 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 			List<String> sourceControlValues = null;
 			if (this.getSourceSkipControl() != null)
 			{
-				sourceControlValues = this.getSourceSkipControl().getValueAsStrings(rowId);
+				sourceControlValues = this.getSourceSkipControl().getValueAsStrings();
 			}
-			nameValueBeans = ControlsUtility.populateListOfValues(this, rowId,sourceControlValues);
+			nameValueBeans = ControlsUtility.populateListOfValues(this, sourceControlValues);
 		}
 
 		if (nameValueBeans != null && !nameValueBeans.isEmpty())
@@ -166,7 +166,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 	 * @return HTML code for MultiselectCheckBox Control.
 	 * @throws DynamicExtensionsSystemException
 	 */
-	protected String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		List<String> selectedOptions = new ArrayList<String>();
 
@@ -217,7 +217,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 	 * @param rowId
 	 * @return List of  all permissible values for this control
 	 */
-	public List<String> getValueAsStrings(Integer rowId)
+	public List<String> getValueAsStrings()
 	{
 		List<String> values = new ArrayList<String>();
 		AssociationInterface association = getBaseAbstractAttributeAssociation();

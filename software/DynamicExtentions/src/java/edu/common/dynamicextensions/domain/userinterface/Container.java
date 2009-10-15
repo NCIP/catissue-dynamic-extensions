@@ -537,7 +537,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 					value = values.get(0);
 				}
 				control.getSourceSkipControl().setValue(value);
-				control.getSourceSkipControl().setSkipLogicControls(Integer.valueOf(-1));
+				control.getSourceSkipControl().setSkipLogicControls();
 			}
 			control.setDataEntryOperation(dataEntryOperation);
 			Object value = containerValueMap.get(control.getBaseAbstractAttribute());
@@ -579,7 +579,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 						+ control.getHTMLComponentName() + "_row_div' />");
 				}
 			}
-			controlHTML.append(control.generateHTML(Integer.valueOf(-1), container));
+			controlHTML.append(control.generateHTML(container));
 			i++;
 			lastRow = control.getSequenceNumber();
 		}

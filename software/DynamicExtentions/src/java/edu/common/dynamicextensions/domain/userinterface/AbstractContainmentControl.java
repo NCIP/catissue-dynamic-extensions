@@ -31,7 +31,7 @@ public abstract class AbstractContainmentControl extends Control
 	 */
 	protected ContainerInterface container;
 
-	public String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	public String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		ContainerInterface containerInterface = this.getContainer();
 		this.setIsSubControl(true);
@@ -63,7 +63,7 @@ public abstract class AbstractContainmentControl extends Control
 		return subContainerHTML;
 	}
 
-	public String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	public String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String subContainerHTML = "";
 		this.setIsSubControl(true);

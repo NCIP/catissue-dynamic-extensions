@@ -25,13 +25,13 @@ public class DataGrid extends Control implements DataGridInterface
 		// TODO Auto-generated method stub
 	}
 
-	protected String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		// TODO Auto-generated method stub
 		return "";
 	}
 
-	protected String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		// TODO Auto-generated method stub
 		return "&nbsp;";
@@ -40,7 +40,7 @@ public class DataGrid extends Control implements DataGridInterface
 	/**
 	 * 
 	 */
-	public List<String> getValueAsStrings(Integer rowId) {
+	public List<String> getValueAsStrings() {
 		// TODO Auto-generated method stub
 		return null;
 	}

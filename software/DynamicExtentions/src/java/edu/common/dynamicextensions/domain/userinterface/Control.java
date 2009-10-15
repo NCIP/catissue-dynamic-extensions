@@ -310,7 +310,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException  exception
 	 */
-	public final String generateHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	public final String generateHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String htmlString = "";
 
@@ -318,11 +318,11 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		if (getParentContainer().getMode() != null
 				&& getParentContainer().getMode().equalsIgnoreCase(WebUIManagerConstants.VIEW_MODE))
 		{
-			innerHTML = generateViewModeHTML(rowId,container);
+			innerHTML = generateViewModeHTML(container);
 		}
 		else
 		{
-			innerHTML = generateEditModeHTML(rowId,container);
+			innerHTML = generateEditModeHTML(container);
 		}
 
 		if (this.isSubControl)
@@ -427,13 +427,13 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	 * @return String html
 	 * @throws DynamicExtensionsSystemException exception
 	 */
-	protected abstract String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException;
+	protected abstract String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException;
 
 	/**
 	 * @return String html
 	 * @throws DynamicExtensionsSystemException exception
 	 */
-	protected abstract String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException;
+	protected abstract String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException;
 
 	/**
 	 * @return
@@ -446,7 +446,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	 * 
 	 * @return
 	 */
-	public abstract List<String> getValueAsStrings(Integer rowId);
+	public abstract List<String> getValueAsStrings();
 	/**
 	 * 
 	 * @return
@@ -697,14 +697,14 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	/**
 	 * 
 	 */
-	private List<ControlInterface> setSkipLogicControlValues(Integer rowId,List<String> values)
+	private List<ControlInterface> setSkipLogicControlValues(List<String> values)
 	{ 
 		List<ControlInterface> controlList = null;
 		try 
 		{
 			if (values == null)
 			{
-				values = getValueAsStrings(rowId);
+				values = getValueAsStrings();
 			}
 			List<PermissibleValueInterface> permissibleValueList = new ArrayList<PermissibleValueInterface>();
 			if (values != null)
@@ -727,7 +727,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 							permissibleValueList.add(selectedPermissibleValue);
 						}
 				}
-				controlList = getSkipLogicControls(permissibleValueList,rowId,values);
+				controlList = getSkipLogicControls(permissibleValueList,values);
 			}
 
 		} 
@@ -741,14 +741,14 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	/**
 	 * 
 	 */
-	public void setSkipLogicControls(Integer rowId)
+	public void setSkipLogicControls()
 	{   
-		setSkipLogicControlValues(rowId,null);
+		setSkipLogicControlValues(null);
 	}
 	/**
 	 * 
 	 */
-	public List<ControlInterface> setSkipLogicControls(Integer rowId,String[] valueArray)
+	public List<ControlInterface> setSkipLogicControls(String[] valueArray)
 	{
 		List<ControlInterface> controlList = null;
 		List<String> values = new ArrayList <String>();
@@ -756,14 +756,23 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		{
 			values.add(controlValue);
 		}
-		controlList = setSkipLogicControlValues(rowId,values);
+		controlList = setSkipLogicControlValues(values);
+		return controlList;
+	}
+	/**
+	 * 
+	 */
+	public List<ControlInterface> setSkipLogicControls(List<String> valueList)
+	{
+		List<ControlInterface> controlList = null;
+		controlList = setSkipLogicControlValues(valueList);
 		return controlList;
 	}
 	/**
 	 * 
 	 */
 	public List<ControlInterface> getSkipLogicControls(
-			List<PermissibleValueInterface> selectedPermissibleValues,Integer rowId,List<String> values) 
+			List<PermissibleValueInterface> selectedPermissibleValues,List<String> values) 
 	{
 		List<ControlInterface> skipLogicControls = new ArrayList<ControlInterface>();
 		if (isSkipLogic) 
@@ -772,7 +781,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 					.getAttributeMetadataInterface(getBaseAbstractAttribute());
 			List<SkipLogicAttributeInterface> readOnlySkipLogicAttributes = 
 			getReadOnlySkipLogicAttributes(selectedPermissibleValues,
-					attributeMetadataInterface,rowId);
+					attributeMetadataInterface);
 			for (SkipLogicAttributeInterface skipLogicAttributeInterface : readOnlySkipLogicAttributes) 
 			{
 				ContainerInterface targetContainerInterface = DynamicExtensionsUtility
@@ -800,7 +809,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 			List<SkipLogicAttributeInterface> nonReadOnlySkipLogicAttributes = 
 					getNonReadOnlySkipLogicAttributes(
 							selectedPermissibleValues,
-							attributeMetadataInterface,rowId);
+							attributeMetadataInterface);
 			for (SkipLogicAttributeInterface skipLogicAttributeInterface : nonReadOnlySkipLogicAttributes) 
 			{
 				ContainerInterface targetContainerInterface = DynamicExtensionsUtility
@@ -839,10 +848,6 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 					targetControl.setIsSkipLogicLoadPermValues(Boolean
 							.valueOf(true));
 				}
-				if (!sourceControl.getParentContainer().equals(targetControl.getParentContainer()))
-				{
-					rowId = Integer.valueOf(-1);
-				}
 				targetControl
 						.setIsSkipLogicTargetControl(Boolean.valueOf(true));
 				skipLogicControls.add(targetControl);
@@ -857,7 +862,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	 */
 	public List<SkipLogicAttributeInterface> getNonReadOnlySkipLogicAttributes(
 			List<PermissibleValueInterface> selectedPermissibleValues,
-			AttributeMetadataInterface attributeMetadataInterface,Integer rowId) 
+			AttributeMetadataInterface attributeMetadataInterface) 
 	{
 		List<SkipLogicAttributeInterface> skipLogicAttributes = new ArrayList<SkipLogicAttributeInterface>();
 		for (PermissibleValueInterface selectedPermissibleValue : selectedPermissibleValues) 
@@ -885,7 +890,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	 */
 	public List<SkipLogicAttributeInterface> getReadOnlySkipLogicAttributes(
 			List<PermissibleValueInterface> selectedPermissibleValues,
-			AttributeMetadataInterface attributeMetadataInterface,Integer rowId) 
+			AttributeMetadataInterface attributeMetadataInterface) 
 	{
 		List<SkipLogicAttributeInterface> skipLogicAttributes = new ArrayList<SkipLogicAttributeInterface>();
 		for (PermissibleValueInterface selectedPermissibleValue : selectedPermissibleValues) 
@@ -911,10 +916,10 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	 * @param rowId
 	 * @return
 	 */
-	protected String getSkipLogicDefaultValue(Integer rowId)
+	protected String getSkipLogicDefaultValue()
 	{
 		String defaultValue = "";
-		List<String> values = this.getSourceSkipControl().getValueAsStrings(rowId);
+		List<String> values = this.getSourceSkipControl().getValueAsStrings();
 		List<PermissibleValueInterface> permissibleValueList = new ArrayList<PermissibleValueInterface>();
 		if (values != null)
 		{

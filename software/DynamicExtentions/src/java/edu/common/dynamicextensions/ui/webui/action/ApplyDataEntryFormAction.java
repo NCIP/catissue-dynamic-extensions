@@ -516,7 +516,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				ControlInterface skipLogicControl = DynamicExtensionsUtility
 						.getControlByIdentifier(controlId, skipLogicContainer);
 				List<ControlInterface> targetSkipControlsList = skipLogicControl
-						.setSkipLogicControls(null, controlValue);
+						.setSkipLogicControls(controlValue);
 				populateAttributeValueMapForSkipLogicAttributes(valueMap,
 						valueMap, -1, targetSkipControlsList);
 			}

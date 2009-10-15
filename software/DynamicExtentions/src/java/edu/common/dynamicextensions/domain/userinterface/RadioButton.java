@@ -34,7 +34,7 @@ public class RadioButton extends Control implements RadioButtonInterface
 	 * @return HTML code for RadioButton
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	public String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		List<NameValueBean> nameValueBeanList = null;
 		String htmlString = "";
@@ -45,7 +45,7 @@ public class RadioButton extends Control implements RadioButtonInterface
 					+ getHTMLComponentName() + "_div' name='"
 					+ getHTMLComponentName() + "_div'>";
 		}
-		String defaultValue = getDefaultValueForControl(rowId);
+		String defaultValue = getDefaultValueForControl();
 		String disabled = "";
 		//If control is defined as readonly through category CSV file,make it Disabled
 		if ((this.isReadOnly != null && getIsReadOnly()) || (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly))
@@ -65,9 +65,9 @@ public class RadioButton extends Control implements RadioButtonInterface
 		List<String> sourceControlValues = null;
 		if (this.getSourceSkipControl() != null)
 		{
-			sourceControlValues = this.getSourceSkipControl().getValueAsStrings(rowId);
+			sourceControlValues = this.getSourceSkipControl().getValueAsStrings();
 		}
-		nameValueBeanList = ControlsUtility.populateListOfValues(this,rowId,sourceControlValues);
+		nameValueBeanList = ControlsUtility.populateListOfValues(this,sourceControlValues);
 
 		String htmlComponentName = getHTMLComponentName();
 		if (nameValueBeanList != null)
@@ -140,7 +140,7 @@ public class RadioButton extends Control implements RadioButtonInterface
 	 * 
 	 * @return
 	 */
-	private String getDefaultValueForControl(Integer rowId)
+	private String getDefaultValueForControl()
 	{
 		String defaultValue = (String) this.value;
 		if (!getIsSkipLogicDefaultValue())
@@ -158,7 +158,7 @@ public class RadioButton extends Control implements RadioButtonInterface
 		{
 			if (defaultValue == null || defaultValue.length() == 0)
 			{
-				defaultValue = getSkipLogicDefaultValue(rowId);
+				defaultValue = getSkipLogicDefaultValue();
 			}
 		}
 		if (defaultValue != null)
@@ -198,7 +198,7 @@ public class RadioButton extends Control implements RadioButtonInterface
 		// TODO Auto-generated constructor stub
 	}
 
-	public String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	public String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String htmlString = "&nbsp;";
 		if (value != null)
@@ -211,10 +211,10 @@ public class RadioButton extends Control implements RadioButtonInterface
 	/**
 	 * 
 	 */
-	public List<String> getValueAsStrings(Integer rowId) 
+	public List<String> getValueAsStrings() 
 	{
 		List<String> values = new ArrayList<String>();
-		values.add(getDefaultValueForControl(rowId));
+		values.add(getDefaultValueForControl());
 		return values;
 	}
 	/**

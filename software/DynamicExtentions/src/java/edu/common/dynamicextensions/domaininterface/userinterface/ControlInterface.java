@@ -113,7 +113,7 @@ public interface ControlInterface extends DynamicExtensionBaseDomainObjectInterf
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException
 	 */
-	String generateHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException;
+	String generateHTML(ContainerInterface container) throws DynamicExtensionsSystemException;
 
 	/**
 	 * @return
@@ -243,19 +243,25 @@ public interface ControlInterface extends DynamicExtensionBaseDomainObjectInterf
 	 */
 	List<ControlInterface> getSkipLogicControls(
 			List<PermissibleValueInterface> selectedPermissibleValues,
-			Integer rowId, List<String> values);
+			List<String> values);
 	/**
 	 * 
 	 * @param selectedPermissibleValue
 	 * @return
 	 */
-	void setSkipLogicControls(Integer rowId);
+	void setSkipLogicControls();
 	/**
 	 * 
 	 * @param rowId
 	 * @param valueArray
 	 */
-	List<ControlInterface> setSkipLogicControls(Integer rowId,String[] valueArray);
+	List<ControlInterface> setSkipLogicControls(String[] valueArray);
+	/**
+	 * 
+	 * @param rowId
+	 * @param valueArray
+	 */
+	List<ControlInterface> setSkipLogicControls(List<String> valueList);
 	/**
 	 * 
 	 * @param isSkipLogicTargetControl
@@ -275,7 +281,7 @@ public interface ControlInterface extends DynamicExtensionBaseDomainObjectInterf
 	  * 
 	  * @return
 	  */
-	 List<String> getValueAsStrings(Integer rowId);
+	 List<String> getValueAsStrings();
 	 /**
 	  * 
 	  * @return

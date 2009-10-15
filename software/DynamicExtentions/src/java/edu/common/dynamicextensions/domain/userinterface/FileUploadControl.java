@@ -31,7 +31,7 @@ public class FileUploadControl extends Control implements FileUploadInterface
 	 * @return 
 	 * @throws DynamicExtensionsSystemException
 	 */
-	protected String generateEditModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String htmlString = "";
 		if (getIsSkipLogicTargetControl())
@@ -76,7 +76,7 @@ public class FileUploadControl extends Control implements FileUploadInterface
 		this.columns = columns;
 	}
 
-	protected String generateViewModeHTML(Integer rowId,ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 //		FileAttributeRecordValue fileAttributeRecordValue = (FileAttributeRecordValue) this.value;
 		String htmlString = "&nbsp;";
@@ -92,7 +92,7 @@ public class FileUploadControl extends Control implements FileUploadInterface
 	/**
 	 * 
 	 */
-	public List<String> getValueAsStrings(Integer rowId) 
+	public List<String> getValueAsStrings() 
 	{
 		return null;
 	}
