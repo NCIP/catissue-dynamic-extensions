@@ -142,7 +142,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		htmlString.append("<SELECT ");
 		htmlString.append(strMultiSelect).append(" size=")
 				.append(this.noOfRows).append(" class='font_bl_s' name='")
-				.append(getHTMLComponentName()).append("' onchange='");
+				.append(getHTMLComponentName()).append("' onchange=\"");
 		if (this.isSkipLogic != null
 				&& this.isSkipLogic)
 		{
@@ -154,7 +154,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 			htmlString.append(parentContainerId);
 			htmlString.append("');");
 		}
-		htmlString.append("isDataChanged();' id='").append(name).append("' ");
+		htmlString.append("isDataChanged();\" id='").append(name).append("' ");
 		
 		if ((this.isReadOnly != null && this.isReadOnly) || (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly))
 		{

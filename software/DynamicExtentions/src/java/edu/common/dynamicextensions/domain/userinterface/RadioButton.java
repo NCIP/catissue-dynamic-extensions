@@ -78,11 +78,11 @@ public class RadioButton extends Control implements RadioButtonInterface
 				String optionValue = nameValueBean.getValue();
 				if (optionValue.equals(defaultValue))
 				{
-					htmlString += "<input type='radio' onclick='"
+					htmlString += "<input type='radio' onclick=\""
 							+ (this.isSkipLogic ? "getSkipLogicControl('"
 									+ htmlComponentName + "','" + identifier
 									+ "','" + parentContainerId + "');" : "")
-							+ "isDataChanged();' "
+							+ "isDataChanged();\" "
 							+ "class='font_bl_nor' "
 							+ "name='"
 							+ htmlComponentName
@@ -104,11 +104,11 @@ public class RadioButton extends Control implements RadioButtonInterface
 				}
 				else
 				{
-					htmlString += "<input type='radio' onclick='"
+					htmlString += "<input type='radio' onclick=\""
 							+ (this.isSkipLogic ? "getSkipLogicControl('"
 									+ htmlComponentName + "','" + identifier
 									+ "','" + parentContainerId + "');" : "")
-							+ "isDataChanged();' "
+							+ "isDataChanged();\" "
 							+ "class='font_bl_nor' "
 							+ "name='"
 							+ htmlComponentName
