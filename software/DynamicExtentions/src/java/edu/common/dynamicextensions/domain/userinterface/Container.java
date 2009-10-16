@@ -501,7 +501,23 @@ public class Container extends DynamicExtensionBaseDomainObject
 
 		return containerHTML.toString();
 	}
-
+	/**
+	 * 
+	 */
+	public boolean isAllControlsSkipLogicTargetControlsForShowHide()
+	{
+		boolean isAlltargetControls = true;
+		List<ControlInterface> controls = getAllControlsUnderSameDisplayLabel();
+		for (ControlInterface control :controls)
+		{
+			if (!control.getIsSkipLogicTargetControl() && !control.getIsShowHide())
+			{
+				isAlltargetControls = false;
+				break;
+			}
+		}
+		return isAlltargetControls;
+	}
 	/**
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException
@@ -511,7 +527,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 		StringBuffer controlHTML = new StringBuffer();
 		List<Object> values = new ArrayList<Object>();
 	
-		addCaption(controlHTML, caption);
+		addCaption(controlHTML, caption,container,values);
 
 		List<ControlInterface> controls = getAllControlsUnderSameDisplayLabel(); //UnderSameDisplayLabel();
 		int lastRow = 0;
@@ -592,18 +608,23 @@ public class Container extends DynamicExtensionBaseDomainObject
 	/**
 	 * @param captionHTML
 	 * @param caption in the format -- NewCaption:Main ContainerId
+	 * @throws DynamicExtensionsSystemException 
 	 */
-	private void addCaption(StringBuffer captionHTML, String caption)
+	private void addCaption(StringBuffer captionHTML, String caption,ContainerInterface container,List<Object> values) throws DynamicExtensionsSystemException
 	{
 		//check if Id in caption matches current id - if yes then it is main form, so replace caption
 		if (caption == null || !caption.endsWith(id.toString()))
 		{
 			if (addCaption) // for subform
 			{
-				captionHTML.append("<tr><td class='td_color_6e81a6' colspan='100' align='left'>");
+				captionHTML.append("<tr ");
+				addDisplayOptionForRow(container,values,captionHTML,"_caption");
+				captionHTML.append("<td class='td_color_6e81a6' colspan='100' align='left'>");
 				captionHTML.append(((AbstractEntity) this.getAbstractEntity())
 						.getCapitalizedName(this.getCaption()));
-				captionHTML.append("<tr><td height='5'></td></tr>");
+				captionHTML.append("<tr ");
+				addDisplayOptionForRow(container,values,captionHTML,"_emptyrow");
+				captionHTML.append("<td height='5'></td></tr>");
 			}
 		}
 		else
@@ -615,7 +636,60 @@ public class Container extends DynamicExtensionBaseDomainObject
 		}
 		
 	}
+	/**
+	 * 
+	 * @param container
+	 * @param values
+	 * @param captionHTML
+	 * @throws DynamicExtensionsSystemException
+	 */
+	private void addDisplayOptionForRow(ContainerInterface container,List<Object> values,StringBuffer captionHTML,String id) throws DynamicExtensionsSystemException
+	{
+		if (isAllControlsSkipLogicTargetControlsForShowHide())
+		{
+			List<ControlInterface> controls = getAllControlsUnderSameDisplayLabel();
+			if (!controls.isEmpty())
+			{
+				ControlInterface control = controls.get(0);
+				captionHTML.append("id='"
+						+ control.getHTMLComponentName() + id + "_container_div' name='"
+						+ control.getHTMLComponentName() + id + "_container_div'");
 
+				Object value = null;
+				values.clear();
+			
+				ControlsUtility
+						.getAttributeValueForSkipLogicAttributesFromValueMap(
+								container.getContainerValueMap(), container
+										.getContainerValueMap(), control
+										.getSourceSkipControl()
+										.getBaseAbstractAttribute(), false,
+								values, Integer.valueOf(-1), Integer
+										.valueOf(-1));
+				if (!values.isEmpty())
+				{
+					value = values.get(0);
+				}
+				control.getSourceSkipControl().setValue(value);
+				control.getSourceSkipControl().setSkipLogicControls();
+
+				if (control.getIsSkipLogicShowHideTargetControl())
+				{
+					captionHTML.append(" style='display:none' >");
+				}
+				else
+				{
+					captionHTML.append(" style='display:block' >");
+				}
+				captionHTML.append("<input type='hidden' name='skipLogicHideControls' id='skipLogicHideControls' value = '"
+						+ control.getHTMLComponentName() + id + "_container_div' />");
+			}
+		}
+		else
+		{
+			captionHTML.append(" style='display:block' >");
+		}
+	}
 	/**
 	 *
 	 * @return

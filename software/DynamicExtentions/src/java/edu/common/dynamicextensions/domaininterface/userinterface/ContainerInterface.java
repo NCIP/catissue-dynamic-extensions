@@ -276,4 +276,9 @@ public interface ContainerInterface extends DynamicExtensionBaseDomainObjectInte
 	 * @param showRequiredFieldWarningMessage the showRequiredFieldWarningMessage to set
 	 */
 	public void setShowRequiredFieldWarningMessage(Boolean showRequiredFieldWarningMessage);
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isAllControlsSkipLogicTargetControlsForShowHide();
 }
