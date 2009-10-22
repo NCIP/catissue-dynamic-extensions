@@ -53,7 +53,6 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ApplyDataEntryFormProcessor;
 import edu.common.dynamicextensions.processor.DeleteRecordProcessor;
-import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
@@ -210,7 +209,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 	public void populateAttributeValueMapForSkipLogicAttributes(
 			Map<BaseAbstractAttributeInterface, Object> fullValueMap,
 			Map<BaseAbstractAttributeInterface, Object> valueMap,
-			Integer rowNumber,List<ControlInterface> controlsList)
+			Integer rowId,String controlName,List<ControlInterface> controlsList)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
 		for (Map.Entry<BaseAbstractAttributeInterface, Object> entry : valueMap.entrySet())
@@ -221,6 +220,8 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				CategoryAttributeInterface categoryAttributeInterface = (CategoryAttributeInterface) attribute;
 				if (categoryAttributeInterface != null)
 				{
+					boolean isSameContainerControl = false;
+					String sourceControlName = null;
 					ContainerInterface controlContainerInterface = DynamicExtensionsUtility
 					.getContainerForAbstractEntity(categoryAttributeInterface
 							.getCategoryEntity());
@@ -242,7 +243,26 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 									break;
 								}
 							}
-							if (found && control.getIsSkipLogicTargetControl()) 
+							if (control.getSourceSkipControl().getParentContainer().equals(
+									control.getParentContainer()))
+							{
+								isSameContainerControl = true;
+							}
+							else
+							{
+								isSameContainerControl = false;
+							}
+							Integer controlSequenceNumber = control.getSequenceNumber();
+							if (controlSequenceNumber != null)
+							{
+								sourceControlName = control.getSourceSkipControl().getHTMLComponentName();
+								if (rowId != null && isSameContainerControl && !rowId.equals(Integer.valueOf(-1)))
+								{
+									sourceControlName = sourceControlName + "_" + rowId;
+								}
+							}
+							if (found && control.getIsSkipLogicTargetControl()
+									&& controlName.equals(sourceControlName)) 
 							{
 								entry.setValue(null);
 							}
@@ -259,7 +279,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				{
 					entryNumber++;
 					populateAttributeValueMapForSkipLogicAttributes(fullValueMap, map,
-							entryNumber,controlsList);
+							entryNumber,controlName,controlsList);
 				}
 			}
 		}
@@ -510,6 +530,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				String containerId = request.getParameter("containerId");
 				String controlId = request.getParameter("controlId");
 				String[] controlValue = request.getParameterValues("controlValue");
+				String controlName = request.getParameter("controlName");
 				ContainerInterface skipLogicContainer = DynamicExtensionsUtility
 						.getContainerByIdentifier(containerId,
 								containerInterface);
@@ -518,7 +539,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				List<ControlInterface> targetSkipControlsList = skipLogicControl
 						.setSkipLogicControls(controlValue);
 				populateAttributeValueMapForSkipLogicAttributes(valueMap,
-						valueMap, -1, targetSkipControlsList);
+						valueMap, -1,controlName,targetSkipControlsList);
 			}
 			populateAttributeValueMapForCalculatedAttributes(valueMap, valueMap,
 					containerInterface, 0);

@@ -2465,7 +2465,7 @@ function getSkipLogicControl(controlName, controlId, containerId)
 	var str = $("dataEntryForm").serialize();
 	var controlValue = document.getElementById(controlName).value;
 	str =  str + "&containerId=" + containerId + "&controlId=" + controlId
-			+ "&controlValue=" + controlValue;
+			+ "&controlValue=" + controlValue + "&controlName=" + controlName;
 	jQuery.ajax( 
 	{
 				type :"POST",

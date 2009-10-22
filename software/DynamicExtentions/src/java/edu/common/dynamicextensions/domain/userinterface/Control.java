@@ -821,15 +821,6 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 								(AttributeMetadataInterface) skipLogicAttributeInterface
 										.getTargetSkipLogicAttribute(),
 								targetContainerInterface);
-				ContainerInterface sourceContainerInterface = DynamicExtensionsUtility
-						.getContainerForAbstractEntity(skipLogicAttributeInterface
-								.getSourceSkipLogicAttribute()
-								.getCategoryEntity());
-				ControlInterface sourceControl = DynamicExtensionsUtility
-						.getControlForAbstractAttribute(
-								(AttributeMetadataInterface) skipLogicAttributeInterface
-										.getSourceSkipLogicAttribute(),
-								sourceContainerInterface);
 				targetControl.setIsSkipLogicDefaultValue(Boolean.valueOf(true));
 				targetControl.setIsSkipLogicReadOnly(Boolean.valueOf(false));
 				targetControl.setIsSkipLogicShowHideTargetControl(Boolean.valueOf(false));
