@@ -209,7 +209,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 	public void populateAttributeValueMapForSkipLogicAttributes(
 			Map<BaseAbstractAttributeInterface, Object> fullValueMap,
 			Map<BaseAbstractAttributeInterface, Object> valueMap,
-			Integer rowId,String controlName,List<ControlInterface> controlsList)
+			Integer rowId,boolean cardinality,String controlName,List<ControlInterface> controlsList)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
 		for (Map.Entry<BaseAbstractAttributeInterface, Object> entry : valueMap.entrySet())
@@ -256,7 +256,9 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 							if (controlSequenceNumber != null)
 							{
 								sourceControlName = control.getSourceSkipControl().getHTMLComponentName();
-								if (rowId != null && isSameContainerControl && !rowId.equals(Integer.valueOf(-1)))
+								if (rowId != null && isSameContainerControl
+										&& cardinality
+										&& !rowId.equals(Integer.valueOf(-1)))
 								{
 									sourceControlName = sourceControlName + "_" + rowId;
 								}
@@ -274,12 +276,18 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 			{
 				List<Map<BaseAbstractAttributeInterface, Object>> attributeValueMapList = (List<Map<BaseAbstractAttributeInterface, Object>>) entry
 						.getValue();
+				boolean oneToManyCardinality = false;
+				int size = attributeValueMapList.size();
+				if (size > 1)
+				{
+					oneToManyCardinality = true;
+				}
 				Integer entryNumber = 0;
 				for (Map<BaseAbstractAttributeInterface, Object> map : attributeValueMapList)
 				{
 					entryNumber++;
 					populateAttributeValueMapForSkipLogicAttributes(fullValueMap, map,
-							entryNumber,controlName,controlsList);
+							entryNumber,oneToManyCardinality,controlName,controlsList);
 				}
 			}
 		}
@@ -539,7 +547,8 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				List<ControlInterface> targetSkipControlsList = skipLogicControl
 						.setSkipLogicControls(controlValue);
 				populateAttributeValueMapForSkipLogicAttributes(valueMap,
-						valueMap, -1,controlName,targetSkipControlsList);
+						valueMap, -1, false, controlName,
+						targetSkipControlsList);
 			}
 			populateAttributeValueMapForCalculatedAttributes(valueMap, valueMap,
 					containerInterface, 0);
