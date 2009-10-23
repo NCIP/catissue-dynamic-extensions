@@ -95,13 +95,13 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		if((!this.getParentContainer().isAjaxRequest()) && (!getIsSkipLogicTargetControl() && !"skipLogicAttributes".equals(getDataEntryOperation())))
 		{
 			htmlString += "<script defer='defer'>Ext.onReady(function(){ "
-					+ "var myUrl= 'DEComboDataAction.do?controlId="
+					+ "var myUrl= \"DEComboDataAction.do?controlId="
 					+ identifier
 					+ "~containerIdentifier="
 					+ parentContainerId
 					+ "~sourceControlValues="
 					+ sourceHtmlComponentValues.toString()
-					+ "';"
+					+ "\";"
 					+ "var ds = new Ext.data.Store({"
 					+ "proxy: new Ext.data.HttpProxy({url: myUrl}),"
 					+ "reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, "
@@ -113,9 +113,9 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					+ "typeAhead: 'false',pageSize:15,forceSelection: 'true',queryParam : 'query',"
 					+ "mode: 'remote',triggerAction: 'all',minChars : 3,queryDelay:500,lazyInit:true"
 					+ isDisabled
-					+ ",emptyText:'"
+					+ ",emptyText:\""
 					+ defaultValue
-					+ "',valueNotFoundText:'',"
+					+ "\",valueNotFoundText:'',"
 					+ "selectOnFocus:'true',applyTo: '"
 					+ htmlComponentName
 					+ "'});combo.on(\"select\", function() {"
@@ -138,9 +138,9 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				+ "' "
 				+ " name='"
 				+ htmlComponentName
-				+ "' value ='"
+				+ "' value =\""
 				+ defaultValue
-				+ "' "
+				+ "\" "
 				+ " size='20'/>"
 				+ "<div id='comboScript_"
 				+ getHTMLComponentName()
@@ -148,13 +148,13 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				+ getHTMLComponentName()
 				+ "' style='display:none'>"
 				+ "Ext.onReady(function(){ "
-				+ "var myUrl='DEComboDataAction.do?controlId="
+				+ "var myUrl=\"DEComboDataAction.do?controlId="
 				+ identifier
 				+ "~containerIdentifier="
 				+ parentContainerId
 				+ "~sourceControlValues="
 				+ sourceHtmlComponentValues.toString()
-				+ "';var ds = new Ext.data.Store({"
+				+ "\";var ds = new Ext.data.Store({"
 				+ "proxy: new Ext.data.HttpProxy({url: myUrl}),"
 				+ "reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, "
 				+ "[{name: 'id', mapping: 'id'},{name: 'excerpt', mapping: 'field'}])});"
@@ -165,9 +165,9 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				+ "typeAhead: 'false',pageSize:15,forceSelection: 'true',queryParam : 'query',"
 				+ "mode: 'remote',triggerAction: 'all',minChars : 3,queryDelay:500,lazyInit:true"
 				+ isDisabled
-				+ ",emptyText:'"
+				+ ",emptyText:\""
 				+ defaultValue
-				+ "',valueNotFoundText:'',"
+				+ "\",valueNotFoundText:'',"
 				+ "selectOnFocus:'true',applyTo: '"
 				+ htmlComponentName
 				+ "'});combo.on(\"select\", function() {"
@@ -188,9 +188,9 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				+ "' "
 				+ " name='"
 				+ htmlComponentName
-				+ "' value ='"
+				+ "' value =\""
 				+ defaultValue
-				+ "' size='20' class='font_bl_nor' />"
+				+ "\" size='20' class='font_bl_nor' />"
 				+ "</div>"
 				+ "</div>"
 				+ "</div>";
