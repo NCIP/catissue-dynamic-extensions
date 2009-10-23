@@ -805,6 +805,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 				targetControl.setIsSkipLogicLoadPermValues(Boolean
 						.valueOf(false));
 				targetControl.setIsSkipLogicDefaultValue(Boolean.valueOf(false));
+				skipLogicControls.add(targetControl);
 			}
 			List<SkipLogicAttributeInterface> nonReadOnlySkipLogicAttributes = 
 					getNonReadOnlySkipLogicAttributes(
