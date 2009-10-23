@@ -586,7 +586,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 				}
 				else
 				{
-					controlHTML.append(" style='display:block'");
+					controlHTML.append(" style='display:row'");
 				}
 				controlHTML.append(">");
 				if (control.getIsSkipLogicTargetControl())
@@ -679,7 +679,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 				}
 				else
 				{
-					captionHTML.append(" style='display:block' >");
+					captionHTML.append(" style='display:row' >");
 				}
 				captionHTML.append("<input type='hidden' name='skipLogicHideControls' id='skipLogicHideControls' value = '"
 						+ control.getHTMLComponentName() + id + "_container_div' />");
@@ -687,7 +687,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 		}
 		else
 		{
-			captionHTML.append(" style='display:block' >");
+			captionHTML.append(" style='display:row' >");
 		}
 	}
 	/**

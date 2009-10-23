@@ -79,14 +79,11 @@ public class DynamicUIGeneratorTag extends TagSupport
 		}
 		try
 		{
-			String generatedHTML = "<div id='skipLogicDiv'>";
 			String caption = (String) pageContext.getSession().getAttribute("OverrideCaption");
 			this.containerInterface.setShowRequiredFieldWarningMessage(Boolean.valueOf(pageContext.getSession().getAttribute("mandatory_Message").toString()));
 			String dataEntryOperation = pageContext.getRequest().getParameter("dataEntryOperation");
-			generatedHTML += this.containerInterface.generateContainerHTML(caption,dataEntryOperation);
-			generatedHTML += "</div>";
 			JspWriter out = pageContext.getOut();
-			out.println(generatedHTML);
+			out.println(this.containerInterface.generateContainerHTML(caption,dataEntryOperation));
 		}
 		catch (DynamicExtensionsSystemException e)
 		{
