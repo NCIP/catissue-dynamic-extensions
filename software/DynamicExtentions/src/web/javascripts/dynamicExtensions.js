@@ -1614,6 +1614,11 @@ function setDefaultValues(tableId, obj, containerId)
 	{
 		var childObject = children[j];
 		childObjectName = childObject.name;
+		if (childObjectName == null && childObject.id != null
+				&& childObject.id != "auto_complete_dropdown")
+		{
+			childObjectName = childObject.id;
+		}
 		if (childObjectName != null && childObjectName.indexOf('_') != -1) 
 		{
 			if (childObjectName.indexOf(')') != -1) 
