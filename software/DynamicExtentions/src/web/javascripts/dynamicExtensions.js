@@ -2468,7 +2468,12 @@ function getSkipLogicControl(controlName, controlId, containerId)
 {
     document.getElementById('dataEntryOperation').value = "skipLogicAttributes";
 	var str = $("dataEntryForm").serialize();
-	var controlValue = document.getElementById(controlName).value;
+	var control = document.getElementById(controlName);
+	var controlValue = "";
+	if (control != null && control.value != null)
+	{
+		controlValue = control.value;
+	}
 	str =  str + "&containerId=" + containerId + "&controlId=" + controlId
 			+ "&controlValue=" + controlValue + "&controlName=" + controlName;
 	jQuery.ajax( 
