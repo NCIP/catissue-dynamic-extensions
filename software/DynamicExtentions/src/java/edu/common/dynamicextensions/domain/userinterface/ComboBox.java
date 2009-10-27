@@ -39,6 +39,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	public String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String defaultValue = getDefaultValueForControl();
+
 		String isDisabled = "";
 		String htmlString = "";
 		if ((this.isReadOnly != null && this.isReadOnly) || (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly))
@@ -88,7 +89,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		}
 		/* Bug Id:9030
 		 * textComponent is the name of the text box.
-		 * if default value is not empty loading the data store first, and then setting the value in 
+		 * if default value is not empty loading the data store first, and then setting the value in
 		 * combo box to default value.
 		 */
 		String textComponent = "combo" + htmlComponentName;
@@ -199,10 +200,10 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 			htmlString += "</div>";
 		}
 		return htmlString;
-	} 
+	}
 
-	
-	
+
+
 	/**
 	 * This method returns the list of values that are displayed as choices.
 	 * @return the list of values that are displayed as choices.
@@ -268,7 +269,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		return htmlString;
 	}
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	private String getDefaultValueForControl()
@@ -332,13 +333,39 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				defaultValue = controlvalue;
 			}
 		}
+		if(isInavlidVaue(defaultValue))
+		{
+			defaultValue = this.getAttibuteMetadataInterface().getDefaultValue();
+		}
 		return defaultValue;
 	}
 
 	/**
-	 * 
+	 * @param value
+	 * @return true if value is not present in the pv list
 	 */
-	public List<String> getValueAsStrings() 
+	private boolean isInavlidVaue(String value)
+	{
+		List<NameValueBean> nameValueBeans = new ArrayList<NameValueBean>();
+		nameValueBeans = ControlsUtility.getListOfPermissibleValues(this.getAttibuteMetadataInterface());
+		boolean isInavlidVaue = true;
+		for(NameValueBean bean: nameValueBeans)
+		{
+			if(bean.getValue().equals(value))
+			{
+				isInavlidVaue = false;
+				break;
+			}
+		}
+		return isInavlidVaue;
+	}
+
+
+
+	/**
+	 *
+	 */
+	public List<String> getValueAsStrings()
 	{
 		List<String> values = new ArrayList<String>();
 		values.add(getDefaultValueForControl());
@@ -348,9 +375,9 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 
 
 	/**
-	 * 
+	 *
 	 */
-	public void setValueAsStrings(List<String> listOfValues) 
+	public void setValueAsStrings(List<String> listOfValues)
 	{
 		if (!listOfValues.isEmpty())
 		{
