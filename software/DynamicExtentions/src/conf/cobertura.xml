@@ -56,7 +56,13 @@
     <cobertura-report datafile="./cobertura/coverage.ser"
                       srcdir="./src/java"
                       destdir="./cobertura/report"
-                      format="html"/>
+                      format="xml"/>
+	<cobertura-report datafile="./cobertura/coverage.ser"
+                      srcdir="./src/java"
+                      destdir="./cobertura/report"
+                      format="html"/>				  
+					  
+					
 
   </target>
 
