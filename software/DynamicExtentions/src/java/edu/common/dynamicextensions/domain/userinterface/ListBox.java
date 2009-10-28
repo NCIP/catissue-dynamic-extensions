@@ -154,7 +154,8 @@ public class ListBox extends SelectControl implements ListBoxInterface
 			htmlString.append(parentContainerId);
 			htmlString.append("');");
 		}
-		htmlString.append("isDataChanged();\" id='").append(name).append("' ");
+		//htmlString.append("isDataChanged();\" id='").append(name).append("' ");
+		htmlString.append("isDataChanged();\" id='").append(htmlComponentName).append("' ");
 		
 		if ((this.isReadOnly != null && this.isReadOnly) || (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly))
 		{
