@@ -1011,6 +1011,98 @@ public class ControlsUtility
 		return null;
 	}
 
+	/**
+	 * @throws ParseException
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsSystemException
+	 *
+	 */
+	public static void populateAttributeValueMapForSkipLogicAttributes(
+			Map<BaseAbstractAttributeInterface, Object> fullValueMap,
+			Map<BaseAbstractAttributeInterface, Object> valueMap,
+			Integer rowId,boolean cardinality,String controlName,List<ControlInterface> controlsList)
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+	{
+		for (Map.Entry<BaseAbstractAttributeInterface, Object> entry : valueMap.entrySet())
+		{
+			BaseAbstractAttributeInterface attribute = entry.getKey();
+			if (attribute instanceof CategoryAttributeInterface)
+			{
+				CategoryAttributeInterface categoryAttributeInterface = (CategoryAttributeInterface) attribute;
+				if (categoryAttributeInterface != null)
+				{
+					boolean isSameContainerControl = false;
+					String sourceControlName = null;
+					ContainerInterface controlContainerInterface = DynamicExtensionsUtility
+					.getContainerForAbstractEntity(categoryAttributeInterface
+							.getCategoryEntity());
 
+					ControlInterface control = DynamicExtensionsUtility
+					.getControlForAbstractAttribute(
+							(AttributeMetadataInterface) categoryAttributeInterface,
+							controlContainerInterface);
+					if (control != null)
+					{
+						if (control.getIsSkipLogicTargetControl())
+						{
+							boolean found = false;
+							for (ControlInterface targetSkipControl : controlsList)
+							{
+								if (control.equals(targetSkipControl))
+								{
+									found = true;
+									break;
+								}
+							}
+							if (control.getSourceSkipControl().getParentContainer().equals(
+									control.getParentContainer()))
+							{
+								isSameContainerControl = true;
+							}
+							else
+							{
+								isSameContainerControl = false;
+							}
+							Integer controlSequenceNumber = control.getSequenceNumber();
+							if (controlSequenceNumber != null)
+							{
+								sourceControlName = control.getSourceSkipControl().getHTMLComponentName();
+								if (rowId != null && isSameContainerControl
+										&& cardinality
+										&& !rowId.equals(Integer.valueOf(-1)))
+								{
+									sourceControlName = sourceControlName + "_" + rowId;
+								}
+							}
+							if (found && control.getIsSkipLogicTargetControl()
+									&& controlName.equals(sourceControlName))
+							{
+								entry.setValue(null);
+							}
+						}
+					}
+				}
+			}
+			else if (attribute instanceof CategoryAssociationInterface)
+			{
+				List<Map<BaseAbstractAttributeInterface, Object>> attributeValueMapList = (List<Map<BaseAbstractAttributeInterface, Object>>) entry
+						.getValue();
+				boolean oneToManyCardinality = false;
+				CategoryAssociationInterface categoryAssociation = (CategoryAssociationInterface) attribute;
+				if (categoryAssociation.getTargetCategoryEntity().getNumberOfEntries() == -1)
+				{
+					oneToManyCardinality = true;
+				}
+				Integer entryNumber = 0;
+				for (Map<BaseAbstractAttributeInterface, Object> map : attributeValueMapList)
+				{
+					entryNumber++;
+					populateAttributeValueMapForSkipLogicAttributes(fullValueMap, map,
+							entryNumber,oneToManyCardinality,controlName,controlsList);
+				}
+			}
+		}
+	}
 
 }
