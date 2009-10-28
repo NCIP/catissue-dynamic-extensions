@@ -277,8 +277,8 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				List<Map<BaseAbstractAttributeInterface, Object>> attributeValueMapList = (List<Map<BaseAbstractAttributeInterface, Object>>) entry
 						.getValue();
 				boolean oneToManyCardinality = false;
-				int size = attributeValueMapList.size();
-				if (size > 1)
+				CategoryAssociationInterface categoryAssociation = (CategoryAssociationInterface) attribute;
+				if (categoryAssociation.getTargetCategoryEntity().getNumberOfEntries() == -1)
 				{
 					oneToManyCardinality = true;
 				}
