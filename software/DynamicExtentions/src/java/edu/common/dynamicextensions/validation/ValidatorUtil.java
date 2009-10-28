@@ -16,7 +16,6 @@ import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterfa
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
-import edu.common.dynamicextensions.domaininterface.userinterface.AbstractContainmentControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ComboBoxInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
@@ -50,15 +49,15 @@ public class ValidatorUtil
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 			List<String> listOfError, ContainerInterface containerInterface)
 			throws DynamicExtensionsSystemException, DynamicExtensionsValidationException
-	{
+			{
 		List<String> errorList = listOfError;
 		if (errorList == null)
 		{
 			errorList = new ArrayList<String>();
 		}
 		Set<Map.Entry<BaseAbstractAttributeInterface, Object>> attributeSet = attributeValueMap
-				.entrySet();
-		if (attributeSet != null || !attributeSet.isEmpty())
+		.entrySet();
+		if ((attributeSet != null) || !attributeSet.isEmpty())
 		{
 			for (Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode : attributeSet)
 			{
@@ -76,19 +75,19 @@ public class ValidatorUtil
 							boolean isValuePresent = false;
 							for(PermissibleValueInterface permissibleValue :  ((UserDefinedDE)((AttributeMetadataInterface)abstractAttribute).getAttributeTypeInformation().getDataElement()).getPermissibleValueCollection())
 							{
-//								System.out.println(permissibleValue.getValueAsObject().toString());
+								//								System.out.println(permissibleValue.getValueAsObject().toString());
 								if(permissibleValue.getValueAsObject().toString().equals(attributeValueNode.getValue()))
 								{
 									isValuePresent = true;
 									break;
 								}
 							}
-							if("".equals(attributeValueNode.getValue().toString()))
+							if((attributeValueNode.getValue()!= null) && "".equals(attributeValueNode.getValue().toString()))
 							{
 								isValuePresent = true;
 							}
 							if(!isValuePresent)
-							{							
+							{
 								errorList.add("Please Enter valid permissible value for attribute "+ control.getCaption());
 							}
 						}
@@ -102,7 +101,7 @@ public class ValidatorUtil
 							.getAssociationType()))
 					{
 						List<Map<BaseAbstractAttributeInterface, Object>> valueObject = (List<Map<BaseAbstractAttributeInterface, Object>>) attributeValueMap
-								.get(abstractAttribute);
+						.get(abstractAttribute);
 						for (Map<BaseAbstractAttributeInterface, Object> subAttributeValueMap : valueObject)
 						{
 							errorList.addAll(validateEntityAttributes(subAttributeValueMap,
@@ -114,7 +113,7 @@ public class ValidatorUtil
 		}
 
 		return errorList;
-	}
+			}
 	/**
 	 *
 	 * @param abstractAttribute
@@ -136,7 +135,7 @@ public class ValidatorUtil
 		{
 			CategoryAssociationInterface categoryAssociationInterface = (CategoryAssociationInterface) associationMetadataInterface;
 			containerCollection = categoryAssociationInterface.getTargetCategoryEntity()
-					.getContainerCollection();
+			.getContainerCollection();
 		}
 		List<ContainerInterface> containerList = new ArrayList<ContainerInterface>(
 				containerCollection);
@@ -161,12 +160,12 @@ public class ValidatorUtil
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 			ContainerInterface containerInterface) throws DynamicExtensionsSystemException,
 			DynamicExtensionsValidationException
-	{
+			{
 		List<String> errorList = new ArrayList<String>();
 
 		Set<Map.Entry<BaseAbstractAttributeInterface, Object>> attributeSet = attributeValueMap
-				.entrySet();
-		if (attributeSet == null || attributeSet.isEmpty())
+		.entrySet();
+		if ((attributeSet == null) || attributeSet.isEmpty())
 		{
 			return errorList;
 		}
@@ -178,7 +177,7 @@ public class ValidatorUtil
 			{
 				ControlInterface control = DynamicExtensionsUtility.getControlForAbstractAttribute(
 						(AttributeMetadataInterface) abstractAttribute, containerInterface);
-				if (control != null && control.getBaseAbstractAttribute() != null)
+				if ((control != null) && (control.getBaseAbstractAttribute() != null))
 				{
 					errorList.addAll(validateAttributes(attributeValueNode, control.getCaption()));
 				}
@@ -186,7 +185,7 @@ public class ValidatorUtil
 		}
 
 		return errorList;
-	}
+			}
 
 	/**
 	 * @param attributeValueNode
@@ -199,7 +198,7 @@ public class ValidatorUtil
 			Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode,
 			String controlCaption) throws DynamicExtensionsSystemException,
 			DynamicExtensionsValidationException
-	{
+			{
 		List<String> errorList = new ArrayList<String>();
 
 		BaseAbstractAttributeInterface abstractAttribute = attributeValueNode.getKey();
@@ -207,7 +206,7 @@ public class ValidatorUtil
 		//Bug: 9778 : modified to get explicit and implicit rules also in case of CategoryAttribute.
 		//Reviewer: Rajesh Patil
 		Collection<RuleInterface> attributeRuleCollection = getRuleCollection(abstractAttribute);
-		if (attributeRuleCollection != null || !attributeRuleCollection.isEmpty())
+		if ((attributeRuleCollection != null) || !attributeRuleCollection.isEmpty())
 		{
 			Long recordId = attribute.getId();
 			String errorMessage = null;
@@ -258,7 +257,7 @@ public class ValidatorUtil
 		}
 
 		return errorList;
-	}
+			}
 
 	/**
 	 * @param abstractAttribute
@@ -266,26 +265,26 @@ public class ValidatorUtil
 	 */
 	private static Collection<RuleInterface> getRuleCollection(
 			BaseAbstractAttributeInterface abstractAttribute)
-	{
+			{
 		AttributeMetadataInterface attribute = (AttributeMetadataInterface) abstractAttribute;
 		Collection<RuleInterface> attributeRuleCollection = attribute.getRuleCollection();
 		if (attribute instanceof CategoryAttributeInterface)
 		{
 			Collection<RuleInterface> implicitRuleCollection = ((CategoryAttributeInterface) attribute)
-					.getAbstractAttribute().getRuleCollection();
+			.getAbstractAttribute().getRuleCollection();
 			attributeRuleCollection.addAll(implicitRuleCollection);
 			removeConflictingRules(attributeRuleCollection);
 		}
 		return attributeRuleCollection;
-	}
+			}
 
 	public static void checkUniqueValidationForAttribute(AttributeMetadataInterface attribute,
 			Object valueObject, Long recordId, String controlCaption)
-			throws DynamicExtensionsValidationException, DynamicExtensionsSystemException
+	throws DynamicExtensionsValidationException, DynamicExtensionsSystemException
 	{
 		Collection<RuleInterface> attributeRuleCollection = attribute.getRuleCollection();
 
-		if (attributeRuleCollection != null || !attributeRuleCollection.isEmpty())
+		if ((attributeRuleCollection != null) || !attributeRuleCollection.isEmpty())
 		{
 			for (RuleInterface rule : attributeRuleCollection)
 			{
@@ -306,11 +305,11 @@ public class ValidatorUtil
 
 	private static void checkValidation(AttributeMetadataInterface attribute, Object valueObject,
 			RuleInterface rule, Map<String, String> parameterMap, String controlCaption)
-			throws DynamicExtensionsSystemException, DynamicExtensionsValidationException
+	throws DynamicExtensionsSystemException, DynamicExtensionsValidationException
 	{
 		String ruleName = rule.getName();
 		ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
-				.getValidatorRule(ruleName);
+		.getValidatorRule(ruleName);
 		validatorRule.validate(attribute, valueObject, parameterMap, controlCaption);
 	}
 
@@ -325,7 +324,7 @@ public class ValidatorUtil
 	{
 		Map<String, String> parameterMap = new HashMap<String, String>();
 		Collection<RuleParameterInterface> ruleParamCollection = rule.getRuleParameterCollection();
-		if (ruleParamCollection != null && !ruleParamCollection.isEmpty())
+		if ((ruleParamCollection != null) && !ruleParamCollection.isEmpty())
 		{
 			for (RuleParameterInterface ruleParameter : ruleParamCollection)
 			{
@@ -344,23 +343,23 @@ public class ValidatorUtil
 	 */
 	public static void reportInvalidInput(String placeHolderOne, String placeHolderTwo,
 			String errorKey) throws DynamicExtensionsValidationException
-	{
+			{
 		List<String> placeHolders = new ArrayList<String>();
 		placeHolders.add(placeHolderOne);
 		placeHolders.add(placeHolderTwo);
 		throw new DynamicExtensionsValidationException("Validation failed", null, errorKey,
 				placeHolders);
-	}
+			}
 
 	/**
 	 * This method check for conflicting rule
 	 * @param allValidationRules rule collection
-	 * @param attributeName attribute name 
+	 * @param attributeName attribute name
 	 * @throws DynamicExtensionsSystemException if conflicting rule are present in rule collection
 	 */
 	public static void checkForConflictingRules(Collection<String> allValidationRules,
 			String attributeName) throws DynamicExtensionsSystemException
-	{
+			{
 		if (allValidationRules.contains(ProcessorConstants.DATE)
 				&& (allValidationRules.contains(ProcessorConstants.DATE_RANGE) || allValidationRules
 						.contains(ProcessorConstants.ALLOW_FUTURE_DATE)))
@@ -374,10 +373,10 @@ public class ValidatorUtil
 		{
 			throw new DynamicExtensionsSystemException(
 					"CONFLICTING RULES PRESENT. DATERANGE AND ALLOWFUTUREDATE RULES CANNOT BE APPLIED FOR A ATTRIBUTE, "
-							+ attributeName);
+					+ attributeName);
 		}
 
-	}
+			}
 
 	/**
 	 * This method removes conflicting rules from the collection
@@ -399,7 +398,7 @@ public class ValidatorUtil
 	}
 
 	/**
-	 * This method check for presence of conflicting rule 
+	 * This method check for presence of conflicting rule
 	 * @param rules rule collection
 	 * @return true or false depending on presence of conflicting rule
 	 */
