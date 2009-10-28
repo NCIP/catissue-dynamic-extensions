@@ -1602,7 +1602,6 @@ function removeCheckedRow(containerId)
 function ignoreResponseHandler(str)
 {
 }
-
 function setDefaultValues(tableId, obj, containerId) 
 {
 	var children = obj.childNodes;
@@ -1640,7 +1639,11 @@ function setDefaultValues(tableId, obj, containerId)
 				{
 					childObject = childObject.childNodes[0];
 					childObjectName = childObject.name;
-
+					if (childObjectName == null && childObject.id != null
+						&& childObject.id != "auto_complete_dropdown")
+					{
+						childObjectName = childObject.id;
+					}
 					if (childObjectName != null
 							&& childObjectName.indexOf('_') != -1) 
 					{
@@ -1712,7 +1715,6 @@ function setDefaultValues(tableId, obj, containerId)
 	}
 	return obj;
 }
-
 function replaceAll(inputString, regExpr, newString)
 {
     var outputStr = "";
