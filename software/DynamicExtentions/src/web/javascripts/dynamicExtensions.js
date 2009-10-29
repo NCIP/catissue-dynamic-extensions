@@ -1523,6 +1523,12 @@ function removeCheckedRow(containerId)
                     var childNode= childNodes[childNodeIndex];
 
                     var childObjectName = childNode.name;
+
+					if (childObjectName != null && "deleteRow" == childObjectName)
+                    {
+						childNode.id = "checkBox_" + containerId + "_" + rowIndex;
+					}
+
                     if (childObjectName != null && childObjectName.indexOf('_') != -1)
                     {
             			if (childObjectName.indexOf('_div') != -1)
@@ -1711,6 +1717,10 @@ function setDefaultValues(tableId, obj, containerId)
 								oldName, newName);
 
 			eval(newScript);
+		}
+		if("deleteRow" == childObjectName)
+		{
+			childObject.id = "checkBox_" + containerId + "_" + rowIndex;
 		}
 	}
 	return obj;

@@ -92,8 +92,8 @@ public class UserInterfaceiUtility
 		htmlForGrid.append("<tr>" + "<td width='5%'><input type='button' style='border: 0px; background-image: url(images/de/b_paste.gif);height: 20px; width: 59px;' align='middle'  id='paste_"+subContainer.getId()+"' " +
 				"onclick='pasteData(\""+subContainer.getId()+"\",\"many\")'/>"+
 				"</td><td class='formField_withoutBorder' style='background-color:#E3E2E7;' width='95%'>&nbsp;</td></tr>");
-		
-		
+
+
 		htmlForGrid.append("<tr width='100%'><td colspan='3' width='100%'>");
 		// For category attribute controls, if heading and/or notes are specified, then
 		// render the UI that displays heading followed by notes for particular
@@ -179,7 +179,7 @@ public class UserInterfaceiUtility
 			htmlForGrid.append("</td><td align='left' width='86%'>");
 			htmlForGrid.append("<input type='button' style='border: 0px; background-image: url(images/de/b_delete.gif); height: 20px; width: 59px;' align='middle' onClick=\"removeCheckedRow('"
 					+ subContainer.getId() + "')\" id='btnDelete" + subContainer.getId() + "'/>");
-			
+
 			//stringBuffer.append("<button type='button' class='actionButton' id='removeRow' onclick=\"removeCheckedRow('" + subContainer.getId()
 			//		+ "')\">");
 			//stringBuffer.append(ApplicationProperties.getValue("buttons.delete"));
@@ -304,7 +304,11 @@ public class UserInterfaceiUtility
 
 		if (container.getMode().equals("edit"))
 		{
-			contHtmlAsARow.append("<input type='checkbox' name='deleteRow' value='' id='1'/>");
+			contHtmlAsARow.append("<input type='checkbox' name='deleteRow' value='' id='checkBox_");
+			contHtmlAsARow.append(container.getId());
+			contHtmlAsARow.append("_");
+			contHtmlAsARow.append(rowId);
+			contHtmlAsARow.append("'/>");
 		}
 		else
 		{
