@@ -111,7 +111,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 	private Boolean addCaption = true;
 
 	private Collection<ContainerInterface> childContainerCollection = new HashSet<ContainerInterface>();
-	
+
 	/**
 	 * Is Ajax Request
 	 */
@@ -495,14 +495,14 @@ public class Container extends DynamicExtensionBaseDomainObject
 				tempContainer = tempContainer.getBaseContainer();
 			}
 		}
-		
+
 		containerHTML.append(generateControlsHTML(caption,dataEntryOperation,this));
 		containerHTML.append("</table>");
 
 		return containerHTML.toString();
 	}
 	/**
-	 * 
+	 *
 	 */
 	public boolean isAllControlsSkipLogicTargetControlsForShowHide()
 	{
@@ -526,7 +526,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 	{
 		StringBuffer controlHTML = new StringBuffer();
 		List<Object> values = new ArrayList<Object>();
-	
+
 		addCaption(controlHTML, caption,container,values);
 
 		List<ControlInterface> controls = getAllControlsUnderSameDisplayLabel(); //UnderSameDisplayLabel();
@@ -538,7 +538,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 			{
 				Object value = null;
 				values.clear();
-			
+
 				ControlsUtility
 						.getAttributeValueForSkipLogicAttributesFromValueMap(
 								container.getContainerValueMap(), container
@@ -547,7 +547,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 										.getBaseAbstractAttribute(), false,
 								values, Integer.valueOf(-1), Integer
 										.valueOf(-1));
-				
+
 				if (!values.isEmpty())
 				{
 					value = values.get(0);
@@ -608,7 +608,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 	/**
 	 * @param captionHTML
 	 * @param caption in the format -- NewCaption:Main ContainerId
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private void addCaption(StringBuffer captionHTML, String caption,ContainerInterface container,List<Object> values) throws DynamicExtensionsSystemException
 	{
@@ -634,10 +634,10 @@ public class Container extends DynamicExtensionBaseDomainObject
 					.substring(0, (caption.length() - 1 - id.toString().length())));
 			captionHTML.append("<tr><td height='5'></td></tr>");
 		}
-		
+
 	}
 	/**
-	 * 
+	 *
 	 * @param container
 	 * @param values
 	 * @param captionHTML
@@ -657,7 +657,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 
 				Object value = null;
 				values.clear();
-			
+
 				ControlsUtility
 						.getAttributeValueForSkipLogicAttributesFromValueMap(
 								container.getContainerValueMap(), container
@@ -842,12 +842,10 @@ public class Container extends DynamicExtensionBaseDomainObject
 
 		for (ControlInterface cntrl : controlCollection)
 		{
-			if (cntrl.getSequenceNumber() != null && cntrl.getSequenceNumber().equals(xPosition))
+			if (cntrl.getSequenceNumber() != null && cntrl.getSequenceNumber().equals(xPosition)
+					&& cntrl.getSequenceNumber() != null && cntrl.getYPosition().equals(yPosition))
 			{
-				if (cntrl.getSequenceNumber() != null && cntrl.getYPosition().equals(yPosition))
-				{
 					control = cntrl;
-				}
 			}
 		}
 
@@ -864,7 +862,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 		this.isAjaxRequest = isAjaxRequest;
 	}
 
-	
+
 	/**
 	 * @return the request
 	 */
@@ -873,7 +871,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 		return request;
 	}
 
-	
+
 	/**
 	 * @param request the request to set
 	 */
@@ -881,7 +879,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 	{
 		this.request = request;
 	}
-	
+
 	/**
 	 * @return the showRequiredFieldWarningMessage
 	 */
@@ -890,7 +888,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 		return showRequiredFieldWarningMessage;
 	}
 
-	
+
 	/**
 	 * @param showRequiredFieldWarningMessage the showRequiredFieldWarningMessage to set
 	 */
@@ -898,5 +896,5 @@ public class Container extends DynamicExtensionBaseDomainObject
 	{
 		this.showRequiredFieldWarningMessage = showRequiredFieldWarningMessage;
 	}
-	
+
 }
