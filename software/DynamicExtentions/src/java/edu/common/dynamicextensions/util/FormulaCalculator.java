@@ -15,7 +15,6 @@ import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.NumericAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.PathAssociationRelationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
-import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
@@ -29,41 +28,39 @@ import edu.common.dynamicextensions.util.parser.FormulaParser;
 import edu.common.dynamicextensions.validation.ValidatorUtil;
 import edu.wustl.common.util.global.CommonServiceLocator;
 
-
-
 /**
- * 
+ *
  * @author rajesh_patil
  *
  */
-public class FormulaCalculator 
+public class FormulaCalculator
 {
 	/**
-	 * 
+	 *
 	 */
 	private FormulaParser formulaParser = null;
 
 	/**
-	 * 
+	 *
 	 */
 	public FormulaCalculator()
 	{
 		this.formulaParser = new FormulaParser();
 	}
 	/**
-	 * 
+	 *
 	 */
 	public FormulaCalculator(FormulaParser formulaParser)
 	{
 		this.formulaParser = formulaParser;
 	}
 	/**
-	 * 
+	 *
 	 * @param attributeValueMap
 	 * @return
-	 * @throws DynamicExtensionsApplicationException 
-	 * @throws ParseException 
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws ParseException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public String evaluateFormula(
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
@@ -102,7 +99,7 @@ public class FormulaCalculator
 		List<String> errorList = new ArrayList<String>();
 		Set<Map.Entry<BaseAbstractAttributeInterface, Object>> attributeSet = attributeValueMapForValidation
 				.entrySet();
-		for (Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode : attributeSet) 
+		for (Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode : attributeSet)
 		{
 			errorList.addAll(ValidatorUtil.validateAttributes(
 					attributeValueNode, attributeValueNode.getKey().getName()));
@@ -134,10 +131,10 @@ public class FormulaCalculator
 				else
 				{
 					PermissibleValueInterface permissibleValueInterface = null;
-					try 
+					try
 					{
 						permissibleValueInterface = attributeInterface.getAttributeTypeInformation().getPermissibleValueForString(entry.getValue().toString());
-					} 
+					}
 					catch (ParseException e)
 					{
 						throw new DynamicExtensionsSystemException("ParseException",e);
@@ -166,13 +163,13 @@ public class FormulaCalculator
 				}
 				else
 				{
-					try 
+					try
 					{
 						value = ((NumericAttributeTypeInformation) ((AttributeMetadataInterface) categoryAttributeInterface)
 								.getAttributeTypeInformation())
 								.getFormattedValue(formulaValue);
-					} 
-					catch (ParseException e) 
+					}
+					catch (ParseException e)
 					{
 						throw new DynamicExtensionsSystemException("ParseException",e);
 					}
@@ -182,7 +179,7 @@ public class FormulaCalculator
 		return value;
 	}
 	/**
-	 * 
+	 *
 	 * @param dateValue
 	 * @param value
 	 * @param attributeInterface
@@ -196,15 +193,15 @@ public class FormulaCalculator
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ControlsUtility
 				.getDateFormat(attributeInterface.getAttributeTypeInformation()),locale);
 		simpleDateFormat.setLenient(true);
-		try 
+		try
 		{
 			dateValue = simpleDateFormat.parse(value);
-		} 
-		catch (ParseException e) 
+		}
+		catch (ParseException e)
 		{
 			throw new DynamicExtensionsSystemException("ParseException",e);
 		}
-		
+
 		if (dateValue.getHours() >= ProcessorConstants.DATE_TIME_FORMAT_ROUND_OFF)
 		{
 			dateValue.setHours(dateValue.getHours() - ProcessorConstants.DATE_TIME_FORMAT_ROUND_OFF);
@@ -213,7 +210,7 @@ public class FormulaCalculator
 		return dateValue;
 	}
 	/**
-	 * 
+	 *
 	 * @param dateValue
 	 * @param formulaValue
 	 * @param attributeInterface
@@ -235,10 +232,10 @@ public class FormulaCalculator
 		return value;
 	}
 	/**
-	 * 
+	 *
 	 * @param attributeValueMap
 	 * @return
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
 	private void evaluateFormulaForCalulatedAttribute(
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
@@ -263,12 +260,12 @@ public class FormulaCalculator
 								.equals(mapentryNumber)))
 				{
 					String value = (String) entry.getValue();
-					if (value != null && value.length() > 0) 
+					if (value != null && value.length() > 0)
 					{
 						values.add(value);
 						return;
 					}
-				} 
+				}
 			}
 			else if (attribute instanceof CategoryAssociationInterface)
 			{
@@ -283,10 +280,10 @@ public class FormulaCalculator
 		}
 	}
 	/**
-	 * @throws DynamicExtensionsApplicationException 
-	 * @throws ParseException 
-	 * @throws DynamicExtensionsSystemException 
-	 * 
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws ParseException
+	 * @throws DynamicExtensionsSystemException
+	 *
 	 */
 	public String setDefaultValueForCalculatedAttributes(CategoryAttributeInterface categoryAttribute,CategoryInterface category) throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
@@ -331,7 +328,7 @@ public class FormulaCalculator
 		List<String> errorList = new ArrayList<String>();
 		Set<Map.Entry<BaseAbstractAttributeInterface, Object>> attributeSet = attributeValueMap
 				.entrySet();
-		for (Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode : attributeSet) 
+		for (Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode : attributeSet)
 		{
 			errorList.addAll(ValidatorUtil.validateAttributes(
 					attributeValueNode, attributeValueNode.getKey().getName()));
@@ -365,15 +362,15 @@ public class FormulaCalculator
 				else
 				{
 					PermissibleValueInterface permissibleValueInterface = null;
-					try 
+					try
 					{
 						permissibleValueInterface = attributeInterface.getAttributeTypeInformation().getPermissibleValueForString(entry.getValue().toString());
-					} 
-					catch (ParseException e) 
+					}
+					catch (ParseException e)
 					{
 						throw new DynamicExtensionsSystemException("ParseException",e);
 					}
-				
+
 					formulaParser.setVariableValue(attribute.getCategoryEntity()
 							.getEntity().getName()
 							+ "_"
@@ -394,13 +391,13 @@ public class FormulaCalculator
 					if (dateValue != null)
 					{
 						String value = setDate(dateValue, formulaValue, (AttributeMetadataInterface) categoryAttribute);
-						try 
+						try
 						{
 							defaultValue = ((AttributeMetadataInterface) categoryAttribute)
 									.getAttributeTypeInformation()
 									.getPermissibleValueForString(value);
-						} 
-						catch (ParseException e) 
+						}
+						catch (ParseException e)
 						{
 							throw new DynamicExtensionsSystemException("ParseException",e);
 						}
@@ -408,7 +405,7 @@ public class FormulaCalculator
 				}
 				else
 				{
-					try 
+					try
 					{
 						NumericAttributeTypeInformation numericAttributeTypeInformation = ((NumericAttributeTypeInformation) ((AttributeMetadataInterface) categoryAttribute)
 								.getAttributeTypeInformation());
@@ -416,7 +413,7 @@ public class FormulaCalculator
 								.getPermissibleValueForString(numericAttributeTypeInformation
 										.getFormattedValue(formulaValue));
 					}
-					catch (ParseException e) 
+					catch (ParseException e)
 					{
 						throw new DynamicExtensionsSystemException("ParseException",e);
 					}
@@ -434,18 +431,18 @@ public class FormulaCalculator
 		return message.toString();
 	}
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	public FormulaParser getFormulaParser() 
+	public FormulaParser getFormulaParser()
 	{
 		return formulaParser;
 	}
 	/**
-	 * 
+	 *
 	 * @param formulaParser
 	 */
-	public void setFormulaParser(FormulaParser formulaParser) 
+	public void setFormulaParser(FormulaParser formulaParser)
 	{
 		this.formulaParser = formulaParser;
 	}
