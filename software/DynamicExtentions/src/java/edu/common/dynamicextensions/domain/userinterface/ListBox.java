@@ -162,9 +162,11 @@ public class ListBox extends SelectControl implements ListBoxInterface
 							+ getHTMLComponentName()
 							+ "_div' name='" + getHTMLComponentName() + "_div'>");
 		}
+
 		htmlString.append("<SELECT ");
 		htmlString.append(strMultiSelect).append(" size=").append(this.noOfRows).append(
 				" class='font_bl_s' name='").append(getHTMLComponentName()).append("' onchange=\"");
+
 		if (this.isSkipLogic != null && this.isSkipLogic)
 		{
 			htmlString.append("getSkipLogicControl('");
