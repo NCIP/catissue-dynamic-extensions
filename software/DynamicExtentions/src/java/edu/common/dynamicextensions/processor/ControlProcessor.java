@@ -277,7 +277,7 @@ public class ControlProcessor extends BaseDynamicExtensionsProcessor
 		listBoxIntf.setIsMultiSelect(controlUIBeanInterface.getIsMultiSelect());
 		listBoxIntf.setNoOfRows(controlUIBeanInterface.getRows());
 		//Set isCollection=true in the attribute
-		AbstractAttributeInterface controlAttribute = controlUIBeanInterface.getAbstractAttribute();
+		//AbstractAttributeInterface controlAttribute = controlUIBeanInterface.getAbstractAttribute();
 		/*		if ((controlAttribute != null) && (controlAttribute instanceof AttributeInterface))
 				{
 					//((AttributeInterface) controlAttribute).setIsCollection(new Boolean(true));
