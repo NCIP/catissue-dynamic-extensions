@@ -1042,45 +1042,43 @@ public class ControlsUtility
 					.getControlForAbstractAttribute(
 							(AttributeMetadataInterface) categoryAttributeInterface,
 							controlContainerInterface);
-					if (control != null)
+					if (control != null && control.getIsSkipLogicTargetControl())
 					{
-						if (control.getIsSkipLogicTargetControl())
+						boolean found = false;
+						for (ControlInterface targetSkipControl : controlsList)
 						{
-							boolean found = false;
-							for (ControlInterface targetSkipControl : controlsList)
+							if (control.equals(targetSkipControl))
 							{
-								if (control.equals(targetSkipControl))
-								{
-									found = true;
-									break;
-								}
-							}
-							if (control.getSourceSkipControl().getParentContainer().equals(
-									control.getParentContainer()))
-							{
-								isSameContainerControl = true;
-							}
-							else
-							{
-								isSameContainerControl = false;
-							}
-							Integer controlSequenceNumber = control.getSequenceNumber();
-							if (controlSequenceNumber != null)
-							{
-								sourceControlName = control.getSourceSkipControl().getHTMLComponentName();
-								if (rowId != null && isSameContainerControl
-										&& cardinality
-										&& !rowId.equals(Integer.valueOf(-1)))
-								{
-									sourceControlName = sourceControlName + "_" + rowId;
-								}
-							}
-							if (found && control.getIsSkipLogicTargetControl()
-									&& controlName.equals(sourceControlName))
-							{
-								entry.setValue(null);
+								found = true;
+								break;
 							}
 						}
+						if (control.getSourceSkipControl().getParentContainer().equals(
+								control.getParentContainer()))
+						{
+							isSameContainerControl = true;
+						}
+						else
+						{
+							isSameContainerControl = false;
+						}
+						Integer controlSequenceNumber = control.getSequenceNumber();
+						if (controlSequenceNumber != null)
+						{
+							sourceControlName = control.getSourceSkipControl().getHTMLComponentName();
+							if (rowId != null && isSameContainerControl
+									&& cardinality
+									&& !rowId.equals(Integer.valueOf(-1)))
+							{
+								sourceControlName = sourceControlName + "_" + rowId;
+							}
+						}
+						if (found && control.getIsSkipLogicTargetControl()
+								&& controlName.equals(sourceControlName))
+						{
+							entry.setValue(null);
+						}
+
 					}
 				}
 			}
