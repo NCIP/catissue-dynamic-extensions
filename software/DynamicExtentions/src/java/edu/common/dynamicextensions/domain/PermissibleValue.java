@@ -7,14 +7,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.SemanticPropertyInterface;
 import edu.common.dynamicextensions.domaininterface.SkipLogicAttributeInterface;
 
 /**
  * @author sujay_narkar
- * @hibernate.class table="DYEXTN_PERMISSIBLE_VALUE" 
+ * @hibernate.class table="DYEXTN_PERMISSIBLE_VALUE"
  *
  */
 public abstract class PermissibleValue extends DynamicExtensionBaseDomainObject
@@ -23,7 +22,7 @@ public abstract class PermissibleValue extends DynamicExtensionBaseDomainObject
 {
 
 	/**
-	 * 
+	 *
 	 */
 	protected String description;
 	/**
@@ -37,7 +36,7 @@ public abstract class PermissibleValue extends DynamicExtensionBaseDomainObject
 	protected Collection<SkipLogicAttributeInterface> dependentSkipLogicAttributes = new HashSet<SkipLogicAttributeInterface>();
 
 	/**
-	 * @hibernate.property name="description" type="string" column="DESCRIPTION" 
+	 * @hibernate.property name="description" type="string" column="DESCRIPTION"
 	 * @return Returns the buttonCss.
 	 */
 	public String getDescription()
@@ -62,7 +61,7 @@ public abstract class PermissibleValue extends DynamicExtensionBaseDomainObject
 	/**
 	 * @hibernate.id name="id" column="IDENTIFIER" type="long"
 	 * length="30" unsaved-value="null" generator-class="native"
-	 * @hibernate.generator-param name="sequence" value="DYEXTN_PERMISSIBLEVAL_SEQ" 
+	 * @hibernate.generator-param name="sequence" value="DYEXTN_PERMISSIBLEVAL_SEQ"
 	 * @return Returns the id.
 	 */
 	public Long getId()
@@ -142,6 +141,7 @@ public abstract class PermissibleValue extends DynamicExtensionBaseDomainObject
 		}
 		return semanticPropertyList;
 	}
+
 	/**
 	 * @hibernate.set name="dependentSkipLogicAttributes" table="DYEXTN_SKIP_LOGIC_ATTRIBUTE"
 	 * cascade="all-delete-orphan" inverse="false" lazy="false"
@@ -154,8 +154,9 @@ public abstract class PermissibleValue extends DynamicExtensionBaseDomainObject
 	{
 		return dependentSkipLogicAttributes;
 	}
+
 	/**
-	 * 
+	 *
 	 * @param dependentSkipLogicAttributes
 	 */
 	public void setDependentSkipLogicAttributes(
@@ -163,11 +164,13 @@ public abstract class PermissibleValue extends DynamicExtensionBaseDomainObject
 	{
 		this.dependentSkipLogicAttributes = dependentSkipLogicAttributes;
 	}
+
 	/**
 	 * This method adds a skip logic attribute.
 	 * @param skipLogicAttributeInterface
 	 */
-	public void addDependentSkipLogicAttribute(SkipLogicAttributeInterface skipLogicAttributeInterface)
+	public void addDependentSkipLogicAttribute(
+			SkipLogicAttributeInterface skipLogicAttributeInterface)
 	{
 		if (dependentSkipLogicAttributes == null)
 		{
@@ -175,11 +178,13 @@ public abstract class PermissibleValue extends DynamicExtensionBaseDomainObject
 		}
 		dependentSkipLogicAttributes.add(skipLogicAttributeInterface);
 	}
+
 	/**
 	 * This method removes a SkipLogic Attribute.
 	 * @param skipLogicAttributeInterface.
 	 */
-	public void removeDependentSkipLogicAttribute(SkipLogicAttributeInterface skipLogicAttributeInterface)
+	public void removeDependentSkipLogicAttribute(
+			SkipLogicAttributeInterface skipLogicAttributeInterface)
 	{
 		if ((dependentSkipLogicAttributes != null)
 				&& (dependentSkipLogicAttributes.contains(skipLogicAttributeInterface)))
@@ -198,8 +203,9 @@ public abstract class PermissibleValue extends DynamicExtensionBaseDomainObject
 			dependentSkipLogicAttributes.clear();
 		}
 	}
+
 	/**
-	 * 
+	 *
 	 * @param stringValue
 	 * @return
 	 */
