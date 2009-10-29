@@ -133,7 +133,7 @@ public class DynamicExtensionUtility
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		EntityGroupManagerInterface entityGroupManager = EntityGroupManager.getInstance();
-		EntityGroupInterface entityGroupObject;
+
 		if (CREATE_TABLE_FOR_ENTITY)
 		{
 			entityGroupManager.persistEntityGroup(entityGroup);
@@ -142,6 +142,7 @@ public class DynamicExtensionUtility
 		{
 			entityGroupManager.persistEntityGroupMetadata(entityGroup);
 		}
+
 		return entityGroup;
 	}
 
