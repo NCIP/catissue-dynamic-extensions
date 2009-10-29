@@ -89,23 +89,22 @@ public class EntityGroupManager extends AbstractMetadataManager
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.entitymanager.EntityGroupManagerInterface#persistEntityGroup(edu.common.dynamicextensions.domaininterface.EntityGroupInterface)
 	 */
-	public DynamicQueryList persistEntityGroup(EntityGroupInterface group ,HibernateDAO... hibernateDAO)
-	throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	public DynamicQueryList persistEntityGroup(EntityGroupInterface group,
+			HibernateDAO... hibernateDAO) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
-		DynamicQueryList queryList =  persistDynamicExtensionObject(group,hibernateDAO);
-		return queryList;
+		return persistDynamicExtensionObject(group, hibernateDAO);
 	}
-
 
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.entitymanager.EntityGroupManagerInterface#persistEntityGroupMetadata(edu.common.dynamicextensions.domaininterface.EntityGroupInterface)
 	 */
-	public DynamicQueryList persistEntityGroupMetadata(EntityGroupInterface entityGroup,HibernateDAO... hibernateDAO)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	public DynamicQueryList persistEntityGroupMetadata(EntityGroupInterface entityGroup,
+			HibernateDAO... hibernateDAO) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
 		addTaggedValue(entityGroup);
-		DynamicQueryList queryList =  persistDynamicExtensionObjectMetdata(entityGroup,hibernateDAO);
-		return queryList;
+		return persistDynamicExtensionObjectMetdata(entityGroup, hibernateDAO);
 	}
 
 	/* (non-Javadoc)
