@@ -25,7 +25,6 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ComboBoxInterf
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ListBoxInterface;
-import edu.common.dynamicextensions.domaininterface.userinterface.MultiSelectCheckBoxInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.MultiSelectInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.TextFieldInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterface;
@@ -100,8 +99,8 @@ public class CategoryValidator
 	/**
 	 * @param entityName
 	 * @throws DynamicExtensionsSystemException
-	 * @throws ClassNotFoundException 
-	 * @throws DAOException 
+	 * @throws ClassNotFoundException
+	 * @throws DAOException
 	 */
 	public void validateEntityName(String entityName) throws DynamicExtensionsSystemException,
 			DAOException, ClassNotFoundException
@@ -120,7 +119,7 @@ public class CategoryValidator
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void validateSubcategoryTag()
 	{
@@ -150,7 +149,7 @@ public class CategoryValidator
 	 * @param rules
 	 * @throws DynamicExtensionsSystemException
 	 * @throws ParseException
-	 * @throws DynamicExtensionsValidationException 
+	 * @throws DynamicExtensionsValidationException
 	 */
 	public static void checkRangeAgainstAttributeValueRange(AttributeInterface attribute,
 			Map<String, Object> rules) throws DynamicExtensionsSystemException, ParseException
@@ -245,7 +244,7 @@ public class CategoryValidator
 
 	/**
 	 * This method performs some basic validations like checking if the attribute or
-	 * the attribute type information is null. It also checks whether range is specified 
+	 * the attribute type information is null. It also checks whether range is specified
 	 * for valid attribute type information.
 	 * @param attribute
 	 * @throws DynamicExtensionsSystemException
@@ -273,7 +272,7 @@ public class CategoryValidator
 	}
 
 	/**
-	 * This method checks whether the range specified for category attribute 
+	 * This method checks whether the range specified for category attribute
 	 * is a valid subset of range specified for its attribute.
 	 * @param catAttrValue
 	 * @param attribute
@@ -465,7 +464,7 @@ public class CategoryValidator
 	}
 
 	/**
-	 * This method checks whether 'textArea' is the control type specified for numeric type field.  
+	 * This method checks whether 'textArea' is the control type specified for numeric type field.
 	 * @param controlType
 	 * @param attribute
 	 * @throws DynamicExtensionsSystemException
@@ -670,7 +669,7 @@ public class CategoryValidator
 	/**
 	 * @param controlType
 	 * @param controlXPosition
-	 * @param container 
+	 * @param container
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public void validateControlInSingleLine(String controlType, int controlXPosition,
