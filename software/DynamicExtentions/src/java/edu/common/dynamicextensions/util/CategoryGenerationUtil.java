@@ -1,7 +1,6 @@
 
 package edu.common.dynamicextensions.util;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,7 +32,7 @@ import edu.common.dynamicextensions.validation.category.CategoryValidator;
 import edu.wustl.common.util.global.ApplicationProperties;
 
 /**
- * 
+ *
  * @author kunal_kamble
  *
  */
@@ -57,7 +56,7 @@ public class CategoryGenerationUtil
 	 * Returns the multiplicity in number for the give string
 	 * @param multiplicity
 	 * @return
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public static int getMultiplicityInNumbers(String multiplicity)
 			throws DynamicExtensionsSystemException
@@ -264,7 +263,7 @@ public class CategoryGenerationUtil
 	 * @param paths
 	 * @param entityGroup
 	 * @return
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public static Map<String, List<AssociationInterface>> getAssociationList(
 			Map<String, List<String>> paths, EntityGroupInterface entityGroup)
@@ -275,7 +274,7 @@ public class CategoryGenerationUtil
 		Set<String> entitiesNames = paths.keySet();
 		for (String entityName : entitiesNames)
 		{
-			// Path stored is from the root. 
+			// Path stored is from the root.
 			List<String> pathsForEntity = paths.get(entityName);
 
 			List<AssociationInterface> associations = new ArrayList<AssociationInterface>();
@@ -325,8 +324,8 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-	 * @throws DynamicExtensionsSystemException 
-	 * 
+	 * @throws DynamicExtensionsSystemException
+	 *
 	 */
 	private static void addAssociation(EntityInterface sourceEntity, EntityInterface targetEntity,
 			String associationRoleName, List<AssociationInterface> associations)
@@ -351,7 +350,7 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public static String getEntityNameExcludingAssociationRoleName(String entityName)
@@ -366,7 +365,7 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public static String getAssociationRoleName(String entityName)
@@ -381,7 +380,7 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public static String getFullAssociationRoleName(String entityName)
@@ -398,7 +397,7 @@ public class CategoryGenerationUtil
 	/**
 	 * This method gets the relative path.
 	 * @param entityNameList ordered entities names in the path
-	 * @param pathMap 
+	 * @param pathMap
 	 * @return
 	 */
 	public static List<String> getRelativePath(List<String> entityNameList,
@@ -426,7 +425,7 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-	 * Returns the entity group used for careting this category 
+	 * Returns the entity group used for careting this category
 	 * @param category
 	 * @param entityGroupName
 	 * @return
@@ -562,11 +561,10 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-	 * @throws ParseException 
-	 * @throws DynamicExtensionsApplicationException 
-	 * @throws DynamicExtensionsSystemException 
-	 * @throws DynamicExtensionsSystemException 
-	 * 
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsSystemException
+	 *
 	 */
 	public static void setDefaultValueForCalculatedAttributes(CategoryInterface category,
 			CategoryEntityInterface rootCategoryEntity, Long lineNumber)
@@ -600,7 +598,7 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public static void getCategoryAttribute(String entityName, Long instanceNumber,
@@ -730,10 +728,10 @@ public class CategoryGenerationUtil
 
 	/**
 	 * category names in CSV are of format <entity_name>[instance_Number]
-	 * This method will generate category entity names according to the path. 
+	 * This method will generate category entity names according to the path.
 	 * @param categoryNameInCSV
 	 * @return
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public static String getCategoryEntityName(String categoryEntityInstancePath,
 			Map<String, List<AssociationInterface>> entityNameAssociationMap)
