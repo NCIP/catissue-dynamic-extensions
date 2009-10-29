@@ -50,7 +50,7 @@ import edu.common.dynamicextensions.validation.category.CategoryValidator;
 import edu.wustl.common.util.global.ApplicationProperties;
 
 /**
- * @author kunal_kamble 
+ * @author kunal_kamble
  * This class creates the category/categories defined in
  * the CSV file.
  */
@@ -700,9 +700,9 @@ public class CategoryGenerator
 		while (categoryFileParser.readNext() && !categoryFileParser.hasRelatedAttributes())
 		{
 			String[] categoryPaths = categoryFileParser.getCategoryPaths();
-			
+
 			categoryFileParser.readNext();
-			
+
 			String sourceAttributeClassName = categoryFileParser
 					.getSkipLogicSourceAttributeClassName();
 
@@ -723,7 +723,7 @@ public class CategoryGenerator
 			CategoryEntityInterface sourceCategoryEntity = categoryHelper
 					.createOrUpdateCategoryEntity(category, sourceEntity,
 							sourceCategoryEntityName);
-	
+
 			String targetAttributeClassName = categoryFileParser
 					.getSkipLogicTargetAttributeClassName();
 
@@ -740,13 +740,13 @@ public class CategoryGenerator
 			EntityInterface targetEntity = entityGroup
 					.getEntityByName(CategoryGenerationUtil
 							.getEntityNameExcludingAssociationRoleName(targetEntityName));
-			
+
 			CategoryEntityInterface targetCategoryEntity = categoryHelper
 			.createOrUpdateCategoryEntity(category, targetEntity,
 					targetCategoryEntityName);
-			
+
 			String sourceAttributeName = categoryFileParser.getSkipLogicSourceAttributeName();
-			
+
 			CategoryValidator.checkForNullRefernce(sourceEntity.getAttributeByName(sourceAttributeName),
 					ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
 							+ categoryFileParser.getLineNumber() + " "
@@ -775,36 +775,36 @@ public class CategoryGenerator
 
 			CategoryAttributeInterface sourceCategoryAttribute = categoryHelper.getCategoryAttribute(
 					sourceEntity, sourceAttributeName, sourceCategoryEntity);
-			
+
 			ContainerInterface sourceContainerInterface = DynamicExtensionsUtility
 			.getContainerForAbstractEntity(sourceCategoryAttribute
 					.getCategoryEntity());
-			
+
 			ControlInterface sourceControl = DynamicExtensionsUtility
 					.getControlForAbstractAttribute(
 							(AttributeMetadataInterface) sourceCategoryAttribute,
 							sourceContainerInterface,sourceCategoryEntityName);
-			
+
 			boolean isEnumeratedSourceControl = true;
 			if (sourceControl instanceof CheckBox)
 			{
 				isEnumeratedSourceControl = false;
 			}
-			sourceControl.setIsSkipLogic(Boolean.valueOf(true));
-			sourceCategoryAttribute.setIsSkipLogic(Boolean.valueOf(true));
+			sourceControl.setIsSkipLogic(Boolean.TRUE);
+			sourceCategoryAttribute.setIsSkipLogic(Boolean.TRUE);
 			PermissibleValueInterface permissibleValueInterface = null;
 			if (isEnumeratedSourceControl)
 			{
 				String permissibleValue = categoryFileParser.getSkipLogicPermissibleValueName();
 				DataElementInterface dataElementInterface = ((AttributeMetadataInterface)sourceCategoryAttribute).getDataElement();
 				UserDefinedDEInterface userDefinedDEInterface = (UserDefinedDEInterface) dataElementInterface;
-				
+
 				permissibleValueInterface = categoryHelper
 						.getPermissibleValue(userDefinedDEInterface
 								.getPermissibleValueCollection(), permissibleValue);
-				
+
 				sourceCategoryAttribute.addSkipLogicPermissibleValue(permissibleValueInterface);
-				
+
 				CategoryValidator.checkForNullRefernce(permissibleValueInterface,
 						ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
 								+ categoryFileParser.getLineNumber() + " "
@@ -815,14 +815,14 @@ public class CategoryGenerator
 			}
 			ContainerInterface targetContainerInterface = DynamicExtensionsUtility
 					.getContainerForAbstractEntity(targetCategoryEntity);
-			
+
 			String targetAttributeName = categoryFileParser.getSkipLogicTargetAttributeName();
-			
+
 			if (targetAttributeName != null  && targetAttributeName.equals(CategoryConstants.ALL))
 			{
 				//Setting control options
 				Map<String, String> controlOptions = categoryFileParser.getControlOptions();
-				
+
 				setSkipLogicForAllSubFormAttributes(targetCategoryEntity,
 						sourceControl, sourceCategoryAttribute,
 						permissibleValueInterface, isEnumeratedSourceControl,
@@ -837,9 +837,9 @@ public class CategoryGenerator
 								+ targetAttributeName + " "
 								+ ApplicationProperties.getValue(CategoryConstants.ATTR_NOT_PRESENT)
 								+ targetEntity.getName());
-				
+
 				isAttributePresent = targetEntity.isAttributePresent(targetAttributeName);
-	
+
 				// If this is the parent attribute and currently the parent category
 				// entity is not created
 				// for given category entity, create parent category hierarchy up to
@@ -850,28 +850,28 @@ public class CategoryGenerator
 					EntityInterface childEntity = targetEntity;
 					CategoryEntityInterface parentCategoryEntity = targetCategoryEntity
 							.getParentCategoryEntity();
-	
+
 					targetCategoryEntity = processInheritance(parentEntity, childEntity,
 							parentCategoryEntity, targetCategoryEntity, targetAttributeName, containerCollection);
 					targetEntity = targetCategoryEntity.getEntity();
-	
+
 				}
-	
+
 				CategoryAttributeInterface targetCategoryAttribute = categoryHelper.getCategoryAttribute(
 						targetEntity, targetAttributeName, targetCategoryEntity);
-				
+
 				ControlInterface targetControl = DynamicExtensionsUtility
 						.getControlForAbstractAttribute(
 								(AttributeMetadataInterface) targetCategoryAttribute,
 								targetContainerInterface,targetCategoryEntityName);
-				
-				targetControl.setIsSkipLogicTargetControl(Boolean.valueOf(true));
+
+				targetControl.setIsSkipLogicTargetControl(Boolean.TRUE);
 				targetControl.setSourceSkipControl(sourceControl);
 
 				SkipLogicAttributeInterface skipLogicAttributeInterface = DomainObjectFactory.getInstance().createSkipLogicAttribute();
 				skipLogicAttributeInterface.setSourceSkipLogicAttribute(sourceCategoryAttribute);
 				skipLogicAttributeInterface.setTargetSkipLogicAttribute(targetCategoryAttribute);
-				
+
 				String defaultValue = categoryFileParser.getDefaultValue();
 				if (defaultValue == null)
 				{
@@ -899,9 +899,9 @@ public class CategoryGenerator
 				}
 				//Setting control options
 				Map<String, String> controlOptions = categoryFileParser.getControlOptions();
-				
+
 				categoryHelper.setOptions(targetControl, controlOptions, categoryFileParser.getLineNumber());
-				
+
 				if (isEnumeratedSourceControl)
 				{
 					permissibleValueInterface.addDependentSkipLogicAttribute(skipLogicAttributeInterface);
@@ -912,15 +912,15 @@ public class CategoryGenerator
 				}
 				Map<String, Collection<SemanticPropertyInterface>> permissibleValues = categoryFileParser
 						.getPermissibleValues();
-	
+
 				Map<String, String> permissibleValueOptions = categoryFileParser
 						.getPermissibleValueOptions();
-				
+
 				List<PermissibleValueInterface> permissibleValuesList = categoryHelper
 						.createPermissibleValuesList(targetAttributeName, targetAttributeClassName,
 								skipLogicAttributeInterface, categoryFileParser
 										.getLineNumber(), permissibleValues);
-				
+
 				skipLogicAttributeInterface.clearDataElementCollection();
 				if (permissibleValuesList != null && !permissibleValuesList.isEmpty())
 				{
@@ -930,10 +930,10 @@ public class CategoryGenerator
 					{
 						userDefinedDE.addPermissibleValue(pv);
 					}
-		
+
 					//add new permissible values
 					skipLogicAttributeInterface.setDataElement(userDefinedDE);
-		
+
 					categoryHelper.setOptions(userDefinedDE, permissibleValueOptions, categoryFileParser.getLineNumber());
 				}
 			}
@@ -953,13 +953,13 @@ public class CategoryGenerator
 		return instancePathInformation;
 	}
 	/**
-	 * 
+	 *
 	 * @param targetCategoryEntity
 	 * @param targetContainerInterface
 	 * @param sourceControl
 	 * @param sourceCategoryAttribute
 	 * @param permissibleValueInterface
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private void setSkipLogicForAllSubFormAttributes(
 			CategoryEntityInterface targetCategoryEntity,
@@ -972,15 +972,15 @@ public class CategoryGenerator
 	{
 		ContainerInterface targetContainerInterface = DynamicExtensionsUtility
 		.getContainerForAbstractEntity(targetCategoryEntity);
-		
+
 		for (CategoryAttributeInterface targetCategoryAttribute : targetCategoryEntity.getAllCategoryAttributes())
 		{
 			ControlInterface targetControl = DynamicExtensionsUtility
 			.getControlForAbstractAttribute(
 					(AttributeMetadataInterface) targetCategoryAttribute,
 					targetContainerInterface,targetCategoryEntity.getName());
-			
-			targetControl.setIsSkipLogicTargetControl(Boolean.valueOf(true));
+
+			targetControl.setIsSkipLogicTargetControl(Boolean.TRUE);
 			targetControl.setSourceSkipControl(sourceControl);
 			SkipLogicAttributeInterface skipLogicAttributeInterface = DomainObjectFactory.getInstance().createSkipLogicAttribute();
 			skipLogicAttributeInterface.setSourceSkipLogicAttribute(sourceCategoryAttribute);
@@ -1004,7 +1004,7 @@ public class CategoryGenerator
 		}
 	}
 	/**
-	 * 
+	 *
 	 * @param categoryAttribute
 	 * @param defaultValue
 	 * @throws DynamicExtensionsApplicationException
@@ -1132,7 +1132,7 @@ public class CategoryGenerator
 			}
 		}
 	}
-	
+
 	/**
 	 * @param categoryEntityNameList
 	 * @param entityName
@@ -1329,7 +1329,7 @@ public class CategoryGenerator
 
 	/**
 	 * handleInstanceException.
-	 * 
+	 *
 	 * @param sourceInstance
 	 * @param targetInstance
 	 * @throws DynamicExtensionsSystemException
@@ -1390,7 +1390,7 @@ public class CategoryGenerator
 	/**
 	 * @param control
 	 * @throws ParseException
-	 * @throws DynamicExtensionsApplicationException 
+	 * @throws DynamicExtensionsApplicationException
 	 */
 	private void setDefaultValue(ControlInterface control) throws ParseException,
 			DynamicExtensionsSystemException, DynamicExtensionsApplicationException
@@ -1466,7 +1466,7 @@ public class CategoryGenerator
 
 	/**
 	 * This method populate the main form list for the given entity group
-	 * 
+	 *
 	 * @param entityGroup
 	 */
 	private void populateMainFormList(EntityGroupInterface entityGroup)
