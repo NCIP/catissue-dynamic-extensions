@@ -1467,7 +1467,7 @@ function addRow(containerId)
 	var x = document.getElementsByTagName("script");
 	var RegularExpression  =  new RegExp("\^print");
 	var RegularExpressionForCombo  =  new RegExp("Ext.form.ComboBox");
-	
+
     for(var i=0;i<x.length;i++)
     {
 	  if(x[i].text!='' && x[i].text.search(RegularExpression) == -1 && x[i].text.search(RegularExpressionForCombo) == -1)
@@ -1525,19 +1525,19 @@ function removeCheckedRow(containerId)
                     var childObjectName = childNode.name;
                     if (childObjectName != null && childObjectName.indexOf('_') != -1)
                     {
-            			if (childObjectName.indexOf('_div') != -1) 
+            			if (childObjectName.indexOf('_div') != -1)
             			{
-            				if (childObject.hasChildNodes) 
+            				if (childObject.hasChildNodes)
             				{
             					childObject = childObject.childNodes[0];
             					childObjectName = childObject.name;
             				}
             			}
     					if (childObjectName != null
-    							&& childObjectName.indexOf('_') != -1) 
+    							&& childObjectName.indexOf('_') != -1)
     					{
 	                        var arr = childObjectName.split('_');
-	                    	
+
 	                        arr[arr.length - 1] = rowIndex;
 	                        var str = "";
 	                        for (arrIndex = 0; arrIndex < arr.length; arrIndex++)
@@ -1552,7 +1552,7 @@ function removeCheckedRow(containerId)
 	                        {
 	                            str = str + ")";
 	                        }
-	
+
 							if (document.getElementById(childObjectName) == null)
 							{
 								var controlValue = childNode.value;
@@ -1561,7 +1561,7 @@ function removeCheckedRow(containerId)
 							{
 								var controlValue = document.getElementById(childObjectName).value;
 							}
-	
+
 							cell.innerHTML = replaceAll(cell.innerHTML,childObjectName,str);
 							if (document.getElementById(childObjectName) == null)
 							{
@@ -1602,14 +1602,14 @@ function removeCheckedRow(containerId)
 function ignoreResponseHandler(str)
 {
 }
-function setDefaultValues(tableId, obj, containerId) 
+function setDefaultValues(tableId, obj, containerId)
 {
 	var children = obj.childNodes;
 	var rowIndex = document.getElementById(tableId).rows.length;
 	rowIndex = parseInt(rowIndex) - 1;
 
 	var i = 0;
-	for (j = 0; j < children.length; j++) 
+	for (j = 0; j < children.length; j++)
 	{
 		var childObject = children[j];
 		childObjectName = childObject.name;
@@ -1618,24 +1618,24 @@ function setDefaultValues(tableId, obj, containerId)
 		{
 			childObjectName = childObject.id;
 		}
-		if (childObjectName != null && childObjectName.indexOf('_') != -1) 
+		if (childObjectName != null && childObjectName.indexOf('_') != -1)
 		{
-			if (childObjectName.indexOf(')') != -1) 
+			if (childObjectName.indexOf(')') != -1)
 			{
 				childObjectName = childObjectName.substring(0, childObjectName
 						.indexOf(')'));
 				i++;
 				// In case of control having multiple options, setting str
 				// only once
-				if (i == 1) 
+				if (i == 1)
 				{
 					str = childObjectName + "_" + rowIndex;
 				}
 				str = str + ")";
-			} 
-			else if (childObjectName.indexOf('_div') != -1) 
+			}
+			else if (childObjectName.indexOf('_div') != -1)
 			{
-				if (childObject.hasChildNodes) 
+				if (childObject.hasChildNodes)
 				{
 					childObject = childObject.childNodes[0];
 					childObjectName = childObject.name;
@@ -1645,9 +1645,9 @@ function setDefaultValues(tableId, obj, containerId)
 						childObjectName = childObject.id;
 					}
 					if (childObjectName != null
-							&& childObjectName.indexOf('_') != -1) 
+							&& childObjectName.indexOf('_') != -1)
 					{
-						if (childObjectName.indexOf(')') != -1) 
+						if (childObjectName.indexOf(')') != -1)
 						{
 							childObjectName = childObjectName.substring(0,
 									childObjectName.indexOf(')'));
@@ -1655,13 +1655,13 @@ function setDefaultValues(tableId, obj, containerId)
 							// In case of control having multiple options,
 							// setting str
 							// only once
-							if (i == 1) 
+							if (i == 1)
 							{
 								str = childObjectName + "_" + rowIndex;
 							}
 							str = str + ")";
-						} 
-						else 
+						}
+						else
 						{
 							i++;
 							// In case of control having multiple options,
@@ -1674,7 +1674,7 @@ function setDefaultValues(tableId, obj, containerId)
 						obj.innerHTML = replaceAll(obj.innerHTML,
 								childObjectName, str);
 					}
-					if ("auto_complete_dropdown" == childObject.id) 
+					if ("auto_complete_dropdown" == childObject.id)
 					{
 						var childNodes2 = childObject.childNodes;
 
@@ -1688,8 +1688,8 @@ function setDefaultValues(tableId, obj, containerId)
 					}
 					continue;
 				}
-			} 
-			else 
+			}
+			else
 			{
 				i++;
 				// In case of control having multiple options, setting str
@@ -1700,7 +1700,7 @@ function setDefaultValues(tableId, obj, containerId)
 			}
 			obj.innerHTML = replaceAll(obj.innerHTML, childObjectName, str);
 		}
-		if ("auto_complete_dropdown" == childObject.id) 
+		if ("auto_complete_dropdown" == childObject.id)
 		{
 			var childNodes2 = childObject.childNodes;
 			var oldName = childNodes2[2].childNodes[0].childNodes[0].name;
@@ -1919,7 +1919,7 @@ function evaluateFormulaForAttribute(controlName)
     if(controlName != null)
     {
         var request = newXMLHTTPReq();
-		var handlerFunction = function() 
+		var handlerFunction = function()
 		{
 	         if(request.readyState  == 4)
 	         {
@@ -2006,20 +2006,20 @@ function showParentContainerInsertDataPage()
 function getValues()
 {
 	var frm = document.forms[0];
-	for (f = 0; f < document.forms[0].elements.length; ++f ) 
-	{ 
+	for (f = 0; f < document.forms[0].elements.length; ++f )
+	{
 		var fld = frm.elements[f];
-		
-		// select all values in list box before form is submitted. 
+
+		// select all values in list box before form is submitted.
 		if (fld.id.startsWith('protocolCoordId_Control_'))
-		{ 
+		{
 			var lbOptions = document.getElementById(fld.id);
 			for (i = lbOptions.options.length-1; i >= 0; i--)
 			{
 				lbOptions.options[i].selected=true;
 			}
 		}
-	} 
+	}
 }
 
 function calculateAttributes()
@@ -2088,12 +2088,12 @@ function changeValueForAllCheckBoxes(checkbox)
 		{
 			selectAllCheckBoxes(true,elements);
 		}
-		
-	}   
+
+	}
 }
 function selectAllCheckBoxes(selectAllchkboxes, elements)
 {
-	
+
 	for(var i=0;i<elements.length;i++)
 	{
 		var chkbox = elements[i];
@@ -2356,11 +2356,11 @@ var timeInterval=100;
 var interval;
 var objID="";
 
-function showStatus(sMsg) 
+function showStatus(sMsg)
 {
 	 window.status = sMsg ;
 }
- 
+
 function showToolTip(objId)
 {
 	objID = objId;
@@ -2386,7 +2386,7 @@ function hideTip(objId)
 		obj.title = "";
 	}
 	interval = window.clearInterval(interval);
-}     
+}
 
 function setTip()
 {
@@ -2406,7 +2406,7 @@ function setTip()
 				tip="";
 			else
 				tip = obj.options[obj.selectedIndex].text;
-			
+
 			var browser=navigator.appName;
 			if(browser=="Microsoft Internet Explorer")
 			{
@@ -2420,7 +2420,7 @@ function setTip()
 	}
 }
 
- 
+
 function setGivenTip(tooltipValue)
 {
 	var obj = document.getElementById(objID);
@@ -2440,9 +2440,9 @@ function setGivenTip(tooltipValue)
 function clearDate(id, pattern)
 {
 	var id = document.getElementById(id);
-	if((pattern == 'MM-DD-YYYY' && id.value == 'MM-DD-YYYY') 
-			|| (pattern == 'MM-DD-YYYY HH:MM' && id.value == 'MM-DD-YYYY HH:MM') 
-			|| (pattern == 'MM-YYYY' && id.value == 'MM-YYYY') 
+	if((pattern == 'MM-DD-YYYY' && id.value == 'MM-DD-YYYY')
+			|| (pattern == 'MM-DD-YYYY HH:MM' && id.value == 'MM-DD-YYYY HH:MM')
+			|| (pattern == 'MM-YYYY' && id.value == 'MM-YYYY')
 			|| (pattern == 'YYYY' && id.value == 'YYYY'))
 	{
 		id.value="";
@@ -2454,7 +2454,7 @@ function getIframeDocument(iframe)
 	var iframeDocument = null;
 	if (iframe.contentDocument)
 	{
-		iframeDocument = iframe.contentDocument; 
+		iframeDocument = iframe.contentDocument;
 	}
 	else if (iframe.contentWindow)
 	{
@@ -2466,7 +2466,7 @@ function getIframeDocument(iframe)
 	}
 	return iframeDocument;
 }
-function getSkipLogicControl(controlName, controlId, containerId) 
+function getSkipLogicControl(controlName, controlId, containerId)
 {
     document.getElementById('dataEntryOperation').value = "skipLogicAttributes";
 	var str = $("dataEntryForm").serialize();
@@ -2478,13 +2478,13 @@ function getSkipLogicControl(controlName, controlId, containerId)
 	}
 	str =  str + "&containerId=" + containerId + "&controlId=" + controlId
 			+ "&controlValue=" + controlValue + "&controlName=" + controlName;
-	jQuery.ajax( 
+	jQuery.ajax(
 	{
 				type :"POST",
 				url :"ApplyDataEntryFormAction.do",
 				dataType: "html",
 				data :str,
-				success : function(htmlresult) 
+				success : function(htmlresult)
 				{
 					var iframe = document.getElementById("skipLogicIframe");
 					if (iframe != null)
@@ -2619,7 +2619,7 @@ function pasteDataPart(clipboardData,index)
     request.open("POST","AjaxcodeHandlerAction.do",true);
     request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     request.send("&ajaxOperation=pasteData&containerId="+conatinerId+"&cardinality="+cardinality+"&index="+index+"&clipboradData="+clipboardData);
-	
+
 }
 function pasteData(conatinerId_temp,cardinality_temp)
 {
@@ -2630,26 +2630,31 @@ function pasteData(conatinerId_temp,cardinality_temp)
 	}
 	else if(window.Components)
 	{
+		try
+		{
+			this.netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
+		} catch(e) {
+			alert("Clipboard access not permitted, sorry. You will have to set signed.applet.codebase_principal_support to true.\nVisit 'about:config' the address bar.\nSearch for 'signed.applets.codebase_principal_support' and set its value to true");
+		}
+		var clip = Components.classes["@mozilla.org/widget/clipboard;1"].getService(Components.interfaces.nsIClipboard);
+		if (!clip) return false;
 		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
-		var clip = Components.classes["@mozilla.org/widget/clipboard;1"].getService(Components.interfaces.nsIClipboard);   
-		if (!clip) return false;   
-		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
-		var trans = Components.classes["@mozilla.org/widget/transferable;1"].createInstance(Components.interfaces.nsITransferable);   
-		if (!trans) return false;   
-		trans.addDataFlavor("text/unicode");  
-		clip.getData(trans, clip.kGlobalClipboard);   
-		var str       = new Object();   
-		var strLength = new Object();   
-		trans.getTransferData("text/unicode", str, strLength);  
-		if (str) str       = str.value.QueryInterface(Components.interfaces.nsISupportsString);   
-		if (str) pastetext = str.data.substring(0, strLength.value / 2);  
+		var trans = Components.classes["@mozilla.org/widget/transferable;1"].createInstance(Components.interfaces.nsITransferable);
+		if (!trans) return false;
+		trans.addDataFlavor("text/unicode");
+		clip.getData(trans, clip.kGlobalClipboard);
+		var str       = new Object();
+		var strLength = new Object();
+		trans.getTransferData("text/unicode", str, strLength);
+		if (str) str       = str.value.QueryInterface(Components.interfaces.nsISupportsString);
+		if (str) pastetext = str.data.substring(0, strLength.value / 2);
 		chkTable = str.data;
 	}
 	else
 	{
 		alert("Your browser doesn't support clipboard access");
 	}
-	
+
 	if(chkTable == null)
 	{
 		return;
@@ -2659,14 +2664,14 @@ function pasteData(conatinerId_temp,cardinality_temp)
 	conatinerId = conatinerId_temp;
 	start=rowIndex*batch;
 	end = noOfRecordsCopied;
-	slice= chkTable.split("\n").slice(start,end);	
+	slice= chkTable.split("\n").slice(start,end);
 
 	if(cardinality == "many")
 	{
-		rowCount = document.getElementById(conatinerId+"_table").rows.length -1 ;			
+		rowCount = document.getElementById(conatinerId+"_table").rows.length -1 ;
 	}else
 	{
-		slice= chkTable.split("\n").slice(start,start+1);	
+		slice= chkTable.split("\n").slice(start,start+1);
 	}
 	pasteDataPart(slice,rowCount+start+1)
 }
@@ -2681,7 +2686,7 @@ function paster(response)
 		numCombosInPastedData = (matches.length)/2;
 	}
 	var errorString = reponseList[1];
-	//PRINT ERRORS IF ANY 
+	//PRINT ERRORS IF ANY
 	var errorHTML = "<table width=\"100%\" height=\"30\"  border=\"0\" cellpadding=\"4\" cellspacing=\"4\" class=\"td_color_FFFFCC\">";
 	var errors = reponseList[1].split(',');
 
@@ -2787,7 +2792,7 @@ function executeCombos()
 						eval(comboScript.innerHTML);
 					}
 				}
-				divCount = divCount-1;			
+				divCount = divCount-1;
 			}
 		}
 	}
@@ -2801,9 +2806,9 @@ function removeElement(id)
 	{
 		p = c.parentNode;
 	}
-	
+
 	p.removeChild(c);
-	
+
 }
 
 function updateOffsets()
