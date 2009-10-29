@@ -7,23 +7,21 @@ import java.util.List;
 import org.nfunk.jep.JEP;
 import org.nfunk.jep.SymbolTable;
 
-import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 
-
 /**
- * 
+ *
  * @author rajesh_patil
  *
  */
 public class FormulaParser
 {
 	/**
-	 * 
+	 *
 	 */
 	private JEP parser = null;
 	/**
-	 * 
+	 *
 	 */
 	public FormulaParser()
 	{
@@ -33,31 +31,31 @@ public class FormulaParser
 		addStandardFunctionsAndConstants();
 	}
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	public JEP getParser() 
+	public JEP getParser()
 	{
 		return parser;
 	}
 	/**
-	 * 
+	 *
 	 * @param parser
 	 */
-	public void setParser(JEP parser) 
+	public void setParser(JEP parser)
 	{
 		this.parser = parser;
 	}
 	/**
-	 * 
+	 *
 	 * @param formulaExpression
 	 * @return
-	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public boolean parseExpression(String formulaExpression) throws DynamicExtensionsSystemException
 	{
 		parser.parseExpression(formulaExpression); // Parse the expression
-		if (parser.hasError()) 
+		if (parser.hasError())
 		{
 			throw new DynamicExtensionsSystemException(parser.getErrorInfo());
 		}
@@ -73,20 +71,19 @@ public class FormulaParser
 		parser.setVarValue(operand,value);
 	}
 	/**
-	 * 
+	 *
 	 * @param formulaExpression
 	 * @return
-	 * @throws DynamicExtensionsApplicationException
 	 */
 	public Double evaluateExpression()
 	{
 		return parser.getValue();
 	}
 	/**
-	 * 
+	 *
 	 * @param formulaExpression
 	 * @return
-	 * @throws DynamicExtensionsApplicationException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public boolean validateExpression(String formulaExpression) throws DynamicExtensionsSystemException
 	{
@@ -95,7 +92,7 @@ public class FormulaParser
 		return isValid;
 	}
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public List<String> getSymobols()
@@ -114,7 +111,7 @@ public class FormulaParser
 		return symbols;
 	}
 	/**
-	 * 
+	 *
 	 * @param formulaParser
 	 */
 	private  void addStandardFunctionsAndConstants()
