@@ -446,9 +446,9 @@ public class CategoryHelper implements CategoryHelperInterface
 				control = (CheckBoxInterface) control;
 			case MULTISELECT_CHECKBOX_CONTROL :
 				control = createOrUpdateSelectControl(container, categoryAttribute,
-								createPermissibleValuesList(entity, attributeName, lineNumber,
+						createPermissibleValuesList(entity, attributeName, lineNumber,
 								permissibleValueNameList), controlType, permValueOptions,
-								lineNumber);
+						lineNumber);
 				break;
 			default :
 				throw new DynamicExtensionsSystemException("ERROR: INCORRECT CONTROL TYPE");
@@ -832,7 +832,7 @@ public class CategoryHelper implements CategoryHelperInterface
 	 * @param baseAbstractAttribute category attribute
 	 * @param permissibleValues list of permissible values
 	 * @return list box object
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private SelectInterface createOrUpdateSelectControl(ContainerInterface container,
 			BaseAbstractAttributeInterface baseAbstractAttribute,
@@ -851,7 +851,9 @@ public class CategoryHelper implements CategoryHelperInterface
 		{
 			if ((control instanceof ComboBox && controlType.equals(controlType.COMBO_BOX_CONTROL))
 					|| (control instanceof ListBox && controlType
-							.equals(controlType.LIST_BOX_CONTROL)) || (control instanceof MultiSelectCheckBox && controlType.equals(controlType.MULTISELECT_CHECKBOX_CONTROL)))
+							.equals(controlType.LIST_BOX_CONTROL))
+					|| (control instanceof MultiSelectCheckBox && controlType
+							.equals(controlType.MULTISELECT_CHECKBOX_CONTROL)))
 
 			{
 				selectControl = (SelectInterface) control;
@@ -876,7 +878,7 @@ public class CategoryHelper implements CategoryHelperInterface
 					selectControl = DomainObjectFactory.getInstance().createComboBox();
 				}
 			}
-			else if (controlType.equals(controlType.MULTISELECT_CHECKBOX_CONTROL) 
+			else if (controlType.equals(controlType.MULTISELECT_CHECKBOX_CONTROL)
 					&& (categoryAttribute.getAbstractAttribute() instanceof AssociationInterface))
 			{
 				selectControl = DomainObjectFactory.getInstance().createMultiSelectCheckBox();
@@ -943,8 +945,8 @@ public class CategoryHelper implements CategoryHelperInterface
 	}
 
 	/**
-	 * This method returns true if the existing permissible value is not present 
-	 * in the incoming permissible value set 
+	 * This method returns true if the existing permissible value is not present
+	 * in the incoming permissible value set
 	 * @param categoryAttribute
 	 * @param permissibleValues
 	 * @return
@@ -1119,7 +1121,7 @@ public class CategoryHelper implements CategoryHelperInterface
 	 * @param container
 	 * @param control
 	 * @param baseAbstractAttribute
-	 * @param controlCaption 
+	 * @param controlCaption
 	 */
 	private void updateContainerAndControl(ContainerInterface container, ControlInterface control,
 			BaseAbstractAttributeInterface baseAbstractAttribute, String controlCaption)
@@ -1221,7 +1223,7 @@ public class CategoryHelper implements CategoryHelperInterface
 	 * @param baseAbstractAttribute category attribute
 	 * @param permissibleValues list of permissible values
 	 * @return RadioButtonInterface radio button object
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private RadioButtonInterface createOrUpdateRadioButtonControl(ContainerInterface container,
 			BaseAbstractAttributeInterface baseAbstractAttribute,
@@ -1341,7 +1343,7 @@ public class CategoryHelper implements CategoryHelperInterface
 	}
 
 	/**
-	 * 
+	 *
 	 * @param attributeName
 	 * @param entityName
 	 * @param skipLogicAttributeInterface
@@ -1557,7 +1559,7 @@ public class CategoryHelper implements CategoryHelperInterface
 	}
 
 	/**
-	 * 
+	 *
 	 * @param permissibleValueCollection
 	 * @param value
 	 * @return
@@ -1734,10 +1736,9 @@ public class CategoryHelper implements CategoryHelperInterface
 			CategoryEntityInterface targetCategoryEntity = (CategoryEntityInterface) targetContainer
 					.getAbstractEntity();
 
-			CategoryAssociationInterface categoryAssociation = associateCategoryEntities(
-					sourceCategoryEntity, targetCategoryEntity, sourceCategoryEntity.getName()
-							+ " to " + targetCategoryEntity.getName() + " category association", 1,
-					entityGroup, associationList, instance);
+			associateCategoryEntities(sourceCategoryEntity, targetCategoryEntity,
+					sourceCategoryEntity.getName() + " to " + targetCategoryEntity.getName()
+							+ " category association", 1, entityGroup, associationList, instance);
 
 			sourceContainer.getChildContainerCollection().add(targetContainer);
 		}
