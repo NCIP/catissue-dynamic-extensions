@@ -336,6 +336,11 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		if(isInavlidVaue(defaultValue))
 		{
 			defaultValue = this.getAttibuteMetadataInterface().getDefaultValue();
+			// Set default value to blank, if not set
+			if(defaultValue == null)
+			{
+				defaultValue = "";
+			}
 		}
 		return defaultValue;
 	}
