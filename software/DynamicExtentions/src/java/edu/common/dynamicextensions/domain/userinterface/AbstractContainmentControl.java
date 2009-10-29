@@ -31,7 +31,9 @@ public abstract class AbstractContainmentControl extends Control
 	 */
 	protected ContainerInterface container;
 
-	public String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
+	@Override
+	public String generateEditModeHTML(ContainerInterface container)
+			throws DynamicExtensionsSystemException
 	{
 		ContainerInterface containerInterface = this.getContainer();
 		this.setIsSubControl(true);
@@ -39,15 +41,15 @@ public abstract class AbstractContainmentControl extends Control
 		if (this.getParentContainer().getShowAssociationControlsAsLink())
 		{
 			String previousLink = containerInterface.generateLink(getParentContainer());
-			String link = UserInterfaceiUtility.getControlHTMLAsARow(this, previousLink);
-			return link;
+			return UserInterfaceiUtility.getControlHTMLAsARow(this, previousLink);
 		}
 
 		String subContainerHTML = "";
 		if (isCardinalityOneToMany())
 		{
 			List<Map<BaseAbstractAttributeInterface, Object>> valueMapList = (List<Map<BaseAbstractAttributeInterface, Object>>) value;
-			subContainerHTML = containerInterface.generateControlsHTMLAsGrid(valueMapList,getDataEntryOperation(),container);
+			subContainerHTML = containerInterface.generateControlsHTMLAsGrid(valueMapList,
+					getDataEntryOperation(), container);
 		}
 		else
 		{
@@ -58,12 +60,15 @@ public abstract class AbstractContainmentControl extends Control
 				containerInterface.setContainerValueMap(displayContainerValueMap);
 			}
 			this.getContainer().setShowAssociationControlsAsLink(true);
-			subContainerHTML = containerInterface.generateControlsHTML(null,getDataEntryOperation(),container);
+			subContainerHTML = containerInterface.generateControlsHTML(null,
+					getDataEntryOperation(), container);
 		}
 		return subContainerHTML;
 	}
 
-	public String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
+	@Override
+	public String generateViewModeHTML(ContainerInterface container)
+			throws DynamicExtensionsSystemException
 	{
 		String subContainerHTML = "";
 		this.setIsSubControl(true);
@@ -72,7 +77,8 @@ public abstract class AbstractContainmentControl extends Control
 			List<Map<BaseAbstractAttributeInterface, Object>> valueMapList = (List<Map<BaseAbstractAttributeInterface, Object>>) value;
 			String oldMode = this.getContainer().getMode();
 			this.getContainer().setMode(WebUIManagerConstants.VIEW_MODE);
-			subContainerHTML = this.getContainer().generateControlsHTMLAsGrid(valueMapList,getDataEntryOperation(),container);
+			subContainerHTML = this.getContainer().generateControlsHTMLAsGrid(valueMapList,
+					getDataEntryOperation(), container);
 			this.getContainer().setMode(oldMode);
 		}
 		else
@@ -86,7 +92,8 @@ public abstract class AbstractContainmentControl extends Control
 			this.getContainer().setShowAssociationControlsAsLink(true);
 			String oldMode = this.getContainer().getMode();
 			this.getContainer().setMode(WebUIManagerConstants.VIEW_MODE);
-			subContainerHTML = this.getContainer().generateControlsHTML(null,getDataEntryOperation(),container);
+			subContainerHTML = this.getContainer().generateControlsHTML(null,
+					getDataEntryOperation(), container);
 			this.getContainer().setMode(oldMode);
 		}
 		return subContainerHTML;
