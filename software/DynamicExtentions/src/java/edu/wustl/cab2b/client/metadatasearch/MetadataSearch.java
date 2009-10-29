@@ -40,7 +40,7 @@ public class MetadataSearch
 
 	/**
 	 * Constructor initializing the EntityCache.
-	 * 
+	 *
 	 * @param entityCache
 	 *            The EntityCache object.
 	 */
@@ -51,7 +51,7 @@ public class MetadataSearch
 
 	/**
 	 * Searches the array of search strings on the search targets specified.
-	 * 
+	 *
 	 * @param searchTarget
 	 *            The search targets to search on.
 	 * @param searchString
@@ -81,14 +81,14 @@ public class MetadataSearch
 				throw new CheckedException("Search target does not exist : " + searchTarget);
 		}
 		matchedClass.setEntityCollection(matchedClass.getSortedEntityCollection());
-		MatchedClass resultantMatchedClassSorted = sortResults(matchedClass);
-		return resultantMatchedClassSorted;
+
+		return sortResults(matchedClass);
 	}
 
 	/**
 	 * Searches the TEXT for array of strings passed. Returns the MatchedClass instance containing the matched
 	 * entities in the search. Splits the search on the basis of "searchTarget" parameter.
-	 * 
+	 *
 	 * @param searchTarget
 	 *            The target on which the search is to be performed.
 	 * @param searchString
@@ -100,12 +100,12 @@ public class MetadataSearch
 			throws CheckedException
 	{
 		MatchedClass resultantMatchedClass = new MatchedClass();
-		for (int i = 0; i < searchTarget.length; i++)
+		for (int element : searchTarget)
 		{
 			MatchedClass matchedClass = null;
 			Collection<EntityInterface> entityCollection = null;
 			Collection<AttributeInterface> attributeCollection = null;
-			switch (searchTarget[i])
+			switch (element)
 			{
 				case Constants.CLASS :
 					entityCollection = createSearchEntity(searchString);
@@ -141,7 +141,7 @@ public class MetadataSearch
 					resultantMatchedClass = createResultClass(resultantMatchedClass, matchedClass);
 					break;
 				default :
-					throw new CheckedException("Search target does not exist : " + searchTarget[i]);
+					throw new CheckedException("Search target does not exist : " + element);
 			}
 		}
 		return resultantMatchedClass;
@@ -150,7 +150,7 @@ public class MetadataSearch
 	/**
 	 * Collects the results from individual searches and adds it to the resultClass to show all the results
 	 * together
-	 * 
+	 *
 	 * @param resultClass
 	 *            Instance of MatchedClass to which all the results are added.
 	 * @param matchClass
@@ -168,7 +168,7 @@ public class MetadataSearch
 
 	/**
 	 * Creates and returns the Entity instance with entity name set as each search string entered for search.
-	 * 
+	 *
 	 * @param searchString
 	 *            the search string.
 	 * @return the Entity instance which is to be searched.
@@ -177,9 +177,9 @@ public class MetadataSearch
 			throws CheckedException
 	{
 		Collection<EntityInterface> entityCollection = new HashSet<EntityInterface>();
-		for (int i = 0; i < searchString.length; i++)
+		for (String element : searchString)
 		{
-			EntityInterface entity = getEntity(searchString[i], null);
+			EntityInterface entity = getEntity(element, null);
 			entityCollection.add(entity);
 		}
 		return entityCollection;
@@ -188,7 +188,7 @@ public class MetadataSearch
 	/**
 	 * Creates and returns the Entity instance with entity name and entity description set as each search string
 	 * entered for search.
-	 * 
+	 *
 	 * @param searchString
 	 *            the search string.
 	 * @return the Entity instance which is to be searched.
@@ -197,9 +197,9 @@ public class MetadataSearch
 			throws CheckedException
 	{
 		Collection<EntityInterface> entityCollection = new HashSet<EntityInterface>();
-		for (int i = 0; i < searchString.length; i++)
+		for (String element : searchString)
 		{
-			EntityInterface entity = getEntity(searchString[i], searchString[i]);
+			EntityInterface entity = getEntity(element, element);
 			entityCollection.add(entity);
 		}
 		return entityCollection;
@@ -207,7 +207,7 @@ public class MetadataSearch
 
 	/**
 	 * Adds name and description to the entity
-	 * 
+	 *
 	 * @param name
 	 *            the name of entity string.
 	 * @param desc
@@ -224,7 +224,7 @@ public class MetadataSearch
 
 	/**
 	 * Creates and returns the Attribute instance with Attribute name set as each search string entered for search.
-	 * 
+	 *
 	 * @param searchString
 	 *            the search string.
 	 * @return the Entity instance which is to be searched.
@@ -233,9 +233,9 @@ public class MetadataSearch
 			throws CheckedException
 	{
 		Collection<AttributeInterface> attributeCollection = new HashSet<AttributeInterface>();
-		for (int i = 0; i < searchString.length; i++)
+		for (String element : searchString)
 		{
-			AttributeInterface attribute = getAttribute(searchString[i], null);
+			AttributeInterface attribute = getAttribute(element, null);
 			attributeCollection.add(attribute);
 		}
 		return attributeCollection;
@@ -244,7 +244,7 @@ public class MetadataSearch
 	/**
 	 * Creates and returns the Attribute instance with Attribute name and Attribute description set as each search
 	 * string entered for search.
-	 * 
+	 *
 	 * @param searchString
 	 *            the search string.
 	 * @return the Entity instance which is to be searched.
@@ -253,9 +253,9 @@ public class MetadataSearch
 			throws CheckedException
 	{
 		Collection<AttributeInterface> attributeCollection = new HashSet<AttributeInterface>();
-		for (int i = 0; i < searchString.length; i++)
+		for (String element : searchString)
 		{
-			AttributeInterface attribute = getAttribute(searchString[i], searchString[i]);
+			AttributeInterface attribute = getAttribute(element, element);
 			attributeCollection.add(attribute);
 		}
 		return attributeCollection;
@@ -263,7 +263,7 @@ public class MetadataSearch
 
 	/**
 	 * Adds name and description to the attribute
-	 * 
+	 *
 	 * @param name
 	 *            the name of attribute string.
 	 * @param name
@@ -281,7 +281,7 @@ public class MetadataSearch
 	/**
 	 * Creates and returns the Attribute instance with Permissible Value of an attribute set as each search string
 	 * entered for search.
-	 * 
+	 *
 	 * @param searchString
 	 *            the search string.
 	 * @return the Entity instance which is to be searched.
@@ -291,10 +291,10 @@ public class MetadataSearch
 	{
 		Collection<PermissibleValueInterface> permissibleValueCollection = new HashSet<PermissibleValueInterface>();
 		DomainObjectFactory deFactory = DomainObjectFactory.getInstance();
-		for (int i = 0; i < searchString.length; i++)
+		for (String element : searchString)
 		{
 			StringValueInterface value = deFactory.createStringValue();
-			value.setValue(searchString[i]);
+			value.setValue(element);
 			permissibleValueCollection.add(value);
 		}
 		return permissibleValueCollection;
@@ -303,7 +303,7 @@ public class MetadataSearch
 	/**
 	 * Searches the CONCEPT CODE for array of strings passed. Returns the MatchedClass instance containing the
 	 * matched entities in the search. Splits the search on the basis of "searchTarget" parameter.
-	 * 
+	 *
 	 * @param searchTarget
 	 *            The target on which the search is to be performed.
 	 * @param searchString
@@ -315,12 +315,12 @@ public class MetadataSearch
 			throws CheckedException
 	{
 		MatchedClass resultantMatchedClass = new MatchedClass();
-		for (int i = 0; i < searchTarget.length; i++)
+		for (int element : searchTarget)
 		{
 			MatchedClass matchedClass = null;
 			Collection<EntityInterface> entityCollection = null;
 			Collection<AttributeInterface> attributeCollection = null;
-			switch (searchTarget[i])
+			switch (element)
 			{
 				case Constants.CLASS :
 					entityCollection = createSearchEntityConceptCode(searchString);
@@ -347,7 +347,7 @@ public class MetadataSearch
 	/**
 	 * Creates and returns the Entity instance collection with concept code set as each search string entered for
 	 * search.
-	 * 
+	 *
 	 * @param searchString
 	 *            the search string.
 	 * @return the Entity instance which is to be searched.
@@ -357,10 +357,10 @@ public class MetadataSearch
 	{
 		Collection<EntityInterface> entityCollection = new HashSet<EntityInterface>();
 		DomainObjectFactory deFactory = DomainObjectFactory.getInstance();
-		for (int i = 0; i < searchString.length; i++)
+		for (String element : searchString)
 		{
 			EntityInterface entity = deFactory.createEntity();
-			addConceptCode(entity, searchString[i]);
+			addConceptCode(entity, element);
 			entityCollection.add(entity);
 		}
 		return entityCollection;
@@ -369,7 +369,7 @@ public class MetadataSearch
 	/**
 	 * Creates and returns the Attibute instance collection with concept code set as each search string entered for
 	 * search.
-	 * 
+	 *
 	 * @param searchString
 	 *            the search string.
 	 * @return the Entity instance which is to be searched.
@@ -379,10 +379,10 @@ public class MetadataSearch
 	{
 		Collection<AttributeInterface> attributeCollection = new HashSet<AttributeInterface>();
 		DomainObjectFactory deFactory = DomainObjectFactory.getInstance();
-		for (int i = 0; i < searchString.length; i++)
+		for (String element : searchString)
 		{
 			AttributeInterface attribute = deFactory.createStringAttribute();
-			addConceptCode(attribute, searchString[i]);
+			addConceptCode(attribute, element);
 			attributeCollection.add(attribute);
 		}
 		return attributeCollection;
@@ -403,7 +403,7 @@ public class MetadataSearch
 	/**
 	 * Creates and returns the Permissible value instance collection with concept code set as each search string
 	 * entered for search.
-	 * 
+	 *
 	 * @param searchString
 	 *            the search string.
 	 * @return the collection of StringPermissibleValue instances which is to be searched.
@@ -413,10 +413,10 @@ public class MetadataSearch
 	{
 		Collection<PermissibleValueInterface> permissibleValueCollection = new HashSet<PermissibleValueInterface>();
 		DomainObjectFactory deFactory = DomainObjectFactory.getInstance();
-		for (int i = 0; i < searchString.length; i++)
+		for (String element : searchString)
 		{
 			PermissibleValueInterface value = deFactory.createStringValue();
-			addConceptCode(value, searchString[i]);
+			addConceptCode(value, element);
 			permissibleValueCollection.add(value);
 		}
 		return permissibleValueCollection;
@@ -430,7 +430,8 @@ public class MetadataSearch
 	 * @param resultantMatchedClass
 	 * @return MatchedClass Sorted Matched Class
 	 */
-	private MatchedClass sortResults(MatchedClass resultantMatchedClass) {
+	private MatchedClass sortResults(MatchedClass resultantMatchedClass)
+	{
 		List<MatchedClassEntry> entityMatches = new ArrayList<MatchedClassEntry>();
 		List<MatchedClassEntry> entityDescMatches = new ArrayList<MatchedClassEntry>();
 		List<MatchedClassEntry> entitySemPropMatches = new ArrayList<MatchedClassEntry>();
@@ -440,7 +441,7 @@ public class MetadataSearch
 		List<MatchedClassEntry> pvMatches = new ArrayList<MatchedClassEntry>();
 		List<MatchedClassEntry> pvSemPropMatches = new ArrayList<MatchedClassEntry>();
 
-		Map<MatchCause,List<MatchedClassEntry>> causeVsListMap = new HashMap<MatchCause, List<MatchedClassEntry>>();
+		Map<MatchCause, List<MatchedClassEntry>> causeVsListMap = new HashMap<MatchCause, List<MatchedClassEntry>>();
 		causeVsListMap.put(MatchCause.EntityName, entityMatches);
 		causeVsListMap.put(MatchCause.EntityDescription, entityDescMatches);
 		causeVsListMap.put(MatchCause.EntitySemanticProperty, entitySemPropMatches);
@@ -450,11 +451,15 @@ public class MetadataSearch
 		causeVsListMap.put(MatchCause.PermissibleValueName, pvMatches);
 		causeVsListMap.put(MatchCause.PermissibleSemanticProperty, pvSemPropMatches);
 
-		List<MatchedClassEntry> matchedClassEntries = resultantMatchedClass.getMatchedClassEntries();
-		for (MatchedClassEntry matchedClassEntry : matchedClassEntries) {
-			for (MatchCause cause : MatchCause.values()) {
-				boolean isAddedToList = populateLists(matchedClassEntry, cause, causeVsListMap.get(cause));
-				if(isAddedToList)
+		List<MatchedClassEntry> matchedClassEntries = resultantMatchedClass
+				.getMatchedClassEntries();
+		for (MatchedClassEntry matchedClassEntry : matchedClassEntries)
+		{
+			for (MatchCause cause : MatchCause.values())
+			{
+				boolean isAddedToList = populateLists(matchedClassEntry, cause, causeVsListMap
+						.get(cause));
+				if (isAddedToList)
 				{
 					break;
 				}
@@ -463,51 +468,59 @@ public class MetadataSearch
 		List<MatchedClassEntry> allEntries = sortIndividualLists(causeVsListMap);
 		return createResultMatchedClass(allEntries);
 	}
+
 	/**
-	 * 
+	 *
 	 * @param allEntries
 	 * @return
 	 */
-	private MatchedClass createResultMatchedClass(List<MatchedClassEntry> allEntries) {
+	private MatchedClass createResultMatchedClass(List<MatchedClassEntry> allEntries)
+	{
 		MatchedClass sortedMatchedClass = new MatchedClass();
 		sortedMatchedClass.setMatchedClassEntries(allEntries);
 		Set<EntityInterface> entities = new LinkedHashSet<EntityInterface>();
-		for(MatchedClassEntry entry : allEntries) {
+		for (MatchedClassEntry entry : allEntries)
+		{
 			entities.add(entry.getMatchedEntity());
 		}
 		sortedMatchedClass.setEntityCollection(entities);
 		return sortedMatchedClass;
 	}
+
 	/**
-	 * 
+	 *
 	 * @param entityMatches
 	 * @param causeVsListMap
 	 * @return
 	 */
 	private List<MatchedClassEntry> sortIndividualLists(
-			Map<MatchCause, List<MatchedClassEntry>> causeVsListMap) {
+			Map<MatchCause, List<MatchedClassEntry>> causeVsListMap)
+	{
 		List<MatchedClassEntry> entityMatchesPosition0 = new ArrayList<MatchedClassEntry>();
 		List<MatchedClassEntry> entityMatchesRest = new ArrayList<MatchedClassEntry>();
 
-		AlphabeticalComparator comparator= new AlphabeticalComparator();
-		List<MatchedClassEntry> allEntries = new  ArrayList<MatchedClassEntry>();
-		
-		divideEntityMatchesList(entityMatchesRest,entityMatchesPosition0,causeVsListMap.get(MatchCause.EntityName));
-		Collections.sort(entityMatchesPosition0,comparator);
+		AlphabeticalComparator comparator = new AlphabeticalComparator();
+		List<MatchedClassEntry> allEntries = new ArrayList<MatchedClassEntry>();
+
+		divideEntityMatchesList(entityMatchesRest, entityMatchesPosition0, causeVsListMap
+				.get(MatchCause.EntityName));
+		Collections.sort(entityMatchesPosition0, comparator);
 		allEntries.addAll(entityMatchesPosition0);
-		Collections.sort(entityMatchesRest,comparator);
+		Collections.sort(entityMatchesRest, comparator);
 		allEntries.addAll(entityMatchesRest);
-		
-		for (MatchCause cause : MatchCause.values()) {
-			if(!cause.equals(MatchCause.EntityName))
+
+		for (MatchCause cause : MatchCause.values())
+		{
+			if (!cause.equals(MatchCause.EntityName))
 			{
 				List<MatchedClassEntry> list = causeVsListMap.get(cause);
-				Collections.sort(list,comparator);
+				Collections.sort(list, comparator);
 				allEntries.addAll(list);
 			}
 		}
 		return allEntries;
 	}
+
 	/**
 	 * Individual lists are populated depending upon their MatchCause and position.
 	 * @param entry
@@ -515,29 +528,33 @@ public class MetadataSearch
 	 * @param list
 	 * @return
 	 */
-	private boolean populateLists(MatchedClassEntry entry, MatchCause cause, List<MatchedClassEntry> list)
+	private boolean populateLists(MatchedClassEntry entry, MatchCause cause,
+			List<MatchedClassEntry> list)
 	{
 		Integer positionOf = entry.positionOf(cause);
-		if(positionOf != null)
+		if (positionOf != null)
 		{
 			list.add(entry);
 			return true;
 		}
 		return false;
 	}
+
 	/**
 	 * List of Entity names is divided intom two lists.
-	 * One containing only entities which StartsWith the searchText 
+	 * One containing only entities which StartsWith the searchText
 	 * Other containing rest of the entities, other than index 0
 	 * @param entityMatchesRest
 	 * @param entityMatchesPosition0
 	 * @param entityMatches
 	 */
 	private void divideEntityMatchesList(List<MatchedClassEntry> entityMatchesRest,
-			List<MatchedClassEntry> entityMatchesPosition0, List<MatchedClassEntry> entityMatches) {
-		for (MatchedClassEntry matchedClassEntry : entityMatches) {
+			List<MatchedClassEntry> entityMatchesPosition0, List<MatchedClassEntry> entityMatches)
+	{
+		for (MatchedClassEntry matchedClassEntry : entityMatches)
+		{
 			Integer positionOf = matchedClassEntry.positionOf(MatchCause.EntityName);
-			if(positionOf == 0)
+			if (positionOf == 0)
 			{
 				entityMatchesPosition0.add(matchedClassEntry);
 			}
