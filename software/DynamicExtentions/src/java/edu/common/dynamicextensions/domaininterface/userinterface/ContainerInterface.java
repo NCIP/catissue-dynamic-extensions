@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import edu.common.dynamicextensions.domain.userinterface.Container;
 import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.DynamicExtensionBaseDomainObjectInterface;
@@ -146,20 +145,23 @@ public interface ContainerInterface extends DynamicExtensionBaseDomainObjectInte
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException
 	 */
-	String generateContainerHTML(String caption,String dataEntryOperation) throws DynamicExtensionsSystemException;
+	String generateContainerHTML(String caption, String dataEntryOperation)
+			throws DynamicExtensionsSystemException;
 
 	/**
 	 * @param caption
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException
 	 */
-	String generateControlsHTML(String caption,String dataEntryOperation,ContainerInterface container) throws DynamicExtensionsSystemException;
+	String generateControlsHTML(String caption, String dataEntryOperation,
+			ContainerInterface container) throws DynamicExtensionsSystemException;
 
 	/**
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 */
-	String generateControlsHTMLAsGrid(List<Map<BaseAbstractAttributeInterface, Object>> valueMap,String dataEntryOperation,ContainerInterface container)
+	String generateControlsHTMLAsGrid(List<Map<BaseAbstractAttributeInterface, Object>> valueMap,
+			String dataEntryOperation, ContainerInterface container)
 			throws DynamicExtensionsSystemException;
 
 	/**
@@ -235,49 +237,49 @@ public interface ContainerInterface extends DynamicExtensionBaseDomainObjectInte
 	 * @return
 	 */
 	ControlInterface getControlByPosition(Integer xPosition, Integer yPosition);
-	
+
 	/**
 	 * @return
 	 */
 	List<ControlInterface> getAllControlsUnderSameDisplayLabel();
-	
+
 	/**
 	 * @return
 	 */
 	Collection<ContainerInterface> getChildContainerCollection();
-	
+
 	/**
 	 * @return
 	 */
 	public boolean isAjaxRequest();
-	
+
 	/**
 	 * @param isAjaxRequest
 	 */
 	public void setAjaxRequest(boolean isAjaxRequest);
-	
+
 	/**
 	 * @param request the request to set
 	 */
 	public void setRequest(HttpServletRequest request);
-	
+
 	/**
 	 * @return the request
 	 */
 	public HttpServletRequest getRequest();
 
-
 	/**
 	 * @return true if required field warning has to be shown
 	 */
 	public Boolean isShowRequiredFieldWarningMessage();
-	
+
 	/**
 	 * @param showRequiredFieldWarningMessage the showRequiredFieldWarningMessage to set
 	 */
 	public void setShowRequiredFieldWarningMessage(Boolean showRequiredFieldWarningMessage);
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isAllControlsSkipLogicTargetControlsForShowHide();
