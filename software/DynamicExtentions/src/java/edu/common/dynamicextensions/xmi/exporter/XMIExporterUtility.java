@@ -20,8 +20,6 @@ import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.wustl.common.exception.BizLogicException;
-import edu.wustl.dao.exception.DAOException;
 
 /**
  * @author falguni_sachde
@@ -35,16 +33,13 @@ public class XMIExporterUtility
 	/**
 	 * @param hookEntityName
 	 * @param entityGroup
-	 * @throws DAOException
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
-	 * @throws BizLogicException
 	 */
-	public static void addHookEntitiesToGroup(String hookEntityName, EntityGroupInterface entityGroup)
-			throws DynamicExtensionsSystemException,
+	public static void addHookEntitiesToGroup(String hookEntityName,
+			EntityGroupInterface entityGroup) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
-
 		Collection<ContainerInterface> mainContainers = entityGroup.getMainContainerCollection();
 		System.out.println("mainContainers.size(): " + mainContainers.size());
 		EntityInterface xmiStaticEntity = null;
@@ -56,9 +51,11 @@ public class XMIExporterUtility
 		{
 			AssociationInterface association = getHookEntityAssociation(staticEntity,
 					(EntityInterface) mainContainer.getAbstractEntity());
-			if(association == null)
+			if (association == null)
 			{
-				throw new DynamicExtensionsApplicationException(hookEntityName+" Hook Entity is not associated with the "+mainContainer.getAbstractEntity());
+				throw new DynamicExtensionsApplicationException(hookEntityName
+						+ " Hook Entity is not associated with the "
+						+ mainContainer.getAbstractEntity());
 			}
 			else
 			{
@@ -66,7 +63,6 @@ public class XMIExporterUtility
 				xmiStaticEntity.addAssociation(association);
 			}
 		}
-
 
 	}
 
@@ -80,16 +76,15 @@ public class XMIExporterUtility
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		//For XMI : add only id , name and table properties
-			EntityInterface xmiEntity = new Entity();
-			xmiEntity.setName(getHookEntityName(srcEntity.getName()));
-			xmiEntity.setDescription(srcEntity.getDescription());
-			xmiEntity.setTableProperties(srcEntity.getTableProperties());
-			xmiEntity.setId(srcEntity.getId());
-			xmiEntity.addAttribute(getIdAttribute(srcEntity));
-			//	xmiEntity.addAssociation(getHookEntityAssociation(srcEntity,targetEntity));
-			return xmiEntity;
+		EntityInterface xmiEntity = new Entity();
+		xmiEntity.setName(getHookEntityName(srcEntity.getName()));
+		xmiEntity.setDescription(srcEntity.getDescription());
+		xmiEntity.setTableProperties(srcEntity.getTableProperties());
+		xmiEntity.setId(srcEntity.getId());
+		xmiEntity.addAttribute(getIdAttribute(srcEntity));
+		//	xmiEntity.addAssociation(getHookEntityAssociation(srcEntity,targetEntity));
+		return xmiEntity;
 	}
-
 
 	/**
 	 * @param name
@@ -118,7 +113,7 @@ public class XMIExporterUtility
 			EntityInterface targetEntity) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
-		AssociationInterface association=null;
+		AssociationInterface association = null;
 		Collection<AssociationInterface> associations = srcEntity.getAllAssociations();
 		for (AssociationInterface staticAssociation : associations)
 		{
@@ -134,7 +129,7 @@ public class XMIExporterUtility
 			}
 		}
 
-	return association;
+		return association;
 	}
 
 	/**
@@ -164,23 +159,22 @@ public class XMIExporterUtility
 		return null;
 	}
 
-
 	/**
 	 * @param name
 	 * @return
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public static EntityInterface getHookEntityByName(String name) throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+	public static EntityInterface getHookEntityByName(String name)
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
 		EntityInterface entity = EntityManager.getInstance().getEntityByName(name);
-		if(entity == null)
+		if (entity == null)
 		{
-			throw new DynamicExtensionsApplicationException("Static Entity With Name "+name+ " Not Found");
+			throw new DynamicExtensionsApplicationException("Static Entity With Name " + name
+					+ " Not Found");
 		}
 		return entity;
 	}
-
-
 
 }
