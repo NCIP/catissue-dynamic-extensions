@@ -230,7 +230,7 @@ public class DomainObjectFactory
 
 	/**
 	 * This method creates an object of constraintKeyProperties set column name to the given parameter
-	 * @param columnName 
+	 * @param columnName
 	 * @return an instance of constraintKeyProperties
 	 */
 	public ConstraintKeyPropertiesInterface createConstraintKeyProperties(String columnName)
@@ -241,7 +241,7 @@ public class DomainObjectFactory
 	}
 
 	/**
-	 * This method creates constraintKeyProperties for inheritance, creates only the constraint name 
+	 * This method creates constraintKeyProperties for inheritance, creates only the constraint name
 	 * @return an instance of constraintProperties
 	 */
 	public ConstraintPropertiesInterface createConstraintPropertiesForInheritance()
@@ -623,7 +623,6 @@ public class DomainObjectFactory
 		return new MultiSelectCheckBox();
 	}
 
-	
 	/**
 	 * This method creates an object of RadioButton.
 	 *
@@ -865,11 +864,12 @@ public class DomainObjectFactory
 		categoryAttribute.setColumnProperties(createColumnProperties());
 		return categoryAttribute;
 	}
+
 	public SkipLogicAttributeInterface createSkipLogicAttribute()
 	{
-		SkipLogicAttribute skipLogicAttribute = new SkipLogicAttribute();
-		return skipLogicAttribute;
+		return new SkipLogicAttribute();
 	}
+
 	/**
 	 * @return IdGeneratorInterface
 	 */
@@ -925,6 +925,7 @@ public class DomainObjectFactory
 	{
 		return new Label();
 	}
+
 	/**
 	 * @return
 	 */
