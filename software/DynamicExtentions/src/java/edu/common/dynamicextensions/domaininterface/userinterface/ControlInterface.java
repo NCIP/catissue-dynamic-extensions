@@ -2,10 +2,8 @@
 package edu.common.dynamicextensions.domaininterface.userinterface;
 
 import java.util.List;
-import java.util.Map;
 
 import edu.common.dynamicextensions.domain.userinterface.Container;
-import edu.common.dynamicextensions.domain.userinterface.Control;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.DynamicExtensionBaseDomainObjectInterface;
@@ -162,7 +160,7 @@ public interface ControlInterface extends DynamicExtensionBaseDomainObjectInterf
 	void setIsSubControl(boolean isSubControl);
 
 	/**
-	 * @return 
+	 * @return
 	 */
 	Boolean getIsReadOnly();
 
@@ -206,149 +204,175 @@ public interface ControlInterface extends DynamicExtensionBaseDomainObjectInterf
 	 * @param position
 	 */
 	void setYPosition(Integer position);
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	Boolean getIsCalculated();
+
 	/**
-	 * 
+	 *
 	 * @param isCalculated
 	 */
 	void setIsCalculated(Boolean isCalculated);
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	Boolean getIsSkipLogic();
+
 	/**
-	 * 
+	 *
 	 * @param isSkipLogic
 	 */
 	void setIsSkipLogic(Boolean isSkipLogic);
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	Boolean getIsSkipLogicReadOnly();
+
 	/**
-	 * 
+	 *
 	 * @param isSkipLogicReadOnly
 	 */
 	void setIsSkipLogicReadOnly(Boolean isSkipLogicReadOnly);
+
 	/**
-	 * 
+	 *
 	 * @param selectedPermissibleValues
 	 * @return
 	 */
 	List<ControlInterface> getSkipLogicControls(
-			List<PermissibleValueInterface> selectedPermissibleValues,
-			List<String> values);
+			List<PermissibleValueInterface> selectedPermissibleValues, List<String> values);
+
 	/**
-	 * 
+	 *
 	 * @param selectedPermissibleValue
 	 * @return
 	 */
 	void setSkipLogicControls();
+
 	/**
-	 * 
+	 *
 	 * @param rowId
 	 * @param valueArray
 	 */
 	List<ControlInterface> setSkipLogicControls(String[] valueArray);
+
 	/**
-	 * 
+	 *
 	 * @param rowId
 	 * @param valueArray
 	 */
 	List<ControlInterface> setSkipLogicControls(List<String> valueList);
+
 	/**
-	 * 
+	 *
 	 * @param isSkipLogicTargetControl
 	 */
 	void setIsSkipLogicTargetControl(Boolean isSkipLogicTargetControl);
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	 Boolean getIsSkipLogicTargetControl();
-	 /**
-	  * 
-	  * @param listOfValues
-	  */
-	 void setValueAsStrings(List<String> listOfValues);
-	 /**
-	  * 
-	  * @return
-	  */
-	 List<String> getValueAsStrings();
-	 /**
-	  * 
-	  * @return
-	  */
-	 ControlInterface getSourceSkipControl();
-	 /**
-	  * 
-	  * @param sourceSkipControl
-	  */
-	 void setSourceSkipControl(ControlInterface sourceSkipControl);
-	 /**
-	  * 
-	  * @return
-	  */
-	 Boolean getIsSkipLogicLoadPermValues();
-	 /**
-	  * 
-	  * @param isSkipLogicLoadPermValues
-	  */
-	 void setIsSkipLogicLoadPermValues(Boolean isSkipLogicLoadPermValues);
-	 /**
-	  * 
-	  * @param dataEntryOperation
-	  */
-	 void setDataEntryOperation(String dataEntryOperation);
-	 /**
-	  * 
-	  */
-	 String getDataEntryOperation();
-	 /**
-	  * 
-	  * @param isSkipLogicShowHideTargetControl
-	  */
-	 void setIsSkipLogicShowHideTargetControl(
-			Boolean isSkipLogicShowHideTargetControl);
-	 /**
-	  * 
-	  * @return
-	  */
-	Boolean getIsSkipLogicShowHideTargetControl();
+	Boolean getIsSkipLogicTargetControl();
+
 	/**
-	 * 
+	 *
+	 * @param listOfValues
+	 */
+	void setValueAsStrings(List<String> listOfValues);
+
+	/**
+	 *
+	 * @return
+	 */
+	List<String> getValueAsStrings();
+
+	/**
+	 *
+	 * @return
+	 */
+	ControlInterface getSourceSkipControl();
+
+	/**
+	 *
+	 * @param sourceSkipControl
+	 */
+	void setSourceSkipControl(ControlInterface sourceSkipControl);
+
+	/**
+	 *
+	 * @return
+	 */
+	Boolean getIsSkipLogicLoadPermValues();
+
+	/**
+	 *
+	 * @param isSkipLogicLoadPermValues
+	 */
+	void setIsSkipLogicLoadPermValues(Boolean isSkipLogicLoadPermValues);
+
+	/**
+	 *
+	 * @param dataEntryOperation
+	 */
+	void setDataEntryOperation(String dataEntryOperation);
+
+	/**
+	 *
+	 */
+	String getDataEntryOperation();
+
+	/**
+	 *
+	 * @param isSkipLogicShowHideTargetControl
+	 */
+	void setIsSkipLogicShowHideTargetControl(Boolean isSkipLogicShowHideTargetControl);
+
+	/**
+	 *
+	 * @return
+	 */
+	Boolean getIsSkipLogicShowHideTargetControl();
+
+	/**
+	 *
 	 * @return
 	 */
 	Boolean getIsShowHide();
+
 	/**
-	 * 
+	 *
 	 * @param isShowHide
 	 */
 	void setIsShowHide(Boolean isShowHide);
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	Boolean getIsSelectiveReadOnly();
+
 	/**
-	 * 
+	 *
 	 * @param isSelectiveReadOnly
 	 */
 	void setIsSelectiveReadOnly(Boolean isSelectiveReadOnly);
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	Boolean getIsSkipLogicDefaultValue();
+
 	/**
-	 * 
+	 *
 	 * @param isSkipLogicDefaultValue
 	 */
 	void setIsSkipLogicDefaultValue(Boolean isSkipLogicDefaultValue);
