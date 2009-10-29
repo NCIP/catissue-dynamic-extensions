@@ -120,7 +120,7 @@ public class Attribute extends AbstractAttribute
 			attributeTypeInformationCollection.clear();
 		}
 
-		this.attributeTypeInformationCollection.add(attributeTypeInformationInterface);
+		attributeTypeInformationCollection.add(attributeTypeInformationInterface);
 
 	}
 
@@ -216,7 +216,7 @@ public class Attribute extends AbstractAttribute
 		{
 			columnPropertiesCollection.clear();
 		}
-		this.columnPropertiesCollection.add(columnProperties);
+		columnPropertiesCollection.add(columnProperties);
 	}
 
 	/**
@@ -303,8 +303,7 @@ public class Attribute extends AbstractAttribute
 		{
 			caDSRValueDomainInfoCollection.clear();
 		}
-		this.caDSRValueDomainInfoCollection
-				.add((CaDSRValueDomainInfo) caDSRValueDomainInfoInterface);
+		caDSRValueDomainInfoCollection.add((CaDSRValueDomainInfo) caDSRValueDomainInfoInterface);
 	}
 
 	public String getDefaultValue()
@@ -390,34 +389,38 @@ public class Attribute extends AbstractAttribute
 	{
 		return new DynamicExtensionBaseQueryBuilder().isValuePresent(this, value);
 	}
+
 	/**
-	 * 
+	 *
 	 */
-	public PermissibleValueInterface getDefaultValuePermissibleValue() 
+	public PermissibleValueInterface getDefaultValuePermissibleValue()
 	{
 		return getAttributeTypeInformation().getDefaultValue();
 	}
+
 	/**
-	 * 
+	 *
 	 */
 	public Collection<PermissibleValueInterface> getSkipLogicPermissibleValues()
 	{
 		return null;
 	}
+
 	/**
-	 * 
+	 * This method adds skip logic permissible value.
 	 */
-	public void addSkipLogicPermissibleValue(
-			PermissibleValueInterface permissibleValue) 
+	public void addSkipLogicPermissibleValue(PermissibleValueInterface permissibleValue)
 	{
-		
+		// This method adds skip logic permissible value.
 	}
+
 	/**
-	 * 
+	 *
 	 * @param permissibleValue
 	 * @return
 	 */
-	public PermissibleValueInterface getSkipLogicPermissibleValue(PermissibleValueInterface permissibleValue)
+	public PermissibleValueInterface getSkipLogicPermissibleValue(
+			PermissibleValueInterface permissibleValue)
 	{
 		return null;
 	}
