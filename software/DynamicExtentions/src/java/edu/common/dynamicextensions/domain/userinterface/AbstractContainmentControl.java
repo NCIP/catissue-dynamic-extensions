@@ -31,7 +31,6 @@ public abstract class AbstractContainmentControl extends Control
 	 */
 	protected ContainerInterface container;
 
-	@Override
 	public String generateEditModeHTML(ContainerInterface container)
 			throws DynamicExtensionsSystemException
 	{
@@ -66,7 +65,6 @@ public abstract class AbstractContainmentControl extends Control
 		return subContainerHTML;
 	}
 
-	@Override
 	public String generateViewModeHTML(ContainerInterface container)
 			throws DynamicExtensionsSystemException
 	{
