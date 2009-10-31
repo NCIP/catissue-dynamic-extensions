@@ -2,7 +2,7 @@
  *<p>Title: </p>
  *<p>Description:  </p>
  *<p>Copyright:TODO</p>
- *@author 
+ *@author
  *@version 1.0
  */
 
@@ -21,11 +21,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.common.dynamicextensions.domain.FileAttributeRecordValue;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
+import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
+import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.entitymanager.EntityManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 
@@ -38,7 +41,7 @@ public class DownloadFileAction extends HttpServlet
 {
 
 	/**
-	 * 
+	 *
 	 */
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException,
 			IOException
@@ -47,26 +50,25 @@ public class DownloadFileAction extends HttpServlet
 	}
 
 	/**
-	 * 
+	 * This method is used to download files saved in database.
 	 */
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException,
 			IOException
 	{
 
-		String attributeIdentifier = req.getParameter("attributeIdentifier");
-		AttributeInterface attributeInterface;
+		String attributeIdentifier = req.getParameter(DEConstants.ATTRIBUTE_IDENTIFIER);
+		EntityManagerInterface entityManagerInterface = EntityManager.getInstance();
+		String recordIdentifier = req.getParameter(DEConstants.RECORD_IDENTIFIER);
+		FileAttributeRecordValue fileAttributeRecordValue;
+		BaseAbstractAttributeInterface baseAbstractAttribute = EntityCache.getInstance()
+				.getBaseAbstractAttributeById(Long.valueOf(attributeIdentifier));
+		AttributeInterface attributeInterface = ((AttributeMetadataInterface) baseAbstractAttribute)
+				.getAttribute();
 		try
 		{
-			attributeInterface = DynamicExtensionsUtility
-					.getAttributeByIdentifier(attributeIdentifier);
-
-			EntityManagerInterface entityManagerInterface = EntityManager.getInstance();
-			String recordIdentifier = req.getParameter("recordIdentifier");
-
-			FileAttributeRecordValue fileAttributeRecordValue = entityManagerInterface
-					.getFileAttributeRecordValueByRecordId(attributeInterface, Long.valueOf(
-							recordIdentifier));
-
+			fileAttributeRecordValue = entityManagerInterface
+					.getFileAttributeRecordValueByRecordId(attributeInterface, Long
+							.valueOf(recordIdentifier));
 			byte[] filedata = fileAttributeRecordValue.getFileContent();
 			String filename = fileAttributeRecordValue.getFileName();
 

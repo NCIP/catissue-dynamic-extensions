@@ -15,20 +15,20 @@ import edu.wustl.common.util.global.ApplicationProperties;
 
 /**
  * @author preeti_munot
- * @hibernate.joined-subclass table="DYEXTN_FILE_UPLOAD" 
- * @hibernate.joined-subclass-key column="IDENTIFIER" 
+ * @hibernate.joined-subclass table="DYEXTN_FILE_UPLOAD"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  */
 public class FileUploadControl extends Control implements FileUploadInterface
 {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 3211268406984504475L;
 	private Integer columns = null;
 
 	/**
-	 * @return 
+	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 */
 	protected String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
@@ -44,13 +44,11 @@ public class FileUploadControl extends Control implements FileUploadInterface
 		ApplicationProperties.initBundle("ApplicationResources");
 		if (this.value != null)
 		{
-			htmlString = ApplicationProperties.getValue("eav.file.fileName")
-					+ "&nbsp;"
-					+ " <A onclick='appendRecordId(this);' href='/dynamicExtensions/DownloadFileAction?attributeIdentifier="
-					+ this.baseAbstractAttribute.getId() + "'>" + this.value + "</A>";
+			htmlString = "<A onclick='appendRecordId(this);' href='/dynamicExtensions/DownloadFileAction?attributeIdentifier="
+				+ this.baseAbstractAttribute.getId() + "'>" + this.value + "</A>";
 
 		}
-		htmlString = htmlString + "<input onchange='isDataChanged();' type=\"file\" " + "name=\"value("
+		htmlString = htmlString + "&nbsp;&nbsp;<input onchange='isDataChanged();' type=\"file\" " + "name=\"value("
 				+ getHTMLComponentName() + ")\" " + "id=\"" + getHTMLComponentName() + "\"/>";
 		if (getIsSkipLogicTargetControl())
 		{
@@ -60,7 +58,7 @@ public class FileUploadControl extends Control implements FileUploadInterface
 	}
 
 	/**
-	 * @hibernate.property name="columns" type="integer" column="NO_OF_COLUMNS" 
+	 * @hibernate.property name="columns" type="integer" column="NO_OF_COLUMNS"
 	 * @return Returns the columns.
 	 */
 	public Integer getColumns()
@@ -69,7 +67,7 @@ public class FileUploadControl extends Control implements FileUploadInterface
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void setColumns(Integer columns)
 	{
@@ -80,7 +78,7 @@ public class FileUploadControl extends Control implements FileUploadInterface
 	{
 //		FileAttributeRecordValue fileAttributeRecordValue = (FileAttributeRecordValue) this.value;
 		String htmlString = "&nbsp;";
-		
+
 		if (this.value != null)
 		{
 			String fileName = this.value.toString();
@@ -90,19 +88,19 @@ public class FileUploadControl extends Control implements FileUploadInterface
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	public List<String> getValueAsStrings() 
+	public List<String> getValueAsStrings()
 	{
 		return null;
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	public void setValueAsStrings(List<String> listOfValues) 
+	public void setValueAsStrings(List<String> listOfValues)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 }

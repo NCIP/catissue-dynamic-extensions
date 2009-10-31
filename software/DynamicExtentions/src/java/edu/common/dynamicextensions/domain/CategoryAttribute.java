@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
@@ -296,7 +297,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 		this.defaultPermissibleValuesCollection = defaultPermissibleValuesCollection;
 	}
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public PermissibleValueInterface getDefaultValuePermissibleValue()
@@ -354,16 +355,16 @@ public class CategoryAttribute extends BaseAbstractAttribute
 		}
 	}
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Collection<PermissibleValueInterface> getSkipLogicPermissibleValues()
 	{
 		return skipLogicpermissibleValuesCollection;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param permissibleValue
 	 * @return
 	 */
@@ -417,7 +418,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 		return calculatedCategoryAttributeCollection;
 	}
 	/**
-	 * 
+	 *
 	 * @param calculatedCategoryAttributeCollection
 	 */
 	public void setCalculatedCategoryAttributeCollection(
@@ -456,7 +457,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 		return calculatedDependentCategoryAttributes;
 	}
 	/**
-	 * 
+	 *
 	 * @param calculatedDependentCategoryAttributes
 	 */
 	public void setCalculatedDependentCategoryAttributes(
@@ -513,7 +514,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 
 	/**
 	 * It will check weather categoryAttribute's abstract attribute is attribute or association.
-	 * If it is association will return null else will return the default value of the original attribute  
+	 * If it is association will return null else will return the default value of the original attribute
 	 * @return
 	 */
 	private String getDefaultValueForAbstractAttribute()
@@ -547,7 +548,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 		this.defaultPermissibleValuesCollection.add(permissibleValue);
 	}
 	/**
-	 * 
+	 *
 	 * @param formulaInterface
 	 */
 	public void setFormula(FormulaInterface formulaInterface)
@@ -650,31 +651,31 @@ public class CategoryAttribute extends BaseAbstractAttribute
 		return isCalculated;
 	}
 	/**
-	 * 
+	 *
 	 * @param isCalculatedAttribute
 	 */
-	public void setIsCalculated(Boolean isCalculatedAttribute) 
+	public void setIsCalculated(Boolean isCalculatedAttribute)
 	{
 		this.isCalculated = isCalculatedAttribute;
 	}
 	/**
 	* @hibernate.property name="isSkipLogic" type="boolean" column="IS_SKIP_LOGIC"
 	*/
-	public Boolean getIsSkipLogic() 
+	public Boolean getIsSkipLogic()
 	{
 		return isSkipLogic;
 	}
 	/**
-	 * 
+	 *
 	 * @param isSkipLogic
 	 */
-	public void setIsSkipLogic(Boolean isSkipLogic) 
+	public void setIsSkipLogic(Boolean isSkipLogic)
 	{
 		this.isSkipLogic = isSkipLogic;
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public boolean isValuePresent(Object value) throws DynamicExtensionsSystemException
 	{
@@ -693,7 +694,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 		return dependentSkipLogicAttributes;
 	}
 	/**
-	 * 
+	 *
 	 * @param dependentSkipLogicAttributes
 	 */
 	public void setDependentSkipLogicAttributes(
@@ -735,6 +736,15 @@ public class CategoryAttribute extends BaseAbstractAttribute
 		{
 			dependentSkipLogicAttributes.clear();
 		}
+	}
+
+	/**
+	 * @return attributeInterface
+	 */
+	public AttributeInterface getAttribute()
+	{
+		AttributeInterface attribute = (AttributeInterface) this.getAbstractAttribute();
+		return attribute;
 	}
 
 }

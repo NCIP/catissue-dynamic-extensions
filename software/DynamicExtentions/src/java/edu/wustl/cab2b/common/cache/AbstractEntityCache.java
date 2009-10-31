@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
+import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
@@ -36,9 +37,9 @@ import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.exception.DAOException;
 
 /**
- * This is an abstract class for caching metadata. 
+ * This is an abstract class for caching metadata.
  * It holds the data needed structures, methods to populate those and public methods to access cache.
- * 
+ *
  * @author Chandrakant Talele
  * @author gautam_shetty
  * @author Rahul Ner
@@ -53,7 +54,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 			.getLogger(AbstractEntityCache.class);
 
 	/**
-	 * List of all the categories loaded in caB2B local database.  
+	 * List of all the categories loaded in caB2B local database.
 	 */
 	protected List<Category> categories = new ArrayList<Category>(0);
 
@@ -95,11 +96,11 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * Map with KEY as a permissible value (PV) and VALUE as its Entity. This is
 	 * needed because there is no back pointer from PV to Entity
 	 */
-	protected Map<PermissibleValueInterface, EntityInterface> permissibleValueVsEntity = 
+	protected Map<PermissibleValueInterface, EntityInterface> permissibleValueVsEntity =
 			new HashMap<PermissibleValueInterface, EntityInterface>();
 
 	/**
-	 * Set of all the DyanamicExtensions categories loaded in the database. 
+	 * Set of all the DyanamicExtensions categories loaded in the database.
 	 */
 	protected Set<CategoryInterface> deCategories = new HashSet<CategoryInterface>();
 
@@ -111,7 +112,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	/**
 	 * Map with KEY as dynamic extension CategoryAttribute's identifier and Value as CategoryAttribute object
 	 */
-	protected Map<Long, CategoryAttributeInterface> idVsCategoryAttribute = 
+	protected Map<Long, CategoryAttributeInterface> idVsCategoryAttribute =
 			new HashMap<Long, CategoryAttributeInterface>();
 
 	/**
@@ -122,7 +123,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	/**
 	 * Map with KEY as dynamic extension CategoryAssociations's identifier and Value as CategoryAssociations object
 	 */
-	protected Map<Long, CategoryAssociationInterface> idVsCaegoryAssociation = 
+	protected Map<Long, CategoryAssociationInterface> idVsCaegoryAssociation =
 			new HashMap<Long, CategoryAssociationInterface>();
 
 	/**
@@ -131,7 +132,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	protected Map<Long, ControlInterface> idVsControl = new HashMap<Long, ControlInterface>();
 
 	/**
-	 * This method gives the singleton cache object. If cache is not present then it 
+	 * This method gives the singleton cache object. If cache is not present then it
 	 * throws {@link UnsupportedOperationException}
 	 * @return The singleton cache object.
 	 */
@@ -147,7 +148,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	/**
 	 * Private default constructor. To restrict the user from instantiating
 	 * explicitly.
-	 * @throws RemoteException 
+	 * @throws RemoteException
 	 */
 	protected AbstractEntityCache()
 	{
@@ -198,7 +199,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	}
 
 	/**
-	 * It will clear all the in memory maps 
+	 * It will clear all the in memory maps
 	 */
 	private void clearCache()
 	{
@@ -287,7 +288,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	/**
 	 * Adds abstract Entity (which can be 'CategoryEnity' or 'Entity') into cache.
 	 * @param abstractEntity which should be cached.
-	 * @param entityGroupsSet in which the entityGroup of the abstractEntity is cached. 
+	 * @param entityGroupsSet in which the entityGroup of the abstractEntity is cached.
 	 * @param categorySet in which the category of the abstractEntity is cached.
 	 */
 	private void addAbstractEntityToCache(AbstractEntityInterface abstractEntity)
@@ -317,7 +318,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	}
 
 	/**
-	 * It will add all the categoryAssociations of the categoryEntity in the cache. 
+	 * It will add all the categoryAssociations of the categoryEntity in the cache.
 	 * @param categoryEntity whose all categoryAssociations should be cached.
 	 */
 	private void createCategoryAssociationCache(CategoryEntityInterface categoryEntity)
@@ -413,7 +414,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	/**
 	 * Returns the Entity objects whose Attribute fields match with the
 	 * respective not null fields in the passed Attribute object.
-	 * 
+	 *
 	 * @param entity The entity object.
 	 * @return the Entity objects whose Attribute fields match with the
 	 *         respective not null fields in the passed Attribute object.
@@ -445,7 +446,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	/**
 	 * Returns the Entity objects whose Permissible value fields match with the
 	 * respective not null fields in the passed Permissible value object.
-	 * 
+	 *
 	 * @param entity The entity object.
 	 * @return the Entity objects whose Permissible value fields match with the
 	 *         respective not null fields in the passed Permissible value
@@ -474,7 +475,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	}
 
 	/**
-	 * It will return the EntityGroup With the given id if it present in cache, else will throw the 
+	 * It will return the EntityGroup With the given id if it present in cache, else will throw the
 	 * exception.
 	 * @param identifier
 	 * @return
@@ -501,7 +502,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 
 	/**
 	 * Returns the Entity for given Identifier
-	 * 
+	 *
 	 * @param identifier Id of the entity
 	 * @return Actual Entity for given id.
 	 */
@@ -518,7 +519,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 
 	/**
 	 * Checks if entity with given id is present in cache.
-	 * 
+	 *
 	 * @param identifier the entity id
 	 * @return <code>true</code> - if entity with given id is present in
 	 *         cache; <code>false</code> otherwise.
@@ -530,7 +531,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 
 	/**
 	 * Returns the Attribute for given Identifier
-	 * 
+	 *
 	 * @param identifier Id of the Attribute
 	 * @return Actual Attribute for given id.
 	 */
@@ -547,7 +548,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 
 	/**
 	 * Returns the Association for given Identifier
-	 * 
+	 *
 	 * @param identifier Id of the Association
 	 * @return Actual Association for given id.
 	 */
@@ -563,7 +564,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	}
 
 	/**
-	 * Returns the Association for given string. 
+	 * Returns the Association for given string.
 	 * Passed string MUST be of format specified in {@link Utility#generateUniqueId(AssociationInterface)}
 	 * @param uniqueStringIdentifier unique String Identifier
 	 * @return Actual Association for given string identifier.
@@ -593,7 +594,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	}
 
 	/**
-	 * It will add the given Entity to the cache & will also update the corresponding 
+	 * It will add the given Entity to the cache & will also update the corresponding
 	 * controls containers & attributes.
 	 * @param entity
 	 */
@@ -687,6 +688,31 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 					"Category Attribute with given id is not present in cache : " + identifier);
 		}
 		return categoryAttribute;
+	}
+
+	/**
+	 * It will return BaseAbstractAttribute with the id as given identifier in the parameter.
+	 * @param identifier
+	 * @return categoryAttribute with given identifier
+	 */
+	public BaseAbstractAttributeInterface getBaseAbstractAttributeById(Long identifier)
+	{
+		BaseAbstractAttributeInterface baseAbstractAttribute = null;
+		baseAbstractAttribute =((BaseAbstractAttributeInterface)idVsCategoryAttribute.get(identifier));
+		if (baseAbstractAttribute == null)
+		{
+			baseAbstractAttribute = ((BaseAbstractAttributeInterface)idVsAttribute.get(identifier));
+		}
+		if (baseAbstractAttribute == null)
+		{
+			baseAbstractAttribute = ((BaseAbstractAttributeInterface)idVsAssociation.get(identifier));
+		}
+		if (baseAbstractAttribute == null)
+		{
+			throw new RuntimeException(
+					"BaseAbstractAttribute with given id is not present in cache : " + identifier);
+		}
+		return baseAbstractAttribute;
 	}
 
 	/**

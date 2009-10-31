@@ -137,6 +137,9 @@ public class DEConstants
 	public static final String INDEX ="index";
 	public static final String COMMA = ",";
 	public static final String CONTAINER_ID = "containerId";
+	public static final int CONTROL_DEFAULT_VALUE = 10;
+	public static final String ATTRIBUTE_IDENTIFIER = "attributeIdentifier";
+	public static final String RECORD_IDENTIFIER = "recordIdentifier";
 
 	public enum Cardinality {
 		ZERO(0), ONE(1), MANY(100);

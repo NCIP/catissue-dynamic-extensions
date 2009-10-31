@@ -424,4 +424,12 @@ public class Attribute extends AbstractAttribute
 	{
 		return null;
 	}
+
+	/**
+	 * @return attributeInterface
+	 */
+	public AttributeInterface getAttribute()
+	{
+		return this;
+	}
 }

@@ -14,7 +14,7 @@ public interface AttributeMetadataInterface extends AbstractMetadataInterface
 {
 
 	/**
-	 * This method returns the default value of the PrimitiveAttribute for displaying in corresponding controls on UI. 
+	 * This method returns the default value of the PrimitiveAttribute for displaying in corresponding controls on UI.
 	 * @param abstractAttribute the PrimitiveAttribute
 	 * @return the Default Value of the PrimitiveAttribute
 	 */
@@ -48,7 +48,7 @@ public interface AttributeMetadataInterface extends AbstractMetadataInterface
 	Collection<RuleInterface> getRuleCollection();
 
 	/**
-	 * 
+	 *
 	 * @return AttributeTypeInformationInterface
 	 */
 	AttributeTypeInformationInterface getAttributeTypeInformation();
@@ -66,24 +66,29 @@ public interface AttributeMetadataInterface extends AbstractMetadataInterface
 	 */
 	boolean isValuePresent(Object value) throws DynamicExtensionsSystemException;
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	PermissibleValueInterface getDefaultValuePermissibleValue();
 	/**
-	 * 
+	 *
 	 * @param permissibleValue
 	 */
 	void addSkipLogicPermissibleValue(PermissibleValueInterface permissibleValue);
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	Collection<PermissibleValueInterface> getSkipLogicPermissibleValues();
 	/**
-	 * 
+	 *
 	 * @param permissibleValue
 	 * @return
 	 */
 	PermissibleValueInterface getSkipLogicPermissibleValue(PermissibleValueInterface permissibleValue);
+
+	/**
+	 * @return attributeInterface
+	 */
+	AttributeInterface getAttribute();
 }
