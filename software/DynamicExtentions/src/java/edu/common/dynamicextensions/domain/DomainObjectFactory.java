@@ -97,7 +97,7 @@ public class DomainObjectFactory
 	/**
 	 * Domain Object Factory Instance
 	 */
-	private static DomainObjectFactory domainObjectFactory;
+	private static DomainObjectFactory domainObjFactory;
 
 	/**
 	 * Empty Constructor
@@ -114,11 +114,11 @@ public class DomainObjectFactory
 	 */
 	public static synchronized DomainObjectFactory getInstance()
 	{
-		if (domainObjectFactory == null)
+		if (domainObjFactory == null)
 		{
-			domainObjectFactory = new DomainObjectFactory();
+			domainObjFactory = new DomainObjectFactory();
 		}
-		return domainObjectFactory;
+		return domainObjFactory;
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class DomainObjectFactory
 	 */
 	public void setInstance(DomainObjectFactory domainObjectFactory)
 	{
-		DomainObjectFactory.domainObjectFactory = domainObjectFactory;
+		DomainObjectFactory.domainObjFactory = domainObjectFactory;
 
 	}
 
