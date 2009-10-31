@@ -41,6 +41,7 @@ import edu.common.dynamicextensions.domaininterface.SemanticPropertyInterface;
 import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.util.CategoryGenerationUtil;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.FormulaCalculator;
 import edu.common.dynamicextensions.util.global.DEConstants;
@@ -1967,85 +1968,26 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		{
 			List<Object> attributePVs = new ArrayList<Object>();
 
-			for (PermissibleValueInterface pv : userDefinedDE.getPermissibleValueCollection())
+			Collection<PermissibleValueInterface> permissibleValueCollection = userDefinedDE.getPermissibleValueCollection();
+			for (PermissibleValueInterface pv : permissibleValueCollection)
 			{
 				attributePVs.add(pv.getValueAsObject());
 			}
 
-			boolean allDoubleValues = false;
-			Iterator<PermissibleValueInterface> itrPV = userDefinedDE
-					.getPermissibleValueCollection().iterator();
-			while (itrPV.hasNext())
-			{
-				if (itrPV.next() instanceof edu.common.dynamicextensions.domain.DoubleValue)
-				{
-					allDoubleValues = true;
-				}
-				else
-				{
-					allDoubleValues = false;
-				}
-			}
+			boolean allDoubleValues = CategoryGenerationUtil
+					.isAllPermissibleValuesDouble(permissibleValueCollection);
 
-			boolean allFloatValues = false;
-			Iterator<PermissibleValueInterface> itrPVFloat = userDefinedDE
-					.getPermissibleValueCollection().iterator();
-			while (itrPVFloat.hasNext())
-			{
-				if (itrPVFloat.next() instanceof edu.common.dynamicextensions.domain.FloatValue)
-				{
-					allFloatValues = true;
-				}
-				else
-				{
-					allFloatValues = false;
-				}
-			}
+			boolean allFloatValues = CategoryGenerationUtil
+					.isAllPermissibleValuesFloat(permissibleValueCollection);
 
-			boolean allIntegerValues = false;
-			Iterator<PermissibleValueInterface> itrPVInteger = userDefinedDE
-					.getPermissibleValueCollection().iterator();
-			while (itrPVInteger.hasNext())
-			{
-				if (itrPVInteger.next() instanceof edu.common.dynamicextensions.domain.IntegerValue)
-				{
-					allIntegerValues = true;
-				}
-				else
-				{
-					allIntegerValues = false;
-				}
-			}
+			boolean allIntegerValues = CategoryGenerationUtil
+					.isAllPermissibleValuesInteger(permissibleValueCollection);
 
-			boolean allShortValues = false;
-			Iterator<PermissibleValueInterface> itrPVShort = userDefinedDE
-					.getPermissibleValueCollection().iterator();
-			while (itrPVShort.hasNext())
-			{
-				if (itrPVShort.next() instanceof edu.common.dynamicextensions.domain.ShortValue)
-				{
-					allShortValues = true;
-				}
-				else
-				{
-					allShortValues = false;
-				}
-			}
+			boolean allShortValues = CategoryGenerationUtil
+					.isAllPermissibleValuesShort(permissibleValueCollection);
 
-			boolean allLongValues = false;
-			Iterator<PermissibleValueInterface> itrPVLong = userDefinedDE
-					.getPermissibleValueCollection().iterator();
-			while (itrPVLong.hasNext())
-			{
-				if (itrPVLong.next() instanceof edu.common.dynamicextensions.domain.LongValue)
-				{
-					allLongValues = true;
-				}
-				else
-				{
-					allLongValues = false;
-				}
-			}
+			boolean allLongValues = CategoryGenerationUtil
+					.isAllPermissibleValuesLong(permissibleValueCollection);
 
 			if (allFloatValues && desiredPVs != null)
 			{

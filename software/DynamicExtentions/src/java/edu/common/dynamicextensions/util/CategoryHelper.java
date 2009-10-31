@@ -1429,75 +1429,109 @@ public class CategoryHelper implements CategoryHelperInterface
 		else if (categoryManager.isPermissibleValuesSubsetValid(userDefinedDE,
 				desiredPermissibleValues))
 		{
-			permissibleValues = new ArrayList<PermissibleValueInterface>();
-			boolean allDoubleValues = false;
-			Iterator itrPV = userDefinedDE.getPermissibleValueCollection().iterator();
-			while (itrPV.hasNext())
-			{
-				if (itrPV.next() instanceof edu.common.dynamicextensions.domain.DoubleValue)
-				{
+			Collection<PermissibleValueInterface> permissibleValueCollection = userDefinedDE
+			.getPermissibleValueCollection();
+		boolean allDoubleValues = CategoryGenerationUtil
+				.isAllPermissibleValuesDouble(permissibleValueCollection);
+		boolean allIntegerValues = CategoryGenerationUtil
+				.isAllPermissibleValuesInteger(permissibleValueCollection);
+		boolean allFloatValues = CategoryGenerationUtil
+				.isAllPermissibleValuesFloat(permissibleValueCollection);
+		boolean allLongValues = CategoryGenerationUtil
+				.isAllPermissibleValuesLong(permissibleValueCollection);
+		boolean allShortValues = CategoryGenerationUtil
+				.isAllPermissibleValuesShort(permissibleValueCollection);
 
-					allDoubleValues = true;
-				}
-				else
-				{
-					allDoubleValues = false;
-				}
-			}
-			boolean allFloatValues = false;
-			Iterator itrPVFloat = userDefinedDE.getPermissibleValueCollection().iterator();
-			while (itrPVFloat.hasNext())
-			{
-				if (itrPVFloat.next() instanceof edu.common.dynamicextensions.domain.FloatValue)
-				{
-
-					allFloatValues = true;
-				}
-				else
-				{
-					allFloatValues = false;
-				}
-			}
 			if (allFloatValues && (desiredPermissibleValues != null))
 			{
-				if (desiredPermissibleValues != null)
+				Set<String> permissibleValueString = desiredPermissibleValues.keySet();
+				for (String permValue : permissibleValueString)
 				{
-					Set<String> permissibleValueString = desiredPermissibleValues.keySet();
-					for (String permValue : permissibleValueString)
+					for (PermissibleValueInterface pv : userDefinedDE
+							.getPermissibleValueCollection())
 					{
-						for (PermissibleValueInterface pv : userDefinedDE
-								.getPermissibleValueCollection())
+						if (((Float) pv.getValueAsObject()).floatValue() == Float
+								.parseFloat(permValue))
 						{
-							if (((Float) pv.getValueAsObject()).floatValue() == Float
-									.parseFloat(permValue))
-							{
-								permissibleValues.add(pv);
-								break;
-							}
+							permissibleValues.add(pv);
+							break;
 						}
 					}
 				}
+
 			}
 			else if (allDoubleValues && (desiredPermissibleValues != null))
 			{
-				if (desiredPermissibleValues != null)
+				Set<String> permissibleValueString = desiredPermissibleValues.keySet();
+				for (String permValue : permissibleValueString)
 				{
-					Set<String> permissibleValueString = desiredPermissibleValues.keySet();
-					for (String permValue : permissibleValueString)
+					for (PermissibleValueInterface pv : userDefinedDE
+							.getPermissibleValueCollection())
 					{
-						for (PermissibleValueInterface pv : userDefinedDE
-								.getPermissibleValueCollection())
+						if (((Double) pv.getValueAsObject()).doubleValue() == Double
+								.parseDouble(permValue))
 						{
-							if (((Double) pv.getValueAsObject()).doubleValue() == Double
-									.parseDouble(permValue))
-							{
-								permissibleValues.add(pv);
-								break;
-							}
+							permissibleValues.add(pv);
+							break;
 						}
 					}
 				}
+
 			}
+			else if (allIntegerValues && desiredPermissibleValues != null)
+			{
+				Set<String> permissibleValueString = desiredPermissibleValues.keySet();
+				for (String permValue : permissibleValueString)
+				{
+					for (PermissibleValueInterface pv : permissibleValueCollection)
+					{
+						if (((Integer) pv.getValueAsObject()).intValue() == Integer
+								.parseInt(permValue))
+						{
+							permissibleValues.add(pv);
+							break;
+						}
+					}
+
+				}
+			}
+
+			else if (allLongValues && desiredPermissibleValues != null)
+			{
+				Set<String> permissibleValueString = desiredPermissibleValues.keySet();
+				for (String permValue : permissibleValueString)
+				{
+					for (PermissibleValueInterface pv : permissibleValueCollection)
+					{
+						if (((Integer) pv.getValueAsObject()).longValue() == Long
+								.parseLong(permValue))
+						{
+							permissibleValues.add(pv);
+							break;
+						}
+					}
+
+				}
+			}
+
+			else if (allShortValues && desiredPermissibleValues != null)
+			{
+				Set<String> permissibleValueString = desiredPermissibleValues.keySet();
+				for (String permValue : permissibleValueString)
+				{
+					for (PermissibleValueInterface pv : permissibleValueCollection)
+					{
+						if (((Integer) pv.getValueAsObject()).shortValue() == Short
+								.parseShort(permValue))
+						{
+							permissibleValues.add(pv);
+							break;
+						}
+					}
+
+				}
+			}
+
 			else
 			{
 				if (desiredPermissibleValues != null)
@@ -1505,8 +1539,7 @@ public class CategoryHelper implements CategoryHelperInterface
 					Set<String> permissibleValueString = desiredPermissibleValues.keySet();
 					for (String permValue : permissibleValueString)
 					{
-						for (PermissibleValueInterface pv : userDefinedDE
-								.getPermissibleValueCollection())
+						for (PermissibleValueInterface pv : permissibleValueCollection)
 						{
 							if (permValue.equalsIgnoreCase(pv.getValueAsObject().toString()))
 							{
@@ -1598,13 +1631,11 @@ public class CategoryHelper implements CategoryHelperInterface
 			for (PermissibleValueInterface permissibleValue : permissibleValueCollection)
 			{
 				Object permissibleValueObject = permissibleValue.getValueAsObject();
-				if (permissibleValueObject != null)
+				if (permissibleValueObject != null
+						&& value.equals(String.valueOf(permissibleValueObject)))
 				{
-					if (value.equals(String.valueOf(permissibleValueObject)))
-					{
-						permissibleValueInterface = permissibleValue;
-						break;
-					}
+					permissibleValueInterface = permissibleValue;
+					break;
 				}
 			}
 		}

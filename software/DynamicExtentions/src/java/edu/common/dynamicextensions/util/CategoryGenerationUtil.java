@@ -2,6 +2,7 @@
 package edu.common.dynamicextensions.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +21,7 @@ import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
+import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.entitymanager.EntityManagerInterface;
@@ -795,8 +797,122 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-	 * category names in CSV are of format <entity_name>[instance_Number]
-	 * @param categoryNameInCSV
-	 * @return
+	 * This method will verify weather all the values in the given collection are
+	 * of Integer type or not.
+	 * @param permissibleValueColl permisibleValueCollection
+	 * @return true if all values are Integer else false
 	 */
+	public static boolean isAllPermissibleValuesInteger(Collection<PermissibleValueInterface> permissibleValueColl)
+	{
+		boolean allIntegerValues = false;
+		Iterator<PermissibleValueInterface> itrPVInteger = permissibleValueColl.iterator();
+		while (itrPVInteger.hasNext())
+		{
+			if (itrPVInteger.next() instanceof edu.common.dynamicextensions.domain.IntegerValue)
+			{
+				allIntegerValues = true;
+			}
+			else
+			{
+				allIntegerValues = false;
+			}
+		}
+		return allIntegerValues;
+	}
+
+	/**
+	 * This method will verify weather all the values in the given collection are
+	 * of Double type or not.
+	 * @param permissibleValueColl permisibleValueCollection
+	 * @return true if all values are Double else false
+	 */
+	public static boolean isAllPermissibleValuesDouble(Collection<PermissibleValueInterface> permissibleValueColl)
+	{
+		boolean allDoubleValues = false;
+		Iterator<PermissibleValueInterface> itrPVInteger = permissibleValueColl.iterator();
+		while (itrPVInteger.hasNext())
+		{
+			if (itrPVInteger.next() instanceof edu.common.dynamicextensions.domain.DoubleValue)
+			{
+				allDoubleValues = true;
+			}
+			else
+			{
+				allDoubleValues = false;
+			}
+		}
+		return allDoubleValues;
+	}
+
+	/**
+	 * This method will verify weather all the values in the given collection are
+	 * of Float type or not.
+	 * @param permissibleValueColl permisibleValueCollection
+	 * @return true if all values are Float else false
+	 */
+	public static boolean isAllPermissibleValuesFloat(Collection<PermissibleValueInterface> permissibleValueColl)
+	{
+		boolean allFloatValues = false;
+		Iterator<PermissibleValueInterface> itrPVInteger = permissibleValueColl.iterator();
+		while (itrPVInteger.hasNext())
+		{
+			if (itrPVInteger.next() instanceof edu.common.dynamicextensions.domain.FloatValue)
+			{
+				allFloatValues = true;
+			}
+			else
+			{
+				allFloatValues = false;
+			}
+		}
+		return allFloatValues;
+	}
+
+	/**
+	 * This method will verify weather all the values in the given collection are
+	 * of Short type or not.
+	 * @param permissibleValueColl permisibleValueCollection
+	 * @return true if all values are Short else false
+	 */
+	public static boolean isAllPermissibleValuesShort(Collection<PermissibleValueInterface> permissibleValueColl)
+	{
+		boolean allShortValues = false;
+		Iterator<PermissibleValueInterface> itrPVInteger = permissibleValueColl.iterator();
+		while (itrPVInteger.hasNext())
+		{
+			if (itrPVInteger.next() instanceof edu.common.dynamicextensions.domain.ShortValue)
+			{
+				allShortValues = true;
+			}
+			else
+			{
+				allShortValues = false;
+			}
+		}
+		return allShortValues;
+	}
+
+	/**
+	 * This method will verify weather all the values in the given collection are
+	 * of Long type or not.
+	 * @param permissibleValueColl permisibleValueCollection
+	 * @return true if all values are Long else false
+	 */
+	public static boolean isAllPermissibleValuesLong(Collection<PermissibleValueInterface> permissibleValueColl)
+	{
+		boolean allLongValues = false;
+		Iterator<PermissibleValueInterface> itrPVInteger = permissibleValueColl.iterator();
+		while (itrPVInteger.hasNext())
+		{
+			if (itrPVInteger.next() instanceof edu.common.dynamicextensions.domain.LongValue)
+			{
+				allLongValues = true;
+			}
+			else
+			{
+				allLongValues = false;
+			}
+		}
+		return allLongValues;
+	}
 }
