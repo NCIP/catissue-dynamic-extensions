@@ -305,7 +305,7 @@ public class UserInterfaceiUtility
 		{
 			contHtmlAsARow.append("<input type='checkbox' name='deleteRow' value='' id='checkBox_");
 			contHtmlAsARow.append(container.getId());
-			contHtmlAsARow.append("_");
+			contHtmlAsARow.append('_');
 			contHtmlAsARow.append(rowId);
 			contHtmlAsARow.append("'/>");
 		}

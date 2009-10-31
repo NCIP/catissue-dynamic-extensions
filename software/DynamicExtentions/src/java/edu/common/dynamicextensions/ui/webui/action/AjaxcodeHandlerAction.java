@@ -156,7 +156,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			Logger.out.error(e.getMessage());
 			String actionForwardString = catchException(e, request);
 			if ((actionForwardString == null) || (actionForwardString.equals("")))
 			{

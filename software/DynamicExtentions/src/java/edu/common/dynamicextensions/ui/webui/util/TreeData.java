@@ -23,7 +23,7 @@ public class TreeData
 	private String color = "navy";
 	private TreeNodesList nodes;
 	private String target = "";
-	private StringBuffer buf = null;
+	private String buf = "";
 	private String nodeClickedFunction = null;
 
 	/**
@@ -53,7 +53,7 @@ public class TreeData
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url URL for the image files
 	 */
 	public void setImagesUrl(String url)
@@ -62,7 +62,7 @@ public class TreeData
 	}
 
 	/**
-	 * 
+	 *
 	 * @return URL of image files
 	 */
 	public String getImagesUrl()
@@ -101,7 +101,7 @@ public class TreeData
 	}
 
 	/**
-	 * 
+	 *
 	 * @param text  : Text for the node
 	 * @param href : refernce for the node link
 	 * @param toolTip : tooltip for tree node
@@ -114,22 +114,22 @@ public class TreeData
 	}
 
 	/**
-	 * 
+	 *
 	 * @param text text to be added to buffer
 	 */
 	private void print(String text)
 	{
-		buf.append(text);
+		buf = buf + text;
 	}
 
 	/**
-	 * 
+	 *
 	 * @return : String having the HTML code for the tree like representation of the data
 	 */
 	public String getTree(String treeName, String fieldForSelectedObject, String strIsTreeExpanded,
 			String nodeClickedFunction)
 	{
-		buf = new StringBuffer();
+		buf = "";
 
 		print("<style>ul.collapsedTree{display:none;margin-left:17px;}ul.expandedTree{margin-left:17px;}li.folder{list-style-image: url("
 				+ folder
@@ -156,11 +156,11 @@ public class TreeData
 			Logger.out.error("Nodes List Is null(get Tree)");
 		}
 
-		return buf.toString();
+		return buf;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param nodeList :  List of tree nodes
 	 * @param parent : Name of parent node
 	 */
