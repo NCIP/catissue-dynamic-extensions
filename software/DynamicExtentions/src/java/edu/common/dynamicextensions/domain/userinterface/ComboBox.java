@@ -84,7 +84,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				for (String value : sourceControlValues)
 				{
 					sourceHtmlComponentValues.append(value);
-					sourceHtmlComponentValues.append("~");
+					sourceHtmlComponentValues.append('~');
 				}
 			}
 		}

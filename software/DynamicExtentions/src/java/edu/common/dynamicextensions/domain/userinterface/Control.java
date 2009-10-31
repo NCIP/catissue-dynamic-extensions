@@ -5,10 +5,8 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import edu.common.dynamicextensions.domain.BaseAbstractAttribute;
 import edu.common.dynamicextensions.domain.DynamicExtensionBaseDomainObject;
@@ -26,6 +24,7 @@ import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.wustl.common.util.logger.Logger;
 
 /**
  * @version 1.0
@@ -733,8 +732,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		}
 		catch (ParseException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.out.error(e.getMessage());
 		}
 		return controlList;
 	}
@@ -932,8 +930,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 							}
 							catch (ParseException e)
 							{
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								Logger.out.error(e.getMessage());
 							}
 						}
 						permissibleValueList.add(selectedPermissibleValue);

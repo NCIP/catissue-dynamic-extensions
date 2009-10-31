@@ -525,7 +525,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 		StringBuffer controlHTML = new StringBuffer();
 		List<Object> values = new ArrayList<Object>();
 
-		addCaption(controlHTML, caption,container,values);
+		addCaptionHTML(controlHTML, caption,container,values);
 
 		List<ControlInterface> controls = getAllControlsUnderSameDisplayLabel(); //UnderSameDisplayLabel();
 		int lastRow = 0;
@@ -586,7 +586,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 				{
 					controlHTML.append(" style='display:row'");
 				}
-				controlHTML.append(">");
+				controlHTML.append('>');
 				if (control.getIsSkipLogicTargetControl())
 				{
 					controlHTML.append("<input type='hidden' name='skipLogicHideControls' id='skipLogicHideControls' value = '"
@@ -608,7 +608,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 	 * @param caption in the format -- NewCaption:Main ContainerId
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void addCaption(StringBuffer captionHTML, String caption,ContainerInterface container,List<Object> values) throws DynamicExtensionsSystemException
+	private void addCaptionHTML(StringBuffer captionHTML, String caption,ContainerInterface container,List<Object> values) throws DynamicExtensionsSystemException
 	{
 		//check if Id in caption matches current id - if yes then it is main form, so replace caption
 		if (caption == null || !caption.endsWith(id.toString()))

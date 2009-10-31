@@ -138,7 +138,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 				for (String value : sourceControlValues)
 				{
 					sourceHtmlComponentValues.append(value);
-					sourceHtmlComponentValues.append("~");
+					sourceHtmlComponentValues.append('~');
 				}
 			}
 		}
