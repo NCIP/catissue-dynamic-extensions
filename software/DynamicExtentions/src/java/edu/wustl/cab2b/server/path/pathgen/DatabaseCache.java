@@ -36,7 +36,7 @@ public class DatabaseCache extends GraphPathFinderCache
 
 	PreparedStatement getPathsOnIgnoringNodes;
 
-	PreparedStatement getAllPaths;
+	PreparedStatement allPaths;
 
 	/**
 	 * @param conn
@@ -49,7 +49,7 @@ public class DatabaseCache extends GraphPathFinderCache
 		super();
 		if (conn == null)
 		{
-			throw new NullPointerException("Connection cannot be null.");
+			throw new IllegalArgumentException ("Connection cannot be null.");
 		}
 		this.conn = conn;
 		this.databaseCacheId = IdGenerator.getNextId();
@@ -67,7 +67,7 @@ public class DatabaseCache extends GraphPathFinderCache
 		ResultSet resultSet = null;
 		try
 		{
-			resultSet = getAllPaths.executeQuery();
+			resultSet = allPaths.executeQuery();
 			while (resultSet.next())
 			{
 				String intermediatePath = resultSet.getString(1);
@@ -155,7 +155,7 @@ public class DatabaseCache extends GraphPathFinderCache
 
 	/**
 	 * Returns path on ignoring nodes
-	 * 
+	 *
 	 * @return collection of Path.
 	 * @see edu.wustl.cab2b.server.path.pathgen.GraphPathFinderCache#getPathsOnIgnoringNodes(edu.wustl.cab2b.server.path.pathgen.SourceDestinationPair,
 	 *      java.util.Set)
@@ -298,7 +298,7 @@ public class DatabaseCache extends GraphPathFinderCache
 					.prepareStatement("insert into TEMP_PATH (IGNORED_NODE_SET_ID,INTERMEDIATE_PATH) values(?,?)");
 			getPathsOnIgnoringNodes = conn
 					.prepareStatement("select p.INTERMEDIATE_PATH from IGNORED_NODE_SET ins left outer join TEMP_PATH  p on ins.IGNORED_NODE_SET_ID = p.IGNORED_NODE_SET_ID where ins.DATABASE_CACHE_ID = ? and ins.SRC_NODE_ID = ? and ins.DES_NODE_ID = ? and LOCATE(ins.NODES_IN_SET,?) <>0 and ins.number_of_ignored_nodes = (select min(ins.number_of_ignored_nodes) from IGNORED_NODE_SET ins left outer join  TEMP_PATH p on ins.IGNORED_NODE_SET_ID = p.IGNORED_NODE_SET_ID where ins.DATABASE_CACHE_ID = ? and ins.SRC_NODE_ID = ? and ins.DES_NODE_ID = ? and LOCATE(ins.NODES_IN_SET,?) <>0 and ins.number_of_ignored_nodes > 0 ) ");
-			getAllPaths = conn
+			allPaths = conn
 					.prepareStatement("select p.intermediate_path,src_node_id,des_node_id from IGNORED_NODE_SET ins join TEMP_PATH  p on ins.IGNORED_NODE_SET_ID = p.IGNORED_NODE_SET_ID where ins.number_of_ignored_nodes = 0");
 
 		}
@@ -349,7 +349,7 @@ public class DatabaseCache extends GraphPathFinderCache
 }
 
 /**
- * 
+ *
  * @author Chandrakant Talele
  *
  */

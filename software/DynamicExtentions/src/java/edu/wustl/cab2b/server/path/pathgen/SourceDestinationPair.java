@@ -12,7 +12,7 @@ public class SourceDestinationPair {
 
     private Node destNode;
 
-    private int hashCode;
+    private int hashCodeObj;
 
     /**
      * Constructor initializes source and destination node.
@@ -61,9 +61,9 @@ public class SourceDestinationPair {
      * @return hash code
      */
     public int hashCode() {
-        if (hashCode == 0) {
-            hashCode = new HashCodeBuilder().append(srcNode).append(destNode).toHashCode();
+        if (hashCodeObj == 0) {
+            hashCodeObj = new HashCodeBuilder().append(srcNode).append(destNode).toHashCode();
         }
-        return hashCode;
+        return hashCodeObj;
     }
 }

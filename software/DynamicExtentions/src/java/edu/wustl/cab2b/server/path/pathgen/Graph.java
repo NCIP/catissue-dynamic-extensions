@@ -12,13 +12,13 @@ import java.util.Set;
  * @author srinath_k
  */
 public class Graph {
-    private Map<Node, Set<Node>> graph;
+    private Map<Node, Set<Node>> graphNodes;
 
     /**
      * Default constructor for Graph 
      */
     public Graph() {
-        graph = new HashMap<Node, Set<Node>>();
+        graphNodes = new HashMap<Node, Set<Node>>();
     }
 
     /**
@@ -37,14 +37,14 @@ public class Graph {
                     "Adjacency matrix cannot be null.");
         }
         if (adjacencyMatrix.length == 0) {
-            graph = new HashMap<Node, Set<Node>>();
+            graphNodes = new HashMap<Node, Set<Node>>();
             return;
         }
         if (adjacencyMatrix.length != adjacencyMatrix[0].length) {
             throw new IllegalArgumentException(
                     "Adjacency matrix must be square.");
         }
-        graph = new HashMap<Node, Set<Node>>();
+        graphNodes = new HashMap<Node, Set<Node>>();
         Node[] nodes = new Node[adjacencyMatrix.length];
         for (int i = 0; i < adjacencyMatrix.length; i++) {
             nodes[i] = new Node(i);
@@ -76,7 +76,7 @@ public class Graph {
      * @param node
      */
     public void addNode(Node node) {
-        graph.put(node, new HashSet<Node>());
+        graphNodes.put(node, new HashSet<Node>());
     }
 
     /**
@@ -88,8 +88,8 @@ public class Graph {
         if (!containsNode(node)) {
             return false;
         }
-        graph.remove(node);
-        for (Node fromNode : graph.keySet()) {
+        graphNodes.remove(node);
+        for (Node fromNode : graphNodes.keySet()) {
             removeEdge(fromNode, node);
         }
         return true;
@@ -113,7 +113,7 @@ public class Graph {
      * @return set of adjacent nodes.
      */
     public Set<Node> getAdjacentNodes(Node node) {
-        return graph.get(node);
+        return graphNodes.get(node);
     }
 
     /**
@@ -122,7 +122,7 @@ public class Graph {
      * @return
      */
     public boolean containsNode(Node node) {
-        return graph.containsKey(node);
+        return graphNodes.containsKey(node);
     }
 
     /**
@@ -132,7 +132,7 @@ public class Graph {
     public Graph clone() {
         Graph clone = new Graph();
 
-        for (Map.Entry<Node, Set<Node>> entry : graph.entrySet()) {
+        for (Map.Entry<Node, Set<Node>> entry : graphNodes.entrySet()) {
             Node fromNode = entry.getKey();
             clone.addNode(fromNode);
             for (Node toNode : entry.getValue()) {
@@ -147,7 +147,7 @@ public class Graph {
      * @return
      */
     public int numberOfNodes() {
-        return graph.size();
+        return graphNodes.size();
     }
 
     /**
@@ -155,14 +155,14 @@ public class Graph {
      * @return
      */
     public Set<Node> allNodes() {
-        return graph.keySet();
+        return graphNodes.keySet();
     }
 
     /**
      * Clears Graph
      */
     public void clear() {
-        graph.clear();
+        graphNodes.clear();
     }
 
     /**
@@ -192,7 +192,7 @@ public class Graph {
             return false;
         }
         Graph otherGraph = (Graph) obj;
-        return graph.equals(otherGraph.graph);
+        return graphNodes.equals(otherGraph.graphNodes);
     }
 
     /**
@@ -200,6 +200,6 @@ public class Graph {
      * @see java.lang.Object#hashCode()
      */
     public int hashCode() {
-        return graph.hashCode();
+        return graphNodes.hashCode();
     }
 }

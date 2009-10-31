@@ -36,7 +36,7 @@ public class Path {
 
     private List<Node> intermediateNodes;
 
-    private int hashCode;
+    private int hashCodeObj;
 
     Path(Node fromNode, Node toNode) {
         this(fromNode, toNode, null);
@@ -166,10 +166,10 @@ public class Path {
      * @return
      */
     public int hashCode() {
-        if (hashCode == 0) {
-            hashCode = new HashCodeBuilder().append(fromNode()).append(toNode()).append(getIntermediateNodes()).toHashCode();
+        if (hashCodeObj == 0) {
+            hashCodeObj = new HashCodeBuilder().append(fromNode()).append(toNode()).append(getIntermediateNodes()).toHashCode();
         }
-        return hashCode;
+        return hashCodeObj;
     }
 
     /**
