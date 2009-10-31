@@ -8,7 +8,7 @@ import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 /**
  * @version 1.0
  * @created 28-Dec-2006 2:01:13 AM
- * @hibernate.class table="ABSTRACT_CATEGORIAL_ATTRIBUTE"
+ * @hibernate.class table="DYEXTN_ABSTR_CAT_ATTR"
  */
 public abstract class AbstractCategorialAttribute<C extends AbstractCategorialClass>
 		implements
@@ -61,10 +61,10 @@ public abstract class AbstractCategorialAttribute<C extends AbstractCategorialCl
 
 	/**
 	 * @return Returns the id.
-	 * 
+	 *
 	 * @hibernate.id name="id" column="ID" type="long"
 	 * length="30" unsaved-value="null" generator-class="native"
-	 * @hibernate.generator-param name="sequence" value="ABSTRACT_CATEGORIAL_ATTRIBUTE_SEQ"
+	 * @hibernate.generator-param name="sequence" value="DYEXTN_ABSTR_CAT_ATTR_SEQ"
 	 */
 	public Long getId()
 	{

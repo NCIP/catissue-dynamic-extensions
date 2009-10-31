@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package edu.wustl.common.querysuite.metadata.category;
@@ -41,9 +41,9 @@ abstract public class AbstractCategorialClass<A extends AbstractCategorialAttrib
 
 	/**
 	 * @return the categorialAttributeCollection
-	 * 
+	 *
 	 * @hibernate.set name="categorialAttributeCollection" cascade="all-delete-orphan" inverse="false" lazy="false"
-	 * @hibernate.collection-key column="ABSTRACT_CATEGORIAL_ATTRIBUTE_ID"
+	 * @hibernate.collection-key column="ABSTR_CATEGORIAL_ATTRIBUTE_ID"
 	 * @hibernate.collection-one-to-many class="edu.wustl.common.querysuite.metadata.category.AbstractCategorialAttribute"
 	 * @hibernate.cache usage="read-write"
 	 */
@@ -54,8 +54,8 @@ abstract public class AbstractCategorialClass<A extends AbstractCategorialAttrib
 
 	/**
 	 * @param categorialAttributeCollection the categorialAttributeCollection to set
-	 * 
-	 * @hiberbate.one-to-many 
+	 *
+	 * @hiberbate.one-to-many
 	 */
 	public void setCategorialAttributeCollection(Set<A> categorialAttributeCollection)
 	{
@@ -64,9 +64,9 @@ abstract public class AbstractCategorialClass<A extends AbstractCategorialAttrib
 
 	/**
 	 * @return the category
-	 * 
-	 * @hibernate.many-to-one column="ABSTRACT_CATEGORY_ID"  
-	 * class="edu.wustl.common.querysuite.metadata.category.AbstractCategory" 
+	 *
+	 * @hibernate.many-to-one column="ABSTRACT_CATEGORY_ID"
+	 * class="edu.wustl.common.querysuite.metadata.category.AbstractCategory"
 	 * cascade="all" lazy="false"
 	 */
 	public C getCategory()
@@ -84,7 +84,7 @@ abstract public class AbstractCategorialClass<A extends AbstractCategorialAttrib
 
 	/**
 	 * @return the children
-	 * 
+	 *
 	 * @hibernate.set name="children" table="ABSTRACT_CATEGORIAL_CLASS" lazy="false" inverse="false"  cascade="save-update"    sort="unsorted"
 	 * @hibernate.collection-key column="PARENT_CATEGORIAL_CLASS_ID"
 	 * @hibernate.collection-one-to-many class="edu.wustl.common.querysuite.metadata.category.AbstractCategorialClass"
@@ -106,7 +106,7 @@ abstract public class AbstractCategorialClass<A extends AbstractCategorialAttrib
 	/**
 	 * Returns the identifier assigned .
 	 * @return a unique id assigned to this object.
-	 * 
+	 *
 	 * @hibernate.id name="id" column="IDENTIFIER" type="long" length="30" unsaved-value="null" generator-class="native"
 	 * @hibernate.generator-param name="sequence" value="CONSTRAINT_SEQ"
 	 */
@@ -125,9 +125,9 @@ abstract public class AbstractCategorialClass<A extends AbstractCategorialAttrib
 
 	/**
 	 * @return the parent
-	 * 
-	 * @hibernate.many-to-one column="PARENT_CATEGORIAL_CLASS_ID"  
-	 * class="edu.wustl.common.querysuite.metadata.category.AbstractCategorialClass" 
+	 *
+	 * @hibernate.many-to-one column="PARENT_CATEGORIAL_CLASS_ID"
+	 * class="edu.wustl.common.querysuite.metadata.category.AbstractCategorialClass"
 	 * cascade="all" lazy="false"
 	 */
 	public CC getParent()
@@ -157,10 +157,10 @@ abstract public class AbstractCategorialClass<A extends AbstractCategorialAttrib
 	}
 
 	/**
-	 * 
+	 *
 	 * @return the pathFromParentId
 	 * @hibernate.property name="pathFromParentId" type="long" update="true" insert="true"  cascade="all" lazy="false" column="PATH_FROM_PARENT_ID"
-	 * 
+	 *
 	 */
 	public Long getPathFromParentId()
 	{
@@ -234,10 +234,10 @@ abstract public class AbstractCategorialClass<A extends AbstractCategorialAttrib
 	}
 
 	/**
-	 * 
+	 *
 	 * @return the deEntityId
 	 * @hibernate.property name="deEntityId" type="long" length="30" column="DE_ENTITY_ID"
-	 * 
+	 *
 	 */
 	public Long getDeEntityId()
 	{

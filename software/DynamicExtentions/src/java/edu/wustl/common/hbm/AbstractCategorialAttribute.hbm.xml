@@ -6,7 +6,7 @@
 <hibernate-mapping default-lazy="false">
     <class
         name="edu.wustl.common.querysuite.metadata.category.AbstractCategorialAttribute"
-        table="ABSTRACT_CATEGORIAL_ATTRIBUTE"
+        table="DYEXTN_ABSTR_CAT_ATTR"
         dynamic-update="false"
         dynamic-insert="false"
     >
@@ -19,7 +19,7 @@
             unsaved-value="null"
         >
             <generator class="native">
-                <param name="sequence">ABSTRACT_CATEGORIAL_ATTRIBUTE_SEQ</param>
+                <param name="sequence">DYEXTN_ABSTR_CAT_ATTR_SEQ</param>
             </generator>
         </id>
 

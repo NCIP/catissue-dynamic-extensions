@@ -35,7 +35,7 @@
              />
 
               <key
-                  column="ABSTRACT_CATEGORIAL_ATTRIBUTE_ID"
+                  column="ABSTR_CATEGORIAL_ATTRIBUTE_ID"
               />
 
               <one-to-many
