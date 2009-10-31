@@ -105,10 +105,10 @@ public class TextField extends Control implements TextFieldInterface
 			htmlString += "<INPUT " + "class='font_bl_nor' " + "name='" + htmlComponentName + "' "
 					+ "id='" + htmlComponentName + "' onchange='isDataChanged();' value='" + defaultValue + "' ";
 
-			int columnSize = columns.intValue() - 2;
+			int columnSize = columns.intValue();
 			if (columnSize > 0)
 			{
-				htmlString += "size='" + columnSize + "' ";
+				htmlString += "style='width:" + (columnSize+1) + "ex' ";
 			}
 			else
 			{
@@ -138,7 +138,7 @@ public class TextField extends Control implements TextFieldInterface
 				maxChars = attibute.getMaxSize();
 			}
 			//Changed by: Kunal
-			//Incase of input type is chosen as number 
+			//Incase of input type is chosen as number
 			//the max char size is -1
 			if (maxChars > 0)
 			{
@@ -182,7 +182,7 @@ public class TextField extends Control implements TextFieldInterface
 
 	/**
 	 * This method returns the Boolean value that decides whether the value of this control should be treated as normal text or URL.
-	 * @hibernate.property name="isUrl" type="boolean" column="IS_URL" 
+	 * @hibernate.property name="isUrl" type="boolean" column="IS_URL"
 	 * @return the Boolean value	true - value is URL
 	 * 								false - value is normal text.
 	 */
@@ -228,26 +228,26 @@ public class TextField extends Control implements TextFieldInterface
 		String defaultValue = (String) this.value;
 		if (!getIsSkipLogicDefaultValue())
 		{
-			if (this.value == null) 
+			if (this.value == null)
 			{
 				defaultValue = "";
-			} 
-			else 
+			}
+			else
 			{
 				defaultValue = (String) this.value;
 			}
-			if (isUrl != null && (isUrl.booleanValue())) 
+			if (isUrl != null && (isUrl.booleanValue()))
 			{
 				defaultValue = this.getAttibuteMetadataInterface()
 						.getDefaultValue();
-			} 
-			else 
+			}
+			else
 			{
-				if (this.value == null) 
+				if (this.value == null)
 				{
 					defaultValue = this.getAttibuteMetadataInterface()
 							.getDefaultValue();
-					if (defaultValue == null || (defaultValue.length() == 0)) 
+					if (defaultValue == null || (defaultValue.length() == 0))
 					{
 						defaultValue = "";
 					}
@@ -265,19 +265,19 @@ public class TextField extends Control implements TextFieldInterface
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	public List<String> getValueAsStrings() 
+	public List<String> getValueAsStrings()
 	{
 		return null;
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	public void setValueAsStrings(List<String> listOfValues) 
+	public void setValueAsStrings(List<String> listOfValues)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 }

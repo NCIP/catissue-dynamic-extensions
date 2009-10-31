@@ -419,6 +419,24 @@
 
         </joined-subclass>
         <joined-subclass
+            name="edu.common.dynamicextensions.domain.userinterface.ComboBox"
+            table="DYEXTN_COMBOBOX"
+            dynamic-update="false"
+            dynamic-insert="false"
+        >
+        <key
+            column="IDENTIFIER"
+        />
+        <property
+            name="columns"
+            type="integer"
+            update="true"
+            insert="true"
+            column="NO_OF_COLUMNS"
+        />
+
+        </joined-subclass>
+        <joined-subclass
             name="edu.common.dynamicextensions.domain.userinterface.MultiSelectCheckBox"
             table="DYEXTN_MULTISELECT_CHECK_BOX"
             dynamic-update="false"
@@ -427,22 +445,13 @@
         <key
             column="IDENTIFIER"
         />
+
         <property
             name="isMultiSelect"
             type="boolean"
             update="true"
             insert="true"
             column="MULTISELECT"
-        />
-        </joined-subclass>
-        <joined-subclass
-            name="edu.common.dynamicextensions.domain.userinterface.ComboBox"
-            table="DYEXTN_COMBOBOX"
-            dynamic-update="false"
-            dynamic-insert="false"
-        >
-        <key
-            column="IDENTIFIER"
         />
 
         </joined-subclass>

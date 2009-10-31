@@ -57,6 +57,7 @@ import edu.common.dynamicextensions.domaininterface.RoleInterface;
 import edu.common.dynamicextensions.domaininterface.SemanticPropertyInterface;
 import edu.common.dynamicextensions.domaininterface.TaggedValueInterface;
 import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ComboBoxInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.FileUploadInterface;
@@ -3004,6 +3005,7 @@ public class XMIImportProcessor
 					{//Combo box for the rest
 						userSelectedControlName = ProcessorConstants.COMBOBOX_CONTROL;
 						controlInterface = deFactory.createComboBox();
+						((ComboBoxInterface) controlInterface).setColumns(DEConstants.CONTROL_DEFAULT_VALUE);
 					}
 					if ((controlModel.getIsMultiSelect() != null)
 							&& (controlModel.getIsMultiSelect().booleanValue()))

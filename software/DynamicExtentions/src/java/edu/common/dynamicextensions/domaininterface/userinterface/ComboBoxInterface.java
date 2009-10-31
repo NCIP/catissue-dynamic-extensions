@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * ComboBoxInterface stores necessary information for generating ComboBox control on
- * dynamically generated user interface.  
+ * dynamically generated user interface.
  * @author geetika_bangard
  */
 public interface ComboBoxInterface extends SelectInterface
@@ -22,4 +22,15 @@ public interface ComboBoxInterface extends SelectInterface
 	 * @param choiceList the List of values that is to set as ChoiceList.
 	 */
 	void setChoiceList(List choiceList);
+
+	/**
+	 * @hibernate.property name="columns" type="integer" column="NO_OF_COLUMNS"
+	 * @return Returns the columns.
+	 */
+	public Integer getColumns();
+
+	/**
+	 * @param columns The columns to set.
+	 */
+	public void setColumns(Integer columns);
 }

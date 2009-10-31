@@ -322,6 +322,7 @@ public class ControlProcessor extends BaseDynamicExtensionsProcessor
 			initializeSelectControl((SelectControl) comboBoxIntf, controlUIBeanInterface,
 					entityGroup);
 		}
+		comboBoxIntf.setColumns(controlUIBeanInterface.getColumns());
 		return comboBoxIntf;
 
 	}

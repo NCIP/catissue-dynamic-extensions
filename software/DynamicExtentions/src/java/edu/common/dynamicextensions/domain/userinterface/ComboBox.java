@@ -9,6 +9,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ComboBoxInterf
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
+import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.wustl.common.beans.NameValueBean;
 
@@ -32,6 +33,28 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	List listOfValues = null;
 
 	/**
+	 * Size of the text field to be shown on UI.
+	 */
+	protected Integer columns;
+
+	/**
+	 * @hibernate.property name="columns" type="integer" column="NO_OF_COLUMNS"
+	 * @return Returns the columns.
+	 */
+	public Integer getColumns()
+	{
+		return columns;
+	}
+
+	/**
+	 * @param columns The columns to set.
+	 */
+	public void setColumns(Integer columns)
+	{
+		this.columns = columns;
+	}
+
+	/**
 	 * This method generates the HTML code for ComboBox control on the HTML form
 	 * @return HTML code for ComboBox
 	 * @throws DynamicExtensionsSystemException if HTMLComponentName() fails.
@@ -39,7 +62,11 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	public String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String defaultValue = getDefaultValueForControl();
-
+		int columnSize = 0;
+		if(columns!=null)
+		{
+			columnSize = columns.intValue();
+		}
 		String isDisabled = "";
 		String htmlString = "";
 		if ((this.isReadOnly != null && this.isReadOnly) || (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly))
@@ -142,7 +169,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				+ "' value =\""
 				+ defaultValue
 				+ "\" "
-				+ " size='20'/>"
+				+ "' style='width:"+(columnSize > 0?(columnSize+1):(Constants.DEFAULT_COLUMN_SIZE+1))+"ex' size='"+(columnSize > 0?columnSize:Constants.DEFAULT_COLUMN_SIZE)+"'/>"
 				+ "<div id='comboScript_"
 				+ getHTMLComponentName()
 				+ "' name='comboScript_"
@@ -191,7 +218,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				+ htmlComponentName
 				+ "' value =\""
 				+ defaultValue
-				+ "\" size='20' class='font_bl_nor' />"
+				+ "\" style='width:"+(columnSize > 0?(columnSize+1):(Constants.DEFAULT_COLUMN_SIZE+1))+"ex' size='"+(columnSize > 0?columnSize:Constants.DEFAULT_COLUMN_SIZE)+"' class='font_bl_nor' />"
 				+ "</div>"
 				+ "</div>"
 				+ "</div>";
