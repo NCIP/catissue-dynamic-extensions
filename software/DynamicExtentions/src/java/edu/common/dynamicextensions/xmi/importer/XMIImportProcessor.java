@@ -252,15 +252,13 @@ public class XMIImportProcessor
 		//Creating entities and entity group.
 		for (UmlClass umlClass : umlClassColl)
 		{
-			if (xmiConfigurationObject.isEntityGroupSystemGenerated())
-			{
-				if (!umlClass.getName()
-						.startsWith(xmiConfigurationObject.getDefaultPackagePrefix())
+			if (xmiConfigurationObject.isEntityGroupSystemGenerated()
+					&& !umlClass.getName().startsWith(xmiConfigurationObject.getDefaultPackagePrefix())
 						&& xmiConfigurationObject.isDefaultPackage())
-				{
+			{
 					umlClass.setName(xmiConfigurationObject.getDefaultPackagePrefix()
 							+ umlClass.getName());
-				}
+
 			}
 			EntityInterface entity = null;
 			//If umlclass name is among  the skip entity names ,then it means that the entity is a part of default catissuepackage.
@@ -2154,18 +2152,18 @@ public class XMIImportProcessor
 					PermissibleValueInterface defaultPermissibleValue = attrTypeInfo
 							.getDefaultValue();
 
-					if (defaultPermissibleValue != null)
+					if (defaultPermissibleValue != null
+							&& defaultPermissibleValue.getValueAsObject() != null)
 					{
-						if (defaultPermissibleValue.getValueAsObject() != null)
+
+						String defaultValueAsString = defaultPermissibleValue.getValueAsObject()
+								.toString();
+						if (defaultValueAsString != null
+								&& !defaultValueAsString.equalsIgnoreCase(""))
 						{
-							String defaultValueAsString = defaultPermissibleValue
-									.getValueAsObject().toString();
-							if (defaultValueAsString != null
-									&& !defaultValueAsString.equalsIgnoreCase(""))
-							{
-								controlModel.setAttributeDefaultValue(defaultValueAsString);
-							}
+							controlModel.setAttributeDefaultValue(defaultValueAsString);
 						}
+
 					}
 					break;
 				}
@@ -3411,13 +3409,11 @@ public class XMIImportProcessor
 		for (String containerName : containerNames)
 		{
 			//		For static models
-			if (xmiConfigurationObject.isEntityGroupSystemGenerated() && isDefaultPackage)
+			if (xmiConfigurationObject.isEntityGroupSystemGenerated() && isDefaultPackage
+					&& !containerName.startsWith(defaultPackagePrefix))
 			{
-				if (!containerName.startsWith(defaultPackagePrefix))
-				{
+				containerName = defaultPackagePrefix + containerName;
 
-					containerName = defaultPackagePrefix + containerName;
-				}
 			}
 			List containerList = entityNameVsContainers.get(containerName);
 			if (containerList == null || containerList.size() < 1)

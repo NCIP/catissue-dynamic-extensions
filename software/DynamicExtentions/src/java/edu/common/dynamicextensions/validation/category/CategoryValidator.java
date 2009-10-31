@@ -369,27 +369,25 @@ public class CategoryValidator
 					.getValue(CategoryConstants.CREATE_CAT_FAILS)
 					+ ApplicationProperties.getValue(CategoryConstants.NULL_ATTR));
 		}
-		if (attribute.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
+		if (attribute.getAttributeTypeInformation() instanceof DateAttributeTypeInformation
+				&& rules != null && rules.containsKey(CategoryConstants.ALLOW_FUTURE_DATE)
+				&& value != null && !(value.trim().equals("")))
 		{
-			if (rules != null && rules.containsKey(CategoryConstants.ALLOW_FUTURE_DATE)
-					&& value != null && !(value.trim().equals("")))
+			FutureDateValidator futureDateValidation = new FutureDateValidator();
+			String defaultDateValue = value.replaceAll("/", "-");
+			try
 			{
-				FutureDateValidator futureDateValidation = new FutureDateValidator();
-				String defaultDateValue = value.replaceAll("/", "-");
-				try
-				{
-					futureDateValidation.validate((AttributeMetadataInterface) attribute,
-							defaultDateValue, null, attribute.getName());
-				}
-				catch (DynamicExtensionsValidationException e)
-				{
-					throw new DynamicExtensionsSystemException(ApplicationProperties
-							.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties.getValue(e.getErrorCode())
-							+ attribute.getName(), e);
-				}
+				futureDateValidation.validate((AttributeMetadataInterface) attribute,
+						defaultDateValue, null, attribute.getName());
+			}
+			catch (DynamicExtensionsValidationException e)
+			{
+				throw new DynamicExtensionsSystemException(ApplicationProperties
+						.getValue(CategoryConstants.CREATE_CAT_FAILS)
+						+ ApplicationProperties.getValue(e.getErrorCode()) + attribute.getName(), e);
 			}
 		}
+
 	}
 
 	/**

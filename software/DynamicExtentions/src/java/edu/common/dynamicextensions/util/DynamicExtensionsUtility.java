@@ -383,17 +383,12 @@ public class DynamicExtensionsUtility
 					return control;
 				}
 			}
-			else if (controlInterface.getBaseAbstractAttribute() != null)
+			else if (controlInterface.getBaseAbstractAttribute() != null
+						&& controlInterface.getBaseAbstractAttribute().getId() != null
+						&& controlInterface.getBaseAbstractAttribute().equals(attributeMetadataInterface))
 			{
-				if (controlInterface.getBaseAbstractAttribute().getId() != null)
-				{
-					if (controlInterface.getBaseAbstractAttribute().equals(
-							attributeMetadataInterface))
-					{
 						control = controlInterface;
 						break;
-					}
-				}
 			}
 		}
 		return control;
@@ -443,7 +438,7 @@ public class DynamicExtensionsUtility
 							&& controlInterface.getBaseAbstractAttribute()
 									.getName().equals(
 											attributeMetadataInterface
-													.getName())) 
+													.getName()))
 					{
 						control = controlInterface;
 						break;
@@ -477,13 +472,12 @@ public class DynamicExtensionsUtility
 					return control;
 				}
 			}
-			else if (controlInterface.getId() != null)
+			else if (controlInterface.getId() != null
+					&& controlInterface.getId().toString().equals(controlIdentifier))
 			{
-				if (controlInterface.getId().toString().equals(controlIdentifier))
-				{
-					control = controlInterface;
-					break;
-				}
+				control = controlInterface;
+				break;
+
 			}
 		}
 		return control;
@@ -2482,7 +2476,7 @@ public class DynamicExtensionsUtility
 	}
 
 	/**
-	 * This function will return the next sequence number for control by incrementing the maximum sequence number within current control collection.  
+	 * This function will return the next sequence number for control by incrementing the maximum sequence number within current control collection.
 	 * @param container
 	 * @return
 	 */
