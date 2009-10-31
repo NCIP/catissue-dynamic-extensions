@@ -22,7 +22,7 @@ public class IdGeneratorUtil
 	/**
 	 * Static instance of the id generator.
 	 */
-	private static IdGeneratorUtil idGeneratorUtil;
+	private static IdGeneratorUtil identGeneratorUtil;
 
 	/**
 	 * Private constructor used for making this class singleton
@@ -38,11 +38,11 @@ public class IdGeneratorUtil
 	 */
 	public static synchronized IdGeneratorUtil getInstance()
 	{
-		if (idGeneratorUtil == null)
+		if (identGeneratorUtil == null)
 		{
-			idGeneratorUtil = new IdGeneratorUtil();
+			identGeneratorUtil = new IdGeneratorUtil();
 		}
-		return idGeneratorUtil;
+		return identGeneratorUtil;
 	}
 
 	/**

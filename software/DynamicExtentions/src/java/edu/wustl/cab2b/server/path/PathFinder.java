@@ -44,7 +44,7 @@ public class PathFinder
 	private static final Logger logger = edu.wustl.common.util.logger.Logger
 			.getLogger(PathFinder.class);
 
-	private static PathFinder pathFinder;
+	private static PathFinder pathFinderObj;
 
 	private Set<InterModelConnection> interModelConnections;
 
@@ -82,14 +82,14 @@ public class PathFinder
 		{
 			logger.error(e.getMessage());
 		}
-		if (pathFinder == null)
+		if (pathFinderObj == null)
 		{
 			logger.info("PathFinder Called first Time.Loading cache...");
 			EntityCache.getInstance();
-			pathFinder = new PathFinder();
+			pathFinderObj = new PathFinder();
 			refreshCache(con, false);
 		}
-		return pathFinder;
+		return pathFinderObj;
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class PathFinder
 		{
             EntityCache.getInstance().refreshCache();
 		}
-		pathFinder.populateCache(con);
+		pathFinderObj.populateCache(con);
 	}
 
 	/**
@@ -137,12 +137,12 @@ public class PathFinder
 	 */
 	public static synchronized PathFinder getInstance()
 	{
-		if (pathFinder == null)
+		if (pathFinderObj == null)
 		{
 			throw new IllegalStateException(
 					"to get PathFinder with this method, it must be initialized using a connection before this call");
 		}
-		return pathFinder;
+		return pathFinderObj;
 	}
 
 	/**
@@ -833,7 +833,7 @@ public class PathFinder
 
 	void setInstance(PathFinder pathFinder)
 	{
-		PathFinder.pathFinder = pathFinder;
+		PathFinder.pathFinderObj = pathFinder;
 	}
 
 	void setEntitySetVsCuratedPath(Map<String, Set<ICuratedPath>> entitySetVsCuratedPath)
