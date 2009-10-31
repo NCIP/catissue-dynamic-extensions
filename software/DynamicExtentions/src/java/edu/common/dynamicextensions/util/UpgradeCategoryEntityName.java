@@ -85,7 +85,7 @@ public class UpgradeCategoryEntityName implements DynamicExtensionsQueryBuilderC
 						char[] catEntityName = categoryEntityName.toCharArray();
 						for(char character : catEntityName)
 						{
-							if((""+character).trim().equalsIgnoreCase(DEConstants.CLOSING_SQUARE_BRACKET))
+							if((Character.toString(character)).trim().equalsIgnoreCase(DEConstants.CLOSING_SQUARE_BRACKET))
 							{
 								numberOfOccurances=numberOfOccurances+1;
 							}

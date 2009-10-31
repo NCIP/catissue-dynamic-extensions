@@ -55,7 +55,7 @@ public class CategoryValidator
 
 	CategoryCSVFileParser categoryFileParser;
 
-	StringBuffer errorMessage = new StringBuffer();
+	String errorMessage = "";
 
 	/**
 	 * @param entityGroup
