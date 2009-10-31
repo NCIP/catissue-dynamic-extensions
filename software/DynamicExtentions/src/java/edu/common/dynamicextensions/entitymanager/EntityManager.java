@@ -82,7 +82,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	/**
 	 * Static instance of the entity manager.
 	 */
-	private static EntityManagerInterface entityManager = null;
+	private static EntityManagerInterface entityManagerIntf = null;
 
 	/**
 	 * Static instance of the queryBuilder.
@@ -108,23 +108,23 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	 */
 	public static synchronized EntityManagerInterface getInstance()
 	{
-		if (entityManager == null)
+		if (entityManagerIntf == null)
 		{
-			entityManager = new EntityManager();
+			entityManagerIntf = new EntityManager();
 			DynamicExtensionsUtility.initialiseApplicationVariables();
 			queryBuilder = QueryBuilderFactory.getQueryBuilder();
 		}
 
-		return entityManager;
+		return entityManagerIntf;
 	}
 
 	/**
 	 * Mock entity manager can be placed in the entity manager using this method.
-	 * @param entityManager
+	 * @param entityManagerIntf
 	 */
 	public static void setInstance(EntityManagerInterface entManager)
 	{
-		EntityManager.entityManager = entManager;
+		EntityManager.entityManagerIntf = entManager;
 	}
 
 	/* (non-Javadoc)

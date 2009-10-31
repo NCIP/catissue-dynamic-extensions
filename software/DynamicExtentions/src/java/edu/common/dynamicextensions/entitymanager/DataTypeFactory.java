@@ -31,7 +31,7 @@ public class DataTypeFactory
 	/**
 	 * 
 	 */
-	private static DataTypeFactory dataTypeFactory = null;
+	private static DataTypeFactory dataTypeFactoryObj = null;
 
 	/**
 	 * 
@@ -54,15 +54,15 @@ public class DataTypeFactory
 	public static synchronized DataTypeFactory getInstance()
 			throws DataTypeFactoryInitializationException
 	{
-		if (dataTypeFactory == null)
+		if (dataTypeFactoryObj == null)
 		{
 			String appName=DynamicExtensionDAO.getInstance().getAppName();
 			String dbType = DAOConfigFactory.getInstance().getDAOFactory(appName).getDataBaseType();				
 			String dataTypeMappingFileName=DynamicExtensionDBFactory.getInstance().getDataTypeMappingFile(dbType);			
-			dataTypeFactory = new DataTypeFactory();
-			dataTypeFactory.populateDataTypeMap(dataTypeMappingFileName);
+			dataTypeFactoryObj = new DataTypeFactory();
+			dataTypeFactoryObj.populateDataTypeMap(dataTypeMappingFileName);
 		}
-		return dataTypeFactory;
+		return dataTypeFactoryObj;
 	}
 
 	/**

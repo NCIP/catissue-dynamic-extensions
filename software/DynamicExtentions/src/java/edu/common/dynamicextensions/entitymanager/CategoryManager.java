@@ -61,7 +61,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	/**
 	 * Static instance of the CategoryManager.
 	 */
-	private static CategoryManagerInterface categoryManager = null;
+	private static CategoryManagerInterface categoryManagerIntf = null;
 
 	/**
 	 * Static instance of the queryBuilder.
@@ -87,14 +87,14 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	 */
 	public static synchronized CategoryManagerInterface getInstance()
 	{
-		if (categoryManager == null)
+		if (categoryManagerIntf == null)
 		{
-			categoryManager = new CategoryManager();
+			categoryManagerIntf = new CategoryManager();
 			DynamicExtensionsUtility.initialiseApplicationVariables();
 			queryBuilder = QueryBuilderFactory.getQueryBuilder();
 		}
 
-		return categoryManager;
+		return categoryManagerIntf;
 	}
 
 	/**
