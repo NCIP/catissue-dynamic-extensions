@@ -67,7 +67,7 @@ public class XMIConfiguration
 	/**
 	 *
 	 */
-	private static XMIConfiguration xmiConfiguration;
+	private static XMIConfiguration xmiConfigurationObj;
 
 	/**
 	 *
@@ -152,12 +152,12 @@ public class XMIConfiguration
 	 */
 	public static synchronized XMIConfiguration getInstance()
 	{
-		if (xmiConfiguration == null)
+		if (xmiConfigurationObj == null)
 		{
-			xmiConfiguration = new XMIConfiguration();
+			xmiConfigurationObj = new XMIConfiguration();
 
 		}
-		return xmiConfiguration;
+		return xmiConfigurationObj;
 	}
 
 	/**
