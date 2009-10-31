@@ -165,9 +165,8 @@ public class UserInterfaceiUtility
 			}
 		}
 
-		htmlForGrid.append("</table>");
-		htmlForGrid.append("<div id='wrapper_div_");
-		htmlForGrid.append(subContainer.getId()+"' > &nbsp;</div>");
+		htmlForGrid.append("</table><div id='wrapper_div_"+subContainer.getId()+"' > &nbsp;</div>");
+
 
 		if (subContainer.getMode().equals("edit"))
 		{

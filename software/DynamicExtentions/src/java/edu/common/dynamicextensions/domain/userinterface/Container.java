@@ -324,7 +324,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 	{
 		boolean found = false;
 		ControlInterface control = null;
-		Collection<ControlInterface> controls = this.getControlCollection();
+		Collection<ControlInterface> controls = getControlCollection();
 		if (controls != null)
 		{
 			Iterator<ControlInterface> controlsIter = controls.iterator();
@@ -370,8 +370,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 	 */
 	public List<ControlInterface> getAllControls()
 	{
-		List<ControlInterface> controls = new ArrayList<ControlInterface>(this
-				.getControlCollection());
+		List<ControlInterface> controls = new ArrayList<ControlInterface>(getControlCollection());
 		Collections.sort(controls);
 
 		List<ControlInterface> baseControls = new ArrayList<ControlInterface>();
@@ -399,8 +398,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 	 */
 	public List<ControlInterface> getAllControlsUnderSameDisplayLabel()
 	{
-		List<ControlInterface> controls = new ArrayList<ControlInterface>(this
-				.getControlCollection());
+		List<ControlInterface> controls = new ArrayList<ControlInterface>(getControlCollection());
 
 		for (ContainerInterface container : childContainerCollection)
 		{
@@ -471,15 +469,15 @@ public class Container extends DynamicExtensionBaseDomainObject
 		containerHTML
 				.append("<table summary='' cellpadding='3' cellspacing='0' align='center' width='100%'>");
 
-		if (this.getMode() != null
-				&& this.getMode().equalsIgnoreCase(WebUIManagerConstants.EDIT_MODE) && (isShowRequiredFieldWarningMessage()))
+		if (getMode() != null
+				&& getMode().equalsIgnoreCase(WebUIManagerConstants.EDIT_MODE) && (isShowRequiredFieldWarningMessage()))
 		{
 			containerHTML.append("<tr><td class='formMessage' colspan='3'><span class='font_red'>");
-			containerHTML.append(this.getRequiredFieldIndicatior());
+			containerHTML.append(getRequiredFieldIndicatior());
 			containerHTML.append("&nbsp;</span><span class='font_gr_s'>");
-			containerHTML.append(this.getRequiredFieldWarningMessage());
-			containerHTML.append("</span></td></tr>");
-			containerHTML.append("<tr><td height='5'/></tr>");
+			containerHTML.append(getRequiredFieldWarningMessage());
+			containerHTML.append("</span></td></tr><tr><td height='5'/></tr>");
+
 		}
 		else
 		{
@@ -488,10 +486,10 @@ public class Container extends DynamicExtensionBaseDomainObject
 			//Container hierarchy can be n level
 			//So, mode of the n containers in the hierarchy need to be same.
 
-			ContainerInterface tempContainer = this.baseContainer;
+			ContainerInterface tempContainer = baseContainer;
 			while (tempContainer != null)
 			{
-				tempContainer.setMode(this.mode);
+				tempContainer.setMode(mode);
 				tempContainer = tempContainer.getBaseContainer();
 			}
 		}
@@ -600,7 +598,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 			lastRow = control.getSequenceNumber();
 		}
 		controlHTML.append("</td></tr>");
-		this.showAssociationControlsAsLink = false;
+		showAssociationControlsAsLink = false;
 
 		return controlHTML.toString();
 	}
@@ -620,8 +618,8 @@ public class Container extends DynamicExtensionBaseDomainObject
 				captionHTML.append("<tr ");
 				addDisplayOptionForRow(container,values,captionHTML,"_caption");
 				captionHTML.append("<td class='td_color_6e81a6' colspan='100' align='left'>");
-				captionHTML.append(((AbstractEntity) this.getAbstractEntity())
-						.getCapitalizedName(this.getCaption()));
+				captionHTML.append(((AbstractEntity) getAbstractEntity())
+						.getCapitalizedName(getCaption()));
 				captionHTML.append("<tr ");
 				addDisplayOptionForRow(container,values,captionHTML,"_emptyrow");
 				captionHTML.append("<td height='5'></td></tr>");
@@ -772,8 +770,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 		linkHTML
 				.append("<img src='images/de/ic_det.gif' alt='Details' width='12' height='12' hspace='3' border='0' align='absmiddle'><a href='#' style='cursor:hand' class='set1' id='lnkDetails");
 		linkHTML.append(container.getId());
-		linkHTML.append("' ");
-		linkHTML.append("onclick='showChildContainerInsertDataPage(");
+		linkHTML.append("' onclick='showChildContainerInsertDataPage(");
 		linkHTML.append(container.getId());
 		linkHTML.append(",this)'>");
 		linkHTML.append(details);
