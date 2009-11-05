@@ -40,9 +40,9 @@ public class CategoryAssociationControl extends AbstractContainmentControl
 
 
 	/**
-	 * 
+	 *
 	 */
-	public List<String> getValueAsStrings() 
+	public List<String> getValueAsStrings()
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -50,12 +50,18 @@ public class CategoryAssociationControl extends AbstractContainmentControl
 
 
 	/**
-	 * 
+	 *
 	 */
-	public void setValueAsStrings(List<String> listOfValues) 
+	public void setValueAsStrings(List<String> listOfValues)
 	{
 		// TODO Auto-generated method stub
-		
-	}
 
+	}
+	/**
+	 *
+	 */
+	public boolean getIsEnumeratedControl()
+	{
+		return false;
+	}
 }

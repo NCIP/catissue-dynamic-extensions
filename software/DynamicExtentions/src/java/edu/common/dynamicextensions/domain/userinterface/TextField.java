@@ -88,9 +88,7 @@ public class TextField extends Control implements TextFieldInterface
 		String htmlString = "";
 		if (getIsSkipLogicTargetControl())
 		{
-			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
-					+ getHTMLComponentName() + "_div' /><div id='"
-					+ getHTMLComponentName() + "_div' name='"
+			htmlString += "<div id='" + getHTMLComponentName() + "_div' name='"
 					+ getHTMLComponentName() + "_div'>";
 		}
 		if (isUrl != null && isUrl)
@@ -166,6 +164,8 @@ public class TextField extends Control implements TextFieldInterface
 		}
 		if (getIsSkipLogicTargetControl())
 		{
+			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
+					+ getHTMLComponentName() + "_div' />";
 			htmlString += "</div>";
 		}
 		return htmlString;
@@ -279,5 +279,12 @@ public class TextField extends Control implements TextFieldInterface
 	{
 		// TODO Auto-generated method stub
 
+	}
+	/**
+	 *
+	 */
+	public boolean getIsEnumeratedControl()
+	{
+		return false;
 	}
 }

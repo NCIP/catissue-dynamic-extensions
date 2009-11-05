@@ -520,12 +520,13 @@ public class Container extends DynamicExtensionBaseDomainObject
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public String generateControlsHTML(String caption,String dataEntryOperation,ContainerInterface container) throws DynamicExtensionsSystemException
+	public String generateControlsHTML(String caption, String dataEntryOperation,
+			ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		StringBuffer controlHTML = new StringBuffer();
 		List<Object> values = new ArrayList<Object>();
 
-		addCaptionHTML(controlHTML, caption,container,values);
+		addCaptionHTML(controlHTML, caption, container, values);
 
 		List<ControlInterface> controls = getAllControlsUnderSameDisplayLabel(); //UnderSameDisplayLabel();
 		int lastRow = 0;
@@ -537,14 +538,10 @@ public class Container extends DynamicExtensionBaseDomainObject
 				Object value = null;
 				values.clear();
 
-				ControlsUtility
-						.getAttributeValueForSkipLogicAttributesFromValueMap(
-								container.getContainerValueMap(), container
-										.getContainerValueMap(), control
-										.getSourceSkipControl()
-										.getBaseAbstractAttribute(), false,
-								values, Integer.valueOf(-1), Integer
-										.valueOf(-1));
+				ControlsUtility.getAttributeValueForSkipLogicAttributesFromValueMap(container
+						.getContainerValueMap(), container.getContainerValueMap(), control
+						.getSourceSkipControl().getBaseAbstractAttribute(), false, values, Integer
+						.valueOf(-1), Integer.valueOf(-1));
 
 				if (!values.isEmpty())
 				{
@@ -556,22 +553,21 @@ public class Container extends DynamicExtensionBaseDomainObject
 			control.setDataEntryOperation(dataEntryOperation);
 			Object value = containerValueMap.get(control.getBaseAbstractAttribute());
 			control.setValue(value);
-			if (lastRow == control.getSequenceNumber())
-			{
-				controlHTML.append("<div style='float:left'>&nbsp;</div>");
-				//controlHTML.append("</div>");
-			}
-			else
+			/*	if (lastRow == control.getSequenceNumber())
+				{
+					controlHTML.append("<div style='float:left'>&nbsp;</div>");
+					//controlHTML.append("</div>");
+				}*/
+			if (lastRow != control.getSequenceNumber())
 			{
 				if (i != 0)
 				{
-					controlHTML.append("</td></tr><tr><td height='7'></td></tr>");
+					controlHTML.append("</table></td></tr><tr><td height='7'></td></tr>");
 				}
 				controlHTML.append("<tr valign='center' ");
 				if (control.getIsSkipLogicTargetControl())
 				{
-					controlHTML.append("id='"
-							+ control.getHTMLComponentName() + "_row_div' name='"
+					controlHTML.append("id='" + control.getHTMLComponentName() + "_row_div' name='"
 							+ control.getHTMLComponentName() + "_row_div'");
 
 				}
@@ -586,23 +582,24 @@ public class Container extends DynamicExtensionBaseDomainObject
 				{
 					controlHTML.append(" style='display:row'");
 				}
-				controlHTML.append('>');
+				controlHTML.append(">");
 				if (control.getIsSkipLogicTargetControl())
 				{
-					controlHTML.append("<input type='hidden' name='skipLogicHideControls' id='skipLogicHideControls' value = '"
-						+ control.getHTMLComponentName() + "_row_div' />");
+					controlHTML
+							.append("<input type='hidden' name='skipLogicHideControls' id='skipLogicHideControls' value = '"
+									+ control.getHTMLComponentName() + "_row_div' />");
 				}
 			}
 			controlHTML.append(control.generateHTML(container));
 			i++;
 			lastRow = control.getSequenceNumber();
+
 		}
 		controlHTML.append("</td></tr>");
-		showAssociationControlsAsLink = false;
+		this.showAssociationControlsAsLink = false;
 
 		return controlHTML.toString();
 	}
-
 	/**
 	 * @param captionHTML
 	 * @param caption in the format -- NewCaption:Main ContainerId
@@ -768,16 +765,15 @@ public class Container extends DynamicExtensionBaseDomainObject
 
 		StringBuffer linkHTML = new StringBuffer();
 		linkHTML
-				.append("<img src='images/de/ic_det.gif' alt='Details' width='12' height='12' hspace='3' border='0' align='absmiddle'><a href='#' style='cursor:hand' class='set1' id='lnkDetails");
-		linkHTML.append(container.getId());
-		linkHTML.append("' onclick='showChildContainerInsertDataPage(");
+				.append("<img src='images/de/ic_det.gif' alt='Details' width='12' height='12' hspace='3' border='0' align='absmiddle'><a href='#' style='cursor:hand' class='set1' onclick='showChildContainerInsertDataPage(");
 		linkHTML.append(container.getId());
 		linkHTML.append(",this)'>");
 		linkHTML.append(details);
 		linkHTML.append("</a><tr><td></td></tr>");
 
-		return linkHTML.toString();
+		return "<table>" + linkHTML.toString();
 	}
+
 
 	/**
 	 * @see edu.common.dynamicextensions.domaininterface.EntityInterface#getParentEntity()

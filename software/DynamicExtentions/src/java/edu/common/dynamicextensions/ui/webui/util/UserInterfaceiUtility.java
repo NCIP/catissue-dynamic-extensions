@@ -48,8 +48,8 @@ public class UserInterfaceiUtility
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public static String generateHTMLforGrid(ContainerInterface subContainer,
-			List<Map<BaseAbstractAttributeInterface, Object>> valueMaps,String dataEntryOperation,ContainerInterface mainContainer)
-			throws DynamicExtensionsSystemException
+			List<Map<BaseAbstractAttributeInterface, Object>> valueMaps, String dataEntryOperation,
+			ContainerInterface mainContainer) throws DynamicExtensionsSystemException
 	{
 		StringBuffer htmlForGrid = new StringBuffer();
 
@@ -69,7 +69,8 @@ public class UserInterfaceiUtility
 		htmlForGrid.append(subContainer.getId());
 		htmlForGrid.append("_substitutionDiv'><table>");
 		subContainer.setContainerValueMap(new HashMap<BaseAbstractAttributeInterface, Object>()); //empty hashmap to generate hidden row
-		htmlForGrid.append(getContainerHTMLAsARow(subContainer, -1,dataEntryOperation,mainContainer));
+		htmlForGrid.append(getContainerHTMLAsARow(subContainer, -1, dataEntryOperation,
+				mainContainer));
 		htmlForGrid.append("</table></div><input type='hidden' name='");
 
 		htmlForGrid.append(subContainer.getId());
@@ -89,10 +90,15 @@ public class UserInterfaceiUtility
 			htmlForGrid.append("</td></tr>");
 		}
 
-		htmlForGrid.append("<tr>" + "<td width='5%'><input type='button' style='border: 0px; background-image: url(images/de/b_paste.gif);height: 20px; width: 59px;' align='middle'  id='paste_"+subContainer.getId()+"' " +
-				"onclick='pasteData(\""+subContainer.getId()+"\",\"many\")'/>"+
-				"</td><td class='formField_withoutBorder' style='background-color:#E3E2E7;' width='95%'>&nbsp;</td></tr>");
-
+		htmlForGrid
+				.append("<tr>"
+						+ "<td width='5%'><input type='button' style='border: 0px; background-image: url(images/de/b_paste.gif);height: 20px; width: 59px;' align='middle'  id='paste_"
+						+ subContainer.getId()
+						+ "' "
+						+ "onclick='pasteData(\""
+						+ subContainer.getId()
+						+ "\",\"many\")'/>"
+						+ "</td><td class='formField_withoutBorder' style='background-color:#E3E2E7;' width='95%'>&nbsp;</td></tr>");
 
 		htmlForGrid.append("<tr width='100%'><td colspan='3' width='100%'>");
 		// For category attribute controls, if heading and/or notes are specified, then
@@ -160,24 +166,28 @@ public class UserInterfaceiUtility
 			for (Map<BaseAbstractAttributeInterface, Object> rowValueMap : valueMaps)
 			{
 				subContainer.setContainerValueMap(rowValueMap);
-				htmlForGrid.append(getContainerHTMLAsARow(subContainer, index,dataEntryOperation,mainContainer));
+				htmlForGrid.append(getContainerHTMLAsARow(subContainer, index, dataEntryOperation,
+						mainContainer));
 				index++;
 			}
 		}
 
-		htmlForGrid.append("</table><div id='wrapper_div_"+subContainer.getId()+"' > &nbsp;</div>");
-
+		htmlForGrid.append("</table>");
+		htmlForGrid.append("<div id='wrapper_div_");
+		htmlForGrid.append(subContainer.getId() + "' > &nbsp;</div>");
 
 		if (subContainer.getMode().equals("edit"))
 		{
 			htmlForGrid
-					.append("<table cellpadding='3' cellspacing='0' align='center' width='100%' class='td_color_e3e2e7'><tr><td align='center'>");
-					htmlForGrid.append("<input type='button' style='border: 0px; background-image: url(images/de/b_add_more.gif); height: 20px; width: 76px;' align='middle' onClick=\"addRow('"
-					+ subContainer.getId() + "')\" id='btnAddMore" + subContainer.getId() + "'/>");
+					.append("<table cellpadding='3' cellspacing='0' align='center' width='100%' class='td_color_e3e2e7'><tr><td align='left'>");
+			htmlForGrid
+					.append("<input type='button' style='border: 0px; background-image: url(images/de/b_delete.gif); height: 20px; width: 59px;' align='middle' onClick=\"removeCheckedRow('"
+							+ subContainer.getId() + "')\"/>");
 
-			htmlForGrid.append("</td><td align='left' width='86%'>");
-			htmlForGrid.append("<input type='button' style='border: 0px; background-image: url(images/de/b_delete.gif); height: 20px; width: 59px;' align='middle' onClick=\"removeCheckedRow('"
-					+ subContainer.getId() + "')\" id='btnDelete" + subContainer.getId() + "'/>");
+			htmlForGrid.append("</td><td align='right'>");
+			htmlForGrid
+					.append("<input type='button' style='border: 0px; background-image: url(images/de/b_add_more.gif); height: 20px; width: 76px;' align='middle' onClick=\"addRow('"
+							+ subContainer.getId() + "')\"/>");
 
 			//stringBuffer.append("<button type='button' class='actionButton' id='removeRow' onclick=\"removeCheckedRow('" + subContainer.getId()
 			//		+ "')\">");
@@ -189,11 +199,10 @@ public class UserInterfaceiUtility
 			//stringBuffer.append("</button>");
 		}
 
-		htmlForGrid.append("</td></tr></table></td></tr>");
+		htmlForGrid.append("</td></tr>");
 
 		return htmlForGrid.toString();
 	}
-
 	/**
 	 *
 	 * @param control

@@ -144,7 +144,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		}
 		else
 		{
-			sourceHtmlComponentValues = new StringBuffer("~");
+			sourceHtmlComponentValues = new StringBuffer('~');
 		}
 
 		String strMultiSelect = "";
@@ -155,18 +155,12 @@ public class ListBox extends SelectControl implements ListBoxInterface
 
 		if (getIsSkipLogicTargetControl())
 		{
-			htmlString
-					.append("<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
-							+ getHTMLComponentName()
-							+ "_div' /><div id='"
-							+ getHTMLComponentName()
-							+ "_div' name='" + getHTMLComponentName() + "_div'>");
+			htmlString.append("<div id='" + getHTMLComponentName() + "_div' name='"
+					+ getHTMLComponentName() + "_div'>");
 		}
-
 		htmlString.append("<SELECT ");
 		htmlString.append(strMultiSelect).append(" size=").append(this.noOfRows).append(
 				" class='font_bl_s' name='").append(getHTMLComponentName()).append("' onchange=\"");
-
 		if (this.isSkipLogic != null && this.isSkipLogic)
 		{
 			htmlString.append("getSkipLogicControl('");
@@ -177,7 +171,6 @@ public class ListBox extends SelectControl implements ListBoxInterface
 			htmlString.append(parentContainerId);
 			htmlString.append("');");
 		}
-		//htmlString.append("isDataChanged();\" id='").append(name).append("' ");
 		htmlString.append("isDataChanged();\" id='").append(htmlComponentName).append("' ");
 
 		if ((this.isReadOnly != null && this.isReadOnly)
@@ -226,14 +219,8 @@ public class ListBox extends SelectControl implements ListBoxInterface
 			StringBuffer multSelWithAutoCmpltHTML = new StringBuffer();
 			if (getIsSkipLogicTargetControl())
 			{
-				multSelWithAutoCmpltHTML
-						.append("<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
-								+ getHTMLComponentName()
-								+ "_div' /><div id='"
-								+ getHTMLComponentName()
-								+ "_div' name='"
-								+ getHTMLComponentName()
-								+ "_div'>");
+				multSelWithAutoCmpltHTML.append("<div id='" + getHTMLComponentName()
+						+ "_div' name='" + getHTMLComponentName() + "_div'>");
 			}
 			multSelWithAutoCmpltHTML
 					.append("<script defer='defer'>Ext.onReady(function(){var myUrl= \"DEComboDataAction.do?controlId= "
@@ -254,7 +241,6 @@ public class ListBox extends SelectControl implements ListBoxInterface
 					.append("\t\t<td width=\"35%\" class=\"black_ar_new\" valign=\"TOP\">\n");
 			multSelWithAutoCmpltHTML.append("\t\t\t<input type='text' id='" + coordId + "' name='"
 					+ coordId + "' value =' ' size='20'/>\n");
-
 			multSelWithAutoCmpltHTML.append("\t\t</td>\n\n");
 			multSelWithAutoCmpltHTML
 					.append("\t\t<td class=\"black_ar_new\" width=\"20%\" align=\"center\" valign=\"TOP\">\n");
@@ -316,6 +302,9 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		}
 		if (getIsSkipLogicTargetControl())
 		{
+			htmlString.append("<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
+							+ getHTMLComponentName()
+							+ "_div' />");
 			htmlString.append("</div>");
 		}
 		return htmlString.toString();
@@ -461,5 +450,12 @@ public class ListBox extends SelectControl implements ListBoxInterface
 	{
 		// TODO Auto-generated method stub
 
+	}
+	/**
+	 *
+	 */
+	public boolean getIsEnumeratedControl()
+	{
+		return true;
 	}
 }

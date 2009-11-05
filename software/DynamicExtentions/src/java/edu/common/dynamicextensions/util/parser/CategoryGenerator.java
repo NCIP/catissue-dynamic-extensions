@@ -798,9 +798,9 @@ public class CategoryGenerator
 				DataElementInterface dataElementInterface = ((AttributeMetadataInterface)sourceCategoryAttribute).getDataElement();
 				UserDefinedDEInterface userDefinedDEInterface = (UserDefinedDEInterface) dataElementInterface;
 
-				permissibleValueInterface = categoryHelper
-				.getPermissibleValue(userDefinedDEInterface
-						.getPermissibleValueCollection(), permissibleValue);
+				permissibleValueInterface = categoryHelper.getPermissibleValue(
+						userDefinedDEInterface.getPermissibleValueCollection(),
+						DynamicExtensionsUtility.getEscapedStringValue(permissibleValue));
 
 				sourceCategoryAttribute.addSkipLogicPermissibleValue(permissibleValueInterface);
 

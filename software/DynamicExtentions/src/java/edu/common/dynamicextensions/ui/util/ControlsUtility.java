@@ -1010,7 +1010,87 @@ public class ControlsUtility
 		}
 		return null;
 	}
+	/**
+	 *
+	 * @param rowId
+	 * @param isSameContainerControl
+	 * @param cardinality
+	 * @param fullValueMap
+	 * @param entry
+	 * @param control
+	 * @throws DynamicExtensionsSystemException
+	 */
+	private static void setValueMapForEnumeratedControls(Integer rowId,boolean isSameContainerControl,boolean cardinality,Map<BaseAbstractAttributeInterface, Object> fullValueMap,Map.Entry<BaseAbstractAttributeInterface, Object> entry,ControlInterface control) throws DynamicExtensionsSystemException
+	{
+		if (rowId == null && isSameContainerControl && cardinality)
+		{
+			rowId = Integer.valueOf(-1);
+		}
+		Object value = null;
+		List<Object> values = new ArrayList<Object>();
+		getAttributeValueForSkipLogicAttributesFromValueMap(
+				fullValueMap, fullValueMap
+						, control
+						.getSourceSkipControl()
+						.getBaseAbstractAttribute(), false,
+				values, Integer.valueOf(rowId), Integer
+						.valueOf(rowId));
 
+		if (!values.isEmpty())
+		{
+			value = values.get(0);
+		}
+		control.getSourceSkipControl().setValue(value);
+		control.getSourceSkipControl().setSkipLogicControls();
+		if (control.getIsSkipLogicLoadPermValues())
+		{
+			List<String> sourceControlValues = null;
+			boolean isValuePresent = false;
+			PermissibleValueInterface permissibleValueInterface = null;
+			List<PermissibleValueInterface> permissibleValueList = null;
+			if (control.getSourceSkipControl() != null)
+			{
+				sourceControlValues = control.getSourceSkipControl().getValueAsStrings();
+			}
+			try
+			{
+				permissibleValueInterface = ((AttributeMetadataInterface) control
+						.getBaseAbstractAttribute())
+						.getAttributeTypeInformation()
+						.getPermissibleValueForString(
+								entry.getValue().toString());
+				permissibleValueList = getSkipLogicPermissibleValues(
+						control.getSourceSkipControl(), control, sourceControlValues);
+			}
+			catch (ParseException e)
+			{
+				throw new DynamicExtensionsSystemException("ParseException",e);
+			}
+			if (permissibleValueList != null && permissibleValueInterface != null)
+			{
+				for (PermissibleValueInterface permissibleValue : permissibleValueList)
+				{
+					if (permissibleValue.getValueAsObject().equals(
+							permissibleValueInterface.getValueAsObject()))
+					{
+						isValuePresent = true;
+						break;
+					}
+				}
+			}
+			if(!isValuePresent)
+			{
+				entry.setValue(null);
+			}
+		}
+		else
+		{
+			if (!control.getIsEnumeratedControl())
+			{
+				entry.setValue(null);
+			}
+		}
+	}
 	/**
 	 * @throws ParseException
 	 * @throws DynamicExtensionsApplicationException
@@ -1053,8 +1133,8 @@ public class ControlsUtility
 								break;
 							}
 						}
-						if (control.getSourceSkipControl().getParentContainer().equals(
-								control.getParentContainer()))
+						if (control.getSourceSkipControl().getParentContainer()
+								.equals(control.getParentContainer()))
 						{
 							isSameContainerControl = true;
 						}
@@ -1062,23 +1142,27 @@ public class ControlsUtility
 						{
 							isSameContainerControl = false;
 						}
-						Integer controlSequenceNumber = control.getSequenceNumber();
+						Integer controlSequenceNumber = control
+								.getSequenceNumber();
 						if (controlSequenceNumber != null)
 						{
-							sourceControlName = control.getSourceSkipControl().getHTMLComponentName();
+							sourceControlName = control.getSourceSkipControl()
+									.getHTMLComponentName();
 							if (rowId != null && isSameContainerControl
 									&& cardinality
 									&& !rowId.equals(Integer.valueOf(-1)))
 							{
-								sourceControlName = sourceControlName + "_" + rowId;
+								sourceControlName = sourceControlName + "_"
+										+ rowId;
 							}
 						}
 						if (found && control.getIsSkipLogicTargetControl()
 								&& controlName.equals(sourceControlName))
 						{
-							entry.setValue(null);
+							setValueMapForEnumeratedControls(rowId,
+									isSameContainerControl, cardinality,
+									fullValueMap, entry, control);
 						}
-
 					}
 				}
 			}

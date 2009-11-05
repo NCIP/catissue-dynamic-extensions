@@ -38,16 +38,16 @@ public class DatePicker extends Control implements DatePickerInterface
 	private static final long serialVersionUID = 1L;
 	private String dateValueType = null;
 	private String dateFormatString = "Date format : ";
-	
+
 	/**
 	 * Show Calendar icon on UI
 	 */
 	private Boolean showCalendar = true;
 
-	
+
 	/**
 	 * This method returns the showCalendar of the DatePicker.
-	 * 
+	 *
 	 * @hibernate.property name="showCalendar" type="boolean"
 	 *                     column="SHOWCALENDAR"
 	 * @return Returns the showCalendar.
@@ -57,7 +57,7 @@ public class DatePicker extends Control implements DatePickerInterface
 		return showCalendar;
 	}
 
-	
+
 	/**
 	 * @param showCalendar the showCalendar to set
 	 */
@@ -68,7 +68,7 @@ public class DatePicker extends Control implements DatePickerInterface
 	/**
 	 * This method generates the HTML code for DatePicker control on the HTML
 	 * form
-	 * 
+	 *
 	 * @return HTML code for DatePicker
 	 * @throws DynamicExtensionsSystemException
 	 *             if couldn't generate the HTML name for the Control.
@@ -82,7 +82,7 @@ public class DatePicker extends Control implements DatePickerInterface
 		String defaultValue = getDefaultValueForControl();
 		if (value == null)
 		{
-			
+
 			if (defaultValue != null && this.getAttibuteMetadataInterface() != null
 					&& this.getAttibuteMetadataInterface() instanceof CategoryAttribute)
 			{
@@ -135,9 +135,7 @@ public class DatePicker extends Control implements DatePickerInterface
 		String output = "";
 		if (getIsSkipLogicTargetControl())
 		{
-			output += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
-					+ getHTMLComponentName() + "_div' /><div id='"
-					+ getHTMLComponentName() + "_div' name='"
+			output += "<div id='" + getHTMLComponentName() + "_div' name='"
 					+ getHTMLComponentName() + "_div'>";
 		}
 		if (dateFormat.equals(ProcessorConstants.DATE_ONLY_FORMAT))
@@ -344,6 +342,8 @@ public class DatePicker extends Control implements DatePickerInterface
 		}
 		if (getIsSkipLogicTargetControl())
 		{
+			output += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
+					+ getHTMLComponentName() + "_div' />";
 			output += "</div>";
 		}
 		return output;
@@ -378,7 +378,7 @@ public class DatePicker extends Control implements DatePickerInterface
 
 	/**
 	 * This method returns the dateValueType of the DatePicker.
-	 * 
+	 *
 	 * @hibernate.property name="dateValueType" type="string"
 	 *                     column="DATE_VALUE_TYPE"
 	 * @return Returns the dateValueType.
@@ -418,7 +418,7 @@ public class DatePicker extends Control implements DatePickerInterface
 	 * @param rowId
 	 * @return value for a control
 	 */
-	public List<String> getValueAsStrings() 
+	public List<String> getValueAsStrings()
 	{
 		return null;
 	}
@@ -426,10 +426,10 @@ public class DatePicker extends Control implements DatePickerInterface
 	 * set value as string for a control
 	 * @param listOfValues list of permissible value
 	 */
-	public void setValueAsStrings(List<String> listOfValues) 
+	public void setValueAsStrings(List<String> listOfValues)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 	/**
 	 * This method return default value for a control
@@ -454,5 +454,12 @@ public class DatePicker extends Control implements DatePickerInterface
 			}
 		}
 		return defaultValue;
+	}
+	/**
+	 *
+	 */
+	public boolean getIsEnumeratedControl()
+	{
+		return false;
 	}
 }

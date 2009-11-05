@@ -11,8 +11,8 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 /**
  * @version 1.0
  * @created 28-Sep-2006 12:20:07 PM
- * @hibernate.joined-subclass table="DYEXTN_DATA_GRID" 
- * @hibernate.joined-subclass-key column="IDENTIFIER" 
+ * @hibernate.joined-subclass table="DYEXTN_DATA_GRID"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  */
 public class DataGrid extends Control implements DataGridInterface
 {
@@ -38,7 +38,7 @@ public class DataGrid extends Control implements DataGridInterface
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public List<String> getValueAsStrings() {
 		// TODO Auto-generated method stub
@@ -46,12 +46,18 @@ public class DataGrid extends Control implements DataGridInterface
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	public void setValueAsStrings(List<String> listOfValues) 
+	public void setValueAsStrings(List<String> listOfValues)
 	{
 		// TODO Auto-generated method stub
-		
-	}
 
+	}
+	/**
+	 *
+	 */
+	public boolean getIsEnumeratedControl()
+	{
+		return false;
+	}
 }

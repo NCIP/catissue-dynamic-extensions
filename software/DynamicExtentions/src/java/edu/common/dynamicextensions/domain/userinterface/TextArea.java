@@ -14,14 +14,14 @@ import edu.common.dynamicextensions.ui.util.Constants;
 /**
  * @version 1.0
  * @created 28-Sep-2006 12:20:09 PM
- * @hibernate.joined-subclass table="DYEXTN_TEXTAREA" 
- * @hibernate.joined-subclass-key column="IDENTIFIER" 
+ * @hibernate.joined-subclass table="DYEXTN_TEXTAREA"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  */
 public class TextArea extends Control implements TextAreaInterface
 {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 201964699680324430L;
 	/**
@@ -34,7 +34,7 @@ public class TextArea extends Control implements TextAreaInterface
 	protected Integer rows;
 
 	/**
-	 * @hibernate.property name="columns" type="integer" column="TEXTAREA_COLUMNS" 
+	 * @hibernate.property name="columns" type="integer" column="TEXTAREA_COLUMNS"
 	 * @return Returns the columns.
 	 */
 	public Integer getColumns()
@@ -51,7 +51,7 @@ public class TextArea extends Control implements TextAreaInterface
 	}
 
 	/**
-	 * @hibernate.property name="rows" type="integer" column="TEXTAREA_ROWS" 
+	 * @hibernate.property name="rows" type="integer" column="TEXTAREA_ROWS"
 	 * @return Returns the rows.
 	 */
 	public Integer getRows()
@@ -72,15 +72,15 @@ public class TextArea extends Control implements TextAreaInterface
 	 * @param rowId
 	 * @return list of values as strings
 	 */
-	public List<String> getValueAsStrings() 
+	public List<String> getValueAsStrings()
 	{
 		return null;
 	}
-	
+
 	/**
 	 * This method generates the HTML code for TextArea control on the HTML form
 	 * @return HTML code for TextArea
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
@@ -90,9 +90,7 @@ public class TextArea extends Control implements TextAreaInterface
 		String htmlComponentName = getHTMLComponentName();
 		if (getIsSkipLogicTargetControl())
 		{
-			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
-					+ getHTMLComponentName() + "_div' /><div id='"
-					+ getHTMLComponentName() + "_div' name='"
+			htmlString += "<div id='" + getHTMLComponentName() + "_div' name='"
 					+ getHTMLComponentName() + "_div'>";
 		}
 		htmlString += "<textarea " + "class='font_bl_nor' " + "name='" + htmlComponentName
@@ -149,6 +147,8 @@ public class TextArea extends Control implements TextAreaInterface
 		}
 		if (getIsSkipLogicTargetControl())
 		{
+			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
+					+ getHTMLComponentName() + "_div' />";
 			htmlString += "</div>";
 		}
 		return htmlString;
@@ -202,13 +202,20 @@ public class TextArea extends Control implements TextAreaInterface
 		}
 		return defaultValue;
 	}
-	
+
 	/**
 	 * set value for a control
 	 */
-	public void setValueAsStrings(List<String> listOfValues) 
+	public void setValueAsStrings(List<String> listOfValues)
 	{
 		// TODO Auto-generated method stub
-		
+
+	}
+	/**
+	 *
+	 */
+	public boolean getIsEnumeratedControl()
+	{
+		return false;
 	}
 }

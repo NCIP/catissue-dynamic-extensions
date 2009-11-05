@@ -37,7 +37,7 @@ public class Label extends Control implements LabelInterface
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public List<String> getValueAsStrings() {
 		// TODO Auto-generated method stub
@@ -45,12 +45,18 @@ public class Label extends Control implements LabelInterface
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	public void setValueAsStrings(List<String> listOfValues) 
+	public void setValueAsStrings(List<String> listOfValues)
 	{
 		// TODO Auto-generated method stub
-		
-	}
 
+	}
+	/**
+	 *
+	 */
+	public boolean getIsEnumeratedControl()
+	{
+		return false;
+	}
 }

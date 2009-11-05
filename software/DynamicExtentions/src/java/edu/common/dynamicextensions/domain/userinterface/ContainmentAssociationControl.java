@@ -26,7 +26,7 @@ public class ContainmentAssociationControl extends AbstractContainmentControl
 {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -57,7 +57,7 @@ public class ContainmentAssociationControl extends AbstractContainmentControl
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public List<String> getValueAsStrings() {
 		// TODO Auto-generated method stub
@@ -65,11 +65,18 @@ public class ContainmentAssociationControl extends AbstractContainmentControl
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	public void setValueAsStrings(List<String> listOfValues) 
+	public void setValueAsStrings(List<String> listOfValues)
 	{
 		// TODO Auto-generated method stub
-		
+
+	}
+	/**
+	 *
+	 */
+	public boolean getIsEnumeratedControl()
+	{
+		return false;
 	}
 }

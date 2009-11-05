@@ -95,7 +95,21 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 			disabled = ProcessorConstants.DISABLED;
 		}
 		String htmlComponentName = getHTMLComponentName();
-
+		String parentContainerId = "";
+		if (this.getParentContainer() != null && this.getParentContainer().getId() != null)
+		{
+			parentContainerId = this.getParentContainer().getId().toString();
+		}
+		String identifier = "";
+		if (this.getId() != null)
+		{
+			identifier = this.getId().toString();
+		}
+		if (getIsSkipLogicTargetControl())
+		{
+			htmlString += "<div id='" + getHTMLComponentName() + "_div' name='"
+					+ getHTMLComponentName() + "_div'>";
+		}
 		if (listOfValues == null)
 		{
 			List<String> sourceControlValues = null;
@@ -130,7 +144,13 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 							+ "'"
 							+ " checked"
 							+ disabled
-							+ " onchange='isDataChanged();' ondblclick='changeValueForAllCheckBoxes(this);' onclick='changeValueForMultiSelectCheckBox(this);' /><img src='images/de/spacer.gif' width='2' height='2'>"
+							+ " onchange='isDataChanged();' ondblclick=\"changeValueForAllCheckBoxes(this);"
+							+ (this.isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
+									+ "','" + identifier + "','" + parentContainerId + "');" : "")
+							+ "\" onclick=\"changeValueForMultiSelectCheckBox(this);"
+							+ (this.isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
+									+ "','" + identifier + "','" + parentContainerId + "');" : "")
+							+ "\" /><img src='images/de/spacer.gif' width='2' height='2'>"
 							+ "<label for=\"" + htmlComponentName + "\">" + nameValueBean.getName()
 							+ "</label> <img src='images/de/spacer.gif' width='3' height='3'>";
 				}
@@ -152,11 +172,23 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 							+ "id='"
 							+ nameValueBean.getValue()
 							+ "'"
-							+ " onchange='isDataChanged();' ondblclick='changeValueForAllCheckBoxes(this);' onclick='changeValueForMultiSelectCheckBox(this);' /><img src='images/de/spacer.gif' width='2' height='2'>"
+							+ " onchange='isDataChanged();' ondblclick=\"changeValueForAllCheckBoxes(this);"
+							+ (this.isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
+									+ "','" + identifier + "','" + parentContainerId + "');" : "")
+							+ "\" onclick=\"changeValueForMultiSelectCheckBox(this);"
+							+ (this.isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
+									+ "','" + identifier + "','" + parentContainerId + "');" : "")
+							+ "\" /><img src='images/de/spacer.gif' width='2' height='2'>"
 							+ "<label for=\"" + htmlComponentName + "\">" + nameValueBean.getName()
 							+ "</label> <img src='images/de/spacer.gif' width='3' height='3'>";
 				}
 			}
+		}
+		if (getIsSkipLogicTargetControl())
+		{
+			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
+					+ getHTMLComponentName() + "_div' />";
+			htmlString += "</div>";
 		}
 		return htmlString;
 	}
@@ -238,30 +270,40 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 		{
 			getValueList(association, values);
 		}
-		if ((!getIsSkipLogicDefaultValue()) && (values == null || values.isEmpty()))
+		if (!getIsSkipLogicDefaultValue())
 		{
-			String defaultValue = null;
-			values = new ArrayList<String>();
-			AttributeMetadataInterface attrMetadataInterface = this.getAttibuteMetadataInterface();
-			if (attrMetadataInterface != null)
+			if (values == null || values.isEmpty())
 			{
-				if (attrMetadataInterface instanceof CategoryAttributeInterface)
+				String defaultValue = null;
+				values = new ArrayList<String>();
+				AttributeMetadataInterface attrMetadataInterface = this.getAttibuteMetadataInterface();
+				if (attrMetadataInterface != null)
 				{
-					AbstractAttributeInterface abstractAttributeInterface = ((CategoryAttributeInterface) attrMetadataInterface)
-							.getAbstractAttribute();
-					if (abstractAttributeInterface instanceof AttributeInterface)
+					if (attrMetadataInterface instanceof CategoryAttributeInterface)
+					{
+						AbstractAttributeInterface abstractAttributeInterface = ((CategoryAttributeInterface) attrMetadataInterface)
+								.getAbstractAttribute();
+						if (abstractAttributeInterface instanceof AttributeInterface)
+						{
+							defaultValue = attrMetadataInterface.getDefaultValue();
+						}
+					}
+					else
 					{
 						defaultValue = attrMetadataInterface.getDefaultValue();
 					}
+					if (defaultValue != null && defaultValue.trim().length() != 0)
+					{
+						values.add(defaultValue);
+					}
 				}
-				else
-				{
-					defaultValue = attrMetadataInterface.getDefaultValue();
-				}
-				if (defaultValue != null && defaultValue.trim().length() != 0)
-				{
-					values.add(defaultValue);
-				}
+			}
+		}
+		else
+		{
+			if (values == null || values.isEmpty())
+			{
+				values.add(getSkipLogicDefaultValue());
 			}
 		}
 		return values;
@@ -288,5 +330,12 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 			}
 		}
 		return associationInterface;
+	}
+	/**
+	 *
+	 */
+	public boolean getIsEnumeratedControl()
+	{
+		return true;
 	}
 }

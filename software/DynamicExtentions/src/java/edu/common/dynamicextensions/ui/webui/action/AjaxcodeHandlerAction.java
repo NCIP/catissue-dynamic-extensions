@@ -796,7 +796,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 					}
 
 				}
-				updateMapForKipLogic(containerInterface,rowValueMap,rwoIndex);
+				updateMapForskipLogic(containerInterface,rowValueMap,rwoIndex);
 
 				errorList.addAll(ValidatorUtil.validateEntity(rowValueMap, new ArrayList<String>(),
 						containerInterface));
@@ -826,7 +826,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void updateMapForKipLogic(ContainerInterface containerInterface,
+	private void updateMapForskipLogic(ContainerInterface containerInterface,
 			Map<BaseAbstractAttributeInterface, Object> rowValueMap, int rwoIndex) throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException {
 		for(ControlInterface control : containerInterface.getAllControlsUnderSameDisplayLabel())
 		{

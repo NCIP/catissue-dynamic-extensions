@@ -40,9 +40,7 @@ public class RadioButton extends Control implements RadioButtonInterface
 		String htmlString = "";
 		if (getIsSkipLogicTargetControl())
 		{
-			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
-					+ getHTMLComponentName() + "_div' /><div id='"
-					+ getHTMLComponentName() + "_div' name='"
+			htmlString += "<div id='" + getHTMLComponentName() + "_div' name='"
 					+ getHTMLComponentName() + "_div'>";
 		}
 		String defaultValue = getDefaultValueForControl();
@@ -132,12 +130,14 @@ public class RadioButton extends Control implements RadioButtonInterface
 		}
 		if (getIsSkipLogicTargetControl())
 		{
+			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
+					+ getHTMLComponentName() + "_div' />";
 			htmlString += "</div>";
 		}
 		return htmlString;
 	}
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	private String getDefaultValueForControl()
@@ -176,7 +176,7 @@ public class RadioButton extends Control implements RadioButtonInterface
 			{
 				long longValue = Long.parseLong(defaultValue);
 				defaultValue = Long.toString(longValue);
-	
+
 			}
 			else if (defaultValue.length() > 0
 					&& this.getAttibuteMetadataInterface()
@@ -184,7 +184,7 @@ public class RadioButton extends Control implements RadioButtonInterface
 			{
 				float floatValue = Float.parseFloat(defaultValue);
 				defaultValue = Float.toString(floatValue);
-	
+
 			}
 		}
 		return defaultValue;
@@ -209,23 +209,29 @@ public class RadioButton extends Control implements RadioButtonInterface
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	public List<String> getValueAsStrings() 
+	public List<String> getValueAsStrings()
 	{
 		List<String> values = new ArrayList<String>();
 		values.add(getDefaultValueForControl());
 		return values;
 	}
 	/**
-	 * 
+	 *
 	 */
-	public void setValueAsStrings(List<String> listOfValues) 
+	public void setValueAsStrings(List<String> listOfValues)
 	{
 		if (!listOfValues.isEmpty())
 		{
 			setValue(listOfValues.get(0));
 		}
 	}
-
+	/**
+	 *
+	 */
+	public boolean getIsEnumeratedControl()
+	{
+		return true;
+	}
 }

@@ -50,9 +50,7 @@ public class CheckBox extends Control implements CheckBoxInterface
 		String htmlString = "";
 		if (getIsSkipLogicTargetControl())
 		{
-			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
-					+ getHTMLComponentName() + "_div' /><div id='"
-					+ getHTMLComponentName() + "_div' name='"
+			htmlString += "<div id='" + getHTMLComponentName() + "_div' name='"
 					+ getHTMLComponentName() + "_div'>";
 		}
 		String disabled = "";
@@ -92,6 +90,8 @@ public class CheckBox extends Control implements CheckBoxInterface
 		}
 		if (getIsSkipLogicTargetControl())
 		{
+			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
+					+ getHTMLComponentName() + "_div' />";
 			htmlString += "</div>";
 		}
 		return htmlString;
@@ -122,9 +122,9 @@ public class CheckBox extends Control implements CheckBoxInterface
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	public List<String> getValueAsStrings() 
+	public List<String> getValueAsStrings()
 	{
 		List<String> values = new ArrayList<String>();
 		values.add(getDefaultValueForControl());
@@ -132,15 +132,15 @@ public class CheckBox extends Control implements CheckBoxInterface
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	public void setValueAsStrings(List<String> listOfValues) 
+	public void setValueAsStrings(List<String> listOfValues)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	private String getDefaultValueForControl()
@@ -163,13 +163,13 @@ public class CheckBox extends Control implements CheckBoxInterface
 		return defaultValue;
 	}
 	/**
-	 * 
+	 *
 	 * @param selectedPermissibleValues
 	 * @return
 	 */
 	public List<SkipLogicAttributeInterface> getNonReadOnlySkipLogicAttributes(
 			List<PermissibleValueInterface> selectedPermissibleValues,
-			AttributeMetadataInterface attributeMetadataInterface,Integer rowId) 
+			AttributeMetadataInterface attributeMetadataInterface)
 	{
 		List<SkipLogicAttributeInterface> skipLogicAttributes = new ArrayList<SkipLogicAttributeInterface>();
 		String checked = getDefaultValueForControl();
@@ -181,13 +181,13 @@ public class CheckBox extends Control implements CheckBoxInterface
 		return skipLogicAttributes;
 	}
 	/**
-	 * 
+	 *
 	 * @param selectedPermissibleValues
 	 * @return
 	 */
 	public List<SkipLogicAttributeInterface> getReadOnlySkipLogicAttributes(
 			List<PermissibleValueInterface> selectedPermissibleValues,
-			AttributeMetadataInterface attributeMetadataInterface,Integer rowId) 
+			AttributeMetadataInterface attributeMetadataInterface)
 	{
 		List<SkipLogicAttributeInterface> skipLogicAttributes = new ArrayList<SkipLogicAttributeInterface>();
 		String checked = getDefaultValueForControl();
@@ -199,17 +199,17 @@ public class CheckBox extends Control implements CheckBoxInterface
 		return skipLogicAttributes;
 	}
 	/**
-	 * 
+	 *
 	 */
-	public void setSkipLogicControls(Integer rowId)
+	public void setSkipLogicControls()
 	{
-		setSkipLogicControlValues(rowId,null);
+		setSkipLogicControlValues(null);
 	}
 	/**
-	 * 
+	 *
 	 */
-	private List<ControlInterface> setSkipLogicControlValues(Integer rowId,List<String> values)
-	{ 
+	private List<ControlInterface> setSkipLogicControlValues(List<String> values)
+	{
 		List<ControlInterface> controlList = null;
 		if (values == null)
 		{
@@ -220,5 +220,12 @@ public class CheckBox extends Control implements CheckBoxInterface
 			controlList = getSkipLogicControls(null,values);
 		}
 		return controlList;
+	}
+	/**
+	 *
+	 */
+	public boolean getIsEnumeratedControl()
+	{
+		return false;
 	}
 }

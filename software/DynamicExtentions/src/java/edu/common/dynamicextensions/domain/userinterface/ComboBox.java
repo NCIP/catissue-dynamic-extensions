@@ -90,7 +90,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		}
 		else
 		{
-			sourceHtmlComponentValues = new StringBuffer("~");
+			sourceHtmlComponentValues = new StringBuffer('~');
 		}
 		String parentContainerId = "";
 		if (this.getParentContainer() != null && this.getParentContainer().getId() != null)
@@ -104,14 +104,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		}
 		if (getIsSkipLogicTargetControl() || this.getParentContainer().isAjaxRequest())
 		{
-			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
-					+ getHTMLComponentName()
-					+ "_div' />"
-					+ "<input type='hidden' name='skipLogicControlScript' id='skipLogicControlScript' value = 'comboScript_"
-					+ getHTMLComponentName()
-					+ "' /><div id='"
-					+ getHTMLComponentName()
-					+ "_div' name='"
+			htmlString += "<div id='" + getHTMLComponentName() + "_div' name='"
 					+ getHTMLComponentName() + "_div'>";
 		}
 		/* Bug Id:9030
@@ -224,6 +217,11 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				+ "</div>";
 		if (getIsSkipLogicTargetControl() || this.getParentContainer().isAjaxRequest())
 		{
+			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
+					+ getHTMLComponentName()
+					+ "_div' />"
+					+ "<input type='hidden' name='skipLogicControlScript' id='skipLogicControlScript' value = 'comboScript_"
+					+ getHTMLComponentName() + "' />";
 			htmlString += "</div>";
 		}
 		return htmlString;
@@ -360,7 +358,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				defaultValue = controlvalue;
 			}
 		}
-		if(isInavlidVaue(defaultValue))
+		if(isInvalidValue(defaultValue))
 		{
 			defaultValue = this.getAttibuteMetadataInterface().getDefaultValue();
 			// Set default value to blank, if not set
@@ -376,7 +374,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	 * @param value
 	 * @return true if value is not present in the pv list
 	 */
-	private boolean isInavlidVaue(String value)
+	private boolean isInvalidValue(String value)
 	{
 		List<NameValueBean> nameValueBeans = new ArrayList<NameValueBean>();
 		nameValueBeans = ControlsUtility.getListOfPermissibleValues(this.getAttibuteMetadataInterface());
@@ -416,5 +414,11 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 			setValue(listOfValues.get(0));
 		}
 	}
-
+	/**
+	 *
+	 */
+	public boolean getIsEnumeratedControl()
+	{
+		return true;
+	}
 }

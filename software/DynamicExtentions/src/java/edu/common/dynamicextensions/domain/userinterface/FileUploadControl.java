@@ -36,9 +36,7 @@ public class FileUploadControl extends Control implements FileUploadInterface
 		String htmlString = "";
 		if (getIsSkipLogicTargetControl())
 		{
-			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
-					+ getHTMLComponentName() + "_div' /><div id='"
-					+ getHTMLComponentName() + "_div' name='"
+			htmlString += "<div id='" + getHTMLComponentName() + "_div' name='"
 					+ getHTMLComponentName() + "_div'>";
 		}
 		ApplicationProperties.initBundle("ApplicationResources");
@@ -52,6 +50,8 @@ public class FileUploadControl extends Control implements FileUploadInterface
 				+ getHTMLComponentName() + ")\" " + "id=\"" + getHTMLComponentName() + "\"/>";
 		if (getIsSkipLogicTargetControl())
 		{
+			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
+					+ getHTMLComponentName() + "_div' />";
 			htmlString += "</div>";
 		}
 		return htmlString;
@@ -102,5 +102,12 @@ public class FileUploadControl extends Control implements FileUploadInterface
 	{
 		// TODO Auto-generated method stub
 
+	}
+	/**
+	 *
+	 */
+	public boolean getIsEnumeratedControl()
+	{
+		return false;
 	}
 }

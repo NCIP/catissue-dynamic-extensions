@@ -233,6 +233,9 @@ public class CategoryHelper implements CategoryHelperInterface
 		CategoryAttributeInterface categoryAttribute = createOrupdateCategoryAttribute(entity,
 				attributeName, container);
 
+		//removing all dependent skip Logic Attributes.
+		categoryAttribute.removeAllDependentSkipLogicAttributes();
+
 		AttributeInterface attribute = entity.getAttributeByName(attributeName);
 
 		applyRulesInCSVFile(categoryAttribute, attribute, rulesMap);
@@ -923,6 +926,9 @@ public class CategoryHelper implements CategoryHelperInterface
 		.createUserDefinedDE();
 		for (PermissibleValueInterface pv : permissibleValues)
 		{
+			//remove all dependent skip Logic Attributes.
+			pv.removeAllDependentSkipLogicAttributes();
+
 			userDefinedDE.addPermissibleValue(pv);
 		}
 
@@ -1286,6 +1292,9 @@ public class CategoryHelper implements CategoryHelperInterface
 		.createUserDefinedDE();
 		for (PermissibleValueInterface pv : permissibleValues)
 		{
+			//remove all dependent skip Logic Attributes.
+			pv.removeAllDependentSkipLogicAttributes();
+
 			userDefinedDE.addPermissibleValue(pv);
 		}
 
