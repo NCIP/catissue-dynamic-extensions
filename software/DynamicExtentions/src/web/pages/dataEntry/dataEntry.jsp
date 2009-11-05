@@ -93,8 +93,8 @@
 			var elements=document.dataEntryForm.elements;
 			for(var i = 0; i < elements.length; i++)
 			{
-				if (elements[i].type != "hidden" && elements[i].disabled != true) 
-		        { 
+				if (elements[i].type != "hidden" && elements[i].disabled != true)
+		        {
 					try
 					{
 						elements[i].focus();
@@ -110,7 +110,7 @@
 		</script>
 	</head>
 
-	<body onload="executeComboScriptsForSkipLogic();loadPreviewForm('<%=request.getContextPath()%>');setFocusToFirstControl();insertBreadCrumbForSubForm(<%=containerInterface.getId()%>,'<%=request.getSession().getAttribute("application_name")%>')" onclick="window.parent.parent.detectApplicationUsageActivity()" onkeydown="window.parent.parent.detectApplicationUsageActivity()">
+	<body onload="executeComboScriptsForSkipLogic();loadPreviewForm('<%=request.getContextPath()%>');insertBreadCrumbForSubForm(<%=containerInterface.getId()%>,'<%=request.getSession().getAttribute("application_name")%>')" onclick="window.parent.parent.detectApplicationUsageActivity()" onkeydown="window.parent.parent.detectApplicationUsageActivity()">
 		<html:form styleId="dataEntryForm" action="/ApplyDataEntryFormAction" enctype="multipart/form-data" method="post">
 		<c:if test='${showInDiv == "false"}'>
 			<div id="dataEntryFormDiv" style="position:absolute;overflow:auto;height:100%;width:100%;">
@@ -120,7 +120,7 @@
 			<div id="dataEntryFormDiv" style="position:absolute;overflow:auto;height:100%;width:100%;z-index:1000;">
 			<div id="overDiv" style="position:absolute; visibility:hidden; z-index:1000;"></div>
 		</c:if>
-		
+
 			<c:choose>
 				<c:when test='${showFormPreview == "true"}'>
 					<table valign="top" style="border-right:1px" align='center' width='100%' height="100%" border='0' cellspacing="0" cellpadding="0" class="tbBorders1" >
@@ -137,11 +137,11 @@
 					</td>
 				</tr>
 				</c:if>
-	 
+
 				<tr valign="top" height="93%">
 					<td>
 						<table valign="top" summary="" align='center' width='100%' cellspacing="0" cellpadding="0" border="0">
-							<c:if test='${showFormPreview == "true"}'> 
+							<c:if test='${showFormPreview == "true"}'>
 								<tr valign="top">
 									<td height="20" class="tabMenuItem" onmouseover="changeMenuStyle(this,'tabMenuItemOver'),showCursor()" onmouseout="changeMenuStyle(this,'tabMenuItem'),hideCursor()" onclick="alert('This page is still under construction and will be available in the next release');">
 										<bean:message key="app.title.DefineGroupTabTitle" />
@@ -157,8 +157,8 @@
 									</td>
 									<td width="50%" class="tabMenuSeparator" colspan="3">&nbsp;</td>
 								</tr>
-						
-							</c:if>	
+
+							</c:if>
 							<tr valign="top">
 								<td colspan="7">
 									<div id ='error_div'>&nbsp;</div>
@@ -171,7 +171,7 @@
 												<table border="0" align="center" cellpadding="1" cellspacing="0" class="td_color_6e81a6">
                                               		<tr>
 													<td>
-													<table width="100%" height="30"  border="0" cellpadding="4" cellspacing="4" class="td_color_FFFFCC">  
+													<table width="100%" height="30"  border="0" cellpadding="4" cellspacing="4" class="td_color_FFFFCC">
 													<c:forEach items="${errorList}" var="error">
 														<jsp:useBean id="error" type="java.lang.String"/>
 														 <tr>
@@ -186,16 +186,16 @@
 												</table>
 											<%
 												} else {
-														
-												
-											%>		<logic:messagesPresent message="true">								
+
+
+											%>		<logic:messagesPresent message="true">
 													<table border="0" align="center" cellpadding="1" cellspacing="0" class="td_color_6e81a6">
 														<tr>
 															<td><table width="100%" height="30"  border="0"		cellpadding="4" cellspacing="4"			class="td_color_FFFFCC">
 																	<tr>
 																		<th align="left" class="font_bl_nor">
 																		<ul>
-																			<html:messages id="msg" message="true"> 
+																			<html:messages id="msg" message="true">
 																			<img src="<%=request.getContextPath()%>/images/de/ic_success.gif" alt="Success" width="28" height="25" hspace="3" align="absmiddle"><bean:write name="msg"/>
 																			</html:messages>
 																		</ul>
@@ -207,7 +207,7 @@
 														</table>
 													    </logic:messagesPresent>
 													<%
-												
+
 												}
 											%>
                                           </tr>
@@ -224,7 +224,7 @@
 								<td valign="top" colspan="7">
 									<table cellpadding="0" cellspacing="5" border="0" align='center'>
 										<tr height="5"><td colspan="2"></tr>
-										<tr align='center'>															
+										<tr align='center'>
 												<c:choose>
 													<c:when test='${showFormPreview=="true"}'>
 														<td align='center'>
@@ -235,13 +235,13 @@
 													</c:when>
 													<c:otherwise>
 														<html:hidden styleId='isEdit' property="isEdit" value=""/>
-														
+
 														<c:if test='${(isTopLevelEntity=="false") && ((showInDiv=="null") || (showInDiv=="true"))}'>
 															<td align='center'>
 																<input type="image" src="<%=request.getContextPath()%>/images/de/b_submit.gif" width="62" height="21" id="btnDESubmit" align="middle" onClick="return showParentContainerInsertDataPage()"/>
 															</td>
 														</c:if>
-																												
+
 														<c:if test='${(mode=="edit") && (isTopLevelEntity=="true") && ((showInDiv=="null") || (showInDiv=="true"))}'>
 															<td align='center'>
 																<input type="image" src="<%=request.getContextPath()%>/images/de/b_submit.gif" width="62" height="21" id="btnDESubmit" align="middle" onClick="return setInsertDataOperation()"/>
@@ -254,14 +254,14 @@
 															document.getElementById('operation_mode').value = "insertParentData";
 															</script>
 														</c:if>
-								
+
 														<c:if test='${!((mode=="view") && (isTopLevelEntity=="false"))  && ((showInDiv=="null") || (showInDiv=="true"))}'>
 															<td align='center'>
 																<input type="button" style="border: 0px; background-image: url(<%=request.getContextPath()%>/images/de/b_cancel.gif); height: 21px; width: 62px;" id="btnDECancel" align="middle" onClick="cancelInsertData()"/>
-															</td>															
+															</td>
 														</c:if>
 													</c:otherwise>
-												</c:choose>	
+												</c:choose>
 										</tr>
 									</table>
 								</td>
@@ -270,7 +270,7 @@
 					</td>
 				</tr>
 			</table>
-			
+
 
 			<html:hidden styleId='recordIdentifier' property="recordIdentifier"/>
 			<html:hidden styleId='entitySaved' property="entitySaved"/>

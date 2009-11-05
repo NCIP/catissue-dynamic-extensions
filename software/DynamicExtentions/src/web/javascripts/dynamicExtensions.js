@@ -1620,7 +1620,8 @@ function setDefaultValues(tableId, obj, containerId)
 		var childObject = children[j];
 		childObjectName = childObject.name;
 		if (childObjectName == null && childObject.id != null
-				&& childObject.id != "auto_complete_dropdown")
+				&& childObject.id != "auto_complete_dropdown"
+					&& childObject.id.indexOf('slcalcodControl') == -1)
 		{
 			childObjectName = childObject.id;
 		}
@@ -1646,7 +1647,8 @@ function setDefaultValues(tableId, obj, containerId)
 					childObject = childObject.childNodes[0];
 					childObjectName = childObject.name;
 					if (childObjectName == null && childObject.id != null
-						&& childObject.id != "auto_complete_dropdown")
+						&& childObject.id != "auto_complete_dropdown"
+							&& childObject.id.indexOf('slcalcodControl') == -1)
 					{
 						childObjectName = childObject.id;
 					}
@@ -1688,7 +1690,32 @@ function setDefaultValues(tableId, obj, containerId)
 						var newName = oldName + "_" + rowIndex;
 						var newScript = replaceAll(childNodes2[1].innerHTML,
 								oldName, newName);
-						obj.innerHTML = replaceAll(obj.innerHTML,
+
+						var div = document.createElement("DIV");
+						div.id = oldName + "_Outer_div";
+						div.name= oldName + "_Outer_div";
+
+						var divObject = document.createElement("DIV");
+						divObject.id = oldName + "_div";
+						divObject.name= oldName + "_div";
+						divObject.appendChild(childNodes2[2].childNodes[0]);
+						div.appendChild(divObject);
+
+						var inputSkipLogicControl = document.createElement("INPUT");
+						inputSkipLogicControl.type = "hidden";
+						inputSkipLogicControl.id = "skipLogicControl";
+						inputSkipLogicControl.name= "skipLogicControl";
+						inputSkipLogicControl.value= divObject.name;
+						divObject.appendChild(inputSkipLogicControl);
+
+						var inputComboScript = document.createElement("INPUT");
+						inputComboScript.type = "hidden";
+						inputComboScript.id = "skipLogicControlScript";
+						inputComboScript.name= "skipLogicControlScript";
+						inputComboScript.value= "comboScript_" + oldName;
+						divObject.appendChild(inputComboScript);
+
+						obj.innerHTML = replaceAll(div.innerHTML,
 								oldName, newName);
 						eval(newScript);
 					}
@@ -2518,6 +2545,7 @@ function getSkipLogicControl(controlName, controlId, containerId)
 					            		if (skipLogicDiv!= null && originalDiv != null)
 					            		{
 					            			originalDiv.innerHTML = skipLogicDiv.innerHTML;
+
 					            		}
 					            	}
 					            }
@@ -2557,7 +2585,7 @@ function executeComboScriptsForSkipLogic()
 		{
 			if (comboScriptDiv[i].value != null)
 			{
-				var comboScript = document.getElementById(comboScriptDiv[i].value)
+				var comboScript = document.getElementById(comboScriptDiv[i].value);
 				if (comboScript != null)
 				{
 					eval(comboScript.innerHTML);
