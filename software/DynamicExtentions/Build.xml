@@ -854,11 +854,11 @@
 			<report todir="${junit.report.dir}" />
 		</junitreport>
 
-	 	<delete >
+	 	<!--<delete >
 			<fileset dir="${junit.report.dir}">
 				<include name="**/**/*.xml" />
 			</fileset>
-	 	</delete>
+	 	</delete>-->
 	</target>
 
 	  <!-- Cobertura -->
