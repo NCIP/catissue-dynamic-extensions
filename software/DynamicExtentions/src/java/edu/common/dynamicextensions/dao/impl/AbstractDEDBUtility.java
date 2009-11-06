@@ -1,6 +1,7 @@
 package edu.common.dynamicextensions.dao.impl;
 
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.processor.ProcessorConstants;
 
 
 /**
@@ -10,7 +11,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 public abstract class AbstractDEDBUtility implements IDEDBUtility
 {
 	/**
-	 * This default implementation is used for 
+	 * This default implementation is used for
 	 * all database(mssql server,db2,postgresql) except mysql
 	 * @param strDate date as string.
 	 * @param removeTime true if time part has to remove
@@ -20,9 +21,19 @@ public abstract class AbstractDEDBUtility implements IDEDBUtility
 	{
 		String month = strDate.substring(0, 2);
 		String year = strDate.substring(3, strDate.length());
-		return month + "-01-" + year + " 0:0";
+		String formattedDate;
+		if(ProcessorConstants.DATE_ONLY_FORMAT.substring(0, 2).equals("MM"))
+		{
+			formattedDate = month + ProcessorConstants.DATE_SEPARATOR+"01"+ProcessorConstants.DATE_SEPARATOR + year + " 0:0";
+		}
+		else
+		{
+			formattedDate = "01"+ProcessorConstants.DATE_SEPARATOR + month + ProcessorConstants.DATE_SEPARATOR + year + " 0:0";
+		}
+
+		return formattedDate;
 	}
-	
+
 	/**
 	 * This default implementation is used for
 	 * all database(mssql server,db2,postgresql,oracle) except mysql
@@ -32,7 +43,7 @@ public abstract class AbstractDEDBUtility implements IDEDBUtility
 	 */
 	public String formatYearDate(String strDate,boolean removeTime)
 	{
-		return "01-01-" + strDate + " 0:0";
+		return "01"+ProcessorConstants.DATE_SEPARATOR+"01"+ProcessorConstants.DATE_SEPARATOR + strDate + " 0:0";
 	}
 	/**
 	 * For mssql server and db2 database this method is not defined,
@@ -44,7 +55,7 @@ public abstract class AbstractDEDBUtility implements IDEDBUtility
 	{
 		return "";
 	}
-	
+
 	/**
 	 * method to clean database.
 	 * @param args argument from main method.

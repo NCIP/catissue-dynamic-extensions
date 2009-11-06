@@ -90,7 +90,7 @@ public final class DynamicExtensionDBFactory
 	 */
 	public DynamicExtensionBaseQueryBuilder getQueryBuilder(String dbType)
 	{
-		return ((DynamicExtensionDBGroup) mapDbTypeVsDbServiceGroup.get(dbType)).getQueryBuilder();
+		return (mapDbTypeVsDbServiceGroup.get(dbType.toLowerCase())).getQueryBuilder();
 	}
 
 	/**
@@ -100,7 +100,7 @@ public final class DynamicExtensionDBFactory
 	 */
 	public IDEDBUtility getDbUtility(String dbType)
 	{
-		return ((DynamicExtensionDBGroup) mapDbTypeVsDbServiceGroup.get(dbType)).getDbUtility();
+		return (mapDbTypeVsDbServiceGroup.get(dbType.toLowerCase())).getDbUtility();
 	}
 
 	/**
@@ -110,7 +110,7 @@ public final class DynamicExtensionDBFactory
 	 */
 	public String getDataTypeMappingFile(String dbType)
 	{
-		return ((DynamicExtensionDBGroup) mapDbTypeVsDbServiceGroup.get(dbType))
+		return (mapDbTypeVsDbServiceGroup.get(dbType.toLowerCase()))
 				.getDataTypeMappingFile();
 	}
 
@@ -193,7 +193,7 @@ public final class DynamicExtensionDBFactory
 		IDEDBUtility dbUtility = (IDEDBUtility) Class.forName(dbUtilityClasName).newInstance();
 		DynamicExtensionDBGroup dEServiceGroup = new DynamicExtensionDBGroup(queryBuilder,
 				dbUtility, dataTypeMappingFile);
-		mapDbTypeVsDbServiceGroup.put(dbType, dEServiceGroup);
+		mapDbTypeVsDbServiceGroup.put(dbType.toLowerCase(), dEServiceGroup);
 	}
 
 	/**
@@ -205,7 +205,7 @@ public final class DynamicExtensionDBFactory
 	 */
 	private String getClassName(Element dbTypeNode, String eleName, String attName)
 	{
-		Node node = ((NodeList) dbTypeNode.getElementsByTagName(eleName)).item(0);
+		Node node = (dbTypeNode.getElementsByTagName(eleName)).item(0);
 		Element nodeElement = (Element) node;
 		return nodeElement.getAttribute(attName);
 

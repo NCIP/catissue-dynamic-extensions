@@ -11,6 +11,7 @@ import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsValidationException;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.util.global.CommonServiceLocator;
 
 /**
@@ -35,7 +36,7 @@ public class DateValidator implements ValidatorRuleInterface
 	}
 
 	/**
-	 * Validate user input for permissible date values for date with range. 
+	 * Validate user input for permissible date values for date with range.
 	 * @param attribute
 	 * @param valueObject
 	 * @param parameterMap
@@ -77,9 +78,8 @@ public class DateValidator implements ValidatorRuleInterface
 				&& ((attributeTypeInformation != null) && (attributeTypeInformation instanceof DateAttributeTypeInformation)))
 		{
 			DateAttributeTypeInformation dateAttributeTypeInformation = (DateAttributeTypeInformation) attributeTypeInformation;
-			String dateFormat = dateAttributeTypeInformation.getFormat();
+			String dateFormat = DynamicExtensionsUtility.getDateFormat(dateAttributeTypeInformation.getFormat());
 			String value = (String) valueObject;
-			value = value.replaceAll("/", "-");
 			Date tempDate = null;
 
 			try

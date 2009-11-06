@@ -221,7 +221,7 @@
 								</td>
 							</tr>
 							<tr class="td_bg_bottom">
-								<td valign="top" colspan="7">
+								<td valign="top" colspan="7" id="submit_cancel_td">
 									<table cellpadding="0" cellspacing="5" border="0" align='center'>
 										<tr height="5"><td colspan="2"></tr>
 										<tr align='center'>
@@ -286,6 +286,11 @@
 			<c:if test="${requestScope.isDirty == 'true' || requestScope.isDirty == true}">
 				<script>
 					document.getElementById('isDirty').value = true;
+				</script>
+			</c:if>
+			<c:if test='${(showInDiv=="false")}'>
+				<script>
+					document.getElementById('submit_cancel_td').style.display="none";
 				</script>
 			</c:if>
 		</html:form>

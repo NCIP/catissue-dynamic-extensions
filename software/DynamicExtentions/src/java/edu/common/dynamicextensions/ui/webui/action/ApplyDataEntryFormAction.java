@@ -24,6 +24,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
 
+import edu.common.dynamicextensions.domain.Attribute;
 import edu.common.dynamicextensions.domain.FileAttributeRecordValue;
 import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.FileExtension;
@@ -52,6 +53,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ApplyDataEntryFormProcessor;
 import edu.common.dynamicextensions.processor.DeleteRecordProcessor;
+import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
@@ -746,10 +748,10 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				value = "1";
 			}
 			if ((value != null)
-					&& ((value.equalsIgnoreCase(DEConstants.DATE_MONTH_YEAR_CAL))
-							|| (value.equalsIgnoreCase(DEConstants.DATE_TIME_CAL))
-							|| (value.equalsIgnoreCase(DEConstants.MONTH_YEAR_CAL)) || (value
-							.equalsIgnoreCase(DEConstants.YEAR_ONLY_CAL))))
+					&& ((value.equalsIgnoreCase(ProcessorConstants.DATE_ONLY_FORMAT))
+							|| (value.equalsIgnoreCase(ProcessorConstants.DATE_TIME_FORMAT))
+							|| (value.equalsIgnoreCase(ProcessorConstants.MONTH_YEAR_FORMAT)) || (value
+							.equalsIgnoreCase(ProcessorConstants.YEAR_ONLY_FORMAT))))
 			{
 				value = "";
 			}
@@ -845,8 +847,10 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 		{
 			errorList = new ArrayList<String>();
 		}
-		AttributeTypeInformationInterface attributeTypeInformation = ((AttributeMetadataInterface) control
-				.getBaseAbstractAttribute()).getAttributeTypeInformation();
+
+		Attribute attribute = (Attribute) control.getBaseAbstractAttribute();
+		AttributeTypeInformationInterface attributeTypeInformation = attribute
+				.getAttributeTypeInformation();
 
 		if (attributeTypeInformation instanceof FileAttributeTypeInformation)
 		{
@@ -887,9 +891,35 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				errorList.add(ApplicationProperties.getValue("app.selectProperFormat",
 						parameterList));
 			}
+			checkFileSize(fileAttibuteInformation.getMaxFileSize(), selectedFileSize, control
+					.getCaption(), errorList);
 		}
 
 		dataEntryForm.setErrorList(errorList);
 		return isValidExtension;
 	}
+
+	/**
+	 * This method is used to check for the maximum file size.
+	 *
+	 * @param dataEntryForm
+	 *
+	 * @param control
+	 *
+	 * @param selectedFile
+	 *
+	 */
+	private void checkFileSize(Float maxFileSize, int selectedFileSize, String attributeName,
+			List<String> errorList)
+	{
+		if ((maxFileSize != null) && (selectedFileSize > maxFileSize * 1000000))
+		{
+			List<String> parameterList = new ArrayList<String>();
+			parameterList.add(maxFileSize.toString());
+			parameterList.add(attributeName);
+			errorList
+					.add(ApplicationProperties.getValue("app.selectProperFileSize", parameterList));
+		}
+	}
+
 }

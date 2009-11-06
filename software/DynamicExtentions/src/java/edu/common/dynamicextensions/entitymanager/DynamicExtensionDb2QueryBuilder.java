@@ -27,7 +27,6 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.util.Utility;
-import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
@@ -94,7 +93,7 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public Object getFormattedValue(AbstractAttribute attribute, Object value)
 	{
@@ -128,29 +127,25 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 		else if (attributeInformation instanceof DateAttributeTypeInformation)
 		{
 			String dateFormat = ((DateAttributeTypeInformation) attributeInformation).getFormat();
-			if (dateFormat == null)
-			{
-				dateFormat = CommonServiceLocator.getInstance().getDatePattern();
-			}
-
+			String datePattern = DynamicExtensionsUtility.getDateFormat(dateFormat);
 			String str = null;
 			if (value instanceof Date)
 			{
-				str = Utility.parseDateToString(((Date) value), dateFormat);
+				str = Utility.parseDateToString(((Date) value), datePattern);
 			}
 			else
 			{
 				str = (String) value;
 			}
 
-			if (dateFormat.equals(ProcessorConstants.MONTH_YEAR_FORMAT) && str.length() != 0)
+			if (datePattern.equals(ProcessorConstants.MONTH_YEAR_FORMAT) && str.length() != 0)
 			{
 				str = DynamicExtensionsUtility.formatMonthAndYearDate(str,false);
 			}
 
-			if (dateFormat.equals(ProcessorConstants.YEAR_ONLY_FORMAT) && str.length() != 0)
+			if (datePattern.equals(ProcessorConstants.YEAR_ONLY_FORMAT) && str.length() != 0)
 			{
-				
+
 				str = DynamicExtensionsUtility.formatYearDate(str,false);
 
 			}
@@ -168,9 +163,9 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 				JDBCDAO jdbcDAO;
 				try
 				{
-					jdbcDAO = (JDBCDAO) factory.getJDBCDAO();
+					jdbcDAO = factory.getJDBCDAO();
 					formattedvalue = jdbcDAO.getStrTodateFunction() + "('" + str.trim() + "','"
-					+ DynamicExtensionsUtility.getSQLDateFormat(dateFormat) + "')";
+					+ DynamicExtensionsUtility.getSQLDateFormat(datePattern) + "')";
 				}
 				catch (DAOException e)
 				{
@@ -221,7 +216,7 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 	/**
 	 *This method create the query for altering the column of given attribute to add not null constraint on it
 	 *@param attribute on which the constraint is to be applied
-	 *@return query 
+	 *@return query
 	 */
 	protected String addNotNullConstraintQuery(AttributeInterface attribute)
 			throws DynamicExtensionsSystemException
@@ -238,7 +233,7 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 	/**
 	 *This method create the query for altering the column of given attribute to add null constraint on it
 	 *@param attribute on which the constraint is to be applied
-	 *@return query 
+	 *@return query
 	 */
 	protected String dropNotNullConstraintQuery(AttributeInterface attribute)
 			throws DynamicExtensionsSystemException
@@ -306,7 +301,7 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 				{
 					throw new DynamicExtensionsSystemException(e.getMessage(), e);
 				}
-				
+
 			}
 		}
 		else
@@ -316,7 +311,7 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 							savedAttribute.getId());
 			if (recordCollection != null && !recordCollection.isEmpty())
 			{
-				Integer count = (Integer) recordCollection.iterator().next();
+				Integer count = recordCollection.iterator().next();
 				if (count > 0)
 				{
 					dataPresent = true;
@@ -448,15 +443,15 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 			newAttributeRollbackQuery += dropExtraColumnQueryStringForFileAttributeInEditCase(attribute);
 
 		}
-		
+
 		attributeRollbackQueryList.add(newAttributeRollbackQuery);
 		return newAttributeQuery;
 	}
 
-	
-	
+
+
 	/**
-	 * Converts Blob data type to Object data type for db2 database 
+	 * Converts Blob data type to Object data type for db2 database
 	 * @param valueObj
 	 * @return
 	 * @throws DynamicExtensionsSystemException
@@ -486,6 +481,6 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 	}
 
 }
-	
+
 
 

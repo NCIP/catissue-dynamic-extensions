@@ -6899,13 +6899,13 @@
 											</UML:TaggedValue.type>
 										</UML:TaggedValue>
 										<UML:TaggedValue xmi.id="EAID_942179CF_464B_48e9_8AAF_A2CA4385095B" isSpecification="false">
-											<UML:TaggedValue.dataValue>01/01/2000</UML:TaggedValue.dataValue>
+											<UML:TaggedValue.dataValue>01-01-2000</UML:TaggedValue.dataValue>
 											<UML:TaggedValue.type>
 												<UML:TagDefinition xmi.idref="EAID_482256A1_AB52_4f46_B6BD_3157D280CCB6"/>
 											</UML:TaggedValue.type>
 										</UML:TaggedValue>
 										<UML:TaggedValue xmi.id="EAID_1D6197F1_A6A0_4f0f_AAB8_A8F615F1E00D" isSpecification="false">
-											<UML:TaggedValue.dataValue>01/01/2010</UML:TaggedValue.dataValue>
+											<UML:TaggedValue.dataValue>01-01-2010</UML:TaggedValue.dataValue>
 											<UML:TaggedValue.type>
 												<UML:TagDefinition xmi.idref="EAID_33617A57_DFD5_4a63_9B06_0E46E0A00D65"/>
 											</UML:TaggedValue.type>

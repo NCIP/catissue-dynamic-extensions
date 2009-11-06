@@ -596,7 +596,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 
 		}
 		controlHTML.append("</td></tr>");
-		this.showAssociationControlsAsLink = false;
+		showAssociationControlsAsLink = false;
 
 		return controlHTML.toString();
 	}

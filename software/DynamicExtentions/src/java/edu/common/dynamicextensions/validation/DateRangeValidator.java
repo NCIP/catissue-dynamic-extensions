@@ -27,7 +27,7 @@ public class DateRangeValidator implements ValidatorRuleInterface
 	/**
 	 * @see edu.common.dynamicextensions.validation.ValidatorRuleInterface#validate(edu.common.dynamicextensions.domaininterface.AttributeInterface, java.lang.Object, java.util.Map)
 	 * @throws DynamicExtensionsValidationException
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public boolean validate(AttributeMetadataInterface attribute, Object valueObject,
 			Map<String, String> parameterMap, String controlCaption)
@@ -46,7 +46,7 @@ public class DateRangeValidator implements ValidatorRuleInterface
 				&& (attributeTypeInformation instanceof DateAttributeTypeInformation))
 		{
 			DateAttributeTypeInformation dateAttributeTypeInformation = (DateAttributeTypeInformation) attributeTypeInformation;
-			String dateFormat = dateAttributeTypeInformation.getFormat();
+			String dateFormat = DynamicExtensionsUtility.getDateFormat(dateAttributeTypeInformation.getFormat());
 			String value = (String) valueObject;
 
 			if (dateFormat.equals(ProcessorConstants.MONTH_YEAR_FORMAT))
@@ -80,9 +80,10 @@ public class DateRangeValidator implements ValidatorRuleInterface
 
 				Date parameterDate = null, valueDate = null;
 				try
-				{
-					parameterDate = Utility.parseDate(parameterValue, "MM-dd-yyyy");
-					valueDate = Utility.parseDate(value, "MM-dd-yyyy");
+				{	// Fix to support different formats in DE :Pavan.
+					parameterValue = parameterValue.replace('/', '-');
+					parameterDate = Utility.parseDate(parameterValue, ProcessorConstants.SQL_DATE_ONLY_FORMAT);
+					valueDate = Utility.parseDate(value, ProcessorConstants.DATE_ONLY_FORMAT);
 				}
 				catch (ParseException ParseException)
 				{
@@ -120,8 +121,7 @@ public class DateRangeValidator implements ValidatorRuleInterface
 		{
 			List<String> placeHolders = new ArrayList<String>();
 			placeHolders.add(controlCaption);
-
-			placeHolders.add(parameterValue);
+			placeHolders.add(Utility.parseDateToString(parameterDate, ProcessorConstants.DATE_ONLY_FORMAT));
 			throw new DynamicExtensionsValidationException("Validation failed", null,
 					"dynExtn.validation.Date.Min", placeHolders);
 		}
@@ -141,8 +141,7 @@ public class DateRangeValidator implements ValidatorRuleInterface
 		{
 			List<String> placeHolders = new ArrayList<String>();
 			placeHolders.add(controlCaption);
-
-			placeHolders.add(parameterValue);
+			placeHolders.add(Utility.parseDateToString(parameterDate, ProcessorConstants.DATE_ONLY_FORMAT));
 			throw new DynamicExtensionsValidationException("Validation failed", null,
 					"dynExtn.validation.Date.Max", placeHolders);
 		}

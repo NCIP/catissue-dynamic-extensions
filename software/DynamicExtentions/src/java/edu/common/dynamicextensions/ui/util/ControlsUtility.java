@@ -290,10 +290,8 @@ public class ControlsUtility
 		{
 			dateFormat = ((DateTypeInformationInterface) dateAttribute).getFormat();
 		}
-		if (dateFormat == null)
-		{
-			dateFormat = ProcessorConstants.DATE_ONLY_FORMAT;
-		}
+		dateFormat = DynamicExtensionsUtility.getDateFormat(dateFormat);
+
 		return dateFormat;
 	}
 	/**

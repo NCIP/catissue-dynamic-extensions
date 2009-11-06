@@ -8,6 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
@@ -36,6 +37,11 @@ import java.util.regex.Pattern;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 
 import edu.common.dynamicextensions.bizlogic.BizLogicFactory;
 import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
@@ -1210,6 +1216,9 @@ public class DynamicExtensionsUtility
 
 		try
 		{
+			// Fix to support different formats in DE :Pavan.
+			date1 = date1.replace('/', '-');
+			date2 = date2.replace('/', '-');
 			Date firstDate = Utility.parseDate(date1, "MM-dd-yyyy");
 			Date secondDate = Utility.parseDate(date2, "MM-dd-yyyy");
 			if (firstDate.after(secondDate))
@@ -1931,15 +1940,12 @@ public class DynamicExtensionsUtility
 
 		String dateFormat = ((DateAttributeTypeInformation) attr.getAttributeTypeInformation())
 				.getFormat();
-		if (dateFormat == null)
-		{
-			dateFormat = CommonServiceLocator.getInstance().getDatePattern();
-		}
+		String datePatten = DynamicExtensionsUtility.getDateFormat(dateFormat);
 
 		String str = null;
 		if (value instanceof Date)
 		{
-			str = Utility.parseDateToString(((Date) value), dateFormat);
+			str = Utility.parseDateToString(((Date) value), datePatten);
 		}
 		else
 		{
@@ -2497,4 +2503,61 @@ public class DynamicExtensionsUtility
 		}
 		return nextSeqNumber + 1;
 	}
+	/**
+	 * It will read the ValidDatePatterns.XML & verify that the date patterns
+	 * specified in the ApplicationResources.properties Files is in the given patterns.
+	 * else will throw the Exception.
+	 */
+	public static void validateGivenDatePatterns()
+	{
+		DynamicExtensionsUtility utility = new DynamicExtensionsUtility();
+		List<String> validDatePatternList = utility.getAllValidDatePatterns();
+
+			if(!(validDatePatternList.contains(ProcessorConstants.DATE_ONLY_FORMAT)
+					&& validDatePatternList.contains(ProcessorConstants.DATE_TIME_FORMAT)
+					&& validDatePatternList.contains(ProcessorConstants.MONTH_YEAR_FORMAT)
+					&& validDatePatternList.contains(ProcessorConstants.YEAR_ONLY_FORMAT)))
+			{
+				throw new RuntimeException("Invalid date pattern specified in the Application resource file");
+			}
+
+	}
+	/**
+	 * It will return the List of all  valid Patterns specified in the ValidDatePatterns.xml
+	 * @return List of datePatterns.
+	 */
+	public List<String> getAllValidDatePatterns()
+	{
+		List<String> validDatePatternList = new ArrayList<String>();
+		SAXReader saxReader = new SAXReader();
+
+		InputStream inputStream =this.getClass().getClassLoader().getResourceAsStream("ValidDatePatterns.xml");
+
+		Document document = null;
+
+		try
+		{
+			document = saxReader.read(inputStream);
+			Element pattern = null;
+
+			Element datePatternsElement = document.getRootElement();
+			Iterator patternIterator = datePatternsElement
+					.elementIterator("pattern");
+
+			Element primitiveAttributeElement = null;
+
+			while (patternIterator.hasNext())
+			{
+				primitiveAttributeElement = (Element) patternIterator.next();
+				validDatePatternList.add(primitiveAttributeElement.getText());
+
+			}
+		}
+		catch (DocumentException documentException)
+		{
+
+		}
+		return validDatePatternList;
+	}
+
 }

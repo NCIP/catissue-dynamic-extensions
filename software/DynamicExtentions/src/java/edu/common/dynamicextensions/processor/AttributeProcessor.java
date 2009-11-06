@@ -1,7 +1,6 @@
 
 package edu.common.dynamicextensions.processor;
-
-import java.lang.reflect.Method;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -77,6 +76,7 @@ import edu.common.dynamicextensions.xmi.model.ControlsModel;
 import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.logger.Logger;
+
 
 /**
  * @author preeti_munot
@@ -641,11 +641,13 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 			attributeRuleCollection.removeAll(obsoleteRules);
 			attributeRuleCollection.addAll(newRules);
 		}
-		ValidatorUtil.checkForConflictingRules(allValidationRules, abstractAttributeInterface.getName());
+		String attributeName = abstractAttributeInterface.getName();
+		ValidatorUtil.checkForConflictingRules(allValidationRules, attributeName);
 		if (allValidationRules != null && !allValidationRules.isEmpty())
 		{
 			for (String validationRule : allValidationRules)
 			{
+				ValidatorUtil.checkForValidDateRangeRule(validationRule,attributeUIBeanInformationIntf,attributeName);
 				RuleInterface rule = instantiateRule(validationRule,
 						attributeUIBeanInformationIntf, implicitRules);
 				abstractAttributeInterface.addRule(rule);
@@ -1046,9 +1048,8 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 	{
 		// Set Date format based on the UI selection : DATE ONLY or DATE And TIME.
 		String format = attributeUIBeanInformationIntf.getFormat();
+		dateAttributeIntf.setFormat(format);
 		String dateFormat = DynamicExtensionsUtility.getDateFormat(format);
-		dateAttributeIntf.setFormat(dateFormat);
-
 		Date defaultValue = null;
 		String dateValueType = attributeUIBeanInformationIntf.getDateValueType();
 		if (dateValueType != null)
@@ -1911,7 +1912,7 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 	{
 		attributeUIBeanInformationIntf.setDataType(ProcessorConstants.DATATYPE_DATE);
 
-		String format = getDateFormat(datAttributeInformation.getFormat());
+		String format = datAttributeInformation.getFormat();
 		attributeUIBeanInformationIntf.setFormat(format);
 
 		if (datAttributeInformation.getDefaultValue() == null)
@@ -1920,14 +1921,14 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 		}
 		else
 		{
-			String dateFormat = DynamicExtensionsUtility.getDateFormat(format);
+			String dateFormat = format;
 			String defaultValue = Utility.parseDateToString((Date) datAttributeInformation
 					.getDefaultValue().getValueAsObject(), dateFormat);
 			attributeUIBeanInformationIntf.setAttributeDefaultValue(defaultValue);
 		}
 	}
 
-	private String getDateFormat(String dateFormat)
+	/*private String getDateFormat(String dateFormat)
 	{
 		String format = null;
 		if (dateFormat == null)
@@ -1955,7 +1956,7 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 		}
 
 		return format;
-	}
+	}*/
 
 	/**
 	 * @param information

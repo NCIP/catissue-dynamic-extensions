@@ -2,8 +2,10 @@
 package edu.common.dynamicextensions.validation.category;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -40,6 +42,7 @@ import edu.common.dynamicextensions.util.parser.CategoryCSVFileParser;
 import edu.common.dynamicextensions.validation.DateRangeValidator;
 import edu.common.dynamicextensions.validation.FutureDateValidator;
 import edu.common.dynamicextensions.validation.RangeValidator;
+import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.dao.exception.DAOException;
@@ -306,6 +309,8 @@ public class CategoryValidator
 
 			try
 			{
+				// Fix to support different date formats in DE :Pavan.
+				catAttrValue = getRuleDateInAttributeDateFormat(catAttrValue,attribute.getAttributeTypeInformation(),attribute.getName());
 				dateRangeValidator.validate((AttributeMetadataInterface) attribute, catAttrValue,
 						values, attribute.getName());
 			}
@@ -316,6 +321,52 @@ public class CategoryValidator
 						+ ApplicationProperties.getValue(e.getErrorCode()) + attribute.getName(), e);
 			}
 		}
+	}
+
+	/**
+	 * It will convert the Date given in the Date Range Rule(MM-dd-yyyy) in the
+	 * currently given date Pattern.
+	 * @param catAttrValue date Value
+	 * @param attributeTypeInformation attribute type info
+	 * @param controlCaption caption of the control
+	 * @return the date in the Given date pattern
+	 * @throws DynamicExtensionsValidationException exception.
+	 */
+	private static String getRuleDateInAttributeDateFormat(String catAttrValue, AttributeTypeInformationInterface attributeTypeInformation, String controlCaption) throws DynamicExtensionsValidationException
+	{
+
+		DateAttributeTypeInformation dateAttributeTypeInformation = (DateAttributeTypeInformation) attributeTypeInformation;
+		String dateFormat = DynamicExtensionsUtility.getDateFormat(dateAttributeTypeInformation.getFormat());
+		if (dateFormat.equals(ProcessorConstants.MONTH_YEAR_FORMAT))
+		{
+			catAttrValue = DynamicExtensionsUtility.formatMonthAndYearDate(catAttrValue, false);
+			catAttrValue = catAttrValue.substring(0, catAttrValue.length() - 4);
+		}
+		if (dateFormat.equals(ProcessorConstants.YEAR_ONLY_FORMAT))
+		{
+			catAttrValue = DynamicExtensionsUtility.formatYearDate(catAttrValue, false);
+			catAttrValue = catAttrValue.substring(0, catAttrValue.length() - 4);
+		}
+		try
+		{
+			Date catAttDate=null;
+			catAttrValue = catAttrValue.replace('/', '-');
+			catAttDate = Utility.parseDate(catAttrValue, ProcessorConstants.SQL_DATE_ONLY_FORMAT);
+			SimpleDateFormat simpleDateFormatter = new SimpleDateFormat(
+					ProcessorConstants.DATE_ONLY_FORMAT, CommonServiceLocator
+							.getInstance().getDefaultLocale());
+			catAttrValue = simpleDateFormatter.format(catAttDate);
+		}
+		catch (ParseException ParseException)
+		{
+			List<String> placeHolders = new ArrayList<String>();
+			placeHolders.add(controlCaption);
+			placeHolders.add(dateFormat);
+			throw new DynamicExtensionsValidationException("Validation failed",
+					ParseException, "dynExtn.validation.Date", placeHolders);
+		}
+
+		return catAttrValue;
 	}
 
 	/**
@@ -374,9 +425,9 @@ public class CategoryValidator
 				&& value != null && !(value.trim().equals("")))
 		{
 			FutureDateValidator futureDateValidation = new FutureDateValidator();
-			String defaultDateValue = value.replaceAll("/", "-");
 			try
 			{
+			String defaultDateValue = getRuleDateInAttributeDateFormat(value.replaceAll("/", "-"),attribute.getAttributeTypeInformation(), attribute.getName());
 				futureDateValidation.validate((AttributeMetadataInterface) attribute,
 						defaultDateValue, null, attribute.getName());
 			}
@@ -651,7 +702,8 @@ public class CategoryValidator
 			else
 			{
 				String dateFormat = ((DateAttributeTypeInformation) attrTypeInfo).getFormat();
-				int result = DynamicExtensionsUtility.compareDates(minValue, maxValue, dateFormat);
+				String datePattern = DynamicExtensionsUtility.getDateFormat(dateFormat);
+				int result = DynamicExtensionsUtility.compareDates(minValue, maxValue, datePattern);
 				if (result == 1 || result == -2)
 				{
 					throw new DynamicExtensionsSystemException(ApplicationProperties

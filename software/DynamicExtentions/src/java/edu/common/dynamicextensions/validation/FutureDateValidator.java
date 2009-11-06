@@ -12,6 +12,7 @@ import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsValidationException;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.util.global.CommonServiceLocator;
 
 /**
@@ -39,9 +40,9 @@ public class FutureDateValidator implements ValidatorRuleInterface
 		/* Check for the validity of the future date */
 		DateValidator dateValidator = new DateValidator();
 		dateValidator.validate(attribute, valueObject, parameterMap, controlCaption, true);
-		
+
 		validateFutureDate(attribute, valueObject, controlCaption);
-		
+
 		return true;
 	}
 
@@ -63,7 +64,7 @@ public class FutureDateValidator implements ValidatorRuleInterface
 		{
 			Date inputDate = null;
 			DateAttributeTypeInformation dateAttributeTypeInformation = (DateAttributeTypeInformation) attributeTypeInformation;
-			String dateFormat = dateAttributeTypeInformation.getFormat();
+			String dateFormat = DynamicExtensionsUtility.getDateFormat(dateAttributeTypeInformation.getFormat());
 			String value = (String) valueObject;
 			try
 			{
@@ -76,7 +77,7 @@ public class FutureDateValidator implements ValidatorRuleInterface
 			{
 				ValidatorUtil.reportInvalidInput(controlCaption, "today's date.", "dynExtn.validation.Date.MinDate");
 			}
-			
+
 			reportInvalidDate(inputDate, controlCaption);
 		}
 	}

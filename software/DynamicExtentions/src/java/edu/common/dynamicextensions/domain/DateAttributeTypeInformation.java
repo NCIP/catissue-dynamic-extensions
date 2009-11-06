@@ -60,42 +60,45 @@ public class DateAttributeTypeInformation extends AttributeTypeInformation
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public PermissibleValueInterface getPermissibleValueForString(String value)
 			throws ParseException
 	{
-		String permissibleValue = value.replace("/", "-");
-
-		if (permissibleValue.length() != format.length())
+		String dateFormat = DynamicExtensionsUtility.getDateFormat(format);
+		if (value.length() != dateFormat.length())
 		{
-			throw new ParseException("DATE VALUE " + permissibleValue + " INVALID FOR " + format
+			throw new ParseException("DATE VALUE " + value + " INVALID FOR " + format
 					+ " DATE FORMAT.", 0);
 		}
 
-		if (permissibleValue.endsWith("0000") || permissibleValue.contains("."))
+		if (value.endsWith("0000") || value.contains("."))
 		{
-			throw new ParseException("DATE VALUE " + permissibleValue + " INVALID FOR " + format
+			throw new ParseException("DATE VALUE " + value + " INVALID FOR " + format
 					+ " DATE FORMAT.", 0);
 		}
 
 		DateValueInterface dateValue = DomainObjectFactory.getInstance().createDateValue();
 
-		if (format.equals(ProcessorConstants.MONTH_YEAR_FORMAT))
+		if (dateFormat.equals(ProcessorConstants.MONTH_YEAR_FORMAT))
 		{
-			Utility.parseDate(permissibleValue, format);
-			permissibleValue = DynamicExtensionsUtility.formatMonthAndYearDate(permissibleValue,false);
+			value = DynamicExtensionsUtility.formatMonthAndYearDate(value,false);
+			value = value.substring(0, value.length() - 4);
+			Utility.parseDate(value, dateFormat);
+
 		}
-		if (format.equals(ProcessorConstants.YEAR_ONLY_FORMAT))
+		if (dateFormat.equals(ProcessorConstants.YEAR_ONLY_FORMAT))
 		{
-			Utility.parseDate(permissibleValue, format);
-			permissibleValue = DynamicExtensionsUtility.formatYearDate(permissibleValue,false);
+			value = DynamicExtensionsUtility.formatYearDate(value,false);
+			value = value.substring(0, value.length() - 4);
+			Utility.parseDate(value, dateFormat);
 		}
 
 		Date date = null;
-		if (format.equals(ProcessorConstants.DATE_TIME_FORMAT))
+		String permissibleValue = value.replace('/', '-');
+		if (dateFormat.equals(ProcessorConstants.DATE_TIME_FORMAT))
 		{
-			date = Utility.parseDate(permissibleValue, ProcessorConstants.DATE_TIME_FORMAT);
+			date = Utility.parseDate(permissibleValue, ProcessorConstants.SQL_DATE_TIME_FORMAT);
 		}
 		else
 		{

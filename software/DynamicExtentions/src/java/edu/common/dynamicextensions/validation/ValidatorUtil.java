@@ -1,6 +1,7 @@
 
 package edu.common.dynamicextensions.validation;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,10 +25,12 @@ import edu.common.dynamicextensions.domaininterface.validationrules.RuleParamete
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsValidationException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
+import edu.common.dynamicextensions.ui.interfaces.AbstractAttributeUIBeanInterface;
 import edu.common.dynamicextensions.ui.util.ControlConfigurationsFactory;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
+import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.global.ApplicationProperties;
 
 /**
@@ -49,14 +52,14 @@ public class ValidatorUtil
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 			List<String> listOfError, ContainerInterface containerInterface)
 			throws DynamicExtensionsSystemException, DynamicExtensionsValidationException
-			{
+	{
 		List<String> errorList = listOfError;
 		if (errorList == null)
 		{
 			errorList = new ArrayList<String>();
 		}
 		Set<Map.Entry<BaseAbstractAttributeInterface, Object>> attributeSet = attributeValueMap
-		.entrySet();
+				.entrySet();
 		if ((attributeSet != null) || !attributeSet.isEmpty())
 		{
 			for (Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode : attributeSet)
@@ -64,31 +67,38 @@ public class ValidatorUtil
 				BaseAbstractAttributeInterface abstractAttribute = attributeValueNode.getKey();
 				if (abstractAttribute instanceof AttributeMetadataInterface)
 				{
-					ControlInterface control = DynamicExtensionsUtility.getControlForAbstractAttribute(
-							(AttributeMetadataInterface) abstractAttribute, containerInterface);
+					ControlInterface control = DynamicExtensionsUtility
+							.getControlForAbstractAttribute(
+									(AttributeMetadataInterface) abstractAttribute,
+									containerInterface);
 					if (control != null)
 					{
 						errorList.addAll(validateAttributes(attributeValueNode, control
 								.getCaption()));
-						if(control instanceof ComboBoxInterface)
+						if (control instanceof ComboBoxInterface)
 						{
 							boolean isValuePresent = false;
-							for(PermissibleValueInterface permissibleValue :  ((UserDefinedDE)((AttributeMetadataInterface)abstractAttribute).getAttributeTypeInformation().getDataElement()).getPermissibleValueCollection())
+							for (PermissibleValueInterface permissibleValue : ((UserDefinedDE) ((AttributeMetadataInterface) abstractAttribute)
+									.getAttributeTypeInformation().getDataElement())
+									.getPermissibleValueCollection())
 							{
 								//								System.out.println(permissibleValue.getValueAsObject().toString());
-								if(permissibleValue.getValueAsObject().toString().equals(attributeValueNode.getValue()))
+								if (permissibleValue.getValueAsObject().toString().equals(
+										attributeValueNode.getValue()))
 								{
 									isValuePresent = true;
 									break;
 								}
 							}
-							if((attributeValueNode.getValue()!= null) && "".equals(attributeValueNode.getValue().toString()))
+							if ((attributeValueNode.getValue() != null)
+									&& "".equals(attributeValueNode.getValue().toString()))
 							{
 								isValuePresent = true;
 							}
-							if(!isValuePresent)
+							if (!isValuePresent)
 							{
-								errorList.add("Please Enter valid permissible value for attribute "+ control.getCaption());
+								errorList.add("Please Enter valid permissible value for attribute "
+										+ control.getCaption());
 							}
 						}
 					}
@@ -101,7 +111,7 @@ public class ValidatorUtil
 							.getAssociationType()))
 					{
 						List<Map<BaseAbstractAttributeInterface, Object>> valueObject = (List<Map<BaseAbstractAttributeInterface, Object>>) attributeValueMap
-						.get(abstractAttribute);
+								.get(abstractAttribute);
 						for (Map<BaseAbstractAttributeInterface, Object> subAttributeValueMap : valueObject)
 						{
 							errorList.addAll(validateEntityAttributes(subAttributeValueMap,
@@ -113,7 +123,8 @@ public class ValidatorUtil
 		}
 
 		return errorList;
-			}
+	}
+
 	/**
 	 *
 	 * @param abstractAttribute
@@ -135,7 +146,7 @@ public class ValidatorUtil
 		{
 			CategoryAssociationInterface categoryAssociationInterface = (CategoryAssociationInterface) associationMetadataInterface;
 			containerCollection = categoryAssociationInterface.getTargetCategoryEntity()
-			.getContainerCollection();
+					.getContainerCollection();
 		}
 		List<ContainerInterface> containerList = new ArrayList<ContainerInterface>(
 				containerCollection);
@@ -160,11 +171,11 @@ public class ValidatorUtil
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 			ContainerInterface containerInterface) throws DynamicExtensionsSystemException,
 			DynamicExtensionsValidationException
-			{
+	{
 		List<String> errorList = new ArrayList<String>();
 
 		Set<Map.Entry<BaseAbstractAttributeInterface, Object>> attributeSet = attributeValueMap
-		.entrySet();
+				.entrySet();
 		if ((attributeSet == null) || attributeSet.isEmpty())
 		{
 			return errorList;
@@ -185,7 +196,7 @@ public class ValidatorUtil
 		}
 
 		return errorList;
-			}
+	}
 
 	/**
 	 * @param attributeValueNode
@@ -198,7 +209,7 @@ public class ValidatorUtil
 			Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode,
 			String controlCaption) throws DynamicExtensionsSystemException,
 			DynamicExtensionsValidationException
-			{
+	{
 		List<String> errorList = new ArrayList<String>();
 
 		BaseAbstractAttributeInterface abstractAttribute = attributeValueNode.getKey();
@@ -257,7 +268,7 @@ public class ValidatorUtil
 		}
 
 		return errorList;
-			}
+	}
 
 	/**
 	 * @param abstractAttribute
@@ -265,22 +276,22 @@ public class ValidatorUtil
 	 */
 	private static Collection<RuleInterface> getRuleCollection(
 			BaseAbstractAttributeInterface abstractAttribute)
-			{
+	{
 		AttributeMetadataInterface attribute = (AttributeMetadataInterface) abstractAttribute;
 		Collection<RuleInterface> attributeRuleCollection = attribute.getRuleCollection();
 		if (attribute instanceof CategoryAttributeInterface)
 		{
 			Collection<RuleInterface> implicitRuleCollection = ((CategoryAttributeInterface) attribute)
-			.getAbstractAttribute().getRuleCollection();
+					.getAbstractAttribute().getRuleCollection();
 			attributeRuleCollection.addAll(implicitRuleCollection);
 			removeConflictingRules(attributeRuleCollection);
 		}
 		return attributeRuleCollection;
-			}
+	}
 
 	public static void checkUniqueValidationForAttribute(AttributeMetadataInterface attribute,
 			Object valueObject, Long recordId, String controlCaption)
-	throws DynamicExtensionsValidationException, DynamicExtensionsSystemException
+			throws DynamicExtensionsValidationException, DynamicExtensionsSystemException
 	{
 		Collection<RuleInterface> attributeRuleCollection = attribute.getRuleCollection();
 
@@ -305,11 +316,11 @@ public class ValidatorUtil
 
 	private static void checkValidation(AttributeMetadataInterface attribute, Object valueObject,
 			RuleInterface rule, Map<String, String> parameterMap, String controlCaption)
-	throws DynamicExtensionsSystemException, DynamicExtensionsValidationException
+			throws DynamicExtensionsSystemException, DynamicExtensionsValidationException
 	{
 		String ruleName = rule.getName();
 		ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
-		.getValidatorRule(ruleName);
+				.getValidatorRule(ruleName);
 		validatorRule.validate(attribute, valueObject, parameterMap, controlCaption);
 	}
 
@@ -343,13 +354,13 @@ public class ValidatorUtil
 	 */
 	public static void reportInvalidInput(String placeHolderOne, String placeHolderTwo,
 			String errorKey) throws DynamicExtensionsValidationException
-			{
+	{
 		List<String> placeHolders = new ArrayList<String>();
 		placeHolders.add(placeHolderOne);
 		placeHolders.add(placeHolderTwo);
 		throw new DynamicExtensionsValidationException("Validation failed", null, errorKey,
 				placeHolders);
-			}
+	}
 
 	/**
 	 * This method check for conflicting rule
@@ -359,7 +370,7 @@ public class ValidatorUtil
 	 */
 	public static void checkForConflictingRules(Collection<String> allValidationRules,
 			String attributeName) throws DynamicExtensionsSystemException
-			{
+	{
 		if (allValidationRules.contains(ProcessorConstants.DATE)
 				&& (allValidationRules.contains(ProcessorConstants.DATE_RANGE) || allValidationRules
 						.contains(ProcessorConstants.ALLOW_FUTURE_DATE)))
@@ -373,10 +384,10 @@ public class ValidatorUtil
 		{
 			throw new DynamicExtensionsSystemException(
 					"CONFLICTING RULES PRESENT. DATERANGE AND ALLOWFUTUREDATE RULES CANNOT BE APPLIED FOR A ATTRIBUTE, "
-					+ attributeName);
+							+ attributeName);
 		}
 
-			}
+	}
 
 	/**
 	 * This method removes conflicting rules from the collection
@@ -416,5 +427,36 @@ public class ValidatorUtil
 			}
 		}
 		return isConflictingRulePresent;
+	}
+
+	/**
+	 * This method vaerify that the Max & Min values in the given attributeUIBeanInformationIntf are according to
+	 * the Given DE Format or Not.
+	 * @param validationRule name of the Rule.
+	 * @param attributeUIBeanInformationIntf ui bean.
+	 * @param attributeName Name of the Attribute
+	 * @throws DynamicExtensionsSystemException Exception.
+	 */
+	public static void checkForValidDateRangeRule(String validationRule,
+			AbstractAttributeUIBeanInterface attributeUIBeanInformationIntf, String attributeName)
+			throws DynamicExtensionsSystemException
+	{
+		if (validationRule.equals(ProcessorConstants.DATE_RANGE))
+		{
+			try
+			{
+				Utility.parseDate(attributeUIBeanInformationIntf.getMax(),
+						ProcessorConstants.SQL_DATE_ONLY_FORMAT);
+				Utility.parseDate(attributeUIBeanInformationIntf.getMin(),
+						ProcessorConstants.SQL_DATE_ONLY_FORMAT);
+			}
+			catch (ParseException ParseException)
+			{
+				throw new DynamicExtensionsSystemException("Date Range Specified For Attribute "
+						+ attributeName + " is not in proper format");
+
+			}
+		}
+
 	}
 }

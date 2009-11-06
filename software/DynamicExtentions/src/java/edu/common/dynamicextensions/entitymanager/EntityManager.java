@@ -1,7 +1,6 @@
 
 package edu.common.dynamicextensions.entitymanager;
-
-import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.sql.Blob;
@@ -69,6 +68,7 @@ import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.DBTypes;
 import edu.wustl.dao.util.NamedQueryParam;
+
 
 /**
  *
@@ -932,7 +932,8 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 					{
 						String dateFormat = ((DateAttributeTypeInformation) primitiveAttr
 								.getAttributeTypeInformation()).getFormat();
-						object = new Timestamp(new SimpleDateFormat(dateFormat,
+						String datePattern = DynamicExtensionsUtility.getDateFormat(dateFormat);
+						object = new Timestamp(new SimpleDateFormat(datePattern,
 								CommonServiceLocator.getInstance().getDefaultLocale()).parse(
 								object.toString()).getTime());
 					}
@@ -1529,11 +1530,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 				DateAttributeTypeInformation dateAttrTypInfo = (DateAttributeTypeInformation) attribute
 						.getAttributeTypeInformation();
 
-				String format = dateAttrTypInfo.getFormat();
-				if (format == null)
-				{
-					format = CommonServiceLocator.getInstance().getDatePattern();
-				}
+				String format = DynamicExtensionsUtility.getDateFormat(dateAttrTypInfo.getFormat());
 
 				valueObj = resultSet.getTimestamp(index + 1);
 

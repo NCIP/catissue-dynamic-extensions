@@ -37,7 +37,7 @@ public class DatePicker extends Control implements DatePickerInterface
 	 */
 	private static final long serialVersionUID = 1L;
 	private String dateValueType = null;
-	private String dateFormatString = "Date format : ";
+	private final String dateFormatString = "Date format : ";
 
 	/**
 	 * Show Calendar icon on UI
@@ -75,19 +75,17 @@ public class DatePicker extends Control implements DatePickerInterface
 	 */
 	protected String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
-		AttributeTypeInformationInterface attributeTypeInformation = ((AttributeMetadataInterface) this
-				.getBaseAbstractAttribute()).getAttributeTypeInformation();
+		AttributeTypeInformationInterface attributeTypeInformation = ((AttributeMetadataInterface) getBaseAbstractAttribute()).getAttributeTypeInformation();
 		String dateFormat = ControlsUtility.getDateFormat(attributeTypeInformation);
 
 		String defaultValue = getDefaultValueForControl();
 		if (value == null)
 		{
 
-			if (defaultValue != null && this.getAttibuteMetadataInterface() != null
-					&& this.getAttibuteMetadataInterface() instanceof CategoryAttribute)
+			if (defaultValue != null && getAttibuteMetadataInterface() != null
+					&& getAttibuteMetadataInterface() instanceof CategoryAttribute)
 			{
-				CategoryAttributeInterface categoryAttribute = (CategoryAttributeInterface) this
-						.getAttibuteMetadataInterface();
+				CategoryAttributeInterface categoryAttribute = (CategoryAttributeInterface) getAttibuteMetadataInterface();
 				DateTypeInformationInterface dateTypeInformation = (DateTypeInformationInterface) ((AttributeInterface) categoryAttribute
 						.getAbstractAttribute()).getAttributeTypeInformation();
 				defaultValue = reverseDate(defaultValue);
@@ -119,8 +117,8 @@ public class DatePicker extends Control implements DatePickerInterface
 			}
 			if (defaultValue == null)
 			{
-				if (this.getDateValueType() != null
-						&& this.getDateValueType().equals(ProcessorConstants.DATE_VALUE_TODAY))
+				if (getDateValueType() != null
+						&& getDateValueType().equals(ProcessorConstants.DATE_VALUE_TODAY))
 				{
 					defaultValue = Utility.parseDateToString(new Date(), dateFormat);
 				}
@@ -144,12 +142,12 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ htmlComponentName
 					+ "' id='"
 					+ htmlComponentName
-					+ "' title='Calendar [MM-DD-YYYY]' value='"
-					+ ((defaultValue != null && defaultValue.trim().length()>0) ? defaultValue : "MM-DD-YYYY")
+					+ "' title='Calendar ["+ProcessorConstants.DATE_ONLY_FORMAT+"]' value='"
+					+ ((defaultValue != null && defaultValue.trim().length()>0) ? defaultValue : ProcessorConstants.DATE_ONLY_FORMAT)
 					+ "'"
-					+ (((this.isReadOnly != null && this.isReadOnly) || (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly)) ? " disabled='"
+					+ (((isReadOnly != null && isReadOnly) || (isSkipLogicReadOnly != null && isSkipLogicReadOnly)) ? " disabled='"
 							+ ProcessorConstants.TRUE : "")
-					+ " onchange='isDataChanged();' onfocus=\"javascript:clearDate('"+htmlComponentName+"','MM-DD-YYYY');\""
+					+ " onchange='isDataChanged();' onfocus=\"javascript:clearDate('"+htmlComponentName+"','"+ProcessorConstants.DATE_ONLY_FORMAT+"');\""
 					+ " style=\"color:"
 					+ ((defaultValue != null && defaultValue.trim().length()>0) ? "black;\"" : "#A9A9A9;\"")
 					+ "/>";
@@ -163,17 +161,17 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ DynamicExtensionsUtility.getCurrentMonth()
 					+ ", "
 					+ DynamicExtensionsUtility.getCurrentDay()
-					+ ", 'MM-dd-yyyy', 'dataEntryForm', '"
+					+ ", '"+ProcessorConstants.DATE_ONLY_FORMAT+"', 'dataEntryForm', '"
 					+ htmlComponentName
 					+ "', event, 1900, 2020);\" href=\"javascript://\">"
-					+ "&nbsp;<IMG alt=\"" + dateFormatString + " [MM-DD-YYYY]\" src=\"images/de/calendar.gif\" border=0 /></A>"
+					+ "&nbsp;<IMG alt=\"" + dateFormatString + " ["+ProcessorConstants.DATE_ONLY_FORMAT+"]\" src=\"images/de/calendar.gif\" border=0 /></A>"
 					+ "<DIV id=slcalcod"
 					+ htmlComponentName
 					+ " style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">";
-			if(this.getParentContainer().isAjaxRequest())
+			if(getParentContainer().isAjaxRequest())
 			{
-				String imgsrc = this.getParentContainer().getRequest().getContextPath()+"/images/de/";
-				String filePath = this.getParentContainer().getRequest().getSession().getServletContext().getRealPath("/javascripts/de/CalendarComponent.js");
+				String imgsrc = getParentContainer().getRequest().getContextPath()+"/images/de/";
+				String filePath = getParentContainer().getRequest().getSession().getServletContext().getRealPath("/javascripts/de/CalendarComponent.js");
 				String jsFunctionName = DEConstants.PROCESS_AJAX_CAL_SCRIPT;
 				Object[] jsFunctionParameters = {htmlComponentName,DynamicExtensionsUtility.getCurrentDay(),DynamicExtensionsUtility.getCurrentMonth(),DynamicExtensionsUtility.getCurrentYear(),imgsrc};
 				String jsOutput = DynamicExtensionsUtility.executeJavaScriptFunc(filePath,jsFunctionName,jsFunctionParameters);
@@ -195,12 +193,12 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ htmlComponentName
 					+ "' id='"
 					+ htmlComponentName
-					+ "' title='Calendar [MM-DD-YYYY HH:MM]' value='"
-					+ ((defaultValue != null && defaultValue.trim().length()>0) ? defaultValue : "MM-DD-YYYY HH:MM")
+					+ "' title='Calendar ["+ProcessorConstants.DATE_TIME_FORMAT+"]' value='"
+					+ ((defaultValue != null && defaultValue.trim().length()>0) ? defaultValue : ProcessorConstants.DATE_TIME_FORMAT)
 					+ "'"
-					+ (((this.isReadOnly != null && this.isReadOnly) || (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly)) ? " disabled='"
+					+ (((isReadOnly != null && isReadOnly) || (isSkipLogicReadOnly != null && isSkipLogicReadOnly)) ? " disabled='"
 							+ ProcessorConstants.TRUE : "")
-					+ " onchange='isDataChanged();' onfocus=\"javascript:clearDate('"+htmlComponentName+"','MM-DD-YYYY HH:MM');\""
+					+ " onchange='isDataChanged();' onfocus=\"javascript:clearDate('"+htmlComponentName+"','"+ProcessorConstants.DATE_TIME_FORMAT+"');\""
 					+ " style=\"color:"
 					+ ((defaultValue != null && defaultValue.trim().length()>0) ? "black;\"" : "#A9A9A9;\"")
 					+ "/>";
@@ -214,17 +212,17 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ DynamicExtensionsUtility.getCurrentMonth()
 					+ ", "
 					+ DynamicExtensionsUtility.getCurrentDay()
-					+ ", 'MM-dd-yyyy', 'dataEntryForm', '"
+					+ ", '"+ProcessorConstants.DATE_ONLY_FORMAT+"', 'dataEntryForm', '"
 					+ htmlComponentName
 					+ "', event, 1900, 2020);\" href=\"javascript://\">"
-					+ "&nbsp;<IMG alt=\"" + dateFormatString + " [MM-DD-YYYY HH:MM]\" src=\"images/de/calendar.gif\" border=0 />&nbsp;</A>"
+					+ "&nbsp;<IMG alt=\"" + dateFormatString + " ["+ProcessorConstants.DATE_TIME_FORMAT+"]\" src=\"images/de/calendar.gif\" border=0 />&nbsp;</A>"
 					+ "<DIV id=slcalcod"
 					+ htmlComponentName
 					+ " style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">";
-			if(this.getParentContainer().isAjaxRequest())
+			if(getParentContainer().isAjaxRequest())
 			{
-				String imgsrc = this.getParentContainer().getRequest().getContextPath()+"/images/de/";
-				String filePath = this.getParentContainer().getRequest().getSession().getServletContext().getRealPath("/javascripts/de/CalendarComponent.js");
+				String imgsrc = getParentContainer().getRequest().getContextPath()+"/images/de/";
+				String filePath = getParentContainer().getRequest().getSession().getServletContext().getRealPath("/javascripts/de/CalendarComponent.js");
 				String jsFunctionName = DEConstants.PRINT_TIME_CAL_FOR_AJAX;
 				Object[] jsFunctionParameters = {htmlComponentName,DynamicExtensionsUtility.getCurrentDay(),DynamicExtensionsUtility.getCurrentMonth(),DynamicExtensionsUtility.getCurrentYear(), DynamicExtensionsUtility.getCurrentHours(),DynamicExtensionsUtility.getCurrentMinutes(),imgsrc };
 				String jsOutput = DynamicExtensionsUtility.executeJavaScriptFunc(filePath,jsFunctionName,jsFunctionParameters);
@@ -248,12 +246,12 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ htmlComponentName
 					+ "' id='"
 					+ htmlComponentName
-					+ "' title='Calender [MM-YYYY]' value='"
-					+ ((defaultValue != null && defaultValue.trim().length()>0) ? defaultValue : "MM-YYYY")
+					+ "' title='Calender ["+ProcessorConstants.MONTH_YEAR_FORMAT+"]' value='"
+					+ ((defaultValue != null && defaultValue.trim().length()>0) ? defaultValue : ProcessorConstants.MONTH_YEAR_FORMAT)
 					+ "'"
-					+ (((this.isReadOnly != null && this.isReadOnly) || (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly)) ? " disabled='"
+					+ (((isReadOnly != null && isReadOnly) || (isSkipLogicReadOnly != null && isSkipLogicReadOnly)) ? " disabled='"
 							+ ProcessorConstants.TRUE : "")
-					+ " onchange='isDataChanged();' onfocus=\"javascript:clearDate('"+htmlComponentName+"','MM-YYYY');\""
+					+ " onchange='isDataChanged();' onfocus=\"javascript:clearDate('"+htmlComponentName+"','"+ProcessorConstants.MONTH_YEAR_FORMAT+"');\""
 					+ " style=\"color:"
 					+ ((defaultValue != null && defaultValue.trim().length()>0) ? "black;\"" : "#A9A9A9;\"")
 					+ "/>";
@@ -267,16 +265,16 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ DynamicExtensionsUtility.getCurrentMonth()
 					+ ", "
 					+ 0
-					+ ", 'MM-yyyy', 'dataEntryForm', '"
+					+ ", '"+ProcessorConstants.MONTH_YEAR_FORMAT+"', 'dataEntryForm', '"
 					+ htmlComponentName
-					+ "', event, 1900, 2020);\" href=\"javascript://\">&nbsp;<IMG alt=\"" + dateFormatString + "[MM-YYYY]\" src=\"images/de/calendar.gif\" border=0 />&nbsp;</A>"
+					+ "', event, 1900, 2020);\" href=\"javascript://\">&nbsp;<IMG alt=\"" + dateFormatString + "["+ProcessorConstants.MONTH_YEAR_FORMAT+"]\" src=\"images/de/calendar.gif\" border=0 />&nbsp;</A>"
 					+ "<DIV id=slcalcod"
 					+ htmlComponentName
 					+ " style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">";
-			if(this.getParentContainer().isAjaxRequest())
+			if(getParentContainer().isAjaxRequest())
 			{
-				String imgsrc = this.getParentContainer().getRequest().getContextPath()+"/images/de/";
-				String filePath = this.getParentContainer().getRequest().getSession().getServletContext().getRealPath("/javascripts/de/CalendarComponent.js");
+				String imgsrc = getParentContainer().getRequest().getContextPath()+"/images/de/";
+				String filePath = getParentContainer().getRequest().getSession().getServletContext().getRealPath("/javascripts/de/CalendarComponent.js");
 				String jsFunctionName = DEConstants.PRINT_MON_YEAR_CAL_FOR_AJAX;
 				Object[] jsFunctionParameters = {htmlComponentName,DynamicExtensionsUtility.getCurrentMonth(),DynamicExtensionsUtility.getCurrentYear(),imgsrc};
 				String jsOutput = DynamicExtensionsUtility.executeJavaScriptFunc(filePath,jsFunctionName,jsFunctionParameters);
@@ -298,12 +296,12 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ htmlComponentName
 					+ "' id='"
 					+ htmlComponentName
-					+ "' title='[YYYY]' value='"
-					+ ((defaultValue != null && defaultValue.trim().length()>0) ? defaultValue : "YYYY")
+					+ "' title='["+ProcessorConstants.YEAR_ONLY_FORMAT+"]' value='"
+					+ ((defaultValue != null && defaultValue.trim().length()>0) ? defaultValue : ProcessorConstants.YEAR_ONLY_FORMAT)
 					+ "'"
-					+ (((this.isReadOnly != null && this.isReadOnly) || (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly)) ? " disabled='"
+					+ (((isReadOnly != null && isReadOnly) || (isSkipLogicReadOnly != null && isSkipLogicReadOnly)) ? " disabled='"
 							+ ProcessorConstants.TRUE : "")
-					+ " onchange='isDataChanged();' onfocus=\"javascript:clearDate('"+htmlComponentName+"','YYYY');\""
+					+ " onchange='isDataChanged();' onfocus=\"javascript:clearDate('"+htmlComponentName+"','"+ProcessorConstants.YEAR_ONLY_FORMAT+"');\""
 					+ " style=\"color:"
 					+ ((defaultValue != null && defaultValue.trim().length()>0) ? "black;\"" : "#A9A9A9;\"")
 					+ "/>";
@@ -317,16 +315,16 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ 0
 					+ ", "
 					+ 0
-					+ ", 'yyyy', 'dataEntryForm', '"
+					+ ", '"+ProcessorConstants.YEAR_ONLY_FORMAT+"', 'dataEntryForm', '"
 					+ htmlComponentName
-					+ "', event, 1900, 2020);\" href=\"javascript://\">&nbsp;<IMG alt=\"" + dateFormatString + " [YYYY]\" src=\"images/de/calendar.gif\" border=0 />&nbsp;</A>"
+					+ "', event, 1900, 2020);\" href=\"javascript://\">&nbsp;<IMG alt=\"" + dateFormatString + " ["+ProcessorConstants.YEAR_ONLY_FORMAT+"]\" src=\"images/de/calendar.gif\" border=0 />&nbsp;</A>"
 					+ "<DIV id=slcalcod"
 					+ htmlComponentName
 					+ " style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">";
-			if(this.getParentContainer().isAjaxRequest())
+			if(getParentContainer().isAjaxRequest())
 			{
-				String imgsrc = this.getParentContainer().getRequest().getContextPath()+"/images/de/";
-				String filePath = this.getParentContainer().getRequest().getSession().getServletContext().getRealPath("/javascripts/de/CalendarComponent.js");
+				String imgsrc = getParentContainer().getRequest().getContextPath()+"/images/de/";
+				String filePath = getParentContainer().getRequest().getSession().getServletContext().getRealPath("/javascripts/de/CalendarComponent.js");
 				String jsFunctionName = DEConstants.PRINT_YEAR_CAL_FOR_AJAX;
 				Object[] jsFunctionParameters = {htmlComponentName, DynamicExtensionsUtility.getCurrentYear(),imgsrc};
 				String jsOutput = DynamicExtensionsUtility.executeJavaScriptFunc(filePath,jsFunctionName,jsFunctionParameters);
@@ -407,7 +405,7 @@ public class DatePicker extends Control implements DatePickerInterface
 		String htmlString = "";
 		if (value != null)
 		{
-			htmlString = "<span class = 'font_bl_nor'> " + this.value.toString() + "</span>";
+			htmlString = "<span class = 'font_bl_nor'> " + value.toString() + "</span>";
 		}
 
 		return htmlString;
@@ -438,12 +436,12 @@ public class DatePicker extends Control implements DatePickerInterface
 	 */
 	private String getDefaultValueForControl()
 	{
-		String defaultValue = (String) this.value;
+		String defaultValue = (String) value;
 		if (!getIsSkipLogicDefaultValue())
 		{
-			if (this.value == null)
+			if (value == null)
 			{
-				defaultValue = this.getAttibuteMetadataInterface().getDefaultValue();
+				defaultValue = getAttibuteMetadataInterface().getDefaultValue();
 			}
 		}
 		else

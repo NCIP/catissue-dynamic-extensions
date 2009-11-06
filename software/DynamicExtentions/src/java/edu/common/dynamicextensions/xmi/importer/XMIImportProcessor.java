@@ -92,7 +92,6 @@ import edu.common.dynamicextensions.xmi.model.ContainerModel;
 import edu.common.dynamicextensions.xmi.model.ControlsModel;
 import edu.wustl.common.bizlogic.DefaultBizLogic;
 import edu.wustl.common.exception.BizLogicException;
-import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.HibernateDAO;
@@ -2570,7 +2569,7 @@ public class XMIImportProcessor
 		String format = taggedValueMap.get(XMIConstants.TAGGED_VALUE_DATE_FORMAT);
 		if (format == null || format.trim().equals(""))
 		{
-			format = CommonServiceLocator.getInstance().getDatePattern();
+			format = ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY;
 		}
 
 		return format;

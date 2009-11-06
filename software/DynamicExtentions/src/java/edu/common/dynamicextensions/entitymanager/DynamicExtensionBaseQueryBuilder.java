@@ -60,7 +60,6 @@ import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.wustl.common.util.Utility;
-import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.global.Status;
 import edu.wustl.common.util.logger.Logger;
@@ -124,7 +123,7 @@ public class DynamicExtensionBaseQueryBuilder
 
 		queries.addAll(getForeignKeyConstraintQuery(entity, revQueries));
 
-		// Get query to create associations, it involves altering source/target 
+		// Get query to create associations, it involves altering source/target
 		// table or creating middle table depending upon the cardinalities.
 		queries.addAll(getCreateAssociationsQueryList(entity, revQueries));
 
@@ -146,7 +145,7 @@ public class DynamicExtensionBaseQueryBuilder
 	{
 		List<String> queries = new ArrayList<String>();
 
-		// Get queries for foreign key constraint for inheritance and to create associations. 
+		// Get queries for foreign key constraint for inheritance and to create associations.
 		// It involves altering source/target table or creating middle table depending upon the cardinalities.
 		queries.addAll(getForeignKeyConstraintQuery(catEntity, revQueries));
 		queries.addAll(getCreateAssociationsQueryList(catEntity, revQueries));
@@ -156,7 +155,7 @@ public class DynamicExtensionBaseQueryBuilder
 
 	/**
 	 * This method is used to execute the data table queries for entity in case of editing the entity.
-	 * This method takes each attribute of the entity and then scans for any changes and builds the 
+	 * This method takes each attribute of the entity and then scans for any changes and builds the
 	 * alter query for each attribute for the entity.
 	 * @param entity entity for which the queries are formed.
 	 * @param dbaseCopy database copy of the entity.
@@ -171,7 +170,7 @@ public class DynamicExtensionBaseQueryBuilder
 	{
 		Logger.out.debug("getUpdateEntityQueryList : Entering method");
 		List<String> updateQries = new ArrayList<String>();
-		// Get the query for any attribute that is modified.		
+		// Get the query for any attribute that is modified.
 		List<String> updAttrQries = getUpdateAttributeQueryList(entity, dbaseCopy, attrRlbkQries);
 		// Get the query part for if primary keys are changed
 		List<String> prmCnstrQueries = getPrimaryKeyQueryList(entity, dbaseCopy, attrRlbkQries);
@@ -197,13 +196,13 @@ public class DynamicExtensionBaseQueryBuilder
 	/**
 	 * This method checks weather the primary key of the entity is changed & if changed
 	 * it searches for all child entities of that entity remove all foreign key constraints
-	 * then modify primary key of the entity and again apply the foreign key constraint of its child  
+	 * then modify primary key of the entity and again apply the foreign key constraint of its child
 	 * @param entity for which to check weather primary key is changed
 	 * @param dbaseCopy database copy of the entity
-	 * @param attrRlbkQries rollback query list 
+	 * @param attrRlbkQries rollback query list
 	 * @return List<String> which are queries to be executed
 	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException 
+	 * @throws DynamicExtensionsApplicationException
 	 */
 	private List<String> getPrimaryKeyQueryList(EntityInterface entity, EntityInterface dbaseCopy,
 			List<String> attrRlbkQries) throws DynamicExtensionsSystemException,
@@ -242,7 +241,7 @@ public class DynamicExtensionBaseQueryBuilder
 	}
 
 	/**
-	 * This method prepares queries for applying the foreign key constraint 
+	 * This method prepares queries for applying the foreign key constraint
 	 * of all the child entity of the current parent whose primary key is changed
 	 * @param entity entity whose primary key is changed
 	 * @param attrRlbkQries rollback query list
@@ -279,7 +278,7 @@ public class DynamicExtensionBaseQueryBuilder
 	}
 
 	/**
-	 * This method prepares queries for removing the foreign key constraint 
+	 * This method prepares queries for removing the foreign key constraint
 	 * of all the child entity of the current parent whose primary key is changed
 	 * It searches for child entities in its own entityGroup
 	 * @param entity whose primary key is changed
@@ -334,8 +333,8 @@ public class DynamicExtensionBaseQueryBuilder
 	 * It prepares the queries for applying the primary key constraint on the entity
 	 * @param entity on which primary key constraint is to be applied
 	 * @param attrRlbkQries rollback query list
-	 * @return List<String> queries 
-	 * @throws DynamicExtensionsSystemException 
+	 * @return List<String> queries
+	 * @throws DynamicExtensionsSystemException
 	 */
 	protected List<String> getPrimaryKeyQuery(EntityInterface entity, List<String> attrRlbkQries)
 			throws DynamicExtensionsSystemException
@@ -347,7 +346,7 @@ public class DynamicExtensionBaseQueryBuilder
 		List<String> queries = new ArrayList<String>();
 		String tableName = entity.getTableProperties().getName();
 
-		//add all the not null constraints 
+		//add all the not null constraints
 		getNotNullQeries(prmKeyAttrColl, queries, attrRlbkQries);
 
 		prmKeyQuery.append(ALTER_TABLE).append(WHITESPACE).append(tableName).append(WHITESPACE)
@@ -356,7 +355,7 @@ public class DynamicExtensionBaseQueryBuilder
 		{
 			primaryKeyName.add(attribute.getColumnProperties().getName());
 		}
-		//sorting the primary key name cause sequence matters when applying the foreign key 
+		//sorting the primary key name cause sequence matters when applying the foreign key
 		//constraint on the child entities
 		Collections.sort(primaryKeyName);
 		prmKeyQuery.append(OPENING_BRACKET);
@@ -396,7 +395,7 @@ public class DynamicExtensionBaseQueryBuilder
 		DynamicExtensionBaseQueryBuilder queryBuilder = QueryBuilderFactory.getQueryBuilder();
 		for (AttributeInterface attribute : prmKeyAttrColl)
 		{
-			//create queries for applying not null constraint on the primary key attribute columns 
+			//create queries for applying not null constraint on the primary key attribute columns
 			//and there roll back queries
 			notNullQuery = queryBuilder.addNotNullConstraintQuery(attribute);
 			rollBackQuery = queryBuilder.dropNotNullConstraintQuery(attribute);
@@ -426,7 +425,7 @@ public class DynamicExtensionBaseQueryBuilder
 		DynamicExtensionBaseQueryBuilder queryBuilder = QueryBuilderFactory.getQueryBuilder();
 		for (AttributeInterface attribute : prmKeyAttrColl)
 		{
-			// after removing the primary key on attribute it should also be nullable so 
+			// after removing the primary key on attribute it should also be nullable so
 			//removing not null constraint on it
 			notNullQuery = queryBuilder.dropNotNullConstraintQuery(attribute);
 			rlbackQuery = queryBuilder.addNotNullConstraintQuery(attribute);
@@ -443,7 +442,7 @@ public class DynamicExtensionBaseQueryBuilder
 	 * @param entity whose primary key constraint is to be removed
 	 * @param attrRlbkQries rollback Query List
 	 * @return List<String> queries to be executed
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	protected List<String> getPrimaryKeyRemoveCnstrQuery(EntityInterface entity,
 			List<String> attrRlbkQries) throws DynamicExtensionsSystemException
@@ -501,7 +500,7 @@ public class DynamicExtensionBaseQueryBuilder
 	}
 
 	/**
-	 * It prepares queries for removing the NOT NULL constraint and setting it to null for given attibute  
+	 * It prepares queries for removing the NOT NULL constraint and setting it to null for given attibute
 	 * @param attribute on which NULL constraint is to be applied
 	 * @return query
 	 * @throws DynamicExtensionsSystemException
@@ -521,7 +520,7 @@ public class DynamicExtensionBaseQueryBuilder
 
 	/**
 	 * This method is used to execute the data table queries for entity in case of editing the entity.
-	 * This method takes each attribute of the entity and then scans for any changes and builds the 
+	 * This method takes each attribute of the entity and then scans for any changes and builds the
 	 * alter query for each attribute for the entity.
 	 * @param catEntity category entity for which the queries are formed.
 	 * @param dbaseCopy database copy of the entity.
@@ -562,7 +561,7 @@ public class DynamicExtensionBaseQueryBuilder
 	 * @param dbaseCopy saved state of the entity
 	 * @param attrRlbkQries rollback query list
 	 * @return Query list
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private List<String> getInheritanceQueryList(Entity entity, Entity dbaseCopy,
 			List<String> attrRlbkQries) throws DynamicExtensionsSystemException
@@ -642,7 +641,7 @@ public class DynamicExtensionBaseQueryBuilder
 	/**
 	 * This method returns association values for the entity's given record.
 	 * e.g if user1 is associated with study1 and study2, this method returns the
-	 * list of record identifiers of study1 and study2 as the return value for the 
+	 * list of record identifiers of study1 and study2 as the return value for the
 	 * association between user and study.
 	 * @param entity
 	 * @param recordId
@@ -702,7 +701,7 @@ public class DynamicExtensionBaseQueryBuilder
 			}
 			else if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.ONE)
 			{
-				// For all many to one associations of a single entity,  
+				// For all many to one associations of a single entity,
 				// create a single query to get values for the target records.
 				sourceKey = association.getConstraintProperties()
 						.getSrcEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties()
@@ -716,7 +715,7 @@ public class DynamicExtensionBaseQueryBuilder
 			}
 			else
 			{
-				// For one to many or one to one association, get target record values 
+				// For one to many or one to one association, get target record values
 				// from the target entity table.
 				targetKey = association.getConstraintProperties()
 						.getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties()
@@ -829,7 +828,7 @@ public class DynamicExtensionBaseQueryBuilder
 	/**
 	 * This method returns association values for the entity's given record.
 	 * e.g if user1 is associated with study1 and study2, this method returns the
-	 * list of record identifiers of study1 and study2 as the return value for the 
+	 * list of record identifiers of study1 and study2 as the return value for the
 	 * association between user and study.
 	 * @param associations
 	 * @param entRecResult
@@ -883,7 +882,7 @@ public class DynamicExtensionBaseQueryBuilder
 			}
 			else if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.ONE)
 			{
-				// For all many to one associations of a single entity, create a single query 
+				// For all many to one associations of a single entity, create a single query
 				// to get values for the target records.
 				sourceKey = association.getConstraintProperties()
 						.getSrcEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties()
@@ -1146,7 +1145,7 @@ public class DynamicExtensionBaseQueryBuilder
 
 		EntityInterface tgtEntity = association.getTargetEntity();
 
-		// Check if these records are referred to by some other incoming association, if so 
+		// Check if these records are referred to by some other incoming association, if so
 		// then this should not be disabled.
 		Collection<AssociationInterface> associations = tgtEntity.getAssociationCollection();
 		for (AssociationInterface tgtEntAsso : associations)
@@ -1201,7 +1200,7 @@ public class DynamicExtensionBaseQueryBuilder
 	}
 
 	/**
-	 * This method checks if the record id of given entity is 
+	 * This method checks if the record id of given entity is
 	 * referred to by some other entity in some association.
 	 * @param entity
 	 * @param recordIds
@@ -1236,7 +1235,7 @@ public class DynamicExtensionBaseQueryBuilder
 			Cardinality srcMaxCard = sourceRole.getMaximumCardinality();
 			Cardinality tgtMaxCard = targetRole.getMaximumCardinality();
 
-			// Commented query part checking for Disabled records. Since delete record functionality is removed, 
+			// Commented query part checking for Disabled records. Since delete record functionality is removed,
 			// we no longer need to check records 'Disabled'.
 			// Moreover the removed query part was not executed on Oracle because of syntax error.
 			if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.MANY)
@@ -1356,7 +1355,7 @@ public class DynamicExtensionBaseQueryBuilder
 		else
 		{
 			// For one to many and one to one, update target entity's records
-			// (set value in target column key = null) that are referring to 
+			// (set value in target column key = null) that are referring to
 			// this record by setting it to null.
 			query.append(UPDATE_KEYWORD);
 			query.append(WHITESPACE + tableName);
@@ -1500,7 +1499,7 @@ public class DynamicExtensionBaseQueryBuilder
 	 * @param entity on which the query is to be applied
 	 * @param revQueries rollback query list
 	 * @return list of queries
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private List<String> getForeignKeyConstraintQuery(Entity entity, List<String> revQueries)
 			throws DynamicExtensionsSystemException
@@ -1577,7 +1576,7 @@ public class DynamicExtensionBaseQueryBuilder
 	 * @param entity child entity
 	 * @param parentEntity parent of the entity
 	 * @return query
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	protected String getForeignKeyConstraintQueryForInheritance(EntityInterface entity,
 			EntityInterface parentEntity) throws DynamicExtensionsSystemException
@@ -1660,7 +1659,7 @@ public class DynamicExtensionBaseQueryBuilder
 	/**
 	 * This method is used to sort the frgnCnstrKeyPropColl in the natural order of the srcPrimaryKeyAttributes column name
 	 * @param frnCnstrKeyProps which is to be sorted
-	 * @return sorted collection of frgnCnstrKeyPropColl 
+	 * @return sorted collection of frgnCnstrKeyPropColl
 	 */
 	private Collection<ConstraintKeyPropertiesInterface> sortOnPrimaryAttribute(
 			Collection<ConstraintKeyPropertiesInterface> frnCnstrKeyProps)
@@ -1676,7 +1675,7 @@ public class DynamicExtensionBaseQueryBuilder
 	}
 
 	/**
-	 * This method returns the queries to remove foreign key constraint in the  
+	 * This method returns the queries to remove foreign key constraint in the
 	 * given child entity that refers to identifier column of the parent.
 	 * @param entity whose foreign key constraint is to be removed
 	 * @param parentEntity on which it refers
@@ -1794,7 +1793,7 @@ public class DynamicExtensionBaseQueryBuilder
 	}
 
 	/**
-	 * This method returns the database type and size of the attribute 
+	 * This method returns the database type and size of the attribute
 	 * passed to it, which becomes the part of the query for that attribute.
 	 * @param attribute
 	 * @return
@@ -1820,7 +1819,8 @@ public class DynamicExtensionBaseQueryBuilder
 			{
 				DateAttributeTypeInformation dateAttrTypInfo = (DateAttributeTypeInformation) attrTypeInfo;
 
-				String format = dateAttrTypInfo.getFormat();
+				String format = DynamicExtensionsUtility.getDateFormat(dateAttrTypInfo.getFormat());
+
 				if (format != null && format.equalsIgnoreCase(ProcessorConstants.DATE_TIME_FORMAT))
 				{
 					return dataTypeFactory.getDatabaseDataType("DateTime");
@@ -1920,7 +1920,7 @@ public class DynamicExtensionBaseQueryBuilder
 
 	/**
 	 * This method returns all the CREATE table entries for associations present in the entity.
-	 * @param entity whose all category associations are to be processed 
+	 * @param entity whose all category associations are to be processed
 	 * @param revQueries rollback query list
 	 * @return list of queries
 	 * @throws DynamicExtensionsApplicationException
@@ -1949,7 +1949,7 @@ public class DynamicExtensionBaseQueryBuilder
 
 	/**
 	 * This method builds the query part for the association.
-	 * @param association whose query is to be prepared 
+	 * @param association whose query is to be prepared
 	 * @param revQueries rollback query list
 	 * @param isAddAssoQuery boolean indicating weather add or remove association query
 	 * @return
@@ -2132,7 +2132,7 @@ public class DynamicExtensionBaseQueryBuilder
 
 				if (isAttributeColumnToBeAdded(attribute, savedAttribute))
 				{
-					// Either the attribute is newly added or previously excluded(file type/multi select) 
+					// Either the attribute is newly added or previously excluded(file type/multi select)
 					// attribute.
 
 					attrQueries.add(processAddAttribute(attribute, attrRlbkQries));
@@ -2181,7 +2181,7 @@ public class DynamicExtensionBaseQueryBuilder
 
 				if (isAbstarctAttributeColumnToBeAdded(attribute, savedAttribute))
 				{
-					// Either the attribute is newly added or previously excluded(file type/multi select) 
+					// Either the attribute is newly added or previously excluded(file type/multi select)
 					// attribute.
 					String attributeQuery = processAddAttribute(attribute, attrRlbkQries);
 					attrQueries.add(attributeQuery);
@@ -2197,9 +2197,9 @@ public class DynamicExtensionBaseQueryBuilder
 	}
 
 	/**
-	 * It will create the queries for association in case of edit 
-	 * @param entity which is edited 
-	 * @param dbaseCopy 
+	 * It will create the queries for association in case of edit
+	 * @param entity which is edited
+	 * @param dbaseCopy
 	 * @param attrRlbkQries rollback query list
 	 * @return list of queries
 	 * @throws DynamicExtensionsSystemException
@@ -2612,8 +2612,8 @@ public class DynamicExtensionBaseQueryBuilder
 	}
 
 	/**
-	 * This method takes the edited attribute and its database copy and then looks for 
-	 * any changes. Changes could be in terms of data table query viz. change in the 
+	 * This method takes the edited attribute and its database copy and then looks for
+	 * any changes. Changes could be in terms of data table query viz. change in the
 	 * constraint NOT NULL AND UNIQUE.
 	 * @param attribute
 	 * @param savedAttr
@@ -2738,7 +2738,7 @@ public class DynamicExtensionBaseQueryBuilder
 
 			if (records != null && !records.isEmpty())
 			{
-				Integer count = (Integer) records.iterator().next();
+				Integer count = records.iterator().next();
 				if (count > 0)
 				{
 					isDataPresent = true;
@@ -2908,7 +2908,7 @@ public class DynamicExtensionBaseQueryBuilder
 
 		}
 
-		// Added by: Kunal : Two more extra columns file name and content type 
+		// Added by: Kunal : Two more extra columns file name and content type
 		// need to be added to the table.
 		if (attribute.getAttributeTypeInformation() instanceof FileAttributeTypeInformation)
 		{
@@ -2986,7 +2986,7 @@ public class DynamicExtensionBaseQueryBuilder
 	}
 
 	/**
-	 * This method constructs the query part for adding two 
+	 * This method constructs the query part for adding two
 	 * extra columns when an attribute of type file is created.
 	 * @param attribute FileAttribute
 	 * @return queryString
@@ -3007,7 +3007,7 @@ public class DynamicExtensionBaseQueryBuilder
 	}
 
 	/**
-	 * This method constructs the query part for dropping 
+	 * This method constructs the query part for dropping
 	 * the extra columns created while creating an attribute of type file.
 	 * @param attribute FileAttribute
 	 * @return query string
@@ -3128,7 +3128,7 @@ public class DynamicExtensionBaseQueryBuilder
 	}
 
 	/**
-	 * This method executes the query that selects record identifiers of the target entity 
+	 * This method executes the query that selects record identifiers of the target entity
 	 * that are associated to the source entity for a given association.
 	 * @param query
 	 * @return List of record identifiers of the target entity .
@@ -3176,7 +3176,7 @@ public class DynamicExtensionBaseQueryBuilder
 	}
 
 	/**
-	 * This method executes the query that selects record identifiers of the target entity 
+	 * This method executes the query that selects record identifiers of the target entity
 	 * that are associated to the source entity for a given association.
 	 * @param query
 	 * @return List of record identifiers of the target entity .
@@ -3223,7 +3223,7 @@ public class DynamicExtensionBaseQueryBuilder
 
 	/**
 	 * This method make sure the cardinality constraints are properly followed.
-	 * e.g for one to one association, it checks if target entity's record id is 
+	 * e.g for one to one association, it checks if target entity's record id is
 	 * not associated to any other record.
 	 * source entity.
 	 * @param asso
@@ -3290,7 +3290,7 @@ public class DynamicExtensionBaseQueryBuilder
 
 	/**
 	 * This method make sure the cardinality constraints are properly followed.
-	 * e.g for one to one association, it checks if target entity's record id is 
+	 * e.g for one to one association, it checks if target entity's record id is
 	 * not associated to any other record.
 	 * source entity.
 	 * @param catAsso
@@ -3372,7 +3372,7 @@ public class DynamicExtensionBaseQueryBuilder
 	 * @param attribute
 	 * @param value
 	 * @return
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public Object getFormattedValue(AbstractAttribute attribute, Object value)
 			throws DynamicExtensionsSystemException
@@ -3411,27 +3411,24 @@ public class DynamicExtensionBaseQueryBuilder
 		else if (attrTypInfo instanceof DateAttributeTypeInformation)
 		{
 			String dateFormat = ((DateAttributeTypeInformation) attrTypInfo).getFormat();
-			if (dateFormat == null)
-			{
-				dateFormat = CommonServiceLocator.getInstance().getDatePattern();
-			}
+			String datePattern = DynamicExtensionsUtility.getDateFormat(dateFormat);
 
 			String str = null;
 			if (value instanceof Date)
 			{
-				str = Utility.parseDateToString(((Date) value), dateFormat);
+				str = Utility.parseDateToString(((Date) value), datePattern);
 			}
 			else
 			{
 				str = (String) value;
 			}
 
-			if (dateFormat.equals(ProcessorConstants.MONTH_YEAR_FORMAT) && str.length() != 0)
+			if (datePattern.equals(ProcessorConstants.MONTH_YEAR_FORMAT) && str.length() != 0)
 			{
 				str = dbUtility.formatMonthAndYearDate(str, true);
 			}
 
-			if (dateFormat.equals(ProcessorConstants.YEAR_ONLY_FORMAT) && str.length() != 0)
+			if (datePattern.equals(ProcessorConstants.YEAR_ONLY_FORMAT) && str.length() != 0)
 			{
 				str = dbUtility.formatMonthAndYearDate(str, true);
 			}
@@ -3448,7 +3445,7 @@ public class DynamicExtensionBaseQueryBuilder
 				{
 					jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
 					frmtedValue = jdbcDao.getStrTodateFunction() + "('" + str.trim() + "','"
-							+ DynamicExtensionsUtility.getSQLDateFormat(dateFormat) + "')";
+							+ DynamicExtensionsUtility.getSQLDateFormat(datePattern) + "')";
 				}
 				catch (DAOException e)
 				{
@@ -3481,7 +3478,7 @@ public class DynamicExtensionBaseQueryBuilder
 				frmtedValue = value.toString();
 			}
 
-			// In case of MySQL5, if the column data type is one of double, float or integer, 
+			// In case of MySQL5, if the column data type is one of double, float or integer,
 			// then it is not possible to pass '' as  a value in insert-update query so pass null as value.
 			if (attrTypInfo instanceof NumericAttributeTypeInformation
 					&& frmtedValue.trim().length() == 0)
@@ -3708,7 +3705,7 @@ public class DynamicExtensionBaseQueryBuilder
 	 */
 	protected Object convertValueToObject(Object valueObj) throws DynamicExtensionsSystemException
 	{
-		return (Object) "";
+		return "";
 	}
 
 	/**

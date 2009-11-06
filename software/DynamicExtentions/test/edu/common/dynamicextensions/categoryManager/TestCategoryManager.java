@@ -44,6 +44,7 @@ import edu.common.dynamicextensions.entitymanager.EntityGroupManager;
 import edu.common.dynamicextensions.entitymanager.EntityGroupManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.CategoryCreator;
 import edu.common.dynamicextensions.util.CiderXMIImporter;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
@@ -3402,7 +3403,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	/**
 	 * use case: Single line display controls validations
 	 * Two controls on the sinlge line should of the same type
-	 * Allowed control type are displayed in the error message
+	 * (Now it is supported) so changed the test case & no error will be thrown.
 	 */
 	public void testSingleLineDisplay3()
 	{
@@ -3597,7 +3598,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		// put all category attributes of the category entity 'PastMedicalHistory[1]' in data value map
 		valueMapMain.put(catAttr1, "CommentTC");
 		valueMapMain.put(catAttr2, "1");
-		valueMapMain.put(catAttr3, "07-01-2009");
+		valueMapMain.put(catAttr3, "07"+ProcessorConstants.DATE_SEPARATOR+"01"+ProcessorConstants.DATE_SEPARATOR+"2009");
 		valueMapMain.put(catAttr4, "LeftTC");
 		valueMapMain.put(catAttr5, "123");
 		valueMapMain.put(catAttr6, "HydronephrosisTC");

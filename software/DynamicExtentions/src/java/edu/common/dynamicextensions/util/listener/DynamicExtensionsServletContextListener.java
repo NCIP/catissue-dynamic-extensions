@@ -16,9 +16,9 @@ import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 
 /**
- * 
+ *
  * @author sujay_narkar
- * 
+ *
  * */
 public class DynamicExtensionsServletContextListener implements ServletContextListener
 {
@@ -28,37 +28,43 @@ public class DynamicExtensionsServletContextListener implements ServletContextLi
 	 */
 	public void contextInitialized(ServletContextEvent sce)
 	{
-		
+
 		String propDirPath=sce.getServletContext().getRealPath("WEB-INF")
 		+ System.getProperty("file.separator") + "classes";
 
-		/**
-		 * Getting Application Properties file path
-		 */
-		String applicationResourcesPath = propDirPath+ System.getProperty("file.separator")
-				+ sce.getServletContext().getInitParameter("applicationproperties");
-		
+
+
 		/**
 		 * Configuring the Logger class so that it can be utilized by
 		 * the entire application
 		 */
-		
+
 		LoggerConfig.configureLogger(propDirPath);
 		try
 		{
 			ErrorKey.init("~");
-		
+
 		}
 		catch (Exception ex)
 		{
 			Logger.out.error(ex.getMessage(), ex);
 		}
+		String resourceBundleKey = sce.getServletContext().getInitParameter(
+		"ResourceBundleParamName");
+		if(resourceBundleKey==null || resourceBundleKey.trim().equals(""))
+		{
+			resourceBundleKey="resourcebundleclass";
+		}
 		/**
-		 * Initializing ApplicationProperties with the class 
+		 * Getting Application Properties file path
+		 */
+		String applicationResourcesPath = propDirPath+ System.getProperty("file.separator")
+				+ sce.getServletContext().getInitParameter(resourceBundleKey)+".properties";
+		/**
+		 * Initializing ApplicationProperties with the class
 		 * corresponding to resource bundle of the application
 		 */
-		ApplicationProperties.initBundle(sce.getServletContext().getInitParameter(
-				"resourcebundleclass"));
+		ApplicationProperties.initBundle(sce.getServletContext().getInitParameter(resourceBundleKey));
 
 		/**
 		 * Getting and storing Home path for the application
@@ -77,7 +83,7 @@ public class DynamicExtensionsServletContextListener implements ServletContextLi
 		}
 
 		/**
-		 * setting system property catissue.home which can be utilized 
+		 * setting system property catissue.home which can be utilized
 		 * by the Logger for creating log file
 		 */
 		System.setProperty("dynamicExtensions.home", Variables.dynamicExtensionsHome + "/Logs");
@@ -90,7 +96,7 @@ public class DynamicExtensionsServletContextListener implements ServletContextLi
 		//QueryBizLogic.initializeQueryData();
 
 		DynamicExtensionsUtility.initialiseApplicationVariables();
-
+		DynamicExtensionsUtility.validateGivenDatePatterns();
 		DynamicExtensionsUtility.initialiseApplicationInfo();
 		Logger.out.info("DynamicExtensionsServletContextListener before Initialising the Cache.");
 		EntityCache.getInstance();
@@ -102,6 +108,6 @@ public class DynamicExtensionsServletContextListener implements ServletContextLi
 	 */
 	public void contextDestroyed(ServletContextEvent sce)
 	{
-		//	  
+		//
 	}
 }

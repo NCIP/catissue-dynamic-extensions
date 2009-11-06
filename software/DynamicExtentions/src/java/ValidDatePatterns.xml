@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<valid_pattern>
+	<pattern >dd-MM-yyyy</pattern>
+	<pattern >dd/MM/yyyy</pattern>
+	<pattern >dd-MM-yyyy HH:mm</pattern>
+	<pattern >dd/MM/yyyy HH:mm</pattern>
+	<pattern >MM-dd-yyyy</pattern>
+	<pattern >MM/dd/yyyy</pattern>
+	<pattern >MM-dd-yyyy HH:mm</pattern>
+	<pattern >MM/dd/yyyy HH:mm</pattern>
+	<pattern >MM-yyyy</pattern>
+	<pattern >MM/yyyy</pattern>
+	<pattern >yyyy</pattern>
+</valid_pattern>

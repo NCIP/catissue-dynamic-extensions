@@ -93,58 +93,58 @@ function hideMonthAndYearCal(id) {
 
 	if (SelectedMonthOption == "Jan")
 	{
-		SelectedMonthOption = "01-";
+		SelectedMonthOption = "01";
 	}
 	else if (SelectedMonthOption == "Feb")
 	{
-		SelectedMonthOption = "02-";
+		SelectedMonthOption = "02";
 	}
 	else if (SelectedMonthOption == "Mar")
 	{
-		SelectedMonthOption = "03-";
+		SelectedMonthOption = "03";
 	}
 	else if (SelectedMonthOption == "Apr")
 	{
-		SelectedMonthOption = "04-";
+		SelectedMonthOption = "04";
 	}
 	else if (SelectedMonthOption == "May")
 	{
-		SelectedMonthOption = "05-";
+		SelectedMonthOption = "05";
 	}
 	else if (SelectedMonthOption == "Jun")
 	{
-		SelectedMonthOption = "06-";
+		SelectedMonthOption = "06";
 	}
 	else if (SelectedMonthOption == "Jul")
 	{
-		SelectedMonthOption = "07-";
+		SelectedMonthOption = "07";
 	}
 	else if (SelectedMonthOption == "Aug")
 	{
-		SelectedMonthOption = "08-";
+		SelectedMonthOption = "08";
 	}
 	else if (SelectedMonthOption == "Sep")
 	{
-		SelectedMonthOption = "09-";
+		SelectedMonthOption = "09";
 	}
 		else if (SelectedMonthOption == "Oct")
 	{
-		SelectedMonthOption = "10-";
+		SelectedMonthOption = "10";
 	}
 		else if (SelectedMonthOption == "Nov")
 	{
-		SelectedMonthOption = "11-";
+		SelectedMonthOption = "11";
 	}
 		else if (SelectedMonthOption == "Dec")
 	{
-		SelectedMonthOption = "12-";
+		SelectedMonthOption = "12";
 	}
 
     var SelectedYear = document.getElementById(yearID).selectedIndex;
 
     var SelectedYearOption = document.getElementById(yearID).options[SelectedYear].innerHTML;
 
-    var combined = SelectedMonthOption + SelectedYearOption;
+    var combined = formatMonthAndYearDate(SelectedMonthOption, SelectedYearOption);
     
     document.forms[calformname].elements[calformelement].value = combined;
         
@@ -166,6 +166,45 @@ function hideMonthAndYearCal(id) {
     }
      document.getElementById(id).style.color="black";
 	 isDataChanged();
+}
+
+function formatMonthAndYearDate(month, year, id) {
+    var date = "";
+    var pos = 0;
+    var pattern;
+    var previousPattern;
+    var patternLength = 0;
+    if (calpattern!=null && calpattern.length>0) {      
+        previousPattern = calpattern.charAt(0);
+        while (pos <= calpattern.length) {
+            if (pos < calpattern.length) {
+                pattern = calpattern.charAt(pos);
+            }  else {
+                pattern = "";
+            }
+            if (pattern != previousPattern) {           
+                switch (previousPattern) {
+                    case 'y':
+                        date += padYear(year, patternLength);               
+                        break;
+                    case 'M':
+                        date += padNumber(month, patternLength);
+                        break;
+                    case '\'':
+                        // PENDING
+                        break;
+                    default:
+                        date += previousPattern;
+                }
+                previousPattern = pattern;
+                patternLength = 0;
+            }
+            patternLength++;
+            pos++;
+        }
+    }
+    
+	 return date;
 }
 
 function hideYearOnlyCal(id) {     
@@ -215,8 +254,31 @@ function printTimeCalendar(id,day, month, year, time_hh, time_mm )
  * bgColor => #000000, #C9252C, 
  */
 function printCal(id,day1, day2, day3, day4, day5, day6, day7, first, month1, month2, month3, month4, month5, month6, month7, month8, month9, month10, month11, month12, day, month, year, displayTime, time_hh, time_mm) 
-{       
-    document.write('<div id="caltitre" style="z-index:10;height:20">'); 
+{ 
+	var calHeight=20;
+	if(document.all) 
+	{
+      //I.E
+		calHeight=20;
+    }
+	else if(document.layers) 
+	{
+        // Netspace 4
+		calHeight=20;
+    }
+	else
+	{
+        // Mozilla
+		if(displayTime=='true')
+		{
+			calHeight=70;
+		}
+		else
+		{
+			calHeight=35;
+		}
+    }  
+    document.write('<div id="caltitre" style="z-index:10;height:'+calHeight+'">'); 
     document.write('<table cellpadding="0" cellspacing="0" border="0" width="267" height:20" bgcolor="#BDDBF3">');
 //  document.write('<form>');
     document.write('<tr><td colspan="15"><img src="' + imgsrc + 'calBackground.gif" width=1 height=1></td></tr>');

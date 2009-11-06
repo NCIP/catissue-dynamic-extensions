@@ -958,7 +958,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 			AttributeInterface studyDate = factory.createDateAttribute();
 			((DateAttributeTypeInformation) studyDate.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.SQL_DATE_ONLY_FORMAT);
+					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
 			studyDate.setName("Date");
 
 			study.addAbstractAttribute(name);
@@ -972,7 +972,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 			dataValue.put(name, "Java Study");
 			dataValue.put(userNames, "a");
-			dataValue.put(studyDate, "11-02-2006");
+			dataValue.put(studyDate, "11"+ProcessorConstants.DATE_SEPARATOR+"02"+ProcessorConstants.DATE_SEPARATOR+"2006");
 
 			Long recordId = EntityManagerInterface.insertData(savedStudy, dataValue);
 
@@ -982,14 +982,14 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			assertEquals("a", userName);
 
 			dataValue.put(userNames, "b");
-			dataValue.put(studyDate, "12-02-2006");
+			dataValue.put(studyDate, "12"+ProcessorConstants.DATE_SEPARATOR+"02"+ProcessorConstants.DATE_SEPARATOR+"2006");
 
 			EntityManagerInterface.editData(savedStudy, dataValue, recordId);
 
 			map = EntityManagerInterface.getRecordById(savedStudy, recordId);
 			userName = (String) map.get(userNames);
 			assertEquals("b", userName);
-			assertEquals("12-02-2006", map.get(studyDate));
+			assertEquals("12"+ProcessorConstants.DATE_SEPARATOR+"02"+ProcessorConstants.DATE_SEPARATOR+"2006", map.get(studyDate));
 		}
 		catch (DynamicExtensionsSystemException e)
 		{
@@ -2692,11 +2692,11 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			AttributeInterface startDate = DomainObjectFactory.getInstance().createDateAttribute();
 			startDate.setName("startDate");
 			((DateAttributeTypeInformation) startDate.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_TIME_FORMAT);
+					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEANDTIME);
 
 			AttributeInterface endDate = DomainObjectFactory.getInstance().createDateAttribute();
 			((DateAttributeTypeInformation) endDate.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.SQL_DATE_ONLY_FORMAT);
+					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
 			endDate.setName("endDate");
 
 			entity.addAbstractAttribute(floatAtribute);
@@ -2710,15 +2710,17 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 			Map dataValue = new HashMap();
 			dataValue.put(floatAtribute, "15.90");
-			dataValue.put(startDate, "11-12-1982 10:11");
-			dataValue.put(endDate, "01-12-1982");
+			String startDateValue = "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982 10:11";
+			dataValue.put(startDate, startDateValue);
+			String endDateValue = "01"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982";
+			dataValue.put(endDate, endDateValue);
 
 			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue);
 
 			dataValue = EntityManagerInterface.getRecordById(entity, recordId);
 
-			assertEquals("11-12-1982 10:11", dataValue.get(startDate));
-			assertEquals("01-12-1982", dataValue.get(endDate));
+			assertEquals(startDateValue, dataValue.get(startDate));
+			assertEquals(endDateValue, dataValue.get(endDate));
 		}
 		catch (Exception e)
 		{
@@ -2749,7 +2751,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			Attribute date = (Attribute) factory.createDateAttribute();
 			date.setName("Date");
 			((DateAttributeTypeInformation) date.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.SQL_DATE_ONLY_FORMAT);
+					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
 
 			RuleInterface dateRule = factory.createRule();
 			dateRule.setName("date");
@@ -2765,13 +2767,13 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			EntityInterface savedEntity = entityManager.persistEntity(entity);
 
 			Map dataValue = new HashMap();
-			dataValue.put("date", "11-16-1982");
+			dataValue.put("date", "11"+ProcessorConstants.DATE_SEPARATOR+"16"+ProcessorConstants.DATE_SEPARATOR+"1982");
 
 			for (RuleInterface rule : date.getRuleCollection())
 			{
 				ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
 						.getValidatorRule(rule.getName());
-				validatorRule.validate(date, "08-16-2020", null, "Date");
+				validatorRule.validate(date, "08"+ProcessorConstants.DATE_SEPARATOR+"16"+ProcessorConstants.DATE_SEPARATOR+"2020", null, "Date");
 			}
 
 			recordId = entityManager.insertData(savedEntity, dataValue);
@@ -2810,24 +2812,24 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		{
 			AttributeInterface dateOnly = DomainObjectFactory.getInstance().createDateAttribute();
 			((DateAttributeTypeInformation) dateOnly.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.SQL_DATE_ONLY_FORMAT);
+					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
 			dateOnly.setName("dateOnly");
 
 			AttributeInterface dateTime = DomainObjectFactory.getInstance().createDateAttribute();
 			((DateAttributeTypeInformation) dateTime.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_TIME_FORMAT);
+					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEANDTIME);
 			dateTime.setName("dateTime");
 
 			AttributeInterface yearOnlyDate = DomainObjectFactory.getInstance()
 					.createDateAttribute();
 			((DateAttributeTypeInformation) yearOnlyDate.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.YEAR_ONLY_FORMAT);
+					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_YEARONLY);
 			yearOnlyDate.setName("yearOnlyDate");
 
 			AttributeInterface monthYearDate = DomainObjectFactory.getInstance()
 					.createDateAttribute();
 			((DateAttributeTypeInformation) monthYearDate.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.MONTH_YEAR_FORMAT);
+					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_MONTHANDYEAR);
 			monthYearDate.setName("monthYearDate");
 
 			entity.addAbstractAttribute(dateOnly);
@@ -2841,19 +2843,19 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			EntityInterface savedEntity = EntityManagerInterface.persistEntity(entity);
 
 			Map dataValue = new HashMap();
-			dataValue.put(dateOnly, "01-12-1982");
-			dataValue.put(dateTime, "11-12-1982 10:11");
+			dataValue.put(dateOnly, "01"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982");
+			dataValue.put(dateTime, "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982 10:11");
 			dataValue.put(yearOnlyDate, "1900");
-			dataValue.put(monthYearDate, "09-1900");
+			dataValue.put(monthYearDate, "09"+ProcessorConstants.DATE_SEPARATOR+"1900");
 
 			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue);
 
 			dataValue = EntityManagerInterface.getRecordById(entity, recordId);
 
-			assertEquals("11-12-1982 10:11", dataValue.get(dateTime));
-			assertEquals("01-12-1982", dataValue.get(dateOnly));
+			assertEquals("11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982 10:11", dataValue.get(dateTime));
+			assertEquals("01"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982", dataValue.get(dateOnly));
 			assertEquals("1900", dataValue.get(yearOnlyDate));
-			assertEquals("09-1900", dataValue.get(monthYearDate));
+			assertEquals("09"+ProcessorConstants.DATE_SEPARATOR+"1900", dataValue.get(monthYearDate));
 		}
 		catch (Exception e)
 		{
@@ -2885,21 +2887,21 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			Attribute date = (Attribute) factory.createDateAttribute();
 			date.setName("DateRange");
 			((DateAttributeTypeInformation) date.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.SQL_DATE_ONLY_FORMAT);
+					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
 
 			RuleInterface dateRange = factory.createRule();
 			dateRange.setName("dateRange");
 
 			RuleParameterInterface minValue = factory.createRuleParameter();
 			minValue.setName("min");
-			minValue.setValue("11-12-1982");
+			minValue.setValue("11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982");
 			dateRange.getRuleParameterCollection().add(minValue);
 
 			date.getRuleCollection().add(dateRange);
 
 			RuleParameterInterface maxValue = factory.createRuleParameter();
 			maxValue.setName("max");
-			maxValue.setValue("11-15-1982");
+			maxValue.setValue("11"+ProcessorConstants.DATE_SEPARATOR+"15"+ProcessorConstants.DATE_SEPARATOR+"1982");
 			dateRange.getRuleParameterCollection().add(maxValue);
 
 			entity.addAbstractAttribute(date);
@@ -2910,17 +2912,17 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			EntityInterface savedEntity = entityManager.persistEntity(entity);
 
 			Map dataValue = new HashMap();
-			dataValue.put("date", "11-15-1982");
+			dataValue.put("date", "11"+ProcessorConstants.DATE_SEPARATOR+"15"+ProcessorConstants.DATE_SEPARATOR+"1982");
 
 			Map<String, String> rulesMap = new HashMap<String, String>();
-			rulesMap.put("min", "11-12-1982");
-			rulesMap.put("max", "11-15-1982");
+			rulesMap.put("min", "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982");
+			rulesMap.put("max", "11"+ProcessorConstants.DATE_SEPARATOR+"15"+ProcessorConstants.DATE_SEPARATOR+"1982");
 
 			for (RuleInterface rule : date.getRuleCollection())
 			{
 				ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
 						.getValidatorRule(rule.getName());
-				validatorRule.validate(date, "11-16-1982", rulesMap, "LeapYear");
+				validatorRule.validate(date, "11"+ProcessorConstants.DATE_SEPARATOR+"16"+ProcessorConstants.DATE_SEPARATOR+"1982", rulesMap, "LeapYear");
 			}
 
 			recordId = entityManager.insertData(savedEntity, dataValue);
@@ -2962,22 +2964,22 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		{
 			Attribute dateOnly = (Attribute) factory.createDateAttribute();
 			((DateAttributeTypeInformation) dateOnly.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.SQL_DATE_ONLY_FORMAT);
+					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
 			dateOnly.setName("dateOnly");
 
 			Attribute dateTime = (Attribute) factory.createDateAttribute();
 			((DateAttributeTypeInformation) dateTime.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_TIME_FORMAT);
+					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEANDTIME);
 			dateTime.setName("dateTime");
 
 			Attribute yearOnlyDate = (Attribute) factory.createDateAttribute();
 			((DateAttributeTypeInformation) yearOnlyDate.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.YEAR_ONLY_FORMAT);
+					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_YEARONLY);
 			yearOnlyDate.setName("yearOnlyDate");
 
 			Attribute monthYearDate = (Attribute) factory.createDateAttribute();
 			((DateAttributeTypeInformation) monthYearDate.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.MONTH_YEAR_FORMAT);
+					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_MONTHANDYEAR);
 			monthYearDate.setName("monthYearDate");
 
 			RuleInterface allowfuturedate = factory.createRule();
@@ -3002,13 +3004,13 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			{
 				ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
 						.getValidatorRule(rule.getName());
-				validatorRule.validate(dateOnly, "08-16-2020", null, "Date");
+				validatorRule.validate(dateOnly, "08"+ProcessorConstants.DATE_SEPARATOR+"16"+ProcessorConstants.DATE_SEPARATOR+"2020", null, "Date");
 			}
 			for (RuleInterface rule : dateTime.getRuleCollection())
 			{
 				ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
 						.getValidatorRule(rule.getName());
-				validatorRule.validate(dateTime, "11-12-2020 10:11", null, "Date");
+				validatorRule.validate(dateTime, "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"2020 10:11", null, "Date");
 			}
 			for (RuleInterface rule : yearOnlyDate.getRuleCollection())
 			{
@@ -3020,23 +3022,23 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			{
 				ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
 						.getValidatorRule(rule.getName());
-				validatorRule.validate(monthYearDate, "09-2020", null, "Date");
+				validatorRule.validate(monthYearDate, "09"+ProcessorConstants.DATE_SEPARATOR+"2020", null, "Date");
 			}
 
 			Map dataValue = new HashMap();
-			dataValue.put(dateOnly, "11-16-2018");
-			dataValue.put(dateTime, "11-12-2018 10:11");
+			dataValue.put(dateOnly, "11"+ProcessorConstants.DATE_SEPARATOR+"16"+ProcessorConstants.DATE_SEPARATOR+"2018");
+			dataValue.put(dateTime, "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"2018 10:11");
 			dataValue.put(yearOnlyDate, "2018");
-			dataValue.put(monthYearDate, "09-2018");
+			dataValue.put(monthYearDate, "09"+ProcessorConstants.DATE_SEPARATOR+"2018");
 
 			recordId = entityManager.insertData(savedEntity, dataValue);
 
 			dataValue = entityManager.getRecordById(entity, recordId);
 
-			assertEquals("11-12-2018 10:11", dataValue.get(dateTime));
-			assertEquals("11-16-2018", dataValue.get(dateOnly));
+			assertEquals("11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"2018 10:11", dataValue.get(dateTime));
+			assertEquals("11"+ProcessorConstants.DATE_SEPARATOR+"16"+ProcessorConstants.DATE_SEPARATOR+"2018", dataValue.get(dateOnly));
 			assertEquals("2018", dataValue.get(yearOnlyDate));
-			assertEquals("09-2018", dataValue.get(monthYearDate));
+			assertEquals("09"+ProcessorConstants.DATE_SEPARATOR+"2018", dataValue.get(monthYearDate));
 		}
 		catch (DynamicExtensionsValidationException e)
 		{
@@ -3073,7 +3075,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			Attribute date = (Attribute) factory.createDateAttribute();
 			date.setName("FutureDate");
 			((DateAttributeTypeInformation) date.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.SQL_DATE_ONLY_FORMAT);
+					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
 
 			RuleInterface allowfuturedate = factory.createRule();
 			allowfuturedate.setName("allowfuturedate");
@@ -3088,13 +3090,13 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			EntityInterface savedEntity = entityManager.persistEntity(entity);
 
 			Map dataValue = new HashMap();
-			dataValue.put(date, "11-16-2000");
+			dataValue.put(date, "11"+ProcessorConstants.DATE_SEPARATOR+"16"+ProcessorConstants.DATE_SEPARATOR+"2000");
 
 			for (RuleInterface rule : date.getRuleCollection())
 			{
 				ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
 						.getValidatorRule(rule.getName());
-				validatorRule.validate(date, "11-16-2000", null, "Date");
+				validatorRule.validate(date, "11"+ProcessorConstants.DATE_SEPARATOR+"16"+ProcessorConstants.DATE_SEPARATOR+"2000", null, "Date");
 			}
 
 			recordId = entityManager.insertData(savedEntity, dataValue);
