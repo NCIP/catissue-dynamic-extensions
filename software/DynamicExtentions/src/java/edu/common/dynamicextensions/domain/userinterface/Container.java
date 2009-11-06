@@ -765,7 +765,10 @@ public class Container extends DynamicExtensionBaseDomainObject
 
 		StringBuffer linkHTML = new StringBuffer();
 		linkHTML
-				.append("<img src='images/de/ic_det.gif' alt='Details' width='12' height='12' hspace='3' border='0' align='absmiddle'><a href='#' style='cursor:hand' class='set1' onclick='showChildContainerInsertDataPage(");
+				.append("<img src='images/de/ic_det.gif' alt='Details' width='12' height='12' hspace='3' border='0' align='absmiddle'><a href='#' style='cursor:hand' class='set1' id='lnkDetails");
+		linkHTML.append(container.getId());
+		linkHTML.append("' ");
+		linkHTML.append("onclick='showChildContainerInsertDataPage(");
 		linkHTML.append(container.getId());
 		linkHTML.append(",this)'>");
 		linkHTML.append(details);
