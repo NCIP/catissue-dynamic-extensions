@@ -37,9 +37,7 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 	public static Test suite()
 	{
 		TestSuite suite = new TestSuite("Test suite for Query Interface Classes");
-		System.out.println("uploadig static metadata");
-		String[] args = {XMI_FILE_PATH+"TestStaticModel.xmi",CSV_FILE_PATH + "staticModelContainers.csv","staticModel","none","false"};
-		XMIImporter.main(args);
+		uploadStaticMetadata();
 		suite.addTestSuite(TestEntityManager.class);
 		suite.addTestSuite(TestEntityManagerForAssociations.class);
 		suite.addTestSuite(TestEntityManagerForInheritance.class);
@@ -48,5 +46,11 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 		suite.addTestSuite(TestCategoryManager.class);
 		suite.addTestSuite(TestEntityManagerWithPrimaryKey.class);
 		return suite;
+	}
+	public static void uploadStaticMetadata()
+	{
+		System.out.println("uploadig static metadata");
+		String[] args = {XMI_FILE_PATH+"TestStaticModel.xmi",CSV_FILE_PATH + "staticModelContainers.csv","staticModel","none","false"};
+		XMIImporter.main(args);
 	}
 }
