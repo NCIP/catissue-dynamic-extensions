@@ -103,7 +103,7 @@
             name="baseAbstractAttribute"
             class="edu.common.dynamicextensions.domain.BaseAbstractAttribute"
             cascade="save-update"
-            outer-join="auto"
+            outer-join="false"
             update="true"
             insert="true"
             column="BASE_ABST_ATR_ID"
