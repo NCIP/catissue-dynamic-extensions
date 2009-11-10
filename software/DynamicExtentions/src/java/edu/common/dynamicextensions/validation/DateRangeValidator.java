@@ -96,11 +96,11 @@ public class DateRangeValidator implements ValidatorRuleInterface
 
 				if ("min".equals(parameterName))
 				{
-					checkMinDate(parameterDate, valueDate, parameterValue, controlCaption);
+					checkMinDate(parameterDate, valueDate, dateFormat, controlCaption);
 				}
 				else if ("max".equals(parameterName))
 				{
-					checkMaxDate(parameterDate, valueDate, parameterValue, controlCaption);
+					checkMaxDate(parameterDate, valueDate, dateFormat, controlCaption);
 				}
 			}
 		}
@@ -110,18 +110,18 @@ public class DateRangeValidator implements ValidatorRuleInterface
 	/**
 	 * @param parameterDate
 	 * @param valueDate
-	 * @param parameterValue
+	 * @param dateFormat
 	 * @param controlCaption
 	 * @throws DynamicExtensionsValidationException
 	 */
-	private void checkMinDate(Date parameterDate, Date valueDate, String parameterValue,
+	private void checkMinDate(Date parameterDate, Date valueDate, String dateFormat,
 			String controlCaption) throws DynamicExtensionsValidationException
 	{
 		if (valueDate.before(parameterDate))
 		{
 			List<String> placeHolders = new ArrayList<String>();
 			placeHolders.add(controlCaption);
-			placeHolders.add(Utility.parseDateToString(parameterDate, ProcessorConstants.DATE_ONLY_FORMAT));
+			placeHolders.add(Utility.parseDateToString(parameterDate, dateFormat));
 			throw new DynamicExtensionsValidationException("Validation failed", null,
 					"dynExtn.validation.Date.Min", placeHolders);
 		}
@@ -130,18 +130,18 @@ public class DateRangeValidator implements ValidatorRuleInterface
 	/**
 	 * @param parameterDate
 	 * @param valueDate
-	 * @param parameterValue
+	 * @param dateFormat
 	 * @param controlCaption
 	 * @throws DynamicExtensionsValidationException
 	 */
-	private void checkMaxDate(Date parameterDate, Date valueDate, String parameterValue,
+	private void checkMaxDate(Date parameterDate, Date valueDate, String dateFormat,
 			String controlCaption) throws DynamicExtensionsValidationException
 	{
 		if (valueDate.after(parameterDate))
 		{
 			List<String> placeHolders = new ArrayList<String>();
 			placeHolders.add(controlCaption);
-			placeHolders.add(Utility.parseDateToString(parameterDate, ProcessorConstants.DATE_ONLY_FORMAT));
+			placeHolders.add(Utility.parseDateToString(parameterDate, dateFormat));
 			throw new DynamicExtensionsValidationException("Validation failed", null,
 					"dynExtn.validation.Date.Max", placeHolders);
 		}
