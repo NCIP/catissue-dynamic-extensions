@@ -10,9 +10,11 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
+import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterface;
 import edu.common.dynamicextensions.exception.DataTypeFactoryInitializationException;
@@ -34,7 +36,7 @@ public class XMIImportValidator
 {
 
 	/**
-	 * This method verify that default value specified is withing given range for numeric type attribute 
+	 * This method verify that default value specified is withing given range for numeric type attribute
 	 * @param attribute
 	 * @param controlsForm
 	 * @param defaultValue
@@ -45,9 +47,9 @@ public class XMIImportValidator
 			throws DynamicExtensionsApplicationException
 	{
 
-		if (controlsForm.getMin() != null && controlsForm.getMin().length() != 0
-				&& controlsForm.getMax() != null && controlsForm.getMax().length() != 0
-				&& defaultValue != null)
+		if ((controlsForm.getMin() != null) && (controlsForm.getMin().length() != 0)
+				&& (controlsForm.getMax() != null) && (controlsForm.getMax().length() != 0)
+				&& (defaultValue != null))
 		{
 			String min = controlsForm.getMin();
 			String max = controlsForm.getMax();
@@ -68,11 +70,11 @@ public class XMIImportValidator
 				Logger.out.info(ApplicationProperties.getValue("validationError")
 						+ ApplicationProperties.getValue("defValueOORange", placeHolders));
 
-				throw new DynamicExtensionsApplicationException(e.getMessage(),e);
+				throw new DynamicExtensionsApplicationException(e.getMessage(), e);
 			}
 			catch (DataTypeFactoryInitializationException e)
 			{
-				throw new DynamicExtensionsApplicationException(e.getMessage(),e);
+				throw new DynamicExtensionsApplicationException(e.getMessage(), e);
 			}
 		}
 	}
@@ -83,16 +85,16 @@ public class XMIImportValidator
 	 * @param controlsForm
 	 * @param defaultValue
 	 * @throws DynamicExtensionsApplicationException
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public static void verifyDefaultValueForDateIsInRange(AbstractAttributeInterface attribute,
 			AbstractAttributeUIBeanInterface controlsForm, String defaultValue)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
 
-		if (controlsForm.getMin() != null && controlsForm.getMin().length() != 0
-				&& controlsForm.getMax() != null && controlsForm.getMax().length() != 0
-				&& defaultValue != null)
+		if ((controlsForm.getMin() != null) && (controlsForm.getMin().length() != 0)
+				&& (controlsForm.getMax() != null) && (controlsForm.getMax().length() != 0)
+				&& (defaultValue != null))
 		{
 			String min = controlsForm.getMin();
 			String max = controlsForm.getMax();
@@ -113,7 +115,7 @@ public class XMIImportValidator
 				Logger.out.info(ApplicationProperties.getValue("validationError")
 						+ ApplicationProperties.getValue("defValueFor")
 						+ ApplicationProperties.getValue(e.getErrorCode(), e.getPlaceHolderList()));
-				throw new DynamicExtensionsSystemException(e.getMessage(),e);
+				throw new DynamicExtensionsSystemException(e.getMessage(), e);
 
 			}
 		}
@@ -132,7 +134,7 @@ public class XMIImportValidator
 			String defaultValue, String min, String max, String attributeName)
 			throws DynamicExtensionsValidationException, DataTypeFactoryInitializationException
 	{
-		if (defaultValue != null && min != null && max != null)
+		if ((defaultValue != null) && (min != null) && (max != null))
 		{
 			Map<String, String> parameterMap = new HashMap<String, String>();
 			parameterMap.put("min", min);
@@ -197,7 +199,7 @@ public class XMIImportValidator
 
 		return true;
 	}
-	
+
 	/**
 	 * @param entityNameVsAttributeNames Map of entityName and corresponding attribute set
 	 * @param umlAssociationName Name of UML association
@@ -243,7 +245,7 @@ public class XMIImportValidator
 				if (childName.equalsIgnoreCase(childEntityName))
 				{
 					String parentName = umlClassIdVsEntity.get(entry.getKey()).getName();
-					if (parentName != null && parentName.trim().length() > 0)
+					if ((parentName != null) && (parentName.trim().length() > 0))
 					{
 						attributeCollection = entityNameVsAttributeNames.get(parentName);
 						validateAssociationName(attributeCollection, umlAssociationName, parentName);
@@ -265,8 +267,8 @@ public class XMIImportValidator
 	private static void validateAssociationName(Set<String> attributeCollection,
 			String umlAssociationName, String entityName) throws DynamicExtensionsSystemException
 	{
-		if (attributeCollection != null && !attributeCollection.isEmpty()
-				&& umlAssociationName != null && umlAssociationName.trim().length() > 0)
+		if ((attributeCollection != null) && !attributeCollection.isEmpty()
+				&& (umlAssociationName != null) && (umlAssociationName.trim().length() > 0))
 		{
 			for (String attributeName : attributeCollection)
 			{
@@ -278,5 +280,68 @@ public class XMIImportValidator
 				}
 			}
 		}
+	}
+
+	/**
+	 * @param entityInterface
+	 * @param sourceEntityCollection
+	 * @throws DynamicExtensionsSystemException
+	 */
+	private static void checkForCycleStartsAtEntity(EntityInterface entityInterface,
+			List<String> sourceEntityCollection) throws DynamicExtensionsSystemException
+	{
+		for (AssociationInterface associationInterface : entityInterface.getAssociationCollection())
+		{
+			if (!sourceEntityCollection.contains(entityInterface.getName()))
+			{
+				sourceEntityCollection.add(entityInterface.getName());
+				checkForCycleStartsAtEntity(associationInterface.getTargetEntity(),
+						sourceEntityCollection);
+			}
+			else
+			{
+
+				throw new DynamicExtensionsSystemException("CYCLE CREATED IN THE MODEL:-"
+						+ getEntityNameAsPath(sourceEntityCollection));
+			}
+			if (sourceEntityCollection.size() > 1)
+			{
+				sourceEntityCollection.remove(sourceEntityCollection.get(sourceEntityCollection
+						.size() - 1));
+			}
+		}
+
+	}
+
+	/**
+	 * @param sourceEntityCollection
+	 * @return
+	 */
+	private static String getEntityNameAsPath(List<String> sourceEntityCollection)
+	{
+		StringBuffer path = new StringBuffer();
+		for (String entity : sourceEntityCollection)
+		{
+			path.append(entity + "->");
+		}
+		path.append((new ArrayList<String>(sourceEntityCollection)).get(0));
+		return path.toString();
+	}
+
+	/**
+	 * @param entityGroupInterface
+	 * @throws DynamicExtensionsSystemException
+	 */
+	public static void validateForCycleInEntityGroup(EntityGroupInterface entityGroupInterface)
+			throws DynamicExtensionsSystemException
+	{
+
+		for (EntityInterface entityInterface : entityGroupInterface.getEntityCollection())
+		{
+			List<String> sourceEntityCollection = new ArrayList<String>();
+			checkForCycleStartsAtEntity(entityInterface, sourceEntityCollection);
+
+		}
+
 	}
 }

@@ -230,7 +230,7 @@ public class XMIImportProcessor
 
 		List<EntityGroupInterface> entityGroupColl = retrieveEntityGroup(entityGroupName);
 
-		if (entityGroupColl == null || entityGroupColl.isEmpty())
+		if ((entityGroupColl == null) || entityGroupColl.isEmpty())
 		{//Add
 			entityGroup = DomainObjectFactory.getInstance().createEntityGroup();
 			setEntityGroupName(entityGroupName);
@@ -253,11 +253,12 @@ public class XMIImportProcessor
 		for (UmlClass umlClass : umlClassColl)
 		{
 			if (xmiConfigurationObject.isEntityGroupSystemGenerated()
-					&& !umlClass.getName().startsWith(xmiConfigurationObject.getDefaultPackagePrefix())
-						&& xmiConfigurationObject.isDefaultPackage())
+					&& !umlClass.getName().startsWith(
+							xmiConfigurationObject.getDefaultPackagePrefix())
+					&& xmiConfigurationObject.isDefaultPackage())
 			{
-					umlClass.setName(xmiConfigurationObject.getDefaultPackagePrefix()
-							+ umlClass.getName());
+				umlClass.setName(xmiConfigurationObject.getDefaultPackagePrefix()
+						+ umlClass.getName());
 
 			}
 			EntityInterface entity = null;
@@ -268,7 +269,7 @@ public class XMIImportProcessor
 					&& isSkipEntity(umlClass.getName(),
 							xmiConfigurationObject.getSkipEntityNames(), xmiConfigurationObject
 									.getDefaultPackagePrefix())
-					&& xmiConfigurationObject.getSkipEntityGroup() != null)
+					&& (xmiConfigurationObject.getSkipEntityGroup() != null))
 			{
 
 				skipentityGroup = EntityGroupManager.getInstance().getEntityGroupByName(
@@ -391,7 +392,7 @@ public class XMIImportProcessor
 		}
 		// Execute data migration scripts for attributes that were changed from a normal attribute to
 		// a multiselect attribute.IF dao is provided then its the resposibility of the host to execute these Queries.
-		if (hibernatedao == null || hibernatedao.length == 0)
+		if ((hibernatedao == null) || (hibernatedao.length == 0))
 		{
 			List<String> multiSelMigrationQueries = EntityManagerUtil
 					.updateSqlScriptToMigrateOldDataForMultiselectAttribute(multiselectMigartionScripts);
@@ -547,7 +548,7 @@ public class XMIImportProcessor
 
 		primaryKey = taggedValueMap.get(XMIConstants.TAGGED_VALUE_PRIMARYKEY);
 		List<String> primaryKeyAttributeNameList = new ArrayList<String>();
-		if (primaryKey != null && !"".equals(primaryKey))
+		if ((primaryKey != null) && !"".equals(primaryKey))
 		{
 			//removeIdAttributeFromEntity(entity);
 			String primaryAttributeName[] = primaryKey.split(XMIConstants.COMMA);
@@ -704,7 +705,7 @@ public class XMIImportProcessor
 	{
 		DatatypeMappings dataType = DatatypeMappings.get(umlClassName);
 		boolean flag = false;
-		if (dataType != null
+		if ((dataType != null)
 				|| umlClassName
 						.equalsIgnoreCase(edu.common.dynamicextensions.ui.util.Constants.COLLECTION)
 				|| umlClassName
@@ -877,7 +878,7 @@ public class XMIImportProcessor
 						continue;
 					}
 					Collection<Generalization> generalizationColl = umlClass.getGeneralization();
-					if (generalizationColl != null && generalizationColl.size() > 0)
+					if ((generalizationColl != null) && (generalizationColl.size() > 0))
 					{
 						generalizations.addAll(generalizationColl);
 					}
@@ -940,7 +941,7 @@ public class XMIImportProcessor
 					}
 
 					Collection<Generalization> generalizationColl = umlClass.getGeneralization();
-					if (generalizationColl != null && generalizationColl.size() > 0)
+					if ((generalizationColl != null) && (generalizationColl.size() > 0))
 					{
 						generalizations.addAll(generalizationColl);
 					}
@@ -1158,7 +1159,7 @@ public class XMIImportProcessor
 		String multiSelectTName = taggedValueMap
 				.get(XMIConstants.TAGGED_VALUE_MULTISELECT_TABLE_NAME);
 		//In case of catissue metadata integration donot change table name of multiselect entity
-		if (multiSelectTName != null && xmiConfigurationObject.getSkipEntityGroup() != null)
+		if ((multiSelectTName != null) && (xmiConfigurationObject.getSkipEntityGroup() != null))
 		{
 			targetEntity.getTableProperties().setName(multiSelectTName);
 
@@ -1492,7 +1493,7 @@ public class XMIImportProcessor
 			}
 		}
 
-		if (nullAssoEnd > 0 && nullAssoEnd < 2)
+		if ((nullAssoEnd > 0) && (nullAssoEnd < 2))
 		{//Only 1 name is present hence unidirectional
 			for (AssociationEnd assoEnd : associationEnds)
 			{
@@ -1535,12 +1536,12 @@ public class XMIImportProcessor
 		{
 			String assTagEntityType = getTaggedValue(assoEnd.getTaggedValue(),
 					XMIConstants.TAGGED_VALUE_ASSN_ENTITY);
-			if (assTagEntityType != null
+			if ((assTagEntityType != null)
 					&& assTagEntityType.equalsIgnoreCase(XMIConstants.ASSN_SRC_ENTITY))
 			{
 				sourceAssociationEnd = assoEnd;
 			}
-			else if (assTagEntityType != null
+			else if ((assTagEntityType != null)
 					&& assTagEntityType.equalsIgnoreCase(XMIConstants.ASSN_TGT_ENTITY))
 			{
 				targetAssociationEnd = assoEnd;
@@ -1572,7 +1573,7 @@ public class XMIImportProcessor
 		XMIImportValidator.validateAssociations(entityNameVsAttributeNames, umlAssociation
 				.getName(), srcEntity.getName(), parentIdVsChildrenIds, umlClassIdVsEntity);
 
-		if (existingAssociationColl != null && !existingAssociationColl.isEmpty())
+		if ((existingAssociationColl != null) && !existingAssociationColl.isEmpty())
 		{//EDIT Case
 			association = isAssociationPresent(umlAssociation.getName(), existingAssociationColl,
 					srcEntity.getName(), tgtEntity.getName(), direction, sourceRole, targetRole);
@@ -1627,7 +1628,7 @@ public class XMIImportProcessor
 	{
 		for (AssociationInterface existingAsso : existingAssociationColl)
 		{
-			if (umlAssociationName != null
+			if ((umlAssociationName != null)
 					&& umlAssociationName.equalsIgnoreCase(existingAsso.getName()))
 			{//Since name is present, edit this association
 				return existingAsso;
@@ -1697,16 +1698,16 @@ public class XMIImportProcessor
 					continue;
 				}
 			}
-			if (existingAsso.getSourceRole().getName() != null
-					&& sourceRole.getName() != null
+			if ((existingAsso.getSourceRole().getName() != null)
+					&& (sourceRole.getName() != null)
 					&& !existingAsso.getSourceRole().getName().equalsIgnoreCase(
 							sourceRole.getName()))
 			{
 				if (direction.equalsIgnoreCase(DEConstants.AssociationDirection.BI_DIRECTIONAL
 						.toString()))
 				{//For bi directional association, reversing the association ends and comparing
-					if (existingAsso.getSourceRole().getName() != null
-							&& targetRole.getName() != null
+					if ((existingAsso.getSourceRole().getName() != null)
+							&& (targetRole.getName() != null)
 							&& !existingAsso.getSourceRole().getName().equalsIgnoreCase(
 									targetRole.getName()))
 					{
@@ -1770,16 +1771,16 @@ public class XMIImportProcessor
 					continue;
 				}
 			}
-			if (existingAsso.getTargetRole().getName() != null
-					&& targetRole.getName() != null
+			if ((existingAsso.getTargetRole().getName() != null)
+					&& (targetRole.getName() != null)
 					&& !existingAsso.getTargetRole().getName().equalsIgnoreCase(
 							targetRole.getName()))
 			{
 				if (direction.equalsIgnoreCase(DEConstants.AssociationDirection.BI_DIRECTIONAL
 						.toString()))
 				{//For bi directional association, reversing the association ends and comparing
-					if (existingAsso.getTargetRole().getName() != null
-							&& sourceRole.getName() != null
+					if ((existingAsso.getTargetRole().getName() != null)
+							&& (sourceRole.getName() != null)
 							&& !existingAsso.getTargetRole().getName().equalsIgnoreCase(
 									sourceRole.getName()))
 					{
@@ -1807,7 +1808,7 @@ public class XMIImportProcessor
 		String val = "";
 		for (TaggedValue taggedValue : taggedValueColl)
 		{
-			if (taggedValue.getType() != null
+			if ((taggedValue.getType() != null)
 					&& taggedValue.getType().getName().equalsIgnoreCase(tagName))
 			{
 				Collection<String> dataValueColl = taggedValue.getDataValue();
@@ -1850,7 +1851,7 @@ public class XMIImportProcessor
 	{
 		AssociationInterface association = deFactory.createAssociation();
 		//remove it after getting DE fix,association name should not be compulsory
-		if (associationName == null || associationName.equals(""))
+		if ((associationName == null) || associationName.equals(""))
 		{
 			association.setName("AssociationName_"
 					+ (sourceEntity.getAssociationCollection().size() + 1));
@@ -1882,7 +1883,7 @@ public class XMIImportProcessor
 		}
 
 		RoleInterface role = deFactory.createRole();
-		if (associationType != null
+		if ((associationType != null)
 				&& (associationType
 						.equalsIgnoreCase(XMIConstants.TAGGED_VALUE_CONTAINMENT_UNSPECIFIED) || associationType
 						.equalsIgnoreCase(XMIConstants.TAGGED_VALUE_CONTAINMENT_NOTSPECIFIED)))
@@ -1960,7 +1961,7 @@ public class XMIImportProcessor
 	 */
 	private ContainerInterface getContainer(String entityName)
 	{
-		if (retrievedContainerList != null && !retrievedContainerList.isEmpty())
+		if ((retrievedContainerList != null) && !retrievedContainerList.isEmpty())
 		{
 			for (ContainerInterface container : retrievedContainerList)
 			{
@@ -1979,7 +1980,7 @@ public class XMIImportProcessor
 	 */
 	private EntityInterface getEntity(String entityName)
 	{
-		if (retrievedContainerList != null && !retrievedContainerList.isEmpty())
+		if ((retrievedContainerList != null) && !retrievedContainerList.isEmpty())
 		{
 			for (ContainerInterface container : retrievedContainerList)
 			{
@@ -2140,11 +2141,11 @@ public class XMIImportProcessor
 	{
 		String ctrlModelAttrDefaultVal = controlModel.getAttributeDefaultValue();
 
-		if (ctrlModelAttrDefaultVal != null && ctrlModelAttrDefaultVal.equalsIgnoreCase(""))
+		if ((ctrlModelAttrDefaultVal != null) && ctrlModelAttrDefaultVal.equalsIgnoreCase(""))
 		{
 			for (AbstractAttributeInterface attribute : originalAttributes)
 			{
-				if (attribute instanceof AttributeInterface
+				if ((attribute instanceof AttributeInterface)
 						&& attribute.getName().equalsIgnoreCase(editedAttribute.getName()))
 				{
 					AttributeTypeInformationInterface attrTypeInfo = ((AttributeInterface) attribute)
@@ -2152,13 +2153,13 @@ public class XMIImportProcessor
 					PermissibleValueInterface defaultPermissibleValue = attrTypeInfo
 							.getDefaultValue();
 
-					if (defaultPermissibleValue != null
-							&& defaultPermissibleValue.getValueAsObject() != null)
+					if ((defaultPermissibleValue != null)
+							&& (defaultPermissibleValue.getValueAsObject() != null))
 					{
 
 						String defaultValueAsString = defaultPermissibleValue.getValueAsObject()
 								.toString();
-						if (defaultValueAsString != null
+						if ((defaultValueAsString != null)
 								&& !defaultValueAsString.equalsIgnoreCase(""))
 						{
 							controlModel.setAttributeDefaultValue(defaultValueAsString);
@@ -2221,7 +2222,7 @@ public class XMIImportProcessor
 
 					if (targetAsso.getAssociationDirection().equals(
 							DEConstants.AssociationDirection.SRC_DESTINATION)
-							&& originalTargetAssociation != null
+							&& (originalTargetAssociation != null)
 							&& originalTargetAssociation.getAssociationDirection().equals(
 									DEConstants.AssociationDirection.BI_DIRECTIONAL))
 					{//We need to remove system generated association if direction has been changed from bi directional to source destination
@@ -2361,7 +2362,7 @@ public class XMIImportProcessor
 				String defaultValue = getDefaultValueTagValue(taggedValueMap);
 				controlModel.setAttributeDefaultValue(defaultValue);
 
-				if (defaultValue != null && !defaultValue.equalsIgnoreCase(""))
+				if ((defaultValue != null) && !defaultValue.equalsIgnoreCase(""))
 				{
 					//dateValueType  value
 					controlModel.setDateValueType(ProcessorConstants.DATE_VALUE_SELECT);
@@ -2417,7 +2418,7 @@ public class XMIImportProcessor
 	private String getListBoxHeightTagValue(Map<String, String> taggedValueMap)
 	{
 		String listBoxHeight = taggedValueMap.get(XMIConstants.TAGGED_VALUE_MULTISELECT);
-		if (listBoxHeight == null || listBoxHeight.trim().equals(""))
+		if ((listBoxHeight == null) || listBoxHeight.trim().equals(""))
 		{
 			listBoxHeight = Integer
 					.toString(edu.common.dynamicextensions.ui.util.Constants.DEFAULT_ROW_SIZE);
@@ -2433,7 +2434,7 @@ public class XMIImportProcessor
 	private String getSeparatorTagValue(Map<String, String> taggedValueMap)
 	{
 		String separator = taggedValueMap.get(XMIConstants.TAGGED_VALUE_SEPARATOR);
-		if (separator == null || separator.trim().equals(""))
+		if ((separator == null) || separator.trim().equals(""))
 		{
 			return null;
 		}
@@ -2485,7 +2486,7 @@ public class XMIImportProcessor
 	 */
 	private boolean isMultiselectTagValue(Map<String, String> taggedValueMap)
 	{
-		if (taggedValueMap != null
+		if ((taggedValueMap != null)
 				&& taggedValueMap.containsKey(XMIConstants.TAGGED_VALUE_MULTISELECT))
 		{
 			return true;
@@ -2499,7 +2500,7 @@ public class XMIImportProcessor
 	 */
 	private String getMultiselectTagValue(Map<String, String> taggedValueMap)
 	{
-		if (taggedValueMap != null
+		if ((taggedValueMap != null)
 				&& taggedValueMap.containsKey(XMIConstants.TAGGED_VALUE_MULTISELECT))
 		{
 			return taggedValueMap.get(XMIConstants.TAGGED_VALUE_MULTISELECT);
@@ -2515,7 +2516,7 @@ public class XMIImportProcessor
 	private String getPHIAttributeTagValue(Map<String, String> taggedValueMap)
 	{
 		String PHIAttribute = taggedValueMap.get(XMIConstants.TAGGED_VALUE_PHI_ATTRIBUTE);
-		if (PHIAttribute == null || PHIAttribute.trim().equals(""))
+		if ((PHIAttribute == null) || PHIAttribute.trim().equals(""))
 		{
 			return "false";
 		}
@@ -2530,12 +2531,12 @@ public class XMIImportProcessor
 	private String getDisplayWidthTagValue(Map<String, String> taggedValueMap)
 	{
 		String width = taggedValueMap.get(XMIConstants.TAGGED_VALUE_DISPLAY_WIDTH);
-		if (width == null || width.trim().equals(""))
+		if ((width == null) || width.trim().equals(""))
 		{
 			width = Integer
 					.toString(edu.common.dynamicextensions.ui.util.Constants.DEFAULT_COLUMN_SIZE);
 		}
-		if (width != null && (Integer.parseInt(width)) > 999)
+		if ((width != null) && ((Integer.parseInt(width)) > 999))
 		{
 			width = XMIConstants.MAX_LENGTH_LIMIT;
 		}
@@ -2549,11 +2550,11 @@ public class XMIImportProcessor
 	private String getMaxLengthTagValue(Map<String, String> taggedValueMap)
 	{
 		String maxLen = taggedValueMap.get(XMIConstants.TAGGED_VALUE_MAX_LENGTH);
-		if (maxLen == null || maxLen.trim().equals(""))
+		if ((maxLen == null) || maxLen.trim().equals(""))
 		{
 			maxLen = XMIConstants.DEFAULT_TEXT_FIELD_MAX_LENGTH;
 		}
-		if (maxLen != null && (Integer.parseInt(maxLen)) > 999)
+		if ((maxLen != null) && ((Integer.parseInt(maxLen)) > 999))
 		{
 			maxLen = XMIConstants.MAX_LENGTH_LIMIT;
 		}
@@ -2567,7 +2568,7 @@ public class XMIImportProcessor
 	private String getDateFormatTagValue(Map<String, String> taggedValueMap)
 	{
 		String format = taggedValueMap.get(XMIConstants.TAGGED_VALUE_DATE_FORMAT);
-		if (format == null || format.trim().equals(""))
+		if ((format == null) || format.trim().equals(""))
 		{
 			format = ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY;
 		}
@@ -2583,7 +2584,7 @@ public class XMIImportProcessor
 	private String getNoOfRowsTagValue(Map<String, String> taggedValueMap)
 	{
 		String noOFRows = taggedValueMap.get(XMIConstants.TAGGED_VALUE_MULTILINE);
-		if (noOFRows == null || noOFRows.trim().equals(""))
+		if ((noOFRows == null) || noOFRows.trim().equals(""))
 		{
 			noOFRows = Integer
 					.toString(edu.common.dynamicextensions.ui.util.Constants.DEFAULT_ROW_SIZE);
@@ -2599,7 +2600,7 @@ public class XMIImportProcessor
 	private String getDefaultValueTagValue(Map<String, String> taggedValueMap)
 	{
 		String defaultValue = taggedValueMap.get(XMIConstants.TAGGED_VALUE_DEFAULT_VALUE);
-		if (defaultValue == null || defaultValue.trim().equals(""))
+		if ((defaultValue == null) || defaultValue.trim().equals(""))
 		{
 			return "";
 		}
@@ -2621,7 +2622,7 @@ public class XMIImportProcessor
 
 		String defaultValue = taggedValueMap.get(XMIConstants.TAGGED_VALUE_DEFAULT_VALUE);
 		String boolValue = ProcessorConstants.FALSE;
-		if (defaultValue != null && !defaultValue.trim().equals(""))
+		if ((defaultValue != null) && !defaultValue.trim().equals(""))
 		{
 			XMIImportValidator.validateDefBooleanValue(abstractAttributeInterface, defaultValue);
 			boolValue = defaultValue;
@@ -2638,7 +2639,7 @@ public class XMIImportProcessor
 	private String getPasswordTagValue(Map<String, String> taggedValueMap)
 	{
 		String password = taggedValueMap.get(XMIConstants.TAGGED_VALUE_PASSWORD);
-		if (password == null || password.trim().equals(""))
+		if ((password == null) || password.trim().equals(""))
 		{
 			return "false";
 		}
@@ -2653,7 +2654,7 @@ public class XMIImportProcessor
 	private String getUrlTagValue(Map<String, String> taggedValueMap)
 	{
 		String url = taggedValueMap.get(XMIConstants.TAGGED_VALUE_URL);
-		if (url == null || url.trim().equals(""))
+		if ((url == null) || url.trim().equals(""))
 		{
 			return "false";
 		}
@@ -2671,7 +2672,7 @@ public class XMIImportProcessor
 		String precision = taggedValueMap.get(XMIConstants.TAGGED_VALUE_PRECISION);
 		Integer precisionDigits = null;
 
-		if (precision == null || precision.trim().equals(""))
+		if ((precision == null) || precision.trim().equals(""))
 		{
 			if (attrTypeInfo instanceof FloatAttributeTypeInformation)
 			{
@@ -2820,7 +2821,7 @@ public class XMIImportProcessor
 
 			List parentContainerList = entityNameVsContainers.get(parent.getName());
 			ContainerInterface parentContainer = null;
-			if (parentContainerList == null || parentContainerList.isEmpty())
+			if ((parentContainerList == null) || parentContainerList.isEmpty())
 			{
 				parentContainer = getContainer(parent.getName());
 			}
@@ -2834,7 +2835,7 @@ public class XMIImportProcessor
 
 				List childContainerList = entityNameVsContainers.get(child.getName());
 				ContainerInterface childContainer = null;
-				if (childContainerList == null || childContainerList.isEmpty())
+				if ((childContainerList == null) || childContainerList.isEmpty())
 				{
 					childContainer = getContainer(child.getName());
 				}
@@ -2877,7 +2878,7 @@ public class XMIImportProcessor
 					//					TODO remove this condition to delete association with deleted or renamed entities.
 					//getting container corresponding to renamed or deleted entity which is associated with some association from the retrieved entity group
 					ContainerInterface targetContainerInterface = null;
-					if (targetContainerInterfaceList == null
+					if ((targetContainerInterfaceList == null)
 							|| targetContainerInterfaceList.isEmpty())
 					{
 						targetContainerInterface = getContainer(targetEntityId);
@@ -2986,9 +2987,9 @@ public class XMIImportProcessor
 					.isAddIdAttribute()))
 			{
 				Map<String, String> taggedValueMap = attrVsMapTagValues.get(attributeInterface);
-				if (userDefinedDEInterface != null
-						&& userDefinedDEInterface.getPermissibleValueCollection() != null
-						&& userDefinedDEInterface.getPermissibleValueCollection().size() > 0)
+				if ((userDefinedDEInterface != null)
+						&& (userDefinedDEInterface.getPermissibleValueCollection() != null)
+						&& (userDefinedDEInterface.getPermissibleValueCollection().size() > 0))
 				{
 					String userSelectedControlName = null;
 					controlModel.setDataType(ProcessorConstants.DATATYPE_STRING);
@@ -3004,7 +3005,8 @@ public class XMIImportProcessor
 					{//Combo box for the rest
 						userSelectedControlName = ProcessorConstants.COMBOBOX_CONTROL;
 						controlInterface = deFactory.createComboBox();
-						((ComboBoxInterface) controlInterface).setColumns(DEConstants.CONTROL_DEFAULT_VALUE);
+						((ComboBoxInterface) controlInterface)
+								.setColumns(DEConstants.CONTROL_DEFAULT_VALUE);
 					}
 					if ((controlModel.getIsMultiSelect() != null)
 							&& (controlModel.getIsMultiSelect().booleanValue()))
@@ -3035,14 +3037,14 @@ public class XMIImportProcessor
 					controlInterface = deFactory.createDatePicker();
 					String defaultValue = getDefaultValueTagValue(taggedValueMap);
 					controlModel.setAttributeDefaultValue(defaultValue);
-					if (defaultValue != null && !defaultValue.equalsIgnoreCase(""))
+					if ((defaultValue != null) && !defaultValue.equalsIgnoreCase(""))
 					{
 						controlModel.setDateValueType(ProcessorConstants.DATE_VALUE_SELECT);
 					}
 
 					//PHI
 					String strIsIdentified = getPHIAttributeTagValue(taggedValueMap);
-					if (strIsIdentified != null && !strIsIdentified.equalsIgnoreCase(""))
+					if ((strIsIdentified != null) && !strIsIdentified.equalsIgnoreCase(""))
 					{
 						attributeProcessor.populateIsIdentifiedInfo(attributeInterface,
 								strIsIdentified);
@@ -3103,7 +3105,7 @@ public class XMIImportProcessor
 
 					//PHI
 					String strIsIdentified = getPHIAttributeTagValue(taggedValueMap);
-					if (strIsIdentified != null && !strIsIdentified.equalsIgnoreCase(""))
+					if ((strIsIdentified != null) && !strIsIdentified.equalsIgnoreCase(""))
 					{
 						attributeProcessor.populateIsIdentifiedInfo(attributeInterface,
 								strIsIdentified);
@@ -3151,7 +3153,7 @@ public class XMIImportProcessor
 						attributeProcessor.populateIsIdentifiedInfo(attributeInterface,
 								strIsIdentified);
 
-						if (controlModel.getLinesType() != null
+						if ((controlModel.getLinesType() != null)
 								&& controlModel.getLinesType().equalsIgnoreCase(
 										XMIConstants.MULTILINE))
 						{
@@ -3302,7 +3304,7 @@ public class XMIImportProcessor
 				}
 			}
 			//Seting Rule Tagged Values to ControlsModel
-			if (taggedValueRuleMap != null && !(taggedValueRuleMap.isEmpty()))
+			if ((taggedValueRuleMap != null) && !(taggedValueRuleMap.isEmpty()))
 			{
 				populateValidationRule(taggedValueRuleMap, controlModel);
 			}
@@ -3417,7 +3419,7 @@ public class XMIImportProcessor
 
 			}
 			List containerList = entityNameVsContainers.get(containerName);
-			if (containerList == null || containerList.size() < 1)
+			if ((containerList == null) || (containerList.size() < 1))
 			{
 				throw new DynamicExtensionsApplicationException("The container name "
 						+ containerName + " does "
@@ -3435,6 +3437,11 @@ public class XMIImportProcessor
 			{
 				entityGroup.addMainContainer(container);
 			}
+
+			// Check for potential cycles in the model. Cycle in the model leads to the UI error in the form
+			//rendering and the while firing the query.
+			XMIImportValidator.validateForCycleInEntityGroup(entityGroup);
+
 			//Do not create database table if entity group is system generated or the isCreateTable is set to false explicitly
 			if (xmiConfigurationObject.isEntityGroupSystemGenerated()
 					|| !xmiConfigurationObject.isCreateTable())
@@ -3638,7 +3645,7 @@ public class XMIImportProcessor
 		{
 			supplierId = supplier.refMofId();
 		}
-		if (clientId != null && supplierId != null)
+		if ((clientId != null) && (supplierId != null))
 		{
 
 			//TO DO --association tagged value
@@ -3681,7 +3688,7 @@ public class XMIImportProcessor
 		//check for associationtype tag ,first check whether containment type tag is present
 		//If not then check whether containment unspecified type tag is present
 		String assnType = getTaggedValue(taggedValueColl, XMIConstants.TAGGED_VALUE_CONTAINMENT);
-		if (assnType != null && assnType.equals(""))
+		if ((assnType != null) && assnType.equals(""))
 		{
 
 			assnType = getTaggedValue(taggedValueColl,
@@ -3741,7 +3748,7 @@ public class XMIImportProcessor
 
 		supplierEntity.getAssociationCollection();
 		supplierEntity.getAttributeCollection();
-		if (mappedAttribute != null && (!"".equals(mappedAttribute.trim())))
+		if ((mappedAttribute != null) && (!"".equals(mappedAttribute.trim())))
 		{
 			StringTokenizer tokens = new StringTokenizer(mappedAttribute,
 					XMIConstants.DOT_SEPARATOR);
