@@ -304,7 +304,7 @@ public class XMIImportValidator
 				throw new DynamicExtensionsSystemException("CYCLE CREATED IN THE MODEL:-"
 						+ getEntityNameAsPath(sourceEntityCollection));
 			}
-			if (sourceEntityCollection.size() > 1)
+			if (sourceEntityCollection.size() > 0)
 			{
 				sourceEntityCollection.remove(sourceEntityCollection.get(sourceEntityCollection
 						.size() - 1));
