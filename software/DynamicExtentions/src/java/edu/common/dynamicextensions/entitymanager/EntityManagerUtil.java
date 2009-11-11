@@ -156,7 +156,7 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 			StatementData stmtData = executeDML(jdbcDao, query);
 			result = stmtData.getRowCount();
 		}
-		
+
 	}
 
 	/**
@@ -176,7 +176,7 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 			Long identifier = null;
 			if (idMap.containsKey(tableName))
 			{
-				Long newIdentifier = (Long) idMap.get(tableName);
+				Long newIdentifier = idMap.get(tableName);
 				identifier = newIdentifier + 1;
 			}
 			else
@@ -365,8 +365,8 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 
 	/**
 	 * It will check weather the primary key of the entity is changed
-	 * @param entity to be checked 
-	 * @return 
+	 * @param entity to be checked
+	 * @return
 	 */
 	public static boolean isPrimaryKeyChanged(EntityInterface entity)
 	{
@@ -394,8 +394,8 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 
 	/**
 	 * It will check weather the primary key of the entity is changed
-	 * @param entity to be checked 
-	 * @return 
+	 * @param entity to be checked
+	 * @return
 	 */
 	public static boolean isPrimaryKeyChanged(EntityInterface entity, EntityInterface dbaseCopy)
 	{
@@ -528,7 +528,7 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 						.getCanonicalName(), savedEntity.getId());
 
 				List<String> updateQueries = queryBuilder.getUpdateEntityQueryList(
-						(Entity) savedEntity, (Entity) dbaseCopy, revQueries, hibernateDAO);
+						(Entity) savedEntity, dbaseCopy, revQueries, hibernateDAO);
 				if (updateQueries != null && !updateQueries.isEmpty())
 				{
 					queries.addAll(updateQueries);
@@ -555,7 +555,7 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 		return queryBuilder.isDataPresent(tableName);
 	}
 
-	
+
 	/**
 	 * @param assoType type of association
 	 * @param name name of association
@@ -643,7 +643,7 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 				+ originalAttribute.getColumnProperties().getName() + " ,identifier from "
 				+ entity.getTableProperties().getName() + ")";
 	}
-	
+
 	/**
 	 * This method replaces deprecated target entity constraint key properties with the new ones.
 	 * @param multiSelMigrationQueries
@@ -657,10 +657,10 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 			String query = changeTgtEntityConstraintKeyPropertiesInQuery(association, multiselectMigartionScripts.get(association));
 			multiSelMigrationQueries.add(query);
 		}
-		
+
 		return multiSelMigrationQueries;
 	}
-	
+
 	/**
 	 * This method replaces deprecated target entity constraint key properties with the new ones.
 	 * @param association association whose target constraint key properties has to change

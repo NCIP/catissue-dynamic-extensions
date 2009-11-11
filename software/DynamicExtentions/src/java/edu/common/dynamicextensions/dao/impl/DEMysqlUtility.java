@@ -1,7 +1,6 @@
 package edu.common.dynamicextensions.dao.impl;
 
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.DatabaseCleaner;
 
 
@@ -20,16 +19,10 @@ public class DEMysqlUtility extends AbstractDEDBUtility
 	@Override
 	public String formatMonthAndYearDate(String strDate,boolean removeTime)
 	{
-		String month = strDate.substring(0, 2);
-		String year = strDate.substring(3, strDate.length());
-		String formattedDate;
-		if(ProcessorConstants.DATE_ONLY_FORMAT.substring(0, 2).equals("MM"))
+		String formattedDate = super.formatMonthAndYearDate(strDate, removeTime);
+		if(removeTime)
 		{
-			formattedDate = month + ProcessorConstants.DATE_SEPARATOR+"01"+ProcessorConstants.DATE_SEPARATOR + year;
-		}
-		else
-		{
-			formattedDate = "01"+ProcessorConstants.DATE_SEPARATOR + month + ProcessorConstants.DATE_SEPARATOR + year;
+			formattedDate = formattedDate.substring(0, formattedDate.length() - 4);
 		}
 		return formattedDate;
 	}
@@ -41,7 +34,12 @@ public class DEMysqlUtility extends AbstractDEDBUtility
 	@Override
 	public String formatYearDate(String strDate,boolean removeTime)
 	{
-		return "01" + ProcessorConstants.DATE_SEPARATOR+ "01" + ProcessorConstants.DATE_SEPARATOR + strDate;
+		String formattedDate= super.formatYearDate(strDate, removeTime);
+		if(removeTime)
+		{
+			formattedDate = formattedDate.substring(0, formattedDate.length() - 4);
+		}
+		return formattedDate;
 	}
 
 	/**

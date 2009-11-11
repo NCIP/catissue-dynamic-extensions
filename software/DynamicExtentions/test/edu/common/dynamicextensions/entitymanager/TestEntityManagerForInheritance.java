@@ -11,6 +11,7 @@ import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
@@ -1045,7 +1046,7 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			//step 7
 			fail();
 		}
-		catch (DynamicExtensionsApplicationException e)
+		catch (DynamicExtensionsSystemException e)
 		{
 			assertTrue(true);
 			Logger.out.info("Application exception is expected to be thrown here");

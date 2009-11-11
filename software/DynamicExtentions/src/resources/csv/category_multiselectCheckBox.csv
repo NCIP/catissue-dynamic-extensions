@@ -8,11 +8,11 @@ ClinicalAnnotations~ClinicalAnnotations,History~ClinicalAnnotations:History,Haza
 
 Display_Label:Radiotherapy,show=true
 instance:ClinicalAnnotations[1]->HealthAnnotations[1]
-HealthAnnotations:agent,multiselectCheckBox,Radiation Therapy Agent,Permissible_Values_File~./src/resources/csv/PVs/radiotherapyAgent.txt,PermVal_Options~IsOrdered=false
+HealthAnnotations:agent,multiselectCheckBox,Radiation Therapy Agent,Permissible_Values_File~./src/resources/csv/PVs/Agent.csv,PermVal_Options~IsOrdered=false
 
 Display_Label:Radiotherapy1,show=true
 instance:ClinicalAnnotations[1]->HealthAnnotations[2]
-HealthAnnotations:agent,listBox,Radiation Therapy Agent1,Permissible_Values_File~./src/resources/csv/PVs/radiotherapyAgent.txt,PermVal_Options~IsOrdered=false
+HealthAnnotations:agent,listBox,Radiation Therapy Agent1,Permissible_Values_File~./src/resources/csv/PVs/Agent.csv,PermVal_Options~IsOrdered=false
 
 Display_Label:Radiation Therapy,show=true
 instance:ClinicalAnnotations[1]

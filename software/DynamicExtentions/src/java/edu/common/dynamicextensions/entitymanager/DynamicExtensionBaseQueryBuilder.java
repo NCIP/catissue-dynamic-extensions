@@ -570,6 +570,10 @@ public class DynamicExtensionBaseQueryBuilder
 		if (entity.getTableProperties() != null
 				&& EntityManagerUtil.isParentChanged(entity, dbaseCopy))
 		{
+			if (entityManagerUtil.isDataPresent(entity.getTableProperties().getName()))
+			{
+				throw new DynamicExtensionsSystemException("Can not change the parent of "+ entity.getName() +". Data is already entered for it." );
+			}
 			DynamicExtensionBaseQueryBuilder queryBuilder = QueryBuilderFactory.getQueryBuilder();
 			EntityInterface dbaseCopyParent = dbaseCopy.getParentEntity();
 			EntityInterface parentEntity = entity.getParentEntity();
@@ -1960,86 +1964,91 @@ public class DynamicExtensionBaseQueryBuilder
 			throws DynamicExtensionsSystemException
 	{
 		Logger.out.debug("Entering getQueryPartForAssociation method");
-
-		EntityInterface srcEntity = association.getEntity();
-		EntityInterface tgtEntity = association.getTargetEntity();
-		RoleInterface sourceRole = association.getSourceRole();
-		RoleInterface targetRole = association.getTargetRole();
-
-		Cardinality srcMaxCard = sourceRole.getMaximumCardinality();
-		Cardinality tgtMaxCard = targetRole.getMaximumCardinality();
-
-		ConstraintPropertiesInterface cnstrnPrprties = association.getConstraintProperties();
-		String tableName = "";
-
 		List<String> queries = new ArrayList<String>();
-		Collection<ConstraintKeyPropertiesInterface> srcCnstrKeyProps = cnstrnPrprties
-				.getSrcEntityConstraintKeyPropertiesCollection();
-		Collection<ConstraintKeyPropertiesInterface> tgtCnstrKeyProps = cnstrnPrprties
-				.getTgtEntityConstraintKeyPropertiesCollection();
-		String dataType = getDataTypeForIdentifier();
-
-		StringBuffer query = new StringBuffer();
-		if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.MANY)
+		if (!association.getIsSystemGenerated())
 		{
-			// For many to many, a middle table is created.
-			tableName = cnstrnPrprties.getName();
-			query.append(CREATE_TABLE + WHITESPACE + tableName + WHITESPACE + OPENING_BRACKET
-					+ WHITESPACE + IDENTIFIER + WHITESPACE + dataType + WHITESPACE + NOT_KEYWORD
-					+ WHITESPACE + NULL_KEYWORD + COMMA);
-			for (ConstraintKeyPropertiesInterface cnstrKeyProp : srcCnstrKeyProps)
-			{
-				query.append(cnstrKeyProp.getTgtForiegnKeyColumnProperties().getName() + WHITESPACE
-						+ getDatabaseTypeAndSize(cnstrKeyProp.getSrcPrimaryKeyAttribute()) + COMMA);
-			}
-			for (ConstraintKeyPropertiesInterface cnstrKeyProp : tgtCnstrKeyProps)
-			{
-				query.append(cnstrKeyProp.getTgtForiegnKeyColumnProperties().getName() + WHITESPACE
-						+ getDatabaseTypeAndSize(cnstrKeyProp.getSrcPrimaryKeyAttribute()) + COMMA);
-			}
-			query.append(PRIMARY_KEY_CONSTRAINT + CLOSING_BRACKET);
-			String rollbackQuery = DROP_KEYWORD + WHITESPACE + TABLE_KEYWORD + WHITESPACE
-					+ tableName;
+			EntityInterface srcEntity = association.getEntity();
+			EntityInterface tgtEntity = association.getTargetEntity();
+			RoleInterface sourceRole = association.getSourceRole();
+			RoleInterface targetRole = association.getTargetRole();
 
-			if (isAddAssoQuery)
+			Cardinality srcMaxCard = sourceRole.getMaximumCardinality();
+			Cardinality tgtMaxCard = targetRole.getMaximumCardinality();
+
+			ConstraintPropertiesInterface cnstrnPrprties = association.getConstraintProperties();
+			String tableName = "";
+
+			Collection<ConstraintKeyPropertiesInterface> srcCnstrKeyProps = cnstrnPrprties
+					.getSrcEntityConstraintKeyPropertiesCollection();
+			Collection<ConstraintKeyPropertiesInterface> tgtCnstrKeyProps = cnstrnPrprties
+					.getTgtEntityConstraintKeyPropertiesCollection();
+			String dataType = getDataTypeForIdentifier();
+
+			StringBuffer query = new StringBuffer();
+			if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.MANY)
 			{
-				revQueries.add(rollbackQuery);
+				// For many to many, a middle table is created.
+				tableName = cnstrnPrprties.getName();
+				query.append(CREATE_TABLE + WHITESPACE + tableName + WHITESPACE + OPENING_BRACKET
+						+ WHITESPACE + IDENTIFIER + WHITESPACE + dataType + WHITESPACE
+						+ NOT_KEYWORD + WHITESPACE + NULL_KEYWORD + COMMA);
+				for (ConstraintKeyPropertiesInterface cnstrKeyProp : srcCnstrKeyProps)
+				{
+					query.append(cnstrKeyProp.getTgtForiegnKeyColumnProperties().getName()
+							+ WHITESPACE
+							+ getDatabaseTypeAndSize(cnstrKeyProp.getSrcPrimaryKeyAttribute())
+							+ COMMA);
+				}
+				for (ConstraintKeyPropertiesInterface cnstrKeyProp : tgtCnstrKeyProps)
+				{
+					query.append(cnstrKeyProp.getTgtForiegnKeyColumnProperties().getName()
+							+ WHITESPACE
+							+ getDatabaseTypeAndSize(cnstrKeyProp.getSrcPrimaryKeyAttribute())
+							+ COMMA);
+				}
+				query.append(PRIMARY_KEY_CONSTRAINT + CLOSING_BRACKET);
+				String rollbackQuery = DROP_KEYWORD + WHITESPACE + TABLE_KEYWORD + WHITESPACE
+						+ tableName;
+
+				if (isAddAssoQuery)
+				{
+					revQueries.add(rollbackQuery);
+				}
+				else
+				{
+					revQueries.add(query.toString());
+					query = new StringBuffer(rollbackQuery);
+
+				}
+				queries.add(query.toString());
+			}
+			else if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.ONE)
+			{
+				// For many to one, a column is added into source entity table.
+				tableName = srcEntity.getTableProperties().getName();
+				for (ConstraintKeyPropertiesInterface cnstrKeyProp : srcCnstrKeyProps)
+				{
+					queries.add(getAddAttributeQuery(tableName, cnstrKeyProp
+							.getTgtForiegnKeyColumnProperties().getName(),
+							getDatabaseTypeAndSize(cnstrKeyProp.getSrcPrimaryKeyAttribute()),
+							revQueries, isAddAssoQuery));
+				}
+
 			}
 			else
 			{
-				revQueries.add(query.toString());
-				query = new StringBuffer(rollbackQuery);
-
+				// For one to one and one to many, a column is added into target entity table.
+				tableName = tgtEntity.getTableProperties().getName();
+				for (ConstraintKeyPropertiesInterface cnstrKeyProp : tgtCnstrKeyProps)
+				{
+					queries.add(getAddAttributeQuery(tableName, cnstrKeyProp
+							.getTgtForiegnKeyColumnProperties().getName(),
+							getDatabaseTypeAndSize(cnstrKeyProp.getSrcPrimaryKeyAttribute()),
+							revQueries, isAddAssoQuery));
+				}
 			}
-			queries.add(query.toString());
+			Logger.out.debug("Exiting getQueryPartForAssociation method");
 		}
-		else if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.ONE)
-		{
-			// For many to one, a column is added into source entity table.
-			tableName = srcEntity.getTableProperties().getName();
-			for (ConstraintKeyPropertiesInterface cnstrKeyProp : srcCnstrKeyProps)
-			{
-				queries.add(getAddAttributeQuery(tableName, cnstrKeyProp
-						.getTgtForiegnKeyColumnProperties().getName(),
-						getDatabaseTypeAndSize(cnstrKeyProp.getSrcPrimaryKeyAttribute()),
-						revQueries, isAddAssoQuery));
-			}
-
-		}
-		else
-		{
-			// For one to one and one to many, a column is added into target entity table.
-			tableName = tgtEntity.getTableProperties().getName();
-			for (ConstraintKeyPropertiesInterface cnstrKeyProp : tgtCnstrKeyProps)
-			{
-				queries.add(getAddAttributeQuery(tableName, cnstrKeyProp
-						.getTgtForiegnKeyColumnProperties().getName(),
-						getDatabaseTypeAndSize(cnstrKeyProp.getSrcPrimaryKeyAttribute()),
-						revQueries, isAddAssoQuery));
-			}
-		}
-		Logger.out.debug("Exiting getQueryPartForAssociation method");
-
 		return queries;
 	}
 

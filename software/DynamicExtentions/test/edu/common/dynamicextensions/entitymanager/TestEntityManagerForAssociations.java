@@ -2439,10 +2439,10 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 
 			user = entityManager.persistEntity(user);
 
-			assertEquals(noOfDefaultColumns, getColumnCount("select * from "
+			assertEquals(noOfDefaultColumns+2, getColumnCount("select * from "
 					+ user.getTableProperties().getName()));
 
-			assertEquals(noOfDefaultColumns + 2, getColumnCount("select * from "
+			assertEquals(noOfDefaultColumns + 1, getColumnCount("select * from "
 					+ study.getTableProperties().getName()));
 
 			EntityInterface savedUser = entityManager
@@ -3431,8 +3431,8 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 		association.setName(assoName);
 		association.setSourceRole(sourceRole);
 		association.setTargetRole(targetRole);
-		association.setAssociationDirection(associationDirection);
 		DynamicExtensionsUtility.getConstraintPropertiesForAssociation(association);
+		association.setAssociationDirection(associationDirection);
 		return association;
 	}
 

@@ -2397,6 +2397,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			String[] args1 = {XMI_FILE_PATH + "test.xmi",CSV_FILE_PATH + "Skip_Logic_Main.csv", "annotations", "  "};
 			XMIImporter.main(args1);
 
+			
 			String[] args2 = {CSV_FILE_PATH + "category_multiselectCheckBox.csv"};
 			CategoryCreator categoryCreator = new CategoryCreator();
 			categoryCreator.main(args2);
@@ -2408,7 +2409,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			assertNotNull(category.getId());
 			assertNotNull(category.getRootCategoryElement());
 			assertEquals(category.getName(), "Test_Cat_Rad_therapy_multiselectCheckbox");
-			
+
 		}
 		catch (Exception e)
 		{

@@ -734,21 +734,24 @@ public abstract class AbstractXMIImporter
 	 * @throws DynamicExtensionsSystemException
 	 */
 	private EntityInterface getStaticEntity(String hookEntityName, HibernateDAO hibernatedao)
-			throws DAOException, DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+			throws DAOException, DynamicExtensionsApplicationException,
+			DynamicExtensionsSystemException
 	{
-		EntityInterface entity=null;
-		if(hibernatedao==null)
+		EntityInterface entity = null;
+		if (hibernatedao == null)
 		{
-			entity= EntityManager.getInstance().getEntityByName(hookEntityName);
+			entity = EntityManager.getInstance().getEntityByName(hookEntityName);
 		}
 		else
 		{
-			List staticEntityList = hibernatedao.retrieve(AbstractMetadata.class.getName(),
-					"name", hookEntityName);
-			if(staticEntityList!=null || !staticEntityList.isEmpty())
+			List staticEntityList = hibernatedao.retrieve(AbstractMetadata.class.getName(), "name",
+					hookEntityName);
+			if (staticEntityList == null || staticEntityList.isEmpty())
 			{
-				entity =((EntityInterface) staticEntityList.get(0));
+				throw new DynamicExtensionsSystemException(
+						"Static Entity Not Found, please provide correct static Entity name");
 			}
+			entity = ((EntityInterface) staticEntityList.get(0));
 		}
 		return entity;
 	}
