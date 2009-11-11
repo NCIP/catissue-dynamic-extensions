@@ -3440,7 +3440,10 @@ public class XMIImportProcessor
 
 			// Check for potential cycles in the model. Cycle in the model leads to the UI error in the form
 			//rendering and the while firing the query.
-			XMIImportValidator.validateForCycleInEntityGroup(entityGroup);
+			if (xmiConfigurationObject.isCreateTable())
+			{
+				XMIImportValidator.validateForCycleInEntityGroup(entityGroup);
+			}
 
 			//Do not create database table if entity group is system generated or the isCreateTable is set to false explicitly
 			if (xmiConfigurationObject.isEntityGroupSystemGenerated()
