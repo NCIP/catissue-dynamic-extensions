@@ -1,55 +1,69 @@
 
 package edu.common.dynamicextensions.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.io.File;
 
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.common.dynamicextensions.util.parser.CategoryGenerator;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.common.util.logger.LoggerConfig;
 
 /**
- * 
+ *
  * @author mandar_shidhore
  *
  */
 public class CategoryCreator
 {
+	static
+	{
+		LoggerConfig.configureLogger(System.getProperty("user.dir"));
+	}
+	private static final Logger LOGGER = Logger.getCommonLogger(CategoryCreator.class);
 
 	public static void main(String[] args)
 	{
-		createCategory(args);
+		try
+		{
+			if (args.length == 0)
+			{
+				throw new Exception("ERROR ---Please Specify the path for .csv file");
+			}
+			String filePath = args[0];
+			boolean isPersistMetadataOnly = false;
+			if(args.length >1 && CategoryConstants.TRUE.equalsIgnoreCase(args[1]))
+			{
+				isPersistMetadataOnly =true;
+
+			}
+			createCategory(filePath ,isPersistMetadataOnly);
+
+		}
+		catch (Exception ex)
+		{
+			LOGGER.info("Exception: " + ex.getMessage());
+			throw new RuntimeException(ex);
+		}
 	}
 
 	/**
 	 * @param args
 	 * @return
 	 */
-	public static List<HashMap> createCategory(String[] args)
+	public static void createCategory(String filePath,boolean isPersistMetadataOnly)
 	{
 		try
 		{
-			if (args.length == 0)
-			{
-				throw new Exception("PLEASE SPECIFY THE PATH FOR .csv FILE");
-			}
-
-			String filePath = args[0];
-			Logger.out.info("The .csv file path is:" + filePath);
-			boolean isPersistMetadataOnly=false;
-			if(args.length >1 && CategoryConstants.TRUE.equalsIgnoreCase(args[1]))
-			{
-				isPersistMetadataOnly =true;
-				
-			}
+			LOGGER.info("The .csv file path is:" + filePath);
+			validateFileExist(filePath);
 
 			CategoryGenerator categoryGenerator = new CategoryGenerator(filePath);
 			CategoryHelperInterface categoryHelper = new CategoryHelper();
 
 			boolean isEdited = true;
-			List<HashMap> categories = new ArrayList<HashMap>();
+
 			for (CategoryInterface category : categoryGenerator.getCategoryList())
 			{
 				if (category.getId() == null)
@@ -65,7 +79,7 @@ public class CategoryCreator
 				{
 					categoryHelper.saveCategory(category);
 				}
-				
+
 				if (isEdited)
 				{
 					Logger.out.info("Edited category " + category.getName() + " successfully");
@@ -74,18 +88,30 @@ public class CategoryCreator
 				{
 					Logger.out.info("Saved category " + category.getName() + " successfully");
 				}
-
-				HashMap<CategoryInterface, Boolean> objCategoryMap = new HashMap<CategoryInterface, Boolean>();
-				objCategoryMap.put(category, Boolean.valueOf(isEdited));
-				categories.add(objCategoryMap);
 			}
+			LOGGER.info("Form definition file " + filePath + " executed successfully.");
 
-			return categories;
 		}
 		catch (Exception ex)
 		{
-			Logger.out.info("Exception:",ex);
-			throw new RuntimeException(ex.getCause().getLocalizedMessage(), ex);
+			LOGGER.error("Error occured while creating category",ex);
+			throw new RuntimeException(ex);
+
+		}
+	}
+
+	/**
+	 * @param csvFilePath
+	 * @throws DynamicExtensionsSystemException
+	 */
+	private static void validateFileExist(String csvFilePath)
+			throws DynamicExtensionsSystemException
+	{
+		File objFile = new File(csvFilePath);
+		if (!objFile.exists())
+		{
+			throw new DynamicExtensionsSystemException(
+					"Please verify that form definition file exist at path: " + csvFilePath);
 		}
 	}
 

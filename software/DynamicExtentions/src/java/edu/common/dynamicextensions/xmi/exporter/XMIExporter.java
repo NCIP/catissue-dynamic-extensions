@@ -26,7 +26,6 @@ import javax.jmi.xmi.XmiWriter;
 import javax.xml.transform.TransformerException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.netbeans.api.mdr.CreationFailedException;
 import org.netbeans.api.mdr.MDRManager;
 import org.netbeans.api.mdr.MDRepository;
@@ -100,6 +99,7 @@ import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.common.dynamicextensions.xmi.XMIConstants;
 import edu.common.dynamicextensions.xmi.XMIUtilities;
+import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 
@@ -113,7 +113,11 @@ public class XMIExporter
 {
 	//Repository
 	private static MDRepository repository = XMIUtilities.getRepository();
-	private static final Logger LOGGER = LoggerConfig.getConfiguredLogger(XMIExporter.class);
+	static
+	{
+		LoggerConfig.configureLogger(System.getProperty("user.dir"));
+	}
+	private static final Logger LOGGER = Logger.getCommonLogger(XMIExporter.class);
 	private static final String UML_MM = "UML";
 	// UML extent
 	private static UmlPackage umlPackage;
