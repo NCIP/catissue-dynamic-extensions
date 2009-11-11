@@ -292,6 +292,10 @@ public class XMIImportValidator
 	{
 		for (AssociationInterface associationInterface : entityInterface.getAssociationCollection())
 		{
+			if (associationInterface.getIsSystemGenerated())
+			{
+				continue;
+			}
 			if (!sourceEntityCollection.contains(entityInterface.getName()))
 			{
 				sourceEntityCollection.add(entityInterface.getName());
