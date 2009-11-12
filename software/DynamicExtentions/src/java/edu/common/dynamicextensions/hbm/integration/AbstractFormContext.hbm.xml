@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!DOCTYPE hibernate-mapping PUBLIC
-    "-//Hibernate/Hibernate Mapping DTD 2.0//EN" 
+    "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-lazy="false">
@@ -43,14 +43,14 @@
             length="10"
         />
 
-		<property name="containerId" 
+		<property name="containerId"
 			type="long" update="true" insert="true"
-			column="CONTAINER_ID" length="30" 
+			column="CONTAINER_ID" length="30"
 		/>
-			
+
         <set
             name="recordEntryCollection"
-            table="DYEXTN_RECORD_ENTRY"
+            table="DYEXTN_ABSTRACT_RECORD_ENTRY"
             lazy="false"
             inverse="true"
             cascade="save-update"
