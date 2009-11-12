@@ -44,7 +44,7 @@ public class CategoryCreator
 		catch (Exception ex)
 		{
 			LOGGER.info("Exception: " + ex.getMessage());
-			throw new RuntimeException(ex);
+			throw new RuntimeException(ex.getMessage(),ex);
 		}
 	}
 
@@ -95,7 +95,7 @@ public class CategoryCreator
 		catch (Exception ex)
 		{
 			LOGGER.error("Error occured while creating category",ex);
-			throw new RuntimeException(ex);
+			throw new RuntimeException(ex.getCause().getLocalizedMessage(),ex);
 
 		}
 	}
