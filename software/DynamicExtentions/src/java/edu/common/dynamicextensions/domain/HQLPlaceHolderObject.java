@@ -1,5 +1,5 @@
 
-package edu.common.dynamicextensions.entitymanager;
+package edu.common.dynamicextensions.domain;
 
 /**
  * 
