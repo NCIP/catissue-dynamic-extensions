@@ -1562,7 +1562,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 		return dataValue;
 	}
- 	/**
+
+	/**
 	 * @param rootCatEntity
 	 * @param recordId
 	 * @return
@@ -1570,20 +1571,28 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws SQLException
 	 */
-	public Map<String, Map<String, Object>> getRelatedAttributeValues(CategoryEntityInterface rootCatEntity, Long recordId) throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException, SQLException
+	public Map<String, Map<String, Object>> getRelatedAttributeValues(
+			CategoryEntityInterface rootCatEntity, Long recordId)
+			throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException, SQLException
 	{
-		CategoryManager categoreyManager = (CategoryManager) CategoryManager.getInstance();
+		CategoryManager categoreyManager = (CategoryManager) CategoryManager
+				.getInstance();
 
-		Map<BaseAbstractAttributeInterface, Object> recordMap = categoreyManager.getRecordById(rootCatEntity, recordId);
+		Map<BaseAbstractAttributeInterface, Object> recordMap = categoreyManager
+				.getRecordById(rootCatEntity, recordId);
 
-		Map<String, Map<String, Object>> records = new HashMap<String, Map<String,Object>>();
+		Map<String, Map<String, Object>> records = new HashMap<String, Map<String, Object>>();
 
 		getMapOfRelatedAttributesValues(records, recordMap);
 
 		return records;
 	}
+
 	/**
-	 * This method keeps only the related invisible category attributes in the map.
+	 * This method keeps only the related invisible category attributes in the
+	 * map.
+	 *
 	 * @param records
 	 * @param dataValue
 	 */
@@ -1591,7 +1600,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			Map<String, Map<String, Object>> records,
 			Map<BaseAbstractAttributeInterface, Object> dataValue)
 	{
-		Iterator<BaseAbstractAttributeInterface> iter = dataValue.keySet().iterator();
+		Iterator<BaseAbstractAttributeInterface> iter = dataValue.keySet()
+				.iterator();
 		while (iter.hasNext())
 		{
 			Object obj = iter.next();
@@ -1600,8 +1610,10 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			{
 				CategoryAttributeInterface catAttr = (CategoryAttributeInterface) obj;
 
-				if (catAttr.getIsRelatedAttribute() != null && catAttr.getIsRelatedAttribute()
-						&& catAttr.getIsVisible() != null && !catAttr.getIsVisible())
+				if (catAttr.getIsRelatedAttribute() != null
+						&& catAttr.getIsRelatedAttribute()
+						&& catAttr.getIsVisible() != null
+						&& !catAttr.getIsVisible())
 				{
 					Map<String, Object> innerMap;
 
@@ -1612,11 +1624,14 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 					}
 					else
 					{
-						innerMap = records.get(catAttr.getCategoryEntity().getName());
+						innerMap = records.get(catAttr.getCategoryEntity()
+								.getName());
 						innerMap.put(catAttr.getName(), dataValue.get(obj));
 					}
 
-					records.put(catAttr.getCategoryEntity().getName(), innerMap);
+					records
+							.put(catAttr.getCategoryEntity().getName(),
+									innerMap);
 				}
 			}
 			else
