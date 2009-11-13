@@ -1562,7 +1562,77 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 		return dataValue;
 	}
+ 	/**
+	 * @param rootCatEntity
+	 * @param recordId
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws SQLException
+	 */
+	public Map<String, Map<String, Object>> getRelatedAttributeValues(CategoryEntityInterface rootCatEntity, Long recordId) throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException, SQLException
+	{
+		CategoryManager categoreyManager = (CategoryManager) CategoryManager.getInstance();
 
+		Map<BaseAbstractAttributeInterface, Object> recordMap = categoreyManager.getRecordById(rootCatEntity, recordId);
+
+		Map<String, Map<String, Object>> records = new HashMap<String, Map<String,Object>>();
+
+		getMapOfRelatedAttributesValues(records, recordMap);
+
+		return records;
+	}
+	/**
+	 * This method keeps only the related invisible category attributes in the map.
+	 * @param records
+	 * @param dataValue
+	 */
+	private void getMapOfRelatedAttributesValues(
+			Map<String, Map<String, Object>> records,
+			Map<BaseAbstractAttributeInterface, Object> dataValue)
+	{
+		Iterator<BaseAbstractAttributeInterface> iter = dataValue.keySet().iterator();
+		while (iter.hasNext())
+		{
+			Object obj = iter.next();
+
+			if (obj instanceof CategoryAttributeInterface)
+			{
+				CategoryAttributeInterface catAttr = (CategoryAttributeInterface) obj;
+
+				if (catAttr.getIsRelatedAttribute() != null && catAttr.getIsRelatedAttribute()
+						&& catAttr.getIsVisible() != null && !catAttr.getIsVisible())
+				{
+					Map<String, Object> innerMap;
+
+					if (records.get(catAttr.getCategoryEntity().getName()) == null)
+					{
+						innerMap = new HashMap<String, Object>();
+						innerMap.put(catAttr.getName(), dataValue.get(obj));
+					}
+					else
+					{
+						innerMap = records.get(catAttr.getCategoryEntity().getName());
+						innerMap.put(catAttr.getName(), dataValue.get(obj));
+					}
+
+					records.put(catAttr.getCategoryEntity().getName(), innerMap);
+				}
+			}
+			else
+			{
+				CategoryAssociationInterface catAssociation = (CategoryAssociationInterface) obj;
+
+				List<Map<BaseAbstractAttributeInterface, Object>> mapsOfCntdRec = (List<Map<BaseAbstractAttributeInterface, Object>>) dataValue
+						.get(catAssociation);
+
+				for (Map<BaseAbstractAttributeInterface, Object> map : mapsOfCntdRec)
+				{
+					getMapOfRelatedAttributesValues(records, map);
+				}
+			}
+		}
+	}
 	/**
 	 * This method removes related invisible category attributes from the map.
 	 * @param curatedRecords
