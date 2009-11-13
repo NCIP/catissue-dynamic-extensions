@@ -15,15 +15,15 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 
 /**
- * 
+ *
  * @author rajesh_patil
- * 
+ *
  */
 public interface CategoryManagerInterface
 {
 
 	/**
-	 * 
+	 *
 	 * @param category
 	 * @return
 	 * @throws DynamicExtensionsSystemException
@@ -33,7 +33,7 @@ public interface CategoryManagerInterface
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
 
 	/**
-	 * 
+	 *
 	 * @param category
 	 * @return
 	 * @throws DynamicExtensionsSystemException
@@ -43,7 +43,7 @@ public interface CategoryManagerInterface
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
 
 	/**
-	 * 
+	 *
 	 * @param category
 	 * @param dataValue
 	 * @param userId
@@ -56,7 +56,7 @@ public interface CategoryManagerInterface
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException;
 
 	/**
-	 * 
+	 *
 	 * @param category
 	 * @param dataValueMaps
 	 * @param userId
@@ -106,18 +106,18 @@ public interface CategoryManagerInterface
 
 	/**
 	 * getEntityRecordIdByRootCategoryEntityRecordId.
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	Long getEntityRecordIdByRootCategoryEntityRecordId(Long rootCategoryEntityRecordId,
 			String rootCategoryTableName) throws DynamicExtensionsSystemException;
 
 	/**
 	 * getEntityRecordIdByRootCategoryEntityRecordId.
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	Long getRootCategoryEntityRecordIdByEntityRecordId(Long rootCategoryEntityRecordId,
 			String rootCategoryTableName) throws DynamicExtensionsSystemException;
-	
+
 	/**
 	 * It will fetch all the categories present
 	 * @return will return the collection of categories.
@@ -126,5 +126,18 @@ public interface CategoryManagerInterface
 	 */
 	Collection<CategoryInterface> getAllCategories()
 		throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
+
+	/**
+	 * @param rootCatEntity
+	 * @param recordId
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws SQLException
+	 */
+	Map<String, Map<String, Object>> getRelatedAttributeValues(
+			CategoryEntityInterface rootCatEntity, Long recordId)
+			throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException, SQLException;
 
 }
