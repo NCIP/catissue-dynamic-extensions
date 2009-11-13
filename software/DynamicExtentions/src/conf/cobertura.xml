@@ -40,6 +40,7 @@
       		<exclude name="**/entitymanager/ContainerInformationObject.class"/>
       		<exclude name="**/entitymanager/DynamicExtensionMySQLQueryBuilder.class"/>
       		<exclude name="**/entitymanager/DynamicExtensionPostGreSQLQueryBuilder.class"/>
+      		<exclude name="**/entitymanager/*Interface*.class"/>
 
        </fileset>
     </cobertura-instrument>
