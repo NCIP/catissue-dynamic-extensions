@@ -43,7 +43,6 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	 * length="30" unsaved-value="null" generator-class="native"
 	 * @hibernate.generator-param name="sequence" value="DYEXTN_CONTROL_SEQ"
 	 */
-	@Override
 	public Long getId()
 	{
 		return id;
