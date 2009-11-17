@@ -43,6 +43,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	 * length="30" unsaved-value="null" generator-class="native"
 	 * @hibernate.generator-param name="sequence" value="DYEXTN_CONTROL_SEQ"
 	 */
+	@Override
 	public Long getId()
 	{
 		return id;
@@ -320,7 +321,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		String htmlString = "";
 
 		String innerHTML = "";
-		if (getParentContainer().getMode() != null
+		if ((getParentContainer().getMode() != null)
 				&& getParentContainer().getMode().equalsIgnoreCase(WebUIManagerConstants.VIEW_MODE))
 		{
 			innerHTML = generateViewModeHTML(container);
@@ -342,7 +343,9 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 			}
 			else
 			{
-				htmlString = innerHTML;
+				htmlString = htmlString.concat("<td class='formRequiredLabel_withoutBorder'>");
+				htmlString = htmlString.concat(innerHTML);
+				htmlString = htmlString.concat("</td>");
 			}
 		}
 
@@ -358,17 +361,17 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		// For category attribute controls, if heading and/or notes are specified, then
 		// render the UI that displays heading followed by notes for particular
 		// category attribute controls.
-		if (heading != null || getFormNotes() != null && getFormNotes().size() != 0)
+		if ((heading != null) || ((getFormNotes() != null) && (getFormNotes().size() != 0)))
 		{
 			controlHTML.append("<tr><td width='100%' colspan='3' align='left'>");
 
-			if (heading != null && heading.length() != 0)
+			if ((heading != null) && (heading.length() != 0))
 			{
 				controlHTML.append("<div style='width:100%' class='td_color_6e81a6'>"
 						+ getHeading() + "</div>");
 			}
 
-			if (getFormNotes() != null && getFormNotes().size() != 0)
+			if ((getFormNotes() != null) && (getFormNotes().size() != 0))
 			{
 
 				for (FormControlNotesInterface fcNote : getFormNotes())
@@ -380,7 +383,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 
 			controlHTML.append("</td></tr>");
 		}
-		if (yPosition != null && yPosition <= 1)
+		if ((yPosition != null) && (yPosition <= 1))
 		{
 
 			controlHTML.append("<td class='formRequiredNotice_withoutBorder' width='2%'>");
@@ -402,13 +405,13 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 
 		}
 
-		if (showLabel != null && showLabel)
+		controlHTML.append("<td class='formRequiredLabel_withoutBorder'>");
+		if ((this.showLabel != null) && this.showLabel)
 		{
-			controlHTML.append("<td class='formRequiredLabel_withoutBorder'>");
-			controlHTML.append(((BaseAbstractAttribute) getBaseAbstractAttribute())
-					.getCapitalizedName(getCaption()));
-			controlHTML.append("</td><td class='formField_withoutBorder' valign='center'>");
+			controlHTML.append(((BaseAbstractAttribute) this.getBaseAbstractAttribute())
+					.getCapitalizedName(this.getCaption()));
 		}
+		controlHTML.append("</td><td class='formField_withoutBorder' valign='center'>");
 
 		if (getYPosition() <= 1)
 		{
@@ -508,8 +511,8 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		Control control = (Control) object;
 		Integer thisSequenceNumber = sequenceNumber;
 		Integer otherSequenceNumber = control.getSequenceNumber();
-		if (thisSequenceNumber.equals(otherSequenceNumber) && yPosition != null
-				&& control.yPosition != null)
+		if (thisSequenceNumber.equals(otherSequenceNumber) && (yPosition != null)
+				&& (control.yPosition != null))
 		{
 			return control.yPosition.compareTo(yPosition);
 		}
@@ -724,7 +727,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 							.getAttributeMetadataInterface(getBaseAbstractAttribute());
 					if (attributeMetadataInterface != null)
 					{
-						if (controlValue != null && controlValue.length() > 0)
+						if ((controlValue != null) && (controlValue.length() > 0))
 						{
 							selectedPermissibleValue = attributeMetadataInterface
 									.getAttributeTypeInformation().getPermissibleValueForString(
@@ -833,8 +836,8 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 				{
 					userDefinedDEInterface = (UserDefinedDEInterface) dataElementInterface;
 				}
-				if (userDefinedDEInterface != null
-						&& userDefinedDEInterface.getPermissibleValueCollection() != null
+				if ((userDefinedDEInterface != null)
+						&& (userDefinedDEInterface.getPermissibleValueCollection() != null)
 						&& !userDefinedDEInterface.getPermissibleValueCollection().isEmpty())
 				{
 					targetControl.setIsSkipLogicLoadPermValues(Boolean.TRUE);
@@ -920,11 +923,10 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 			{
 				PermissibleValueInterface selectedPermissibleValue = null;
 				AttributeMetadataInterface sourceAttributeMetadataInterface = ControlsUtility
-						.getAttributeMetadataInterface(sourceSkipControl
-								.getBaseAbstractAttribute());
+						.getAttributeMetadataInterface(sourceSkipControl.getBaseAbstractAttribute());
 				if (sourceAttributeMetadataInterface != null)
 				{
-					if (controlValue != null && controlValue.length() > 0)
+					if ((controlValue != null) && (controlValue.length() > 0))
 					{
 						try
 						{
@@ -943,9 +945,10 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 			SkipLogicAttributeInterface skipLogicAttributeInterface = ControlsUtility
 					.getSkipLogicAttributeForAttribute(permissibleValueList,
 							(AttributeMetadataInterface) sourceSkipControl
-									.getBaseAbstractAttribute(), (AttributeMetadataInterface) getBaseAbstractAttribute());
-			if (!getIsSkipLogicReadOnly() && skipLogicAttributeInterface != null
-					&& skipLogicAttributeInterface.getDefaultValue() != null)
+									.getBaseAbstractAttribute(),
+							(AttributeMetadataInterface) getBaseAbstractAttribute());
+			if (!getIsSkipLogicReadOnly() && (skipLogicAttributeInterface != null)
+					&& (skipLogicAttributeInterface.getDefaultValue() != null))
 			{
 				defaultValue = skipLogicAttributeInterface.getDefaultValue();
 			}
