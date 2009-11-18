@@ -7,7 +7,7 @@
 -->
 <project name="DynamicExtensionsInstallation">
 
-	<property file="../src/conf/DynamicExtensionsInstall.properties" />
+	<property file="DynamicExtensionsInstall.properties" />
 	<property name="de.temp.dir" value="./detemp" />
 	<property name="temp.dir.DE" value="${de.temp.dir}/temp" />
 	<property name="oracle.driver.string.DE" value="oracle.jdbc.driver.OracleDriver" />
