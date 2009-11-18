@@ -24,7 +24,6 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
 
-import edu.common.dynamicextensions.domain.Attribute;
 import edu.common.dynamicextensions.domain.FileAttributeRecordValue;
 import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.FileExtension;
@@ -848,9 +847,8 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 			errorList = new ArrayList<String>();
 		}
 
-		Attribute attribute = (Attribute) control.getBaseAbstractAttribute();
-		AttributeTypeInformationInterface attributeTypeInformation = attribute
-				.getAttributeTypeInformation();
+		AttributeTypeInformationInterface attributeTypeInformation = ((AttributeMetadataInterface) control
+				.getBaseAbstractAttribute()).getAttributeTypeInformation();
 
 		if (attributeTypeInformation instanceof FileAttributeTypeInformation)
 		{
@@ -891,35 +889,13 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				errorList.add(ApplicationProperties.getValue("app.selectProperFormat",
 						parameterList));
 			}
-			checkFileSize(fileAttibuteInformation.getMaxFileSize(), selectedFileSize, control
-					.getCaption(), errorList);
+
 		}
 
 		dataEntryForm.setErrorList(errorList);
 		return isValidExtension;
 	}
 
-	/**
-	 * This method is used to check for the maximum file size.
-	 *
-	 * @param dataEntryForm
-	 *
-	 * @param control
-	 *
-	 * @param selectedFile
-	 *
-	 */
-	private void checkFileSize(Float maxFileSize, int selectedFileSize, String attributeName,
-			List<String> errorList)
-	{
-		if ((maxFileSize != null) && (selectedFileSize > maxFileSize * 1000000))
-		{
-			List<String> parameterList = new ArrayList<String>();
-			parameterList.add(maxFileSize.toString());
-			parameterList.add(attributeName);
-			errorList
-					.add(ApplicationProperties.getValue("app.selectProperFileSize", parameterList));
-		}
-	}
+
 
 }
