@@ -180,54 +180,6 @@
 				<include name="**/domaininterface/**/*.class" />
 				<include name="**/entitymanager/**.class" />
 				<include name="**/exception/*.class" />
-				<include name="**/hbm/**/*.*" />
-				<include name="**/dynamicextensions/util/**/*.*" />
-				<include name="**/dynamicextensions/validation/**/*.*" />
-				<include name="**/common/util/**/*.*" />
-				<include name="**/dynamicextensions/bizlogic/**/*.class" />
-				<include name="DynamicExtensionsErrorsMessages.properties" />
-				<include name="DynamicExtensionsFileFormats.properties" />
-				<include name="DynamicExtensionDAO.properties" />
-				<include name="*.xml" />
-				<include name="**/xmi/**/*.*" />
-				<include name="*.xsl" />
-				<include name="**/ui/interfaces/*.class" />
-				<include name="**/ui/util/*.class" />
-				<include name="**/ui/webui/util/*.class" />
-				<include name="**/ui/webui/actionform/*.class" />
-				<include name="**/processor/**/*.class" />
-				<include name="**/dao/impl/**/*.class" />
-				<include name="**/wustl/cab2b/**/*.class" />
-				<include name="**/wustl/common/**/*.class" />
-				<include name="**/wustl/metadata/**/*.class" />
-				<exclude name="**/*Test*.class" />
-				<exclude name="**/TestHibernate.cfg.xml" />
-				<exclude name="**/*ApplicationDAOProperties.xml" />
-
-
-			</fileset>
-			<manifest>
-				<section name="${DynamicExtensions.jar.details}">
-					<attribute name="Version" value="${DynamicExtensions.jar.version}" />
-					<attribute name="Built-By" value="${DynamicExtensions.jar.creator}" />
-					<attribute name="Build-on" value="${TODAY_IND}" />
-					<attribute name="SVN-URL" value="${dist.revision}" />
-				</section>
-			</manifest>
-		</jar>
-	</target>
-	<!-- Create dynamic extensions jar Begins-->
-
-	<!-- Create dynamic extensions web jar Begins-->
-	<target name="create_dyn_ext_web_jar" depends="compile">
-		<delete file="${interface.dir}/DynamicExtensions.jar" />
-		<jar taskname="buildJar" jarfile="${interface.dir}/DynamicExtensions.jar">
-			<fileset dir="${target.dir}">
-				<include name="**/domain/**/*.class" />
-				<include name="**/DEIntegration/**.class" />
-				<include name="**/domaininterface/**/*.class" />
-				<include name="**/entitymanager/**.class" />
-				<include name="**/exception/*.class" />
 				<include name="**/dao/impl/*.class" />
 				<include name="**/interfaceactions/**.class" />
 				<include name="**/hbm/**/*.*" />
@@ -265,7 +217,9 @@
 			</manifest>
 		</jar>
 	</target>
-	<!-- Create dynamic extensions web jar ends-->
+	<!-- Create dynamic extensions jar Begins-->
+
+
 
 	<target name="create_dyn_ext_interface_sourcezip" depends="compile">
 		<delete file="${interface.src.dir}/DynamicExtensions-src.zip" />
@@ -288,7 +242,7 @@
 	</target>
 
 	<!-- Creates the Dynamic Extensions zip of the application -->
-	<target name="create_dynamic_extensions_zip" depends="create_dyn_ext_web_jar,version_info,init_zip">
+	<target name="create_dynamic_extensions_zip" depends="create_dyn_ext_interface_jar,version_info,init_zip">
 		<delete file="binaries/dynamicextensions.zip" />
 		<zip destfile="binaries/dynamicextensions.zip">
 			<fileset dir="${temp.dir}">
@@ -325,7 +279,7 @@
 			<fileset dir="${base.dir}/src/conf">
 				<include name="ApplicationDAOProperties.xml" />
 				<include name="DynamicExtensionsHibernate.cfg.xml" />
-				<include name="DynamicExtensionsInstall.properties" />
+				<include name="DynamicExtensionsHibernateWeb.cfg.xml" />
 				<include name="log4j.properties.template" />
 			</fileset>
 		</copy>
@@ -834,6 +788,7 @@
 		<target name="run_junit">
 			<delete dir="${junit.report.dir}" />
 			<mkdir dir="${junit.report.dir}" />
+
 
 			<junit printsummary="yes" haltonerror="no" haltonfailure="no" fork="yes" maxmemory="1024m">
 
