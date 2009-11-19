@@ -102,7 +102,7 @@ public class ApplyDataEntryFormProcessor extends BaseDynamicExtensionsProcessor
 			Map map = attributeValueMap;
 			EntityManagerInterface entityManagerInterface = EntityManager.getInstance();
 			recordIdentifier = entityManagerInterface.insertData((EntityInterface) container
-					.getAbstractEntity(), map, userId);
+					.getAbstractEntity(), map, null, userId);
 		}
 
 		return recordIdentifier.toString();
@@ -130,7 +130,7 @@ public class ApplyDataEntryFormProcessor extends BaseDynamicExtensionsProcessor
 			EntityInterface entity = (Entity) container.getAbstractEntity();
 			//Correct this:
 			Map map = attributeValueMap;
-			return entityManager.editData(entity, map, recordIdentifier, userId);
+			return entityManager.editData(entity, map, recordIdentifier, null, userId);
 		}
 		else
 		{
@@ -144,7 +144,6 @@ public class ApplyDataEntryFormProcessor extends BaseDynamicExtensionsProcessor
 					(CategoryEntityInterface) container.getAbstractEntity(), attributeValueMap,
 					categoryRecordId, userId);
 		}
-
 	}
 
 	public Long getUserId()

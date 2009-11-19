@@ -208,8 +208,8 @@ public interface EntityManagerInterface
 	 * This method inserts one record for the entity.
 	 */
 	Long insertData(EntityInterface entity, Map<AbstractAttributeInterface, Object> dataValue,
-			Long... userId) throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException;
+			HibernateDAO hibernateDao, Long... userId)
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException;
 
 	/**
 	 * This method inserts multiple records for the entity. This is a single transaction, so either all records are inserted or nothing
@@ -222,17 +222,19 @@ public interface EntityManagerInterface
 
 	/**
 	 * This method updates the existing record for the given entity.
-	 * @param entity       Entity for which record needs to be updated
-	 * @param dataValue    map that contains  name of the attribute whose value is changed and its new value
-	 *                     If it is multiselect attribute then value should be List<string>
-	 * @param recordId     Id of the record
-	 * @return true if success
+	 * @param entity Entity for which record needs to be updated
+	 * @param dataValue map that contains  name of the attribute whose value is changed and its new value
+	 *                  If it is multiselect attribute then value should be List<string>
+	 * @param recordId Id of the record
+	 * @param hibernateDao
+	 * @param userId
+	 * @return true if edit is successful
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
 	 */
 	boolean editData(EntityInterface entity, Map<AbstractAttributeInterface, ?> dataValue,
-			Long recordId, Long... userId) throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException;
+			Long recordId, HibernateDAO hibernateDao, Long... userId)
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException;
 
 	/**
 	 * The method returns the entity records for the given entity, attribute and records.
@@ -358,7 +360,6 @@ public interface EntityManagerInterface
 	 */
 	void addAssociationColumn(AssociationInterface association)
 			throws DynamicExtensionsSystemException;
-
 
 	/**
 	 * @param associationInterface

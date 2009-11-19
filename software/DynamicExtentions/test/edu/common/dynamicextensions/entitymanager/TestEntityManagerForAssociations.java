@@ -448,10 +448,10 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			Map dataValue = new HashMap();
 
 			dataValue.put(studyNameAttribute, "study");
-			entityManagerInterface.insertData(study, dataValue);
+			entityManagerInterface.insertData(study, dataValue, null);
 			dataValue.clear();
 			dataValue.put(studyNameAttribute, "study1");
-			entityManagerInterface.insertData(study, dataValue);
+			entityManagerInterface.insertData(study, dataValue, null);
 
 			dataValue.clear();
 			List<Long> targetIdList = new ArrayList<Long>();
@@ -461,12 +461,12 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			dataValue.put(userNameAttribute, "rahul");
 			dataValue.put(association, targetIdList);
 
-			entityManagerInterface.insertData(savedEntity, dataValue);
+			entityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			dataValue.clear();
 			dataValue.put(userNameAttribute, "vishvesh");
 			dataValue.put(association, targetIdList);
-			entityManagerInterface.insertData(savedEntity, dataValue);
+			entityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
 					+ association.getConstraintProperties().getName(), INT_TYPE, 1);
@@ -540,11 +540,11 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			Map dataValue = new HashMap();
 
 			dataValue.put(studyNameAttribute, "study");
-			entityManagerInterface.insertData(study, dataValue);
+			entityManagerInterface.insertData(study, dataValue, null);
 
 			dataValue.clear();
 			dataValue.put(studyNameAttribute, "study1");
-			entityManagerInterface.insertData(study, dataValue);
+			entityManagerInterface.insertData(study, dataValue, null);
 
 			dataValue.clear();
 			List<Long> targetIdList = new ArrayList<Long>();
@@ -554,7 +554,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			dataValue.put(userNameAttribute, "rahul");
 			dataValue.put(association, targetIdList);
 
-			entityManagerInterface.insertData(savedEntity, dataValue);
+			entityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
 					+ study.getTableProperties().getName(), INT_TYPE, 1);
@@ -634,7 +634,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 
 			dataValue.put(association, targetIdList);
 
-			entityManagerInterface.insertData(savedEntity, dataValue);
+			entityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			int rowCount = (Integer) executeQuery("select IDENTIFIER from "
 					+ savedEntity.getTableProperties().getName(), INT_TYPE, 1);
@@ -714,12 +714,12 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 
 			dataValue.put(association, targetIdList);
 
-			Long recordId = entityManagerInterface.insertData(savedEntity, dataValue);
+			Long recordId = entityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			dataValue.clear();
 			dataValue.put(userNameAttribute, "vishvesh");
 			dataValue.put(association, targetIdList);
-			Long recordId1 = entityManagerInterface.insertData(savedEntity, dataValue);
+			Long recordId1 = entityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			dataValue.clear();
 			dataValue = entityManagerInterface.getRecordById(savedEntity, recordId);
@@ -807,10 +807,10 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			Map dataValue = new HashMap();
 
 			dataValue.put(studyNameAttribute, "study");
-			entityManagerInterface.insertData(study, dataValue);
+			entityManagerInterface.insertData(study, dataValue, null);
 			dataValue.clear();
 			dataValue.put(studyNameAttribute, "study1");
-			entityManagerInterface.insertData(study, dataValue);
+			entityManagerInterface.insertData(study, dataValue, null);
 
 			dataValue.clear();
 			List<Long> targetIdList = new ArrayList<Long>();
@@ -820,12 +820,12 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			dataValue.put(userNameAttribute, "rahul");
 			dataValue.put(association, targetIdList);
 
-			Long recordId = entityManagerInterface.insertData(savedEntity, dataValue);
+			Long recordId = entityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			dataValue.clear();
 			dataValue.put(userNameAttribute, "vishvesh");
 			dataValue.put(association, targetIdList);
-			entityManagerInterface.insertData(savedEntity, dataValue);
+			entityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			dataValue.clear();
 			dataValue = entityManagerInterface.getRecordById(savedEntity, recordId);
@@ -909,11 +909,11 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			Map dataValue = new HashMap();
 
 			dataValue.put(studyNameAttribute, "study");
-			entityManagerInterface.insertData(study, dataValue);
+			entityManagerInterface.insertData(study, dataValue, null);
 
 			dataValue.clear();
 			dataValue.put(studyNameAttribute, "study1");
-			entityManagerInterface.insertData(study, dataValue);
+			entityManagerInterface.insertData(study, dataValue, null);
 
 			dataValue.clear();
 			dataValue.put(userNameAttribute, "rahul");
@@ -921,7 +921,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			targetIdList.add(1L);
 			dataValue.put(association, targetIdList);
 
-			Long recordId = entityManagerInterface.insertData(savedEntity, dataValue);
+			Long recordId = entityManagerInterface.insertData(savedEntity, dataValue, null);
 			dataValue.clear();
 
 			dataValue = entityManagerInterface.getRecordById(savedEntity, recordId);
@@ -1109,7 +1109,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 
 			dataValue.put(association, targetIdList);
 
-			entityManagerInterface.insertData(savedEntity, dataValue);
+			entityManagerInterface.insertData(savedEntity, dataValue, null);
 			int identifier = (Integer) executeQuery("select IDENTIFIER from "
 					+ savedEntity.getTableProperties().getName(), INT_TYPE, 1);
 			assertEquals(1, identifier);
@@ -1180,7 +1180,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			dataValue.put(userName, "User1");
 			dataValue.put(association, list);
 
-			EntityManager.getInstance().insertData(user, dataValue);
+			EntityManager.getInstance().insertData(user, dataValue, null);
 			int columnValue = (Integer) executeQuery("select * from "
 					+ user.getTableProperties().getName(), INT_TYPE, 2);
 			assertEquals(1, columnValue);
@@ -1269,7 +1269,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			dataValue.put(userName, "User1");
 			dataValue.put(association, list);
 
-			Long recordId = EntityManager.getInstance().insertData(user, dataValue);
+			Long recordId = EntityManager.getInstance().insertData(user, dataValue, null);
 
 			//Checking whether there is an entry added in the data table for user.
 			int columnValue = (Integer) executeQuery("select * from "
@@ -1359,7 +1359,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			dataValue.put(userName, "User1");
 			dataValue.put(association, list);
 
-			Long recordId = EntityManager.getInstance().insertData(user, dataValue);
+			Long recordId = EntityManager.getInstance().insertData(user, dataValue, null);
 
 			//Checking whether there is an entry added in the data table for user.
 			int identifier = (Integer) executeQuery("select IDENTIFIER from "
@@ -2439,10 +2439,10 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 
 			user = entityManager.persistEntity(user);
 
-			assertEquals(noOfDefaultColumns+2, getColumnCount("select * from "
+			assertEquals(noOfDefaultColumns, getColumnCount("select * from "
 					+ user.getTableProperties().getName()));
 
-			assertEquals(noOfDefaultColumns + 1, getColumnCount("select * from "
+			assertEquals(noOfDefaultColumns + 2, getColumnCount("select * from "
 					+ study.getTableProperties().getName()));
 
 			EntityInterface savedUser = entityManager
@@ -2540,7 +2540,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			dataValue.put(association, addressDataValueMapList);
 
 			// Step 5
-			entityManagerInterface.insertData(savedEntity, dataValue);
+			entityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			// Step 6
 			int rowCount = (Integer) executeQuery("select count(*) from "
@@ -2636,7 +2636,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			dataValue.put(association, addressDataValueMapList);
 
 			// Step 5
-			entityManagerInterface.insertData(savedEntity, dataValue);
+			entityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			// Step 6
 			int rowCount = (Integer) executeQuery("select count(*) from "
@@ -2729,7 +2729,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			dataValue.put(association, addressDataValueMapList);
 
 			// Step 5
-			Long recordId = entityManagerInterface.insertData(savedEntity, dataValue);
+			Long recordId = entityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			// Step 6
 			int rowCount = (Integer) executeQuery("select count(*) from "
@@ -2746,7 +2746,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			addressDataValue1.put(cityAttribute, "Pune 37");
 
 			// Step 8
-			entityManagerInterface.editData(savedEntity, dataValue, recordId);
+			entityManagerInterface.editData(savedEntity, dataValue, recordId, null);
 
 			// Step 9
 			rowCount = (Integer) executeQuery("select count(*) from "
@@ -2845,7 +2845,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			dataValue.put(association, addressDataValueMapList);
 
 			// Step 5
-			Long recordId = entityManagerInterface.insertData(savedEntity, dataValue);
+			Long recordId = entityManagerInterface.insertData(savedEntity, dataValue, null, null);
 
 			// Step 6
 			int rowCount = (Integer) executeQuery("select count(*) from "
@@ -2866,7 +2866,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			addressDataValueMapList.add(addressDataValue1);
 
 			// Step 8
-			entityManagerInterface.editData(savedEntity, dataValue, recordId);
+			entityManagerInterface.editData(savedEntity, dataValue, recordId, null);
 
 			// Step 9
 			rowCount = (Integer) executeQuery("select count(*) from "
@@ -2972,7 +2972,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			dataValue.put(association, addressDataValueMapList);
 
 			// Step 5
-			Long recordId = entityManagerInterface.insertData(savedEntity, dataValue);
+			Long recordId = entityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			// Step 6
 			int rowCount = (Integer) executeQuery("select count(*) from "
@@ -3297,11 +3297,11 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			dataValue.put(userNameAttribute, "Rahul");
 			dataValue.put(userInstitute, institutionList);
 
-			Long recordId = entityManager.insertData(user, dataValue);
+			Long recordId = entityManager.insertData(user, dataValue, null);
 
 			//Step 7
 			institutionValueMap.put(institutionName, "PSPL");
-			entityManager.editData(user, dataValue, recordId);
+			entityManager.editData(user, dataValue, recordId, null);
 
 			//step 8
 			int rowCount = (Integer) executeQuery("select count(*) from "
@@ -3431,8 +3431,8 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 		association.setName(assoName);
 		association.setSourceRole(sourceRole);
 		association.setTargetRole(targetRole);
-		DynamicExtensionsUtility.getConstraintPropertiesForAssociation(association);
 		association.setAssociationDirection(associationDirection);
+		DynamicExtensionsUtility.getConstraintPropertiesForAssociation(association);
 		return association;
 	}
 

@@ -171,7 +171,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			//Step 5
 			EntityInterface newEditedEntity = EntityManagerInterface.persistEntity(editedEntity);
 			dataValue.put(floatAtribute1, "21");
-			EntityManagerInterface.insertData(newEditedEntity, dataValue);
+			EntityManagerInterface.insertData(newEditedEntity, dataValue, null);
 			//Step 6
 
 			assertEquals(noOfDefaultColumns + 2, getColumnCount("select * from "
@@ -181,7 +181,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 					+ editedEntity.getTableProperties().getName(), INT_TYPE, 1);
 			assertEquals(1, rowCount);
 
-			EntityManagerInterface.insertData(newEditedEntity, dataValue);
+			EntityManagerInterface.insertData(newEditedEntity, dataValue, null);
 			rowCount = (Integer) executeQuery("select count(*) from "
 					+ editedEntity.getTableProperties().getName(), INT_TYPE, 1);
 			assertEquals(2, rowCount);
@@ -484,7 +484,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			Map dataValue = new HashMap();
 			dataValue.put(ssn, 101202);
 
-			EntityManagerInterface.insertData(entity, dataValue);
+			EntityManagerInterface.insertData(entity, dataValue, null);
 
 			AttributeTypeInformationInterface dateAttributeType = new StringAttributeTypeInformation();
 			ssn.setAttributeTypeInformation(dateAttributeType);
@@ -746,7 +746,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			//dataValue.put(commentsAttributes, "this is not default comment");
 			dataValue.put(association, dataList);
 
-			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue);
+			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			Map map = EntityManagerInterface.getRecordById(savedEntity, recordId);
 
@@ -754,7 +754,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 			dataMapFirst.put(streetAttribute, "rajesh");
 
-			EntityManagerInterface.editData(savedEntity, dataValue, recordId);
+			EntityManagerInterface.editData(savedEntity, dataValue, recordId, null);
 
 			map = EntityManagerInterface.getRecordById(savedEntity, recordId);
 
@@ -833,7 +833,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				i++;
 			}
 
-			EntityManagerInterface.insertData(newEntity, dataValue);
+			EntityManagerInterface.insertData(newEntity, dataValue, null);
 			int column = (Integer) executeQuery("select count(*) from "
 					+ newEntity.getTableProperties().getName(), INT_TYPE, 1);
 
@@ -958,7 +958,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 			AttributeInterface studyDate = factory.createDateAttribute();
 			((DateAttributeTypeInformation) studyDate.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
+					.setFormat(ProcessorConstants.SQL_DATE_ONLY_FORMAT);
 			studyDate.setName("Date");
 
 			study.addAbstractAttribute(name);
@@ -972,9 +972,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 			dataValue.put(name, "Java Study");
 			dataValue.put(userNames, "a");
-			dataValue.put(studyDate, "11"+ProcessorConstants.DATE_SEPARATOR+"02"+ProcessorConstants.DATE_SEPARATOR+"2006");
+			dataValue.put(studyDate, "11-02-2006");
 
-			Long recordId = EntityManagerInterface.insertData(savedStudy, dataValue);
+			Long recordId = EntityManagerInterface.insertData(savedStudy, dataValue, null);
 
 			Map map = EntityManagerInterface.getRecordById(savedStudy, recordId);
 
@@ -982,14 +982,14 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			assertEquals("a", userName);
 
 			dataValue.put(userNames, "b");
-			dataValue.put(studyDate, "12"+ProcessorConstants.DATE_SEPARATOR+"02"+ProcessorConstants.DATE_SEPARATOR+"2006");
+			dataValue.put(studyDate, "12-02-2006");
 
-			EntityManagerInterface.editData(savedStudy, dataValue, recordId);
+			EntityManagerInterface.editData(savedStudy, dataValue, recordId, null);
 
 			map = EntityManagerInterface.getRecordById(savedStudy, recordId);
 			userName = (String) map.get(userNames);
 			assertEquals("b", userName);
-			assertEquals("12"+ProcessorConstants.DATE_SEPARATOR+"02"+ProcessorConstants.DATE_SEPARATOR+"2006", map.get(studyDate));
+			assertEquals("12-02-2006", map.get(studyDate));
 		}
 		catch (DynamicExtensionsSystemException e)
 		{
@@ -1102,9 +1102,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 			newDataValue.put(associationUserGroup, newDataList);
 
-			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue);
+			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue, null);
 
-			Long newRecordId = EntityManagerInterface.insertData(userGroup, newDataValue);
+			Long newRecordId = EntityManagerInterface.insertData(userGroup, newDataValue, null);
 
 			Map map = EntityManagerInterface.getRecordById(savedEntity, recordId);
 
@@ -1112,7 +1112,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 			dataMapFirst.put(streetAttribute, "rajesh");
 
-			EntityManagerInterface.editData(savedEntity, dataValue, recordId);
+			EntityManagerInterface.editData(savedEntity, dataValue, recordId, null);
 
 			map = EntityManagerInterface.getRecordById(savedEntity, recordId);
 
@@ -1441,7 +1441,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				i++;
 			}
 
-			EntityManagerInterface.insertData(newEntity, dataValue);
+			EntityManagerInterface.insertData(newEntity, dataValue, null);
 
 			assertEquals("Person", entity.getName());
 			Map map = EntityManagerInterface.getRecordById(entity, new Long(1));
@@ -1741,7 +1741,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "45");
 			dataValue.put(resume, fileRecord);
 
-			Long recordId = EntityManagerInterface.insertData(user, dataValue);
+			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
 			FileAttributeRecordValue attributeRecordValue = EntityManagerInterface
 					.getFileAttributeRecordValueByRecordId(resume, recordId);
 
@@ -1812,7 +1812,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "45");
 			dataValue.put(resume, fileRecord);
 
-			Long recordId = EntityManagerInterface.insertData(user, dataValue);
+			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
 					+ user.getTableProperties().getName(), INT_TYPE, 1);
@@ -1880,7 +1880,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "45");
 			dataValue.put(resume, fileRecord);
 
-			Long recordId = EntityManagerInterface.insertData(user, dataValue);
+			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
 
 			dataValue = EntityManagerInterface.getRecordById(user, recordId);
 
@@ -1951,7 +1951,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "45");
 			dataValue.put(resume, fileRecord);
 
-			Long recordId = EntityManagerInterface.insertData(user, dataValue);
+			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
 			//recordId = entityManager.insertData(user, dataValue);
 
 			dataValue = EntityManagerInterface.getRecordById(user, recordId);
@@ -1959,7 +1959,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			fileRecord.setFileName("new file name");
 			fileRecord.setFileContent("modified file contents".getBytes());
 			dataValue.put(resume, fileRecord);
-			EntityManagerInterface.editData(user, dataValue, recordId);
+			EntityManagerInterface.editData(user, dataValue, recordId, null);
 
 			dataValue = EntityManagerInterface.getRecordById(user, recordId);
 
@@ -2442,7 +2442,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			//dataValue.put(commentsAttributes, "this is not default comment");
 			dataValue.put(tempAttributes, "temp");
 
-			EntityManagerInterface.insertData(savedEntity, dataValue);
+			EntityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			//Step 4.
 			String status = (String) executeQuery("select * from "
@@ -2692,11 +2692,11 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			AttributeInterface startDate = DomainObjectFactory.getInstance().createDateAttribute();
 			startDate.setName("startDate");
 			((DateAttributeTypeInformation) startDate.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEANDTIME);
+					.setFormat(ProcessorConstants.DATE_TIME_FORMAT);
 
 			AttributeInterface endDate = DomainObjectFactory.getInstance().createDateAttribute();
 			((DateAttributeTypeInformation) endDate.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
+					.setFormat(ProcessorConstants.SQL_DATE_ONLY_FORMAT);
 			endDate.setName("endDate");
 
 			entity.addAbstractAttribute(floatAtribute);
@@ -2710,17 +2710,15 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 			Map dataValue = new HashMap();
 			dataValue.put(floatAtribute, "15.90");
-			String startDateValue = "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982 10:11";
-			dataValue.put(startDate, startDateValue);
-			String endDateValue = "01"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982";
-			dataValue.put(endDate, endDateValue);
+			dataValue.put(startDate, "11-12-1982 10:11");
+			dataValue.put(endDate, "01-12-1982");
 
-			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue);
+			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			dataValue = EntityManagerInterface.getRecordById(entity, recordId);
 
-			assertEquals(startDateValue, dataValue.get(startDate));
-			assertEquals(endDateValue, dataValue.get(endDate));
+			assertEquals("11-12-1982 10:11", dataValue.get(startDate));
+			assertEquals("01-12-1982", dataValue.get(endDate));
 		}
 		catch (Exception e)
 		{
@@ -2751,7 +2749,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			Attribute date = (Attribute) factory.createDateAttribute();
 			date.setName("Date");
 			((DateAttributeTypeInformation) date.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
+					.setFormat(ProcessorConstants.SQL_DATE_ONLY_FORMAT);
 
 			RuleInterface dateRule = factory.createRule();
 			dateRule.setName("date");
@@ -2767,16 +2765,16 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			EntityInterface savedEntity = entityManager.persistEntity(entity);
 
 			Map dataValue = new HashMap();
-			dataValue.put("date", "11"+ProcessorConstants.DATE_SEPARATOR+"16"+ProcessorConstants.DATE_SEPARATOR+"1982");
+			dataValue.put("date", "11-16-1982");
 
 			for (RuleInterface rule : date.getRuleCollection())
 			{
 				ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
 						.getValidatorRule(rule.getName());
-				validatorRule.validate(date, "08"+ProcessorConstants.DATE_SEPARATOR+"16"+ProcessorConstants.DATE_SEPARATOR+"2020", null, "Date");
+				validatorRule.validate(date, "08-16-2020", null, "Date");
 			}
 
-			recordId = entityManager.insertData(savedEntity, dataValue);
+			recordId = entityManager.insertData(savedEntity, dataValue, null);
 			assertEquals(recordId, null);
 		}
 		catch (DynamicExtensionsValidationException e)
@@ -2812,24 +2810,24 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		{
 			AttributeInterface dateOnly = DomainObjectFactory.getInstance().createDateAttribute();
 			((DateAttributeTypeInformation) dateOnly.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
+					.setFormat(ProcessorConstants.SQL_DATE_ONLY_FORMAT);
 			dateOnly.setName("dateOnly");
 
 			AttributeInterface dateTime = DomainObjectFactory.getInstance().createDateAttribute();
 			((DateAttributeTypeInformation) dateTime.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEANDTIME);
+					.setFormat(ProcessorConstants.DATE_TIME_FORMAT);
 			dateTime.setName("dateTime");
 
 			AttributeInterface yearOnlyDate = DomainObjectFactory.getInstance()
 					.createDateAttribute();
 			((DateAttributeTypeInformation) yearOnlyDate.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_YEARONLY);
+					.setFormat(ProcessorConstants.YEAR_ONLY_FORMAT);
 			yearOnlyDate.setName("yearOnlyDate");
 
 			AttributeInterface monthYearDate = DomainObjectFactory.getInstance()
 					.createDateAttribute();
 			((DateAttributeTypeInformation) monthYearDate.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_MONTHANDYEAR);
+					.setFormat(ProcessorConstants.MONTH_YEAR_FORMAT);
 			monthYearDate.setName("monthYearDate");
 
 			entity.addAbstractAttribute(dateOnly);
@@ -2843,19 +2841,19 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			EntityInterface savedEntity = EntityManagerInterface.persistEntity(entity);
 
 			Map dataValue = new HashMap();
-			dataValue.put(dateOnly, "01"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982");
-			dataValue.put(dateTime, "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982 10:11");
+			dataValue.put(dateOnly, "01-12-1982");
+			dataValue.put(dateTime, "11-12-1982 10:11");
 			dataValue.put(yearOnlyDate, "1900");
-			dataValue.put(monthYearDate, "09"+ProcessorConstants.DATE_SEPARATOR+"1900");
+			dataValue.put(monthYearDate, "09-1900");
 
-			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue);
+			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			dataValue = EntityManagerInterface.getRecordById(entity, recordId);
 
-			assertEquals("11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982 10:11", dataValue.get(dateTime));
-			assertEquals("01"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982", dataValue.get(dateOnly));
+			assertEquals("11-12-1982 10:11", dataValue.get(dateTime));
+			assertEquals("01-12-1982", dataValue.get(dateOnly));
 			assertEquals("1900", dataValue.get(yearOnlyDate));
-			assertEquals("09"+ProcessorConstants.DATE_SEPARATOR+"1900", dataValue.get(monthYearDate));
+			assertEquals("09-1900", dataValue.get(monthYearDate));
 		}
 		catch (Exception e)
 		{
@@ -2887,21 +2885,21 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			Attribute date = (Attribute) factory.createDateAttribute();
 			date.setName("DateRange");
 			((DateAttributeTypeInformation) date.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
+					.setFormat(ProcessorConstants.SQL_DATE_ONLY_FORMAT);
 
 			RuleInterface dateRange = factory.createRule();
 			dateRange.setName("dateRange");
 
 			RuleParameterInterface minValue = factory.createRuleParameter();
 			minValue.setName("min");
-			minValue.setValue("11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982");
+			minValue.setValue("11-12-1982");
 			dateRange.getRuleParameterCollection().add(minValue);
 
 			date.getRuleCollection().add(dateRange);
 
 			RuleParameterInterface maxValue = factory.createRuleParameter();
 			maxValue.setName("max");
-			maxValue.setValue("11"+ProcessorConstants.DATE_SEPARATOR+"15"+ProcessorConstants.DATE_SEPARATOR+"1982");
+			maxValue.setValue("11-15-1982");
 			dateRange.getRuleParameterCollection().add(maxValue);
 
 			entity.addAbstractAttribute(date);
@@ -2912,20 +2910,20 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			EntityInterface savedEntity = entityManager.persistEntity(entity);
 
 			Map dataValue = new HashMap();
-			dataValue.put("date", "11"+ProcessorConstants.DATE_SEPARATOR+"15"+ProcessorConstants.DATE_SEPARATOR+"1982");
+			dataValue.put("date", "11-15-1982");
 
 			Map<String, String> rulesMap = new HashMap<String, String>();
-			rulesMap.put("min", "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982");
-			rulesMap.put("max", "11"+ProcessorConstants.DATE_SEPARATOR+"15"+ProcessorConstants.DATE_SEPARATOR+"1982");
+			rulesMap.put("min", "11-12-1982");
+			rulesMap.put("max", "11-15-1982");
 
 			for (RuleInterface rule : date.getRuleCollection())
 			{
 				ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
 						.getValidatorRule(rule.getName());
-				validatorRule.validate(date, "11"+ProcessorConstants.DATE_SEPARATOR+"16"+ProcessorConstants.DATE_SEPARATOR+"1982", rulesMap, "LeapYear");
+				validatorRule.validate(date, "11-16-1982", rulesMap, "LeapYear");
 			}
 
-			recordId = entityManager.insertData(savedEntity, dataValue);
+			recordId = entityManager.insertData(savedEntity, dataValue, null);
 			assertEquals(recordId, null);
 		}
 		catch (DynamicExtensionsValidationException e)
@@ -2964,22 +2962,22 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		{
 			Attribute dateOnly = (Attribute) factory.createDateAttribute();
 			((DateAttributeTypeInformation) dateOnly.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
+					.setFormat(ProcessorConstants.SQL_DATE_ONLY_FORMAT);
 			dateOnly.setName("dateOnly");
 
 			Attribute dateTime = (Attribute) factory.createDateAttribute();
 			((DateAttributeTypeInformation) dateTime.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEANDTIME);
+					.setFormat(ProcessorConstants.DATE_TIME_FORMAT);
 			dateTime.setName("dateTime");
 
 			Attribute yearOnlyDate = (Attribute) factory.createDateAttribute();
 			((DateAttributeTypeInformation) yearOnlyDate.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_YEARONLY);
+					.setFormat(ProcessorConstants.YEAR_ONLY_FORMAT);
 			yearOnlyDate.setName("yearOnlyDate");
 
 			Attribute monthYearDate = (Attribute) factory.createDateAttribute();
 			((DateAttributeTypeInformation) monthYearDate.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_MONTHANDYEAR);
+					.setFormat(ProcessorConstants.MONTH_YEAR_FORMAT);
 			monthYearDate.setName("monthYearDate");
 
 			RuleInterface allowfuturedate = factory.createRule();
@@ -3004,13 +3002,13 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			{
 				ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
 						.getValidatorRule(rule.getName());
-				validatorRule.validate(dateOnly, "08"+ProcessorConstants.DATE_SEPARATOR+"16"+ProcessorConstants.DATE_SEPARATOR+"2020", null, "Date");
+				validatorRule.validate(dateOnly, "08-16-2020", null, "Date");
 			}
 			for (RuleInterface rule : dateTime.getRuleCollection())
 			{
 				ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
 						.getValidatorRule(rule.getName());
-				validatorRule.validate(dateTime, "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"2020 10:11", null, "Date");
+				validatorRule.validate(dateTime, "11-12-2020 10:11", null, "Date");
 			}
 			for (RuleInterface rule : yearOnlyDate.getRuleCollection())
 			{
@@ -3022,23 +3020,23 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			{
 				ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
 						.getValidatorRule(rule.getName());
-				validatorRule.validate(monthYearDate, "09"+ProcessorConstants.DATE_SEPARATOR+"2020", null, "Date");
+				validatorRule.validate(monthYearDate, "09-2020", null, "Date");
 			}
 
 			Map dataValue = new HashMap();
-			dataValue.put(dateOnly, "11"+ProcessorConstants.DATE_SEPARATOR+"16"+ProcessorConstants.DATE_SEPARATOR+"2018");
-			dataValue.put(dateTime, "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"2018 10:11");
+			dataValue.put(dateOnly, "11-16-2018");
+			dataValue.put(dateTime, "11-12-2018 10:11");
 			dataValue.put(yearOnlyDate, "2018");
-			dataValue.put(monthYearDate, "09"+ProcessorConstants.DATE_SEPARATOR+"2018");
+			dataValue.put(monthYearDate, "09-2018");
 
-			recordId = entityManager.insertData(savedEntity, dataValue);
+			recordId = entityManager.insertData(savedEntity, dataValue, null);
 
 			dataValue = entityManager.getRecordById(entity, recordId);
 
-			assertEquals("11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"2018 10:11", dataValue.get(dateTime));
-			assertEquals("11"+ProcessorConstants.DATE_SEPARATOR+"16"+ProcessorConstants.DATE_SEPARATOR+"2018", dataValue.get(dateOnly));
+			assertEquals("11-12-2018 10:11", dataValue.get(dateTime));
+			assertEquals("11-16-2018", dataValue.get(dateOnly));
 			assertEquals("2018", dataValue.get(yearOnlyDate));
-			assertEquals("09"+ProcessorConstants.DATE_SEPARATOR+"2018", dataValue.get(monthYearDate));
+			assertEquals("09-2018", dataValue.get(monthYearDate));
 		}
 		catch (DynamicExtensionsValidationException e)
 		{
@@ -3075,7 +3073,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			Attribute date = (Attribute) factory.createDateAttribute();
 			date.setName("FutureDate");
 			((DateAttributeTypeInformation) date.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
+					.setFormat(ProcessorConstants.SQL_DATE_ONLY_FORMAT);
 
 			RuleInterface allowfuturedate = factory.createRule();
 			allowfuturedate.setName("allowfuturedate");
@@ -3090,16 +3088,16 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			EntityInterface savedEntity = entityManager.persistEntity(entity);
 
 			Map dataValue = new HashMap();
-			dataValue.put(date, "11"+ProcessorConstants.DATE_SEPARATOR+"16"+ProcessorConstants.DATE_SEPARATOR+"2000");
+			dataValue.put(date, "11-16-2000");
 
 			for (RuleInterface rule : date.getRuleCollection())
 			{
 				ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
 						.getValidatorRule(rule.getName());
-				validatorRule.validate(date, "11"+ProcessorConstants.DATE_SEPARATOR+"16"+ProcessorConstants.DATE_SEPARATOR+"2000", null, "Date");
+				validatorRule.validate(date, "11-16-2000", null, "Date");
 			}
 
-			recordId = entityManager.insertData(savedEntity, dataValue);
+			recordId = entityManager.insertData(savedEntity, dataValue, null);
 		}
 		catch (DynamicExtensionsValidationException e)
 		{
@@ -3164,7 +3162,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(floatAtribute, "122.34");
 			dataValue.put(commentsAttributes, "test1123");
 
-			EntityManagerInterface.insertData(entity, dataValue);
+			EntityManagerInterface.insertData(entity, dataValue, null);
 
 			//step 5
 			int rowCount = (Integer) executeQuery("select count(*) from "
@@ -3244,11 +3242,11 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(floatAtribute, "1.1");
 			dataValue.put(commentsAttributes, "test1");
 
-			EntityManagerInterface.insertData(entity, dataValue);
+			EntityManagerInterface.insertData(entity, dataValue, null);
 
 			dataValue.put(floatAtribute, "1.2");
 			dataValue.put(commentsAttributes, "test2");
-			EntityManagerInterface.insertData(entity, dataValue);
+			EntityManagerInterface.insertData(entity, dataValue, null);
 
 			//step 5
 			List<EntityRecord> recordList = EntityManagerInterface.getAllRecords(entity);
@@ -3340,7 +3338,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(association, addressDataValueMapList);
 
 			// Step 5
-			EntityManagerInterface.insertData(savedEntity, dataValue);
+			EntityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			System.out.println("show sql: " + System.getProperty("show_sql"));
 
@@ -3438,7 +3436,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(association, addressDataValueMapList);
 
 			// Step 5
-			EntityManagerInterface.insertData(savedEntity, dataValue);
+			EntityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			assertEquals(Status.ACTIVITY_STATUS_ACTIVE.toString(), getActivityStatus(user, 1L));
 			assertEquals(Status.ACTIVITY_STATUS_ACTIVE.toString(), getActivityStatus(address, 1L));
@@ -3514,11 +3512,11 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			//Insert Data
 			Map dataValue = new HashMap();
 			dataValue.put(studyNameAttribute, "study");
-			EntityManagerInterface.insertData(study, dataValue);
+			EntityManagerInterface.insertData(study, dataValue, null);
 
 			dataValue.clear();
 			dataValue.put(studyNameAttribute, "study1");
-			EntityManagerInterface.insertData(study, dataValue);
+			EntityManagerInterface.insertData(study, dataValue, null);
 
 			dataValue.clear();
 			List<Long> targetIdList = new ArrayList<Long>();
@@ -3528,7 +3526,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(userNameAttribute, "rahul");
 			dataValue.put(association, targetIdList);
 
-			EntityManagerInterface.insertData(savedEntity, dataValue);
+			EntityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			assertEquals(Status.ACTIVITY_STATUS_ACTIVE.toString(), getActivityStatus(user, 1L));
 			assertEquals(Status.ACTIVITY_STATUS_ACTIVE.toString(), getActivityStatus(study, 1L));
@@ -3611,12 +3609,12 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			//Step 5
 			Map dataValue = new HashMap();
 			dataValue.put(studyNameAttribute, "study");
-			EntityManagerInterface.insertData(study, dataValue);
+			EntityManagerInterface.insertData(study, dataValue, null);
 
 			//Step 6
 			dataValue.clear();
 			dataValue.put(studyNameAttribute, "study1");
-			EntityManagerInterface.insertData(study, dataValue);
+			EntityManagerInterface.insertData(study, dataValue, null);
 
 			//Step 7
 			EntityManagerInterface.deleteRecord(study, 1L);
@@ -3633,7 +3631,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(userNameAttribute, "rahul");
 			dataValue.put(association, targetIdList);
 
-			EntityManagerInterface.insertData(savedEntity, dataValue);
+			EntityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			//Step 9
 			EntityManagerInterface.deleteRecord(study, 2L);
@@ -3679,7 +3677,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(barcode, "123'456");
 
 			EntityManagerInterface.persistEntity(specimen);
-			Long recordId = EntityManagerInterface.insertData(specimen, dataValue);
+			Long recordId = EntityManagerInterface.insertData(specimen, dataValue, null);
 
 			assertTrue(true);
 		}
@@ -3794,7 +3792,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "45");
 			dataValue.put(info, objectRecord);
 
-			Long recordId = EntityManagerInterface.insertData(user, dataValue);
+			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
 					+ user.getTableProperties().getName(), INT_TYPE, 1);
@@ -3845,7 +3843,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "45");
 			dataValue.put(info, objectRecord);
 
-			Long recordId = EntityManagerInterface.insertData(user, dataValue);
+			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
 					+ user.getTableProperties().getName(), INT_TYPE, 1);
@@ -3906,7 +3904,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "45");
 			dataValue.put(info, objectRecord);
 
-			Long recordId = EntityManagerInterface.insertData(user, dataValue);
+			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
 					+ user.getTableProperties().getName(), INT_TYPE, 1);
@@ -3973,7 +3971,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "45");
 			dataValue.put(info, objectRecord);
 
-			Long recordId = EntityManagerInterface.insertData(user, dataValue);
+			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
 					+ user.getTableProperties().getName(), INT_TYPE, 1);
@@ -3998,7 +3996,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "54");
 			dataValue.put(info, objectRecord);
 
-			EntityManagerInterface.editData(user, dataValue, recordId);
+			EntityManagerInterface.editData(user, dataValue, recordId, null);
 
 			dataValue = EntityManagerInterface.getRecordById(user, recordId);
 
@@ -4122,7 +4120,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "45");
 			dataValue.put(info, objectRecord);
 
-			Long recordId = EntityManagerInterface.insertData(user, dataValue);
+			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
 
 			int rowCOunt = (Integer) executeQuery("select count(*) from "
 					+ user.getTableProperties().getName(), INT_TYPE, 1);
@@ -4240,85 +4238,73 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	}
 
 	/**
-	 * this test cases is not working properly in case of
-	 * decimal attributes because of bug in mysql
-	 * please refrer : http://bugs.mysql.com/bug.php?id=9528
-	 * Thus this test case will always be success on MYSQL
 	 * unique rule
 	 */
 	public void testUniqueRule()
 	{
-		String appName = DynamicExtensionDAO.getInstance().getAppName();
-		String dbType = DAOConfigFactory.getInstance().getDAOFactory(appName).getDataBaseType();
+		DomainObjectFactory factory = DomainObjectFactory.getInstance();
+		EntityGroupInterface entityGroup = factory.createEntityGroup();
+		entityGroup.setName("unique");
 
-		// this test case is failing for mysql db.
-		// please refer http://bugs.mysql.com/bug.php?id=9528
-		if (!dbType.equalsIgnoreCase("mysql"))
+		//Step 1
+		Entity entity = (Entity) createAndPopulateEntity();
+		entity.setName("unique_rule");
+		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
+		Long recordId1 = null;
+		Long recordId2 = null;
+
+		try
 		{
-			DomainObjectFactory factory = DomainObjectFactory.getInstance();
-			EntityGroupInterface entityGroup = factory.createEntityGroup();
-			entityGroup.setName("unique");
+			Attribute floatAtribute = (Attribute) factory.createFloatAttribute();
+			floatAtribute.setName("Price");
 
-			//Step 1
-			Entity entity = (Entity) createAndPopulateEntity();
-			entity.setName("unique_rule");
-			EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-			Long recordId1 = null;
-			Long recordId2 = null;
+			NumericTypeInformationInterface numericAttributeTypeInfo = (NumericTypeInformationInterface) factory
+					.createFloatAttributeTypeInformation();
+			numericAttributeTypeInfo.setDecimalPlaces(2);
 
-			try
+			floatAtribute.setAttributeTypeInformation(numericAttributeTypeInfo);
+
+			RuleInterface uniqueRule = factory.createRule();
+			uniqueRule.setName("unique");
+			floatAtribute.getRuleCollection().add(uniqueRule);
+
+			entity.addAbstractAttribute(floatAtribute);
+			entityGroup.addEntity(entity);
+			entity.setEntityGroup(entityGroup);
+
+			//Step 2
+			EntityInterface savedEntity = EntityManagerInterface.persistEntity(entity);
+
+			Map dataValue = new HashMap();
+			dataValue.put(floatAtribute, "15.90");
+
+			recordId1 = EntityManagerInterface.insertData(savedEntity, dataValue, null);
+
+			dataValue = EntityManagerInterface.getRecordById(entity, recordId1);
+
+			for (RuleInterface rule : floatAtribute.getRuleCollection())
 			{
-				Attribute floatAtribute = (Attribute) factory.createFloatAttribute();
-				floatAtribute.setName("Price");
-
-				NumericTypeInformationInterface numericAttributeTypeInfo = (NumericTypeInformationInterface) factory
-						.createFloatAttributeTypeInformation();
-				numericAttributeTypeInfo.setDecimalPlaces(2);
-
-				floatAtribute.setAttributeTypeInformation(numericAttributeTypeInfo);
-
-				RuleInterface uniqueRule = factory.createRule();
-				uniqueRule.setName("unique");
-				floatAtribute.getRuleCollection().add(uniqueRule);
-
-				entity.addAbstractAttribute(floatAtribute);
-				entityGroup.addEntity(entity);
-				entity.setEntityGroup(entityGroup);
-
-				//Step 2
-				EntityInterface savedEntity = EntityManagerInterface.persistEntity(entity);
-
-				Map dataValue = new HashMap();
-				dataValue.put(floatAtribute, "15.90");
-
-				recordId1 = EntityManagerInterface.insertData(savedEntity, dataValue);
-
-				dataValue = EntityManagerInterface.getRecordById(entity, recordId1);
-
-				for (RuleInterface rule : floatAtribute.getRuleCollection())
-				{
-					ValidatorRuleInterface validatorRule = ControlConfigurationsFactory
-							.getInstance().getValidatorRule(rule.getName());
-					validatorRule.validate(floatAtribute, "15.90", null, "Date");
-				}
-
-				Map dataValue2 = new HashMap();
-				dataValue2.put(floatAtribute, "15.90");
-
-				recordId2 = EntityManagerInterface.insertData(savedEntity, dataValue2);
-				assertEquals(recordId2, null);
+				ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
+						.getValidatorRule(rule.getName());
+				validatorRule.validate(floatAtribute, "15.90", null, "Date");
 			}
-			catch (DynamicExtensionsValidationException e)
-			{
-				System.out.println("Could not insert data....");
-				System.out.println("Validation failed. Input data should be unique");
-				assertEquals(recordId2, null);
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-				fail();
-			}
+
+			Map dataValue2 = new HashMap();
+			dataValue2.put(floatAtribute, "15.90");
+
+			recordId2 = EntityManagerInterface.insertData(savedEntity, dataValue2, null);
+			assertEquals(recordId2, null);
+		}
+		catch (DynamicExtensionsValidationException e)
+		{
+			System.out.println("Could not insert data....");
+			System.out.println("Validation failed. Input data should be unique");
+			assertEquals(recordId2, null);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail();
 		}
 	}
 
@@ -4368,7 +4354,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 						.getName());
 			}
 
-			recordId = entityManager.insertData(savedEntity, dataValue);
+			recordId = entityManager.insertData(savedEntity, dataValue, null);
 			assertEquals(recordId, null);
 		}
 		catch (DynamicExtensionsValidationException e)
