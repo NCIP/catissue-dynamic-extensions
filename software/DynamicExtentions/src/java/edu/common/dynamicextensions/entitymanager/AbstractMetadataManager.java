@@ -1,17 +1,12 @@
 
 package edu.common.dynamicextensions.entitymanager;
 
-import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
 
 import org.hibernate.HibernateException;
@@ -19,9 +14,6 @@ import org.hibernate.Query;
 
 import edu.common.dynamicextensions.bizlogic.BizLogicFactory;
 import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
-import edu.common.dynamicextensions.domain.AbstractAttribute;
-import edu.common.dynamicextensions.domain.Attribute;
-import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.DynamicExtensionBaseDomainObject;
 import edu.common.dynamicextensions.domain.Entity;
 import edu.common.dynamicextensions.domain.HQLPlaceHolderObject;
@@ -30,11 +22,9 @@ import edu.common.dynamicextensions.domaininterface.AbstractMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.DynamicExtensionBaseDomainObjectInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
-import edu.common.dynamicextensions.domaininterface.TaggedValueInterface;
 import edu.common.dynamicextensions.domaininterface.databaseproperties.TablePropertiesInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.xmi.DynamicQueryList;
@@ -382,7 +372,8 @@ public abstract class AbstractMetadataManager
 	{
 		for (int counter = 0; counter < substParams.size(); counter++)
 		{
-			HQLPlaceHolderObject plcHolderObj = substParams.get(Integer.toBinaryString(counter));
+			HQLPlaceHolderObject plcHolderObj = substParams.get(Integer
+					.toBinaryString(counter));
 			String objectType = plcHolderObj.getType();
 			if ("string".equals(objectType))
 			{
@@ -442,14 +433,14 @@ public abstract class AbstractMetadataManager
 	 * @throws DynamicExtensionsApplicationException exception
 	 */
 	protected DynamicQueryList persistDynamicExtensionObject(
-			AbstractMetadataInterface abstrMetadata, HibernateDAO... hibernateDAO)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			AbstractMetadataInterface abstrMetadata,HibernateDAO... hibernateDAO ) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
 		List<String> revQueries = new LinkedList<String>();
 		List<String> queries = new ArrayList<String>();
 		Stack<String> rlbkQryStack = new Stack<String>();
 		DynamicQueryList dynamicQueryList = new DynamicQueryList();
-		if (hibernateDAO != null && hibernateDAO.length > 0)
+		if(hibernateDAO!=null && hibernateDAO.length>0)
 		{
 			preProcess(abstrMetadata, revQueries, queries);
 
@@ -465,6 +456,7 @@ public abstract class AbstractMetadataManager
 		return dynamicQueryList;
 	}
 
+
 	/**
 	 * This method persists an entity group and the associated entities and also creates the data table
 	 * for the entities.
@@ -473,8 +465,9 @@ public abstract class AbstractMetadataManager
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	private DynamicQueryList persistDynamicExtensionObject(AbstractMetadataInterface abstrMetadata)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	private DynamicQueryList persistDynamicExtensionObject(
+			AbstractMetadataInterface abstrMetadata) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
 		List<String> revQueries = new LinkedList<String>();
 		List<String> queries = new ArrayList<String>();
@@ -528,14 +521,14 @@ public abstract class AbstractMetadataManager
 	 * @throws DynamicExtensionsApplicationException exception
 	 */
 	public DynamicQueryList persistDynamicExtensionObjectMetdata(
-			AbstractMetadataInterface abstrMetadata, HibernateDAO... hibernateDAO)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			AbstractMetadataInterface abstrMetadata,HibernateDAO... hibernateDAO) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
 		Stack<String> rlbkQryStack = new Stack<String>();
-		HibernateDAO newHibernateDAO = null;
-		if (hibernateDAO != null && hibernateDAO.length > 0)
+		HibernateDAO newHibernateDAO=null;
+		if(hibernateDAO!=null && hibernateDAO.length>0)
 		{
-			newHibernateDAO = hibernateDAO[0];
+			newHibernateDAO=hibernateDAO[0];
 			saveDynamicExtensionObject(abstrMetadata, newHibernateDAO, rlbkQryStack);
 		}
 		else
@@ -789,356 +782,6 @@ public abstract class AbstractMetadataManager
 		}
 
 		return records;
-	}
-
-	/**
-	 * This method sets the object properties. It invokes appropriate setter method
-	 * depending on the data type of argument.
-	 * @param attribute
-	 * @param dataType
-	 * @param klass
-	 * @param dataValue
-	 * @param returnedObj
-	 * @return
-	 * @throws Exception
-	 */
-	protected Object setObjectProperty(AbstractAttribute attribute, String dataType, Class klass,
-			Map<AbstractAttributeInterface, Object> dataValue, Object returnedObj) throws Exception
-	{
-		Object value = null;
-
-		String attrName = attribute.getName();
-		attrName = attrName.substring(0, 1).toUpperCase()
-				+ attrName.substring(1, attrName.length());
-		value = dataValue.get(attribute);
-
-		if (dataType.equals("Long"))
-		{
-			Long longValue = null;
-
-			if (value != null && !("".equals(value)))
-			{
-				longValue = new Long(value.toString());
-			}
-
-			// Set the property attrName.
-			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Long"), returnedObj,
-					longValue);
-		}
-		else if (dataType.equals("Float"))
-		{
-			Float floatValue = null;
-
-			if (value != null && !("".equals(value)))
-			{
-				floatValue = new Float(value.toString());
-			}
-
-			// Set the property attrName.
-			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Float"), returnedObj,
-					floatValue);
-		}
-		else if (dataType.equals("Double"))
-		{
-			Double doubleValue = null;
-
-			if (value != null && !("".equals(value)))
-			{
-				doubleValue = new Double(value.toString());
-			}
-
-			// Set the property attrName.
-			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Double"), returnedObj,
-					doubleValue);
-		}
-		else if (dataType.equals("Short"))
-		{
-			Short shortValue = null;
-
-			if (value != null && !("".equals(value)))
-			{
-				shortValue = new Short(value.toString());
-			}
-
-			// Set the property attrName.
-			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Short"), returnedObj,
-					shortValue);
-		}
-		else if (dataType.equals("Integer"))
-		{
-			Integer integerValue = null;
-
-			if (value != null && !("".equals(value)))
-			{
-				integerValue = new Integer(value.toString());
-			}
-
-			// Set the property attrName.
-			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Integer"), returnedObj,
-					integerValue);
-		}
-		else if (dataType.equals("Boolean"))
-		{
-			Boolean booleanValue = null;
-
-			if (value != null && !("".equals(value)))
-			{
-				if (value.equals("1"))
-				{
-					value = "true";
-				}
-				else
-				{
-					value = "false";
-				}
-
-				booleanValue = new Boolean(value.toString());
-			}
-
-			// Set the property attrName.
-			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Boolean"), returnedObj,
-					booleanValue);
-		}
-		else if (dataType.equals("Date"))
-		{
-			Date dateValue = null;
-			if (value != null && !("".equals(value)))
-			{
-				Attribute attr = (Attribute) attribute;
-				DateAttributeTypeInformation dateAttributeTypeInf = (DateAttributeTypeInformation) attr
-						.getAttributeTypeInformation();
-
-				String format = dateAttributeTypeInf.getFormat();
-				if (format == null)
-				{
-					format = ProcessorConstants.DATE_ONLY_FORMAT;
-				}
-
-				SimpleDateFormat formatter = new SimpleDateFormat(format);
-				dateValue = formatter.parse(value.toString());
-			}
-
-			// Set the property attrName.
-			invokeSetterMethod(klass, attrName, Class.forName("java.util.Date"), returnedObj,
-					dateValue);
-		}
-		else
-		{
-			String stringValue = null;
-
-			if (value != null && !("".equals(value)))
-			{
-				stringValue = value.toString();
-			}
-
-			// Set the property attrName.
-			invokeSetterMethod(klass, attrName, Class.forName("java.lang.String"), returnedObj,
-					stringValue);
-		}
-
-		return returnedObj;
-	}
-
-	/**
-	 * This method sets the object properties. It invokes appropriate setter method
-	 * depending on the data type of argument.
-	 * @param attribute
-	 * @param dataType
-	 * @param klass
-	 * @param dataValue
-	 * @param returnedObj
-	 * @return
-	 * @throws Exception
-	 */
-	protected Object setObjectProperty(AbstractAttribute attribute, String dataType, Class klass,
-			Object walue, Object returnedObj) throws Exception
-	{
-		Object value = null;
-
-		String attrName = attribute.getName();
-		attrName = attrName.substring(0, 1).toUpperCase()
-				+ attrName.substring(1, attrName.length());
-		value = walue;
-
-		if (dataType.equals("Long"))
-		{
-			Long longValue = null;
-
-			if (value != null && !("".equals(value)))
-			{
-				longValue = new Long(value.toString());
-			}
-
-			// Set the property attrName.
-			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Long"), returnedObj,
-					longValue);
-		}
-		else if (dataType.equals("Float"))
-		{
-			Float floatValue = null;
-
-			if (value != null && !("".equals(value)))
-			{
-				floatValue = new Float(value.toString());
-			}
-
-			// Set the property attrName.
-			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Float"), returnedObj,
-					floatValue);
-		}
-		else if (dataType.equals("Double"))
-		{
-			Double doubleValue = null;
-
-			if (value != null && !("".equals(value)))
-			{
-				doubleValue = new Double(value.toString());
-			}
-
-			// Set the property attrName.
-			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Double"), returnedObj,
-					doubleValue);
-		}
-		else if (dataType.equals("Short"))
-		{
-			Short shortValue = null;
-
-			if (value != null && !("".equals(value)))
-			{
-				shortValue = new Short(value.toString());
-			}
-
-			// Set the property attrName.
-			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Short"), returnedObj,
-					shortValue);
-		}
-		else if (dataType.equals("Integer"))
-		{
-			Integer integerValue = null;
-
-			if (value != null && !("".equals(value)))
-			{
-				integerValue = new Integer(value.toString());
-			}
-
-			// Set the property attrName.
-			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Integer"), returnedObj,
-					integerValue);
-		}
-		else if (dataType.equals("Boolean"))
-		{
-			Boolean booleanValue = null;
-
-			if (value != null && !("".equals(value)))
-			{
-				if (value.equals("1"))
-				{
-					value = "true";
-				}
-				else
-				{
-					value = "false";
-				}
-
-				booleanValue = new Boolean(value.toString());
-			}
-
-			// Set the property attrName.
-			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Boolean"), returnedObj,
-					booleanValue);
-		}
-		else if (dataType.equals("Date"))
-		{
-			Date dateValue = null;
-			if (value != null && !("".equals(value)))
-			{
-				Attribute attr = (Attribute) attribute;
-				DateAttributeTypeInformation dateAttributeTypeInf = (DateAttributeTypeInformation) attr
-						.getAttributeTypeInformation();
-
-				String format = dateAttributeTypeInf.getFormat();
-				if (format == null)
-				{
-					format = ProcessorConstants.DATE_ONLY_FORMAT;
-				}
-
-				SimpleDateFormat formatter = new SimpleDateFormat(format);
-				dateValue = formatter.parse(value.toString());
-			}
-
-			// Set the property attrName.
-			invokeSetterMethod(klass, attrName, Class.forName("java.util.Date"), returnedObj,
-					dateValue);
-		}
-		else
-		{
-			String stringValue = null;
-
-			if (value != null && !("".equals(value)))
-			{
-				stringValue = value.toString();
-			}
-
-			// Set the property attrName.
-			invokeSetterMethod(klass, attrName, Class.forName("java.lang.String"), returnedObj,
-					stringValue);
-		}
-
-		return returnedObj;
-	}
-
-	/**
-	 * @param klass
-	 * @param property
-	 * @param argumentType
-	 * @param invokeOnObject
-	 * @param argument
-	 * @throws Exception
-	 */
-	protected void invokeSetterMethod(Class klass, String property, Class argumentType,
-			Object invokeOnObject, Object argument) throws Exception
-	{
-		Method setter = klass.getMethod("set" + property, argumentType);
-		setter.invoke(invokeOnObject, argument);
-	}
-
-	/**
-	 * @param klass
-	 * @param property
-	 * @param invokeOnObject
-	 * @return
-	 * @throws Exception
-	 */
-	protected Object invokeGetterMethod(Class klass, String property, Object invokeOnObject)
-			throws Exception
-	{
-		Method getter = klass.getMethod("get" + property);
-		Object returnedObject = getter.invoke(invokeOnObject);
-
-		return returnedObject;
-	}
-
-	/**
-	 * @param entity
-	 * @param packageName
-	 * @return
-	 */
-	protected String getPackageName(EntityInterface entity, String packageName)
-	{
-		Set<TaggedValueInterface> taggedValues = (Set<TaggedValueInterface>) entity
-				.getEntityGroup().getTaggedValueCollection();
-		Iterator<TaggedValueInterface> taggedValuesIter = taggedValues.iterator();
-		while (taggedValuesIter.hasNext())
-		{
-			TaggedValueInterface taggedValue = taggedValuesIter.next();
-			if (taggedValue.getKey().equals("PackageName"))
-			{
-				packageName = taggedValue.getValue();
-				break;
-			}
-		}
-
-		return packageName;
 	}
 
 }

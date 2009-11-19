@@ -171,7 +171,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			//Step 5
 			EntityInterface newEditedEntity = EntityManagerInterface.persistEntity(editedEntity);
 			dataValue.put(floatAtribute1, "21");
-			EntityManagerInterface.insertData(newEditedEntity, dataValue, null);
+			EntityManagerInterface.insertData(newEditedEntity, dataValue);
 			//Step 6
 
 			assertEquals(noOfDefaultColumns + 2, getColumnCount("select * from "
@@ -181,7 +181,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 					+ editedEntity.getTableProperties().getName(), INT_TYPE, 1);
 			assertEquals(1, rowCount);
 
-			EntityManagerInterface.insertData(newEditedEntity, dataValue, null);
+			EntityManagerInterface.insertData(newEditedEntity, dataValue);
 			rowCount = (Integer) executeQuery("select count(*) from "
 					+ editedEntity.getTableProperties().getName(), INT_TYPE, 1);
 			assertEquals(2, rowCount);
@@ -484,7 +484,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			Map dataValue = new HashMap();
 			dataValue.put(ssn, 101202);
 
-			EntityManagerInterface.insertData(entity, dataValue, null);
+			EntityManagerInterface.insertData(entity, dataValue);
 
 			AttributeTypeInformationInterface dateAttributeType = new StringAttributeTypeInformation();
 			ssn.setAttributeTypeInformation(dateAttributeType);
@@ -746,7 +746,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			//dataValue.put(commentsAttributes, "this is not default comment");
 			dataValue.put(association, dataList);
 
-			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue, null);
+			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue);
 
 			Map map = EntityManagerInterface.getRecordById(savedEntity, recordId);
 
@@ -754,7 +754,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 			dataMapFirst.put(streetAttribute, "rajesh");
 
-			EntityManagerInterface.editData(savedEntity, dataValue, recordId, null);
+			EntityManagerInterface.editData(savedEntity, dataValue, recordId);
 
 			map = EntityManagerInterface.getRecordById(savedEntity, recordId);
 
@@ -833,7 +833,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				i++;
 			}
 
-			EntityManagerInterface.insertData(newEntity, dataValue, null);
+			EntityManagerInterface.insertData(newEntity, dataValue);
 			int column = (Integer) executeQuery("select count(*) from "
 					+ newEntity.getTableProperties().getName(), INT_TYPE, 1);
 
@@ -974,7 +974,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(userNames, "a");
 			dataValue.put(studyDate, "11"+ProcessorConstants.DATE_SEPARATOR+"02"+ProcessorConstants.DATE_SEPARATOR+"2006");
 
-			Long recordId = EntityManagerInterface.insertData(savedStudy, dataValue, null);
+			Long recordId = EntityManagerInterface.insertData(savedStudy, dataValue);
 
 			Map map = EntityManagerInterface.getRecordById(savedStudy, recordId);
 
@@ -984,7 +984,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(userNames, "b");
 			dataValue.put(studyDate, "12"+ProcessorConstants.DATE_SEPARATOR+"02"+ProcessorConstants.DATE_SEPARATOR+"2006");
 
-			EntityManagerInterface.editData(savedStudy, dataValue, recordId, null);
+			EntityManagerInterface.editData(savedStudy, dataValue, recordId);
 
 			map = EntityManagerInterface.getRecordById(savedStudy, recordId);
 			userName = (String) map.get(userNames);
@@ -1102,9 +1102,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 			newDataValue.put(associationUserGroup, newDataList);
 
-			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue, null);
+			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue);
 
-			Long newRecordId = EntityManagerInterface.insertData(userGroup, newDataValue, null);
+			Long newRecordId = EntityManagerInterface.insertData(userGroup, newDataValue);
 
 			Map map = EntityManagerInterface.getRecordById(savedEntity, recordId);
 
@@ -1112,7 +1112,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 			dataMapFirst.put(streetAttribute, "rajesh");
 
-			EntityManagerInterface.editData(savedEntity, dataValue, recordId, null);
+			EntityManagerInterface.editData(savedEntity, dataValue, recordId);
 
 			map = EntityManagerInterface.getRecordById(savedEntity, recordId);
 
@@ -1441,7 +1441,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				i++;
 			}
 
-			EntityManagerInterface.insertData(newEntity, dataValue, null);
+			EntityManagerInterface.insertData(newEntity, dataValue);
 
 			assertEquals("Person", entity.getName());
 			Map map = EntityManagerInterface.getRecordById(entity, new Long(1));
@@ -1741,7 +1741,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "45");
 			dataValue.put(resume, fileRecord);
 
-			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
+			Long recordId = EntityManagerInterface.insertData(user, dataValue);
 			FileAttributeRecordValue attributeRecordValue = EntityManagerInterface
 					.getFileAttributeRecordValueByRecordId(resume, recordId);
 
@@ -1812,7 +1812,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "45");
 			dataValue.put(resume, fileRecord);
 
-			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
+			Long recordId = EntityManagerInterface.insertData(user, dataValue);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
 					+ user.getTableProperties().getName(), INT_TYPE, 1);
@@ -1880,7 +1880,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "45");
 			dataValue.put(resume, fileRecord);
 
-			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
+			Long recordId = EntityManagerInterface.insertData(user, dataValue);
 
 			dataValue = EntityManagerInterface.getRecordById(user, recordId);
 
@@ -1951,7 +1951,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "45");
 			dataValue.put(resume, fileRecord);
 
-			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
+			Long recordId = EntityManagerInterface.insertData(user, dataValue);
 			//recordId = entityManager.insertData(user, dataValue);
 
 			dataValue = EntityManagerInterface.getRecordById(user, recordId);
@@ -1959,7 +1959,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			fileRecord.setFileName("new file name");
 			fileRecord.setFileContent("modified file contents".getBytes());
 			dataValue.put(resume, fileRecord);
-			EntityManagerInterface.editData(user, dataValue, recordId, null);
+			EntityManagerInterface.editData(user, dataValue, recordId);
 
 			dataValue = EntityManagerInterface.getRecordById(user, recordId);
 
@@ -2442,7 +2442,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			//dataValue.put(commentsAttributes, "this is not default comment");
 			dataValue.put(tempAttributes, "temp");
 
-			EntityManagerInterface.insertData(savedEntity, dataValue, null);
+			EntityManagerInterface.insertData(savedEntity, dataValue);
 
 			//Step 4.
 			String status = (String) executeQuery("select * from "
@@ -2715,7 +2715,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			String endDateValue = "01"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982";
 			dataValue.put(endDate, endDateValue);
 
-			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue, null);
+			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue);
 
 			dataValue = EntityManagerInterface.getRecordById(entity, recordId);
 
@@ -2776,7 +2776,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				validatorRule.validate(date, "08"+ProcessorConstants.DATE_SEPARATOR+"16"+ProcessorConstants.DATE_SEPARATOR+"2020", null, "Date");
 			}
 
-			recordId = entityManager.insertData(savedEntity, dataValue, null);
+			recordId = entityManager.insertData(savedEntity, dataValue);
 			assertEquals(recordId, null);
 		}
 		catch (DynamicExtensionsValidationException e)
@@ -2848,7 +2848,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(yearOnlyDate, "1900");
 			dataValue.put(monthYearDate, "09"+ProcessorConstants.DATE_SEPARATOR+"1900");
 
-			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue, null);
+			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue);
 
 			dataValue = EntityManagerInterface.getRecordById(entity, recordId);
 
@@ -2925,7 +2925,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				validatorRule.validate(date, "11"+ProcessorConstants.DATE_SEPARATOR+"16"+ProcessorConstants.DATE_SEPARATOR+"1982", rulesMap, "LeapYear");
 			}
 
-			recordId = entityManager.insertData(savedEntity, dataValue, null);
+			recordId = entityManager.insertData(savedEntity, dataValue);
 			assertEquals(recordId, null);
 		}
 		catch (DynamicExtensionsValidationException e)
@@ -3031,7 +3031,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(yearOnlyDate, "2018");
 			dataValue.put(monthYearDate, "09"+ProcessorConstants.DATE_SEPARATOR+"2018");
 
-			recordId = entityManager.insertData(savedEntity, dataValue, null);
+			recordId = entityManager.insertData(savedEntity, dataValue);
 
 			dataValue = entityManager.getRecordById(entity, recordId);
 
@@ -3099,7 +3099,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				validatorRule.validate(date, "11"+ProcessorConstants.DATE_SEPARATOR+"16"+ProcessorConstants.DATE_SEPARATOR+"2000", null, "Date");
 			}
 
-			recordId = entityManager.insertData(savedEntity, dataValue, null);
+			recordId = entityManager.insertData(savedEntity, dataValue);
 		}
 		catch (DynamicExtensionsValidationException e)
 		{
@@ -3164,7 +3164,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(floatAtribute, "122.34");
 			dataValue.put(commentsAttributes, "test1123");
 
-			EntityManagerInterface.insertData(entity, dataValue, null);
+			EntityManagerInterface.insertData(entity, dataValue);
 
 			//step 5
 			int rowCount = (Integer) executeQuery("select count(*) from "
@@ -3244,11 +3244,11 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(floatAtribute, "1.1");
 			dataValue.put(commentsAttributes, "test1");
 
-			EntityManagerInterface.insertData(entity, dataValue, null);
+			EntityManagerInterface.insertData(entity, dataValue);
 
 			dataValue.put(floatAtribute, "1.2");
 			dataValue.put(commentsAttributes, "test2");
-			EntityManagerInterface.insertData(entity, dataValue, null);
+			EntityManagerInterface.insertData(entity, dataValue);
 
 			//step 5
 			List<EntityRecord> recordList = EntityManagerInterface.getAllRecords(entity);
@@ -3340,7 +3340,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(association, addressDataValueMapList);
 
 			// Step 5
-			EntityManagerInterface.insertData(savedEntity, dataValue, null);
+			EntityManagerInterface.insertData(savedEntity, dataValue);
 
 			System.out.println("show sql: " + System.getProperty("show_sql"));
 
@@ -3438,7 +3438,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(association, addressDataValueMapList);
 
 			// Step 5
-			EntityManagerInterface.insertData(savedEntity, dataValue, null);
+			EntityManagerInterface.insertData(savedEntity, dataValue);
 
 			assertEquals(Status.ACTIVITY_STATUS_ACTIVE.toString(), getActivityStatus(user, 1L));
 			assertEquals(Status.ACTIVITY_STATUS_ACTIVE.toString(), getActivityStatus(address, 1L));
@@ -3514,11 +3514,11 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			//Insert Data
 			Map dataValue = new HashMap();
 			dataValue.put(studyNameAttribute, "study");
-			EntityManagerInterface.insertData(study, dataValue, null);
+			EntityManagerInterface.insertData(study, dataValue);
 
 			dataValue.clear();
 			dataValue.put(studyNameAttribute, "study1");
-			EntityManagerInterface.insertData(study, dataValue, null);
+			EntityManagerInterface.insertData(study, dataValue);
 
 			dataValue.clear();
 			List<Long> targetIdList = new ArrayList<Long>();
@@ -3528,7 +3528,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(userNameAttribute, "rahul");
 			dataValue.put(association, targetIdList);
 
-			EntityManagerInterface.insertData(savedEntity, dataValue, null);
+			EntityManagerInterface.insertData(savedEntity, dataValue);
 
 			assertEquals(Status.ACTIVITY_STATUS_ACTIVE.toString(), getActivityStatus(user, 1L));
 			assertEquals(Status.ACTIVITY_STATUS_ACTIVE.toString(), getActivityStatus(study, 1L));
@@ -3611,12 +3611,12 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			//Step 5
 			Map dataValue = new HashMap();
 			dataValue.put(studyNameAttribute, "study");
-			EntityManagerInterface.insertData(study, dataValue, null);
+			EntityManagerInterface.insertData(study, dataValue);
 
 			//Step 6
 			dataValue.clear();
 			dataValue.put(studyNameAttribute, "study1");
-			EntityManagerInterface.insertData(study, dataValue, null);
+			EntityManagerInterface.insertData(study, dataValue);
 
 			//Step 7
 			EntityManagerInterface.deleteRecord(study, 1L);
@@ -3633,7 +3633,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(userNameAttribute, "rahul");
 			dataValue.put(association, targetIdList);
 
-			EntityManagerInterface.insertData(savedEntity, dataValue, null);
+			EntityManagerInterface.insertData(savedEntity, dataValue);
 
 			//Step 9
 			EntityManagerInterface.deleteRecord(study, 2L);
@@ -3679,7 +3679,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(barcode, "123'456");
 
 			EntityManagerInterface.persistEntity(specimen);
-			Long recordId = EntityManagerInterface.insertData(specimen, dataValue, null);
+			Long recordId = EntityManagerInterface.insertData(specimen, dataValue);
 
 			assertTrue(true);
 		}
@@ -3794,7 +3794,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "45");
 			dataValue.put(info, objectRecord);
 
-			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
+			Long recordId = EntityManagerInterface.insertData(user, dataValue);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
 					+ user.getTableProperties().getName(), INT_TYPE, 1);
@@ -3845,7 +3845,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "45");
 			dataValue.put(info, objectRecord);
 
-			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
+			Long recordId = EntityManagerInterface.insertData(user, dataValue);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
 					+ user.getTableProperties().getName(), INT_TYPE, 1);
@@ -3906,7 +3906,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "45");
 			dataValue.put(info, objectRecord);
 
-			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
+			Long recordId = EntityManagerInterface.insertData(user, dataValue);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
 					+ user.getTableProperties().getName(), INT_TYPE, 1);
@@ -3973,7 +3973,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "45");
 			dataValue.put(info, objectRecord);
 
-			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
+			Long recordId = EntityManagerInterface.insertData(user, dataValue);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
 					+ user.getTableProperties().getName(), INT_TYPE, 1);
@@ -3998,7 +3998,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "54");
 			dataValue.put(info, objectRecord);
 
-			EntityManagerInterface.editData(user, dataValue, recordId, null);
+			EntityManagerInterface.editData(user, dataValue, recordId);
 
 			dataValue = EntityManagerInterface.getRecordById(user, recordId);
 
@@ -4122,7 +4122,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "45");
 			dataValue.put(info, objectRecord);
 
-			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
+			Long recordId = EntityManagerInterface.insertData(user, dataValue);
 
 			int rowCOunt = (Integer) executeQuery("select count(*) from "
 					+ user.getTableProperties().getName(), INT_TYPE, 1);
@@ -4291,7 +4291,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				Map dataValue = new HashMap();
 				dataValue.put(floatAtribute, "15.90");
 
-			recordId1 = EntityManagerInterface.insertData(savedEntity, dataValue, null);
+				recordId1 = EntityManagerInterface.insertData(savedEntity, dataValue);
 
 				dataValue = EntityManagerInterface.getRecordById(entity, recordId1);
 
@@ -4305,7 +4305,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				Map dataValue2 = new HashMap();
 				dataValue2.put(floatAtribute, "15.90");
 
-			recordId2 = EntityManagerInterface.insertData(savedEntity, dataValue2, null);
+				recordId2 = EntityManagerInterface.insertData(savedEntity, dataValue2);
 				assertEquals(recordId2, null);
 			}
 			catch (DynamicExtensionsValidationException e)
@@ -4368,7 +4368,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 						.getName());
 			}
 
-			recordId = entityManager.insertData(savedEntity, dataValue, null);
+			recordId = entityManager.insertData(savedEntity, dataValue);
 			assertEquals(recordId, null);
 		}
 		catch (DynamicExtensionsValidationException e)

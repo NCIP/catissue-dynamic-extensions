@@ -43,7 +43,7 @@ public class ApplyDataEntryFormProcessor extends BaseDynamicExtensionsProcessor
 	}
 
 	/**
-	 *
+	 * 
 	 * @param attributeValueMap
 	 * @return
 	 */
@@ -74,11 +74,11 @@ public class ApplyDataEntryFormProcessor extends BaseDynamicExtensionsProcessor
 
 	/**
 	 * This method will pass the values entered into the controls to EntityManager to insert them in Database.
-	 * @param containerInterface The container of who's value of Control are to be populated.
+	 * @param containerInterface The container of who's value of Control are to be populated. 
 	 * @param attributeValueMap The Map of Attribute and their corresponding values from controls.
 	 * @throws DynamicExtensionsApplicationException on Application exception
 	 * @throws DynamicExtensionsSystemException on System exception
-	 * @return recordIdentifier Record identifier of the last saved record.
+	 * @return recordIdentifier Record identifier of the last saved record. 
 	 */
 	public String insertDataEntryForm(ContainerInterface container,
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap)
@@ -102,7 +102,7 @@ public class ApplyDataEntryFormProcessor extends BaseDynamicExtensionsProcessor
 			Map map = attributeValueMap;
 			EntityManagerInterface entityManagerInterface = EntityManager.getInstance();
 			recordIdentifier = entityManagerInterface.insertData((EntityInterface) container
-					.getAbstractEntity(), map, null, userId);
+					.getAbstractEntity(), map, userId);
 		}
 
 		return recordIdentifier.toString();
@@ -116,7 +116,7 @@ public class ApplyDataEntryFormProcessor extends BaseDynamicExtensionsProcessor
 	 * @return
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
-	 * @throws SQLException
+	 * @throws SQLException 
 	 */
 	public Boolean editDataEntryForm(ContainerInterface container,
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap, Long recordIdentifier)
@@ -130,7 +130,7 @@ public class ApplyDataEntryFormProcessor extends BaseDynamicExtensionsProcessor
 			EntityInterface entity = (Entity) container.getAbstractEntity();
 			//Correct this:
 			Map map = attributeValueMap;
-			return entityManager.editData(entity, map, recordIdentifier, null, userId);
+			return entityManager.editData(entity, map, recordIdentifier, userId);
 		}
 		else
 		{
@@ -144,6 +144,7 @@ public class ApplyDataEntryFormProcessor extends BaseDynamicExtensionsProcessor
 					(CategoryEntityInterface) container.getAbstractEntity(), attributeValueMap,
 					categoryRecordId, userId);
 		}
+
 	}
 
 	public Long getUserId()
