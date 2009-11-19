@@ -3,6 +3,8 @@ package edu.common.dynamicextensions.entitymanager;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,6 +45,7 @@ import edu.common.dynamicextensions.domaininterface.AbstractMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationDisplayAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
+import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.DynamicExtensionBaseDomainObjectInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
@@ -56,6 +59,7 @@ import edu.common.dynamicextensions.util.AssociationTreeObject;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
+import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.global.Constants;
@@ -589,17 +593,73 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	 * @see edu.common.dynamicextensions.entitymanager.EntityManagerInterface#insertData(edu.common.dynamicextensions.domaininterface.EntityInterface, java.util.Map, java.lang.Long[])
 	 */
 	public Long insertData(EntityInterface entity,
-			Map<AbstractAttributeInterface, Object> dataValue, Long... userId)
-			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+			Map<AbstractAttributeInterface, Object> dataValue, HibernateDAO hibernateDao,
+			Long... userId) throws DynamicExtensionsApplicationException,
+			DynamicExtensionsSystemException
 	{
-		List<Map<AbstractAttributeInterface, Object>> dataValMaps = new ArrayList<Map<AbstractAttributeInterface, Object>>();
-		dataValMaps.add(dataValue);
-
 		Long usrId = ((userId != null && userId.length != 0) ? userId[0] : null);
 
-		List<Long> recordIds = insertData(entity, dataValMaps, usrId);
+		Set<Object> auditableDEObjects = new HashSet<Object>();
 
-		return recordIds.get(0);
+		Long identifier = null;
+		HibernateDAO hibernateDAO = hibernateDao;
+		try
+		{
+			if (hibernateDAO == null)
+			{
+				hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
+	}
+
+			// Populate the whole object hierarchy tree.
+			Object newObject = createObject(entity, dataValue, auditableDEObjects);
+
+			hibernateDAO.insert(newObject);
+
+			Method method = (newObject.getClass()).getMethod("getId");
+			Object object = method.invoke(newObject);
+			identifier = new Long(object.toString());
+
+			/*// Get audit manager from DefaultBizLogic.
+			DefaultBizLogic defaultBizLogic = new DefaultBizLogic();
+			SessionDataBean sessionDataBean = new SessionDataBean();
+			AuditManager auditManager = defaultBizLogic.getAuditManager(sessionDataBean);
+
+			// Audit the objects being inserted.
+			for (Object obj : auditableDEObjects)
+			{
+				System.out.println(obj);
+				sessionDataBean.setUserId(usrId);
+
+				auditManager.insertAudit(hibernateDAO, obj);
+			}*/
+
+			if (hibernateDao == null)
+			{
+				hibernateDAO.commit();
+			}
+		}
+		catch (Exception e)
+		{
+			throw (DynamicExtensionsSystemException) handleRollback(e,
+					"Error while inserting data", hibernateDAO, true);
+		}
+		finally
+		{
+			if (hibernateDao == null && hibernateDAO != null)
+			{
+				try
+				{
+					DynamicExtensionsUtility.closeHibernateDAO(hibernateDAO);
+				}
+				catch (DAOException e)
+				{
+					throw (DynamicExtensionsSystemException) handleRollback(e,
+							"Error while closing", hibernateDAO, true);
+				}
+			}
+		}
+
+		return identifier;
 	}
 
 	/* (non-Javadoc)
@@ -1019,54 +1079,409 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	 * @see edu.common.dynamicextensions.entitymanager.EntityManagerInterface#editData(edu.common.dynamicextensions.domaininterface.EntityInterface, java.util.Map, java.lang.Long, java.lang.Long[])
 	 */
 	public boolean editData(EntityInterface entity, Map<AbstractAttributeInterface, ?> dataValue,
-			Long recordId, Long... userId) throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException
+			Long recordId, HibernateDAO hibernateDao, Long... userId)
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
 		boolean isSuccess = false;
 		Long usrId = ((userId != null && userId.length != 0) ? userId[0] : null);
 
-		JDBCDAO jdbcDao = null;
+		HibernateDAO hibernateDAO = hibernateDao;
+
 		try
 		{
-			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-
-			Map<EntityInterface, Map<?, ?>> entityValueMap = initialiseEntityValueMap(entity,
-					dataValue);
-
-			List<EntityInterface> entities = getParentEntityList(entity);
-			for (EntityInterface ent : entities)
+			if (hibernateDAO == null)
 			{
-				Map valueMap = entityValueMap.get(ent);
-				isSuccess = editDataForSingleEntity(ent, valueMap, recordId, jdbcDao, usrId);
+				hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
 			}
-			jdbcDao.commit();
+
+			Map<AbstractAttributeInterface, Object> dataVal = (Map<AbstractAttributeInterface, Object>) dataValue;
+
+			String packageName = null;
+			packageName = getPackageName(entity, packageName);
+
+			String className = packageName + "." + entity.getName();
+
+			Object oldObject = null;
+
+			if (hibernateDao == null)
+			{
+				List retrievedObjects = hibernateDAO.retrieve(className, "id", recordId);
+				oldObject = retrievedObjects.get(0);
+			}
+			else
+			{
+				Object obj = hibernateDAO.retrieveById(className, recordId);
+				oldObject = obj;
 		}
-		/*catch (DynamicExtensionsApplicationException e)
+
+			//Object originalTopLevelObject = copyOriginalObjectState(oldObject);
+
+			Set<Map<String, Object>> auditableObjects = new HashSet<Map<String, Object>>();
+
+			Object updatedObject = updateObject(entity, dataVal, oldObject, hibernateDAO,
+					auditableObjects);
+			hibernateDAO.update(updatedObject);
+
+			isSuccess = true;
+
+			/*// Get audit manager from DefaultBizLogic.
+			DefaultBizLogic defaultBizLogic = new DefaultBizLogic();
+			SessionDataBean sessionDataBean = new SessionDataBean();
+
+			AuditManager auditManager = defaultBizLogic.getAuditManager(sessionDataBean);
+
+			for (Map<String, Object> mapofAuditableObjects : auditableObjects)
+		{
+				Object oldObj = mapofAuditableObjects
+						.get(edu.common.dynamicextensions.ui.util.Constants.OLD_OBJECT);
+				Object updatedObj = mapofAuditableObjects
+						.get(edu.common.dynamicextensions.ui.util.Constants.UPDATED_OBJECT);
+
+				auditManager.updateAudit(hibernateDAO, updatedObj, oldObj);
+			}*/
+
+			if (hibernateDao == null)
+			{
+				hibernateDAO.commit();
+			}
+		}
+		catch (DynamicExtensionsApplicationException e)
 		{
 			throw (DynamicExtensionsApplicationException) handleRollback(e,
-					"Error while inserting data", jdbcDAO, false);
-		}*/
+					"Error while inserting data", hibernateDAO, false);
+		}
 		catch (DAOException e)
 		{
-			throw new DynamicExtensionsSystemException("Error while updating", e);
-			/*throw (DynamicExtensionsSystemException) handleRollback(e, "Error while updating",
-					jdbcDAO, true);*/
+			throw new DynamicExtensionsSystemException("Error while updating records!", e);
 		}
+		/*catch (AuditException e)
+		{
+			throw new DynamicExtensionsSystemException("Error while updating records!", e);
+		}*/
 		finally
 		{
+			if (hibernateDao == null && hibernateDAO != null)
+			{
 			try
 			{
-				DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+					DynamicExtensionsUtility.closeHibernateDAO(hibernateDAO);
 			}
 			catch (DAOException e)
 			{
-				throw (DynamicExtensionsSystemException) handleRollback(e, "Error while closing",
-						jdbcDao, true);
+					throw (DynamicExtensionsSystemException) handleRollback(e,
+							"Error while closing", hibernateDAO, true);
 			}
-
+		}
 		}
 
 		return isSuccess;
+	}
+
+	/**
+	 * This constructs a new object from the data in the map.
+	 * @param entity
+	 * @param dataValue
+	 * @param auditableDEObjects
+	 * @return
+	 * @throws DynamicExtensionsApplicationException
+	 */
+	private Object createObject(EntityInterface entity,
+			Map<AbstractAttributeInterface, Object> dataValue, Set<Object> auditableDEObjects)
+			throws DynamicExtensionsApplicationException
+	{
+		String packageName = null;
+		packageName = getPackageName(entity, packageName);
+
+		Object newObject = null;
+
+		try
+		{
+			// Create a new instance.
+			Class newObjectClass = Class.forName(packageName + "." + entity.getName());
+			Constructor constructor = newObjectClass.getConstructor();
+			newObject = constructor.newInstance();
+
+			// If empty, insert row with only identifier column value.
+			if (dataValue == null)
+			{
+				dataValue = new HashMap();
+			}
+
+			Set uiColumnSet = dataValue.keySet();
+			Iterator uiColumnSetIter = uiColumnSet.iterator();
+			while (uiColumnSetIter.hasNext())
+			{
+				AbstractAttribute attribute = (AbstractAttribute) uiColumnSetIter.next();
+
+				if (attribute instanceof AssociationInterface)
+				{
+					AssociationInterface association = (AssociationInterface) attribute;
+
+					EntityInterface baseEntity = association.getEntity();
+					String baseEntClassName = packageName + "." + baseEntity.getName();
+					EntityInterface targetEntity = association.getTargetEntity();
+
+					Cardinality targetMaxCardinality = association.getTargetRole()
+							.getMaximumCardinality();
+					String targetRole = association.getTargetRole().getName();
+					targetRole = targetRole.substring(0, 1).toUpperCase()
+							+ targetRole.substring(1, targetRole.length());
+
+					Set<Object> containedObjects = new HashSet<Object>();
+
+					Object value = dataValue.get(attribute);
+
+					List<Map> listOfMapsForContainedEntity = (List) value;
+					for (Map valueMapForContainedEntity : listOfMapsForContainedEntity)
+					{
+						Object associatedObject = createObject(targetEntity,
+								valueMapForContainedEntity, auditableDEObjects);
+
+						Class assoObjectClass = associatedObject.getClass();
+
+						String source = association.getSourceRole().getName();
+						source = source.substring(0, 1).toUpperCase()
+								+ source.substring(1, source.length());
+
+						invokeSetterMethod(assoObjectClass, source,
+								Class.forName(baseEntClassName), associatedObject, newObject);
+
+						if (targetMaxCardinality == Cardinality.ONE)
+						{
+							// Add the object.
+							invokeSetterMethod(newObjectClass, targetRole, associatedObject
+									.getClass(), newObject, associatedObject);
+							break;
+						}
+						else
+						{
+							containedObjects.add(associatedObject);
+						}
+					}
+
+					if (targetMaxCardinality == Cardinality.MANY)
+					{
+						// Add the collection.
+						invokeSetterMethod(newObjectClass, targetRole, Class
+								.forName("java.util.Collection"), newObject, containedObjects);
+					}
+				}
+				else
+				{
+					String dataType = ((AttributeMetadataInterface) attribute)
+							.getAttributeTypeInformation().getDataType();
+
+					newObject = setObjectProperty(attribute, dataType, newObjectClass, dataValue,
+							newObject);
+				}
+			}
+		}
+		catch (ClassNotFoundException exception)
+		{
+			throw new DynamicExtensionsApplicationException(
+					"Exception encountered during data entry!", exception);
+		}
+		catch (Exception exception)
+		{
+			throw new DynamicExtensionsApplicationException(
+					"Exception encountered during data entry!", exception);
+		}
+
+		// Add the object to the set of auditable DE objects, for auditing.
+		//auditableDEObjects.add(newObject);
+
+		return newObject;
+	}
+
+	/**
+	 * This updates the existing object with data in the map.
+	 * @param entity
+	 * @param dataValue
+	 * @param oldObject
+	 * @param hibernateDAO
+	 * @param auditableObjects
+	 * @param auditableDEObjects
+	 * @return
+	 * @throws DynamicExtensionsApplicationException
+	 */
+	private Object updateObject(EntityInterface entity,
+			Map<AbstractAttributeInterface, Object> dataValue, Object oldObject,
+			HibernateDAO hibernateDAO, Set<Map<String, Object>> auditableObjects)
+			throws DynamicExtensionsApplicationException
+	{
+		String packageName = null;
+		packageName = getPackageName(entity, packageName);
+
+		try
+		{
+			Class oldObjectClass = oldObject.getClass();
+
+			// If empty, insert row with only identifier column value.
+			if (dataValue == null)
+			{
+				dataValue = new HashMap();
+			}
+
+			Set uiColumnSet = dataValue.keySet();
+			Iterator uiColumnSetIter = uiColumnSet.iterator();
+			while (uiColumnSetIter.hasNext())
+			{
+				AbstractAttribute attribute = (AbstractAttribute) uiColumnSetIter.next();
+
+				if (attribute instanceof AssociationInterface)
+				{
+					AssociationInterface association = (AssociationInterface) attribute;
+
+					EntityInterface baseEntity = association.getEntity();
+					String baseEntityClassName = packageName + "." + baseEntity.getName();
+
+					EntityInterface targetEntity = association.getTargetEntity();
+					Cardinality targetMaxCardinality = association.getTargetRole()
+							.getMaximumCardinality();
+					String targetRole = association.getTargetRole().getName();
+					targetRole = targetRole.substring(0, 1).toUpperCase()
+							+ targetRole.substring(1, targetRole.length());
+
+					Collection<Object> containedObjects = null;
+
+					// Get the associated object(s).
+					Object associatedObjects = invokeGetterMethod(oldObjectClass, targetRole,
+							oldObject);
+
+					if (targetMaxCardinality != Cardinality.ONE)
+					{
+						if (associatedObjects != null)
+						{
+							containedObjects = (Collection) associatedObjects;
+						}
+						else
+						{
+							containedObjects = new HashSet<Object>();
+						}
+					}
+
+					Set<Object> objectsToBeRetained = new HashSet<Object>();
+
+					Object value = dataValue.get(attribute);
+					List<Map> listOfMapsForContainedEntity = (List) value;
+
+					for (Map valueMapForContainedEntity : listOfMapsForContainedEntity)
+					{
+						boolean isNew = false;
+						Object objForUpdate = null;
+
+						if (targetMaxCardinality == Cardinality.ONE)
+						{
+							objForUpdate = associatedObjects;
+						}
+						else
+						{
+							edu.common.dynamicextensions.domain.EntityRecord entityRecord = new edu.common.dynamicextensions.domain.EntityRecord();
+							Long recordId = (Long) valueMapForContainedEntity.get(entityRecord);
+
+							if (recordId != null)
+							{
+								for (Object obj : containedObjects)
+								{
+									Method method = (obj.getClass()).getMethod("getId");
+									Object object = method.invoke(obj);
+									Long id = new Long(object.toString());
+
+									if (id.intValue() == recordId.intValue())
+									{
+										objForUpdate = obj;
+										objectsToBeRetained.add(objForUpdate);
+
+										break;
+									}
+								}
+							}
+						}
+
+						if (objForUpdate != null)
+						{
+							// We do not need to do anything in this case.
+						}
+						else
+						{
+							String targetEntityClassName = packageName + "."
+									+ targetEntity.getName();
+							Class associatedClass = Class.forName(targetEntityClassName);
+
+							Constructor constructor = associatedClass.getConstructor();
+							objForUpdate = constructor.newInstance();
+							isNew = true;
+						}
+
+						//Map<String, Object> audtblObjects = new HashMap<String, Object>();
+						//audtblObjects.put(edu.common.dynamicextensions.ui.util.Constants.OLD_OBJECT, objForUpdate);
+
+						objForUpdate = updateObject(targetEntity, valueMapForContainedEntity,
+								objForUpdate, hibernateDAO, auditableObjects);
+
+						//audtblObjects.put(edu.common.dynamicextensions.ui.util.Constants.UPDATED_OBJECT, objForUpdate);
+						//auditableObjects.add(audtblObjects);
+
+						Class assoObjectClass = objForUpdate.getClass();
+
+						String source = association.getSourceRole().getName();
+						source = source.substring(0, 1).toUpperCase()
+								+ source.substring(1, source.length());
+
+						invokeSetterMethod(assoObjectClass, source, Class
+								.forName(baseEntityClassName), objForUpdate, oldObject);
+
+						if (targetMaxCardinality == Cardinality.ONE)
+						{
+							invokeSetterMethod(oldObjectClass, targetRole, objForUpdate.getClass(),
+									oldObject, objForUpdate);
+							break;
+						}
+						else
+						{
+							if (isNew)
+							{
+								containedObjects.add(objForUpdate);
+								objectsToBeRetained.add(objForUpdate);
+							}
+						}
+					}
+
+					if (containedObjects != null)
+					{
+						List objectsToBeRemoved = new ArrayList();
+						Iterator iterator = containedObjects.iterator();
+						while (iterator.hasNext())
+						{
+							objectsToBeRemoved.add(iterator.next());
+						}
+
+						containedObjects.removeAll(objectsToBeRemoved);
+						containedObjects.addAll(objectsToBeRetained);
+					}
+
+					if (targetMaxCardinality == Cardinality.MANY)
+					{
+						invokeSetterMethod(oldObjectClass, targetRole, Class
+								.forName("java.util.Collection"), oldObject, containedObjects);
+					}
+				}
+				else if (attribute instanceof AttributeInterface)
+				{
+					String dataType = ((AttributeMetadataInterface) attribute)
+							.getAttributeTypeInformation().getDataType();
+					oldObject = setObjectProperty(attribute, dataType, oldObjectClass, dataValue,
+							oldObject);
+				}
+			}
+		}
+		catch (Exception exception)
+		{
+			throw new DynamicExtensionsApplicationException(
+					"Exception encountered during editing data!", exception);
+		}
+
+		return oldObject;
 	}
 
 	/* (non-Javadoc)
@@ -1676,8 +2091,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 				{
 					String dbColumnName = selColNames.get(i - 1);
 					Object value = getValueFromResultSet(resultSet, columnNames, dbColumnName, i);
-					AttributeInterface attribute = columnNames
-							.get(dbColumnName);
+					AttributeInterface attribute = columnNames.get(dbColumnName);
 					int indexOfAttribute = recMetadata.getAttributeList().indexOf(attribute);
 					values[indexOfAttribute] = value;
 				}
@@ -2467,7 +2881,6 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			}
 		}
 	}
-
 
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.entitymanager.EntityManagerInterface#associateEntityRecords(edu.common.dynamicextensions.domaininterface.AssociationInterface, java.lang.Long, java.lang.Long)
