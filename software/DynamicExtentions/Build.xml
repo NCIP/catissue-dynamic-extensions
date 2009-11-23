@@ -790,7 +790,7 @@
 			<mkdir dir="${junit.report.dir}" />
 
 
-			<junit printsummary="yes" haltonerror="no" haltonfailure="no" fork="yes" maxmemory="1024m" timeout="2700000">
+			<junit printsummary="yes" haltonerror="no" haltonfailure="no" fork="yes" maxmemory="1024m" timeout="10800000">
 
 				<sysproperty key="net.sourceforge.cobertura.datafile" file="./cobertura/coverage.ser" />
 
