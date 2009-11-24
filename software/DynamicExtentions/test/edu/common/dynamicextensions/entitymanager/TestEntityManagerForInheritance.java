@@ -11,6 +11,7 @@ import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
@@ -327,7 +328,7 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			arivalDate.setName("arivalDate");
 			tissueSpecimen.addAbstractAttribute(arivalDate);
 			DateAttributeTypeInformation dateAttributeTypeInformation = new DateAttributeTypeInformation();
-			dateAttributeTypeInformation.setFormat(ProcessorConstants.SQL_DATE_ONLY_FORMAT);
+			dateAttributeTypeInformation.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
 			arivalDate.setAttributeTypeInformation(dateAttributeTypeInformation);
 			tissueSpecimen = entityManagerInterface.persistEntity(tissueSpecimen);
 
@@ -335,7 +336,7 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			dataValue.put(barcode, "123456");
 			dataValue.put(label, "specimen parent label");
 			dataValue.put(quantityInCellCount, "45");
-			dataValue.put(arivalDate, "11-12-1982");
+			dataValue.put(arivalDate, "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982");
 
 			Long recordId = entityManagerInterface.insertData(tissueSpecimen, dataValue, null);
 
@@ -378,7 +379,7 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			dataValue.put(barcode, "869");
 			dataValue.put(label, "specimen parent label");
 			dataValue.put(quantityInCellCount, "45");
-			dataValue.put(arivalDate, "11-12-1982");
+			dataValue.put(arivalDate, "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982");
 			dataValue.put(newAttribute, "12");
 
 			recordId = entityManagerInterface.insertData(advanceTissueSpecimenA, dataValue, null);
@@ -464,7 +465,7 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			tissueSpecimen.addAbstractAttribute(arivalDate);
 
 			DateAttributeTypeInformation dateAttributeTypeInformation = new DateAttributeTypeInformation();
-			dateAttributeTypeInformation.setFormat(ProcessorConstants.SQL_DATE_ONLY_FORMAT);
+			dateAttributeTypeInformation.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
 			arivalDate.setAttributeTypeInformation(dateAttributeTypeInformation);
 
 			tissueSpecimen = entityManagerInterface.persistEntity(tissueSpecimen);
@@ -476,7 +477,7 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			//dataValue.put(barcode, "123456");
 			//dataValue.put(label, "specimen parent label");
 			dataValue.put(quantityInCellCount, "45");
-			dataValue.put(arivalDate, "11-12-1982");
+			dataValue.put(arivalDate, "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982");
 
 			//step 3
 			Long recordId = entityManagerInterface.insertData(tissueSpecimen, dataValue, null);
@@ -571,7 +572,7 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			tissueSpecimen.addAbstractAttribute(arivalDate);
 
 			DateAttributeTypeInformation dateAttributeTypeInformation = new DateAttributeTypeInformation();
-			dateAttributeTypeInformation.setFormat(ProcessorConstants.SQL_DATE_ONLY_FORMAT);
+			dateAttributeTypeInformation.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
 			arivalDate.setAttributeTypeInformation(dateAttributeTypeInformation);
 
 			tissueSpecimen = entityManagerInterface.persistEntity(tissueSpecimen);
@@ -617,7 +618,7 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			dataValue.put(barcode, "123456");
 			dataValue.put(label, "specimen parent label");
 			dataValue.put(quantityInCellCount, "45");
-			dataValue.put(arivalDate, "11-12-1982");
+			dataValue.put(arivalDate, "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982");
 
 			Long recordId = entityManagerInterface.insertData(tissueSpecimen, dataValue, null);
 
@@ -628,14 +629,14 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			assertEquals("123456", outputMap.get(barcode));
 			assertEquals("specimen parent label", outputMap.get(label));
 			assertEquals("45", outputMap.get(quantityInCellCount));
-			assertEquals("11-12-1982", outputMap.get(arivalDate));
+			assertEquals("11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982", outputMap.get(arivalDate));
 
 			//step 5
 			dataValue.clear();
 			dataValue.put(barcode, "869");
 			dataValue.put(label, "specimen parent label");
 			dataValue.put(quantityInCellCount, "46");
-			dataValue.put(arivalDate, "11-11-1982");
+			dataValue.put(arivalDate, "11"+ProcessorConstants.DATE_SEPARATOR+"11"+ProcessorConstants.DATE_SEPARATOR+"1982");
 			dataValue.put(newAttribute, "12");
 
 			recordId = entityManagerInterface.insertData(advanceTissueSpecimenA, dataValue, null);
@@ -646,14 +647,14 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			assertEquals("869", outputMap.get(barcode));
 			assertEquals("specimen parent label", outputMap.get(label));
 			assertEquals("46", outputMap.get(quantityInCellCount));
-			assertEquals("11-11-1982", outputMap.get(arivalDate));
+			assertEquals("11"+ProcessorConstants.DATE_SEPARATOR+"11"+ProcessorConstants.DATE_SEPARATOR+"1982", outputMap.get(arivalDate));
 
 			//step 7
 			dataValue.clear();
 			dataValue.put(barcode, "1001");
 			dataValue.put(label, "specimen parent label new");
 			dataValue.put(quantityInCellCount, "411");
-			dataValue.put(arivalDate, "01-11-1982");
+			dataValue.put(arivalDate, "01"+ProcessorConstants.DATE_SEPARATOR+"11"+ProcessorConstants.DATE_SEPARATOR+"1982");
 			dataValue.put(newAttributeB, "40");
 			dataValue.put(newAttributeB2, "41");
 
@@ -664,7 +665,7 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			assertEquals("1001", outputMap.get(barcode));
 			assertEquals("specimen parent label new", outputMap.get(label));
 			assertEquals("411", outputMap.get(quantityInCellCount));
-			assertEquals("01-11-1982", outputMap.get(arivalDate));
+			assertEquals("01"+ProcessorConstants.DATE_SEPARATOR+"11"+ProcessorConstants.DATE_SEPARATOR+"1982", outputMap.get(arivalDate));
 			assertEquals("40", outputMap.get(newAttributeB));
 			assertEquals("41", outputMap.get(newAttributeB2));
 		}
@@ -1045,7 +1046,7 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			//step 7
 			fail();
 		}
-		catch (DynamicExtensionsApplicationException e)
+		catch (DynamicExtensionsSystemException e)
 		{
 			assertTrue(true);
 			Logger.out.info("Application exception is expected to be thrown here");
@@ -1323,7 +1324,7 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			tissueSpecimen.addAbstractAttribute(arivalDate);
 
 			DateAttributeTypeInformation dateAttributeTypeInformation = new DateAttributeTypeInformation();
-			dateAttributeTypeInformation.setFormat(ProcessorConstants.SQL_DATE_ONLY_FORMAT);
+			dateAttributeTypeInformation.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
 			arivalDate.setAttributeTypeInformation(dateAttributeTypeInformation);
 			tissueSpecimen = entityManagerInterface.persistEntity(tissueSpecimen);
 
@@ -1362,7 +1363,7 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			dataValue.put(barcode, "123456");
 			dataValue.put(label, "specimen parent label");
 			dataValue.put(quantityInCellCount, "45");
-			dataValue.put(arivalDate, "11-12-1982");
+			dataValue.put(arivalDate, "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982");
 
 			Long recordId = entityManagerInterface.insertData(tissueSpecimen, dataValue, null);
 
@@ -1378,7 +1379,7 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			dataValue.put(barcode, "870");
 			dataValue.put(label, "specimen parent label123");
 			dataValue.put(quantityInCellCount, "4546");
-			dataValue.put(arivalDate, "11-11-1982");
+			dataValue.put(arivalDate, "11"+ProcessorConstants.DATE_SEPARATOR+"11"+ProcessorConstants.DATE_SEPARATOR+"1982");
 
 			entityManagerInterface.editData(tissueSpecimen, dataValue, recordId, null);
 
@@ -1403,7 +1404,7 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			dataValue.put(barcode, "869");
 			dataValue.put(label, "specimen parent label");
 			dataValue.put(quantityInCellCount, "45");
-			dataValue.put(arivalDate, "11-12-1982");
+			dataValue.put(arivalDate, "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982");
 			dataValue.put(newAttribute, "12");
 
 			recordId = entityManagerInterface.insertData(advanceTissueSpecimenA, dataValue, null);
@@ -1425,7 +1426,7 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			dataValue.put(barcode, "875");
 			dataValue.put(label, "New Label");
 			dataValue.put(quantityInCellCount, "454647");
-			dataValue.put(arivalDate, "11-11-1982");
+			dataValue.put(arivalDate, "11"+ProcessorConstants.DATE_SEPARATOR+"11"+ProcessorConstants.DATE_SEPARATOR+"1982");
 			dataValue.put(newAttribute, "1223");
 
 			entityManagerInterface.editData(advanceTissueSpecimenA, dataValue, recordId, null);
