@@ -38,13 +38,13 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 	{
 		TestSuite suite = new TestSuite("Test suite for Query Interface Classes");
 		uploadStaticMetadata();
+		suite.addTestSuite(TestEntityManagerWithPrimaryKey.class);
 		suite.addTestSuite(TestEntityManager.class);
 		suite.addTestSuite(TestEntityManagerForAssociations.class);
 		suite.addTestSuite(TestEntityManagerForInheritance.class);
 		suite.addTestSuite(TestEntityMangerForXMIImportExport.class);
 		suite.addTestSuite(TestImportPermissibleValues.class);
 		suite.addTestSuite(TestCategoryManager.class);
-		suite.addTestSuite(TestEntityManagerWithPrimaryKey.class);
 		return suite;
 	}
 	public static void uploadStaticMetadata()
