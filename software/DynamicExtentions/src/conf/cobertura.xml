@@ -33,8 +33,10 @@
       <ignore regex="org.apache.log4j.*"/>
 
     <fileset dir="./binaries/classes">
-        	<include name="**/entitymanager/*.class"/>
+        	<include name="**/*.class"/>
       		<exclude name="**/entitymanager/*Test*.class"/>
+      		<exclude name="**/edu/common/dynamicextensions/ui/*.class"/>
+      		<exclude name="**/listener/*.class"/>
       		<exclude name="**/entitymanager/DynamicExtensionDb2QueryBuilder.class"/>
       		<exclude name="**/entitymanager/DynamicExtensionMsSQLServerQueryBuilder.class"/>
       		<exclude name="**/entitymanager/ContainerInformationObject.class"/>
