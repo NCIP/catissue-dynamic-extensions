@@ -1008,6 +1008,7 @@ public class ControlsUtility
 		}
 		return null;
 	}
+
 	/**
 	 *
 	 * @param rowId
@@ -1018,7 +1019,12 @@ public class ControlsUtility
 	 * @param control
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private static void setValueMapForEnumeratedControls(Integer rowId,boolean isSameContainerControl,boolean cardinality,Map<BaseAbstractAttributeInterface, Object> fullValueMap,Map.Entry<BaseAbstractAttributeInterface, Object> entry,ControlInterface control) throws DynamicExtensionsSystemException
+	private static void setValueMapForEnumeratedControls(Integer rowId,
+			boolean isSameContainerControl, boolean cardinality,
+			Map<BaseAbstractAttributeInterface, Object> fullValueMap,
+			Map.Entry<BaseAbstractAttributeInterface, Object> entry,
+			ControlInterface control, boolean isCopyPaste)
+			throws DynamicExtensionsSystemException
 	{
 		if (rowId == null && isSameContainerControl && cardinality)
 		{
@@ -1083,8 +1089,9 @@ public class ControlsUtility
 		}
 		else
 		{
-			if (!control.getIsEnumeratedControl())
-			{
+			if ((!isCopyPaste && !control.getIsEnumeratedControl())
+					|| (isCopyPaste && control.getIsSkipLogicReadOnly() && !control
+							.getIsEnumeratedControl())) {
 				entry.setValue(null);
 			}
 		}
@@ -1099,7 +1106,8 @@ public class ControlsUtility
 	public static void populateAttributeValueMapForSkipLogicAttributes(
 			Map<BaseAbstractAttributeInterface, Object> fullValueMap,
 			Map<BaseAbstractAttributeInterface, Object> valueMap,
-			Integer rowId,boolean cardinality,String controlName,List<ControlInterface> controlsList)
+			Integer rowId, boolean cardinality, String controlName,
+			List<ControlInterface> controlsList, boolean isCopyPaste)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
 		for (Map.Entry<BaseAbstractAttributeInterface, Object> entry : valueMap.entrySet())
@@ -1159,7 +1167,7 @@ public class ControlsUtility
 						{
 							setValueMapForEnumeratedControls(rowId,
 									isSameContainerControl, cardinality,
-									fullValueMap, entry, control);
+									fullValueMap, entry, control,isCopyPaste);
 						}
 					}
 				}
@@ -1179,7 +1187,7 @@ public class ControlsUtility
 				{
 					entryNumber++;
 					populateAttributeValueMapForSkipLogicAttributes(fullValueMap, map,
-							entryNumber,oneToManyCardinality,controlName,controlsList);
+							entryNumber,oneToManyCardinality,controlName,controlsList,isCopyPaste);
 				}
 			}
 		}

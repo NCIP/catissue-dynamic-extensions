@@ -800,7 +800,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 				}
 				errorList.addAll(ValidatorUtil.validateEntity(rowValueMap, new ArrayList<String>(),
 						containerInterface));
-				updateMapForskipLogic(containerInterface,rowValueMap,rwoIndex);
+				updateMapForSkipLogic(containerInterface,rowValueMap,rwoIndex);
 				containerInterface.setContainerValueMap(rowValueMap);
 				returnString.append(UserInterfaceiUtility.getContainerHTMLAsARow(
 						containerInterface, rwoIndex, null,containerInterface));
@@ -834,18 +834,24 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void updateMapForskipLogic(ContainerInterface containerInterface,
+	private void updateMapForSkipLogic(ContainerInterface containerInterface,
 			Map<BaseAbstractAttributeInterface, Object> rowValueMap, int rwoIndex) throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException {
 		for(ControlInterface control : containerInterface.getAllControlsUnderSameDisplayLabel())
 		{
-			String[] stringArray = {(String) rowValueMap.get(control.getAttibuteMetadataInterface())};
-			List<ControlInterface> targetSkipControlsList = control
-			.setSkipLogicControls(stringArray);
-			if(control.getIsSkipLogic() && targetSkipControlsList != null)
+			if(control.getIsSkipLogic())
 			{
-			ControlsUtility.populateAttributeValueMapForSkipLogicAttributes(rowValueMap,
-					rowValueMap, rwoIndex, true, control.getHTMLComponentName()+"_"+rwoIndex,
-					targetSkipControlsList);
+				String[] stringArray = { (String) rowValueMap.get(control
+						.getAttibuteMetadataInterface()) };
+				List<ControlInterface> targetSkipControlsList = control
+						.setSkipLogicControls(stringArray);
+				ControlsUtility
+						.populateAttributeValueMapForSkipLogicAttributes(
+								rowValueMap,
+								rowValueMap,
+								rwoIndex,
+								true,
+								control.getHTMLComponentName() + "_" + rwoIndex,
+								targetSkipControlsList, true);
 			}
 		}
 
