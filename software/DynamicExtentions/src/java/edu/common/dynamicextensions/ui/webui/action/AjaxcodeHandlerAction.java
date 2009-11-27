@@ -778,9 +778,10 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 		String[] records = clipboardData.split(DEConstants.COMMA);
 		String[] cols = null;
 		Set<String> errorList = new HashSet<String>();
+		ContainerInterface containerInterface = null;
 		try
 		{
-			ContainerInterface containerInterface = DynamicExtensionsUtility
+			containerInterface = DynamicExtensionsUtility
 			.getContainerByIdentifier(request.getParameter(DEConstants.CONTAINER_ID));
 			setContainerParameters(containerInterface, request);
 			List<ControlInterface> list = containerInterface.getAllControlsUnderSameDisplayLabel();
@@ -788,28 +789,35 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 			for (String record : records) {
 				cols = record.split("\t");
 				Map<BaseAbstractAttributeInterface, Object> rowValueMap = new HashMap<BaseAbstractAttributeInterface, Object>();
-				for (int i = 0; i < cols.length; i++)
+				int columnCounter = 0;
+				for(ControlInterface control: list)
 				{
-					if (!(list.get(i).getBaseAbstractAttribute() instanceof AssociationMetadataInterface))
+					if(columnCounter < cols.length
+							&& !(control.getBaseAbstractAttribute() instanceof AssociationMetadataInterface))
 					{
-						rowValueMap.put(list.get(i).getBaseAbstractAttribute(), cols[i]);
+						rowValueMap.put(control.getBaseAbstractAttribute(), cols[columnCounter++]);
 					}
-
 				}
-				updateMapForskipLogic(containerInterface,rowValueMap,rwoIndex);
-
 				errorList.addAll(ValidatorUtil.validateEntity(rowValueMap, new ArrayList<String>(),
 						containerInterface));
+				updateMapForskipLogic(containerInterface,rowValueMap,rwoIndex);
 				containerInterface.setContainerValueMap(rowValueMap);
 				returnString.append(UserInterfaceiUtility.getContainerHTMLAsARow(
 						containerInterface, rwoIndex, null,containerInterface));
 				rwoIndex++;
 			}
-			resetContainerParameters(containerInterface);
+
 		}
 		catch (Exception e)
 		{
 			Logger.out.error(e.getMessage());
+		}
+		finally
+		{
+			if(containerInterface != null)
+			{
+				resetContainerParameters(containerInterface);
+			}
 		}
 		returnString.append("~ErrorList");
 		if (errorList.size() > 0)
@@ -833,9 +841,12 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 			String[] stringArray = {(String) rowValueMap.get(control.getAttibuteMetadataInterface())};
 			List<ControlInterface> targetSkipControlsList = control
 			.setSkipLogicControls(stringArray);
+			if(control.getIsSkipLogic() && targetSkipControlsList != null)
+			{
 			ControlsUtility.populateAttributeValueMapForSkipLogicAttributes(rowValueMap,
 					rowValueMap, rwoIndex, true, control.getHTMLComponentName()+"_"+rwoIndex,
 					targetSkipControlsList);
+			}
 		}
 
 
