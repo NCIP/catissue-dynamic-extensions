@@ -116,31 +116,29 @@ public abstract class AbstractMetadataManager
 	{
 		DynamicExtensionBaseDomainObjectInterface dyExtBsDmnObj = null;
 
-		if (objectName == null || objectName.equals(""))
+		if (objectName != null && !"".equals(objectName))
 		{
-			return dyExtBsDmnObj;
-		}
 
-		// Get the instance of the default biz logic.
-		DefaultBizLogic defaultBizLogic = BizLogicFactory.getDefaultBizLogic();
-		String DEAppName = DynamicExtensionDAO.getInstance().getAppName();
-		defaultBizLogic.setAppName(DEAppName);
-		List objects = new ArrayList();
+			// Get the instance of the default biz logic.
+			DefaultBizLogic defaultBizLogic = BizLogicFactory.getDefaultBizLogic();
+			String DEAppName = DynamicExtensionDAO.getInstance().getAppName();
+			defaultBizLogic.setAppName(DEAppName);
+			List objects = new ArrayList();
 
-		try
-		{
-			objects = defaultBizLogic.retrieve(className, "name", objectName);
-		}
-		catch (BizLogicException e)
-		{
-			throw new DynamicExtensionsSystemException(e.getMessage(), e);
-		}
+			try
+			{
+				objects = defaultBizLogic.retrieve(className, "name", objectName);
+			}
+			catch (BizLogicException e)
+			{
+				throw new DynamicExtensionsSystemException(e.getMessage(), e);
+			}
 
-		if (objects != null && !objects.isEmpty())
-		{
-			dyExtBsDmnObj = (DynamicExtensionBaseDomainObjectInterface) objects.get(0);
+			if (objects != null && !objects.isEmpty())
+			{
+				dyExtBsDmnObj = (DynamicExtensionBaseDomainObjectInterface) objects.get(0);
+			}
 		}
-
 		return dyExtBsDmnObj;
 	}
 
@@ -155,27 +153,26 @@ public abstract class AbstractMetadataManager
 	{
 		DynamicExtensionBaseDomainObjectInterface dyExtBsDmnObj = null;
 
-		if (objectName == null || objectName.equals(""))
+		if (objectName != null && !"".equals(objectName))
 		{
-			return dyExtBsDmnObj;
-		}
 
-		List objects = new ArrayList();
+			List objects = new ArrayList();
 
-		try
-		{
-			objects = hibernateDao.retrieve(className, "name", objectName);
-		}
-		catch (DAOException e)
-		{
-			throw new DynamicExtensionsSystemException(e.getMessage(), e);
-		}
+			try
+			{
+				objects = hibernateDao.retrieve(className, "name", objectName);
+			}
+			catch (DAOException e)
+			{
+				throw new DynamicExtensionsSystemException(e.getMessage(), e);
+			}
 
-		if (objects != null && !objects.isEmpty())
-		{
-			dyExtBsDmnObj = (DynamicExtensionBaseDomainObjectInterface) objects.get(0);
-		}
+			if (objects != null && !objects.isEmpty())
+			{
+				dyExtBsDmnObj = (DynamicExtensionBaseDomainObjectInterface) objects.get(0);
+			}
 
+		}
 		return dyExtBsDmnObj;
 	}
 
@@ -383,8 +380,7 @@ public abstract class AbstractMetadataManager
 	{
 		for (int counter = 0; counter < substParams.size(); counter++)
 		{
-			HQLPlaceHolderObject plcHolderObj = substParams.get(Integer
-					.toBinaryString(counter));
+			HQLPlaceHolderObject plcHolderObj = substParams.get(Integer.toBinaryString(counter));
 			String objectType = plcHolderObj.getType();
 			if ("string".equals(objectType))
 			{
@@ -444,14 +440,14 @@ public abstract class AbstractMetadataManager
 	 * @throws DynamicExtensionsApplicationException exception
 	 */
 	protected DynamicQueryList persistDynamicExtensionObject(
-			AbstractMetadataInterface abstrMetadata,HibernateDAO... hibernateDAO ) throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException
+			AbstractMetadataInterface abstrMetadata, HibernateDAO... hibernateDAO)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		List<String> revQueries = new LinkedList<String>();
 		List<String> queries = new ArrayList<String>();
 		Stack<String> rlbkQryStack = new Stack<String>();
 		DynamicQueryList dynamicQueryList = new DynamicQueryList();
-		if(hibernateDAO!=null && hibernateDAO.length>0)
+		if (hibernateDAO != null && hibernateDAO.length > 0)
 		{
 			preProcess(abstrMetadata, revQueries, queries);
 
@@ -467,7 +463,6 @@ public abstract class AbstractMetadataManager
 		return dynamicQueryList;
 	}
 
-
 	/**
 	 * This method persists an entity group and the associated entities and also creates the data table
 	 * for the entities.
@@ -476,9 +471,8 @@ public abstract class AbstractMetadataManager
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	private DynamicQueryList persistDynamicExtensionObject(
-			AbstractMetadataInterface abstrMetadata) throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException
+	private DynamicQueryList persistDynamicExtensionObject(AbstractMetadataInterface abstrMetadata)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		List<String> revQueries = new LinkedList<String>();
 		List<String> queries = new ArrayList<String>();
@@ -532,14 +526,14 @@ public abstract class AbstractMetadataManager
 	 * @throws DynamicExtensionsApplicationException exception
 	 */
 	public DynamicQueryList persistDynamicExtensionObjectMetdata(
-			AbstractMetadataInterface abstrMetadata,HibernateDAO... hibernateDAO) throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException
+			AbstractMetadataInterface abstrMetadata, HibernateDAO... hibernateDAO)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		Stack<String> rlbkQryStack = new Stack<String>();
-		HibernateDAO newHibernateDAO=null;
-		if(hibernateDAO!=null && hibernateDAO.length>0)
+		HibernateDAO newHibernateDAO = null;
+		if (hibernateDAO != null && hibernateDAO.length > 0)
 		{
-			newHibernateDAO=hibernateDAO[0];
+			newHibernateDAO = hibernateDAO[0];
 			saveDynamicExtensionObject(abstrMetadata, newHibernateDAO, rlbkQryStack);
 		}
 		else
@@ -620,6 +614,7 @@ public abstract class AbstractMetadataManager
 	protected Exception handleRollback(Exception exception, String excMessage, DAO dao,
 			boolean isExcToBeWrpd)
 	{
+		Exception newException = exception;
 		try
 		{
 			dao.rollback();
@@ -631,12 +626,11 @@ public abstract class AbstractMetadataManager
 
 		if (isExcToBeWrpd)
 		{
-			return new DynamicExtensionsSystemException(excMessage, exception);
+			newException = new DynamicExtensionsSystemException(excMessage, exception);
 		}
-		else
-		{
-			return exception;
-		}
+
+		return newException;
+
 	}
 
 	/**
@@ -816,20 +810,20 @@ public abstract class AbstractMetadataManager
 				+ attrName.substring(1, attrName.length());
 		value = dataValue.get(attribute);
 
-		if (dataType.equals("Long"))
+		if ("Long".equals(dataType))
 		{
 			Long longValue = null;
 
 			if (value != null && !("".equals(value)))
 			{
-				longValue = new Long(value.toString());
+				longValue = Long.valueOf(value.toString());
 			}
 
 			// Set the property attrName.
 			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Long"), returnedObj,
 					longValue);
 		}
-		else if (dataType.equals("Float"))
+		else if ("Float".equals(dataType))
 		{
 			Float floatValue = null;
 
@@ -842,7 +836,7 @@ public abstract class AbstractMetadataManager
 			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Float"), returnedObj,
 					floatValue);
 		}
-		else if (dataType.equals("Double"))
+		else if ("Double".equals(dataType))
 		{
 			Double doubleValue = null;
 
@@ -855,39 +849,39 @@ public abstract class AbstractMetadataManager
 			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Double"), returnedObj,
 					doubleValue);
 		}
-		else if (dataType.equals("Short"))
+		else if ("Short".equals(dataType))
 		{
 			Short shortValue = null;
 
 			if (value != null && !("".equals(value)))
 			{
-				shortValue = new Short(value.toString());
+				shortValue = Short.valueOf(value.toString());
 			}
 
 			// Set the property attrName.
 			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Short"), returnedObj,
 					shortValue);
 		}
-		else if (dataType.equals("Integer"))
+		else if ("Integer".equals(dataType))
 		{
 			Integer integerValue = null;
 
 			if (value != null && !("".equals(value)))
 			{
-				integerValue = new Integer(value.toString());
+				integerValue = Integer.valueOf(value.toString());
 			}
 
 			// Set the property attrName.
 			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Integer"), returnedObj,
 					integerValue);
 		}
-		else if (dataType.equals("Boolean"))
+		else if ("Boolean".equals(dataType))
 		{
 			Boolean booleanValue = null;
 
 			if (value != null && !("".equals(value)))
 			{
-				if (value.equals("1"))
+				if ("1".equals(value))
 				{
 					value = "true";
 				}
@@ -896,14 +890,14 @@ public abstract class AbstractMetadataManager
 					value = "false";
 				}
 
-				booleanValue = new Boolean(value.toString());
+				booleanValue = Boolean.valueOf(value.toString());
 			}
 
 			// Set the property attrName.
 			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Boolean"), returnedObj,
 					booleanValue);
 		}
-		else if (dataType.equals("Date"))
+		else if ("Date".equals(dataType))
 		{
 			Date dateValue = null;
 			if (value != null && !("".equals(value)))
@@ -964,20 +958,20 @@ public abstract class AbstractMetadataManager
 				+ attrName.substring(1, attrName.length());
 		value = walue;
 
-		if (dataType.equals("Long"))
+		if ("Long".equals(dataType))
 		{
 			Long longValue = null;
 
 			if (value != null && !("".equals(value)))
 			{
-				longValue = new Long(value.toString());
+				longValue = Long.valueOf(value.toString());
 			}
 
 			// Set the property attrName.
 			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Long"), returnedObj,
 					longValue);
 		}
-		else if (dataType.equals("Float"))
+		else if ("Float".equals(dataType))
 		{
 			Float floatValue = null;
 
@@ -990,7 +984,7 @@ public abstract class AbstractMetadataManager
 			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Float"), returnedObj,
 					floatValue);
 		}
-		else if (dataType.equals("Double"))
+		else if ("Double".equals(dataType))
 		{
 			Double doubleValue = null;
 
@@ -1003,39 +997,39 @@ public abstract class AbstractMetadataManager
 			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Double"), returnedObj,
 					doubleValue);
 		}
-		else if (dataType.equals("Short"))
+		else if ("Short".equals(dataType))
 		{
 			Short shortValue = null;
 
 			if (value != null && !("".equals(value)))
 			{
-				shortValue = new Short(value.toString());
+				shortValue = Short.valueOf(value.toString());
 			}
 
 			// Set the property attrName.
 			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Short"), returnedObj,
 					shortValue);
 		}
-		else if (dataType.equals("Integer"))
+		else if ("Integer".equals(dataType))
 		{
 			Integer integerValue = null;
 
 			if (value != null && !("".equals(value)))
 			{
-				integerValue = new Integer(value.toString());
+				integerValue = Integer.valueOf(value.toString());
 			}
 
 			// Set the property attrName.
 			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Integer"), returnedObj,
 					integerValue);
 		}
-		else if (dataType.equals("Boolean"))
+		else if ("Boolean".equals(dataType))
 		{
 			Boolean booleanValue = null;
 
 			if (value != null && !("".equals(value)))
 			{
-				if (value.equals("1"))
+				if ("1".equals(value))
 				{
 					value = "true";
 				}
@@ -1044,14 +1038,14 @@ public abstract class AbstractMetadataManager
 					value = "false";
 				}
 
-				booleanValue = new Boolean(value.toString());
+				booleanValue = Boolean.valueOf(value.toString());
 			}
 
 			// Set the property attrName.
 			invokeSetterMethod(klass, attrName, Class.forName("java.lang.Boolean"), returnedObj,
 					booleanValue);
 		}
-		else if (dataType.equals("Date"))
+		else if ("Date".equals(dataType))
 		{
 			Date dateValue = null;
 			if (value != null && !("".equals(value)))

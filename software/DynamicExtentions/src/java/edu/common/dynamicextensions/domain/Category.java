@@ -27,7 +27,7 @@ public class Category extends AbstractMetadata implements CategoryInterface
 	protected CategoryEntity rootCategoryElement;
 
 	/**
-	 * 
+	 *
 	 */
 	protected Collection<CategoryEntityInterface> relatedAttributeCategoryEntityCollection = new HashSet<CategoryEntityInterface>();
 
@@ -37,7 +37,7 @@ public class Category extends AbstractMetadata implements CategoryInterface
 	 */
 	public CategoryEntityInterface getRootCategoryElement()
 	{
-		return (CategoryEntityInterface) rootCategoryElement;
+		return rootCategoryElement;
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class Category extends AbstractMetadata implements CategoryInterface
 	 */
 	public CategoryEntityInterface getCategoryEntityByName(String categoryEntityName)
 	{
-		return getCategoryEntity(this.getRootCategoryElement(), categoryEntityName);
+		return getCategoryEntity(getRootCategoryElement(), categoryEntityName);
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class Category extends AbstractMetadata implements CategoryInterface
 	 */
 	public void addRelatedAttributeCategoryEntity(CategoryEntityInterface categoryEntity)
 	{
-		this.relatedAttributeCategoryEntityCollection.add(categoryEntity);
+		relatedAttributeCategoryEntityCollection.add(categoryEntity);
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class Category extends AbstractMetadata implements CategoryInterface
 	 */
 	public void removeRelatedAttributeCategoryEntity(CategoryEntityInterface categoryEntity)
 	{
-		this.relatedAttributeCategoryEntityCollection.remove(categoryEntity);
+		relatedAttributeCategoryEntityCollection.remove(categoryEntity);
 	}
 
 }

@@ -506,7 +506,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 	{
 		boolean isAlltargetControls = true;
 		List<ControlInterface> controls = getAllControlsUnderSameDisplayLabel();
-		for (ControlInterface control :controls)
+		for (ControlInterface control : controls)
 		{
 			if (!control.getIsSkipLogicTargetControl() && !control.getIsShowHide())
 			{

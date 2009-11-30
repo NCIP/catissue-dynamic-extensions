@@ -40,10 +40,10 @@ public class FileUploadControl extends Control implements FileUploadInterface
 					+ getHTMLComponentName() + "_div'>";
 		}
 		ApplicationProperties.initBundle("ApplicationResources");
-		if (this.value != null)
+		if (value != null)
 		{
 			htmlString = "<A onclick='appendRecordId(this);' href='/dynamicExtensions/DownloadFileAction?attributeIdentifier="
-				+ this.baseAbstractAttribute.getId() + "'>" + this.value + "</A>";
+				+ baseAbstractAttribute.getId() + "'>" + value + "</A>";
 
 		}
 		htmlString = htmlString + "&nbsp;&nbsp;<input onchange='isDataChanged();' type=\"file\" " + "name=\"value("
@@ -79,9 +79,9 @@ public class FileUploadControl extends Control implements FileUploadInterface
 //		FileAttributeRecordValue fileAttributeRecordValue = (FileAttributeRecordValue) this.value;
 		String htmlString = "&nbsp;";
 
-		if (this.value != null)
+		if (value != null)
 		{
-			String fileName = this.value.toString();
+			String fileName = value.toString();
 			htmlString = "<span class = '" + cssClass + "'> " + fileName + "</span>";
 		}
 		return htmlString;
