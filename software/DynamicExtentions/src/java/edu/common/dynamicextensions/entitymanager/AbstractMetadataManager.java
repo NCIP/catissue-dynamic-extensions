@@ -123,7 +123,7 @@ public abstract class AbstractMetadataManager
 			DefaultBizLogic defaultBizLogic = BizLogicFactory.getDefaultBizLogic();
 			String DEAppName = DynamicExtensionDAO.getInstance().getAppName();
 			defaultBizLogic.setAppName(DEAppName);
-			List objects = new ArrayList();
+			List objects;
 
 			try
 			{
@@ -156,7 +156,7 @@ public abstract class AbstractMetadataManager
 		if (objectName != null && !"".equals(objectName))
 		{
 
-			List objects = new ArrayList();
+			List objects ;
 
 			try
 			{
@@ -187,7 +187,7 @@ public abstract class AbstractMetadataManager
 			DynamicExtensionsApplicationException
 	{
 		AbstractBizLogic bizLogic = BizLogicFactory.getDefaultBizLogic();
-		Collection objects = new HashSet();
+		Collection objects =null;
 
 		try
 		{
@@ -338,7 +338,7 @@ public abstract class AbstractMetadataManager
 	protected Collection executeHQL(String queryName, Map<String, NamedQueryParam> substParams)
 			throws DynamicExtensionsSystemException
 	{
-		Collection objects = new HashSet();
+		Collection objects = null;
 		HibernateDAO hibernateDAO = null;
 		try
 		{
@@ -724,7 +724,7 @@ public abstract class AbstractMetadataManager
 	public List<EntityRecord> getAllRecords(AbstractEntityInterface entity)
 			throws DynamicExtensionsSystemException
 	{
-		List<EntityRecord> records = new ArrayList<EntityRecord>();
+		List<EntityRecord> records;
 		JDBCDAO jdbcDao = null;
 		List<List> results;
 		try

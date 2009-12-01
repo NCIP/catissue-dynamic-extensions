@@ -202,8 +202,6 @@ public class EntityGroupManager extends AbstractMetadataManager
 			throws DynamicExtensionsSystemException
 	{
 		EntityGroupInterface entityGroup = null;
-		Collection entityGroups = new HashSet();
-
 		if (shortName == null || shortName.equals(""))
 		{
 			return entityGroup;
@@ -218,7 +216,7 @@ public class EntityGroupManager extends AbstractMetadataManager
 		try
 		{
 			// Call retrieve method to get the entity group object based on the given value of short name.
-			entityGroups = defBizLogic
+			Collection entityGroups = defBizLogic
 					.retrieve(EntityGroup.class.getName(), "shortName", shortName);
 			if (entityGroups != null && !entityGroups.isEmpty())
 			{

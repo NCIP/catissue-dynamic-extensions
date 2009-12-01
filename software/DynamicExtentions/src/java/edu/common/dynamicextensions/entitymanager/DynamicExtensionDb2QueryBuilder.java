@@ -99,117 +99,121 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 	{
 
 		String formattedvalue = null;
-		AttributeTypeInformationInterface attributeInformation = ((Attribute) attribute)
-				.getAttributeTypeInformation();
-		if (attribute == null)
+
+		if (attribute != null)
 		{
-			formattedvalue = null;
-		}
 
-		else if (attributeInformation instanceof StringAttributeTypeInformation)
-		{
-			// quick fix.
-			if (value instanceof List)
+			AttributeTypeInformationInterface attributeInformation = ((Attribute) attribute)
+					.getAttributeTypeInformation();
+
+			if (attributeInformation instanceof StringAttributeTypeInformation)
 			{
-				if (((List) value).size() > 0)
+				// quick fix.
+				if (value instanceof List)
 				{
-					formattedvalue = "'"
-							+ DynamicExtensionsUtility
-									.getEscapedStringValue((String) ((List) value).get(0)) + "'";
-				}
-			}
-			else
-			{
-				formattedvalue = "'"
-						+ DynamicExtensionsUtility.getEscapedStringValue((String) value) + "'";
-			}
-		}
-		else if (attributeInformation instanceof DateAttributeTypeInformation)
-		{
-			String dateFormat = ((DateAttributeTypeInformation) attributeInformation).getFormat();
-			String datePattern = DynamicExtensionsUtility.getDateFormat(dateFormat);
-			String str = null;
-			if (value instanceof Date)
-			{
-				str = Utility.parseDateToString(((Date) value), datePattern);
-			}
-			else
-			{
-				str = (String) value;
-			}
-
-			if (datePattern.equals(ProcessorConstants.MONTH_YEAR_FORMAT) && str.length() != 0)
-			{
-				str = DynamicExtensionsUtility.formatMonthAndYearDate(str,false);
-			}
-
-			if (datePattern.equals(ProcessorConstants.YEAR_ONLY_FORMAT) && str.length() != 0)
-			{
-
-				str = DynamicExtensionsUtility.formatYearDate(str,false);
-
-			}
-			// if user not enter any value for date field its getting saved as 00-00-0000 ,which is throwing exception
-			//So to avoid it store null value in database
-			if (str.trim().length() == 0)
-			{
-				formattedvalue = null;
-
-			}
-			else
-			{
-				String appName=DynamicExtensionDAO.getInstance().getAppName();
-				IDAOFactory factory = DAOConfigFactory.getInstance().getDAOFactory(appName);
-				JDBCDAO jdbcDAO;
-				try
-				{
-					jdbcDAO = factory.getJDBCDAO();
-					formattedvalue = jdbcDAO.getStrTodateFunction() + "('" + str.trim() + "','"
-					+ DynamicExtensionsUtility.getSQLDateFormat(datePattern) + "')";
-				}
-				catch (DAOException e)
-				{
-					Logger.out.error(e.getMessage());
-				}
-			}
-		}
-		else
-		{
-			// quick fix.
-			if (value instanceof List)
-			{
-				if (((List) value).size() > 0)
-				{
-					formattedvalue = ((List) value).get(0).toString();
-				}
-			}
-			else
-			{
-				formattedvalue = value.toString();
-			}
-
-			//In case of DB2 ,if the column datatype double ,float ,integer then its not possible to pass '' as  in insert-update query
-			//so instead pass null as value.
-			if (attributeInformation instanceof BooleanAttributeTypeInformation)
-			{
-				if ("false".equals(formattedvalue))
-				{
-					formattedvalue = "0";
+					if (((List) value).size() > 0)
+					{
+						formattedvalue = "'"
+								+ DynamicExtensionsUtility
+										.getEscapedStringValue((String) ((List) value).get(0))
+								+ "'";
+					}
 				}
 				else
 				{
-					formattedvalue = "1";
+					formattedvalue = "'"
+							+ DynamicExtensionsUtility.getEscapedStringValue((String) value) + "'";
 				}
 			}
-			else if (formattedvalue != null && formattedvalue.trim().length() == 0)
+			else if (attributeInformation instanceof DateAttributeTypeInformation)
 			{
-				formattedvalue = null;
+				String dateFormat = ((DateAttributeTypeInformation) attributeInformation)
+						.getFormat();
+				String datePattern = DynamicExtensionsUtility.getDateFormat(dateFormat);
+				String str = null;
+				if (value instanceof Date)
+				{
+					str = Utility.parseDateToString(((Date) value), datePattern);
+				}
+				else
+				{
+					str = (String) value;
+				}
+
+				if (datePattern.equals(ProcessorConstants.MONTH_YEAR_FORMAT) && str.length() != 0)
+				{
+					str = DynamicExtensionsUtility.formatMonthAndYearDate(str, false);
+				}
+
+				if (datePattern.equals(ProcessorConstants.YEAR_ONLY_FORMAT) && str.length() != 0)
+				{
+
+					str = DynamicExtensionsUtility.formatYearDate(str, false);
+
+				}
+				// if user not enter any value for date field its getting saved as 00-00-0000 ,which is throwing exception
+				//So to avoid it store null value in database
+				if (str.trim().length() == 0)
+				{
+					formattedvalue = null;
+
+				}
+				else
+				{
+					String appName = DynamicExtensionDAO.getInstance().getAppName();
+					IDAOFactory factory = DAOConfigFactory.getInstance().getDAOFactory(appName);
+					JDBCDAO jdbcDAO;
+					try
+					{
+						jdbcDAO = factory.getJDBCDAO();
+						formattedvalue = jdbcDAO.getStrTodateFunction() + "('" + str.trim() + "','"
+								+ DynamicExtensionsUtility.getSQLDateFormat(datePattern) + "')";
+					}
+					catch (DAOException e)
+					{
+						Logger.out.error(e.getMessage());
+					}
+				}
+			}
+			else
+			{
+				// quick fix.
+				if (value instanceof List)
+				{
+					if (((List) value).size() > 0)
+					{
+						formattedvalue = ((List) value).get(0).toString();
+					}
+				}
+				else
+				{
+					formattedvalue = value.toString();
+				}
+
+				//In case of DB2 ,if the column datatype double ,float ,integer then its not possible to pass '' as  in insert-update query
+				//so instead pass null as value.
+				if (attributeInformation instanceof BooleanAttributeTypeInformation)
+				{
+					if ("false".equals(formattedvalue))
+					{
+						formattedvalue = "0";
+					}
+					else
+					{
+						formattedvalue = "1";
+					}
+				}
+				else if (formattedvalue != null && formattedvalue.trim().length() == 0)
+				{
+					formattedvalue = null;
+
+				}
 
 			}
-
+			Logger.out.debug("getFormattedValue The formatted value for attribute "
+					+ attribute.getName() + "is " + formattedvalue);
 		}
-		Logger.out.debug("getFormattedValue The formatted value for attribute "
-				+ attribute.getName() + "is " + formattedvalue);
+
 		return formattedvalue;
 	}
 

@@ -714,7 +714,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		Long parentRecId = null;
-		Long usrId = ((userId != null || userId.length > 0) ? userId[0] : null);
+		Long usrId = ((userId != null && userId.length > 0) ? userId[0] : null);
 
 		Map<EntityInterface, Map<?, ?>> entityData = initialiseEntityValueMap(entity, dataValue);
 
@@ -2146,7 +2146,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			Long recordId) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
-		Map<AbstractAttributeInterface, Object> recordValues = new HashMap<AbstractAttributeInterface, Object>();
+		Map<AbstractAttributeInterface, Object> recordValues ;
 		HibernateDAO hibernateDAO = null;
 		try
 		{
@@ -2303,10 +2303,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 
 			for (String delRecQuery : delRecQueries)
 			{
-				logDebug("deleteRecord", "QUERY for delete record is : " + delRecQuery.toString());
-
 				if (delRecQuery != null && delRecQuery.trim().length() != 0)
 				{
+					logDebug("deleteRecord", "QUERY for delete record is : " + delRecQuery.toString());
 					try
 					{
 						jdbcDAO.executeUpdate(delRecQuery.toString());
@@ -2413,187 +2412,188 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 
 		Collection<AssociationDisplayAttributeInterface> assoAttributes = assoControl
 				.getAssociationDisplayAttributeCollection();
-		if (assoAttributes != null && assoAttributes.isEmpty())
+		if (assoAttributes != null && !assoAttributes.isEmpty())
 		{
-			return assoRecords;
-		}
-		if (assoControl instanceof SelectControl)
-		{
-			tgtEntityTable = ((AssociationInterface) ((SelectControl) assoControl)
-					.getBaseAbstractAttribute()).getTargetEntity().getTableProperties().getName();
-		}
-		String selectClause = SELECT_KEYWORD + tgtEntityTable + "." + IDENTIFIER;
-		String fromClause = FROM_KEYWORD + tgtEntityTable + ", ";
-		String whereClause = WHERE_KEYWORD;
-		// Clause for multiple columns.
-		String multipleColClause = SELECT_KEYWORD + tgtEntityTable + "." + IDENTIFIER + ", ";
 
-		List associationAttr = new ArrayList(assoAttributes);
-		Collections.sort(associationAttr);
-
-		Iterator<AssociationDisplayAttributeInterface> attrIter = assoAttributes.iterator();
-		AssociationDisplayAttributeInterface displayAttribute = null;
-
-		while (attrIter.hasNext())
-		{
-			displayAttribute = attrIter.next();
-			columnName = displayAttribute.getAttribute().getColumnProperties().getName();
-			tableName = displayAttribute.getAttribute().getEntity().getTableProperties().getName();
-
-			if (assoControl instanceof SelectControl
-					&& ((AssociationInterface) ((SelectControl) assoControl)
-							.getBaseAbstractAttribute()).getTargetEntity().getParentEntity() != null)
+			if (assoControl instanceof SelectControl)
 			{
-				selectClause = selectClause + ", " + tableName + "." + columnName;
+				tgtEntityTable = ((AssociationInterface) ((SelectControl) assoControl)
+						.getBaseAbstractAttribute()).getTargetEntity().getTableProperties()
+						.getName();
+			}
+			String selectClause = SELECT_KEYWORD + tgtEntityTable + "." + IDENTIFIER;
+			String fromClause = FROM_KEYWORD + tgtEntityTable + ", ";
+			String whereClause = WHERE_KEYWORD;
+			// Clause for multiple columns.
+			String multipleColClause = SELECT_KEYWORD + tgtEntityTable + "." + IDENTIFIER + ", ";
 
-				if (!(fromClause.contains(tableName)))
+			List associationAttr = new ArrayList(assoAttributes);
+			Collections.sort(associationAttr);
+
+			Iterator<AssociationDisplayAttributeInterface> attrIter = assoAttributes.iterator();
+			AssociationDisplayAttributeInterface displayAttribute = null;
+
+			while (attrIter.hasNext())
+			{
+				displayAttribute = attrIter.next();
+				columnName = displayAttribute.getAttribute().getColumnProperties().getName();
+				tableName = displayAttribute.getAttribute().getEntity().getTableProperties()
+						.getName();
+
+				if (assoControl instanceof SelectControl
+						&& ((AssociationInterface) ((SelectControl) assoControl)
+								.getBaseAbstractAttribute()).getTargetEntity().getParentEntity() != null)
 				{
-					fromClause = fromClause + tableName + ", ";
-				}
-				if (counter == 0 && assoAttributes.size() > 1)
-				{
-					whereClause = whereClause + tableName + ".ACTIVITY_STATUS <> 'Disabled' AND ";
-					whereClause = whereClause + tableName + "." + IDENTIFIER + " = ";
-				}
-				else if (counter > 0 && assoAttributes.size() > 1)
-				{
-					whereClause = whereClause + tableName + "." + IDENTIFIER + " AND " + tableName
-							+ ".ACTIVITY_STATUS <> 'Disabled' AND " + tableName + "." + IDENTIFIER
-							+ " = ";
-				}
-				else if (assoAttributes.size() == 1)
-				{
-					if (!(fromClause.contains(tgtEntityTable)))
+					selectClause = selectClause + ", " + tableName + "." + columnName;
+
+					if (!(fromClause.contains(tableName)))
 					{
-						fromClause = fromClause + tgtEntityTable + ", ";
+						fromClause = fromClause + tableName + ", ";
 					}
-					whereClause = whereClause + tgtEntityTable
-							+ ".ACTIVITY_STATUS <> 'Disabled' AND ";
-					whereClause = whereClause + tableName + "." + IDENTIFIER + " = "
-							+ tgtEntityTable + "." + IDENTIFIER + " AND " + tgtEntityTable + "."
-							+ IDENTIFIER + " = ";
-				}
+					if (counter == 0 && assoAttributes.size() > 1)
+					{
+						whereClause = whereClause + tableName
+								+ ".ACTIVITY_STATUS <> 'Disabled' AND ";
+						whereClause = whereClause + tableName + "." + IDENTIFIER + " = ";
+					}
+					else if (counter > 0 && assoAttributes.size() > 1)
+					{
+						whereClause = whereClause + tableName + "." + IDENTIFIER + " AND "
+								+ tableName + ".ACTIVITY_STATUS <> 'Disabled' AND " + tableName
+								+ "." + IDENTIFIER + " = ";
+					}
+					else if (assoAttributes.size() == 1)
+					{
+						if (!(fromClause.contains(tgtEntityTable)))
+						{
+							fromClause = fromClause + tgtEntityTable + ", ";
+						}
+						whereClause = whereClause + tgtEntityTable
+								+ ".ACTIVITY_STATUS <> 'Disabled' AND ";
+						whereClause = whereClause + tableName + "." + IDENTIFIER + " = "
+								+ tgtEntityTable + "." + IDENTIFIER + " AND " + tgtEntityTable
+								+ "." + IDENTIFIER + " = ";
+					}
 
-				counter++;
+					counter++;
 
-				tableNames.add(tableName);
-			}
-			else
-			{
-				areMultipleAttr = true;
-				multipleColClause += columnName + ", ";
-				tableNames.add(tableName);
-			}
-
-			if (tableNames.isEmpty() && !(assoControl instanceof SelectControl))
-			{
-				selectClause = selectClause + tableName + "." + IDENTIFIER;
-				fromClause = fromClause + tableName;
-				onClause = onClause + tableName + "." + IDENTIFIER;
-				tableNames.add(tableName);
-			}
-			else
-			{
-				if (tableNames.indexOf(tableName) == -1)
-				{
 					tableNames.add(tableName);
-					fromClause = fromClause + JOIN_KEYWORD + tableName;
-					onClause = onClause + EQUAL + tableName + "." + IDENTIFIER;
-				}
-			}
-		}
-
-		if (!areMultipleAttr)
-		{
-			int lastIndexOfAND = whereClause.lastIndexOf("AND");
-			whereClause = whereClause.substring(0, lastIndexOfAND);
-			fromClause = fromClause.substring(0, fromClause.length() - 2);
-		}
-
-		if (((AssociationInterface) ((SelectControl) assoControl).getBaseAbstractAttribute())
-				.getTargetEntity().getParentEntity() == null)
-		{
-			multipleColClause = multipleColClause.substring(0, multipleColClause.length() - 2)
-					+ FROM_KEYWORD + tgtEntityTable;
-		}
-
-		StringBuffer query = new StringBuffer();
-
-		if (!areMultipleAttr)
-		{
-			query.append(selectClause + fromClause + whereClause);
-		}
-		else
-		{
-			query.append(multipleColClause);
-			query.append(WHERE_KEYWORD
-					+ queryBuilder.getRemoveDisbledRecordsQuery(tableNames.get(0)));
-		}
-
-		JDBCDAO jdbcDao = null;
-		try
-		{
-			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			List results = new ArrayList();
-			results = jdbcDao.executeQuery(query.toString());
-
-			if (results != null)
-			{
-				if (!areMultipleAttr)
-				{
-					for (int i = 0; i < results.size(); i++)
-					{
-						List innerList = (List) results.get(i);
-						Long recordId = Long.parseLong((String) innerList.get(0));
-						innerList.remove(0);
-						assoRecords.put(recordId, innerList);
-					}
 				}
 				else
 				{
-					for (int i = 0; i < results.size(); i++)
+					areMultipleAttr = true;
+					multipleColClause += columnName + ", ";
+					tableNames.add(tableName);
+				}
+
+				if (tableNames.isEmpty() && !(assoControl instanceof SelectControl))
+				{
+					selectClause = selectClause + tableName + "." + IDENTIFIER;
+					fromClause = fromClause + tableName;
+					onClause = onClause + tableName + "." + IDENTIFIER;
+					tableNames.add(tableName);
+				}
+				else
+				{
+					if (tableNames.indexOf(tableName) == -1)
 					{
-						List innerList = (List) results.get(i);
-						Long recordId = Long.parseLong((String) innerList.get(0));
+						tableNames.add(tableName);
+						fromClause = fromClause + JOIN_KEYWORD + tableName;
+						onClause = onClause + EQUAL + tableName + "." + IDENTIFIER;
+					}
+				}
+			}
 
-						if (assoRecords.containsKey(recordId))
+			if (!areMultipleAttr)
+			{
+				int lastIndexOfAND = whereClause.lastIndexOf("AND");
+				whereClause = whereClause.substring(0, lastIndexOfAND);
+				fromClause = fromClause.substring(0, fromClause.length() - 2);
+			}
+
+			if (((AssociationInterface) ((SelectControl) assoControl).getBaseAbstractAttribute())
+					.getTargetEntity().getParentEntity() == null)
+			{
+				multipleColClause = multipleColClause.substring(0, multipleColClause.length() - 2)
+						+ FROM_KEYWORD + tgtEntityTable;
+			}
+
+			StringBuffer query = new StringBuffer();
+
+			if (!areMultipleAttr)
+			{
+				query.append(selectClause + fromClause + whereClause);
+			}
+			else
+			{
+				query.append(multipleColClause);
+				query.append(WHERE_KEYWORD
+						+ queryBuilder.getRemoveDisbledRecordsQuery(tableNames.get(0)));
+			}
+
+			JDBCDAO jdbcDao = null;
+			try
+			{
+				jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
+				List results = jdbcDao.executeQuery(query.toString());
+
+				if (results != null)
+				{
+					if (!areMultipleAttr)
+					{
+						for (int i = 0; i < results.size(); i++)
 						{
-							List<String> tempStringList = new ArrayList<String>();
-
-							String existingString = assoRecords.get(recordId).toString().replace(
-									"[", " ");
-							existingString = existingString.replace("]", " ");
-
-							tempStringList.add(existingString.trim() + assoControl.getSeparator()
-									+ (String) innerList.get(1));
-							assoRecords.put(recordId, tempStringList);
-						}
-						else
-						{
+							List innerList = (List) results.get(i);
+							Long recordId = Long.parseLong((String) innerList.get(0));
 							innerList.remove(0);
 							assoRecords.put(recordId, innerList);
 						}
 					}
+					else
+					{
+						for (int i = 0; i < results.size(); i++)
+						{
+							List innerList = (List) results.get(i);
+							Long recordId = Long.parseLong((String) innerList.get(0));
+
+							if (assoRecords.containsKey(recordId))
+							{
+								List<String> tempStringList = new ArrayList<String>();
+
+								String existingString = assoRecords.get(recordId).toString()
+										.replace("[", " ");
+								existingString = existingString.replace("]", " ");
+
+								tempStringList.add(existingString.trim()
+										+ assoControl.getSeparator() + (String) innerList.get(1));
+								assoRecords.put(recordId, tempStringList);
+							}
+							else
+							{
+								innerList.remove(0);
+								assoRecords.put(recordId, innerList);
+							}
+						}
+					}
 				}
 			}
-		}
 
-		catch (DAOException e)
-		{
-			throw new DynamicExtensionsSystemException("Error while retrieving the data", e);
-		}
-		finally
-		{
-			try
-			{
-				DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
-			}
 			catch (DAOException e)
 			{
 				throw new DynamicExtensionsSystemException("Error while retrieving the data", e);
 			}
+			finally
+			{
+				try
+				{
+					DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+				}
+				catch (DAOException e)
+				{
+					throw new DynamicExtensionsSystemException("Error while retrieving the data", e);
+				}
+			}
 		}
-
 		return assoRecords;
 	}
 
@@ -2865,7 +2865,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			throws DynamicExtensionsSystemException
 	{
 		List<String> revQueries = new ArrayList<String>();
-		Stack<String> rlbkQryStack = new Stack<String>();
+		Stack<String> rlbkQryStack =null;
 
 		try
 		{
@@ -2875,7 +2875,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		}
 		catch (DynamicExtensionsSystemException e)
 		{
-			if (!rlbkQryStack.isEmpty())
+			if (rlbkQryStack!=null && !rlbkQryStack.isEmpty())
 			{
 				rollbackQueries(rlbkQryStack, association.getEntity(), e, null);
 			}
@@ -3099,8 +3099,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 				String entTableName = resultSet.getString(NAME);
 				if (entTableName != null)
 				{
-					EntityManagerUtil entityManagerUtil = new EntityManagerUtil();
-					return entityManagerUtil.getNextIdentifier(entTableName);
+					return EntityManagerUtil.getNextIdentifier(entTableName);
 				}
 			}
 		}
@@ -3293,7 +3292,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	private Collection executeHQLWithCleanSession(String queryName,
 			Map<String, NamedQueryParam> substParams) throws DynamicExtensionsSystemException
 	{
-		Collection objects = new HashSet();
+		Collection objects = null;
 		HibernateDAO hibernateDAO = null;
 		try
 		{
