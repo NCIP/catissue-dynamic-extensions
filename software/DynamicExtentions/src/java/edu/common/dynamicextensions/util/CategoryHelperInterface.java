@@ -78,7 +78,7 @@ public interface CategoryHelperInterface
 	/**
 	 * Create a new category if category with the given name does not exist.
 	 * @param name name by which we wish to create the category.
-	 * @return category 
+	 * @return category
 	 * @throws DynamicExtensionsSystemException
 	 */
 	CategoryInterface getCategory(String name) throws DynamicExtensionsSystemException;
@@ -120,8 +120,8 @@ public interface CategoryHelperInterface
 	void setRootCategoryEntity(ContainerInterface container, CategoryInterface category);
 
 	/**
-	 * Add a controls to category containers. Attribute name is used to get the attribute of the entity. 
-	 * controlValue is used to select the type of control desired. controlCaption is used to modify the 
+	 * Add a controls to category containers. Attribute name is used to get the attribute of the entity.
+	 * controlValue is used to select the type of control desired. controlCaption is used to modify the
 	 * UI property i.e. label of the attribute. Lastly a list of permissible values is passed if any permissible
 	 * values subset exist for an attribute.
 	 * @param entity used to create a category entity.
@@ -130,7 +130,7 @@ public interface CategoryHelperInterface
 	 * @param controlType type of control to be created. (e.g. ControlEnum.TEXT_FIELD_CONTROL)
 	 * @param permissibleValues in case of radio buttons, lists and combo boxes, the list of permissible values is required, optional otherwise.
 	 * @throws DynamicExtensionsApplicationException
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	ControlInterface addOrUpdateControl(EntityInterface entity, String attributeName,
 			ContainerInterface container, ControlEnum controlType, String controlCaption,
@@ -158,8 +158,8 @@ public interface CategoryHelperInterface
 	 * @param associationList association(s) present between two entities involved.
 	 * e.g 'userstudyassociation' as depicted above
 	 * @param noOfEntries indicates multiplicity. e.g. one-to-one (1) or one-to-many (-1) etc.
-	 * @param string 
-	 * @return CategoryAssociationControlInterface 
+	 * @param string
+	 * @return CategoryAssociationControlInterface
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
@@ -177,7 +177,7 @@ public interface CategoryHelperInterface
 	int getNextSequenceNumber(ContainerInterface container);
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @param attributeName
 	 * @param desiredPermissibleValues
@@ -193,7 +193,7 @@ public interface CategoryHelperInterface
 	/**
 	 * @param path
 	 * @param instance
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	void addInstanceInformationToPath(PathInterface path, String instance)
 			throws DynamicExtensionsSystemException;
@@ -279,7 +279,7 @@ public interface CategoryHelperInterface
 	 * @param temp
 	 */
 	void removeAllSeprators(ContainerInterface temp);
-	
+
 	/**
 	 * Separates the instance information form the string of the format entityName[instance]
 	 * @param categoryEntityName
@@ -287,7 +287,7 @@ public interface CategoryHelperInterface
 	 */
 	public abstract Long getInsatnce(String categoryEntityName);
 	/**
-	 * 
+	 *
 	 * @param permissibleValueCollection
 	 * @param value
 	 * @return
@@ -296,7 +296,7 @@ public interface CategoryHelperInterface
 			Collection<PermissibleValueInterface> permissibleValueCollection,
 			String value);
 	/**
-	 * 
+	 *
 	 * @param attributeName
 	 * @param entityName
 	 * @param skipLogicAttributeInterface
@@ -306,7 +306,7 @@ public interface CategoryHelperInterface
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public List<PermissibleValueInterface> createPermissibleValuesList(
+	List<PermissibleValueInterface> createPermissibleValuesList(
 			String attributeName,
 			String entityName,
 			SkipLogicAttributeInterface skipLogicAttributeInterface,
@@ -314,5 +314,13 @@ public interface CategoryHelperInterface
 			Map<String, Collection<SemanticPropertyInterface>> desiredPermissibleValues)
 			throws DynamicExtensionsApplicationException,
 			DynamicExtensionsSystemException;
+
+
+	/**
+	 * This method will release the lock on the category so that other users can use it
+	 * for furthure.
+	 * @param category category on which the lock is released.
+	 */
+	void releaseLockOnCategory(CategoryInterface category);
 
 }

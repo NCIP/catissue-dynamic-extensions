@@ -6,6 +6,9 @@ package edu.common.dynamicextensions.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +36,8 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -930,7 +935,7 @@ public class DynamicExtensionsUtility
 			String attributeName) throws DynamicExtensionsApplicationException
 	{
 		Collection<AbstractAttributeInterface> collection = entity.getAbstractAttributeCollection();
-		if (collection != null || !collection.isEmpty())
+		if (collection != null && !collection.isEmpty())
 		{
 			for (AbstractAttributeInterface attribute : collection)
 			{
@@ -1303,7 +1308,7 @@ public class DynamicExtensionsUtility
 	{
 		DefaultBizLogic defaultBizLogic = BizLogicFactory.getDefaultBizLogic();
 		defaultBizLogic.setAppName(DynamicExtensionDAO.getInstance().getAppName());
-		List objectList = new ArrayList();
+		List objectList ;
 		ContainerInterface containerInterface = null;
 		if (caption == null || caption.trim().length() == 0)
 		{
@@ -1444,7 +1449,7 @@ public class DynamicExtensionsUtility
 	public static EntityGroupInterface retrieveEntityGroup(String name)
 	{
 		//DefaultBizLogic bizlogic = new DefaultBizLogic();
-		Collection<EntityGroupInterface> entityGroupCollection = new HashSet<EntityGroupInterface>();
+		Collection<EntityGroupInterface> entityGroupCollection;
 		EntityGroupInterface entityGroup = null;
 		DefaultBizLogic bizlogic = BizLogicFactory.getDefaultBizLogic();
 		bizlogic.setAppName(DynamicExtensionDAO.getInstance().getAppName());
@@ -2558,6 +2563,91 @@ public class DynamicExtensionsUtility
 
 		}
 		return validDatePatternList;
+	}
+
+	/**
+	 * This method will extract the given zip file in filename argument to the destination folder.
+	 * if destination folder is null or empty string then it will extract the zip to the current base directory
+	 * @param filename zip file to be extracted.
+	 * @param destination folder where the file should be extracted.
+	 * @throws DynamicExtensionsSystemException exception.
+	 * @throws IOException exception.
+	 */
+	public static void extractZipToDestination(String filename,String destination) throws DynamicExtensionsSystemException, IOException
+	{
+		ZipInputStream zipinputstream=null;
+		try
+		{
+			String destinationPath = "";
+			if(destination!=null && !"".equals(destination))
+			{
+				destinationPath = destination + "/";
+			}
+			zipinputstream = new ZipInputStream(new FileInputStream(filename));
+			ZipEntry zipentry = zipinputstream.getNextEntry();
+			while (zipentry != null)
+			{
+				if (!zipentry.isDirectory())
+				{
+					String entryName = zipentry.getName();
+					extractZipEntryToFile(destinationPath, zipinputstream, entryName);
+					zipinputstream.closeEntry();
+				}
+				zipentry = zipinputstream.getNextEntry();
+			}
+			zipinputstream.close();
+		}
+		catch (IOException e)
+		{
+			throw new DynamicExtensionsSystemException("Can not extract the Zip ", e);
+		}
+		finally
+		{
+			if (zipinputstream != null)
+			{
+				zipinputstream.close();
+			}
+		}
+	}
+
+	/**
+	 * It will only extract the given zipEntry i.e. particular file in the zip file
+	 * to the destination path
+	 * @param destinationPath directory in which to extract the directory.
+	 * @param zipinputstream input stream
+	 * @param entryName name of the file which is to be extracted
+	 * @throws IOException exception
+	 * @throws DynamicExtensionsSystemException exception
+	 */
+	private static void extractZipEntryToFile(String destinationPath,
+			ZipInputStream zipinputstream, String entryName) throws IOException, DynamicExtensionsSystemException
+	{
+		byte[] buf = new byte[1024];
+		FileOutputStream fileoutputstream=null;
+		try
+		{
+			File newFile = new File(destinationPath+entryName);
+			File parentFile = newFile.getParentFile();
+			if (parentFile != null && !parentFile.exists() && !parentFile.mkdirs())
+			{
+				// this is condition when mkdirs is failed to create the directories
+				throw new DynamicExtensionsSystemException("Can not create Directory "+parentFile);
+			}
+			fileoutputstream = new FileOutputStream(newFile);
+			int bytesRead = zipinputstream.read(buf, 0, 1024);
+			while (bytesRead > -1)
+			{
+				fileoutputstream.write(buf, 0, bytesRead);
+				bytesRead = zipinputstream.read(buf, 0, 1024);
+			}
+		}
+		finally
+		{
+			if(fileoutputstream !=null)
+			{
+				fileoutputstream.close();
+			}
+		}
 	}
 
 }

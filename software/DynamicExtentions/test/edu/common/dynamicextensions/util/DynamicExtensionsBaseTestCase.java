@@ -426,7 +426,7 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	protected void createCaegory(String categoryFilePath)
 	{
 		String[] args2 = {categoryFilePath};
-		CategoryCreator categoryCreator = new CategoryCreator();
+		CommandLineCategoryCreator categoryCreator = new CommandLineCategoryCreator();
 		categoryCreator.main(args2);
 
 	}

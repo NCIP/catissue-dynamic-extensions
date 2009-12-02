@@ -25,12 +25,13 @@ public abstract class CategoryFileParser extends FileReader
 	protected boolean inSignleLineDisplay;
 
 	/**
-	 * @param filePath
+	 * @param filePath file path
+	 * @param base directory
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public CategoryFileParser(String filePath) throws DynamicExtensionsSystemException
+	public CategoryFileParser(String filePath,String baseDirectory) throws DynamicExtensionsSystemException
 	{
-		super(filePath);
+		super(filePath,baseDirectory);
 	}
 
 	/**
@@ -39,7 +40,7 @@ public abstract class CategoryFileParser extends FileReader
 	public abstract long getLineNumber();
 
 	/**
-	 * @return false if end of category file 
+	 * @return false if end of category file
 	 * otherwise reads the next line.
 	 * @throws IOException
 	 */
@@ -56,8 +57,8 @@ public abstract class CategoryFileParser extends FileReader
 	public abstract String getEntityGroupName();
 
 	/**
-	 * @return map with key as entity name and 
-	 * value as its complete path from the root 
+	 * @return map with key as entity name and
+	 * value as its complete path from the root
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public abstract Map<String, List<String>> getPaths() throws DynamicExtensionsSystemException;
@@ -68,7 +69,7 @@ public abstract class CategoryFileParser extends FileReader
 	public abstract String getDisplyLable();
 
 	/**
-	 * @return 
+	 * @return
 	 */
 	public abstract boolean isShowCaption();
 
@@ -89,7 +90,7 @@ public abstract class CategoryFileParser extends FileReader
 	 */
 	public abstract String getControlType();
 
-	/** 
+	/**
 	 * @return control label
 	 */
 	public abstract String getControlCaption();
@@ -121,7 +122,7 @@ public abstract class CategoryFileParser extends FileReader
 			throws DynamicExtensionsSystemException;
 
 	/**
-	 * @return 
+	 * @return
 	 */
 	public abstract boolean hasDisplayLable();
 
@@ -264,5 +265,11 @@ public abstract class CategoryFileParser extends FileReader
 	 * @return
 	 */
 	public abstract Map<String, String> getCommonControlOptions();
-	
+
+	/**
+	 *This method closes the stream which was open to read the file
+	 * @throws IOException
+	 */
+	public abstract void closeResources() throws DynamicExtensionsSystemException;
+
 }

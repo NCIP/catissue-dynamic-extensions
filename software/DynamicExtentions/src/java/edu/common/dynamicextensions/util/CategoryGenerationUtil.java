@@ -31,6 +31,7 @@ import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
 import edu.common.dynamicextensions.util.parser.FormulaParser;
 import edu.common.dynamicextensions.validation.category.CategoryValidator;
+import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.util.global.ApplicationProperties;
 
 /**
@@ -440,7 +441,7 @@ public class CategoryGenerationUtil
 			return category.getRootCategoryElement().getEntity().getEntityGroup();
 		}
 
-		return DynamicExtensionsUtility.retrieveEntityGroup(entityGroupName);
+		return EntityCache.getInstance().getEntityGroupByName(entityGroupName);
 
 	}
 

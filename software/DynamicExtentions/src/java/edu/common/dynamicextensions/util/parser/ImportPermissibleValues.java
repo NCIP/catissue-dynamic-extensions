@@ -38,7 +38,7 @@ public class ImportPermissibleValues
 	{
 		LoggerConfig.configureLogger(System.getProperty("user.dir"));
 	}
-	private CategoryCSVFileParser categoryCSVFileParser;
+	private final CategoryCSVFileParser categoryCSVFileParser;
 
 	private static final String ENTITY_GROUP = "Entity_Group";
 
@@ -51,7 +51,7 @@ public class ImportPermissibleValues
 	public ImportPermissibleValues(String filePath) throws DynamicExtensionsSystemException,
 			FileNotFoundException
 	{
-		this.categoryCSVFileParser = new CategoryCSVFileParser(filePath);
+		categoryCSVFileParser = new CategoryCSVFileParser(filePath,"");
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class ImportPermissibleValues
 					Map<String, Collection<SemanticPropertyInterface>> finalPVs = new LinkedHashMap<String, Collection<SemanticPropertyInterface>>();
 					Long attributeId = entityManager.getAttributeId(attributeName, entityId);
 					// Bug # 10432,10382
-					// If this attribute is of type association (as in case of multi select),  
+					// If this attribute is of type association (as in case of multi select),
 					// it is required to fetch association's target entity's attribute id.
 					Long associationAttributeId = entityManager
 							.getAssociationAttributeId(attributeId);

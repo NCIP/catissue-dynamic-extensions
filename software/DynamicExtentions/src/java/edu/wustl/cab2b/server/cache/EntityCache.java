@@ -15,7 +15,7 @@ import edu.wustl.common.querysuite.metadata.category.Category;
 
 /**
  * This class is used to cache the Entity and its Attribute objects.
- * 
+ *
  * @author Chandrakant Talele
  * @author gautam_shetty
  * @author Rahul Ner
@@ -45,7 +45,7 @@ public class EntityCache extends AbstractEntityCache
 	/**
 	 * Returns the Entity objects whose source classes fields match with the
 	 * respective not null fields in the passed entity object.
-	 * 
+	 *
 	 * @param patternEntityCollection The entity object.
 	 * @return the Entity objects whose source classes fields match with the
 	 *         respective not null fields in the passed entity object.
@@ -79,10 +79,10 @@ public class EntityCache extends AbstractEntityCache
 	}
 
 	/**
-	 * 
+	 *
 	 * Returns the Entity objects whose attributes's source classes fields match
 	 * with the respective not null fields in the passed entity object.
-	 * 
+	 *
 	 * @param patternAttributeCollection The entity object.
 	 * @return the Entity objects whose attributes's source classes fields match
 	 *         with the respective not null fields in the passed entity object.

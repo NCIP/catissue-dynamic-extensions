@@ -2,7 +2,6 @@
 package edu.wustl.cab2b.common.cache;
 
 import java.io.Serializable;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -50,7 +49,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 
 	private static final long serialVersionUID = 1234567890L;
 
-	private static final Logger logger = edu.wustl.common.util.logger.Logger
+	private static final Logger LOGGER = edu.wustl.common.util.logger.Logger
 			.getLogger(AbstractEntityCache.class);
 
 	/**
@@ -61,7 +60,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	/**
 	 * Set of all the entity groups loaded as metadata in caB2B.
 	 */
-	private Set<EntityGroupInterface> cab2bEntityGroups = new HashSet<EntityGroupInterface>();
+	private final Set<EntityGroupInterface> cab2bEntityGroups = new HashSet<EntityGroupInterface>();
 
 	/**
 	 * The EntityCache object. Needed for singleton
@@ -132,6 +131,19 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	protected Map<Long, ControlInterface> idVsControl = new HashMap<Long, ControlInterface>();
 
 	/**
+	 * This set contains all the categories which are in opened at this instance in Edit
+	 * mode by any user.
+	 */
+	protected Set<CategoryInterface> categoriesInUse = new HashSet<CategoryInterface>();
+
+	/**
+	 *  This counter is used for creating the temporary directories in case of create
+	 *  category task by more than one user at a time.
+	 */
+	protected long catFileNameCounter = 1L;
+
+
+	/**
 	 * This method gives the singleton cache object. If cache is not present then it
 	 * throws {@link UnsupportedOperationException}
 	 * @return The singleton cache object.
@@ -148,7 +160,6 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	/**
 	 * Private default constructor. To restrict the user from instantiating
 	 * explicitly.
-	 * @throws RemoteException
 	 */
 	protected AbstractEntityCache()
 	{
@@ -158,9 +169,9 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	/**
 	 * Refresh the entity cache.
 	 */
-	public final void refreshCache()
+	public final synchronized void refreshCache()
 	{
-		logger.info("Initializing cache, this may take few minutes...");
+		LOGGER.info("Initializing cache, this may take few minutes...");
 		clearCache();
 
 		HibernateDAO hibernateDAO = null;
@@ -175,7 +186,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 		}
 		catch (DAOException e)
 		{
-			logger.error("Error while Creating EntityCache. Error: " + e.getMessage());
+			LOGGER.error("Error while Creating EntityCache. Error: " + e.getMessage());
 			throw new RuntimeException("Exception encountered while creating EntityCache!!", e);
 		}
 		finally
@@ -188,14 +199,14 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 				}
 				catch (DAOException e)
 				{
-					logger.error("Exception encountered while closing session In EntityCache."
+					LOGGER.error("Exception encountered while closing session In EntityCache."
 							+ e.getMessage());
 					throw new RuntimeException(
 							"Exception encountered while closing session In EntityCache.", e);
 				}
 			}
 		}
-		logger.info("Initializing cache DONE");
+		LOGGER.info("Initializing cache DONE");
 	}
 
 	/**
@@ -259,6 +270,67 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 			createCategoryEntityCach(targetCategoryEntity);
 
 		}
+	}
+
+
+	/**
+	 * This method verifies weather the current category is in use by some user in
+	 * edit category mode.
+	 * @param category category which is to be checked for in use state.
+	 * @return true if category is in use else will return false.
+	 */
+	public synchronized boolean isCategoryInUse(CategoryInterface category)
+	{
+		boolean isInUse = false;
+		if(categoriesInUse.contains(category))
+		{
+			isInUse=true;
+		}
+		return isInUse;
+
+	}
+
+	/**
+	 * This method will remove the given category from in Use set.
+	 * so that it will be available for other users to Edit.
+	 * @param category which is to be released.
+	 */
+	public synchronized void releaseCategoryFromUse(CategoryInterface category)
+	{
+		categoriesInUse.remove(category);
+	}
+
+	/**
+	 * This method will add the given category in use.
+	 * @param category which is to be marked as in use.
+	 */
+	public synchronized void markCategoryInUse(CategoryInterface category)
+	{
+		categoriesInUse.add(category);
+	}
+
+	/**
+	 * This method will return the next Counter for generating the temporary directory
+	 * for category creation.
+	 * @return category file name counter.
+	 */
+	public synchronized long getNextIdForCategoryFileGeneration()
+	{
+		return catFileNameCounter++;
+	}
+
+	/**
+	 * This method will add the given category to cache.
+	 * @param category category to be added.
+	 */
+	public synchronized void addCategoryToCache(CategoryInterface category)
+	{
+		LOGGER.info("adding category to cache"+category);
+		deCategories.remove(category);
+		deCategories.add(category);
+		createCategoryEntityCach(category.getRootCategoryElement());
+		LOGGER.info("adding category to cache done");
+
 	}
 
 	/**
@@ -698,14 +770,14 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	public BaseAbstractAttributeInterface getBaseAbstractAttributeById(Long identifier)
 	{
 		BaseAbstractAttributeInterface baseAbstractAttribute = null;
-		baseAbstractAttribute =((BaseAbstractAttributeInterface)idVsCategoryAttribute.get(identifier));
+		baseAbstractAttribute =idVsCategoryAttribute.get(identifier);
 		if (baseAbstractAttribute == null)
 		{
-			baseAbstractAttribute = ((BaseAbstractAttributeInterface)idVsAttribute.get(identifier));
+			baseAbstractAttribute = idVsAttribute.get(identifier);
 		}
 		if (baseAbstractAttribute == null)
 		{
-			baseAbstractAttribute = ((BaseAbstractAttributeInterface)idVsAssociation.get(identifier));
+			baseAbstractAttribute = idVsAssociation.get(identifier);
 		}
 		if (baseAbstractAttribute == null)
 		{

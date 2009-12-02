@@ -1,6 +1,7 @@
 
 package edu.common.dynamicextensions.domain;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import edu.common.dynamicextensions.domaininterface.DateValueInterface;
@@ -32,7 +33,12 @@ public class DateValue extends PermissibleValue implements DateValueInterface
 	 */
 	public Date getValue()
 	{
-		return value;
+		Date defaultDate = null;
+		if(value != null)
+		{
+			defaultDate = new Timestamp(value.getTime());
+		}
+		return defaultDate;
 	}
 
 	/**
@@ -50,16 +56,21 @@ public class DateValue extends PermissibleValue implements DateValueInterface
 	 */
 	public Object getValueAsObject()
 	{
-		return value;
+		Date defaultDate = null;
+		if(value != null)
+		{
+			defaultDate = new Timestamp(value.getTime());
+		}
+		return defaultDate;
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public PermissibleValueInterface clone()
 	{
 		DateValueInterface dateValueInterface = DomainObjectFactory.getInstance().createDateValue();
-		dateValueInterface.setValue(this.value);
+		dateValueInterface.setValue(value);
 		return dateValueInterface;
 	}
 
@@ -69,7 +80,7 @@ public class DateValue extends PermissibleValue implements DateValueInterface
 	public boolean equals(Object obj)
 	{
 		boolean isEqual = false;
-		if (obj instanceof DateValue && (value!= null && value.equals(((DateValue) obj).getValue())))
+		if (obj instanceof DateValue && (value!= null && getValue().equals(((DateValue) obj).getValue())))
 		{
 			isEqual = true;
 		}

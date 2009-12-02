@@ -66,7 +66,7 @@ public class CategoryValidator
 	public CategoryValidator(CategoryCSVFileParser categoryFileParser)
 	{
 		this.categoryFileParser = categoryFileParser;
-		ApplicationProperties.initBundle(CategoryCSVConstants.DYEXTN_ERROR_MESSAGES_FILE);
+		ApplicationProperties.initBundle("ApplicationResources");
 	}
 
 	/**

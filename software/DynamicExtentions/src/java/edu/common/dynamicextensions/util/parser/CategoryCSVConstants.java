@@ -3,14 +3,14 @@ package edu.common.dynamicextensions.util.parser;
 
 /**
  * @author kunal_kamble
- * This interface defines all the keywords used in the 
+ * This interface defines all the keywords used in the
  * csv file used for the category creation.
  */
 public interface CategoryCSVConstants
 {
 
 	/**
-	 * This keyword used to mark the beginning of the new category definition. 
+	 * This keyword used to mark the beginning of the new category definition.
 	 */
 	String FORM_DEFINITION = "Form_Definition";
 
@@ -20,17 +20,17 @@ public interface CategoryCSVConstants
 	String PERMISSIBLE_VALUES = "Permissible_Values";
 
 	/**
-	 * This keyword is used before specifying the permissible values 
+	 * This keyword is used before specifying the permissible values
 	 * file name, where permissible values are line separated.
 	 */
 	String PERMISSIBLE_VALUES_FILE = "Permissible_Values_File";
 
 	/**
-	 * This keyword is used before defining the options available for a control. 
+	 * This keyword is used before defining the options available for a control.
 	 */
 	String OPTIONS = "options";
 	/**
-	 * This keyword is used before defining the options available for a control. 
+	 * This keyword is used before defining the options available for a control.
 	 */
 	String PERMISSIBLE_VALUE_OPTIONS = "PermVal_Options";
 
@@ -70,7 +70,7 @@ public interface CategoryCSVConstants
 	 * Defines for turning off future date validation.
 	 */
 	String ALLOW_FUTURE_DATE = "allowfuturedate";
-	
+
 	/**
 	 * Defines for date rule validation.
 	 */
@@ -120,6 +120,9 @@ public interface CategoryCSVConstants
 	String TEXT_AREA = "textArea";
 
 	String SEPARATOR = "separator";
-	
+
 	String COMMON_OPTIONS = "commonOptions";
+
+	String METADATA_ONLY = "isMetadataOnly";
+	String CATEGORY_NAMES_FILE = "categoryFileNames";
 }

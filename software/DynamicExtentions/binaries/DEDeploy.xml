@@ -291,11 +291,14 @@
 	</target>
 
 	<!-- Target used to create the Category -->
+	<property name="categoryFormNames" value="" />
 	<target name="create_category">
 
 		<antcall target="setupClassExecutionEnvironment" />
-		<java classname="edu.common.dynamicextensions.util.CategoryCreator" fork="true" maxmemory="1024M">
-			<arg value="${categoryDefinitionFilePath}" />
+		<java classname="edu.common.dynamicextensions.util.CommandLineCategoryCreator" fork="true" maxmemory="1024M">
+			<arg value="${zipFilePath}" />
+			<arg value="${categoryFormNames}" />
+			<arg value="${Application.url}"/>
 			<classpath>
 				<pathelement location="${temp.dir.DE}" />
 				<fileset dir="${lib.dir.DE}">
@@ -312,8 +315,8 @@
 	</target>
 
 	<!--This target executes create_all_categories command for all the  category-forms file specified within csv file-->
-	<property name="categoryFormNames" value="" />
-	<target name="create_all_categories">
+
+	<!--<target name="create_all_categories">
 		<antcall target="setupClassExecutionEnvironment" />
 		<java classname="edu.common.dynamicextensions.util.MultipleCategoryCreator" fork="true" maxmemory="1024M">
 			<arg value="${categoryFormNames}" />
@@ -330,7 +333,7 @@
 			</classpath>
 		</java>
 
-	</target>
+	</target>-->
 	<!--end of  target create_all_categories -->
 	<property name="permissibleValuesFile" value=" " />
 	<target name="import_permissible_values">

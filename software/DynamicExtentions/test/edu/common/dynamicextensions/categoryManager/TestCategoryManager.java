@@ -45,8 +45,8 @@ import edu.common.dynamicextensions.entitymanager.EntityGroupManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
-import edu.common.dynamicextensions.util.CategoryCreator;
 import edu.common.dynamicextensions.util.CiderXMIImporter;
+import edu.common.dynamicextensions.util.CommandLineCategoryCreator;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.XMIImporter;
@@ -225,7 +225,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			XMIImporter.main(args1);
 
 			String[] args2 = {CSV_FILE_PATH+"cat_RULES.csv"};
-			CategoryCreator categoryCreator = new CategoryCreator();
+			CommandLineCategoryCreator categoryCreator = new CommandLineCategoryCreator();
 			categoryCreator.main(args2);
 
 			fail();
@@ -1361,8 +1361,8 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			XMIImporter.main(args1);
 
 			String[] args2 = {CSV_FILE_PATH+ "Category_PathAnnoModel.csv"};
-			CategoryCreator categoryCreator = new CategoryCreator();
-			categoryCreator.main(args2);
+
+			CommandLineCategoryCreator.main(args2);
 
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 			category = (CategoryInterface) categoryManager.getObjectByName(
@@ -1418,8 +1418,8 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			XMIImporter.main(args1);
 
 			String[] args2 = {CSV_FILE_PATH + "Category_NeedleBiopsy.csv"};
-			CategoryCreator categoryCreator = new CategoryCreator();
-			categoryCreator.main(args2);
+
+			CommandLineCategoryCreator.main(args2);
 
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 			category = (CategoryInterface) categoryManager.getObjectByName(
@@ -1478,8 +1478,8 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			CiderXMIImporter.main(args);
 
 			String[] args2 = {CSV_FILE_PATH+"Lab_category.csv", "true"};
-			CategoryCreator categoryCreator = new CategoryCreator();
-			categoryCreator.main(args2);
+
+			CommandLineCategoryCreator.main(args2);
 
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 			category = (CategoryInterface) categoryManager.getObjectByName(
@@ -1511,8 +1511,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			XMIImporter.main(args);
 
 			String[] args2 = {CSV_FILE_PATH + "BMI.csv"};
-			CategoryCreator categoryCreator = new CategoryCreator();
-			categoryCreator.main(args2);
+			CommandLineCategoryCreator.main(args2);
 
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 			category = (CategoryInterface) categoryManager.getObjectByName(
@@ -1544,8 +1543,8 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			XMIImporter.main(args);
 
 			String[] args2 = {CSV_FILE_PATH+"BMIRelatedAttribute.csv"};
-			CategoryCreator categoryCreator = new CategoryCreator();
-			categoryCreator.main(args2);
+
+			CommandLineCategoryCreator.main(args2);
 
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 			category = (CategoryInterface) categoryManager.getObjectByName(
@@ -1577,8 +1576,8 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			XMIImporter.main(args);
 
 			String[] args2 = {CSV_FILE_PATH + "BMI_DifferentClass.csv"};
-			CategoryCreator categoryCreator = new CategoryCreator();
-			categoryCreator.main(args2);
+
+			CommandLineCategoryCreator.main(args2);
 
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 			category = (CategoryInterface) categoryManager.getObjectByName(
@@ -1610,8 +1609,8 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			XMIImporter.main(args);
 
 			String[] args2 = {CSV_FILE_PATH + "BMI_Date.csv"};
-			CategoryCreator categoryCreator = new CategoryCreator();
-			categoryCreator.main(args2);
+
+			CommandLineCategoryCreator.main(args2);
 
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 			category = (CategoryInterface) categoryManager.getObjectByName(
@@ -1645,8 +1644,8 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			importPermissibleValues.importValues();
 
 			String[] args2 = {CSV_FILE_PATH + "SkipLogic.csv"};
-			CategoryCreator categoryCreator = new CategoryCreator();
-			categoryCreator.main(args2);
+
+			CommandLineCategoryCreator.main(args2);
 
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 
@@ -2310,9 +2309,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			CategoryManagerInterface categoryManager = CategoryManager.getInstance();
-			CategoryGenerator categoryGenerator = new CategoryGenerator(filePath);
+			CategoryGenerator categoryGenerator = new CategoryGenerator(filePath,"");
 
-			CategoryInterface category = categoryGenerator.getCategoryList().get(0);
+			CategoryInterface category = categoryGenerator.generateCategory();
 
 			// Save the category.
 			category = categoryManager.persistCategory(category);
@@ -2397,10 +2396,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			String[] args1 = {XMI_FILE_PATH + "test.xmi",CSV_FILE_PATH + "Skip_Logic_Main.csv", "annotations", "  "};
 			XMIImporter.main(args1);
 
-			
+
 			String[] args2 = {CSV_FILE_PATH + "category_multiselectCheckBox.csv"};
-			CategoryCreator categoryCreator = new CategoryCreator();
-			categoryCreator.main(args2);
+			CommandLineCategoryCreator.main(args2);
 
 			CategoryManager categoryManager = (CategoryManager) CategoryManager.getInstance();
 			category = (CategoryInterface) categoryManager.getObjectByName(

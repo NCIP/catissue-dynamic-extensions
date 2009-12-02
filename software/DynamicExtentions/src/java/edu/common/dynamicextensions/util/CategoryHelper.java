@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import edu.common.dynamicextensions.domain.Category;
 import edu.common.dynamicextensions.domain.CategoryAssociation;
 import edu.common.dynamicextensions.domain.CategoryAttribute;
 import edu.common.dynamicextensions.domain.CategoryEntity;
@@ -59,7 +58,6 @@ import edu.common.dynamicextensions.domaininterface.userinterface.TextAreaInterf
 import edu.common.dynamicextensions.domaininterface.userinterface.TextFieldInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleParameterInterface;
-import edu.common.dynamicextensions.entitymanager.AbstractMetadataManager;
 import edu.common.dynamicextensions.entitymanager.CategoryManager;
 import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
@@ -71,7 +69,9 @@ import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
 import edu.common.dynamicextensions.util.parser.CategoryFileParser;
 import edu.common.dynamicextensions.validation.ValidatorUtil;
+import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.util.global.ApplicationProperties;
+import edu.wustl.metadata.util.DyExtnObjectCloner;
 
 /**
  * @author kunal_kamble
@@ -90,6 +90,8 @@ public class CategoryHelper implements CategoryHelperInterface
 	 */
 	public CategoryHelper()
 	{
+		// TODO Auto-generated constructor
+
 	}
 
 	/**
@@ -101,24 +103,79 @@ public class CategoryHelper implements CategoryHelperInterface
 		this.categoryFileParser = categoryFileParser;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.common.dynamicextensions.categoryManager.CategoryHelperInterface#createCategory(java.lang.String)
+	/**
+	 * This method will retrieve the category from the cache with the given name.
+	 * If the category is find then it will check weather it is already in use or not.
+	 * If it is already in use it will throw exception.
+	 * else will add the category to inUse set & return the category for furthure operations.
+	 * After completing the operation user has to release the lock on category explicitly.
+	 * @param name name of the category to retrieve.
+	 * @return category with given name from cache else new category.
 	 */
 	public CategoryInterface getCategory(String name) throws DynamicExtensionsSystemException
 	{
-
-		CategoryInterface category = (CategoryInterface) ((AbstractMetadataManager) categoryManager)
-				.getObjectByName(Category.class.getName(), name);
-
+		CategoryInterface category = getCategoryFromCache(name);
 		if (category == null)
 		{
 			category = DomainObjectFactory.getInstance().createCategory();
 			category.setName(name);
 		}
+		else
+		{
+			synchronized (category)
+			{
+				if(EntityCache.getInstance().isCategoryInUse(category))
+				{
+					throw new DynamicExtensionsSystemException("Category In Use Please Try Agian after some time");
+				}
+				else
+				{
+					EntityCache.getInstance().markCategoryInUse(category);
+					DyExtnObjectCloner cloner = new DyExtnObjectCloner();
+					CategoryInterface clonedCategory = cloner.clone(category);
+					category = clonedCategory;
+				}
+			}
+		}
 
 		return category;
 	}
 
+	/**
+	 * This method will search for the categort with given name in Cache.
+	 * @param name name of the category
+	 * @return category with given name if found else will return null.
+	 */
+	private CategoryInterface getCategoryFromCache(String name)
+	{
+		CategoryInterface category=null;
+		for(CategoryInterface cat : EntityCache.getInstance().getAllCategories())
+		{
+			if (name.equals(cat.getName()))
+			{
+				category = cat;
+				break;
+			}
+
+		}
+		return category;
+	}
+
+	/**
+	 * This method will release the lock on the category so that other users can use it
+	 * for furthure.
+	 * @param category category on which the lock is released.
+	 */
+	public void releaseLockOnCategory(CategoryInterface category)
+	{
+		if(category!=null && category.getId()!=null)
+		{
+			synchronized (category)
+			{
+				EntityCache.getInstance().releaseCategoryFromUse(category);
+			}
+		}
+	}
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.categoryManager.CategoryHelperInterface#saveCategory(edu.common.dynamicextensions.domaininterface.CategoryInterface)
 	 */
@@ -464,6 +521,7 @@ public class CategoryHelper implements CategoryHelperInterface
 				break;
 			case LABEL_CONTROL :
 				control = control;
+				break;
 			case MULTISELECT_CHECKBOX_CONTROL :
 				control = createOrUpdateSelectControl(container, categoryAttribute,
 						createPermissibleValuesList(entity, attributeName, lineNumber,

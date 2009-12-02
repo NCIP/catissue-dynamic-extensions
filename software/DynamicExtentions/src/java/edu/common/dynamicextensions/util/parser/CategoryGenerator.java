@@ -56,13 +56,13 @@ import edu.wustl.common.util.global.ApplicationProperties;
 public class CategoryGenerator
 {
 
-	private CategoryFileParser categoryFileParser;
+	private final CategoryFileParser categoryFileParser;
 
 	private CategoryValidator categoryValidator;
 
-	private CategoryHelperInterface categoryHelper;
+	private final CategoryHelperInterface categoryHelper;
 
-	private List<String> mainFormList = new ArrayList<String>();
+	private final List<String> mainFormList = new ArrayList<String>();
 
 	private CategoryInterface category;
 	private EntityGroupInterface entityGroup;
@@ -85,10 +85,10 @@ public class CategoryGenerator
 	 * @throws DynamicExtensionsSystemException
 	 * @throws FileNotFoundException
 	 */
-	public CategoryGenerator(String filePath) throws DynamicExtensionsSystemException,
+	public CategoryGenerator(String filePath,String baseDir) throws DynamicExtensionsSystemException,
 	FileNotFoundException
 	{
-		categoryFileParser = new CategoryCSVFileParser(filePath);
+		categoryFileParser = new CategoryCSVFileParser(filePath,baseDir);
 		categoryValidator = new CategoryValidator((CategoryCSVFileParser) categoryFileParser);
 		categoryHelper = new CategoryHelper(categoryFileParser);
 	}
@@ -99,12 +99,11 @@ public class CategoryGenerator
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws ParseException
 	 */
-	public List<CategoryInterface> getCategoryList() throws DynamicExtensionsSystemException,
+	public CategoryInterface generateCategory() throws DynamicExtensionsSystemException,
 	DynamicExtensionsApplicationException, ParseException
 	{
 		CategoryHelperInterface categoryHelper = new CategoryHelper(categoryFileParser);
-		List<CategoryInterface> categoryList = new ArrayList<CategoryInterface>();
-		ApplicationProperties.initBundle(CategoryCSVConstants.DYEXTN_ERROR_MESSAGES_FILE);
+		ApplicationProperties.initBundle("ApplicationResources");
 
 		try
 		{
@@ -422,26 +421,9 @@ public class CategoryGenerator
 				// rearrangeControlSequence((ContainerInterface)
 				// category.getRootCategoryElement()
 				// .getContainerCollection().iterator().next(), sequenceMap);
-				categoryList.add(category);
 
 			}
 
-		}
-		catch (FileNotFoundException e)
-		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue("fileNotFound"), e);
-		}
-		catch (IOException e)
-		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-					+ categoryFileParser.getLineNumber()
-					+ " "
-					+ ApplicationProperties.getValue("readingFile")
-					+ categoryFileParser.getFilePath(), e);
 		}
 		catch (Exception e)
 		{
@@ -458,7 +440,11 @@ public class CategoryGenerator
 
 			throw new DynamicExtensionsSystemException("", e);
 		}
-		return categoryList;
+		finally
+		{
+			categoryFileParser.closeResources();
+		}
+		return category;
 	}
 
 	private ControlInterface processSubcategory(boolean firstTimeinDisplayLabel,
@@ -562,11 +548,11 @@ public class CategoryGenerator
 		}
 
 		CategoryHelper categoryHelper = new CategoryHelper(categoryFileParser);
-		CategoryInterface parentCategory = categoryHelper.getCategory(newCategoryEntityName);
+		//CategoryInterface parentCategory = categoryHelper.getCategory(newCategoryEntityName);
 
 		ContainerInterface parentContainer = createCategoryEntityAndContainer(entityGroup
 				.getEntityByName(parentEntity.getName()), newCategoryEntityName,
-				newCategoryEntityName, false, containerCollection, parentCategory);
+				newCategoryEntityName, false, containerCollection, category);
 		(childCategoryEntity)
 		.setParentCategoryEntity((CategoryEntityInterface) parentContainer
 				.getAbstractEntity());
