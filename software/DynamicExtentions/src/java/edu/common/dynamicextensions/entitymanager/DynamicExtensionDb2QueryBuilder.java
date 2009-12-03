@@ -153,7 +153,7 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 				}
 				// if user not enter any value for date field its getting saved as 00-00-0000 ,which is throwing exception
 				//So to avoid it store null value in database
-				if (str.trim().length() == 0)
+				if ("".equals(str.trim()))
 				{
 					formattedvalue = null;
 
@@ -203,7 +203,7 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 						formattedvalue = "1";
 					}
 				}
-				else if (formattedvalue != null && formattedvalue.trim().length() == 0)
+				else if (formattedvalue != null && "".equals(formattedvalue.trim().length()))
 				{
 					formattedvalue = null;
 
@@ -262,7 +262,22 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 	{
 		boolean dataPresent = false;
 		StringBuffer queryBuffer = new StringBuffer();
-		if (!isAttributeColumnToBeExcluded(savedAttribute))
+		if (isAttributeColumnToBeExcluded(savedAttribute))
+		{
+			Collection<Integer> recordCollection = EntityManager.getInstance()
+					.getAttributeRecordsCount(savedAttribute.getEntity().getId(),
+							savedAttribute.getId());
+			if (recordCollection != null && !recordCollection.isEmpty())
+			{
+				Integer count = recordCollection.iterator().next();
+				if (count > 0)
+				{
+					dataPresent = true;
+				}
+			}
+
+		}
+		else
 		{
 			queryBuffer.append(SELECT_KEYWORD).append(WHITESPACE).append("COUNT").append(
 					OPENING_BRACKET).append(ASTERIX).append(CLOSING_BRACKET).append(WHITESPACE)
@@ -275,8 +290,8 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 			JDBCDAO jdbcDao = null;
 			try
 			{
-				jdbcDao=DynamicExtensionsUtility.getJDBCDAO();
-				resultSet=jdbcDao.getQueryResultSet(queryBuffer.toString());
+				jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
+				resultSet = jdbcDao.getQueryResultSet(queryBuffer.toString());
 				resultSet.next();
 				Long count = resultSet.getLong(1);
 				if (count > 0)
@@ -306,20 +321,6 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 					throw new DynamicExtensionsSystemException(e.getMessage(), e);
 				}
 
-			}
-		}
-		else
-		{
-			Collection<Integer> recordCollection = EntityManager.getInstance()
-					.getAttributeRecordsCount(savedAttribute.getEntity().getId(),
-							savedAttribute.getId());
-			if (recordCollection != null && !recordCollection.isEmpty())
-			{
-				Integer count = recordCollection.iterator().next();
-				if (count > 0)
-				{
-					dataPresent = true;
-				}
 			}
 		}
 		return dataPresent;
@@ -452,8 +453,6 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 		return newAttributeQuery;
 	}
 
-
-
 	/**
 	 * Converts Blob data type to Object data type for db2 database
 	 * @param valueObj
@@ -485,6 +484,3 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 	}
 
 }
-
-
-

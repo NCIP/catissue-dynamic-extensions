@@ -69,7 +69,6 @@ import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
 
-
 /**
  * This class provides the methods that builds the queries that are required for
  * creation and updating of the tables of the entities.These queries are as per SQL-99 standard.
@@ -572,7 +571,8 @@ public class DynamicExtensionBaseQueryBuilder
 		{
 			if (entityManagerUtil.isDataPresent(entity.getTableProperties().getName()))
 			{
-				throw new DynamicExtensionsSystemException("Can not change the parent of "+ entity.getName() +". Data is already entered for it." );
+				throw new DynamicExtensionsSystemException("Can not change the parent of "
+						+ entity.getName() + ". Data is already entered for it.");
 			}
 			DynamicExtensionBaseQueryBuilder queryBuilder = QueryBuilderFactory.getQueryBuilder();
 			EntityInterface dbaseCopyParent = dbaseCopy.getParentEntity();
@@ -621,7 +621,8 @@ public class DynamicExtensionBaseQueryBuilder
 				&& EntityManagerUtil.isParentChanged(catEntity, dbaseCopy))
 		{
 			String frnCnstrRlbkQry = "";
-			if (dbaseCopy.getParentCategoryEntity() != null && dbaseCopy.getParentCategoryEntity().isCreateTable())
+			if (dbaseCopy.getParentCategoryEntity() != null
+					&& dbaseCopy.getParentCategoryEntity().isCreateTable())
 			{
 				frnCnstrRlbkQry = getForeignKeyConstraintQueryForInheritance(dbaseCopy, dbaseCopy
 						.getParentCategoryEntity());
@@ -629,7 +630,8 @@ public class DynamicExtensionBaseQueryBuilder
 						.getParentCategoryEntity()));
 				attrRlbkQries.add(frnCnstrRlbkQry);
 			}
-			if (catEntity.getParentCategoryEntity() != null && catEntity.getParentCategoryEntity().isCreateTable())
+			if (catEntity.getParentCategoryEntity() != null
+					&& catEntity.getParentCategoryEntity().isCreateTable())
 			{
 				String frnCnstrntAdQry = getForeignKeyConstraintQueryForInheritance(catEntity,
 						catEntity.getParentCategoryEntity());
@@ -1604,7 +1606,7 @@ public class DynamicExtensionBaseQueryBuilder
 		{
 			columnName = cnstrKeyProp.getTgtForiegnKeyColumnProperties().getName();
 
-			if (frnCnstrName.trim().length() != 0 && !"".equals(frgnCnstrName))
+			if (!"".equals(frgnCnstrName.trim()))
 			{
 				frgnCnstrName = frgnCnstrName.concat(COMMA);
 				prmKeyName = prmKeyName.concat(COMMA);
@@ -1806,6 +1808,7 @@ public class DynamicExtensionBaseQueryBuilder
 	protected String getDatabaseTypeAndSize(AttributeInterface attribute)
 			throws DynamicExtensionsSystemException
 	{
+		String dataType = null;
 		try
 		{
 			DataTypeFactory dataTypeFactory = DataTypeFactory.getInstance();
@@ -1813,11 +1816,11 @@ public class DynamicExtensionBaseQueryBuilder
 					.getAttributeTypeInformation();
 			if (attrTypeInfo instanceof StringAttributeTypeInformation)
 			{
-				return dataTypeFactory.getDatabaseDataType("String");
+				dataType = dataTypeFactory.getDatabaseDataType("String");
 			}
 			else if (attrTypeInfo instanceof IntegerAttributeTypeInformation)
 			{
-				return dataTypeFactory.getDatabaseDataType("Integer");
+				dataType = dataTypeFactory.getDatabaseDataType("Integer");
 			}
 			else if (attrTypeInfo instanceof DateAttributeTypeInformation)
 			{
@@ -1827,40 +1830,40 @@ public class DynamicExtensionBaseQueryBuilder
 
 				if (format != null && format.equalsIgnoreCase(ProcessorConstants.DATE_TIME_FORMAT))
 				{
-					return dataTypeFactory.getDatabaseDataType("DateTime");
+					dataType = dataTypeFactory.getDatabaseDataType("DateTime");
 				}
 				else
 				{
-					return dataTypeFactory.getDatabaseDataType("Date");
+					dataType = dataTypeFactory.getDatabaseDataType("Date");
 				}
 			}
 			else if (attrTypeInfo instanceof FloatAttributeTypeInformation)
 			{
-				return dataTypeFactory.getDatabaseDataType("Float");
+				dataType = dataTypeFactory.getDatabaseDataType("Float");
 			}
 			else if (attrTypeInfo instanceof BooleanAttributeTypeInformation)
 			{
-				return dataTypeFactory.getDatabaseDataType("Boolean");
+				dataType = dataTypeFactory.getDatabaseDataType("Boolean");
 			}
 			else if (attrTypeInfo instanceof DoubleAttributeTypeInformation)
 			{
-				return dataTypeFactory.getDatabaseDataType("Double");
+				dataType = dataTypeFactory.getDatabaseDataType("Double");
 			}
 			else if (attrTypeInfo instanceof LongAttributeTypeInformation)
 			{
-				return dataTypeFactory.getDatabaseDataType("Long");
+				dataType = dataTypeFactory.getDatabaseDataType("Long");
 			}
 			else if (attrTypeInfo instanceof ShortAttributeTypeInformation)
 			{
-				return dataTypeFactory.getDatabaseDataType("Short");
+				dataType = dataTypeFactory.getDatabaseDataType("Short");
 			}
-			if (attrTypeInfo instanceof FileAttributeTypeInformation)
+			else if (attrTypeInfo instanceof FileAttributeTypeInformation)
 			{
-				return dataTypeFactory.getDatabaseDataType("File");
+				dataType = dataTypeFactory.getDatabaseDataType("File");
 			}
 			else if (attrTypeInfo instanceof ObjectAttributeTypeInformation)
 			{
-				return dataTypeFactory.getDatabaseDataType("Object");
+				dataType = dataTypeFactory.getDatabaseDataType("Object");
 			}
 		}
 		catch (DataTypeFactoryInitializationException e)
@@ -1868,7 +1871,7 @@ public class DynamicExtensionBaseQueryBuilder
 			throw new DynamicExtensionsSystemException("Could Not get data type attribute", e);
 		}
 
-		return null;
+		return dataType;
 	}
 
 	/**
@@ -2093,6 +2096,7 @@ public class DynamicExtensionBaseQueryBuilder
 	protected String getAddAttributeQuery(String tableName, String columnName, String dataType,
 			List<String> revQueries, boolean isAddAssoQry)
 	{
+		String queryToReturn;
 		StringBuffer query = new StringBuffer();
 		query.append(ALTER_TABLE + WHITESPACE + tableName + WHITESPACE + ADD_KEYWORD + WHITESPACE);
 		query.append(columnName + WHITESPACE + dataType + WHITESPACE);
@@ -2102,13 +2106,14 @@ public class DynamicExtensionBaseQueryBuilder
 		if (isAddAssoQry)
 		{
 			revQueries.add(rollbackQuery);
-			return query.toString();
+			queryToReturn = query.toString();
 		}
 		else
 		{
 			revQueries.add(query.toString());
-			return rollbackQuery;
+			queryToReturn = rollbackQuery;
 		}
+		return queryToReturn;
 	}
 
 	/**
@@ -3443,7 +3448,7 @@ public class DynamicExtensionBaseQueryBuilder
 			}
 			// For MySQL5 if user does not enter any value for date field, it gets saved as 00-00-0000,
 			// which is throwing exception so to avoid it store null value in database.
-			if (str.trim().length() == 0)
+			if ("".equals(str.trim()))
 			{
 				frmtedValue = null;
 			}
@@ -3490,7 +3495,7 @@ public class DynamicExtensionBaseQueryBuilder
 			// In case of MySQL5, if the column data type is one of double, float or integer,
 			// then it is not possible to pass '' as  a value in insert-update query so pass null as value.
 			if (attrTypInfo instanceof NumericAttributeTypeInformation
-					&& frmtedValue.trim().length() == 0)
+					&& "".equals(frmtedValue.trim()))
 			{
 				frmtedValue = null;
 			}

@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * This class represents a single record for an entity
- * 
+ *
  * @author Rahul Ner
  * @author vishvesh Mulay
  */
@@ -20,14 +20,14 @@ public class EntityRecord implements EntityRecordInterface, Serializable
 	private static final long serialVersionUID = -552600540977483821L;
 
 	/**
-	 * 
+	 *
 	 */
-	Long recordId;
+	protected Long recordId;
 
 	/**
-	 * 
+	 *
 	 */
-	List recordValueList = new ArrayList();
+	protected List recordValueList = new ArrayList();
 
 	/**
 	 *
@@ -84,7 +84,7 @@ public class EntityRecord implements EntityRecordInterface, Serializable
 	 */
 	public void addRecordValue(int index, Object value)
 	{
-		this.recordValueList.add(index, value);
+		recordValueList.add(index, value);
 
 	}
 

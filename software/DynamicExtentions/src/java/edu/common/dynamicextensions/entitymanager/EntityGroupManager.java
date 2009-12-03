@@ -216,8 +216,8 @@ public class EntityGroupManager extends AbstractMetadataManager
 		try
 		{
 			// Call retrieve method to get the entity group object based on the given value of short name.
-			Collection entityGroups = defBizLogic
-					.retrieve(EntityGroup.class.getName(), "shortName", shortName);
+			Collection entityGroups = defBizLogic.retrieve(EntityGroup.class.getName(),
+					"shortName", shortName);
 			if (entityGroups != null && !entityGroups.isEmpty())
 			{
 				entityGroup = (EntityGroupInterface) entityGroups.iterator().next();
@@ -394,15 +394,17 @@ public class EntityGroupManager extends AbstractMetadataManager
 	private EntityInterface getEntityFromGroup(EntityGroupInterface entityGroup, Long entityId)
 	{
 		Collection<EntityInterface> entities = entityGroup.getEntityCollection();
+		EntityInterface entityObject = null;
 		for (EntityInterface entity : entities)
 		{
 			if (entity.getId() != null && entity.getId().equals(entityId))
 			{
-				return entity;
+				entityObject = entity;
+				break;
 			}
 		}
 
-		return null;
+		return entityObject;
 	}
 
 	/* (non-Javadoc)

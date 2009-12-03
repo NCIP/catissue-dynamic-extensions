@@ -5,17 +5,17 @@ public class ContainerInformationObject
 {
 
 	/**
-	 * 
+	 *
 	 */
-	String name;
+	private String name;
 	/**
-	 * 
+	 *
 	 */
-	String value;
+	private String value;
 	/**
-	 * 
+	 *
 	 */
-	String description;
+	private String description;
 
 	/**
 	 * @return the description
@@ -66,7 +66,7 @@ public class ContainerInformationObject
 	}
 
 	/**
-	 * 
+	 *
 	 * @param name
 	 * @param value
 	 * @param description

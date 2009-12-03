@@ -77,7 +77,7 @@ public interface EntityManagerInterface
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	public Collection<AssociationInterface> getAssociations(Long srcEntityId, Long tgtEntityId,
+	Collection<AssociationInterface> getAssociations(Long srcEntityId, Long tgtEntityId,
 			HibernateDAO hibernatedao) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException;
 

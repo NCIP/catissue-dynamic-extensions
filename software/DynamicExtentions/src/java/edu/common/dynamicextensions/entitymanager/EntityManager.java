@@ -1,5 +1,7 @@
+
 package edu.common.dynamicextensions.entitymanager;
-import java.io.ByteArrayOutputStream;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
@@ -71,7 +73,6 @@ import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.DBTypes;
 import edu.wustl.dao.util.NamedQueryParam;
-
 
 /**
  *
@@ -613,9 +614,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			}
 			Object newObject = createObject(entity, dataValue, auditableDEObjects);
 			hibernateDAO.insert(newObject);
-			Method method = (newObject.getClass()).getMethod("getId");
+			Method method = newObject.getClass().getMethod("getId");
 			Object object = method.invoke(newObject);
-			identifier = new Long(object.toString());
+			identifier = Long.valueOf(object.toString());
 
 			/*// Get audit manager from DefaultBizLogic.
 			DefaultBizLogic defaultBizLogic = new DefaultBizLogic();
@@ -716,7 +717,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		Long parentRecId = null;
 		Long usrId = ((userId != null && userId.length > 0) ? userId[0] : null);
 
-		Map<EntityInterface, Map<?, ?>> entityData = initialiseEntityValueMap(entity, dataValue);
+		Map<EntityInterface, Map<?, ?>> entityData = initialiseEntityValueMap(dataValue);
 
 		List<EntityInterface> entities = getParentEntityList(entity);
 		for (EntityInterface ent : entities)
@@ -752,7 +753,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	 * @param dataValue
 	 * @return
 	 */
-	private Map<EntityInterface, Map<?, ?>> initialiseEntityValueMap(EntityInterface entity,
+	private Map<EntityInterface, Map<?, ?>> initialiseEntityValueMap(
 			Map<AbstractAttributeInterface, ?> dataValue)
 	{
 		Map<EntityInterface, Map<?, ?>> entityMap = new HashMap<EntityInterface, Map<?, ?>>();
@@ -1381,9 +1382,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 								{
 									Method method = (obj.getClass()).getMethod("getId");
 									Object object = method.invoke(obj);
-									Long id = new Long(object.toString());
+									Long identifier = Long.valueOf(object.toString());
 
-									if (id.intValue() == recordId.intValue())
+									if (identifier.intValue() == recordId.intValue())
 									{
 										objForUpdate = obj;
 										objectsToBeRetained.add(objForUpdate);
@@ -1492,7 +1493,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 
 		Long usrId = ((userId != null && userId.length != 0) ? userId[0] : null);
 
-		Map<EntityInterface, Map<?, ?>> entityValueMap = initialiseEntityValueMap(entity, dataValue);
+		Map<EntityInterface, Map<?, ?>> entityValueMap = initialiseEntityValueMap(dataValue);
 
 		List<EntityInterface> entities = getParentEntityList(entity);
 		try
@@ -2146,7 +2147,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			Long recordId) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
-		Map<AbstractAttributeInterface, Object> recordValues ;
+		Map<AbstractAttributeInterface, Object> recordValues;
 		HibernateDAO hibernateDAO = null;
 		try
 		{
@@ -2305,7 +2306,8 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			{
 				if (delRecQuery != null && delRecQuery.trim().length() != 0)
 				{
-					logDebug("deleteRecord", "QUERY for delete record is : " + delRecQuery.toString());
+					logDebug("deleteRecord", "QUERY for delete record is : "
+							+ delRecQuery.toString());
 					try
 					{
 						jdbcDAO.executeUpdate(delRecQuery.toString());
@@ -2800,6 +2802,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	public Long getRootCategoryEntityIdByCategoryName(String categoryName)
 			throws DynamicExtensionsSystemException
 	{
+		Long identifier = null;
 		// Create a map of substitution parameters.
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
 		substParams.put("0", new NamedQueryParam(DBTypes.STRING, categoryName));
@@ -2807,13 +2810,14 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		rootCategoryEntityId = executeHQL("getRootCategoryEntityId", substParams);
 		if (rootCategoryEntityId != null && !rootCategoryEntityId.isEmpty())
 		{
-			return rootCategoryEntityId.iterator().next();
+			identifier = rootCategoryEntityId.iterator().next();
 		}
-		return null;
+		return identifier;
 	}
 
 	public Long getContainerIdFromEntityId(Long entityId) throws DynamicExtensionsSystemException
 	{
+		Long identifier = null;
 		// Create a map of substitution parameters.
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
 		substParams.put("0", new NamedQueryParam(DBTypes.LONG, entityId));
@@ -2821,9 +2825,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		containerIds = executeHQL("getContainerIdFromEntityId", substParams);
 		if (containerIds != null && !containerIds.isEmpty())
 		{
-			return containerIds.iterator().next();
+			identifier = containerIds.iterator().next();
 		}
-		return null;
+		return identifier;
 	}
 
 	/**
@@ -2834,6 +2838,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	public String getContainerCaptionFromEntityId(Long entityId)
 			throws DynamicExtensionsSystemException
 	{
+		String identifier = null;
 		// Create a map of substitution parameters.
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
 		substParams.put("0", new NamedQueryParam(DBTypes.STRING, entityId));
@@ -2841,9 +2846,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		containerIds = executeHQL("getContainerCaptionFromEntityId", substParams);
 		if (containerIds != null && !containerIds.isEmpty())
 		{
-			return containerIds.iterator().next();
+			identifier = containerIds.iterator().next();
 		}
-		return null;
+		return identifier;
 	}
 
 	public Collection<Long> getAllEntityIdsForEntityGroup(Long entityGroupId)
@@ -2865,7 +2870,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			throws DynamicExtensionsSystemException
 	{
 		List<String> revQueries = new ArrayList<String>();
-		Stack<String> rlbkQryStack =null;
+		Stack<String> rlbkQryStack = null;
 
 		try
 		{
@@ -2875,13 +2880,12 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		}
 		catch (DynamicExtensionsSystemException e)
 		{
-			if (rlbkQryStack!=null && !rlbkQryStack.isEmpty())
+			if (rlbkQryStack != null && !rlbkQryStack.isEmpty())
 			{
 				rollbackQueries(rlbkQryStack, association.getEntity(), e, null);
 			}
 		}
 	}
-
 
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.entitymanager.EntityManagerInterface#associateEntityRecords(edu.common.dynamicextensions.domaininterface.AssociationInterface, java.lang.Long, java.lang.Long)
@@ -2897,6 +2901,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	 */
 	public Long getEntityIdByContainerId(Long containerId) throws DynamicExtensionsSystemException
 	{
+		Long identifier = null;
 		// Create a map of substitution parameters.
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
 		substParams.put("0", new NamedQueryParam(DBTypes.LONG, containerId));
@@ -2907,10 +2912,10 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		records = executeHQL("getEntityIdForContainerId", substParams);
 		if (records != null && !records.isEmpty())
 		{
-			return (Long) records.iterator().next();
+			identifier = (Long) records.iterator().next();
 		}
 
-		return null;
+		return identifier;
 	}
 
 	/* (non-Javadoc)
@@ -3012,6 +3017,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	 */
 	public Long getContainerIdForEntity(Long entityId) throws DynamicExtensionsSystemException
 	{
+		Long identifier = null;
 		String tableName = "dyextn_container";
 
 		StringBuffer query = new StringBuffer();
@@ -3028,7 +3034,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			if (resultSet != null)
 			{
 				resultSet.next();
-				return resultSet.getLong(IDENTIFIER);
+				identifier = resultSet.getLong(IDENTIFIER);
 			}
 		}
 		catch (DAOException e)
@@ -3055,7 +3061,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			}
 		}
 
-		return null;
+		return identifier;
 	}
 
 	/* (non-Javadoc)
@@ -3088,6 +3094,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 
 		ResultSet resultSet = null;
 		JDBCDAO jdbcDao = null;
+		Long identifier = null;
 		try
 		{
 			Logger.out.info("Query = " + query.toString());
@@ -3099,7 +3106,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 				String entTableName = resultSet.getString(NAME);
 				if (entTableName != null)
 				{
-					return EntityManagerUtil.getNextIdentifier(entTableName);
+					identifier = EntityManagerUtil.getNextIdentifier(entTableName);
 				}
 			}
 		}
@@ -3127,7 +3134,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			}
 		}
 
-		return null;
+		return identifier;
 	}
 
 	/* (non-Javadoc)
@@ -3997,6 +4004,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	public Long getAssociationIdFrmPathAssoRelationId(Long pathAssociationRelationId)
 			throws DynamicExtensionsSystemException
 	{
+		Long identifier = null;
 		// Create a map of substitution parameters.
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
 		substParams.put("0", new NamedQueryParam(DBTypes.LONG, pathAssociationRelationId));
@@ -4004,9 +4012,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		associationColl = executeHQL("getAssoIdFrmPathAssoRelationId", substParams);
 		if (associationColl != null && !associationColl.isEmpty())
 		{
-			return associationColl.iterator().next();
+			identifier = associationColl.iterator().next();
 		}
-		return null;
+		return identifier;
 	}
 
 	/**
@@ -4034,6 +4042,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	public String getSrcEntityNameFromAssociationId(Long associationId)
 			throws DynamicExtensionsSystemException
 	{
+		String srcEntityName = null;
 		// Create a map of substitution parameters.
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
 		substParams.put("0", new NamedQueryParam(DBTypes.LONG, associationId));
@@ -4041,9 +4050,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		srcEntityNameColl = executeHQL("getSrcEntityNameFromAssociationId", substParams);
 		if (srcEntityNameColl != null && !srcEntityNameColl.isEmpty())
 		{
-			return srcEntityNameColl.iterator().next();
+			srcEntityName = srcEntityNameColl.iterator().next();
 		}
-		return null;
+		return srcEntityName;
 	}
 
 	/**
@@ -4054,6 +4063,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	public String getTgtEntityNameFromAssociationId(Long associationId)
 			throws DynamicExtensionsSystemException
 	{
+		String tgtEntityName = null;
 		// Create a map of substitution parameters.
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
 		substParams.put("0", new NamedQueryParam(DBTypes.LONG, associationId));
@@ -4061,9 +4071,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		tgtEntityNameColl = executeHQL("getTgtEntityNameFromAssociationId", substParams);
 		if (tgtEntityNameColl != null && !tgtEntityNameColl.isEmpty())
 		{
-			return tgtEntityNameColl.iterator().next();
+			tgtEntityName = tgtEntityNameColl.iterator().next();
 		}
-		return null;
+		return tgtEntityName;
 	}
 
 	/**
@@ -4074,6 +4084,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	public Long getSrcInstanceIdFromAssociationRelationId(Long associationRelationId)
 			throws DynamicExtensionsSystemException
 	{
+		Long identifier = null;
 		// Create a map of substitution parameters.
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
 		substParams.put("0", new NamedQueryParam(DBTypes.LONG, associationRelationId));
@@ -4081,9 +4092,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		srcInstanceIdColl = executeHQL("getSrcInstanceIdFromAssociationRelationId", substParams);
 		if (srcInstanceIdColl != null && !srcInstanceIdColl.isEmpty())
 		{
-			return srcInstanceIdColl.iterator().next();
+			identifier = srcInstanceIdColl.iterator().next();
 		}
-		return null;
+		return identifier;
 	}
 
 	/**
@@ -4094,6 +4105,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	public Long getTgtInstanceIdFromAssociationRelationId(Long associationRelationId)
 			throws DynamicExtensionsSystemException
 	{
+		Long identifier = null;
 		// Create a map of substitution parameters.
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
 		substParams.put("0", new NamedQueryParam(DBTypes.LONG, associationRelationId));
@@ -4101,9 +4113,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		tgtInstanceIdColl = executeHQL("getTgtInstanceIdFromAssociationRelationId", substParams);
 		if (tgtInstanceIdColl != null && !tgtInstanceIdColl.isEmpty())
 		{
-			return tgtInstanceIdColl.iterator().next();
+			identifier = tgtInstanceIdColl.iterator().next();
 		}
-		return null;
+		return identifier;
 	}
 
 	/**
@@ -4125,6 +4137,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	public String getCategoryEntityNameByCategoryEntityId(Long categoryId)
 			throws DynamicExtensionsSystemException
 	{
+		String name = null;
 		// Create a map of substitution parameters.
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
 		substParams.put("0", new NamedQueryParam(DBTypes.LONG, categoryId));
@@ -4132,9 +4145,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		rootCategoryEntityName = executeHQL("getCategoryEntityNameByCategoryEntityId", substParams);
 		if (rootCategoryEntityName != null && !rootCategoryEntityName.isEmpty())
 		{
-			return rootCategoryEntityName.iterator().next();
+			name = rootCategoryEntityName.iterator().next();
 		}
-		return null;
+		return name;
 	}
 
 }

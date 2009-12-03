@@ -30,8 +30,8 @@ public interface EntityGroupManagerInterface
 	 * @throws DynamicExtensionsSystemException exception
 	 * @throws DynamicExtensionsApplicationException exception
 	 */
-	public DynamicQueryList persistEntityGroup(EntityGroupInterface group,HibernateDAO... hibernateDao)
-	throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
+	DynamicQueryList persistEntityGroup(EntityGroupInterface group, HibernateDAO... hibernateDao)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
 
 	/**
 	 * This method persists an entity group and the associated entities without creating the data table
@@ -42,8 +42,9 @@ public interface EntityGroupManagerInterface
 	 * @throws DynamicExtensionsSystemException exception
 	 * @throws DynamicExtensionsApplicationException exception
 	 */
-	DynamicQueryList persistEntityGroupMetadata(EntityGroupInterface entityGroup,HibernateDAO... hibernateDao)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
+	DynamicQueryList persistEntityGroupMetadata(EntityGroupInterface entityGroup,
+			HibernateDAO... hibernateDao) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException;
 
 	/**
 	 * This method returns the entity group given the short name for the same.

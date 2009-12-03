@@ -129,7 +129,8 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 	 * @param query query to be executed
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public StatementData executeDML(JDBCDAO jdbcDao, String query) throws DynamicExtensionsSystemException
+	public StatementData executeDML(JDBCDAO jdbcDao, String query)
+			throws DynamicExtensionsSystemException
 	{
 		Logger.out.info(query);
 		try
@@ -150,11 +151,10 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 	public void executeDMLQueryList(JDBCDAO jdbcDao, List<String> queries)
 			throws DynamicExtensionsSystemException
 	{
-		int result = -1;
+
 		for (String query : queries)
 		{
-			StatementData stmtData = executeDML(jdbcDao, query);
-			result = stmtData.getRowCount();
+			executeDML(jdbcDao, query);
 		}
 
 	}
@@ -555,7 +555,6 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 		return queryBuilder.isDataPresent(tableName);
 	}
 
-
 	/**
 	 * @param assoType type of association
 	 * @param name name of association
@@ -633,11 +632,8 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 			EntityInterface entity, AssociationInterface association, AttributeInterface attribute,
 			AttributeInterface originalAttribute)
 	{
-		return "insert into "
-				+ association.getTargetEntity().getTableProperties().getName()
-				+ "(activity_status,identifier,"
-				+ attribute.getColumnProperties().getName()
-				+ ","
+		return "insert into " + association.getTargetEntity().getTableProperties().getName()
+				+ "(activity_status,identifier," + attribute.getColumnProperties().getName() + ","
 				+ Constants.ASSO_TGT_ENT_CONSTR_KEY_PROP + ") "
 				+ "(select activity_status,identifier,"
 				+ originalAttribute.getColumnProperties().getName() + " ,identifier from "
@@ -649,12 +645,14 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 	 * @param multiSelMigrationQueries
 	 * @param multiselectMigartionScripts
 	 */
-	public static List<String> updateSqlScriptToMigrateOldDataForMultiselectAttribute(Map<AssociationInterface, String> multiselectMigartionScripts)
+	public static List<String> updateSqlScriptToMigrateOldDataForMultiselectAttribute(
+			Map<AssociationInterface, String> multiselectMigartionScripts)
 	{
 		List<String> multiSelMigrationQueries = new ArrayList<String>();
 		for (AssociationInterface association : multiselectMigartionScripts.keySet())
 		{
-			String query = changeTgtEntityConstraintKeyPropertiesInQuery(association, multiselectMigartionScripts.get(association));
+			String query = changeTgtEntityConstraintKeyPropertiesInQuery(association,
+					multiselectMigartionScripts.get(association));
 			multiSelMigrationQueries.add(query);
 		}
 
@@ -666,11 +664,14 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 	 * @param association association whose target constraint key properties has to change
 	 * @param query
 	 */
-	private static String changeTgtEntityConstraintKeyPropertiesInQuery(AssociationInterface association, String query)
+	private static String changeTgtEntityConstraintKeyPropertiesInQuery(
+			AssociationInterface association, String query)
 	{
-		String newTgtEntConstrKeyProp = association.getConstraintProperties().getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties().getName();
-		String newQuery = query.replace(edu.common.dynamicextensions.ui.util.Constants.ASSO_TGT_ENT_CONSTR_KEY_PROP, newTgtEntConstrKeyProp);
-		return newQuery;
+		String newTgtEntConstrKeyProp = association.getConstraintProperties()
+				.getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties().getName();
+		return query.replace(
+				edu.common.dynamicextensions.ui.util.Constants.ASSO_TGT_ENT_CONSTR_KEY_PROP,
+				newTgtEntConstrKeyProp);
 	}
 
 	/**
@@ -678,8 +679,7 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 	 * @param hibernateDao DAO object
 	 * @return true if primary key of an entity is changed else false
 	 */
-	public static boolean isPrimaryKeyChanged(EntityInterface entity,
-			HibernateDAO hibernateDao)
+	public static boolean isPrimaryKeyChanged(EntityInterface entity, HibernateDAO hibernateDao)
 	{
 		boolean isChanged = false;
 		if (entity != null)
@@ -690,8 +690,8 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 				EntityInterface dbaseCopy = null;
 				try
 				{
-					dbaseCopy = (Entity) hibernateDao.retrieveById(Entity.class
-							.getCanonicalName(), entityId);
+					dbaseCopy = (Entity) hibernateDao.retrieveById(Entity.class.getCanonicalName(),
+							entityId);
 				}
 				catch (DAOException e)
 				{

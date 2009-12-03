@@ -22,15 +22,14 @@ public class QueryBuilderFactory
 	 * This method returns the query builder depending on the database
 	 * @return
 	 */
-	public static DynamicExtensionBaseQueryBuilder getQueryBuilder()
+	public static synchronized DynamicExtensionBaseQueryBuilder getQueryBuilder()
 	{
-		if (queryBuilder != null)
+		if (queryBuilder == null)
 		{
-			return queryBuilder;
+			String appName = DynamicExtensionDAO.getInstance().getAppName();
+			String dbType = DAOConfigFactory.getInstance().getDAOFactory(appName).getDataBaseType();
+			queryBuilder = DynamicExtensionDBFactory.getInstance().getQueryBuilder(dbType);
 		}
-		String appName=DynamicExtensionDAO.getInstance().getAppName();
-		String dbType=DAOConfigFactory.getInstance().getDAOFactory(appName).getDataBaseType();
-		queryBuilder=DynamicExtensionDBFactory.getInstance().getQueryBuilder(dbType);
 		return queryBuilder;
 	}
 

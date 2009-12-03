@@ -21,12 +21,12 @@ public class EntityRecordResult implements EntityRecordResultInterface, Serializ
 	/**
 	 * List of entity records
 	 */
-	List<EntityRecordInterface> entityRecordList;
+	protected List<EntityRecordInterface> entityRecordList;
 
 	/**
 	 * Metadata for the result
 	 */
-	EntityRecordMetadata entityRecordMetadata;
+	protected EntityRecordMetadata entityRecordMetadata;
 
 	/**
 	 * @see edu.common.dynamicextensions.entitymanager.EntityRecordResultInterface#getEntityRecordList()
