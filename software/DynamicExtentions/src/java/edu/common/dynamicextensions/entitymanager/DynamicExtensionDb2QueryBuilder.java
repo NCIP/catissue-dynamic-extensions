@@ -203,7 +203,7 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 						formattedvalue = "1";
 					}
 				}
-				else if (formattedvalue != null && "".equals(formattedvalue.trim().length()))
+				else if (formattedvalue != null && "".equals(formattedvalue.trim()))
 				{
 					formattedvalue = null;
 
