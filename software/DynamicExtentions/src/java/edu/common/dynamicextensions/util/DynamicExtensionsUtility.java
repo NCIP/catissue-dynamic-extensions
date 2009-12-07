@@ -395,16 +395,18 @@ public class DynamicExtensionsUtility
 				}
 			}
 			else if (controlInterface.getBaseAbstractAttribute() != null
-						&& controlInterface.getBaseAbstractAttribute().getId() != null
-						&& controlInterface.getBaseAbstractAttribute().equals(attributeMetadataInterface))
+					&& controlInterface.getBaseAbstractAttribute().getId() != null
+					&& controlInterface.getBaseAbstractAttribute().equals(
+							attributeMetadataInterface))
 			{
-						control = controlInterface;
-						break;
+				control = controlInterface;
+				break;
 			}
 		}
 		return control;
 
 	}
+
 	/**
 	 *
 	 * @param abstractAttribute
@@ -413,7 +415,7 @@ public class DynamicExtensionsUtility
 	 */
 	public static ControlInterface getControlForAbstractAttribute(
 			AttributeMetadataInterface attributeMetadataInterface,
-			ContainerInterface containerInterface,String categoryEntityName)
+			ContainerInterface containerInterface, String categoryEntityName)
 	{
 		ControlInterface control = null;
 		Collection<ControlInterface> controlCollection = containerInterface.getAllControls();
@@ -441,15 +443,11 @@ public class DynamicExtensionsUtility
 				}
 				else
 				{
-					if (controlInterface.getParentContainer()
-							.getAbstractEntity().getName() != null
-							&& controlInterface.getParentContainer()
-									.getAbstractEntity().getName().equals(
-											categoryEntityName)
-							&& controlInterface.getBaseAbstractAttribute()
-									.getName().equals(
-											attributeMetadataInterface
-													.getName()))
+					if (controlInterface.getParentContainer().getAbstractEntity().getName() != null
+							&& controlInterface.getParentContainer().getAbstractEntity().getName()
+									.equals(categoryEntityName)
+							&& controlInterface.getBaseAbstractAttribute().getName().equals(
+									attributeMetadataInterface.getName()))
 					{
 						control = controlInterface;
 						break;
@@ -1308,7 +1306,7 @@ public class DynamicExtensionsUtility
 	{
 		DefaultBizLogic defaultBizLogic = BizLogicFactory.getDefaultBizLogic();
 		defaultBizLogic.setAppName(DynamicExtensionDAO.getInstance().getAppName());
-		List objectList ;
+		List objectList;
 		ContainerInterface containerInterface = null;
 		if (caption == null || caption.trim().length() == 0)
 		{
@@ -2508,6 +2506,7 @@ public class DynamicExtensionsUtility
 		}
 		return nextSeqNumber + 1;
 	}
+
 	/**
 	 * It will read the ValidDatePatterns.XML & verify that the date patterns
 	 * specified in the ApplicationResources.properties Files is in the given patterns.
@@ -2518,15 +2517,17 @@ public class DynamicExtensionsUtility
 		DynamicExtensionsUtility utility = new DynamicExtensionsUtility();
 		List<String> validDatePatternList = utility.getAllValidDatePatterns();
 
-			if(!(validDatePatternList.contains(ProcessorConstants.DATE_ONLY_FORMAT)
-					&& validDatePatternList.contains(ProcessorConstants.DATE_TIME_FORMAT)
-					&& validDatePatternList.contains(ProcessorConstants.MONTH_YEAR_FORMAT)
-					&& validDatePatternList.contains(ProcessorConstants.YEAR_ONLY_FORMAT)))
-			{
-				throw new RuntimeException("Invalid date pattern specified in the Application resource file");
-			}
+		if (!(validDatePatternList.contains(ProcessorConstants.DATE_ONLY_FORMAT)
+				&& validDatePatternList.contains(ProcessorConstants.DATE_TIME_FORMAT)
+				&& validDatePatternList.contains(ProcessorConstants.MONTH_YEAR_FORMAT) && validDatePatternList
+				.contains(ProcessorConstants.YEAR_ONLY_FORMAT)))
+		{
+			throw new RuntimeException(
+					"Invalid date pattern specified in the Application resource file");
+		}
 
 	}
+
 	/**
 	 * It will return the List of all  valid Patterns specified in the ValidDatePatterns.xml
 	 * @return List of datePatterns.
@@ -2536,7 +2537,8 @@ public class DynamicExtensionsUtility
 		List<String> validDatePatternList = new ArrayList<String>();
 		SAXReader saxReader = new SAXReader();
 
-		InputStream inputStream =this.getClass().getClassLoader().getResourceAsStream("ValidDatePatterns.xml");
+		InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(
+				"ValidDatePatterns.xml");
 
 		Document document = null;
 
@@ -2546,8 +2548,7 @@ public class DynamicExtensionsUtility
 			Element pattern = null;
 
 			Element datePatternsElement = document.getRootElement();
-			Iterator patternIterator = datePatternsElement
-					.elementIterator("pattern");
+			Iterator patternIterator = datePatternsElement.elementIterator("pattern");
 
 			Element primitiveAttributeElement = null;
 
@@ -2573,13 +2574,14 @@ public class DynamicExtensionsUtility
 	 * @throws DynamicExtensionsSystemException exception.
 	 * @throws IOException exception.
 	 */
-	public static void extractZipToDestination(String filename,String destination) throws DynamicExtensionsSystemException, IOException
+	public static void extractZipToDestination(String filename, String destination)
+			throws DynamicExtensionsSystemException, IOException
 	{
-		ZipInputStream zipinputstream=null;
+		ZipInputStream zipinputstream = null;
 		try
 		{
 			String destinationPath = "";
-			if(destination!=null && !"".equals(destination))
+			if (destination != null && !"".equals(destination))
 			{
 				destinationPath = destination + "/";
 			}
@@ -2620,18 +2622,19 @@ public class DynamicExtensionsUtility
 	 * @throws DynamicExtensionsSystemException exception
 	 */
 	private static void extractZipEntryToFile(String destinationPath,
-			ZipInputStream zipinputstream, String entryName) throws IOException, DynamicExtensionsSystemException
+			ZipInputStream zipinputstream, String entryName) throws IOException,
+			DynamicExtensionsSystemException
 	{
 		byte[] buf = new byte[1024];
-		FileOutputStream fileoutputstream=null;
+		FileOutputStream fileoutputstream = null;
 		try
 		{
-			File newFile = new File(destinationPath+entryName);
+			File newFile = new File(destinationPath + entryName);
 			File parentFile = newFile.getParentFile();
 			if (parentFile != null && !parentFile.exists() && !parentFile.mkdirs())
 			{
 				// this is condition when mkdirs is failed to create the directories
-				throw new DynamicExtensionsSystemException("Can not create Directory "+parentFile);
+				throw new DynamicExtensionsSystemException("Can not create Directory " + parentFile);
 			}
 			fileoutputstream = new FileOutputStream(newFile);
 			int bytesRead = zipinputstream.read(buf, 0, 1024);
@@ -2643,7 +2646,7 @@ public class DynamicExtensionsUtility
 		}
 		finally
 		{
-			if(fileoutputstream !=null)
+			if (fileoutputstream != null)
 			{
 				fileoutputstream.close();
 			}
