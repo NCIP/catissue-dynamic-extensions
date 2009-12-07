@@ -150,7 +150,7 @@ public class LoadFormDefinitionAction extends BaseDynamicExtensionsAction
 					populateAssociationInformation(parentContainer, container, formDefinitionForm);
 				}
 			}
-			boolean isDataEntered=false;
+			boolean isDataEntered =false;
 			if ((operationMode != null) && (operationMode.equals(DEConstants.EDIT_FORM)) && container.getId()!=null)
 			{
 				AbstractEntityInterface abstractEntityInterface =entityGroup.getEntityByName(container.getAbstractEntity().getName());
