@@ -5,11 +5,21 @@
 	then imported in the deploy.xml of the host application to able to call the DE specific tasks in the host
 	application.
 -->
-<project name="DynamicExtensionsInstallation">
+<project name="DynamicExtensionsInstallation" basedir="..">
 
 	<property file="DynamicExtensionsInstall.properties" />
-	<property name="de.temp.dir" value="./detemp" />
-	<property name="temp.dir.DE" value="${de.temp.dir}/temp" />
+	<property name="base.dir" value="." />
+	<property name="de.temp.dir" value="${base.dir}/detemp" />
+	<property name="temp.dir.DE" value="${base.dir}/temp" />
+	<property name="tempcacore.dir" value="${base.dir}/temp_deaudit_related_files" />
+	<property name="export.dir" value="${tempcacore.dir}/temp_exported_xmi" />
+	<property name="cacoresdk.dir" value="${tempcacore.dir}/caCoreSDK" />
+	<property name="cacore.dir" value="${tempcacore.dir}/temp_caCORESDK" />
+	<property name="caCORESDK.zip.location" value="${de.temp.dir}/lib/server/caCORESDK.zip" />
+	<property name="dezip.dir" value="${tempcacore.dir}/temp_DE_zip" />
+	<property name="dejar.dir" value="${tempcacore.dir}/temp_DE_jar" />
+	<property name="entity.jar.location" value="${tempcacore.dir}/entity_jar" />
+
 	<property name="oracle.driver.string.DE" value="oracle.jdbc.driver.OracleDriver" />
 	<property name="mysql.driver.string.DE" value="com.mysql.jdbc.Driver" />
 	<property name="db2.driver.string.DE" value="com.ibm.db2.jcc.DB2Driver" />
@@ -357,8 +367,8 @@
 
 	<property name="groupname" value="" />
 	<property name="version" value="" />
+
 	<target name="export_xmi">
-		<antcall target="setupClassExecutionEnvironment" />
 		<java classname="edu.common.dynamicextensions.xmi.exporter.XMIExporter" fork="true" maxmemory="1024M">
 			<arg value="${groupname}" />
 			<arg value="${filename}" />
@@ -541,5 +551,237 @@
 		</sql>
 	</target>
 
+
+	<!-- =================================
+          target: import.xmi.to.generate.cacore
+         ================================= -->
+    <target name="import.xmi.to.generate.cacore" depends="" description="description">
+    	<property name="xmi.name" value="${}" />
+    	<property name="mainContainerList" value="${}" />
+    	<property name="package.name" value="${}" />
+    	<property name="hookentity" value="${}" />
+    	<property name="addQueryPaths" value="${}" />
+    	<property name="testcases" value="${}" />
+
+    	<antcall target="import_xmi_DE">
+			<param name="filename" value="${xmi.name}"/>
+			<param name="mainContainerList" value="${mainContainerList}" />
+			<param name="package" value="${package.name}" />
+			<param name="hookentity" value="${hookentity}" />
+			<param name="addQueryPaths" value="${addQueryPaths}" />
+		</antcall>
+
+
+    	<delete dir="${tempcacore.dir}" />
+    	<mkdir dir="${tempcacore.dir}" />
+
+    	<delete dir="${export.dir}" />
+    	<mkdir dir="${export.dir}" />
+
+		<antcall target="export.xmi.and.generate.cacore.for.imported.xmis">
+			<param name="entityGroup" value="${xmi.name}"/>
+			<param name="testcases" value="${testcases}"/>
+		</antcall>
+    </target>
+
+	<!-- =================================
+          target: generate.cacore.for.imported.xmis
+         ================================= -->
+    <target name="generate.cacore.for.imported.xmis" depends="setupClassExecutionEnvironment" description="description">
+
+    	<property name="testcases" value="False" />
+
+		<java failonerror="true" classname="edu.wustl.metadata.util.EntityGroupName" fork="yes" >
+			<arg value="${basedir}/temp_deaudit_related_files/temp_exported_xmi/"/>
+			<classpath>
+				<pathelement location="${temp.dir.DE}" />
+				<fileset dir="${lib.dir.DE}">
+					<include name="*.jar" />
+					<exclude name="uml-1.3.jar" />
+				</fileset>
+				<fileset dir="${extra.lib.dir.DE}">
+					<include name="jboss-j2ee.jar" />
+					<include name="jta.jar" />
+				</fileset>
+			</classpath>
+		</java>
+
+		<property file="${tempcacore.dir}/temp_exported_xmi/EntityGroup.properties" />
+		<foreach list="${entity.group.name}" param="xmi.name"  target="export.xmi.and.generate.cacore" />
+
+    </target>
+
+	<!-- =================================
+          target:export.xmi.and.generate.cacore
+         ================================= -->
+    <target name="export.xmi.and.generate.cacore" depends="" description="description">
+
+    	<mkdir dir="${dezip.dir}" />
+		<mkdir dir="${dejar.dir}" />
+
+    	<echo>${xmi.name}</echo>
+    	<echo>${export.dir}</echo>
+
+		<java failonerror="true" classname="edu.wustl.metadata.util.PackageName" fork="yes" >
+			<arg value="${export.dir}/"/>
+			<arg value="${xmi.name}"/>
+
+			<classpath>
+				<pathelement location="${temp.dir.DE}" />
+				<fileset dir="${lib.dir.DE}">
+					<include name="*.jar" />
+					<exclude name="uml-1.3.jar" />
+				</fileset>
+				<fileset dir="${extra.lib.dir.DE}">
+					<include name="jboss-j2ee.jar" />
+					<include name="jta.jar" />
+				</fileset>
+
+			</classpath>
+
+		</java>
+		<property file="${export.dir}/Package.properties" />
+
+		<property name="entitygroupname" value="${entity.name}" />
+		<property name="xmi.filename" value="${export.dir}/${entity.name}.xmi" />
+		<property name="version.number" value="1.1" />
+
+    	<antcall target="export_xmi">
+    		<param name="setup.method.required" value="False" />
+			<param name="groupname" value="${entitygroupname}"/>
+    		<param name="filename" value="${xmi.filename}"/>
+			<param name="version" value="${version.number}"/>
+    		<param name="hookentity" value="edu.wustl.clinportal.domain.ParticipantRecordEntry" />
+    	</antcall>
+
+    	<antcall target="generate.cacore" />
+    </target>
+
+	<!-- - - - - - - - - - - - - - - - - -
+          target: generate.cacore
+         - - - - - - - - - - - - - - - - - -->
+    <target name="generate.cacore">
+    	<echo message=" "/>
+		<echo message="-------------------------"/>
+		<echo message=" Now creating caCORE war "/>
+		<echo message="-------------------------"/>
+		<echo message=" "/>
+
+		<antcall target="unzip_caCORESDKzip">
+			<param name="entity.group.name" value="${entitygroupname}"/>
+			<param name="entity.package.name" value="${cacore.package.name}"/>
+		</antcall>
+
+    	<ant antfile="build.xml" dir="${cacoresdk.dir}" target="build-system" />
+
+    	<delete dir="${cacore.dir}" />
+    	<mkdir dir="${cacore.dir}" />
+    	<unwar dest="${cacore.dir}" src="${cacoresdk.dir}/output/${entitygroupname}/package/${entitygroupname}.war" overwrite="true"/>
+
+    	<if>
+    		<equals arg1="True" arg2="${testcases}" />
+    		<then>
+    			<copy todir="./classes/${de.package.name}/" overwrite="true">
+    				<fileset dir="${cacore.dir}/WEB-INF/classes/${de.package.name}">
+    					<include name="**/*" />
+    				</fileset>
+    			</copy>
+    		</then>
+    		<else>
+    			<unzip src="${de.zip.location}/dynamicextensions.zip" dest="${dezip.dir}" overwrite="true" />
+
+    	    	<copy todir="${entity.jar.location}/${de.package.name}" overwrite="true">
+    	    		<fileset dir="${cacore.dir}/WEB-INF/classes/${de.package.name}">
+    	    			<include name="**/*" />
+    	    		</fileset>
+    	    	</copy>
+
+    	    	<property name="caCOREHibernateCfgFile" value="${cacore.dir}/WEB-INF/classes/orm1.cfg.xml"/>
+    	    	<property name="DEHibernateWebCfgFile" value="${dezip.dir}/conf/DynamicExtensionsHibernateWeb.cfg.xml" />
+
+    	    	<java classname="edu.wustl.metadata.util.CacoreDEMetadataAppender" fork="true" maxmemory="1024M">
+    	    		<arg value="${DEHibernateWebCfgFile}" />
+    	    		<arg value="${caCOREHibernateCfgFile}" />
+    				<classpath>
+    					<pathelement location="${temp.dir.DE}" />
+    					<fileset dir="${lib.dir.DE}">
+    						<include name="*.jar" />
+    						<exclude name="uml-1.3.jar" />
+    					</fileset>
+    					<fileset dir="${extra.lib.dir.DE}">
+    						<include name="jboss-j2ee.jar" />
+    						<include name="jta.jar" />
+    					</fileset>
+    				</classpath>
+    			</java>
+    		</else>
+    	</if>
+
+		<delete>
+			<fileset dir="${export.dir}/">
+				<include name="**/*.txt"/>
+				<include name="**/Package.properties" />
+			</fileset>
+		</delete>
+
+    	<antcall target="build_artifacts" />
+    </target>
+
+	<target name="unzip_caCORESDKzip">
+		<delete dir="${cacoresdk.dir}"/>
+		<mkdir dir="${cacoresdk.dir}"/>
+
+		<unzip src="${caCORESDK.zip.location}" dest="${cacoresdk.dir}" overwrite="true" />
+		<copy todir="${cacoresdk.dir}/models/xmi" overwrite="true">
+			<fileset dir="${export.dir}">
+				<include name="*.xmi" />
+			</fileset>
+		</copy>
+
+		<replace dir="${cacoresdk.dir}/conf">
+			<include name="deploy.properties" />
+			<replacefilter token="@@ENTITYNAME@@" value="${entity.group.name}.xmi" />
+			<replacefilter token="@@FIXED_ENTITYNAME@@" value="fixed_${entity.group.name}.xmi" />
+			<replacefilter token="@@PACKAGE_NAME@@" value="${entity.package.name}" />
+			<replacefilter token="@@APPLICATION_NAME@@" value="${entity.group.name}" />
+		</replace>
+
+	</target>
+
+	<target name="build_artifacts">
+		<echo message=" "/>
+		<echo message="-----------------------------------------"/>
+		<echo message=" Now creating ${entitygroupname}.jar file "/>
+		<echo message="-----------------------------------------"/>
+		<echo message=" "/>
+
+		<!-- Create ${entitygroupname}.jar file. -->
+		<jar destfile="${entity.jar.location}/${entitygroupname}.jar" basedir="${entity.jar.location}"/>
+
+		<copy todir="${entityGroup.jar.location}/" file="${entity.jar.location}/${entitygroupname}.jar" overwrite="true" />
+
+		<echo message=" "/>
+		<echo message="-----------------------------------------"/>
+		<echo message=" Now creating dynamicExtensions.zip file "/>
+		<echo message="-----------------------------------------"/>
+		<echo message=" "/>
+
+		<!-- Create dynamicextensions.zip file. -->
+		<zip destfile="${dezip.dir}/dynamicextensions.zip" basedir="${dezip.dir}" />
+
+		<copy todir="${base.dir}/" file="${dezip.dir}/dynamicextensions.zip" overwrite="true"/>
+
+		<delete>
+			<fileset dir="${cacore.dir}">
+				<include name="**/*"/>
+			</fileset>
+		</delete>
+
+		<delete>
+			<fileset dir="${dezip.dir}">
+				<include name="**/*"/>
+			</fileset>
+		</delete>
+	</target>
 
 </project>
