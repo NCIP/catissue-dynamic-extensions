@@ -86,7 +86,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	/**
 	 * Static instance of the entity manager.
 	 */
-	private static EntityManagerInterface entityManager = null;
+	private static EntityManagerInterface manager = null;
 
 	/**
 	 * Static instance of the queryBuilder.
@@ -112,14 +112,14 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	 */
 	public static synchronized EntityManagerInterface getInstance()
 	{
-		if (entityManager == null)
+		if (manager == null)
 		{
-			entityManager = new EntityManager();
+			manager = new EntityManager();
 			DynamicExtensionsUtility.initialiseApplicationVariables();
 			queryBuilder = QueryBuilderFactory.getQueryBuilder();
 		}
 
-		return entityManager;
+		return manager;
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	 */
 	public static void setInstance(EntityManagerInterface entManager)
 	{
-		EntityManager.entityManager = entManager;
+		EntityManager.manager = entManager;
 	}
 
 	/* (non-Javadoc)
@@ -640,7 +640,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		catch (Exception e)
 		{
 			throw (DynamicExtensionsSystemException) handleRollback(e,
-					"Error while inserting data", hibernateDAO, true);
+					DATA_INSERTION_ERROR_MESSAGE, hibernateDAO, true);
 		}
 		finally
 		{
@@ -684,12 +684,12 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		catch (DynamicExtensionsApplicationException e)
 		{
 			throw (DynamicExtensionsApplicationException) handleRollback(e,
-					"Error while inserting data", jdbcDAo, false);
+					DATA_INSERTION_ERROR_MESSAGE, jdbcDAo, false);
 		}
 		catch (DAOException e)
 		{
 			throw (DynamicExtensionsSystemException) handleRollback(e,
-					"Error while inserting data", jdbcDAo, true);
+					DATA_INSERTION_ERROR_MESSAGE, jdbcDAo, true);
 		}
 		/*finally
 		{
@@ -1145,7 +1145,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		catch (DynamicExtensionsApplicationException e)
 		{
 			throw (DynamicExtensionsApplicationException) handleRollback(e,
-					"Error while inserting data", hibernateDAO, false);
+					DATA_INSERTION_ERROR_MESSAGE, hibernateDAO, false);
 		}
 		catch (DAOException e)
 		{
@@ -1395,11 +1395,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 							}
 						}
 
-						if (objForUpdate != null)
-						{
-							// We do not need to do anything in this case.
-						}
-						else
+						if (objForUpdate == null)
 						{
 							String targetEntityClassName = packageName + "."
 									+ targetEntity.getName();
@@ -1507,7 +1503,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		catch (DynamicExtensionsApplicationException e)
 		{
 			throw (DynamicExtensionsApplicationException) handleRollback(e,
-					"Error while inserting data", jdbcDao, false);
+					DATA_INSERTION_ERROR_MESSAGE, jdbcDao, false);
 		}
 		catch (DynamicExtensionsSystemException e)
 		{
