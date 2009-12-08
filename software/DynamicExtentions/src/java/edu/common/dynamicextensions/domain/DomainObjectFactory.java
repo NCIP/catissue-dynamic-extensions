@@ -9,6 +9,7 @@ import static edu.common.dynamicextensions.entitymanager.DynamicExtensionsQueryB
 import static edu.common.dynamicextensions.entitymanager.DynamicExtensionsQueryBuilderConstantsInterface.TABLE_NAME_PREFIX;
 import static edu.common.dynamicextensions.entitymanager.DynamicExtensionsQueryBuilderConstantsInterface.UNDERSCORE;
 
+import java.io.FileNotFoundException;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -82,7 +83,10 @@ import edu.common.dynamicextensions.domaininterface.userinterface.TextFieldInter
 import edu.common.dynamicextensions.domaininterface.userinterface.ViewInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleParameterInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.IdGeneratorUtil;
+import edu.common.dynamicextensions.util.parser.CategoryCSVFileParser;
+import edu.common.dynamicextensions.util.parser.CategoryFileParser;
 
 /**
  * This is a singleton class which provides methods for generating domain
@@ -934,5 +938,26 @@ public class DomainObjectFactory
 		Formula formula = new Formula();
 		formula.setExpression(expression);
 		return formula;
+	}
+
+	/**
+	 * It will create the instance on CategoryFile Parser depending on the
+	 * file path given to it. e.g if file is csv it will give CategoryCSVFileParser
+	 * & etc.
+	 * If file specified is of not in supported formats it will return null.
+	 * @param filePath file to use for category creation.
+	 * @param baseDir base directory.
+	 * @return category File Parser according to file Type.
+	 * @throws DynamicExtensionsSystemException Exception.
+	 * @throws FileNotFoundException if file is not found at proper place.
+	 */
+	public CategoryFileParser createCategoryFileParser(String filePath,String baseDir) throws DynamicExtensionsSystemException, FileNotFoundException
+	{
+		CategoryFileParser categoryFileParser =null;
+		if(filePath.endsWith(".csv") || filePath.endsWith(".CSV"))
+		{
+			categoryFileParser = new CategoryCSVFileParser(filePath,baseDir);
+		}
+		return categoryFileParser;
 	}
 }
