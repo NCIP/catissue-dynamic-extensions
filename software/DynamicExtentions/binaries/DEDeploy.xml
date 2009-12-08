@@ -371,7 +371,7 @@
 	<target name="export_xmi">
 		<java classname="edu.common.dynamicextensions.xmi.exporter.XMIExporter" fork="true" maxmemory="1024M">
 			<arg value="${groupname}" />
-			<arg value="${filename}" />
+			<arg value="${relative.filename}" />
 			<arg value="${version}" />
 			<arg value="${hookentity}" />
 			<classpath>
@@ -647,7 +647,7 @@
     	<antcall target="export_xmi">
     		<param name="setup.method.required" value="False" />
 			<param name="groupname" value="${entitygroupname}"/>
-    		<param name="filename" value="${xmi.filename}"/>
+    		<param name="relative.filename" value="${xmi.filename}"/>
 			<param name="version" value="${version.number}"/>
     		<param name="hookentity" value="edu.wustl.clinportal.domain.ParticipantRecordEntry" />
     	</antcall>
