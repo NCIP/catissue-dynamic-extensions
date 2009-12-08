@@ -88,7 +88,7 @@ public class CategoryGenerator
 	public CategoryGenerator(String filePath,String baseDir) throws DynamicExtensionsSystemException,
 	FileNotFoundException
 	{
-		categoryFileParser = new CategoryCSVFileParser(filePath,baseDir);
+		categoryFileParser = DomainObjectFactory.getInstance().createCategoryFileParser(filePath,baseDir);
 		categoryValidator = new CategoryValidator((CategoryCSVFileParser) categoryFileParser);
 		categoryHelper = new CategoryHelper(categoryFileParser);
 	}

@@ -1,3 +1,4 @@
+
 package edu.common.dynamicextensions.ui.webui.action;
 
 import java.io.BufferedInputStream;
@@ -19,6 +20,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
@@ -26,11 +28,11 @@ import edu.common.dynamicextensions.util.CategoryHelper;
 import edu.common.dynamicextensions.util.CategoryHelperInterface;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
+import edu.common.dynamicextensions.util.parser.CategoryFileParser;
 import edu.common.dynamicextensions.util.parser.CategoryGenerator;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
-
 
 /**
  * This action class is used by the create_category ant target.
@@ -43,6 +45,7 @@ import edu.wustl.common.util.logger.LoggerConfig;
  */
 public class CreateCategoryAction extends BaseDynamicExtensionsAction
 {
+
 	static
 	{
 		LoggerConfig.configureLogger(System.getProperty("user.dir"));
@@ -51,7 +54,6 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 
 	private static final String CATEGORY_DIR_PREFIX = "CategoryDirectory";
 
-	private final Map<String, Exception> catNameVsException = new HashMap<String, Exception>();
 	/* (non-Javadoc)
 	 * @see org.apache.struts.actions.DispatchAction#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
@@ -59,31 +61,34 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 			HttpServletRequest request, HttpServletResponse response)
 	{
 		LOGGER.info("In create category action");
-		String tempDirName =CATEGORY_DIR_PREFIX+EntityCache.getInstance().getNextIdForCategoryFileGeneration();
+		Map<String, Exception> catNameVsException = new HashMap<String, Exception>();
+		String tempDirName = CATEGORY_DIR_PREFIX
+				+ EntityCache.getInstance().getNextIdForCategoryFileGeneration();
 		try
 		{
-			downloadZipFile(request,tempDirName);
-			List<String>fileNamesList = getCategoryFileNames(request);
+			downloadZipFile(request, tempDirName);
+			List<String> fileNamesList = getCategoryFileNames(request, tempDirName);
 
-			for(String name : fileNamesList)
+			for (String name : fileNamesList)
 			{
-				if(ProcessorConstants.TRUE.equalsIgnoreCase(request.getParameter(CategoryCSVConstants.METADATA_ONLY)))
+				if (ProcessorConstants.TRUE.equalsIgnoreCase(request
+						.getParameter(CategoryCSVConstants.METADATA_ONLY)))
 				{
-					createCategory(name,tempDirName, true);
+					createCategory(name, tempDirName, true, catNameVsException);
 				}
 				else
 				{
-					createCategory(name,tempDirName,false);
+					createCategory(name, tempDirName, false, catNameVsException);
 				}
 			}
-			sendResponse(response,catNameVsException);
+			sendResponse(response, catNameVsException);
 
 			LOGGER.info("Create category action Completed Successfully");
 		}
 		catch (Exception e)
 		{
-			LOGGER.info("Exception Occured While creating category",e);
-			sendResponse(response,e);
+			LOGGER.info("Exception Occured While creating category", e);
+			sendResponse(response, e);
 		}
 		finally
 		{
@@ -96,28 +101,77 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 	 * This method will retrieve the category names parameter provided in request
 	 * and will return the List of names.
 	 * @param request HttpServletRequest from which to retrieve the category names.
+	 * @param tempDirName
 	 * @return List of category names to be created.
 	 * @throws DynamicExtensionsSystemException exception
 	 */
-	private List<String> getCategoryFileNames(HttpServletRequest request) throws DynamicExtensionsSystemException
+	private List<String> getCategoryFileNames(HttpServletRequest request, String tempDirName)
+			throws DynamicExtensionsSystemException
 	{
-		List<String> fileNameList = new ArrayList<String>();// TODO Auto-generated method stub
+		List<String> fileNameList;
 		String fileNameString = request.getParameter(CategoryCSVConstants.CATEGORY_NAMES_FILE);
-		if(fileNameString == null || "".equals(fileNameString.trim()))
+		if (fileNameString == null || "".equals(fileNameString.trim()))
 		{
-			throw new DynamicExtensionsSystemException("Please provide names of the Category Files To be created");
+			fileNameList = getCategoryFileListInDirectory(new File(tempDirName),"");
+			//throw new DynamicExtensionsSystemException("Please provide names of the Category Files To be created");
 		}
-		StringTokenizer tokenizer = new StringTokenizer(fileNameString,"!=!");
-		while(tokenizer.hasMoreTokens())
+		else
 		{
-			String token = tokenizer.nextToken();
-			if(!"".equals(token))
+			fileNameList = new ArrayList<String>();
+			StringTokenizer tokenizer = new StringTokenizer(fileNameString, CategoryCSVConstants.CAT_FILE_NAME_SEPARATOR);
+			while (tokenizer.hasMoreTokens())
 			{
-				fileNameList.add(token);
+				String token = tokenizer.nextToken();
+				if (!"".equals(token))
+				{
+					fileNameList.add(token);
+				}
 			}
 		}
 		return fileNameList;
 	}
+
+	/**
+	 * It will search in the given base directory & will find out all the category
+	 * files present in the given directory.
+	 * @param baseDirectory directory in which to search for the files.
+	 * @param relativePath path used to reach the category files.
+	 * @return list of the file names relative to the given base directory.
+	 * @throws DynamicExtensionsSystemException exception.
+	 */
+	private List<String> getCategoryFileListInDirectory(File baseDirectory,String relativePath)
+			throws DynamicExtensionsSystemException
+	{
+		List<String> fileNameList = new ArrayList<String>();
+		try
+		{
+			for (File file : baseDirectory.listFiles())
+			{
+				if (file.isDirectory())
+				{
+					String childDirPath = relativePath + file.getName() + "/";
+					fileNameList.addAll(getCategoryFileListInDirectory(file,childDirPath));
+				}
+				else
+				{
+					CategoryFileParser categoryFileParser = DomainObjectFactory.getInstance().createCategoryFileParser(file.getAbsolutePath(),"");
+					 if (categoryFileParser!=null && categoryFileParser.isCategoryFile())
+					 {
+						 fileNameList.add(relativePath+file.getName());
+						 categoryFileParser.closeResources();
+					 }
+				}
+			}
+		}
+		catch (IOException e)
+		{
+			throw new DynamicExtensionsSystemException(
+					"Exception Occured while Reading the Category Files", e);
+
+		}
+		return fileNameList;
+	}
+
 
 	/**
 	 * This method will first of all delete all the files & folders
@@ -136,9 +190,9 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 				{
 					deleteDirectory(files[i]);
 				}
-				else if(!files[i].delete())
+				else if (!files[i].delete())
 				{
-					LOGGER.error("Can not delete File "+files[i]);
+					LOGGER.error("Can not delete File " + files[i]);
 				}
 			}
 		}
@@ -153,50 +207,52 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 	 * @throws IOException Exception.
 	 * @throws DynamicExtensionsSystemException Exception
 	 */
-	private void downloadZipFile(HttpServletRequest request,String tempDirName) throws IOException, DynamicExtensionsSystemException
+	private void downloadZipFile(HttpServletRequest request, String tempDirName)
+			throws IOException, DynamicExtensionsSystemException
 	{
-		BufferedInputStream reader =null;
-		BufferedOutputStream fileWriter= null;
+		BufferedInputStream reader = null;
+		BufferedOutputStream fileWriter = null;
 		createNewTempDirectory(tempDirName);
-		String fileName = tempDirName +"/categoryZip.zip";
+		String fileName = tempDirName + "/categoryZip.zip";
 		try
 		{
 			reader = new BufferedInputStream(request.getInputStream());
 			File file = new File(fileName);
-			if(file.exists() && !file.delete())
+			if (file.exists() && !file.delete())
 			{
-				LOGGER.error("Can not delete File : "+file);
+				LOGGER.error("Can not delete File : " + file);
 			}
-			fileWriter =new BufferedOutputStream(new FileOutputStream(file));
+			fileWriter = new BufferedOutputStream(new FileOutputStream(file));
 
 			byte[] buffer = new byte[1024];
-			int len =  reader.read(buffer);
-			while( len  >=0)
+			int len = reader.read(buffer);
+			while (len >= 0)
 			{
-				fileWriter.write(buffer,0,len);
-				len =  reader.read(buffer);
+				fileWriter.write(buffer, 0, len);
+				len = reader.read(buffer);
 			}
 			fileWriter.flush();
 
 		}
-	    catch (IOException e)
+		catch (IOException e)
 		{
 			// TODO Auto-generated catch block
-			throw new DynamicExtensionsSystemException("Exception occured while Downloading the Zip",e);
+			throw new DynamicExtensionsSystemException(
+					"Exception occured while Downloading the Zip", e);
 
 		}
-	    finally
-	    {
-	    	if(fileWriter!=null)
+		finally
+		{
+			if (fileWriter != null)
 			{
 				fileWriter.close();
 			}
-	    	if(reader!=null)
+			if (reader != null)
 			{
 				reader.close();
 			}
-	    }
-		DynamicExtensionsUtility.extractZipToDestination(fileName,tempDirName);
+		}
+		DynamicExtensionsUtility.extractZipToDestination(fileName, tempDirName);
 	}
 
 	/**
@@ -208,11 +264,11 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 	private void createNewTempDirectory(String tempDirName) throws DynamicExtensionsSystemException
 	{
 		File tempDir = new File(tempDirName);
-		if(tempDir.exists() && tempDir.delete())
+		if (tempDir.exists() && !tempDir.delete())
 		{
-			LOGGER.error("Unable to delete Directory "+ tempDirName);
+			LOGGER.error("Unable to delete Directory " + tempDirName);
 		}
-		if(!tempDir.mkdirs())
+		if (!tempDir.mkdirs())
 		{
 			throw new DynamicExtensionsSystemException("Unable to create tempDirectory");
 		}
@@ -223,22 +279,21 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 	 * @param response HttpServletResponse through which the responseObject should be send.
 	 * @param responseObject object to be send.
 	 */
-	public void sendResponse(HttpServletResponse response,Object responseObject)
+	public void sendResponse(HttpServletResponse response, Object responseObject)
 	{
-	     try
-	     {
-	    	 ObjectOutputStream outputToClient = new ObjectOutputStream(response.getOutputStream());
-	         outputToClient.writeObject(responseObject);
-	         outputToClient.flush();
-	         outputToClient.close();
-	     }
-	     catch (IOException e)
-	     {
-	       LOGGER.info("Exception occured while sending Response to java Application");
-	     }
+		try
+		{
+			ObjectOutputStream outputToClient = new ObjectOutputStream(response.getOutputStream());
+			outputToClient.writeObject(responseObject);
+			outputToClient.flush();
+			outputToClient.close();
+		}
+		catch (IOException e)
+		{
+			LOGGER.info("Exception occured while sending Response to java Application");
+		}
 
 	}
-
 
 	/**
 	 * This method will create the category using the file specified in filePath which is
@@ -246,48 +301,51 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 	 * @param filePath path of the file from which to create category.
 	 * @param baseDirectory directory from which all the paths are mentioned.
 	 * @param isPersistMetadataOnly if true saves only the metadata , does not create the dynamic tables for category
+	 * @param catNameVsException this  is a report map in which the entry is made for each category
+	 * the value will be null if category creation is successful else exception occured will be its value.
 	 */
-	public void createCategory(String filePath, String baseDirectory , boolean isPersistMetadataOnly)
+	public void createCategory(String filePath, String baseDirectory,
+			boolean isPersistMetadataOnly, Map<String, Exception> catNameVsException)
 	{
-		CategoryInterface category=null;
+		CategoryInterface category = null;
 		CategoryHelperInterface categoryHelper = new CategoryHelper();
 		try
 		{
 			LOGGER.info("The .csv file path is:" + filePath);
-			CategoryGenerator categoryGenerator = new CategoryGenerator(filePath,baseDirectory);
+			CategoryGenerator categoryGenerator = new CategoryGenerator(filePath, baseDirectory);
 
 			boolean isEdited = true;
 
 			category = categoryGenerator.generateCategory();
 
-				if (category.getId() == null)
-				{
-					isEdited = false;
-				}
+			if (category.getId() == null)
+			{
+				isEdited = false;
+			}
 
-				if(isPersistMetadataOnly)
-				{
-					categoryHelper.saveCategoryMetadata(category);
-				}
-				else
-				{
-					categoryHelper.saveCategory(category);
-				}
-				if (isEdited)
-				{
-					Logger.out.info("Edited category " + category.getName() + " successfully");
-				}
-				else
-				{
-					Logger.out.info("Saved category " + category.getName() + " successfully");
-				}
-		LOGGER.info("Form definition file " + filePath + " executed successfully.");
-		catNameVsException.put(filePath,null);
+			if (isPersistMetadataOnly)
+			{
+				categoryHelper.saveCategoryMetadata(category);
+			}
+			else
+			{
+				categoryHelper.saveCategory(category);
+			}
+			if (isEdited)
+			{
+				LOGGER.info("Edited category " + category.getName() + " successfully");
+			}
+			else
+			{
+				LOGGER.info("Saved category " + category.getName() + " successfully");
+			}
+			LOGGER.info("Form definition file " + filePath + " executed successfully.");
+			catNameVsException.put(filePath, null);
 		}
 		catch (Exception ex)
 		{
-			LOGGER.error("Error occured while creating category",ex);
-			catNameVsException.put(filePath,ex);
+			LOGGER.error("Error occured while creating category", ex);
+			catNameVsException.put(filePath, ex);
 		}
 		finally
 		{

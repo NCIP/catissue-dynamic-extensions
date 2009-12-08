@@ -889,4 +889,22 @@ public class CategoryCSVFileParser extends CategoryFileParser
 		return readLine()[0].split(":")[2].trim();
 	}
 
+	/**
+	 * This method will verify weather the file to which this parser
+	 * object pointing is actually a category file or not.
+	 * @return true if the file is category file.
+	 */
+	public boolean isCategoryFile() throws IOException
+	{
+
+		boolean isCategory = false;
+		 if(readNext() && hasFormDefination())
+		 {
+			 isCategory = true;
+		 }
+
+
+		return isCategory;
+	}
+
 }

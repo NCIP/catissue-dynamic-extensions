@@ -38,6 +38,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -122,6 +123,13 @@ import edu.wustl.dao.exception.DAOException;
  */
 public class DynamicExtensionsUtility
 {
+
+	static
+	{
+		LoggerConfig.configureLogger(System.getProperty("user.dir"));
+	}
+
+	private static final Logger LOGGER = Logger.getCommonLogger(CommandLineCategoryCreator.class);
 
 	/**
 	 * This method fetches the Control instance from the Database given the corresponding Control Identifier.
@@ -2653,4 +2661,122 @@ public class DynamicExtensionsUtility
 		}
 	}
 
+	/**
+	 *  It will zip the current folder & create the zip file with
+	 *  the given  file name in second parameter.
+	 * @param srcFolder folder to be zipped.
+	 * @param destZipFile name of the zip file.
+	 * @return the file object pointing to the Zip file.
+	 * @throws DynamicExtensionsSystemException Exception.
+	 * @throws IOException Exception.
+	 */
+	public static File zipFolder(String srcFolder, String destZipFile)
+			throws DynamicExtensionsSystemException, IOException
+	{
+		ZipOutputStream zip = null;
+		FileOutputStream fileWriter = null;
+		File destZip = null;
+		try
+		{
+
+			destZip = new File(destZipFile);
+			if (destZip.exists() && !destZip.delete())
+			{
+				LOGGER.error("can not delete " + destZipFile);
+			}
+			fileWriter = new FileOutputStream(destZip);
+			zip = new ZipOutputStream(fileWriter);
+
+			addFolderToZip("", srcFolder, zip);
+			zip.flush();
+		}
+		catch (IOException e)
+		{
+			throw new DynamicExtensionsSystemException("Error occured while Reading the Folder", e);
+		}
+		finally
+		{
+			if (zip != null)
+			{
+				zip.close();
+			}
+		}
+		return destZip;
+	}
+
+	/**
+	 * It will add the current file in the zip at the given path.
+	 * @param path path where to add the file in zip.
+	 * @param srcFile file to add in zip.
+	 * @param zip zip output stream pointing to the zipped file.
+	 * @throws IOException exception.
+	 * @throws DynamicExtensionsSystemException exception.
+	 */
+	private static void addFileToZip(String path, String srcFile, ZipOutputStream zip)
+			throws IOException, DynamicExtensionsSystemException
+
+	{
+
+		File folder = new File(srcFile);
+		if (folder.isDirectory())
+		{
+			addFolderToZip(path, srcFile, zip);
+		}
+		else
+		{
+			byte[] buf = new byte[1024];
+
+			FileInputStream inputStream = null;
+			try
+			{
+				inputStream = new FileInputStream(srcFile);
+				zip.putNextEntry(new ZipEntry(path + "/" + folder.getName()));
+				int len = inputStream.read(buf);
+				while (len > 0)
+				{
+					zip.write(buf, 0, len);
+					len = inputStream.read(buf);
+				}
+			}
+			finally
+			{
+				if (inputStream != null)
+				{
+					inputStream.close();
+				}
+			}
+		}
+	}
+
+	/**
+	 * This method will add the given srcFolder to the given zip
+	 * output stream zip at the given path in the created zip file.
+	 * @param path path where the folder should be added in the zip file.
+	 * @param srcFolder folder to add in the zip.
+	 * @param zip zip out put stream pointing to zip file.
+	 * @throws DynamicExtensionsSystemException Exception.
+	 * @throws IOException Exception.
+	 */
+	private static void addFolderToZip(String path, String srcFolder, ZipOutputStream zip)
+			throws DynamicExtensionsSystemException, IOException
+
+	{
+		File folder = new File(srcFolder);
+		if (!folder.exists() || !folder.isDirectory())
+		{
+			throw new DynamicExtensionsSystemException(srcFolder
+					+ "Does not exist. Please specify correct path");
+		}
+		for (String fileName : folder.list())
+		{
+			if ("".equals(path))
+			{
+				addFileToZip(folder.getName(), srcFolder + "/" + fileName, zip);
+			}
+			else
+			{
+				addFileToZip(path + "/" + folder.getName(), srcFolder + "/" + fileName, zip);
+			}
+		}
+	}
 }

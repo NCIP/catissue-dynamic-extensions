@@ -87,7 +87,6 @@ public class CommandLineCategoryCreator
 
 			// read the response from server
 			processResponse(servletConnection);
-
 		}
 		catch (IOException e)
 		{
@@ -118,7 +117,7 @@ public class CommandLineCategoryCreator
 			csvReader = new BufferedInputStream(new FileInputStream(file));
 			servletWriter = getServletWriter(servletConnection);
 			int len = csvReader.read(buffer);
-			while (len>= 0)
+			while (len >= 0)
 			{
 				servletWriter.write(buffer, 0, len);
 				len = csvReader.read(buffer);
@@ -165,30 +164,65 @@ public class CommandLineCategoryCreator
 	{
 		try
 		{
-			if (args.length >= 3)
+			validate(args);
+			zipFile = DynamicExtensionsUtility.zipFolder(args[0], "tempCategoryDir.zip");
+			String url = args[1] + "/CreateCategoryAction.do?";
+			String categoryFilenameString ="";
+			if (args.length > 2 && !"".equals(args[2].trim()))
 			{
-				zipFile = new File(args[0]);
-				String categoryFilenameString = getCategoryFilenameString(args[1]);
-				if (args.length == 4 && args[3].equalsIgnoreCase("true"))
-				{
-					isMetadataOnly = true;
-				}
+				categoryFilenameString = getCategoryFilenameString(args[2]);
 
-				serverUrl = new URL(args[2] + "/CreateCategoryAction.do?"+CategoryCSVConstants.METADATA_ONLY+"="
-						+ isMetadataOnly + "&"+CategoryCSVConstants.CATEGORY_NAMES_FILE +"="+categoryFilenameString);//"http://10.88.199.50:28080/clinportal/CreateCategoryAction.do"
 			}
-			else
+			if (args.length > 3 && args[3].equalsIgnoreCase("true"))
 			{
-				throw new DynamicExtensionsSystemException(
-						"Please specify the name of the Zip file, the file which contains category names & Application Url");
+				isMetadataOnly = true;
 			}
+			serverUrl = new URL(url + CategoryCSVConstants.METADATA_ONLY + "=" + isMetadataOnly
+					+ "&" + CategoryCSVConstants.CATEGORY_NAMES_FILE + "=" + categoryFilenameString);
 		}
 		catch (MalformedURLException e)
 		{
-			throw new DynamicExtensionsSystemException("Please provide correct URL", e);
+			throw new DynamicExtensionsSystemException("Please provide correct server URL", e);
 		}
 	}
 
+	/**
+	 * It will validate weather the correct number of arguments are passed or not & then throw exception accordingly.
+	 * @param args arguments
+	 * @throws DynamicExtensionsSystemException exception
+	 */
+	private static void validate(String args[]) throws DynamicExtensionsSystemException
+	{
+		if (args.length == 0)
+		{
+			throw new DynamicExtensionsSystemException(
+					"Please Specify the folder where category Files are.");
+		}
+		if (args.length < 2)
+		{
+			throw new DynamicExtensionsSystemException(
+					"Please Specify the Server URL on which the Application is running.");
+		}
+		if (args[0] != null && args[0].trim().length() == 0)
+		{
+			throw new DynamicExtensionsSystemException(
+					"Please Specify the folder where category Files are.");
+		}
+		if (args[1] != null && args[1].trim().length() == 0)
+		{
+			throw new DynamicExtensionsSystemException(
+					"Please Specify the Server URL on which the Application is running.");
+		}
+	}
+
+	/**
+	 * This method will read the names of the category files mentioned in the file "categoryListFileName"
+	 * given in the arguments & create a string of category file names separated with the '!=!' token.
+	 * @param categoryListFileName name of the file in which category files path are mentioned.
+	 * @return the string formed from category file names with'!=!' in between.
+	 * @throws DynamicExtensionsSystemException Exception.
+	 * @throws IOException Exception.
+	 */
 	private String getCategoryFilenameString(String categoryListFileName)
 			throws DynamicExtensionsSystemException, IOException
 	{
@@ -204,7 +238,7 @@ public class CommandLineCategoryCreator
 				//read each line of text file
 				while (line != null)
 				{
-					catFileNameString.append(line.trim()).append("!=!");
+					catFileNameString.append(line.trim()).append(CategoryCSVConstants.CAT_FILE_NAME_SEPARATOR);
 					line = bufRdr.readLine();
 				}
 			}
@@ -215,7 +249,7 @@ public class CommandLineCategoryCreator
 			}
 			finally
 			{
-				if(bufRdr!=null)
+				if (bufRdr != null)
 				{
 					bufRdr.close();
 				}
@@ -229,6 +263,12 @@ public class CommandLineCategoryCreator
 		return catFileNameString.toString();
 	}
 
+	/**
+	 * This method will get the ouput stream from the given  servletConnection.
+	 * @param servletConnection url connection from which to get the output Stream.
+	 * @return BufferedOutputStream for writing to the URL.
+	 * @throws DynamicExtensionsSystemException Exception.
+	 */
 	private BufferedOutputStream getServletWriter(URLConnection servletConnection)
 			throws DynamicExtensionsSystemException
 	{
@@ -263,20 +303,20 @@ public class CommandLineCategoryCreator
 			inputFromServlet = new ObjectInputStream(servletConnection.getInputStream());
 
 			Object exceptionOccured = inputFromServlet.readObject();
-			if(exceptionOccured instanceof Exception)
+			if (exceptionOccured instanceof Exception)
 			{
 				LOGGER.info("exception occured");
-				throw new DynamicExtensionsSystemException("", (Exception)exceptionOccured);
+				throw new DynamicExtensionsSystemException("", (Exception) exceptionOccured);
 			}
-			else if(exceptionOccured instanceof Map)
+			else if (exceptionOccured instanceof Map)
 			{
-				printReport((Map<String,Exception> )exceptionOccured);
+				printReport((Map<String, Exception>) exceptionOccured);
 			}
 		}
 		catch (IOException e)
 		{
-			throw new DynamicExtensionsSystemException("Exception occured while creating category, Please verify Server is Running",
-					e);
+			throw new DynamicExtensionsSystemException(
+					"Exception occured while creating category, Please verify Server is Running", e);
 		}
 		catch (ClassNotFoundException e)
 		{
@@ -295,16 +335,17 @@ public class CommandLineCategoryCreator
 
 	private void printReport(Map<String, Exception> exceptionOccured)
 	{
-		for(Entry<String, Exception> entry : exceptionOccured.entrySet())
+		for (Entry<String, Exception> entry : exceptionOccured.entrySet())
 		{
-			if(entry.getValue()==null)
+			if (entry.getValue() == null)
 			{
-				LOGGER.info("Category File :"+entry.getKey()+"\n\tExecuted Succesfully");
+				LOGGER.info("Category File :" + entry.getKey() + "\n\tExecuted Succesfully");
 			}
 			else
 			{
-				LOGGER.error("Category creation failed for file : "+ entry.getKey());
-				LOGGER.debug("Exception Occured is as Follows :", entry.getValue());
+				LOGGER.error("Category creation failed for file : " + entry.getKey());
+				LOGGER.error("Exception Occured is as Follows : "+ entry.getValue().getCause().getLocalizedMessage());
+				LOGGER.debug("Exception Occured is as Follows : ", entry.getValue());
 			}
 		}
 
@@ -464,4 +505,6 @@ public class CommandLineCategoryCreator
 
 		}
 	}
+
+
 }

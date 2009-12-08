@@ -272,4 +272,11 @@ public abstract class CategoryFileParser extends FileReader
 	 */
 	public abstract void closeResources() throws DynamicExtensionsSystemException;
 
+	/**
+	 * This method will verify weather the file to which this parser
+	 * object pointing is actually a category file or not.
+	 * @return true if the file is category file.
+	 */
+	public abstract boolean isCategoryFile() throws IOException;
+
 }

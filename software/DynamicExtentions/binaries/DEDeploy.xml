@@ -301,14 +301,18 @@
 	</target>
 
 	<!-- Target used to create the Category -->
-	<property name="categoryFormNames" value="" />
+	<property name="categoryFormNamesFile" value=" " />
+	<property name="isPersistMetadataOnly" value=" " />
+	<property name="categoryFileDir" value=" " />
 	<target name="create_category">
-
 		<antcall target="setupClassExecutionEnvironment" />
+		<echo message="Creating Categories" />
 		<java classname="edu.common.dynamicextensions.util.CommandLineCategoryCreator" fork="true" maxmemory="1024M">
-			<arg value="${zipFilePath}" />
-			<arg value="${categoryFormNames}" />
-			<arg value="${Application.url}"/>
+			<arg value="${categoryFileDir}" />
+			<arg value="${Application.url}" />
+			<arg value="${categoryFormNamesFile}" />
+			<arg value="${isPersistMetadataOnly}" />
+
 			<classpath>
 				<pathelement location="${temp.dir.DE}" />
 				<fileset dir="${lib.dir.DE}">
