@@ -10,7 +10,7 @@
 	<property file="DynamicExtensionsInstall.properties" />
 	<property name="base.dir" value="." />
 	<property name="de.temp.dir" value="${base.dir}/detemp" />
-	<property name="temp.dir.DE" value="${base.dir}/temp" />
+	<property name="temp.dir.DE" value="${de.temp.dir}/temp" />
 	<property name="tempcacore.dir" value="${base.dir}/temp_deaudit_related_files" />
 	<property name="export.dir" value="${tempcacore.dir}/temp_exported_xmi" />
 	<property name="cacoresdk.dir" value="${tempcacore.dir}/caCoreSDK" />
