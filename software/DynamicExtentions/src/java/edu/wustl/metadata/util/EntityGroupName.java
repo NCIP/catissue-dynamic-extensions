@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import edu.common.dynamicextensions.entitymanager.EntityGroupManager;
 import edu.common.dynamicextensions.entitymanager.EntityGroupManagerInterface;
@@ -15,10 +16,10 @@ import edu.wustl.common.beans.NameValueBean;
 
 public class EntityGroupName {
 
-    static EntityGroupManagerInterface entityGroupManager = EntityGroupManager.getInstance();
+    private static EntityGroupManagerInterface entityGroupManager = EntityGroupManager.getInstance();
 
-    public static void getAllEntityGroupBean(String directoryPath) {
-        ArrayList<String> allEntityGroupNames = new ArrayList<String>();
+    public void getAllEntityGroupBean(String directoryPath) {
+        List<String> allEntityGroupNames = new ArrayList<String>();
         try {
             Collection<NameValueBean> allEntityGroupBeansNames = entityGroupManager.getAllEntityGroupBeans();
             for (NameValueBean nameValueBean : allEntityGroupBeansNames) {
@@ -30,7 +31,7 @@ public class EntityGroupName {
         }
     }
 
-    private static void writeToFile(ArrayList<String> allEntityGroupNames, String directoryPath) {
+    private void writeToFile(List<String> allEntityGroupNames, String directoryPath) {
         File newFile = new File(directoryPath + File.separator + "EntityGroups.txt");
         String entityGroupTag = "entity.group.name=";
         try {
@@ -48,7 +49,8 @@ public class EntityGroupName {
     }
 
     public static void main(String[] args) {
-        getAllEntityGroupBean(args[0]);
+        EntityGroupName entityGroupName = new EntityGroupName();
+        entityGroupName.getAllEntityGroupBean(args[0]);
     }
 
 }

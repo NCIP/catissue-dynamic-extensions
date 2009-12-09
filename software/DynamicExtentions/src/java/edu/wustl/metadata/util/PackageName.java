@@ -18,26 +18,23 @@ import edu.wustl.cab2b.common.exception.RuntimeException;
 
 public class PackageName {
 
-    static EntityGroupManagerInterface entityGroupManager = EntityGroupManager.getInstance();
+    private static EntityGroupManagerInterface entityGroupManager = EntityGroupManager.getInstance();
 
     public static void main(String[] args) {
         getPackageName(args[0], args[1]);
     }
 
-    private static void getPackageName(String directoryPath, String name) {
+    private static void getPackageName(String directoryPath, String xmiName) {
 
         String packageName = null;
-        String entityName = null;
-        String packageEntityName = null;
-        EntityGroupInterface entityGroups = null;
         try {
-            File file = new File(name);
+            File file = new File(xmiName);
             int indexOfExtension = file.getName().lastIndexOf('.');
             if (indexOfExtension != -1) {
-                name = file.getName().substring(0, indexOfExtension);
+                xmiName = file.getName().substring(0, indexOfExtension);
             }
 
-            entityGroups = entityGroupManager.getEntityGroupByName(name);
+            EntityGroupInterface entityGroups = entityGroupManager.getEntityGroupByName(xmiName);
             EntityInterface entity = entityGroups.getEntityCollection().iterator().next();
             Set<TaggedValueInterface> taggedValues = (Set<TaggedValueInterface>) entity.getEntityGroup().getTaggedValueCollection();
 
@@ -50,20 +47,20 @@ public class PackageName {
                 }
             }
             int start = packageName.lastIndexOf('.');
+            String entityName = xmiName;
+            String packageEntityName = xmiName;
             if (start != -1) {
-                packageEntityName = packageName.substring(packageName.lastIndexOf('.')+1, packageName.length());
+                packageEntityName = packageName.substring(packageName.lastIndexOf('.') + 1, packageName.length());
 
-                String temp = packageName.substring(0, packageName.indexOf('.')+1);
-                packageName = packageName.substring(packageName.indexOf('.')+1, packageName.length());
-                if(packageName.indexOf('.')!=-1){
-                    temp = temp + packageName.substring(0, packageName.indexOf('.'));
+                StringBuffer tempPackageName = new StringBuffer(
+                        packageName.substring(0, packageName.indexOf('.') + 1));
+                packageName = packageName.substring(packageName.indexOf('.') + 1, packageName.length());
+                if (packageName.indexOf('.') != -1) {
+                    tempPackageName.append(packageName.substring(0, packageName.indexOf('.')));
                 }
-                packageName= temp;
-                packageName = packageName.replace('.', '/');
-            } else {
-                packageEntityName = name;
+                packageName = tempPackageName.toString().replace('.', '/');
             }
-            entityName = name;
+
             writeToFile(directoryPath, packageName, entityName, packageEntityName);
         } catch (DynamicExtensionsSystemException e) {
             throw new RuntimeException("Error while retriving Entity Group", e);
