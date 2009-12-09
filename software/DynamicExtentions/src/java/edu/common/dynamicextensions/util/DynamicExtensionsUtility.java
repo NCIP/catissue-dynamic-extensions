@@ -129,7 +129,7 @@ public class DynamicExtensionsUtility
 		LoggerConfig.configureLogger(System.getProperty("user.dir"));
 	}
 
-	private static final Logger LOGGER = Logger.getCommonLogger(CommandLineCategoryCreator.class);
+	private static final Logger LOGGER = Logger.getCommonLogger(DynamicExtensionsUtility.class);
 
 	/**
 	 * This method fetches the Control instance from the Database given the corresponding Control Identifier.
@@ -2609,7 +2609,7 @@ public class DynamicExtensionsUtility
 		}
 		catch (IOException e)
 		{
-			throw new DynamicExtensionsSystemException("Can not extract the Zip ", e);
+			throw new DynamicExtensionsSystemException("Can not extract the Zip, Zip may be currupted", e);
 		}
 		finally
 		{
