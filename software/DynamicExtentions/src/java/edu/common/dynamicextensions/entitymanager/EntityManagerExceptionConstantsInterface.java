@@ -2,7 +2,7 @@
 package edu.common.dynamicextensions.entitymanager;
 
 /**
- * 
+ *
  * @author vishvesh_mulay
  * @author mandar_shidhore
  *
@@ -75,5 +75,7 @@ public interface EntityManagerExceptionConstantsInterface
 
 	// Exception constant in case of opening a session to save the container.
 	String DYEXTN_S_003 = "DYEXTN_S_003";
+
+	String DATA_INSERTION_ERROR_MESSAGE = "Error while inserting data";
 
 }
