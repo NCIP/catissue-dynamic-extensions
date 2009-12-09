@@ -1938,11 +1938,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 				DateAttributeTypeInformation dateAttrTypInfo = (DateAttributeTypeInformation) attribute
 						.getAttributeTypeInformation();
 
-				String format = dateAttrTypInfo.getFormat();
-				if (format == null)
-				{
-					format = CommonServiceLocator.getInstance().getDatePattern();
-				}
+				String format = DynamicExtensionsUtility.getDateFormat(dateAttrTypInfo.getFormat());
 
 				valueObj = resultSet.getTimestamp(index + 1);
 
