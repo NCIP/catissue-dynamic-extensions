@@ -2609,7 +2609,7 @@ public class DynamicExtensionsUtility
 		}
 		catch (IOException e)
 		{
-			throw new DynamicExtensionsSystemException("Can not extract the Zip, Zip may be currupted", e);
+			throw new DynamicExtensionsSystemException("Can not extract the zip, zip may be currupted", e);
 		}
 		finally
 		{
@@ -2642,7 +2642,7 @@ public class DynamicExtensionsUtility
 			if (parentFile != null && !parentFile.exists() && !parentFile.mkdirs())
 			{
 				// this is condition when mkdirs is failed to create the directories
-				throw new DynamicExtensionsSystemException("Can not create Directory " + parentFile);
+				throw new DynamicExtensionsSystemException("Can not create directory " + parentFile);
 			}
 			fileoutputstream = new FileOutputStream(newFile);
 			int bytesRead = zipinputstream.read(buf, 0, 1024);
@@ -2692,7 +2692,7 @@ public class DynamicExtensionsUtility
 		}
 		catch (IOException e)
 		{
-			throw new DynamicExtensionsSystemException("Error occured while Reading the Folder", e);
+			throw new DynamicExtensionsSystemException("Error occured while reading the folder", e);
 		}
 		finally
 		{
@@ -2765,7 +2765,7 @@ public class DynamicExtensionsUtility
 		if (!folder.exists() || !folder.isDirectory())
 		{
 			throw new DynamicExtensionsSystemException(srcFolder
-					+ "Does not exist. Please specify correct path");
+					+ "does not exist. Please specify correct path");
 		}
 		for (String fileName : folder.list())
 		{

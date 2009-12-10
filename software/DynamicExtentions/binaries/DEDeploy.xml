@@ -305,23 +305,25 @@
 	<property name="isPersistMetadataOnly" value=" " />
 	<property name="categoryFileDir" value=" " />
 	<target name="create_category">
-		<antcall target="setupClassExecutionEnvironment" />
+		<delete dir="${de.temp.dir}" failonerror="no" />
+		<mkdir dir="${de.temp.dir}" />
+		<unzip src="categoryCreator.zip" dest="${de.temp.dir}" overwrite="true"/>
+		<copy file="./${de.temp.dir}/log4j.properties.template" tofile="./log4j.properties" overwrite="true" />
+			<mkdir dir="./log" />
+			<replace file="./log4j.properties">
+				<replacefilter token="@@jbosshome@@" value="." />
+			</replace>
 		<echo message="Creating Categories" />
-		<java classname="edu.common.dynamicextensions.util.CommandLineCategoryCreator" fork="true" maxmemory="1024M">
+		<java classname="edu.common.dynamicextensions.category.CategoryCreator" fork="true" maxmemory="1024M">
 			<arg value="${categoryFileDir}" />
 			<arg value="${Application.url}" />
 			<arg value="${categoryFormNamesFile}" />
 			<arg value="${isPersistMetadataOnly}" />
 
 			<classpath>
-				<pathelement location="${temp.dir.DE}" />
-				<fileset dir="${lib.dir.DE}">
+				<fileset dir="${de.temp.dir}">
 					<include name="*.jar" />
 					<exclude name="uml-1.3.jar" />
-				</fileset>
-				<fileset dir="${extra.lib.dir.DE}">
-					<include name="jboss-j2ee.jar" />
-					<include name="jta.jar" />
 				</fileset>
 			</classpath>
 		</java>

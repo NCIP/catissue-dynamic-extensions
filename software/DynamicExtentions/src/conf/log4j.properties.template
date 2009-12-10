@@ -1,6 +1,7 @@
 # Set root category priority to INFO and its only appender to CONSOLE.
 #log4j.rootCategory=INFO, CONSOLE
-log4j.rootCategory=INFO, CONSOLE, LOGFILE
+log4j.rootCategory=DEBUG, CONSOLE, LOGFILE
+#log4j.rootCategory=INFO, CONSOLE, LOGFILE
 
 # Set the enterprise logger category to FATAL and its only appender to CONSOLE.
 #log4j.logger.org.apache.axis.enterprise=FATAL, CONSOLE
@@ -17,7 +18,7 @@ log4j.appender.LOGFILE.File=@@jbosshome@@/log/dynamicExtentions.log
 log4j.appender.LOGFILE.Append=true
 log4j.appender.LOGFILE.MaxFileSize=1024KB
 log4j.appender.LOGFILE.MaxBackupIndex=7
-log4j.appender.LOGFILE.Threshold=INFO
+log4j.appender.LOGFILE.Threshold=DEBUG
 log4j.appender.LOGFILE.layout=org.apache.log4j.PatternLayout
 #log4j.appender.LOGFILE.layout.ConversionPattern=%-4r %d [%t] %-5p %C{3} - %m%n
 log4j.appender.LOGFILE.layout.ConversionPattern= %-5p %d %C{3} - %m%n

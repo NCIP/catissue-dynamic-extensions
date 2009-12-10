@@ -1,5 +1,5 @@
 
-package edu.common.dynamicextensions.util;
+package edu.common.dynamicextensions.category;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -23,7 +23,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 
@@ -35,7 +35,7 @@ import edu.wustl.common.util.logger.LoggerConfig;
  * @author pavan_kalantri
  *
  */
-public class CommandLineCategoryCreator
+public class CategoryCreator
 {
 
 	static
@@ -43,7 +43,7 @@ public class CommandLineCategoryCreator
 		LoggerConfig.configureLogger(System.getProperty("user.dir"));
 	}
 
-	private static final Logger LOGGER = Logger.getCommonLogger(CommandLineCategoryCreator.class);
+	private static final Logger LOGGER = Logger.getCommonLogger(CategoryCreator.class);
 
 	private File zipFile;
 	private URL serverUrl;
@@ -58,7 +58,7 @@ public class CommandLineCategoryCreator
 	 */
 	public static void main(String[] args)
 	{
-		CommandLineCategoryCreator refresher = new CommandLineCategoryCreator();
+		CategoryCreator refresher = new CategoryCreator();
 		refresher.createCategory(args);
 	}
 
@@ -90,12 +90,13 @@ public class CommandLineCategoryCreator
 		}
 		catch (IOException e)
 		{
-			LOGGER.info("Exception occured while Creating the category", e);
-
+			LOGGER.error("Exception occured while creating the category : "+e.getLocalizedMessage());
+			LOGGER.debug("Exception occured is as follows : ", e);
 		}
 		catch (DynamicExtensionsSystemException e)
 		{
-			LOGGER.info("Exception occured while Creating the category", e);
+			LOGGER.error("Exception occured while creating the category : "+e.getLocalizedMessage());
+			LOGGER.debug("Exception occured is as follows : ", e);
 		}
 	}
 
@@ -128,12 +129,12 @@ public class CommandLineCategoryCreator
 		{
 			// TODO Auto-generated catch block
 			throw new DynamicExtensionsSystemException(
-					"File Not Found, please specify correct file path.", e);
+					"File not found, please specify correct file path.", e);
 		}
 		catch (IOException e)
 		{
 			// TODO Auto-generated catch block
-			throw new DynamicExtensionsSystemException("Exception Occured While Creating category",
+			throw new DynamicExtensionsSystemException("Exception occured while creating category",
 					e);
 		}
 		finally
@@ -177,12 +178,12 @@ public class CommandLineCategoryCreator
 			{
 				isMetadataOnly = true;
 			}
-			serverUrl = new URL(url + CategoryCSVConstants.METADATA_ONLY + "=" + isMetadataOnly
-					+ "&" + CategoryCSVConstants.CATEGORY_NAMES_FILE + "=" + categoryFilenameString);
+			serverUrl = new URL(url + CategoryCreatorConstants.METADATA_ONLY + "=" + isMetadataOnly
+					+ "&" + CategoryCreatorConstants.CATEGORY_NAMES_FILE + "=" + categoryFilenameString);
 		}
 		catch (MalformedURLException e)
 		{
-			throw new DynamicExtensionsSystemException("Please provide correct server URL", e);
+			throw new DynamicExtensionsSystemException("Please provide correct ApplicationURL", e);
 		}
 	}
 
@@ -196,22 +197,22 @@ public class CommandLineCategoryCreator
 		if (args.length == 0)
 		{
 			throw new DynamicExtensionsSystemException(
-					"Please Specify the folder where category Files are.");
+					"Please specify category files folder path.");
 		}
 		if (args.length < 2)
 		{
 			throw new DynamicExtensionsSystemException(
-					"Please Specify the Server URL on which the Application is running.");
+					"Please specify the AppplicationURL.");
 		}
 		if (args[0] != null && args[0].trim().length() == 0)
 		{
 			throw new DynamicExtensionsSystemException(
-					"Please Specify the folder where category Files are.");
+					"Please specify category files folder path.");
 		}
 		if (args[1] != null && args[1].trim().length() == 0)
 		{
 			throw new DynamicExtensionsSystemException(
-					"Please Specify the Server URL on which the Application is running.");
+					"Please specify the  AppplicationURL.");
 		}
 	}
 
@@ -238,7 +239,7 @@ public class CommandLineCategoryCreator
 				//read each line of text file
 				while (line != null)
 				{
-					catFileNameString.append(line.trim()).append(CategoryCSVConstants.CAT_FILE_NAME_SEPARATOR);
+					catFileNameString.append(line.trim()).append(CategoryCreatorConstants.CAT_FILE_NAME_SEPARATOR);
 					line = bufRdr.readLine();
 				}
 			}
@@ -257,7 +258,7 @@ public class CommandLineCategoryCreator
 		}
 		else
 		{
-			throw new DynamicExtensionsSystemException("Category Names File not Found at "
+			throw new DynamicExtensionsSystemException("Category names file not found at "
 					+ categoryListFileName);
 		}
 		return catFileNameString.toString();
@@ -281,7 +282,7 @@ public class CommandLineCategoryCreator
 		catch (IOException e)
 		{
 			throw new DynamicExtensionsSystemException(
-					"Please Verify the Correct URL is specified & the Server is Running", e);
+					"Please verify the Correct URL is specified & the server is running", e);
 		}
 		return servletWriter;
 	}
@@ -306,7 +307,8 @@ public class CommandLineCategoryCreator
 			if (exceptionOccured instanceof Exception)
 			{
 				LOGGER.info("exception occured");
-				throw new DynamicExtensionsSystemException("", (Exception) exceptionOccured);
+				Exception serverException = (Exception) exceptionOccured;
+				throw new DynamicExtensionsSystemException(serverException.getLocalizedMessage(), serverException);
 			}
 			else if (exceptionOccured instanceof Map)
 			{
@@ -316,12 +318,12 @@ public class CommandLineCategoryCreator
 		catch (IOException e)
 		{
 			throw new DynamicExtensionsSystemException(
-					"Exception occured while creating category, Please verify Server is Running", e);
+					"Exception occured while creating category, please verify server is running", e);
 		}
 		catch (ClassNotFoundException e)
 		{
 
-			throw new DynamicExtensionsSystemException("Exception Occured While Creating category",
+			throw new DynamicExtensionsSystemException("Exception occured while creating category",
 					e);
 		}
 		finally
@@ -339,13 +341,13 @@ public class CommandLineCategoryCreator
 		{
 			if (entry.getValue() == null)
 			{
-				LOGGER.info("Category File :" + entry.getKey() + "\n\tExecuted Succesfully");
+				LOGGER.info("Category file :" + entry.getKey() + "\n\texecuted succesfully");
 			}
 			else
 			{
 				LOGGER.error("Category creation failed for file : " + entry.getKey());
-				LOGGER.error("Exception Occured is as Follows : "+ entry.getValue().getCause().getLocalizedMessage());
-				LOGGER.debug("Exception Occured is as Follows : ", entry.getValue());
+				LOGGER.error("Exception occured : "+ entry.getValue().getCause().getLocalizedMessage());
+				LOGGER.debug("Exception occured : ", entry.getValue());
 			}
 		}
 
@@ -359,20 +361,28 @@ public class CommandLineCategoryCreator
 	 * @return Urlconnection object for the given serverUrl.
 	 * @throws IOException exception
 	 */
-	private URLConnection openServletConnection(URL serverUrl) throws IOException
+	private URLConnection openServletConnection(URL serverUrl) throws DynamicExtensionsSystemException
 	{
-		URLConnection servletConnection = serverUrl.openConnection();
+		URLConnection servletConnection;
+		try
+		{
+			servletConnection = serverUrl.openConnection();
 
-		// I m going to write something to servlet & also will be waiting to read from servlet
-		servletConnection.setDoInput(true);
-		servletConnection.setDoOutput(true);
+			// I m going to write something to servlet & also will be waiting to read from servlet
+			servletConnection.setDoInput(true);
+			servletConnection.setDoOutput(true);
 
-		// Don't use a cached version of URL connection.
-		servletConnection.setUseCaches(false);
-		servletConnection.setDefaultUseCaches(false);
+			// Don't use a cached version of URL connection.
+			servletConnection.setUseCaches(false);
+			servletConnection.setDefaultUseCaches(false);
 
-		// Specify the content type that we will send binary data
-		servletConnection.setRequestProperty("Content-Type", "application/octet-stream");
+			// Specify the content type that we will send binary data
+			servletConnection.setRequestProperty("Content-Type", "application/octet-stream");
+		}
+		catch(IOException e)
+		{
+			throw new DynamicExtensionsSystemException("Please verify the ApplicationURL and also verify that the server is running.",e);
+		}
 		return servletConnection;
 	}
 

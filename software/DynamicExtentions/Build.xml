@@ -16,6 +16,7 @@
 	<property name="build.dir" value="${base.dir}/build" />
 	<property name="applet.dir" value="${base.dir}/src/web/Applet" />
 	<property name="interface.dir" value="${base.dir}/binaries/DynamicExtensionsInterface" />
+	<property name="category.jar.dir" value="${base.dir}/binaries/CategoryCreator" />
 	<property name="interface.src.dir" value="${base.dir}/binaries/DynamicExtensionsInterfaceSource" />
 	<property name="javadoc.dir" value="../../tools/JavaDoc" />
 	<property name="javadoc.zip" value="DynamicExtensionsJavaDoc.zip" />
@@ -185,6 +186,7 @@
 				<include name="**/hbm/**/*.*" />
 				<include name="**/dynamicextensions/util/**/*.*" />
 				<include name="**/dynamicextensions/validation/**/*.*" />
+				<include name="**/dynamicextensions/category/**/*.*" />
 				<include name="**/common/util/**/*.*" />
 				<include name="**/dynamicextensions/bizlogic/**/*.class" />
 				<include name="DynamicExtensionsErrorsMessages.properties" />
@@ -1026,7 +1028,7 @@
 			</if>
 			<copy file="${temp.hdoclet.dir}/project/software/DynamicExtentions/binaries/dynamicExtensions.zip" todir="${de_release_dir}" overwrite="true" />
 			<copy file="${temp.hdoclet.dir}/project/software/DynamicExtentions/binaries/DynamicExtensionsInterface/dynamicExtensions.jar" todir="${de_release_dir}" overwrite="true" />
-			<copy file="./binaries/dynamicExtensions.zip" todir="${de_release_dir}" overwrite="true" />
+			<copy file="${temp.hdoclet.dir}/project/software/DynamicExtentions/binaries/categoryCreator.zip" todir="${de_release_dir}" overwrite="true" />
 		</target>
 		<!-- DE release target end-->
 
@@ -1067,5 +1069,40 @@
 					<include name="**/**/*.txt" />
 				</fileset>
 			</copy >
+		</target>
+
+		<target name="create_category_creator_zip" depends="create_category_creator_jar,version_info">
+			<delete file="binaries/categoryCreator.zip" />
+			<zip destfile="binaries/categoryCreator.zip">
+				<fileset dir="${category.jar.dir}">
+					<include name="CategoryCreator.jar" />
+				</fileset>
+				<fileset dir="${base.dir}/lib/server">
+					<include name="washu-commons-1.1.2.jar" />
+					<include name="log4j.jar" />
+				</fileset>
+				<fileset dir="${base.dir}/src/conf">
+					<include name="log4j.properties.template" />
+				</fileset>
+			</zip>
+		</target>
+
+		<target name="create_category_creator_jar" depends="compile">
+			<delete dir="${category.jar.dir}" />
+			<mkdir dir="${category.jar.dir}" />
+			<jar taskname="buildJar" jarfile="${category.jar.dir}/CategoryCreator.jar">
+				<fileset dir="${target.dir}">
+					<include name="**/edu/common/dynamicextensions/exception/**/*.class" />
+					<include name="**/edu/common/dynamicextensions/category/**.class" />
+				</fileset>
+				<manifest>
+					<section name="${DynamicExtensions.jar.details}">
+						<attribute name="Version" value="${DynamicExtensions.jar.version}" />
+						<attribute name="Built-By" value="${DynamicExtensions.jar.creator}" />
+						<attribute name="Build-on" value="${TODAY_IND}" />
+						<attribute name="SVN-URL" value="${dist.revision}" />
+					</section>
+				</manifest>
+			</jar>
 		</target>
 	</project>

@@ -20,6 +20,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import edu.common.dynamicextensions.category.CategoryCreatorConstants;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
@@ -27,7 +28,6 @@ import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.CategoryHelper;
 import edu.common.dynamicextensions.util.CategoryHelperInterface;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
-import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
 import edu.common.dynamicextensions.util.parser.CategoryFileParser;
 import edu.common.dynamicextensions.util.parser.CategoryGenerator;
 import edu.wustl.cab2b.server.cache.EntityCache;
@@ -72,7 +72,7 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 			for (String name : fileNamesList)
 			{
 				if (ProcessorConstants.TRUE.equalsIgnoreCase(request
-						.getParameter(CategoryCSVConstants.METADATA_ONLY)))
+						.getParameter(CategoryCreatorConstants.METADATA_ONLY)))
 				{
 					createCategory(name, tempDirName, true, catNameVsException);
 				}
@@ -83,11 +83,11 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 			}
 			sendResponse(response, catNameVsException);
 
-			LOGGER.info("Create category action Completed Successfully");
+			LOGGER.info("Create category action completed successfully");
 		}
 		catch (Exception e)
 		{
-			LOGGER.info("Exception Occured While creating category", e);
+			LOGGER.info("Exception occured while creating category", e);
 			sendResponse(response, e);
 		}
 		finally
@@ -109,7 +109,7 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 			throws DynamicExtensionsSystemException
 	{
 		List<String> fileNameList;
-		String fileNameString = request.getParameter(CategoryCSVConstants.CATEGORY_NAMES_FILE);
+		String fileNameString = request.getParameter(CategoryCreatorConstants.CATEGORY_NAMES_FILE);
 		if (fileNameString == null || "".equals(fileNameString.trim()))
 		{
 			fileNameList = getCategoryFileListInDirectory(new File(tempDirName),"");
@@ -118,7 +118,7 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 		else
 		{
 			fileNameList = new ArrayList<String>();
-			StringTokenizer tokenizer = new StringTokenizer(fileNameString, CategoryCSVConstants.CAT_FILE_NAME_SEPARATOR);
+			StringTokenizer tokenizer = new StringTokenizer(fileNameString, CategoryCreatorConstants.CAT_FILE_NAME_SEPARATOR);
 			while (tokenizer.hasMoreTokens())
 			{
 				String token = tokenizer.nextToken();
@@ -166,7 +166,7 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 		catch (IOException e)
 		{
 			throw new DynamicExtensionsSystemException(
-					"Exception Occured while Reading the Category Files", e);
+					"Exception occured while reading the category file names ", e);
 
 		}
 		return fileNameList;
@@ -192,7 +192,7 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 				}
 				else if (!files[i].delete())
 				{
-					LOGGER.error("Can not delete File " + files[i]);
+					LOGGER.error("Can not delete file " + files[i]);
 				}
 			}
 		}
@@ -220,7 +220,7 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 			File file = new File(fileName);
 			if (file.exists() && !file.delete())
 			{
-				LOGGER.error("Can not delete File : " + file);
+				LOGGER.error("Can not delete file : " + file);
 			}
 			fileWriter = new BufferedOutputStream(new FileOutputStream(file));
 
@@ -236,9 +236,8 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
 			throw new DynamicExtensionsSystemException(
-					"Exception occured while Downloading the Zip", e);
+					"Exception occured while downloading the zip on server", e);
 
 		}
 		finally
@@ -266,7 +265,7 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 		File tempDir = new File(tempDirName);
 		if (tempDir.exists() && !tempDir.delete())
 		{
-			LOGGER.error("Unable to delete Directory " + tempDirName);
+			LOGGER.error("Unable to delete directory " + tempDirName);
 		}
 		if (!tempDir.mkdirs())
 		{
@@ -290,7 +289,7 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 		}
 		catch (IOException e)
 		{
-			LOGGER.info("Exception occured while sending Response to java Application");
+			LOGGER.info("Exception occured while sending response to java application");
 		}
 
 	}

@@ -15,6 +15,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 import junit.framework.TestCase;
+import edu.common.dynamicextensions.category.CategoryCreator;
 import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
@@ -426,7 +427,7 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	protected void createCaegory(String categoryFilePath)
 	{
 		String[] args2 = {categoryFilePath};
-		CommandLineCategoryCreator categoryCreator = new CommandLineCategoryCreator();
+		CategoryCreator categoryCreator = new CategoryCreator();
 		categoryCreator.main(args2);
 
 	}

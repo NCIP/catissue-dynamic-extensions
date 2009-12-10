@@ -951,7 +951,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		if (!(attrTypeInfo instanceof DateAttributeTypeInformation && catAttribute
 				.getDefaultValue() == null))
 		{
-			if (columnNames.toString().length() > 0)
+			if (!columnNames.equals(""))
 			{
 				columnNames.append(", ");
 				columnValues.append(", ");
