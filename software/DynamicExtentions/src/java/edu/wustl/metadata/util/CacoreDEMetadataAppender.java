@@ -22,6 +22,8 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
+
 /**
  *
  * @author mandar_shidhore
@@ -37,60 +39,65 @@ public class CacoreDEMetadataAppender {
 
     /**
      * @param args
+     * @throws DynamicExtensionsApplicationException
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) throws DynamicExtensionsApplicationException {
+        final CacoreDEMetadataAppender cacoreDEMetadata = new CacoreDEMetadataAppender();
+
         if (args.length != 2) {
-            throw new RuntimeException("Please specify paths for hibernate configuration files!");
+            throw new DynamicExtensionsApplicationException(
+                    "Please specify paths for hibernate configuration files!");
         }
         String tempFilePath = "";
 
         try {
-            String deHibernateCfgFilePath = args[0];
+            final String deHibCfgFile = args[0];
             tempFilePath = args[0];
-            Document deHibCfg = getDocumentObjectForXML(deHibernateCfgFilePath);
-            NodeList deHibCfgNodes = deHibCfg.getElementsByTagName(SESSION_FACTORY);
-            Node deHibCfgNode = deHibCfgNodes.item(0);
+            final Document deHibCfg = cacoreDEMetadata.getDocumentObjectForXML(deHibCfgFile);
+            final NodeList deHibCfgNodes = deHibCfg.getElementsByTagName(SESSION_FACTORY);
+            final Node deHibCfgNode = deHibCfgNodes.item(0);
 
             // Get the original resource mappings from 'DynamicExtensionsHibernate.cfg.xml' file.
-            List<String> origDEResrcMappings = getOrigDEResourceMappings(deHibCfgNode);
+            final List<String> deResrcMappings = cacoreDEMetadata.getOrigDEResourceMappings(deHibCfgNode);
 
-            String cacoreHibernateCfgFilePath = args[1];
+            final String cacoreHibCfg = args[1];
             tempFilePath = args[1];
-            Document cacoreGenHibCfg = getDocumentObjectForXML(cacoreHibernateCfgFilePath);
-            NodeList cacoreGenHibCfgNodes = cacoreGenHibCfg.getElementsByTagName(SESSION_FACTORY);
-            Node cacoreGenHibCfgNode = cacoreGenHibCfgNodes.item(0);
+            final Document cacoreGenHibCfg = cacoreDEMetadata.getDocumentObjectForXML(cacoreHibCfg);
+            final NodeList cacoreHibCfgNodes = cacoreGenHibCfg.getElementsByTagName(SESSION_FACTORY);
+            final Node cacoreHibCfgNode = cacoreHibCfgNodes.item(0);
 
-            NodeList cacoreGenHibCfgChildNodes = cacoreGenHibCfgNode.getChildNodes();
-            for (int i = 0; i < cacoreGenHibCfgChildNodes.getLength(); i++) {
-                Node node = cacoreGenHibCfgChildNodes.item(i);
+            final NodeList cacoreCfgChdNodes = cacoreHibCfgNode.getChildNodes();
+            for (int i = 0; i < cacoreCfgChdNodes.getLength(); i++) {
+                final Node node = cacoreCfgChdNodes.item(i);
                 if (node.hasAttributes()) {
-                    Node innerNode = node.getAttributes().item(0);
+                    final Node innerNode = node.getAttributes().item(0);
                     if (MAPPING.equals(node.getNodeName())) {
-                        addNodes(origDEResrcMappings, deHibCfgNode, deHibCfg, innerNode.getNodeValue());
+                        cacoreDEMetadata.addNodes(deResrcMappings, deHibCfgNode, deHibCfg,
+                                                  innerNode.getNodeValue());
                     }
                 }
             }
             //printDEResourceMappings(deHibCfgNode);
-            writeConfigurationFile(deHibernateCfgFilePath, deHibCfg);
+            cacoreDEMetadata.writeConfigurationFile(deHibCfgFile, deHibCfg);
         } catch (SAXException e) {
-            throw new RuntimeException("Exception while reading file " + tempFilePath, e);
+            throw new DynamicExtensionsApplicationException("Exception while reading file " + tempFilePath, e);
         } catch (IOException e) {
-            throw new RuntimeException("Exception while reading file " + tempFilePath, e);
+            throw new DynamicExtensionsApplicationException("Exception while reading file " + tempFilePath, e);
         } catch (TransformerException e) {
-            throw new RuntimeException("Exception while reading file " + tempFilePath, e);
+            throw new DynamicExtensionsApplicationException("Exception while reading file " + tempFilePath, e);
         }
     }
 
     /**
-     * @param existingDEResourceMappings
+     * @param existDEMappings
      * @param deHibCfgNode
      * @param deHibCfg
      * @param nodeValue
      */
-    private static void addNodes(List<String> existingDEResourceMappings, Node deHibCfgNode, Document deHibCfg,
-                                 String nodeValue) {
-        if (!existingDEResourceMappings.contains(nodeValue)) {
-            Element mappingNode = deHibCfg.createElement(MAPPING);
+    private void addNodes(final List<String> existDEMappings, final Node deHibCfgNode, final Document deHibCfg,
+                          final String nodeValue) {
+        if (!existDEMappings.contains(nodeValue)) {
+            final Element mappingNode = deHibCfg.createElement(MAPPING);
             mappingNode.setAttribute(RESOURCE, nodeValue);
             deHibCfgNode.appendChild(mappingNode);
         }
@@ -101,14 +108,14 @@ public class CacoreDEMetadataAppender {
      * @param node
      * @return
      */
-    private static List<String> getOrigDEResourceMappings(Node node) {
-        List<String> resourceMappings = new ArrayList<String>();
+    private List<String> getOrigDEResourceMappings(final Node node) {
+        final List<String> resourceMappings = new ArrayList<String>();
 
-        NodeList propertyNodes = node.getChildNodes();
+        final NodeList propertyNodes = node.getChildNodes();
         for (int i = 0; i < propertyNodes.getLength(); i++) {
-            Node property = propertyNodes.item(i);
+            final Node property = propertyNodes.item(i);
             if (property.hasAttributes()) {
-                Node innerNode = property.getAttributes().item(0);
+                final Node innerNode = property.getAttributes().item(0);
                 if (MAPPING.equals(property.getNodeName())) {
                     resourceMappings.add(innerNode.getNodeValue());
                 }
@@ -123,15 +130,15 @@ public class CacoreDEMetadataAppender {
      * @throws SAXException
      * @throws IOException
      */
-    private static Document getDocumentObjectForXML(String xmlFile) throws SAXException, IOException {
-        DOMParser parser = new DOMParser();
+    private Document getDocumentObjectForXML(final String xmlFile) throws SAXException, IOException {
+        final DOMParser parser = new DOMParser();
 
         // Ignore DTD URL : without this we get connection timeout
         // error as the application tries to access the URL.
         parser.setEntityResolver(new DtdResolver());
         parser.parse(new InputSource(xmlFile));
 
-        Document document = parser.getDocument();
+        final Document document = parser.getDocument();
 
         return document;
     }
@@ -143,9 +150,9 @@ public class CacoreDEMetadataAppender {
      * @throws TransformerException
      * @throws IOException
      */
-    private static void writeConfigurationFile(String cfgFile, Document cfgDocument) throws TransformerException,
-            IOException {
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+    private void writeConfigurationFile(final String cfgFile, final Document cfgDocument)
+            throws TransformerException, IOException {
+        final Transformer transformer = TransformerFactory.newInstance().newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC,
                                       "-//Hibernate/Hibernate Configuration DTD 3.0//EN");
@@ -153,22 +160,22 @@ public class CacoreDEMetadataAppender {
                                       "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd");
 
         // Initialize StreamResult with file object to save to file.
-        StreamResult result = new StreamResult(new FileWriter(cfgFile));
-        DOMSource source = new DOMSource(cfgDocument);
+        final StreamResult result = new StreamResult(new FileWriter(cfgFile));
+        final DOMSource source = new DOMSource(cfgDocument);
         transformer.transform(source, result);
     }
 }
 
 class DtdResolver implements EntityResolver {
 
-    public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+    public InputSource resolveEntity(final String publicId, final String systemId) throws SAXException, IOException {
         InputSource inputSource = null;
 
-        String hibernateConfig = "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd";
-        String hibernateMapping = "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd";
+        final String hibernateConfig = "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd";
+        final String hibernateMapping = "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd";
 
         if (systemId.contains(hibernateConfig) || systemId.contains(hibernateMapping)) {
-            return new InputSource(new StringReader(""));
+            inputSource = new InputSource(new StringReader(""));
         }
         return inputSource;
     }

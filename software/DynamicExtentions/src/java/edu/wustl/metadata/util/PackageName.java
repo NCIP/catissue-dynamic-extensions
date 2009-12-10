@@ -18,41 +18,42 @@ import edu.wustl.cab2b.common.exception.RuntimeException;
 
 public class PackageName {
 
-    private static EntityGroupManagerInterface entityGroupManager = EntityGroupManager.getInstance();
+    private static EntityGroupManagerInterface entityManager = EntityGroupManager.getInstance();
 
-    public static void main(String[] args) {
-        getPackageName(args[0], args[1]);
+    public static void main(final String[] args) {
+        final PackageName packageName = new PackageName();
+        packageName.getPackageName(args[0], args[1]);
     }
 
-    private static void getPackageName(String directoryPath, String xmiName) {
+    private void getPackageName(final String directoryPath, final String xmiName) {
 
         String packageName = null;
         try {
-            File file = new File(xmiName);
-            int indexOfExtension = file.getName().lastIndexOf('.');
+            String entityName = xmiName;
+            final File file = new File(entityName);
+            final int indexOfExtension = file.getName().lastIndexOf('.');
             if (indexOfExtension != -1) {
-                xmiName = file.getName().substring(0, indexOfExtension);
+                entityName = file.getName().substring(0, indexOfExtension);
             }
 
-            EntityGroupInterface entityGroups = entityGroupManager.getEntityGroupByName(xmiName);
-            EntityInterface entity = entityGroups.getEntityCollection().iterator().next();
-            Set<TaggedValueInterface> taggedValues = (Set<TaggedValueInterface>) entity.getEntityGroup().getTaggedValueCollection();
+            final EntityGroupInterface entityGroups = entityManager.getEntityGroupByName(entityName);
+            final EntityInterface entity = entityGroups.getEntityCollection().iterator().next();
+            final  Set<TaggedValueInterface> taggedValues = (Set<TaggedValueInterface>) entity.getEntityGroup().getTaggedValueCollection();
 
-            Iterator<TaggedValueInterface> taggedValuesIter = taggedValues.iterator();
+            final Iterator<TaggedValueInterface> taggedValuesIter = taggedValues.iterator();
             while (taggedValuesIter.hasNext()) {
-                TaggedValueInterface taggedValue = taggedValuesIter.next();
+                final TaggedValueInterface taggedValue = taggedValuesIter.next();
                 if (taggedValue.getKey().equals("PackageName")) {
                     packageName = taggedValue.getValue();
                     break;
                 }
             }
-            int start = packageName.lastIndexOf('.');
-            String entityName = xmiName;
-            String packageEntityName = xmiName;
+            final int start = packageName.lastIndexOf('.');
+            String packageEntityName = packageName;
             if (start != -1) {
                 packageEntityName = packageName.substring(packageName.lastIndexOf('.') + 1, packageName.length());
 
-                StringBuffer tempPackageName = new StringBuffer(
+                final StringBuffer tempPackageName = new StringBuffer(
                         packageName.substring(0, packageName.indexOf('.') + 1));
                 packageName = packageName.substring(packageName.indexOf('.') + 1, packageName.length());
                 if (packageName.indexOf('.') != -1) {
@@ -69,11 +70,11 @@ public class PackageName {
         }
     }
 
-    private static void writeToFile(String directoryPath, String packageName, String entityName,
-                                    String packageEntityName) {
-        File newFile = new File(directoryPath + File.separator + "Package.txt");
+    private void writeToFile(final String directoryPath, final String packageName, final String entityName,
+                             final String packageEntityName) {
+        final File newFile = new File(directoryPath + File.separator + "Package.txt");
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(newFile));
+            final BufferedWriter writer = new BufferedWriter(new FileWriter(newFile));
             writer.write("entity.name=" + entityName);
             writer.newLine();
             writer.write("de.package.name=" + packageName);

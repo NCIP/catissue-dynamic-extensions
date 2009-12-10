@@ -16,28 +16,27 @@ import edu.wustl.common.beans.NameValueBean;
 
 public class EntityGroupName {
 
-    private static EntityGroupManagerInterface entityGroupManager = EntityGroupManager.getInstance();
+    private static EntityGroupManagerInterface entityManager = EntityGroupManager.getInstance();
 
-    public void getAllEntityGroupBean(String directoryPath) {
-        List<String> allEntityGroupNames = new ArrayList<String>();
+    public void getAllEntityGroupBean(final String directoryPath) {
+        final List<String> allEntGrpNames = new ArrayList<String>();
         try {
-            Collection<NameValueBean> allEntityGroupBeansNames = entityGroupManager.getAllEntityGroupBeans();
-            for (NameValueBean nameValueBean : allEntityGroupBeansNames) {
-                allEntityGroupNames.add(nameValueBean.getName());
+            final Collection<NameValueBean> allEntityNames = entityManager.getAllEntityGroupBeans();
+            for (NameValueBean nameValueBean : allEntityNames) {
+                allEntGrpNames.add(nameValueBean.getName());
             }
-            writeToFile(allEntityGroupNames, directoryPath);
+            writeToFile(allEntGrpNames, directoryPath);
         } catch (DynamicExtensionsSystemException e) {
             throw new RuntimeException("Error while retriving Entity Group Names", e);
         }
     }
 
-    private void writeToFile(List<String> allEntityGroupNames, String directoryPath) {
-        File newFile = new File(directoryPath + File.separator + "EntityGroups.txt");
-        String entityGroupTag = "entity.group.name=";
+    private void writeToFile(final List<String> allEntGrpNames, final String directoryPath) {
+        final File newFile = new File(directoryPath + File.separator + "EntityGroups.txt");
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(newFile));
-            writer.write(entityGroupTag);
-            for (String entity : allEntityGroupNames) {
+            final BufferedWriter writer = new BufferedWriter(new FileWriter(newFile));
+            writer.write("entity.group.name=");
+            for (String entity : allEntGrpNames) {
                 writer.write(entity);
                 writer.write(',');
             }
@@ -48,8 +47,8 @@ public class EntityGroupName {
         }
     }
 
-    public static void main(String[] args) {
-        EntityGroupName entityGroupName = new EntityGroupName();
+    public static void main(final String[] args) {
+        final EntityGroupName entityGroupName = new EntityGroupName();
         entityGroupName.getAllEntityGroupBean(args[0]);
     }
 
