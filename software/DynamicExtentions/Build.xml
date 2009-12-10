@@ -212,7 +212,7 @@
 			<manifest>
 				<section name="${DynamicExtensions.jar.details}">
 					<attribute name="Version" value="${DynamicExtensions.jar.version}" />
-					<attribute name="Built-By" value="${DynamicExtensions.jar.creator}" />
+					<attribute name="Built-By" value="${user.name}" />
 					<attribute name="Build-on" value="${TODAY_IND}" />
 					<attribute name="SVN-URL" value="${dist.revision}" />
 				</section>
@@ -359,7 +359,7 @@
 			<manifest>
 				<section name="${DynamicExtensions.jar.details}">
 					<attribute name="Version" value="${DynamicExtensions.jar.version}" />
-					<attribute name="Built-By" value="${DynamicExtensions.jar.creator}" />
+					<attribute name="Built-By" value="${user.name}" />
 					<attribute name="Build-on" value="${TODAY_IND}" />
 					<attribute name="SVN-URL" value="${dist.revision}" />
 				</section>
@@ -377,7 +377,7 @@
 			<manifest>
 				<section name="${DynamicExtensions.jar.details}">
 					<attribute name="Version" value="${DynamicExtensions.jar.version}" />
-					<attribute name="Built-By" value="${DynamicExtensions.jar.creator}" />
+					<attribute name="Built-By" value="${user.name}" />
 					<attribute name="Build-on" value="${TODAY_IND}" />
 					<attribute name="SVN-URL" value="${dist.revision}" />
 				</section>
@@ -753,7 +753,7 @@
 				<manifest>
 					<section name="${DynamicExtensions.jar.details}">
 						<attribute name="Version" value="${DynamicExtensions.jar.version}" />
-						<attribute name="Built-By" value="${DynamicExtensions.jar.creator}" />
+						<attribute name="Built-By" value="${user.name}" />
 						<attribute name="Build-on" value="${TODAY_IND}" />
 						<attribute name="SVN-URL" value="${dist.revision}" />
 					</section>
@@ -888,7 +888,7 @@
 			<manifest file="${meta.dir}/MANIFEST.MF">
 				<section name="${DynamicExtensions.jar.details}">
 					<attribute name="Version" value="${DynamicExtensions.jar.version}" />
-					<attribute name="Built-By" value="${DynamicExtensions.jar.creator}" />
+					<attribute name="Built-By" value="${user.name}" />
 					<attribute name="Build-on" value="${TODAY_IND}" />
 					<attribute name="SVN-URL" value="${dist.revision}" />
 				</section>
@@ -1090,6 +1090,7 @@
 		<target name="create_category_creator_jar" depends="compile">
 			<delete dir="${category.jar.dir}" />
 			<mkdir dir="${category.jar.dir}" />
+			<attribute name="Built-By" value="${user.name}" />
 			<jar taskname="buildJar" jarfile="${category.jar.dir}/CategoryCreator.jar">
 				<fileset dir="${target.dir}">
 					<include name="**/edu/common/dynamicextensions/exception/**/*.class" />
@@ -1098,7 +1099,7 @@
 				<manifest>
 					<section name="${DynamicExtensions.jar.details}">
 						<attribute name="Version" value="${DynamicExtensions.jar.version}" />
-						<attribute name="Built-By" value="${DynamicExtensions.jar.creator}" />
+						<attribute name="Built-By" value="${user.name}" />
 						<attribute name="Build-on" value="${TODAY_IND}" />
 						<attribute name="SVN-URL" value="${dist.revision}" />
 					</section>
