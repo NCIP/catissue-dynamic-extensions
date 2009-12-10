@@ -27,7 +27,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.CategoryHelper;
 import edu.common.dynamicextensions.util.CategoryHelperInterface;
-import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.ZipUtility;
 import edu.common.dynamicextensions.util.parser.CategoryFileParser;
 import edu.common.dynamicextensions.util.parser.CategoryGenerator;
 import edu.wustl.cab2b.server.cache.EntityCache;
@@ -251,7 +251,7 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 				reader.close();
 			}
 		}
-		DynamicExtensionsUtility.extractZipToDestination(fileName, tempDirName);
+		ZipUtility.extractZipToDestination(fileName, tempDirName);
 	}
 
 	/**

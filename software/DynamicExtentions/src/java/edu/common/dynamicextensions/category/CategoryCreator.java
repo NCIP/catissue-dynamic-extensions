@@ -23,7 +23,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.ZipUtility;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 
@@ -90,12 +90,14 @@ public class CategoryCreator
 		}
 		catch (IOException e)
 		{
-			LOGGER.error("Exception occured while creating the category : "+e.getLocalizedMessage());
+			LOGGER.error("Exception : "+e.getLocalizedMessage());
+			LOGGER.info("For more information please check :/log/dynamicExtentions.log");
 			LOGGER.debug("Exception occured is as follows : ", e);
 		}
 		catch (DynamicExtensionsSystemException e)
 		{
-			LOGGER.error("Exception occured while creating the category : "+e.getLocalizedMessage());
+			LOGGER.error("Exception : "+e.getLocalizedMessage());
+			LOGGER.info("For more information please check :/log/dynamicExtentions.log");
 			LOGGER.debug("Exception occured is as follows : ", e);
 		}
 	}
@@ -166,7 +168,7 @@ public class CategoryCreator
 		try
 		{
 			validate(args);
-			zipFile = DynamicExtensionsUtility.zipFolder(args[0], "tempCategoryDir.zip");
+			zipFile = ZipUtility.zipFolder(args[0], "tempCategoryDir.zip");
 			String url = args[1] + "/CreateCategoryAction.do?";
 			String categoryFilenameString ="";
 			if (args.length > 2 && !"".equals(args[2].trim()))
@@ -318,12 +320,12 @@ public class CategoryCreator
 		catch (IOException e)
 		{
 			throw new DynamicExtensionsSystemException(
-					"Exception occured while creating category, please verify server is running", e);
+					"Can not connect to server, please verify server is running", e);
 		}
 		catch (ClassNotFoundException e)
 		{
 
-			throw new DynamicExtensionsSystemException("Exception occured while creating category",
+			throw new DynamicExtensionsSystemException("Class not found " + e.getLocalizedMessage(),
 					e);
 		}
 		finally
@@ -346,8 +348,8 @@ public class CategoryCreator
 			else
 			{
 				LOGGER.error("Category creation failed for file : " + entry.getKey());
-				LOGGER.error("Exception occured : "+ entry.getValue().getCause().getLocalizedMessage());
-				LOGGER.debug("Exception occured : ", entry.getValue());
+				LOGGER.error("Exception : "+ entry.getValue().getCause().getLocalizedMessage());
+				LOGGER.debug("Exception : ", entry.getValue());
 			}
 		}
 
