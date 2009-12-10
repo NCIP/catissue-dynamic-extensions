@@ -1079,6 +1079,7 @@
 				</fileset>
 				<fileset dir="${base.dir}/lib/server">
 					<include name="washu-commons-1.1.2.jar" />
+					<include name="cog-jglobus.jar" />
 					<include name="log4j.jar" />
 				</fileset>
 				<fileset dir="${base.dir}/src/conf">
@@ -1090,10 +1091,10 @@
 		<target name="create_category_creator_jar" depends="compile">
 			<delete dir="${category.jar.dir}" />
 			<mkdir dir="${category.jar.dir}" />
-			<attribute name="Built-By" value="${user.name}" />
 			<jar taskname="buildJar" jarfile="${category.jar.dir}/CategoryCreator.jar">
 				<fileset dir="${target.dir}">
 					<include name="**/edu/common/dynamicextensions/exception/**/*.class" />
+					<include name="**/dynamicextensions/util/ZipUtility.class" />
 					<include name="**/edu/common/dynamicextensions/category/**.class" />
 				</fileset>
 				<manifest>
