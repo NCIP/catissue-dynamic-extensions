@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!DOCTYPE hibernate-mapping PUBLIC
-    "-//Hibernate/Hibernate Mapping DTD 2.0//EN" 
+    "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-lazy="false">
@@ -41,6 +41,23 @@
             insert="true"
             column="ACTIVITY_STATUS"
             length="10"
+        />
+
+        <property
+            name="modifiedBy"
+            type="string"
+            update="true"
+            insert="true"
+            column="MODIFIED_BY"
+            length="255"
+        />
+
+         <property
+            name="modifiedDate"
+            type="date"
+            update="true"
+            insert="true"
+            column="MODIFIED_DATE"
         />
 
     </class>

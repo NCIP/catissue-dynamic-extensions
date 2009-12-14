@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import edu.common.dynamicextensions.domain.FileAttributeRecordValue;
-import edu.common.dynamicextensions.domain.integration.EntityMapCondition;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
@@ -770,14 +769,6 @@ public interface EntityManagerInterface
 	 * @throws DynamicExtensionsSystemException
 	 */
 	Collection<NameValueBean> getAllSystemGenEntityGroupBeans()
-			throws DynamicExtensionsSystemException;
-
-	/**
-	 * @param staticRecordId
-	 * @return collection of EntityMapConditions for a staticRecordId
-	 * @throws DynamicExtensionsSystemException
-	 */
-	Collection<EntityMapCondition> getAllConditionsByStaticRecordId(Long staticRecordId)
 			throws DynamicExtensionsSystemException;
 
 	/**

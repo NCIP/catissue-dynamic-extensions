@@ -39,7 +39,6 @@ import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.NumericAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.ObjectAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.StringAttributeTypeInformation;
-import edu.common.dynamicextensions.domain.integration.EntityMapCondition;
 import edu.common.dynamicextensions.domain.userinterface.SelectControl;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AbstractMetadataInterface;
@@ -3946,23 +3945,6 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		return entGroupBeans;
 	}
 
-	/**
-	 * @param staticRecordId Collection Protocol Id
-	 * @return entityMapCondition for the given staticRecordId
-	 * @throws DynamicExtensionsSystemException
-	 */
-	public Collection<EntityMapCondition> getAllConditionsByStaticRecordId(Long staticRecordId)
-			throws DynamicExtensionsSystemException
-	{
-		// Create a map of substitution parameters.
-		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
-		substParams.put("0", new NamedQueryParam(DBTypes.LONG, staticRecordId));
-
-		Collection<EntityMapCondition> entityMapCondition = executeHQL(
-				"getAllEntityMapConditionByStaticRecordId", substParams);
-
-		return entityMapCondition;
-	}
 
 	/**
 	 * @param entityName to get entityGroup

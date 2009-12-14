@@ -1,6 +1,8 @@
 
 package edu.common.dynamicextensions.domain.integration;
 
+import java.util.Date;
+
 import edu.wustl.common.domain.AbstractDomainObject;
 
 /**
@@ -19,6 +21,8 @@ public abstract class AbstractRecordEntry extends AbstractDomainObject
 	protected Long id;
 	protected String activityStatus;
 	protected AbstractFormContext formContext;
+	protected Date modifiedDate;
+	protected String modifiedBy;
 
 	/**
 	 * @hibernate.id name="id" column="IDENTIFIER" type="long" length="30"
@@ -50,7 +54,7 @@ public abstract class AbstractRecordEntry extends AbstractDomainObject
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * @hibernate.many-to-one column="ABSTRACT_FORM_CONTEXT_ID" class="edu.common.dynamicextensions.domain.integration.AbstractFormContext" constrained="true"
 	 */
@@ -62,6 +66,35 @@ public abstract class AbstractRecordEntry extends AbstractDomainObject
 	public void setFormContext(AbstractFormContext formContext)
 	{
 		this.formContext = formContext;
+	}
+
+	/**
+	 * @return Returns the modifiedDate.
+	 *  @hibernate.property name="modifiedDate" column="MODIFIED_DATE" type="date"
+	 */
+	public Date getModifiedDate()
+	{
+		return modifiedDate;
+	}
+
+
+	public void setModifiedDate(Date modifiedDate)
+	{
+		this.modifiedDate = modifiedDate;
+	}
+
+	/**
+	 * @return Returns the modifiedBy.
+	 *  @hibernate.property name="modifiedBy" column="MODIFIED_BY" type="string" length="255"
+	 */
+	public String getModifiedBy()
+	{
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(String modifiedBy)
+	{
+		this.modifiedBy = modifiedBy;
 	}
 
 }

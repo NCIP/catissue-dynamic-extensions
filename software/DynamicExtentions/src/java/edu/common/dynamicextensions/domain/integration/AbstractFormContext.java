@@ -24,6 +24,7 @@ public abstract class AbstractFormContext extends AbstractDomainObject
 	protected Long containerId;
 	protected String activityStatus;
 	protected Collection<AbstractRecordEntry> recordEntryCollection = new HashSet<AbstractRecordEntry>();
+	protected Boolean hideForm;
 
 	/**
 	 * @hibernate.id name="id" column="IDENTIFIER" type="long" length="30"
@@ -98,6 +99,20 @@ public abstract class AbstractFormContext extends AbstractDomainObject
 	public void setRecordEntryCollection(Collection<AbstractRecordEntry> recordEntryColn)
 	{
 		this.recordEntryCollection = recordEntryColn;
+	}
+
+	/**
+	 * Returns true if to hide form.
+	 * @hibernate.property name="hideForm" type="boolean" column="HIDE_FORM"
+	 */
+	public Boolean getHideForm()
+	{
+		return hideForm;
+	}
+
+	public void setHideForm(Boolean hideForm)
+	{
+		this.hideForm = hideForm;
 	}
 
 }

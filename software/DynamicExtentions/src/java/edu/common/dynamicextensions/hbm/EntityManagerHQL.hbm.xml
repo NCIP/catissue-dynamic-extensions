@@ -306,10 +306,7 @@
 			   from EntityGroup entityGroup
 			   		where entityGroup.isSystemGenerated = true
 	</query>
-	<query name="getAllEntityMapConditionByStaticRecordId">
-	   from EntityMapCondition entityMapCond
-	      where entityMapCond.staticRecordId = ?
-	</query>
+
 	<query name="getEntityGroupNameByEntityName">
    		select entity.entityGroup.name 
    			   from Entity entity where entity.name = ? AND entity.id = (select container.abstractEntity.id

@@ -43,6 +43,14 @@
             length="10"
         />
 
+        <property
+            name="hideForm"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="HIDE_FORM"
+        />
+
 		<property name="containerId"
 			type="long" update="true" insert="true"
 			column="CONTAINER_ID" length="30"
