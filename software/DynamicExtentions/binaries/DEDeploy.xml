@@ -39,125 +39,183 @@
 
 	<!-- Target For Upgrading the Database From DE v 1.2.0 to DE v 1.3.0 -->
 
-	<target name="upgrade_db_from_DE_1.2.0_to_DE_1.3.0">
-	<delete dir="${de.temp.dir}" failonerror="no" />
-	<mkdir dir="${de.temp.dir}" />
+
+	<target name="deploy_db_DE">
+		<echo message="Initializing Database for DynamicExtentions Application..." />
+		<delete dir="${de.temp.dir}" failonerror="no" />
+		<mkdir dir="${de.temp.dir}" />
 		<unzip src="dynamicextensions.zip" dest="${de.temp.dir}">
 		</unzip>
-			<taskdef resource="net/sf/antcontrib/antcontrib.properties">
-				<classpath>
-					<pathelement location="${extra.lib.dir.DE}/ant-contrib.jar" />
-				</classpath>
-			</taskdef>
-			<if>
-				<equals arg1="mysql" arg2="${database.type}" casesensitive="false" />
+		<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+			<classpath>
+				<pathelement location="${extra.lib.dir.DE}/ant-contrib.jar" />
+			</classpath>
+		</taskdef>
+
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" casesensitive="false" />
+			<then>
+				<antcall target="deploy_db_mysql_DE" />
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" casesensitive="false" />
 				<then>
-					<antcall target="upgrade_db_mysql_from_DE_1.2.0_to_DE_1.3.0" />
+					<antcall target="deploy_db_oracle_DE" />
+				</then>
+			</elseif>
+			<elseif>
+				<equals arg1="db2" arg2="${database.type}" casesensitive="false" />
+				<then>
+					<antcall target="deploy_db_db2_DE" />
+				</then>
+			</elseif>
+			<else>
+				<echo message="DATABASE INITIALIZATION FAILED PLEASE CHECK DATABASE.TYPE PROPERTY" level="error" />
+			</else>
+		</if>
+
+	</target>
+	<target name="deploy_db_db2_DE">
+
+		<antcall target="execute_file_db_db2">
+			<param name="sql.file.name" value="${db2.sql.dir.DE}/dynamicextension.sql" />
+		</antcall>
+	</target>
+
+	<target name="deploy_db_mysql_DE">
+
+		<antcall target="execute_file_db_mysql">
+			<param name="sql.file.name" value="${mysql.sql.dir.DE}/dynamicextension.sql" />
+		</antcall>
+
+	</target>
+
+	<target name="deploy_db_oracle_DE">
+		<antcall target="execute_file_db_oracle">
+			<param name="sql.file.name" value="${oracle.sql.dir.DE}/dynamicextension.sql" />
+		</antcall>
+
+	</target>
+
+	<target name="upgrade_db_from_DE_1.2.0_to_DE_1.3.0">
+		<delete dir="${de.temp.dir}" failonerror="no" />
+		<mkdir dir="${de.temp.dir}" />
+		<unzip src="dynamicextensions.zip" dest="${de.temp.dir}">
+		</unzip>
+		<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+			<classpath>
+				<pathelement location="${extra.lib.dir.DE}/ant-contrib.jar" />
+			</classpath>
+		</taskdef>
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" casesensitive="false" />
+			<then>
+				<antcall target="upgrade_db_mysql_from_DE_1.2.0_to_DE_1.3.0" />
+
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" casesensitive="false" />
+				<then>
+					<antcall target="upgrade_db_oracle_from_DE_1.2.0_to_DE_1.3.0" />
+				</then>
+			</elseif>
+			<elseif>
+				<equals arg1="db2" arg2="${database.type}" casesensitive="false" />
+				<then>
+					<antcall target="upgrade_db_db2_from_DE_1.2.0_to_DE_1.3.0" />
 
 				</then>
-				<elseif>
-					<equals arg1="oracle" arg2="${database.type}" casesensitive="false" />
-					<then>
-						<antcall target="upgrade_db_oracle_from_DE_1.2.0_to_DE_1.3.0" />
-					</then>
-				</elseif>
-				<elseif>
-					<equals arg1="db2" arg2="${database.type}" casesensitive="false" />
-					<then>
-						<antcall target="upgrade_db_db2_from_DE_1.2.0_to_DE_1.3.0" />
-
-					</then>
-				</elseif>
-				<else>
-					<echo message="DATABASE INITIALIZATION FAILED PLEASE CHECK DATABASE.TYPE PROPERTY" level="error" />
-				</else>
-			</if>
-		</target>
+			</elseif>
+			<else>
+				<echo message="DATABASE INITIALIZATION FAILED PLEASE CHECK DATABASE.TYPE PROPERTY" level="error" />
+			</else>
+		</if>
+	</target>
 
 	<target name="upgrade_db_from_DE_1.3.0_to_DE_1.4.0">
 		<delete dir="${de.temp.dir}" failonerror="no" />
 		<mkdir dir="${de.temp.dir}" />
-			<unzip src="dynamicextensions.zip" dest="${de.temp.dir}">
-			</unzip>
-				<taskdef resource="net/sf/antcontrib/antcontrib.properties">
-					<classpath>
-						<pathelement location="${extra.lib.dir.DE}/ant-contrib.jar" />
-					</classpath>
-				</taskdef>
-				<if>
-					<equals arg1="mysql" arg2="${database.type}" casesensitive="false" />
-					<then>
-						<antcall target="upgrade_db_mysql_from_DE_1.3.0_to_DE_1.4.0" />
+		<unzip src="dynamicextensions.zip" dest="${de.temp.dir}">
+		</unzip>
+		<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+			<classpath>
+				<pathelement location="${extra.lib.dir.DE}/ant-contrib.jar" />
+			</classpath>
+		</taskdef>
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" casesensitive="false" />
+			<then>
+				<antcall target="upgrade_db_mysql_from_DE_1.3.0_to_DE_1.4.0" />
 
-					</then>
-					<elseif>
-						<equals arg1="oracle" arg2="${database.type}" casesensitive="false" />
-						<then>
-							<antcall target="upgrade_db_oracle_from_DE_1.3.0_to_DE_1.4.0" />
-						</then>
-					</elseif>
-					<elseif>
-						<equals arg1="db2" arg2="${database.type}" casesensitive="false" />
-						<then>
-							<antcall target="upgrade_db_db2_from_DE_1.3.0_to_DE_1.4.0" />
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" casesensitive="false" />
+				<then>
+					<antcall target="upgrade_db_oracle_from_DE_1.3.0_to_DE_1.4.0" />
+				</then>
+			</elseif>
+			<elseif>
+				<equals arg1="db2" arg2="${database.type}" casesensitive="false" />
+				<then>
+					<antcall target="upgrade_db_db2_from_DE_1.3.0_to_DE_1.4.0" />
 
-						</then>
-					</elseif>
-					<else>
-						<echo message="DATABASE INITIALIZATION FAILED PLEASE CHECK DATABASE.TYPE PROPERTY" level="error" />
-					</else>
-				</if>
-			</target>
+				</then>
+			</elseif>
+			<else>
+				<echo message="DATABASE INITIALIZATION FAILED PLEASE CHECK DATABASE.TYPE PROPERTY" level="error" />
+			</else>
+		</if>
+	</target>
 
 	<target name="upgrade_db_db2_from_DE_1.2.0_to_DE_1.3.0">
 		<antcall target="execute_file_db_db2">
-			<param name="sql.file.name" value="Upgrade_DE_Metadata_DE_1.2.0_to_DE_1.3.0.sql" />
+			<param name="sql.file.name" value="${db2.dbupgrade.sql.dir.DE}/Upgrade_DE_Metadata_DE_1.2.0_to_DE_1.3.0.sql" />
 		</antcall>
 	</target>
 
 	<target name="upgrade_db_mysql_from_DE_1.2.0_to_DE_1.3.0">
 		<antcall target="execute_file_db_mysql">
-			<param name="sql.file.name" value="Upgrade_DE_Metadata_DE_1.2.0_to_DE_1.3.0.sql" />
+			<param name="sql.file.name" value="${mysql.dbupgrade.sql.dir.DE}/Upgrade_DE_Metadata_DE_1.2.0_to_DE_1.3.0.sql" />
 		</antcall>
 	</target>
 
 	<target name="upgrade_db_oracle_from_DE_1.2.0_to_DE_1.3.0">
 		<antcall target="execute_file_db_oracle">
-			<param name="sql.file.name" value="Upgrade_DE_Metadata_DE_1.2.0_to_DE_1.3.0.sql" />
+			<param name="sql.file.name" value="${oracle.dbupgrade.sql.dir.DE}/Upgrade_DE_Metadata_DE_1.2.0_to_DE_1.3.0.sql" />
 		</antcall>
 	</target>
 
 	<target name="upgrade_db_db2_from_DE_1.3.0_to_DE_1.4.0">
-			<antcall target="execute_file_db_db2">
-				<param name="sql.file.name" value="Upgrade_DE_Metadata_DE_1.3.0_to_DE_1.4.0.sql" />
-			</antcall>
+		<antcall target="execute_file_db_db2">
+			<param name="sql.file.name" value="${db2.dbupgrade.sql.dir.DE}/Upgrade_DE_Metadata_DE_1.3.0_to_DE_1.4.0.sql" />
+		</antcall>
 	</target>
 
-		<target name="upgrade_db_mysql_from_DE_1.3.0_to_DE_1.4.0">
-			<antcall target="execute_file_db_mysql">
-				<param name="sql.file.name" value="Upgrade_DE_Metadata_DE_1.3.0_to_DE_1.4.0.sql" />
-			</antcall>
-		</target>
+	<target name="upgrade_db_mysql_from_DE_1.3.0_to_DE_1.4.0">
+		<antcall target="execute_file_db_mysql">
+			<param name="sql.file.name" value="${mysql.dbupgrade.sql.dir.DE}/Upgrade_DE_Metadata_DE_1.3.0_to_DE_1.4.0.sql" />
+		</antcall>
+	</target>
 
-		<target name="upgrade_db_oracle_from_DE_1.3.0_to_DE_1.4.0">
-			<antcall target="execute_file_db_oracle">
-				<param name="sql.file.name" value="Upgrade_DE_Metadata_DE_1.3.0_to_DE_1.4.0.sql" />
-			</antcall>
-			<sql driver="${oracle.driver.string.DE}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" delimiter="/" delimitertype="row" keepformat="yes" rdbms="oracle">
-				<transaction src="${oracle.dbupgrade.sql.dir.DE}/upgrade_DE_integration_sequences_1.3.0_to_1.4.0.sql" />
-				<transaction>commit</transaction>
+	<target name="upgrade_db_oracle_from_DE_1.3.0_to_DE_1.4.0">
+		<antcall target="execute_file_db_oracle">
+			<param name="sql.file.name" value="${oracle.dbupgrade.sql.dir.DE}/Upgrade_DE_Metadata_DE_1.3.0_to_DE_1.4.0.sql" />
+		</antcall>
+		<sql driver="${oracle.driver.string.DE}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" delimiter="/" delimitertype="row" keepformat="yes" rdbms="oracle">
+			<transaction src="${oracle.dbupgrade.sql.dir.DE}/upgrade_DE_integration_sequences_1.3.0_to_1.4.0.sql" />
+			<transaction>commit</transaction>
 			<classpath>
-					<fileset dir="${lib.dir.DE}">
-										<include name="*.jar" />
-									</fileset>
-								</classpath>
-							</sql>
-		</target>
+				<fileset dir="${lib.dir.DE}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+	</target>
 
 	<target name="execute_file_db_mysql">
 		<echo message="upgrading the DB For DynamicExtensions" />
 		<sql driver="${mysql.driver.string.DE}" url="jdbc:mysql://${database.host}:${database.port}/${database.name}" userid="${database.username}" password="${database.password}" onerror="continue">
-			<transaction src="${mysql.dbupgrade.sql.dir.DE}/${sql.file.name}" />
+			<transaction src="${sql.file.name}" />
 			<transaction>commit;</transaction>
 			<classpath>
 				<fileset dir="${lib.dir.DE}">
@@ -170,7 +228,7 @@
 	<target name="execute_file_db_oracle">
 		<echo message="upgrading the DB For DynamicExtensions" />
 		<sql driver="${oracle.driver.string.DE}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" rdbms="oracle">
-			<transaction src="${oracle.dbupgrade.sql.dir.DE}/${sql.file.name}" />
+			<transaction src="${sql.file.name}" />
 			<transaction>commit;</transaction>
 			<classpath>
 				<fileset dir="${lib.dir.DE}">
@@ -183,7 +241,7 @@
 	<target name="execute_file_db_db2">
 		<echo message="upgrading the DB For DynamicExtensions" />
 		<sql driver="${db2.driver.string.DE}" url="jdbc:db2//${database.host}:${database.port}/${database.name}:currentSchema=${database.schema};" userid="${database.username}" password="${database.password}" onerror="continue">
-			<transaction src="${db2.dbupgrade.sql.dir.DE}/${sql.file.name}" />
+			<transaction src="${sql.file.name}" />
 			<transaction>commit;</transaction>
 			<classpath>
 				<fileset dir="${lib.dir.DE}">
