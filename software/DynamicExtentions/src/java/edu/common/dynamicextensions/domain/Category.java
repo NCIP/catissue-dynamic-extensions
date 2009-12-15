@@ -22,6 +22,11 @@ public class Category extends AbstractMetadata implements CategoryInterface
 	private static final long serialVersionUID = 4234527890L;
 
 	/**
+	 * User id
+	 */
+	protected String userId;
+	
+	/**
 	 * rootCategoryElement.
 	 */
 	protected CategoryEntity rootCategoryElement;
@@ -31,6 +36,23 @@ public class Category extends AbstractMetadata implements CategoryInterface
 	 */
 	protected Collection<CategoryEntityInterface> relatedAttributeCategoryEntityCollection = new HashSet<CategoryEntityInterface>();
 
+	/**
+     * 
+     * @return
+     * @hibernate.property name="userId" type="string" length="19" column="USER_ID" 
+     */
+	public String getUserId() {
+        return userId;
+    }
+
+    /**
+     * 
+     * @param userId
+     */
+	public void setUserId(String userId) {
+        this.userId = userId;
+    }
+	
 	/**
 	 * @hibernate.many-to-one column="ROOT_CATEGORY_ELEMENT" cascade="all" class="edu.common.dynamicextensions.domain.CategoryEntity"
 	 * @return the rootCategoryElement.
