@@ -107,6 +107,7 @@ create table DYEXTN_CADSR_VALUE_DOMAIN_INFO (
 );
 create table DYEXTN_CATEGORY (
    IDENTIFIER number(19,0) not null,
+   USER_ID number(19,0),
    ROOT_CATEGORY_ELEMENT number(19,0),
    CATEGORY_ENTITY_ID number(19,0),
    primary key (IDENTIFIER)
