@@ -114,133 +114,6 @@
         -->
 
         <joined-subclass
-            name="edu.common.dynamicextensions.domain.EntityGroup"
-            table="DYEXTN_ENTITY_GROUP"
-            dynamic-update="false"
-            dynamic-insert="false"
-        >
-        <key
-            column="IDENTIFIER"
-        />
-
-        <set
-            name="entityCollection"
-            table="DYEXTN_ENTITY"
-            lazy="false"
-            inverse="false"
-            cascade="save-update"
-            sort="unsorted"
-        >
-            <cache
-                usage="read-write"
-             />
-
-              <key
-                  column="ENTITY_GROUP_ID"
-              />
-
-              <one-to-many
-                  class="edu.common.dynamicextensions.domain.Entity"
-              />
-        </set>
-
-        <property
-            name="longName"
-            type="string"
-            update="true"
-            insert="true"
-            column="LONG_NAME"
-        />
-
-        <property
-            name="shortName"
-            type="string"
-            update="true"
-            insert="true"
-            column="SHORT_NAME"
-        />
-
-        <property
-            name="version"
-            type="string"
-            update="true"
-            insert="true"
-            column="VERSION"
-        />
-
-        <set
-            name="mainContainerCollection"
-            table="DYEXTN_CONTAINER"
-            lazy="false"
-            inverse="false"
-            cascade="save-update"
-            sort="unsorted"
-        >
-            <cache
-                usage="read-write"
-             />
-
-              <key
-                  column="ENTITY_GROUP_ID"
-              />
-
-              <one-to-many
-                  class="edu.common.dynamicextensions.domain.userinterface.Container"
-              />
-        </set>
-
-        <property
-            name="isSystemGenerated"
-            type="boolean"
-            update="true"
-            insert="true"
-            column="IS_SYSTEM_GENERATED"
-        />
-
-        </joined-subclass>
-        <joined-subclass
-            name="edu.common.dynamicextensions.domain.Category"
-            table="DYEXTN_CATEGORY"
-            dynamic-update="false"
-            dynamic-insert="false"
-        >
-        <key
-            column="IDENTIFIER"
-        />
-
-        <many-to-one
-            name="rootCategoryElement"
-            class="edu.common.dynamicextensions.domain.CategoryEntity"
-            cascade="all"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="ROOT_CATEGORY_ELEMENT"
-        />
-
-        <set
-            name="relatedAttributeCategoryEntityCollection"
-            table="DYEXTN_CATEGORY_ENTITY"
-            lazy="false"
-            inverse="false"
-            cascade="all"
-            sort="unsorted"
-        >
-            <cache
-                usage="read-write"
-             />
-
-              <key
-                  column="REL_ATTR_CAT_ENTITY_ID"
-              />
-
-              <one-to-many
-                  class="edu.common.dynamicextensions.domain.CategoryEntity"
-              />
-        </set>
-
-        </joined-subclass>
-        <joined-subclass
             name="edu.common.dynamicextensions.domain.BaseAbstractAttribute"
             table="DYEXTN_BASE_ABSTRACT_ATTRIBUTE"
             dynamic-update="false"
@@ -250,232 +123,6 @@
             column="IDENTIFIER"
         />
 
-        <joined-subclass
-            name="edu.common.dynamicextensions.domain.AbstractAttribute"
-            table="DYEXTN_ATTRIBUTE"
-            dynamic-update="false"
-            dynamic-insert="false"
-        >
-        <key
-            column="IDENTIFIER"
-        />
-
-        <set
-            name="ruleCollection"
-            table="DYEXTN_RULE"
-            lazy="false"
-            inverse="false"
-            cascade="all-delete-orphan"
-            sort="unsorted"
-        >
-            <cache
-                usage="read-write"
-             />
-
-              <key
-                  column="ATTRIBUTE_ID"
-              />
-
-              <one-to-many
-                  class="edu.common.dynamicextensions.domain.validationrules.Rule"
-              />
-        </set>
-
-        <many-to-one
-            name="entity"
-            class="edu.common.dynamicextensions.domain.Entity"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="ENTIY_ID"
-        />
-
-        <joined-subclass
-            name="edu.common.dynamicextensions.domain.Attribute"
-            table="DYEXTN_PRIMITIVE_ATTRIBUTE"
-            dynamic-update="false"
-            dynamic-insert="false"
-        >
-        <key
-            column="IDENTIFIER"
-        />
-
-        <set
-            name="attributeTypeInformationCollection"
-            table="DYEXTN_ATTRIBUTE_TYPE_INFO"
-            lazy="false"
-            inverse="false"
-            cascade="all-delete-orphan"
-            sort="unsorted"
-        >
-            <cache
-                usage="read-write"
-             />
-
-              <key
-                  column="PRIMITIVE_ATTRIBUTE_ID"
-              />
-
-              <one-to-many
-                  class="edu.common.dynamicextensions.domain.AttributeTypeInformation"
-              />
-        </set>
-
-        <property
-            name="isIdentified"
-            type="boolean"
-            update="true"
-            insert="true"
-            column="IS_IDENTIFIED"
-        />
-
-        <property
-            name="isPrimaryKey"
-            type="boolean"
-            update="true"
-            insert="true"
-            column="IS_PRIMARY_KEY"
-        />
-
-        <set
-            name="columnPropertiesCollection"
-            table="DYEXTN_COLUMN_PROPERTIES"
-            lazy="false"
-            inverse="false"
-            cascade="all-delete-orphan"
-            sort="unsorted"
-        >
-            <cache
-                usage="read-write"
-             />
-
-              <key
-                  column="PRIMITIVE_ATTRIBUTE_ID"
-              />
-
-              <one-to-many
-                  class="edu.common.dynamicextensions.domain.databaseproperties.ColumnProperties"
-              />
-        </set>
-
-        <property
-            name="isNullable"
-            type="boolean"
-            update="true"
-            insert="true"
-            column="IS_NULLABLE"
-        />
-
-        <set
-            name="caDSRValueDomainInfoCollection"
-            table="DYEXTN_CADSR_VALUE_DOMAIN_INFO"
-            lazy="false"
-            inverse="false"
-            cascade="all-delete-orphan"
-            sort="unsorted"
-        >
-            <cache
-                usage="read-write"
-             />
-
-              <key
-                  column="PRIMITIVE_ATTRIBUTE_ID"
-              />
-
-              <one-to-many
-                  class="edu.common.dynamicextensions.domain.CaDSRValueDomainInfo"
-              />
-        </set>
-
-        </joined-subclass>
-        <joined-subclass
-            name="edu.common.dynamicextensions.domain.Association"
-            table="DYEXTN_ASSOCIATION"
-            dynamic-update="false"
-            dynamic-insert="false"
-        >
-        <key
-            column="IDENTIFIER"
-        />
-        <property
-            name="isCollection"
-            type="boolean"
-            update="true"
-            insert="true"
-            column="IS_COLLECTION"
-        />
-
-        <property
-            name="direction"
-            type="string"
-            update="true"
-            insert="true"
-            column="DIRECTION"
-        />
-
-        <many-to-one
-            name="targetEntity"
-            class="edu.common.dynamicextensions.domain.Entity"
-            cascade="save-update"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="TARGET_ENTITY_ID"
-        />
-
-        <many-to-one
-            name="sourceRole"
-            class="edu.common.dynamicextensions.domain.Role"
-            cascade="save-update"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="SOURCE_ROLE_ID"
-        />
-
-        <many-to-one
-            name="targetRole"
-            class="edu.common.dynamicextensions.domain.Role"
-            cascade="save-update"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="TARGET_ROLE_ID"
-        />
-
-        <set
-            name="constraintPropertiesCollection"
-            table="DYEXTN_CONSTRAINT_PROPERTIES"
-            lazy="false"
-            inverse="false"
-            cascade="all-delete-orphan"
-            sort="unsorted"
-        >
-            <cache
-                usage="read-write"
-             />
-
-              <key
-                  column="ASSOCIATION_ID"
-              />
-
-              <one-to-many
-                  class="edu.common.dynamicextensions.domain.databaseproperties.ConstraintProperties"
-              />
-        </set>
-
-        <property
-            name="isSystemGenerated"
-            type="boolean"
-            update="true"
-            insert="true"
-            column="IS_SYSTEM_GENERATED"
-        />
-
-        </joined-subclass>
-
-        </joined-subclass>
         <joined-subclass
             name="edu.common.dynamicextensions.domain.CategoryAttribute"
             table="DYEXTN_CATEGORY_ATTRIBUTE"
@@ -515,8 +162,8 @@
             cascade="save-update"
             sort="unsorted"
         >
-            <cache
-                usage="read-write"
+            <cache 
+                usage="read-write" 
              />
 
               <key
@@ -729,6 +376,69 @@
 
         </joined-subclass>
         <joined-subclass
+            name="edu.common.dynamicextensions.domain.CategoryAssociation"
+            table="DYEXTN_CATEGORY_ASSOCIATION"
+            dynamic-update="false"
+            dynamic-insert="false"
+        >
+        <key
+            column="IDENTIFIER"
+        />
+
+        <many-to-one
+            name="categoryEntity"
+            class="edu.common.dynamicextensions.domain.CategoryEntity"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="CATEGORY_ENTIY_ID"
+        />
+
+        <set
+            name="targetCategoryEntityCollection"
+            table="DYEXTN_CATEGORY_ENTITY"
+            lazy="false"
+            inverse="false"
+            cascade="none"
+            sort="unsorted"
+        >
+            <cache
+                usage="read-write"
+             />
+
+              <key
+                  column="CATEGORY_ASSOCIATION_ID"
+              />
+
+              <one-to-many
+                  class="edu.common.dynamicextensions.domain.CategoryEntity"
+              />
+        </set>
+
+        <set
+            name="constraintPropertiesCollection"
+            table="DYEXTN_CONSTRAINT_PROPERTIES"
+            lazy="false"
+            inverse="false"
+            cascade="all-delete-orphan"
+            sort="unsorted"
+        >
+            <cache
+                usage="read-write"
+             />
+
+              <key
+                  column="CATEGORY_ASSOCIATION_ID"
+              />
+
+              <one-to-many
+                  class="edu.common.dynamicextensions.domain.databaseproperties.ConstraintProperties"
+              />
+        </set>
+
+        </joined-subclass>
+        <joined-subclass
             name="edu.common.dynamicextensions.domain.SkipLogicAttribute"
             table="DYEXTN_SKIP_LOGIC_ATTRIBUTE"
             dynamic-update="false"
@@ -802,8 +512,8 @@
 
         </joined-subclass>
         <joined-subclass
-            name="edu.common.dynamicextensions.domain.CategoryAssociation"
-            table="DYEXTN_CATEGORY_ASSOCIATION"
+            name="edu.common.dynamicextensions.domain.AbstractAttribute"
+            table="DYEXTN_ATTRIBUTE"
             dynamic-update="false"
             dynamic-insert="false"
         >
@@ -811,22 +521,12 @@
             column="IDENTIFIER"
         />
 
-        <many-to-one
-            name="categoryEntity"
-            class="edu.common.dynamicextensions.domain.CategoryEntity"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="CATEGORY_ENTIY_ID"
-        />
-
         <set
-            name="targetCategoryEntityCollection"
-            table="DYEXTN_CATEGORY_ENTITY"
+            name="ruleCollection"
+            table="DYEXTN_RULE"
             lazy="false"
             inverse="false"
-            cascade="none"
+            cascade="all-delete-orphan"
             sort="unsorted"
         >
             <cache
@@ -834,13 +534,78 @@
              />
 
               <key
-                  column="CATEGORY_ASSOCIATION_ID"
+                  column="ATTRIBUTE_ID"
               />
 
               <one-to-many
-                  class="edu.common.dynamicextensions.domain.CategoryEntity"
+                  class="edu.common.dynamicextensions.domain.validationrules.Rule"
               />
         </set>
+
+        <many-to-one
+            name="entity"
+            class="edu.common.dynamicextensions.domain.Entity"
+            cascade="none"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="ENTIY_ID"
+        />
+
+        <joined-subclass
+            name="edu.common.dynamicextensions.domain.Association"
+            table="DYEXTN_ASSOCIATION"
+            dynamic-update="false"
+            dynamic-insert="false"
+        >
+        <key
+            column="IDENTIFIER"
+        />
+        <property
+            name="isCollection"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="IS_COLLECTION"
+        />
+
+        <property
+            name="direction"
+            type="string"
+            update="true"
+            insert="true"
+            column="DIRECTION"
+        />
+
+        <many-to-one
+            name="targetEntity"
+            class="edu.common.dynamicextensions.domain.Entity"
+            cascade="save-update"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="TARGET_ENTITY_ID"
+        />
+
+        <many-to-one
+            name="sourceRole"
+            class="edu.common.dynamicextensions.domain.Role"
+            cascade="save-update"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="SOURCE_ROLE_ID"
+        />
+
+        <many-to-one
+            name="targetRole"
+            class="edu.common.dynamicextensions.domain.Role"
+            cascade="save-update"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="TARGET_ROLE_ID"
+        />
 
         <set
             name="constraintPropertiesCollection"
@@ -855,13 +620,121 @@
              />
 
               <key
-                  column="CATEGORY_ASSOCIATION_ID"
+                  column="ASSOCIATION_ID"
               />
 
               <one-to-many
                   class="edu.common.dynamicextensions.domain.databaseproperties.ConstraintProperties"
               />
         </set>
+
+        <property
+            name="isSystemGenerated"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="IS_SYSTEM_GENERATED"
+        />
+
+        </joined-subclass>
+        <joined-subclass
+            name="edu.common.dynamicextensions.domain.Attribute"
+            table="DYEXTN_PRIMITIVE_ATTRIBUTE"
+            dynamic-update="false"
+            dynamic-insert="false"
+        >
+        <key
+            column="IDENTIFIER"
+        />
+
+        <set
+            name="attributeTypeInformationCollection"
+            table="DYEXTN_ATTRIBUTE_TYPE_INFO"
+            lazy="false"
+            inverse="false"
+            cascade="all-delete-orphan"
+            sort="unsorted"
+        >
+            <cache
+                usage="read-write"
+             />
+
+              <key
+                  column="PRIMITIVE_ATTRIBUTE_ID"
+              />
+
+              <one-to-many
+                  class="edu.common.dynamicextensions.domain.AttributeTypeInformation"
+              />
+        </set>
+
+        <property
+            name="isIdentified"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="IS_IDENTIFIED"
+        />
+
+        <property
+            name="isPrimaryKey"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="IS_PRIMARY_KEY"
+        />
+
+        <set
+            name="columnPropertiesCollection"
+            table="DYEXTN_COLUMN_PROPERTIES"
+            lazy="false"
+            inverse="false"
+            cascade="all-delete-orphan"
+            sort="unsorted"
+        >
+            <cache 
+                usage="read-write" 
+             />
+
+              <key
+                  column="PRIMITIVE_ATTRIBUTE_ID"
+              />
+
+              <one-to-many
+                  class="edu.common.dynamicextensions.domain.databaseproperties.ColumnProperties"
+              />
+        </set>
+
+        <property
+            name="isNullable"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="IS_NULLABLE"
+        />
+
+        <set
+            name="caDSRValueDomainInfoCollection"
+            table="DYEXTN_CADSR_VALUE_DOMAIN_INFO"
+            lazy="false"
+            inverse="false"
+            cascade="all-delete-orphan"
+            sort="unsorted"
+        >
+            <cache
+                usage="read-write"
+             />
+
+              <key
+                  column="PRIMITIVE_ATTRIBUTE_ID"
+              />
+
+              <one-to-many
+                  class="edu.common.dynamicextensions.domain.CaDSRValueDomainInfo"
+              />
+        </set>
+
+        </joined-subclass>
 
         </joined-subclass>
 
@@ -884,8 +757,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache
-                usage="read-write"
+            <cache 
+                usage="read-write" 
              />
 
               <key
@@ -939,125 +812,6 @@
               />
         </set>
 
-        <joined-subclass
-            name="edu.common.dynamicextensions.domain.Entity"
-            table="DYEXTN_ENTITY"
-            dynamic-update="false"
-            dynamic-insert="false"
-        >
-        <key
-            column="IDENTIFIER"
-        />
-        <property
-            name="dataTableState"
-            type="int"
-            update="true"
-            insert="true"
-            column="DATA_TABLE_STATE"
-        />
-
-        <list
-            name="primaryKeyAttributeCollection"
-            table="DYEXTN_ENTIY_COMPOSITE_KEY_REL"
-            lazy="false"
-            inverse="false"
-            cascade="save-update"
-        >
-            <cache
-                usage="read-write"
-             />
-
-              <key
-                  column="ENTITY_ID"
-              />
-
-              <index
-                  column="INSERTION_ORDER"
-                  type="long"
-              />
-
-              <many-to-many
-                  class="edu.common.dynamicextensions.domain.Attribute"
-                  column="ATTRIBUTE_ID"
-                  outer-join="auto"
-              />
-
-        </list>
-
-        <many-to-one
-            name="entityGroup"
-            class="edu.common.dynamicextensions.domain.EntityGroup"
-            cascade="save-update"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="ENTITY_GROUP_ID"
-        />
-
-        <set
-            name="abstractAttributeCollection"
-            table="DYEXTN_ATTRIBUTE"
-            lazy="false"
-            inverse="false"
-            cascade="all-delete-orphan"
-            sort="unsorted"
-        >
-            <cache
-                usage="read-write"
-             />
-
-              <key
-                  column="ENTIY_ID"
-              />
-
-              <one-to-many
-                  class="edu.common.dynamicextensions.domain.AbstractAttribute"
-              />
-        </set>
-
-        <property
-            name="abstract"
-            type="boolean"
-            update="true"
-            insert="true"
-            column="IS_ABSTRACT"
-        />
-
-        <many-to-one
-            name="parentEntity"
-            class="edu.common.dynamicextensions.domain.Entity"
-            cascade="save-update"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="PARENT_ENTITY_ID"
-        />
-
-        <property
-            name="inheritStrategy"
-            type="int"
-            update="true"
-            insert="true"
-            column="INHERITANCE_STRATEGY"
-        />
-
-        <property
-            name="discriminatorColumn"
-            type="string"
-            update="true"
-            insert="true"
-            column="DISCRIMINATOR_COLUMN_NAME"
-        />
-
-        <property
-            name="discriminatorValue"
-            type="string"
-            update="true"
-            insert="true"
-            column="DISCRIMINATOR_VALUE"
-        />
-
-        </joined-subclass>
         <joined-subclass
             name="edu.common.dynamicextensions.domain.CategoryEntity"
             table="DYEXTN_CATEGORY_ENTITY"
@@ -1219,6 +973,260 @@
         />
 
         </joined-subclass>
+        <joined-subclass
+            name="edu.common.dynamicextensions.domain.Entity"
+            table="DYEXTN_ENTITY"
+            dynamic-update="false"
+            dynamic-insert="false"
+        >
+        <key
+            column="IDENTIFIER"
+        />
+        <property
+            name="dataTableState"
+            type="int"
+            update="true"
+            insert="true"
+            column="DATA_TABLE_STATE"
+        />
+
+        <list
+            name="primaryKeyAttributeCollection"
+            table="DYEXTN_ENTIY_COMPOSITE_KEY_REL"
+            lazy="false"
+            inverse="false"
+            cascade="save-update"
+        >
+            <cache
+                usage="read-write"
+             />
+
+              <key
+                  column="ENTITY_ID"
+              />
+
+              <index
+                  column="INSERTION_ORDER"
+                  type="long"
+              />
+
+              <many-to-many
+                  class="edu.common.dynamicextensions.domain.Attribute"
+                  column="ATTRIBUTE_ID"
+                  outer-join="auto"
+              />
+
+        </list>
+
+        <many-to-one
+            name="entityGroup"
+            class="edu.common.dynamicextensions.domain.EntityGroup"
+            cascade="save-update"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="ENTITY_GROUP_ID"
+        />
+
+        <set
+            name="abstractAttributeCollection"
+            table="DYEXTN_ATTRIBUTE"
+            lazy="false"
+            inverse="false"
+            cascade="all-delete-orphan"
+            sort="unsorted"
+        >
+            <cache
+                usage="read-write"
+             />
+
+              <key
+                  column="ENTIY_ID"
+              />
+
+              <one-to-many
+                  class="edu.common.dynamicextensions.domain.AbstractAttribute"
+              />
+        </set>
+
+        <property
+            name="abstract"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="IS_ABSTRACT"
+        />
+
+        <many-to-one
+            name="parentEntity"
+            class="edu.common.dynamicextensions.domain.Entity"
+            cascade="save-update"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="PARENT_ENTITY_ID"
+        />
+
+        <property
+            name="inheritStrategy"
+            type="int"
+            update="true"
+            insert="true"
+            column="INHERITANCE_STRATEGY"
+        />
+
+        <property
+            name="discriminatorColumn"
+            type="string"
+            update="true"
+            insert="true"
+            column="DISCRIMINATOR_COLUMN_NAME"
+        />
+
+        <property
+            name="discriminatorValue"
+            type="string"
+            update="true"
+            insert="true"
+            column="DISCRIMINATOR_VALUE"
+        />
+
+        </joined-subclass>
+
+        </joined-subclass>
+        <joined-subclass
+            name="edu.common.dynamicextensions.domain.EntityGroup"
+            table="DYEXTN_ENTITY_GROUP"
+            dynamic-update="false"
+            dynamic-insert="false"
+        >
+        <key
+            column="IDENTIFIER"
+        />
+
+        <set
+            name="entityCollection"
+            table="DYEXTN_ENTITY"
+            lazy="false"
+            inverse="false"
+            cascade="save-update"
+            sort="unsorted"
+        >
+            <cache
+                usage="read-write"
+             />
+
+              <key
+                  column="ENTITY_GROUP_ID"
+              />
+
+              <one-to-many
+                  class="edu.common.dynamicextensions.domain.Entity"
+              />
+        </set>
+
+        <property
+            name="longName"
+            type="string"
+            update="true"
+            insert="true"
+            column="LONG_NAME"
+        />
+
+        <property
+            name="shortName"
+            type="string"
+            update="true"
+            insert="true"
+            column="SHORT_NAME"
+        />
+
+        <property
+            name="version"
+            type="string"
+            update="true"
+            insert="true"
+            column="VERSION"
+        />
+
+        <set
+            name="mainContainerCollection"
+            table="DYEXTN_CONTAINER"
+            lazy="false"
+            inverse="false"
+            cascade="save-update"
+            sort="unsorted"
+        >
+            <cache
+                usage="read-write"
+             />
+
+              <key
+                  column="ENTITY_GROUP_ID"
+              />
+
+              <one-to-many
+                  class="edu.common.dynamicextensions.domain.userinterface.Container"
+              />
+        </set>
+
+        <property
+            name="isSystemGenerated"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="IS_SYSTEM_GENERATED"
+        />
+
+        </joined-subclass>
+        <joined-subclass
+            name="edu.common.dynamicextensions.domain.Category"
+            table="DYEXTN_CATEGORY"
+            dynamic-update="false"
+            dynamic-insert="false"
+        >
+        <key
+            column="IDENTIFIER"
+        />
+        <property
+            name="userId"
+            type="long"
+            update="true"
+            insert="true"
+            column="USER_ID"
+            length="19"
+        />
+
+        <many-to-one
+            name="rootCategoryElement"
+            class="edu.common.dynamicextensions.domain.CategoryEntity"
+            cascade="all"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="ROOT_CATEGORY_ELEMENT"
+        />
+
+        <set
+            name="relatedAttributeCategoryEntityCollection"
+            table="DYEXTN_CATEGORY_ENTITY"
+            lazy="false"
+            inverse="false"
+            cascade="all"
+            sort="unsorted"
+        >
+            <cache
+                usage="read-write"
+             />
+
+              <key
+                  column="REL_ATTR_CAT_ENTITY_ID"
+              />
+
+              <one-to-many
+                  class="edu.common.dynamicextensions.domain.CategoryEntity"
+              />
+        </set>
 
         </joined-subclass>
 
