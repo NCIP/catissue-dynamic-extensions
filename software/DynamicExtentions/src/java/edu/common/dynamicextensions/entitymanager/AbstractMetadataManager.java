@@ -906,11 +906,7 @@ public abstract class AbstractMetadataManager
 				DateAttributeTypeInformation dateAttributeTypeInf = (DateAttributeTypeInformation) attr
 						.getAttributeTypeInformation();
 
-				String format = dateAttributeTypeInf.getFormat();
-				if (format == null)
-				{
-					format = ProcessorConstants.DATE_ONLY_FORMAT;
-				}
+				String format = DynamicExtensionsUtility.getDateFormat(dateAttributeTypeInf.getFormat());
 
 				SimpleDateFormat formatter = new SimpleDateFormat(format);
 				dateValue = formatter.parse(value.toString());
