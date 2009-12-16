@@ -343,12 +343,13 @@ public class CategoryCreator
 		{
 			if (entry.getValue() == null)
 			{
-				LOGGER.info("Category file :" + entry.getKey() + "\n\texecuted succesfully");
+				LOGGER.info("Category creation successfull for file :" + entry.getKey());
 			}
 			else
 			{
 				LOGGER.error("Category creation failed for file : " + entry.getKey());
 				LOGGER.error("Exception : "+ entry.getValue().getCause().getLocalizedMessage());
+				LOGGER.error("For more details please check ./log/dynamicExtentions.log" );
 				LOGGER.debug("Exception : ", entry.getValue());
 			}
 		}
