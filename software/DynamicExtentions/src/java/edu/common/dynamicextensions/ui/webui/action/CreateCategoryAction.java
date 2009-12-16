@@ -155,9 +155,12 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 				else
 				{
 					CategoryFileParser categoryFileParser = DomainObjectFactory.getInstance().createCategoryFileParser(file.getAbsolutePath(),"");
-					 if (categoryFileParser!=null && categoryFileParser.isCategoryFile())
+					 if (categoryFileParser!=null)
 					 {
-						 fileNameList.add(relativePath+file.getName());
+						 if(categoryFileParser.isCategoryFile())
+						 {
+							 fileNameList.add(relativePath+file.getName());
+						 }
 						 categoryFileParser.closeResources();
 					 }
 				}
