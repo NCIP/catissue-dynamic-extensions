@@ -32,12 +32,12 @@ public interface CategoryInterface extends AbstractMetadataInterface
 	 *
 	 * @return
 	 */
-	long getUserId();
+	Long getUserId();
 	/**
 	 * To associate user with the study
 	 * @param userId
 	 */
-	void setUserId(long userId);
+	void setUserId(Long userId);
 	/**
 	 * @param relatedAttributeCategoryEntityCollection
 	 */
