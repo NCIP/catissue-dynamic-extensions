@@ -18,6 +18,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import edu.common.dynamicextensions.EntityManager;
+import edu.common.dynamicextensions.EntityManagerInterface;
 import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
 import edu.common.dynamicextensions.domain.Attribute;
 import edu.common.dynamicextensions.domain.AttributeTypeInformation;
@@ -4569,7 +4571,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
-	
+
 	/**
      * This method test for Inserting record for an entity.
      */
@@ -4595,6 +4597,51 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
                 EntityManagerInterface manager = new EntityManager();
                 Long recordId = manager.insertData(clinicalAnnotations, dataValue, null);
+          }
+          catch(Exception e)
+          {
+                e.printStackTrace();
+                fail();
+          }
+
+    }
+
+    /**
+     * This method test for Inserting record for an entity.
+     */
+    public static void testEditRecordCacore()
+    {
+          try
+          {
+				EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName("TestCases");
+				EntityInterface clinicalAnnotations = testModel.getEntityByName("ClinicalAnnotations");
+				AssociationInterface pathAnnoChildAssocn = (AssociationInterface)clinicalAnnotations.getAbstractAttributeByName("PathAnnoChild");
+
+				Map dataValue = new HashMap();
+				List dataList = new ArrayList();
+				Map dataMapFirst = new HashMap();
+				dataMapFirst.put(pathAnnoChildAssocn.getTargetEntity().getAttributeByName("detectionDateChild"), "04-06-09");
+				dataMapFirst.put(pathAnnoChildAssocn.getTargetEntity().getAttributeByName("malignantChild"), "true");
+
+				dataList.add(dataMapFirst);
+
+				//dataValue.put(commentsAttributes, "this is not default comment");
+				dataValue.put(pathAnnoChildAssocn, dataList);
+				EntityManagerInterface manager = new EntityManager();
+				Long recordId = manager.insertData(clinicalAnnotations, dataValue, null);
+	            assertNotNull(recordId);
+	            Map dataMapFirst1 = new HashMap();
+	            dataList = new ArrayList();
+	            dataMapFirst1.put(pathAnnoChildAssocn.getTargetEntity().getAttributeByName("detectionDateChild"), "08-07-09");
+	            dataMapFirst1.put(pathAnnoChildAssocn.getTargetEntity().getAttributeByName("malignantChild"), "false");
+				dataList.add(dataMapFirst1);
+				dataValue.put(pathAnnoChildAssocn, dataList);
+				boolean isSuccess = manager.editData(clinicalAnnotations, dataValue, recordId, null);
+				assertTrue(isSuccess);
+
+				Map<AbstractAttributeInterface, Object> valueMap = manager.getRecordById(clinicalAnnotations, recordId);
+				assertNotNull(valueMap);
+
           }
           catch(Exception e)
           {
