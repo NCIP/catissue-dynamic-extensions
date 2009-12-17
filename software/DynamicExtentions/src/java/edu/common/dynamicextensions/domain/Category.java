@@ -24,7 +24,7 @@ public class Category extends AbstractMetadata implements CategoryInterface
 	/**
 	 * User id
 	 */
-	protected long userId;
+	protected Long userId;
 	
 	/**
 	 * rootCategoryElement.
@@ -41,7 +41,7 @@ public class Category extends AbstractMetadata implements CategoryInterface
      * @return
      * @hibernate.property name="userId" type="long" length="19" column="USER_ID" 
      */
-	public long getUserId() {
+	public Long getUserId() {
         return userId;
     }
 
@@ -49,7 +49,7 @@ public class Category extends AbstractMetadata implements CategoryInterface
      * 
      * @param userId
      */
-	public void setUserId(long userId) {
+	public void setUserId(Long userId) {
         this.userId = userId;
     }
 	
