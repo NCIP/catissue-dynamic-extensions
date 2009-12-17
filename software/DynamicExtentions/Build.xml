@@ -7,7 +7,7 @@
 	<property file="src/conf/DynamicExtensions.properties" />
 	<property file="src/conf/db.properties" />
 
-
+	<import file="./binaries/DEDeploy.xml" />
 	<property name="base.dir" value="." />
 	<property name="src.dir" value="src/java" />
 	<property name="test.dir" value="test" />
@@ -20,6 +20,7 @@
 	<property name="interface.src.dir" value="${base.dir}/binaries/DynamicExtensionsInterfaceSource" />
 	<property name="javadoc.dir" value="../../tools/JavaDoc" />
 	<property name="javadoc.zip" value="DynamicExtensionsJavaDoc.zip" />
+	<property name="resource.dir" value="src/resources" />
 
 
 	<property name="hbm.dir" value="${src.dir}/edu/common/dynamicextensions/hbm" />
@@ -787,10 +788,9 @@
 			</replaceregexp>
 		</target>
 
-		<target name="run_junit">
+		<target name="run_junit" depends="import.static.and.test.model" >
 			<delete dir="${junit.report.dir}" />
 			<mkdir dir="${junit.report.dir}" />
-
 
 			<junit printsummary="yes" haltonerror="no" haltonfailure="no" fork="yes" maxmemory="1024m" timeout="10800000">
 
@@ -831,6 +831,31 @@
 			</delete>-->
 		</target>
 
+	<!-- - - - - - - - - - - - - - - - - -
+          target: import.static.and.test.model
+         - - - - - - - - - - - - - - - - - -->
+    <target name="import.static.and.test.model">
+		<ant antfile="DEDeploy.xml" dir="./binaries/" target="import.xmi.for.testcases">
+			<property name="filename" value="${basedir}/${resource.dir}/xmi/TestStaticModel.xmi" />
+			<property name="mainContainerList" value="${basedir}/${resource.dir}/csv/staticModelContainers.csv" />
+			<property name="package" value="staticModel" />
+			<property name="hookentity" value="none" />
+			<property name="addQueryPaths" value="false" />
+		</ant>
+
+		<echo message="Static Model loaded Successfully" />
+
+		<ant antfile="DEDeploy.xml" dir="./binaries/" target="import.xmi.to.generate.cacore">
+			<property name="xmi.name" value="${basedir}/${resource.dir}/xmi/TestCases.xmi" />
+			<property name="mainContainerList" value="${basedir}/${resource.dir}/csv/testcases.csv" />
+			<property name="package.name" value="clinannotations" />
+			<property name="hookentity" value="edu.wustl.catissuecore.domain.RecordEntry" />
+			<property name="addQueryPaths" value="false" />
+			<property name="testcases" value="True" />
+		</ant>
+    </target>
+
+
 		<!-- Cobertura -->
 		<path id="cobertura.classpath">
 			<fileset dir="../../tools/cobertura">
@@ -854,18 +879,6 @@
 
 		<property name="filename" value="" />
 		<property name="package" value="" />
-		<target name="import_xmi" depends="compile">
-			<java classname="edu.common.dynamicextensions.xmi.importer.XMIImporter" fork="true">
-				<arg value="${filename}" />
-				<arg value="${package}" />
-				<classpath>
-					<pathelement location="${target.dir}" />
-					<fileset dir="${lib.dir}">
-						<include name="*.jar" />
-					</fileset>
-				</classpath>
-			</java>
-		</target>
 
 		<target name="export_xmi" depends="compile">
 			<java classname="edu.common.dynamicextensions.xmi.exporter.XMIExporter" fork="true">
