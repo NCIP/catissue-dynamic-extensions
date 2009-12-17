@@ -34,6 +34,7 @@ import edu.common.dynamicextensions.domain.StringValue;
 import edu.common.dynamicextensions.domain.TaggedValue;
 import edu.common.dynamicextensions.domain.databaseproperties.TableProperties;
 import edu.common.dynamicextensions.domain.userinterface.Container;
+import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
@@ -3916,11 +3917,10 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			userAttribute.add(age);
 			userAttribute.add(info);
 
-			EntityRecordResultInterface recordResult = EntityManagerInterface.getEntityRecords(
-					user, userAttribute, null);
+			Map<AbstractAttributeInterface, Object> record = EntityManagerInterface.getEntityRecordById(user, recordId, null);
 
-			EntityRecordInterface record = recordResult.getEntityRecordList().iterator().next();
-			assertEquals("45", record.getRecordValueList().get(0).toString());
+
+			assertEquals("45", record.get(age).toString());
 
 			ObjectAttributeRecordValue attributeRecordValue = (ObjectAttributeRecordValue) dataValue
 					.get((info));
