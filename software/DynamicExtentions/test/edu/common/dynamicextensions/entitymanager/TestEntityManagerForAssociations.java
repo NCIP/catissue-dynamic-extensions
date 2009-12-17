@@ -3436,4 +3436,38 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 		return association;
 	}
 
+	/**
+     * This method test for Inserting record for an entity.
+     */
+    public static void testInsertRecordCacore()
+    {
+
+          try
+          {
+                EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName("TestCases");
+                EntityInterface clinicalAnnotations = testModel.getEntityByName("ClinicalAnnotations");
+                AssociationInterface pathAnnoChildAssocn = (AssociationInterface)clinicalAnnotations.getAbstractAttributeByName("PathAnnoChild");
+
+                Map dataValue = new HashMap();
+                List dataList = new ArrayList();
+                Map dataMapFirst = new HashMap();
+                dataMapFirst.put(pathAnnoChildAssocn.getTargetEntity().getAttributeByName("detectionDateChild"), "02-02-09");
+                dataMapFirst.put(pathAnnoChildAssocn.getTargetEntity().getAttributeByName("malignantChild"), "true");
+
+                dataList.add(dataMapFirst);
+
+                //dataValue.put(commentsAttributes, "this is not default comment");
+                dataValue.put(pathAnnoChildAssocn, dataList);
+
+                EntityManagerInterface manager = new EntityManager();
+                Long recordId = manager.insertData(clinicalAnnotations, dataValue, null);
+          }
+          catch(Exception e)
+          {
+                e.printStackTrace();
+                fail();
+          }
+
+    }
+
 }
