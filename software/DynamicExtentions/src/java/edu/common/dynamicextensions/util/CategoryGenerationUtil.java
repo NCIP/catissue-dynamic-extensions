@@ -295,7 +295,7 @@ public class CategoryGenerationUtil
 			while (entNamesIter.hasNext())
 			{
 				String targetEntityName = entNamesIter.next();
-
+				int size = associations.size();
 				EntityInterface targetEntity = entityGroup
 						.getEntityByName(getEntityNameExcludingAssociationRoleName(targetEntityName));
 				addAssociation(sourceEntity, targetEntity, associationRoleName, associations);
@@ -308,7 +308,14 @@ public class CategoryGenerationUtil
 
 					parentEntity = parentEntity.getParentEntity();
 				}
-
+				if (associations.size() == size)
+				{
+					throw new DynamicExtensionsSystemException(ApplicationProperties
+							.getValue(CategoryConstants.CREATE_CAT_FAILS) +
+							"Error in defining path for the entity " + entityName + ": "
+									+ sourceEntity.getName() + " --> " + targetEntityName
+									+ "  Association does not exist.");
+				}
 				// Source entity should now be target entity.
 				sourceEntity = targetEntity;
 				associationRoleName = getAssociationRoleName(targetEntityName);
