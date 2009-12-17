@@ -28,7 +28,16 @@ public interface CategoryInterface extends AbstractMetadataInterface
 	 * @return
 	 */
 	Collection<CategoryEntityInterface> getRelatedAttributeCategoryEntityCollection();
-
+	/**
+	 *
+	 * @return
+	 */
+	long getUserId();
+	/**
+	 * To associate user with the study
+	 * @param userId
+	 */
+	void setUserId(long userId);
 	/**
 	 * @param relatedAttributeCategoryEntityCollection
 	 */
