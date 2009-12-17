@@ -210,14 +210,6 @@ public interface EntityManagerInterface
 			HibernateDAO hibernateDao, Long... userId)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException;
 
-	/**
-	 * This method inserts multiple records for the entity. This is a single transaction, so either all records are inserted or nothing
-	 * is persisted.
-	 * It returns the record id in the same sequence as that of input maps in dataValueMapList.
-	 */
-	List<Long> insertData(EntityInterface entity,
-			List<Map<AbstractAttributeInterface, Object>> dataValueMapList, Long... userId)
-			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException;
 
 	/**
 	 * This method updates the existing record for the given entity.
@@ -235,17 +227,7 @@ public interface EntityManagerInterface
 			Long recordId, HibernateDAO hibernateDao, Long... userId)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException;
 
-	/**
-	 * The method returns the entity records for the given entity, attribute and records.
-	 * @param entity
-	 * @param abstrAttributes
-	 * @param recordIds
-	 * @return
-	 * @throws DynamicExtensionsSystemException
-	 */
-	EntityRecordResultInterface getEntityRecords(EntityInterface entity,
-			List<? extends AbstractAttributeInterface> abstrAttributes, List<Long> recordIds)
-			throws DynamicExtensionsSystemException;
+
 
 	/**
 	 * Returns a particular record for the given recordId of the given entityId
@@ -602,59 +584,8 @@ public interface EntityManagerInterface
 			Long recordId, JDBCDAO... dao) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException;
 
-	/**
-	 * @param entity
-	 * @param dataValue
-	 * @param jdbcDao
-	 * @param parentRecordId
-	 * @return
-	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
-	 */
-	Long insertDataForSingleEntity(EntityInterface entity, Map<?, ?> dataValue, JDBCDAO jdbcDao,
-			Long parentRecordId, Long... userId) throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException;
 
-	/**
-	 * @param entity
-	 * @param dataValue
-	 * @param recordId
-	 * @param jdbcDAO
-	 * @return
-	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
-	 */
-	boolean editDataForSingleEntity(EntityInterface entity, Map<?, ?> dataValue, Long recordId,
-			JDBCDAO jdbcDao, Long... userId) throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException;
 
-	/**
-	 * @param entity
-	 * @param dataValue
-	 * @param jdbcDAO
-	 * @param identifier
-	 * @return
-	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
-	 */
-	Long insertDataForHeirarchy(EntityInterface entity,
-			Map<AbstractAttributeInterface, ?> dataValue, JDBCDAO jdbcDao, Long... identifier)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
-
-	/**
-	 * @param entity
-	 * @param dataValue
-	 * @param recordId
-	 * @param jdbcDAO
-	 * @param userId
-	 * @return
-	 * @throws DynamicExtensionsApplicationException
-	 * @throws DynamicExtensionsSystemException
-	 */
-	boolean editDataForHeirarchy(EntityInterface entity,
-			Map<AbstractAttributeInterface, ?> dataValue, Long recordId, JDBCDAO jdbcDao,
-			Long... userId) throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException;
 
 	/**
 	 * This method updates attribute type info object
