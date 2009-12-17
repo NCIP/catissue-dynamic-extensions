@@ -401,6 +401,7 @@ public class XMIImportProcessor
 		return dynamicQueryList;
 	}
 
+
 	/**
 	 * @param umlAssociationColl
 	 * @throws DynamicExtensionsSystemException
@@ -1629,8 +1630,9 @@ public class XMIImportProcessor
 		for (AssociationInterface existingAsso : existingAssociationColl)
 		{
 			if ((umlAssociationName != null)
-					&& umlAssociationName.equalsIgnoreCase(existingAsso.getName()))
-			{//Since name is present, edit this association
+					&& umlAssociationName.equalsIgnoreCase(existingAsso.getName())
+					&& existingAsso.getTargetEntity().getName().equalsIgnoreCase(tgtEntityName))
+			{//Since name is present, & its between the same two entities so edit this association.
 				return existingAsso;
 			}
 			//If even 1 condition does not match, goto next association
