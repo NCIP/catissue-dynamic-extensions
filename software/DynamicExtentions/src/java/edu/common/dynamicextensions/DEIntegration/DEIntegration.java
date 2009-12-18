@@ -2,7 +2,7 @@
  *<p>Title: </p>
  *<p>Description:  </p>
  *<p>Copyright:TODO</p>
- *@author 
+ *@author
  *@version 1.0
  */
 
@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,9 +29,10 @@ import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 
 /**
- * 
+ *
  * @author shital_lawhale
  *
  */
@@ -51,14 +53,14 @@ public class DEIntegration implements IntegrationInterface
 	}
 
 	/**
-	 *This method returns the Category Record Id BasedOn HookEntityRecId 
+	 *This method returns the Category Record Id BasedOn HookEntityRecId
 	 *Steps:
-	 *1) it will search for root entity of this category entity 
-	 *2) and then it will return record id of category based on root entity rec id 
+	 *1) it will search for root entity of this category entity
+	 *2) and then it will return record id of category based on root entity rec id
 	 *@param categoryContainerId
 	 *@param staticRecId
 	 *@param hookEntityId
-	 *@return the record id of the category depending on hook entity record id. 
+	 *@return the record id of the category depending on hook entity record id.
 	 */
 	public Collection getCategoryRecIdBasedOnHookEntityRecId(Long categoryContainerId,
 			Long staticRecId, Long hookEntityId) throws DynamicExtensionsSystemException,
@@ -67,11 +69,10 @@ public class DEIntegration implements IntegrationInterface
 
 		Collection catRecIds = new HashSet();
 
-		String entityTableName = "";
-		String columnName = "";
-		String catTableName = "";//EntityManager.getInstance().getDynamicTableName(
-		//  categoryContainerId);
-		Long entityContainerId = null;
+		String entityTableName;
+		String columnName ;
+		String catTableName ;
+		Long entityContainerId;
 
 		if (categoryEntityMap.containsKey(categoryContainerId.toString()))
 		{
@@ -105,7 +106,6 @@ public class DEIntegration implements IntegrationInterface
 		}
 
 		else
-		//if(entityTableName==null)
 		{
 			entityTableName = EntityManager.getInstance().getDynamicTableName(entityContainerId);
 			columnName = EntityManager.getInstance().getColumnNameForAssociation(hookEntityId,
@@ -123,8 +123,10 @@ public class DEIntegration implements IntegrationInterface
 		{
 			jdbcDao=DynamicExtensionsUtility.getJDBCDAO();
 			String entitySql = "select identifier from " + entityTableName + " where " + columnName
-					+ " = " + staticRecId;
-			resultSet = jdbcDao.getQueryResultSet(entitySql); //util.executeQuery(entitySql);
+					+ " = ?";
+			LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+			queryDataList.add(new ColumnValueBean(columnName, staticRecId));
+			resultSet = jdbcDao.getResultSet(entitySql,queryDataList,null); //util.executeQuery(entitySql);
 			List recIdList = new ArrayList();
 			while (resultSet.next())
 			{
@@ -146,7 +148,7 @@ public class DEIntegration implements IntegrationInterface
 	}
 
 	/**
-	 * 
+	 *
 	 * @param hookEntityId
 	 * @return the container Id of the DE entities that are associated with given static hook entity
 	 */
@@ -163,9 +165,9 @@ public class DEIntegration implements IntegrationInterface
 	}
 
 	/**
-	 * 
+	 *
 	 * @param containerId
-	 * @return whether this entity is simple DE form /category. 
+	 * @return whether this entity is simple DE form /category.
 	 */
 	public boolean isCategory(Long containerId) throws DynamicExtensionsSystemException
 	{
@@ -189,11 +191,11 @@ public class DEIntegration implements IntegrationInterface
 	}
 
 	/**
-	 *This method returns the entry Record Id BasedOn HookEntityRecId 
+	 *This method returns the entry Record Id BasedOn HookEntityRecId
 	 * @param categoryContainerId
 	 * @param staticRecId
 	 * @param hookEntityId
-	 * @return the record id of the category depending on hook entity record id. 
+	 * @return the record id of the category depending on hook entity record id.
 	 */
 	public Collection getDynamicEntityRecordIdFromHookEntityRecordId(String hookEntityRecId,
 			Long containerId, Long hookEntityId) throws DynamicExtensionsSystemException,
@@ -218,9 +220,11 @@ public class DEIntegration implements IntegrationInterface
 			entityMap.put(hookEntityId + "_" + containerId, columnName);
 		}
 		EntityManagerUtil entityManagerUtil = new EntityManagerUtil();
-		String entitySql = "select identifier from " + tableName + " where " + columnName + "="
-				+ hookEntityRecId;
-		recIdList = entityManagerUtil.getResultInList(entitySql);
+		String entitySql = "select identifier from " + tableName + " where " + columnName + "=?";
+
+		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+		queryDataList.add(new ColumnValueBean(columnName, Long.valueOf(hookEntityRecId)));
+		recIdList = entityManagerUtil.getResultInList(entitySql,queryDataList);
 
 		return recIdList;
 	}
@@ -237,9 +241,9 @@ public class DEIntegration implements IntegrationInterface
 	}
 
 	/**
-	 * 
+	 *
 	 * @param hookEntityId
-	 * @return the record id of the category depending on hook entity record id. 
+	 * @return the record id of the category depending on hook entity record id.
 	 */
 	public Collection getCategoriesContainerIdFromHookEntity(Long hookEntityId)
 			throws DynamicExtensionsSystemException
@@ -256,9 +260,9 @@ public class DEIntegration implements IntegrationInterface
 	 * @param containerId
 	 * @param hookEntityId
 	 * @return
-	 * @throws DynamicExtensionsApplicationException 
-	 * @throws DynamicExtensionsSystemException 
-	 * @throws CacheException 
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
+	 * @throws CacheException
 	 * @throws SQLException
 	 * @throws DAOException
 	 */
@@ -281,8 +285,8 @@ public class DEIntegration implements IntegrationInterface
 	}
 
 	/**
-	 *This method returns the Category Record_Id ie id of its root entity 
-	 *BasedOn categoryContainerId and dynamicEntityRecordId  
+	 *This method returns the Category Record_Id ie id of its root entity
+	 *BasedOn categoryContainerId and dynamicEntityRecordId
 	 * @param categoryContainerId
 	 * @param dynamicEntityRecordId
 	 * @return
@@ -314,9 +318,11 @@ public class DEIntegration implements IntegrationInterface
 		try
 		{
 			jdbcDao=DynamicExtensionsUtility.getJDBCDAO();
-			String catSql = "select RECORD_ID from " + catTableName + " where identifier= "
-					+ dynamicEntityRecordId;
-			resultSet = jdbcDao.getQueryResultSet(catSql); //util.executeQuery(entitySql);
+			String catSql = "select RECORD_ID from " + catTableName + " where identifier= ?";
+
+			LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+			queryDataList.add(new ColumnValueBean(DEConstants.IDENTIFIER, dynamicEntityRecordId));
+			resultSet = jdbcDao.getResultSet(catSql,queryDataList,null); //util.executeQuery(entitySql);
 
 			while (resultSet.next())
 			{

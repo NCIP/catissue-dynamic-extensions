@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,6 +56,7 @@ import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 
 /**
  * @author rajesh_patil
@@ -393,11 +395,12 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		StringBuffer query = new StringBuffer();
 		query.append(SELECT_KEYWORD + WHITESPACE + IDENTIFIER + WHITESPACE + FROM_KEYWORD
 				+ WHITESPACE + rootCatEntity.getTableProperties().getName() + WHITESPACE
-				+ WHERE_KEYWORD + WHITESPACE + RECORD_ID + EQUAL + parentRecId);
-
+				+ WHERE_KEYWORD + WHITESPACE + RECORD_ID + EQUAL + QUESTION_MARK);
+		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+		queryDataList.add(new ColumnValueBean(RECORD_ID, parentRecId));
 		Long rootCERecId = null;
 
-		List<Long> results = getResultIDList(query.toString(), IDENTIFIER, jdbcDao);
+		List<Long> results = getResultIDList(query.toString(), IDENTIFIER, jdbcDao,queryDataList);
 		if (!results.isEmpty())
 		{
 			rootCERecId = results.get(0);
@@ -489,10 +492,10 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				// Query to insert record into category entity table.
 				String insertQuery = INSERT_INTO_KEYWORD
 						+ rootCatEntity.getTableProperties().getName()
-						+ " (IDENTIFIER, ACTIVITY_STATUS, " + RECORD_ID + ") VALUES (" + catEntId
-						+ ", 'ACTIVE', " + entityId + ")";
-
-				executeUpdateQuery(insertQuery, identifier, jdbcDao);
+						+ " (IDENTIFIER, ACTIVITY_STATUS, " + RECORD_ID + ") VALUES (?,?,?)";
+				//creating the column value beans according to DAO1.1.5
+				LinkedList<ColumnValueBean> colValBeanList = createColumnValueBeanListForDataEntry(catEntId,entityId);
+				executeUpdateQuery(insertQuery, identifier, jdbcDao,colValBeanList);
 				logDebug("insertData", "categoryEntityTableInsertQuery is : " + insertQuery);
 			}
 
@@ -1147,8 +1150,10 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 						hibernateDao.update(object);
 						String selectQuery = SELECT_KEYWORD + IDENTIFIER + FROM_KEYWORD
-								+ catEntTblName + WHERE_KEYWORD + RECORD_ID + " = " + id;
-						List<Long> resultIds = getResultIDList(selectQuery, "IDENTIFIER", jdbcDao);
+								+ catEntTblName + WHERE_KEYWORD + RECORD_ID + " = ?";
+						LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+						queryDataList.add(new ColumnValueBean(RECORD_ID, id));
+						List<Long> resultIds = getResultIDList(selectQuery, "IDENTIFIER", jdbcDao,queryDataList);
 						if (resultIds.isEmpty())
 						{
 							Long catEntId = entityManagerUtil.getNextIdentifier(catEntTblName);
@@ -1156,9 +1161,12 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 							// Insert query for category entity table.
 							String insertQuery = INSERT_INTO_KEYWORD + catEntTblName
 									+ " (IDENTIFIER, ACTIVITY_STATUS, " + RECORD_ID + ", "
-									+ catEntFK + ") VALUES (" + catEntId + ", 'ACTIVE', " + id
-									+ ", " + rootRecId + ")";
-							executeUpdateQuery(insertQuery, userId, jdbcDao);
+									+ catEntFK + ") VALUES (?,?,?,?)";
+
+							LinkedList<ColumnValueBean> colValBeanList = createColumnValueBeanListForDataEntry(catEntId,id);
+							ColumnValueBean bean4 = new ColumnValueBean(catEntFK, rootRecId);
+							colValBeanList.add(bean4);
+							executeUpdateQuery(insertQuery, userId, jdbcDao,colValBeanList);
 						}
 					}
 				}
@@ -1228,9 +1236,11 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 							// Insert query for category entity table.
 							String insQryForCatEnt = INSERT_INTO_KEYWORD + catEntTblName
 									+ " (IDENTIFIER, ACTIVITY_STATUS, " + RECORD_ID + ", "
-									+ catEntFK + ") VALUES (" + catEntId + ", 'ACTIVE', "
-									+ entityId + ", " + rootRecId + ")";
-							executeUpdateQuery(insQryForCatEnt, userId, jdbcDao);
+									+ catEntFK + ") VALUES (?,?,?,?)";
+							LinkedList<ColumnValueBean> colValBeanList = createColumnValueBeanListForDataEntry(catEntId,entityId);
+							ColumnValueBean bean4 = new ColumnValueBean(catEntFK, rootRecId);
+							colValBeanList.add(bean4);
+							executeUpdateQuery(insQryForCatEnt, userId, jdbcDao,colValBeanList);
 						}
 
 					}
@@ -1533,9 +1543,9 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 						// Insert query for category entity table.
 						String insertQuery = INSERT_INTO_KEYWORD + catEntTblName + " ("
-								+ IDENTIFIER + ", ACTIVITY_STATUS, " + RECORD_ID + ") VALUES ("
-								+ catEntId + ", 'ACTIVE', " + entityId + ")";
-						executeUpdateQuery(insertQuery, userId, jdbcDao);
+								+ IDENTIFIER + ", ACTIVITY_STATUS, " + RECORD_ID + ") VALUES (?,?,?)";
+						LinkedList<ColumnValueBean> colValBeanList = createColumnValueBeanListForDataEntry(catEntId,entityId);
+						executeUpdateQuery(insertQuery, userId, jdbcDao,colValBeanList);
 					}
 
 					if (catEntFKColName != null)
@@ -1544,9 +1554,14 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 						{
 							// Update query for category entity table.
 							String updateQuery = UPDATE_KEYWORD + catEntTblName + " SET "
-									+ catEntFKColName + " = " + srcCatEntityId + WHERE_KEYWORD
-									+ IDENTIFIER + " = " + catEntId;
-							executeUpdateQuery(updateQuery, userId, jdbcDao);
+									+ catEntFKColName + " = ? "+ WHERE_KEYWORD
+									+ IDENTIFIER + " = ?" ;
+							ColumnValueBean bean1 = new ColumnValueBean("catEntFKColName", srcCatEntityId);
+							ColumnValueBean bean2 = new ColumnValueBean("IDENTIFIER", catEntId);
+							LinkedList<ColumnValueBean> colValBeanList = new LinkedList<ColumnValueBean>();
+							colValBeanList.add(bean1);
+							colValBeanList.add(bean2);
+							executeUpdateQuery(updateQuery, userId, jdbcDao,colValBeanList);
 						}
 
 						PathInterface paths = categoryEnt.getPath();
@@ -1698,10 +1713,11 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 											+ fKeyColName
 											+ FROM_KEYWORD
 											+ association.getTargetEntity().getTableProperties()
-													.getName() + WHERE_KEYWORD + IDENTIFIER + " = "
-											+ currentEntityId;
+													.getName() + WHERE_KEYWORD + IDENTIFIER + " = ?";
 
-									List<Long> ids = getResultIDList(query, fKeyColName, jdbcDao);
+									LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+									queryDataList.add(new ColumnValueBean(IDENTIFIER, currentEntityId));
+									List<Long> ids = getResultIDList(query, fKeyColName, jdbcDao,queryDataList);
 									if (ids != null && !ids.isEmpty())
 									{
 										intermediateEntityId = ids.get(0);
@@ -1872,6 +1888,9 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 								}
 								else
 								{
+
+									Long fKeyColData = fullKeyMap.get(association.getEntity().getName()
+											+ "[" + par.getSourceInstanceId() + "]");
 									String query = SELECT_KEYWORD
 											+ IDENTIFIER
 											+ FROM_KEYWORD
@@ -1879,11 +1898,10 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 													.getName()
 											+ WHERE_KEYWORD
 											+ fKeyColName
-											+ " = "
-											+ fullKeyMap.get(association.getEntity().getName()
-													+ "[" + par.getSourceInstanceId() + "]");
-
-									List<Long> ids = getResultIDList(query, IDENTIFIER, jdbcDao);
+											+ " = ?";
+									LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+									queryDataList.add(new ColumnValueBean(fKeyColName, fKeyColData));
+									List<Long> ids = getResultIDList(query, IDENTIFIER, jdbcDao,queryDataList);
 									if (ids != null && !ids.isEmpty())
 									{
 										if (ids.size() == 1)
@@ -1914,9 +1932,10 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 						String selectQuery = SELECT_KEYWORD + IDENTIFIER + FROM_KEYWORD
 								+ catAssociation.getCategoryEntity().getTableProperties().getName()
-								+ WHERE_KEYWORD + RECORD_ID + " = " + previousEntityId;
-
-						List<Long> identifiers = getResultIDList(selectQuery, IDENTIFIER, jdbcDao);
+								+ WHERE_KEYWORD + RECORD_ID + " = ?" ;
+						LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+						queryDataList.add(new ColumnValueBean(RECORD_ID, previousEntityId));
+						List<Long> identifiers = getResultIDList(selectQuery, IDENTIFIER, jdbcDao,queryDataList);
 
 						Long resultId = null;
 						if (identifiers != null && !identifiers.isEmpty())
@@ -2119,9 +2138,10 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 						// Insert query for category entity table.
 						String insertQuery = INSERT_INTO_KEYWORD + catEntTblName + " ("
-								+ IDENTIFIER + ", ACTIVITY_STATUS, " + RECORD_ID + ") VALUES ("
-								+ catEntId + ", 'ACTIVE', " + entityId + ")";
-						executeUpdateQuery(insertQuery, userId, jdbcDao);
+								+ IDENTIFIER + ", ACTIVITY_STATUS, " + RECORD_ID + ") VALUES (?,?,?)";
+
+						LinkedList<ColumnValueBean> colValBeanList = createColumnValueBeanListForDataEntry(catEntId,entityId);
+						executeUpdateQuery(insertQuery, userId, jdbcDao,colValBeanList);
 					}
 
 					if (catEntFKColName != null && entityFKColName != null)
@@ -2130,9 +2150,14 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 						{
 							// Update query for category entity table.
 							String updateQuery = UPDATE_KEYWORD + catEntTblName + " SET "
-									+ catEntFKColName + " = " + srcCatEntityId + WHERE_KEYWORD
-									+ IDENTIFIER + " = " + catEntId;
-							executeUpdateQuery(updateQuery, userId, jdbcDao);
+									+ catEntFKColName + " = ?" + WHERE_KEYWORD
+									+ IDENTIFIER + " = ?";
+							ColumnValueBean bean1=new ColumnValueBean(catEntFKColName, srcCatEntityId);
+							ColumnValueBean bean2=new ColumnValueBean(IDENTIFIER, catEntId);
+							LinkedList<ColumnValueBean> colValBeanList = new LinkedList<ColumnValueBean>();
+							colValBeanList.add(bean1);
+							colValBeanList.add(bean2);
+							executeUpdateQuery(updateQuery, userId, jdbcDao,colValBeanList);
 						}
 
 						String packageName = null;
@@ -2211,9 +2236,10 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 					String selectQuery = SELECT_KEYWORD + IDENTIFIER + FROM_KEYWORD
 							+ catAssociation.getCategoryEntity().getTableProperties().getName()
-							+ WHERE_KEYWORD + RECORD_ID + " = " + sourceEntityId;
-
-					List<Long> identifiers = getResultIDList(selectQuery, IDENTIFIER, jdbcDao);
+							+ WHERE_KEYWORD + RECORD_ID + " = ?" ;
+					LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+					queryDataList.add(new ColumnValueBean(RECORD_ID, sourceEntityId));
+					List<Long> identifiers = getResultIDList(selectQuery, IDENTIFIER, jdbcDao,queryDataList);
 
 					Long resultId = null;
 					if (identifiers != null && !identifiers.isEmpty())
@@ -2652,9 +2678,10 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			catEntTblName = catEntity.getTableProperties().getName();
 
 			selRecIdQuery = SELECT_KEYWORD + RECORD_ID + FROM_KEYWORD + catEntTblName
-					+ WHERE_KEYWORD + IDENTIFIER + " = " + rootCatEntRecId;
-
-			List<Long> identifiers = getResultIDList(selRecIdQuery, RECORD_ID, jdbcDAO);
+					+ WHERE_KEYWORD + IDENTIFIER + " = ?";
+			LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+			queryDataList.add(new ColumnValueBean(IDENTIFIER, rootCatEntRecId));
+			List<Long> identifiers = getResultIDList(selRecIdQuery, RECORD_ID, jdbcDAO,queryDataList);
 
 			if (identifiers != null && !identifiers.isEmpty())
 			{
@@ -2713,9 +2740,11 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				{
 					String selectQuery = SELECT_KEYWORD + IDENTIFIER + FROM_KEYWORD
 							+ catAssociation.getCategoryEntity().getTableProperties().getName()
-							+ WHERE_KEYWORD + RECORD_ID + " = " + recordId;
+							+ WHERE_KEYWORD + RECORD_ID + " = ?";
+					LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+					queryDataList.add(new ColumnValueBean(RECORD_ID, recordId));
 
-					List<Long> identifiers = getResultIDList(selectQuery, IDENTIFIER, jdbcDAO);
+					List<Long> identifiers = getResultIDList(selectQuery, IDENTIFIER, jdbcDAO,queryDataList);
 
 					if (identifiers != null && !identifiers.isEmpty())
 					{
@@ -2723,20 +2752,23 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 					}
 				}
 
+				String tgtFkColName = catAssociation.getConstraintProperties()
+						.getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties()
+						.getName();
 				selRecIdQuery = SELECT_KEYWORD
 						+ RECORD_ID
 						+ FROM_KEYWORD
 						+ catEntTblName
 						+ WHERE_KEYWORD
-						+ catAssociation.getConstraintProperties()
-								.getTgtEntityConstraintKeyProperties()
-								.getTgtForiegnKeyColumnProperties().getName() + " = "
-						+ rootCatEntRecId;
+						+ tgtFkColName+ " = ?";
+
+				LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+				queryDataList.add(new ColumnValueBean(tgtFkColName, rootCatEntRecId));
 
 				List<Map<BaseAbstractAttributeInterface, Object>> innerRecords = new ArrayList<Map<BaseAbstractAttributeInterface, Object>>();
 				dataValue.put(catAssociation, innerRecords);
 
-				List<Long> recordIds = getResultIDList(selRecIdQuery, RECORD_ID, jdbcDAO);
+				List<Long> recordIds = getResultIDList(selRecIdQuery, RECORD_ID, jdbcDAO,queryDataList);
 				for (Long recId : recordIds)
 				{
 					Map<BaseAbstractAttributeInterface, Object> innerRecord = new HashMap<BaseAbstractAttributeInterface, Object>();
@@ -2902,16 +2934,18 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		for (CategoryAssociationInterface catAssociation : catEntity
 				.getCategoryAssociationCollection())
 		{
+			String colName = catAssociation.getConstraintProperties()
+					.getTgtEntityConstraintKeyProperties()
+					.getTgtForiegnKeyColumnProperties().getName();
 			if (catAssociation.getTargetCategoryEntity().getChildCategories().size() != 0)
 			{
 				String selectQuery = "SELECT IDENTIFIER FROM "
 						+ catAssociation.getTargetCategoryEntity().getTableProperties().getName()
 						+ " WHERE "
-						+ catAssociation.getConstraintProperties()
-								.getTgtEntityConstraintKeyProperties()
-								.getTgtForiegnKeyColumnProperties().getName() + " = " + recordId;
-
-				List<Long> recordIds = getResultIDList(selectQuery, "IDENTIFIER", jdbcDao);
+						+ colName + " = ?" ;
+				LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+				queryDataList.add(new ColumnValueBean(colName, recordId));
+				List<Long> recordIds = getResultIDList(selectQuery, "IDENTIFIER", jdbcDao,queryDataList);
 				for (Long recId : recordIds)
 				{
 					clearCategoryEntityData(catAssociation.getTargetCategoryEntity(), recId,
@@ -2919,8 +2953,11 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 					String deleteQuery = "DELETE FROM "
 							+ catAssociation.getTargetCategoryEntity().getTableProperties()
-									.getName() + " WHERE IDENTIFIER = " + recId;
-					executeUpdateQuery(deleteQuery, userId, jdbcDao);
+									.getName() + " WHERE IDENTIFIER = ?";
+					ColumnValueBean bean1 = new ColumnValueBean(IDENTIFIER, recId);
+					LinkedList<ColumnValueBean> colValBeanList = new LinkedList<ColumnValueBean>();
+					colValBeanList.add(bean1);
+					executeUpdateQuery(deleteQuery, userId, jdbcDao,colValBeanList);
 					rlbkQryStack.push(deleteQuery);
 				}
 			}
@@ -2929,10 +2966,11 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				String deleteQuery = "DELETE FROM "
 						+ catAssociation.getTargetCategoryEntity().getTableProperties().getName()
 						+ " WHERE "
-						+ catAssociation.getConstraintProperties()
-								.getTgtEntityConstraintKeyProperties()
-								.getTgtForiegnKeyColumnProperties().getName() + " = " + recordId;
-				executeUpdateQuery(deleteQuery, userId, jdbcDao);
+						+ colName + " = ?";
+				ColumnValueBean bean1 = new ColumnValueBean(colName, recordId);
+				LinkedList<ColumnValueBean> colValBeanList = new LinkedList<ColumnValueBean>();
+				colValBeanList.add(bean1);
+				executeUpdateQuery(deleteQuery, userId, jdbcDao,colValBeanList);
 				rlbkQryStack.push(deleteQuery);
 			}
 		}
@@ -2960,11 +2998,12 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		StringBuffer query = new StringBuffer();
 		query.append(SELECT_KEYWORD + WHITESPACE + RECORD_ID + WHITESPACE + FROM_KEYWORD
 				+ WHITESPACE + rootCatEntity.getTableProperties().getName() + WHITESPACE
-				+ WHERE_KEYWORD + WHITESPACE + IDENTIFIER + EQUAL + recordId);
+				+ WHERE_KEYWORD + WHITESPACE + IDENTIFIER + EQUAL + QUESTION_MARK);
 
 		Long rootCatEntRecId = null;
-
-		List<Long> results = getResultIDList(query.toString(), RECORD_ID, jdbcDao);
+		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+		queryDataList.add(new ColumnValueBean(IDENTIFIER, recordId));
+		List<Long> results = getResultIDList(query.toString(), RECORD_ID, jdbcDao,queryDataList);
 		if (!results.isEmpty())
 		{
 			rootCatEntRecId = results.get(0);
@@ -3083,10 +3122,11 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	 * depending upon column name passed.
 	 * @param query
 	 * @param columnName
+	 * @param queryDataList
 	 * @return a list of identifier, record identifier depending upon column name passed.
 	 * @throws SQLException
 	 */
-	private List<Long> getResultIDList(String query, String columnName, JDBCDAO jdbcDao)
+	private List<Long> getResultIDList(String query, String columnName, JDBCDAO jdbcDao, LinkedList<ColumnValueBean> queryDataList)
 			throws DynamicExtensionsSystemException
 	{
 		List<Long> recordIds = new ArrayList<Long>();
@@ -3094,7 +3134,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		Object value = null;
 		try
 		{
-			resultSet = jdbcDao.getQueryResultSet(query);
+			resultSet = jdbcDao.getResultSet(query,queryDataList,null);
 
 			while (resultSet.next())
 			{
@@ -3135,9 +3175,10 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	public Long getEntityRecordIdByRootCategoryEntityRecordId(Long rootCategoryEntityRecordId,
 			String rootCategoryTableName) throws DynamicExtensionsSystemException
 	{
-		String query = "select record_Id from " + rootCategoryTableName + " where IDENTIFIER ="
-				+ rootCategoryEntityRecordId;
-		return getEntityRecordId(query);
+		String query = "select record_Id from " + rootCategoryTableName + " where IDENTIFIER = ? ";
+		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+		queryDataList.add(new ColumnValueBean(IDENTIFIER, rootCategoryEntityRecordId));
+		return getEntityRecordId(query,queryDataList);
 	}
 
 	/**
@@ -3147,9 +3188,11 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	public Long getRootCategoryEntityRecordIdByEntityRecordId(Long rootCategoryEntityRecordId,
 			String rootCategoryTableName) throws DynamicExtensionsSystemException
 	{
-		String query = "select IDENTIFIER from " + rootCategoryTableName + " where record_Id ="
-				+ rootCategoryEntityRecordId;
-		return getEntityRecordId(query);
+		String query = "select IDENTIFIER from " + rootCategoryTableName + " where record_Id =?";
+
+		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+		queryDataList.add(new ColumnValueBean(RECORD_ID, rootCategoryEntityRecordId));
+		return getEntityRecordId(query,queryDataList);
 	}
 
 	/**
@@ -3158,7 +3201,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private Long getEntityRecordId(String query) throws DynamicExtensionsSystemException
+	private Long getEntityRecordId(String query,LinkedList<ColumnValueBean> queryDataList) throws DynamicExtensionsSystemException
 	{
 		ResultSet resultSet = null;
 		Long entityRecordId = null;
@@ -3166,7 +3209,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		try
 		{
 			jdbcDAO = DynamicExtensionsUtility.getJDBCDAO();
-			resultSet = jdbcDAO.getQueryResultSet(query);
+			resultSet = jdbcDAO.getResultSet(query,queryDataList,null);
 			resultSet.next();
 			entityRecordId = resultSet.getLong(1);
 		}
@@ -3193,19 +3236,34 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		return entityRecordId;
 	}
 
+	private LinkedList<ColumnValueBean> createColumnValueBeanListForDataEntry(long identifier,long recordId)
+	{
+		ColumnValueBean bean1 = new ColumnValueBean("IDENTIFIER", identifier);
+		ColumnValueBean bean2 = new ColumnValueBean("ACTIVITY_STATUS", "ACTIVE");
+		ColumnValueBean bean3 = new ColumnValueBean(RECORD_ID, recordId);
+		LinkedList<ColumnValueBean> colValBeanList = new LinkedList<ColumnValueBean>();
+		colValBeanList.add(bean1);
+		colValBeanList.add(bean2);
+		colValBeanList.add(bean3);
+		return colValBeanList;
+	}
 	/**
 	 * This method executes a SQL query.
 	 * @param query
+	 * @param colValBeanList
 	 * @throws SQLException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void executeUpdateQuery(String query, Long userId, JDBCDAO jdbcDao)
+	private void executeUpdateQuery(String query, Long userId, JDBCDAO jdbcDao, LinkedList<ColumnValueBean> colValBeanList)
 			throws DynamicExtensionsSystemException
 	{
 		try
 		{
+			LinkedList<LinkedList<ColumnValueBean>> valueBeanList = new LinkedList<LinkedList<ColumnValueBean>>();
+			valueBeanList.add(colValBeanList);
 			queryBuilder.auditQuery(jdbcDao, query, userId);
-			jdbcDao.executeUpdate(query);
+
+			jdbcDao.executeUpdate(query, valueBeanList);
 		}
 		catch (DAOException e)
 		{

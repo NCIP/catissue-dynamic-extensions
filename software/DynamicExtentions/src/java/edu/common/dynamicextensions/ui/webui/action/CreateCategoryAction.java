@@ -266,9 +266,9 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 	private void createNewTempDirectory(String tempDirName) throws DynamicExtensionsSystemException
 	{
 		File tempDir = new File(tempDirName);
-		if (tempDir.exists() && !tempDir.delete())
+		if (tempDir.exists())
 		{
-			LOGGER.error("Unable to delete directory " + tempDirName);
+			deleteDirectory(new File(tempDirName));
 		}
 		if (!tempDir.mkdirs())
 		{

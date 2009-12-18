@@ -4,7 +4,6 @@ package edu.common.dynamicextensions.ui.webui.action;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -51,7 +50,6 @@ import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ApplyDataEntryFormProcessor;
-import edu.common.dynamicextensions.processor.DeleteRecordProcessor;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
@@ -119,7 +117,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 							WebUIManagerConstants.CANCELLED, dataEntryForm.getContainerId());
 				}
 
-				if (((actionForward != null) && actionForward.getName().equals(
+				/*if (((actionForward != null) && actionForward.getName().equals(
 						"showDynamicExtensionsHomePage"))
 						&& ((mode != null) && mode.equals("delete")))
 				{
@@ -127,16 +125,16 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 					deleteRecord(recordIdentifier, containerStack.firstElement());
 					isCallbackURL = redirectCallbackURL(request, response, recordIdentifier,
 							WebUIManagerConstants.DELETED, dataEntryForm.getContainerId());
-				}
+				}*/
 
-				else if ((actionForward == null) && (errorList != null) && errorList.isEmpty())
+				if ((actionForward == null) && (errorList != null) && errorList.isEmpty())
 				{
 					String recordIdentifier = storeParentContainer(valueMapStack, containerStack,
 							request, dataEntryForm.getRecordIdentifier());
 					isCallbackURL = redirectCallbackURL(request, response, recordIdentifier,
 							WebUIManagerConstants.SUCCESS, dataEntryForm.getContainerId());
 				}
-				if ((containerSize != null) && (containerSize.trim().length() > 0))
+				if ((containerSize != null) && (!containerSize.trim().equals("")))
 				{
 					long containerStackSize = Long.valueOf(containerSize);
 					if ((request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME) != null)
@@ -179,11 +177,8 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 	}
 
 	/**
-	 * @throws ParseException
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsSystemException
-	 *
 	 */
 	public void populateAttributeValueMapForCalculatedAttributes(
 			Map<BaseAbstractAttributeInterface, Object> fullValueMap,
@@ -225,21 +220,6 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				}
 			}
 		}
-	}
-
-	/**
-	 *
-	 * @param recordIdentfier
-	 * @param containerInterface
-	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
-	 */
-	private void deleteRecord(String recordIdentfier, ContainerInterface containerInterface)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
-	{
-		Long recordNumber = Long.valueOf(recordIdentfier);
-		DeleteRecordProcessor.getInstance().deleteRecord(containerInterface, recordNumber);
-
 	}
 
 	/**
@@ -395,7 +375,6 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 	 * @throws FileNotFoundException if improper value is entered for FileUpload control.
 	 * @throws DynamicExtensionsSystemException
 	 * @throws IOException
-	 * @throws ParseException
 	 * @throws DynamicExtensionsApplicationException
 	 */
 	private void populateAndValidateValues(Stack<ContainerInterface> containerStack,
@@ -579,7 +558,12 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				{
 					if (association.getIsCollection())
 					{
-						if (selectedValues != null)
+						if (selectedValues == null)
+						{
+							valueList.add(new HashMap());
+
+						}
+						else
 						{
 							Collection<AbstractAttributeInterface> attributes = association
 									.getTargetEntity().getAllAbstractAttributes();
@@ -593,10 +577,6 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 								dataMap.put(attributesList.get(0), id);
 								valueList.add(dataMap);
 							}
-						}
-						else
-						{
-							valueList.add(new HashMap());
 						}
 					}
 					else
@@ -617,7 +597,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 			{
 				String selectedValue = request.getParameter(controlName);
 
-				if ((selectedValue != null) && (selectedValue.trim().length() != 0))
+				if ((selectedValue != null) && (!selectedValue.trim().equals("")))
 				{
 					valueList.add(Long.valueOf(selectedValue.trim()));
 				}
@@ -704,14 +684,14 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 			FormFile formFile = null;
 			formFile = (FormFile) dataEntryForm.getValue(controlName);
 			boolean isValidExtension = true;
-			if (!formFile.getFileName().equals(""))
+			if (formFile.getFileName().equals(""))
 			{
-				isValidExtension = checkValidFormat(dataEntryForm, control, formFile.getFileName(),
-						formFile.getFileSize());
+				attributeValueMap.put(abstractAttribute, control.getValue());
 			}
 			else
 			{
-				attributeValueMap.put(abstractAttribute, control.getValue());
+				isValidExtension = checkValidFormat(dataEntryForm, control, formFile.getFileName(),
+						formFile.getFileSize());
 			}
 			if (isValidExtension
 					&& ((formFile.getFileName() != null) && !formFile.getFileName().equals("")))

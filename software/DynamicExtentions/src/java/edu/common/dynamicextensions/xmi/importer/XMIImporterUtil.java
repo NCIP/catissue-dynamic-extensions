@@ -10,10 +10,12 @@ import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.SemanticPropertyInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
-import gov.nih.nci.cagrid.metadata.common.SemanticMetadata;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.xmi.XMIConfiguration;
+import edu.wustl.dao.JDBCDAO;
+import edu.wustl.dao.exception.DAOException;
+import gov.nih.nci.cagrid.metadata.common.SemanticMetadata;
 
 public class XMIImporterUtil
 {
@@ -64,5 +66,43 @@ public class XMIImporterUtil
 	{
 		DynamicExtensionsUtility.populateEntityForConstraintProperties(entityGroup,
 				xmiConfigurationObject);
+	}
+
+	/**
+	 * This method is added for only using the Query which has inner query in it
+	 * for inserting the data in it.
+	 * @param queryList queries to be executed
+	 * @throws DynamicExtensionsSystemException
+	 */
+	public static void executeDML(List<String> queryList) throws DynamicExtensionsSystemException
+	{
+		JDBCDAO jdbcDao = null;
+
+
+		try
+		{
+			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
+			for (String query : queryList)
+			{
+				jdbcDao.executeUpdate(query);
+			}
+		}
+
+		catch (DAOException e)
+		{
+			throw new DynamicExtensionsSystemException("Error while retrieving the data", e);
+		}
+		finally
+		{
+			try
+			{
+				jdbcDao.commit();
+				DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+			}
+			catch (DAOException e)
+			{
+				throw new DynamicExtensionsSystemException("Error while retrieving the data", e);
+			}
+		}
 	}
 }

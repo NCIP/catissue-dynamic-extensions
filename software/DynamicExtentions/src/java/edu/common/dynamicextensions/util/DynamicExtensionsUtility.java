@@ -26,8 +26,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -110,6 +112,7 @@ import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 
 /**
  * @author chetan_patil
@@ -2305,6 +2308,44 @@ public class DynamicExtensionsUtility
 	public static void closeHibernateDAO(HibernateDAO hibernateDao) throws DAOException
 	{
 		hibernateDao.closeSession();
+	}
+
+	/**
+	 * @param queryList queries to be executed
+	 * @throws DynamicExtensionsSystemException
+	 */
+	public static void executeDML(List<Map<String,LinkedList<ColumnValueBean>>> queryList) throws DynamicExtensionsSystemException
+	{
+		JDBCDAO jdbcDao = null;
+		try
+		{
+			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
+			for(Map<String,LinkedList<ColumnValueBean>> query : queryList)
+			{
+			for (Map.Entry<String,LinkedList<ColumnValueBean>> queryRecord : query.entrySet())
+			{
+				LinkedList<LinkedList<ColumnValueBean>> colValBeanList = new LinkedList<LinkedList<ColumnValueBean>>();
+				colValBeanList.add(queryRecord.getValue());
+				jdbcDao.executeUpdate(queryRecord.getKey(),colValBeanList);
+			}}
+		}
+
+		catch (DAOException e)
+		{
+			throw new DynamicExtensionsSystemException("Error while inserting the data", e);
+		}
+		finally
+		{
+			try
+			{
+				jdbcDao.commit();
+				DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+			}
+			catch (DAOException e)
+			{
+				throw new DynamicExtensionsSystemException("Error while inserting the data", e);
+			}
+		}
 	}
 
 	/**

@@ -228,7 +228,8 @@ public interface EntityManagerInterface
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException;
 
 
-
+	
+	
 	/**
 	 * Returns a particular record for the given recordId of the given entityId
 	 * @param entityId
@@ -237,28 +238,6 @@ public interface EntityManagerInterface
 	 *             value - attribute value
 	 */
 	Map<AbstractAttributeInterface, Object> getRecordById(EntityInterface entity, Long recordId)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
-
-	/**
-	 * This method deletes a particular record for an entity.
-	 * @param entity Entity for which record needs to be deleted
-	 * @param recordId Id of the record
-	 * @return success failure flag. true if successful
-	 * @throws DynamicExtensionsApplicationException
-	 * @throws DynamicExtensionsSystemException
-	 */
-	boolean deleteRecord(EntityInterface entity, Long recordId)
-			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException;
-
-	/**
-	 * Method deletes the passed records of the passed container.
-	 * @param containerId
-	 * @param recordIdList
-	 * @return
-	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
-	 */
-	void deleteRecords(Long containerId, List<Long> recordIdList)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
 
 	/**
@@ -583,8 +562,6 @@ public interface EntityManagerInterface
 	Map<AbstractAttributeInterface, Object> getEntityRecordById(EntityInterface entity,
 			Long recordId, JDBCDAO... dao) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException;
-
-
 
 
 	/**

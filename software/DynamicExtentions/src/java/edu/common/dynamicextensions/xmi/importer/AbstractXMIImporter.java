@@ -51,6 +51,7 @@ import edu.common.dynamicextensions.xmi.XMIConfiguration;
 import edu.common.dynamicextensions.xmi.XMIUtilities;
 import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.util.global.CommonServiceLocator;
+import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.HibernateDAO;
@@ -69,7 +70,13 @@ import edu.wustl.dao.exception.DAOException;
 public abstract class AbstractXMIImporter
 {
 
-	private static final org.apache.log4j.Logger LOGGER = LoggerConfig.getConfiguredLogger(AbstractXMIImporter.class);
+	static
+	{
+		LoggerConfig.configureLogger(System.getProperty("user.dir"));
+	}
+
+	private static final Logger LOGGER = Logger.getCommonLogger(AbstractXMIImporter.class);
+
 	// name of a UML extent (instance of UML metamodel) that the UML models will be loaded into
 	private static final String UML_INSTANCE = "UMLInstance";
 	// name of a MOF extent that will contain definition of UML metamodel
@@ -560,7 +567,7 @@ public abstract class AbstractXMIImporter
 		// a multiselect attribute.
 		List<String> multiSelMigrationQueries = EntityManagerUtil
 				.updateSqlScriptToMigrateOldDataForMultiselectAttribute(multiselectMigartionScripts);
-		EntityManagerUtil.executeDML(multiSelMigrationQueries);
+		XMIImporterUtil.executeDML(multiSelMigrationQueries);
 
 	}
 

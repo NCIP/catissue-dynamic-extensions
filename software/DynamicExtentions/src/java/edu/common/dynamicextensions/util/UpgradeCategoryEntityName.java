@@ -7,7 +7,10 @@ package edu.common.dynamicextensions.util;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import edu.common.dynamicextensions.entitymanager.DynamicExtensionsQueryBuilderConstantsInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
@@ -16,6 +19,7 @@ import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 
 
 /**
@@ -61,9 +65,11 @@ public class UpgradeCategoryEntityName implements DynamicExtensionsQueryBuilderC
 				query.append(WHITESPACE + FROM_KEYWORD + WHITESPACE
 						+ DEConstants.PATH_TABLE_NAME + WHITESPACE);
 				query.append(WHITESPACE + WHERE_KEYWORD + WHITESPACE
-						+ DEConstants.CATEGORY_ENTITY_ID + EQUAL
-						+ categoryEntityId);
-				List<Long> pathIdColl = entityManagerUtil.getResultInList(query.toString());
+						+ DEConstants.CATEGORY_ENTITY_ID + EQUAL + QUESTION_MARK);
+
+				LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+				queryDataList.add(new ColumnValueBean(DEConstants.CATEGORY_ENTITY_ID , categoryEntityId));
+				List<Long> pathIdColl = entityManagerUtil.getResultInList(query.toString(),queryDataList);
 				if (pathIdColl != null && !pathIdColl.isEmpty())
 				{
 					Long pathId = Long.valueOf(pathIdColl.get(0).toString());
@@ -112,16 +118,20 @@ public class UpgradeCategoryEntityName implements DynamicExtensionsQueryBuilderC
 			throws DynamicExtensionsSystemException, SQLException
 	{
 		StringBuffer query = new StringBuffer();
-		List<String> queryList = new ArrayList<String>();
+		Map<String,LinkedList<ColumnValueBean>> queryVsDatamap = new HashMap<String,LinkedList<ColumnValueBean>>();
+
 		query.append(UPDATE_KEYWORD);
 		query.append(WHITESPACE
 				+ DEConstants.ABSTRACT_METADATA_TABLE_NAME);
 		query.append(WHITESPACE + SET_KEYWORD + WHITESPACE
-				+ DEConstants.NAME + EQUAL + "'"
-				+ categoryEntityName + "'" + WHITESPACE);
-		query.append(WHERE_KEYWORD + WHITESPACE + IDENTIFIER + EQUAL + categoryEntityId);
-		queryList.add(query.toString());
-		EntityManagerUtil.executeDML(queryList);
+				+ DEConstants.NAME + EQUAL +QUESTION_MARK + WHITESPACE);
+		query.append(WHERE_KEYWORD + WHITESPACE + IDENTIFIER + EQUAL + QUESTION_MARK);
+		LinkedList<ColumnValueBean> colValBeanList =new LinkedList<ColumnValueBean>();
+		colValBeanList.add(new ColumnValueBean(DEConstants.NAME , categoryEntityName));
+		colValBeanList.add(new ColumnValueBean(IDENTIFIER, categoryEntityId));
+		queryVsDatamap.put(query.toString(),colValBeanList);
+		List<Map<String,LinkedList<ColumnValueBean>>> queryList = new ArrayList<Map<String,LinkedList<ColumnValueBean>>>();
+		DynamicExtensionsUtility.executeDML(queryList);
 	}
 
 	/**

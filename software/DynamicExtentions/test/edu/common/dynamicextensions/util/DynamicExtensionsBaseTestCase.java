@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.LinkedList;
 
 import junit.framework.TestCase;
 import edu.common.dynamicextensions.category.CategoryCreator;
@@ -33,6 +34,7 @@ import edu.wustl.common.util.logger.LoggerConfig;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 
 public class DynamicExtensionsBaseTestCase extends TestCase
 		implements
@@ -112,14 +114,14 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	 * @param columnNumber of which value is to be retrieved
 	 * @return Object of the value
 	 */
-	protected Object executeQuery(String query, String returnType, int columnNumber)
+	protected Object executeQuery(String query, String returnType, int columnNumber,LinkedList<ColumnValueBean> queryDataList)
 	{
 		ResultSet resultSet = null;
 		Object ans = null;
 		JDBCDAO jdbcDao = getJDBCDAO();
 		try
 		{
-			resultSet = jdbcDao.getQueryResultSet(query);
+			resultSet = jdbcDao.getResultSet(query,queryDataList,null);
 			resultSet.next();
 			if (STRING_TYPE.equals(returnType))
 			{
@@ -397,9 +399,12 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 
 	protected String getActivityStatus(EntityInterface entity, Long recordId) throws Exception
 	{
-		return (String) executeQuery("select " + Constants.ACTIVITY_STATUS_COLUMN + " from "
-				+ entity.getTableProperties().getName() + " where identifier = " + recordId,
-				STRING_TYPE, 1);
+		StringBuffer query = new StringBuffer();
+		query.append("select "+ Constants.ACTIVITY_STATUS_COLUMN+ " from"+entity.getTableProperties().getName()+" where identifier = ?" );
+		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+		queryDataList.add(new ColumnValueBean(Constants.IDENTIFIER, recordId));
+		return (String) executeQuery(query.toString(),
+				STRING_TYPE, 1,queryDataList);
 
 	}
 

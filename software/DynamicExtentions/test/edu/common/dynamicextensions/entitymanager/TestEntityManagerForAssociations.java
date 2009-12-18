@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import edu.common.dynamicextensions.domain.Association;
-import edu.common.dynamicextensions.domain.Attribute;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.Entity;
 import edu.common.dynamicextensions.domain.userinterface.Container;
@@ -32,7 +31,6 @@ import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationDirection;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
-import edu.wustl.common.util.global.Status;
 import edu.wustl.common.util.logger.Logger;
 
 public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestCase
@@ -469,7 +467,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			entityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ association.getConstraintProperties().getName(), INT_TYPE, 1);
+					+ association.getConstraintProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(4, rowCount);
 		}
 		catch (DynamicExtensionsSystemException e)
@@ -557,7 +555,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			entityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ study.getTableProperties().getName(), INT_TYPE, 1);
+					+ study.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(2, rowCount);
 		}
 		catch (DynamicExtensionsSystemException e)
@@ -637,7 +635,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			entityManagerInterface.insertData(savedEntity, dataValue, null);
 
 			int rowCount = (Integer) executeQuery("select IDENTIFIER from "
-					+ savedEntity.getTableProperties().getName(), INT_TYPE, 1);
+					+ savedEntity.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 
 		}
@@ -1111,7 +1109,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 
 			entityManagerInterface.insertData(savedEntity, dataValue, null);
 			int identifier = (Integer) executeQuery("select IDENTIFIER from "
-					+ savedEntity.getTableProperties().getName(), INT_TYPE, 1);
+					+ savedEntity.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, identifier);
 		}
 		catch (Exception e)
@@ -1122,275 +1120,6 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 
 		}
 
-	}
-
-	/**
-	 *  Purpose: To test the deletion of record for an entity which has a one to many association with other entity.
-	 *  Expected behavior: the entry for this record in the target entity's data table should also be removed.
-	 *  Test case flow : 1. create user and study entity. 2. create association User 1--->* Study. 3.Persist entities.
-	 *  4.Insert one record 5. Check the record has been inserted or not. 6. Delete the inserted record.
-	 */
-
-	public void testDeleteRecordWithAssociationOneToMany()
-	{
-
-		try
-		{
-			DomainObjectFactory factory = DomainObjectFactory.getInstance();
-			EntityGroupInterface entityGroup = factory.createEntityGroup();
-			entityGroup.setName("test_" + new Double(Math.random()).toString());
-			MockEntityManager mock = new MockEntityManager();
-			Entity study = (Entity) createAndPopulateEntity();;
-			study.setName("study");
-
-			Attribute studyName = (Attribute) mock.initializeStringAttribute("studyName",
-					"new Study");
-			study.addAbstractAttribute(studyName);
-
-			Entity user = (Entity) createAndPopulateEntity();;
-			user.setName("user");
-			Attribute userName = (Attribute) mock.initializeStringAttribute("userName", "new User");
-			user.addAbstractAttribute(userName);
-
-			//Associate  User(1) <---->(*)Study
-			AssociationInterface association = DomainObjectFactory.getInstance()
-					.createAssociation();
-
-			association.setTargetEntity(study);
-			association.setAssociationDirection(AssociationDirection.SRC_DESTINATION);
-			association.setName("primaryInvestigator");
-			association.setSourceRole(getRole(AssociationType.ASSOCIATION, "primaryInvestigator",
-					Cardinality.ONE, Cardinality.ONE));
-			association.setTargetRole(getRole(AssociationType.ASSOCIATION, "study",
-					Cardinality.ZERO, Cardinality.MANY));
-
-			user.addAbstractAttribute(association);
-			DynamicExtensionsUtility.getConstraintPropertiesForAssociation(association);
-			EntityManagerUtil.addIdAttribute(user);
-			entityGroup.addEntity(user);
-			user.setEntityGroup(entityGroup);
-			entityGroup.addEntity(study);
-			study.setEntityGroup(entityGroup);
-
-			EntityManager.getInstance().persistEntity(user);
-
-			Map dataValue = new HashMap();
-			List list = new ArrayList();
-			list.add(1L);
-			dataValue.put(userName, "User1");
-			dataValue.put(association, list);
-
-			EntityManager.getInstance().insertData(user, dataValue, null);
-			int columnValue = (Integer) executeQuery("select * from "
-					+ user.getTableProperties().getName(), INT_TYPE, 2);
-			assertEquals(1, columnValue);
-			String value = (String) executeQuery("select * from "
-					+ user.getTableProperties().getName(), STRING_TYPE, 3);
-			assertEquals("User1", value);
-
-			assertEquals(getColumnCount("select * from " + user.getTableProperties().getName()),
-					noOfDefaultColumns + 1);
-
-			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ user.getTableProperties().getName(), INT_TYPE, 1);
-			assertEquals(1, rowCount);
-
-			EntityManager.getInstance().deleteRecord(user, 1L);
-
-			assertEquals(Status.ACTIVITY_STATUS_DISABLED.toString(), getActivityStatus(user, 1L));
-
-		}
-		catch (Exception e)
-		{
-			//TODO Auto-generated catch block
-			Logger.out.debug(e.getMessage());
-			e.printStackTrace();
-			fail("Exception occured");
-
-		}
-	}
-
-	/**
-	 *  Purpose: To test the deletion of record for an entity which has a many to many association with other entity.
-	 *  Expected behavior: the entry for this record in the target entity's data table should also be removed.
-	 *  Test case flow : 1. create user and study entity. 2. create association User *--->* Study. 3.Persist entities.
-	 *  4.Insert one record 5. Check the record has been inserted or not. 6. Delete the inserted record.
-	 *  7.Check if the record is deleted. 8. Check if there are no entries for the deleted record in the
-	 *  middle table of the many to many association.
-	 */
-
-	public void testDeleteRecordWithAssociationManyToMany()
-	{
-
-		try
-		{
-			DomainObjectFactory factory = DomainObjectFactory.getInstance();
-			EntityGroupInterface entityGroup = factory.createEntityGroup();
-			entityGroup.setName("test_" + new Double(Math.random()).toString());
-			MockEntityManager mock = new MockEntityManager();
-			Entity study = (Entity) createAndPopulateEntity();
-			study.setName("study");
-
-			Attribute studyName = (Attribute) mock.initializeStringAttribute("studyName",
-					"new Study");
-			study.addAbstractAttribute(studyName);
-
-			Entity user = (Entity) createAndPopulateEntity();;
-			user.setName("user");
-			Attribute userName = (Attribute) mock.initializeStringAttribute("userName", "new User");
-			user.addAbstractAttribute(userName);
-
-			//Associate  User(*) <---->(*)Study
-			AssociationInterface association = DomainObjectFactory.getInstance()
-					.createAssociation();
-
-			association.setTargetEntity(study);
-			association.setAssociationDirection(AssociationDirection.SRC_DESTINATION);
-			association.setName("primaryInvestigator");
-			association.setSourceRole(getRole(AssociationType.ASSOCIATION, "primaryInvestigator",
-					Cardinality.ONE, Cardinality.MANY));
-			association.setTargetRole(getRole(AssociationType.ASSOCIATION, "study",
-					Cardinality.ZERO, Cardinality.MANY));
-
-			user.addAbstractAttribute(association);
-			DynamicExtensionsUtility.getConstraintPropertiesForAssociation(association);
-			EntityManagerUtil.addIdAttribute(user);
-			entityGroup.addEntity(user);
-			user.setEntityGroup(entityGroup);
-			entityGroup.addEntity(study);
-			study.setEntityGroup(entityGroup);
-
-			EntityManager.getInstance().persistEntity(user);
-
-			Map dataValue = new HashMap();
-			List list = new ArrayList();
-			list.add(1L);
-			list.add(2L);
-			dataValue.put(userName, "User1");
-			dataValue.put(association, list);
-
-			Long recordId = EntityManager.getInstance().insertData(user, dataValue, null);
-
-			//Checking whether there is an entry added in the data table for user.
-			int columnValue = (Integer) executeQuery("select * from "
-					+ user.getTableProperties().getName(), INT_TYPE, 2);
-			assertEquals(1, columnValue);
-			//Checking whether the the value of the second column (i.e. the column for the user name.. first column is identifier).
-			//is having the expected value or not.
-			String value = (String) executeQuery("select * from "
-					+ user.getTableProperties().getName(), "string", 3);
-			assertEquals("User1", value);
-			assertEquals(getColumnCount("select * from " + user.getTableProperties().getName()),
-					noOfDefaultColumns + 1);
-
-			//Checking whether there are 2 entries added in the middle table for the many to many association.
-			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ association.getConstraintProperties().getName(), INT_TYPE, 1);
-			assertEquals(2, rowCount);
-			//Deleting the record
-			EntityManager.getInstance().deleteRecord(user, 1L);
-			//Checking there is no entry for the deleted record in the middle table.
-			assertEquals(Status.ACTIVITY_STATUS_DISABLED.toString(), getActivityStatus(user, 1L));
-		}
-		catch (Exception e)
-		{
-			//TODO Auto-generated catch block
-			Logger.out.debug(e.getMessage());
-			e.printStackTrace();
-			fail("Exception occured");
-
-		}
-	}
-
-	/**
-	 *  Purpose: To test the deletion of record for an entity which has a many to one association with other entity.
-	 *  Expected behavior: the entry for this record in the target entity's data table should also be removed.
-	 *  Test case flow : 1. create user and study entity. 2. create association User *--->1 Study. 3.Persist entities.
-	 *  4.Insert one record 5. Check the record has been inserted or not. 6. Delete the inserted record.
-	 *  7.Check if the record is properly deleted or not.
-	 */
-
-	public void testDeleteRecordWithAssociationManyToOne()
-	{
-
-		try
-		{
-			//Variables.databaseName = DEConstants.ORACLE_DATABASE;
-			DomainObjectFactory factory = DomainObjectFactory.getInstance();
-			EntityGroupInterface entityGroup = factory.createEntityGroup();
-			entityGroup.setName("test_" + new Double(Math.random()).toString());
-			MockEntityManager mock = new MockEntityManager();
-			Entity study = (Entity) createAndPopulateEntity();;
-			study.setName("study");
-
-			Attribute studyName = (Attribute) mock.initializeStringAttribute("studyName",
-					"new Study");
-			study.addAbstractAttribute(studyName);
-
-			Entity user = (Entity) createAndPopulateEntity();;
-			user.setName("user");
-			Attribute userName = (Attribute) mock.initializeStringAttribute("userName", "new User");
-			user.addAbstractAttribute(userName);
-
-			//Associate  User(*) <---->(1)Study
-			AssociationInterface association = DomainObjectFactory.getInstance()
-					.createAssociation();
-
-			association.setTargetEntity(study);
-			association.setAssociationDirection(AssociationDirection.SRC_DESTINATION);
-			association.setName("primaryInvestigator");
-			association.setSourceRole(getRole(AssociationType.ASSOCIATION, "primaryInvestigator",
-					Cardinality.ONE, Cardinality.MANY));
-			association.setTargetRole(getRole(AssociationType.ASSOCIATION, "study",
-					Cardinality.ZERO, Cardinality.ONE));
-
-			user.addAbstractAttribute(association);
-			DynamicExtensionsUtility.getConstraintPropertiesForAssociation(association);
-			entityGroup.addEntity(user);
-			user.setEntityGroup(entityGroup);
-			entityGroup.addEntity(study);
-			study.setEntityGroup(entityGroup);
-
-			EntityManager.getInstance().persistEntity(user);
-
-			Map dataValue = new HashMap();
-			List list = new ArrayList();
-			list.add(1L);
-			dataValue.put(userName, "User1");
-			dataValue.put(association, list);
-
-			Long recordId = EntityManager.getInstance().insertData(user, dataValue, null);
-
-			//Checking whether there is an entry added in the data table for user.
-			int identifier = (Integer) executeQuery("select IDENTIFIER from "
-					+ user.getTableProperties().getName(), INT_TYPE, 1);
-
-			assertEquals(1, identifier);
-			//Checking whether the the value of the second column (i.e. the column for the user name.. first column is identifier).
-			//is having the expected value or not.
-			//Checking whether there is an entry added in the data table for user.
-			String value = (String) executeQuery("select "
-					+ userName.getColumnProperties().getName() + " from "
-					+ user.getTableProperties().getName(), STRING_TYPE, 1);
-
-			assertEquals("User1", value);
-			//Checking if the extra column for many to one association is added or not
-			assertEquals(getColumnCount("select * from " + user.getTableProperties().getName()),
-					noOfDefaultColumns + 2);
-
-			//Deleting the record
-			EntityManager.getInstance().deleteRecord(user, 1L);
-
-			assertEquals(Status.ACTIVITY_STATUS_DISABLED.toString(), getActivityStatus(user, 1L));;
-		}
-		catch (Exception e)
-		{
-			//TODO Auto-generated catch block
-			Logger.out.debug(e.getMessage());
-			e.printStackTrace();
-			fail("Exception occured");
-
-		}
 	}
 
 	/**
@@ -2544,11 +2273,11 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 
 			// Step 6
 			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ address.getTableProperties().getName(), INT_TYPE, 1);
+					+ address.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ user.getTableProperties().getName(), INT_TYPE, 1);
+					+ user.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 		}
 		catch (Exception e)
@@ -2640,11 +2369,11 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 
 			// Step 6
 			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ address.getTableProperties().getName(), INT_TYPE, 1);
+					+ address.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(2, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ user.getTableProperties().getName(), INT_TYPE, 1);
+					+ user.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 		}
 		catch (Exception e)
@@ -2733,11 +2462,11 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 
 			// Step 6
 			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ address.getTableProperties().getName(), INT_TYPE, 1);
+					+ address.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ user.getTableProperties().getName(), INT_TYPE, 1);
+					+ user.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 
 			addressDataValue1.clear();
@@ -2750,11 +2479,11 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 
 			// Step 9
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ address.getTableProperties().getName(), INT_TYPE, 1);
+					+ address.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ user.getTableProperties().getName(), INT_TYPE, 1);
+					+ user.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 
 		}
@@ -2849,12 +2578,12 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 
 			// Step 6
 			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ address.getTableProperties().getName(), INT_TYPE, 1);
+					+ address.getTableProperties().getName(), INT_TYPE, 1,null);
 
 			assertEquals(2, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ user.getTableProperties().getName(), INT_TYPE, 1);
+					+ user.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 
 			addressDataValue1.clear();
@@ -2870,19 +2599,19 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 
 			// Step 9
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ address.getTableProperties().getName(), INT_TYPE, 1);
+					+ address.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 
 			String value = (String) executeQuery("select * from "
-					+ address.getTableProperties().getName(), STRING_TYPE, 3);
+					+ address.getTableProperties().getName(), STRING_TYPE, 3,null);
 			assertEquals("Swami Vivekand Road", value);
 
 			value = (String) executeQuery(
-					"select * from " + address.getTableProperties().getName(), STRING_TYPE, 4);
+					"select * from " + address.getTableProperties().getName(), STRING_TYPE, 4,null);
 			assertEquals("Pune 37", value);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ user.getTableProperties().getName(), INT_TYPE, 1);
+					+ user.getTableProperties().getName(), INT_TYPE, 1,null);
 
 			assertEquals(1, rowCount);
 
@@ -2895,114 +2624,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 
 	}
 
-	/**
-	 *  PURPOSE: This method test for deleting data for a containtment relationship between two entities
-	 *  having one to many association
-	 *  EXPECTED BEHAVIOUR: Data should be removed from the data tables of the source and target entity
-	 *  TEST CASE FLOW: 1. create User
-	 *                  2. Create Address
-	 *                  3. Add Association with      User(1) ------->(*) Address containment association
-	 *                  4. persist entities.
-	 *                  5. Insert Data with multiple addresses for the user
-	 *                  6. Data table for Address should have the appropriate entries for the inserted data for user.
-	 *                  7. Call deleteData method on entity manager for the inserted data.
-	 *                  8. Check if the data is removed from both the tables
-	 *                  */
-	public void testDeleteDataForContainmentOneToMany()
-	{
 
-		EntityManagerInterface entityManagerInterface = EntityManager.getInstance();
-		DomainObjectFactory factory = DomainObjectFactory.getInstance();
-		EntityGroupInterface entityGroup = factory.createEntityGroup();
-		entityGroup.setName("test_" + new Double(Math.random()).toString());
-		try
-		{
-
-			// Step 1
-			EntityInterface user = createAndPopulateEntity();
-			AttributeInterface userNameAttribute = factory.createStringAttribute();
-			userNameAttribute.setName("user name");
-			user.setName("user");
-			user.addAbstractAttribute(userNameAttribute);
-
-			// Step 2
-			EntityInterface address = createAndPopulateEntity();
-			address.setName("address");
-
-			AttributeInterface streetAttribute = factory.createStringAttribute();
-			streetAttribute.setName("street name");
-			address.addAbstractAttribute(streetAttribute);
-
-			AttributeInterface cityAttribute = factory.createStringAttribute();
-			cityAttribute.setName("city name");
-			address.addAbstractAttribute(cityAttribute);
-
-			// Step 3
-			AssociationInterface association = factory.createAssociation();
-			association.setTargetEntity(address);
-			association.setAssociationDirection(AssociationDirection.SRC_DESTINATION);
-			association.setName("UserAddress");
-			association.setSourceRole(getRole(AssociationType.CONTAINTMENT, "User",
-					Cardinality.ZERO, Cardinality.ONE));
-			association.setTargetRole(getRole(AssociationType.ASSOCIATION, "address",
-					Cardinality.ZERO, Cardinality.MANY));
-
-			user.addAbstractAttribute(association);
-			DynamicExtensionsUtility.getConstraintPropertiesForAssociation(association);
-			entityGroup.addEntity(user);
-			user.setEntityGroup(entityGroup);
-			entityGroup.addEntity(address);
-			address.setEntityGroup(entityGroup);
-			// Step 4
-			EntityInterface savedEntity = entityManagerInterface.persistEntity(user);
-
-			Map dataValue = new HashMap();
-			Map addressDataValue1 = new HashMap();
-			addressDataValue1.put(streetAttribute, "Laxmi Road");
-			addressDataValue1.put(cityAttribute, "Pune");
-
-			Map addressDataValue2 = new HashMap();
-			addressDataValue2.put(streetAttribute, "Saraswati Road");
-			addressDataValue2.put(cityAttribute, "Pune");
-
-			List<Map> addressDataValueMapList = new ArrayList<Map>();
-			addressDataValueMapList.add(addressDataValue1);
-			addressDataValueMapList.add(addressDataValue2);
-			dataValue.put(userNameAttribute, "rahul");
-			dataValue.put(association, addressDataValueMapList);
-
-			// Step 5
-			Long recordId = entityManagerInterface.insertData(savedEntity, dataValue, null);
-
-			// Step 6
-			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ address.getTableProperties().getName(), INT_TYPE, 1);
-			assertEquals(2, rowCount);
-
-			rowCount = (Integer) executeQuery("select count(*) from "
-					+ user.getTableProperties().getName(), INT_TYPE, 1);
-			assertEquals(1, rowCount);
-
-			// Step 7
-			entityManagerInterface.deleteRecord(savedEntity, recordId);
-
-			// Step 8
-			rowCount = (Integer) executeQuery("select count(*) from "
-					+ user.getTableProperties().getName(), INT_TYPE, 1);
-			assertEquals(1, rowCount);
-
-			rowCount = (Integer) executeQuery("select count(*) from "
-					+ address.getTableProperties().getName(), INT_TYPE, 1);
-			assertEquals(2, rowCount);
-
-		}
-		catch (Exception e)
-		{
-			Logger.out.debug(DynamicExtensionsUtility.getStackTrace(e));
-			fail();
-		}
-
-	}
 
 	//	/**
 	//	 *  PURPOSE: This method tests for creation of all the hierarchy for containment control
@@ -3305,7 +2927,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 
 			//step 8
 			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ address.getTableProperties().getName(), INT_TYPE, 1);
+					+ address.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 
 		}
@@ -3436,6 +3058,6 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 		return association;
 	}
 
-	
+
 
 }

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,7 +31,7 @@ import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
-import edu.wustl.dao.util.StatementData;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 
 public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstantsInterface
 {
@@ -70,32 +71,46 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 		}
 	}*/
 
-	/**
-	 * @param inputs
-	 * @return
-	 */
-	public static String getListToString(List inputs)
-	{
-		String query = inputs.toString();
-		query = query.replace("[", OPENING_BRACKET);
-		query = query.replace("]", CLOSING_BRACKET);
 
-		return query;
+	/**
+	 * @param inputs list which should be aappended to query
+	 * @param query Query to which append it in its IN clause
+	 * @return LinkedList of column value bean for executing this query using prepared statement
+	 */
+	public static LinkedList<ColumnValueBean> appendListToQueryInCluase(List inputs,StringBuffer query)
+	{
+		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+		query.append(OPENING_BRACKET);
+        int index = 0;
+		query.append(QUESTION_MARK);
+        queryDataList.add(new ColumnValueBean(IDENTIFIER, inputs.get(index++)));
+        for(;index<inputs.size();index++)
+        {
+        	query.append(COMMA);
+        	queryDataList.add(new ColumnValueBean(IDENTIFIER, inputs.get(index++)));
+        	query.append(QUESTION_MARK);
+        }
+        query.append(CLOSING_BRACKET);
+
+		return queryDataList;
 	}
 
+
 	/**
-	 * @param query
-	 * @return
-	 * @throws DynamicExtensionsSystemException
+	 * This will return the no of records returned by the Query.
+	 * @param query query to be executed
+	 * @param queryDataList coloumnValue Bean List.
+	 * @return number of records.
+	 * @throws DynamicExtensionsSystemException exception.
 	 */
-	public static int getNoOfRecord(String query) throws DynamicExtensionsSystemException
+	public static int getNoOfRecord(String query,LinkedList<ColumnValueBean> queryDataList) throws DynamicExtensionsSystemException
 	{
 		ResultSet resultSet = null;
 		JDBCDAO jdbcDao = null;
 		try
 		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			resultSet = jdbcDao.getQueryResultSet(query);
+			resultSet = jdbcDao.getResultSet(query,queryDataList,null);
 			resultSet.next();
 			return resultSet.getInt(1);
 		}
@@ -124,46 +139,12 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 		}
 	}
 
-	/**
-	 * @param jdbcDAO
-	 * @param query query to be executed
-	 * @throws DynamicExtensionsSystemException
-	 */
-	public StatementData executeDML(JDBCDAO jdbcDao, String query)
-			throws DynamicExtensionsSystemException
-	{
-		Logger.out.info(query);
-		try
-		{
-			return jdbcDao.executeUpdate(query);
-		}
-		catch (DAOException e)
-		{
-			throw new DynamicExtensionsSystemException(e.getMessage(), e);
-		}
-	}
-
-	/**
-	 * @param jdbcDAO
-	 * @param queries
-	 * @throws DynamicExtensionsSystemException
-	 */
-	public void executeDMLQueryList(JDBCDAO jdbcDao, List<String> queries)
-			throws DynamicExtensionsSystemException
-	{
-
-		for (String query : queries)
-		{
-			executeDML(jdbcDao, query);
-		}
-
-	}
 
 	/**
 	 * Method generates the next identifier for the table that stores the value of the passes entity.
 	 * @param tableName
-	 * @return
-	 * @throws DynamicExtensionsSystemException
+	 * @return next identifier
+	 * @throws DynamicExtensionsSystemException exception.
 	 */
 	synchronized public static Long getNextIdentifier(String tableName)
 			throws DynamicExtensionsSystemException
@@ -185,7 +166,7 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 				try
 				{
 					jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-					resultSet = jdbcDao.getQueryResultSet(query.toString());
+					resultSet = jdbcDao.getResultSet(query.toString(),null,null);
 					resultSet.next();
 					identifier = resultSet.getLong(1);
 					identifier = identifier + 1;
@@ -224,11 +205,12 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 
 	/**
 	 * This method is used in case result of the query is multiple records.
-	 * @param query
-	 * @return
-	 * @throws DynamicExtensionsSystemException
+	 * @param query query to be executed
+	 * @param queryDataList columnValue Bean List
+	 * @return list of records.
+	 * @throws DynamicExtensionsSystemException exception.
 	 */
-	public List<Long> getResultInList(String query) throws DynamicExtensionsSystemException
+	public List<Long> getResultInList(String query,LinkedList<ColumnValueBean> queryDataList) throws DynamicExtensionsSystemException
 	{
 		List<Long> results = new ArrayList<Long>();
 
@@ -237,7 +219,7 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 		try
 		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			resultSet = jdbcDao.getQueryResultSet(query);
+			resultSet = jdbcDao.getResultSet(query,queryDataList,null);
 			while (resultSet.next())
 			{
 				Long identifier = resultSet.getLong(1);
@@ -583,44 +565,10 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 			throws DynamicExtensionsSystemException
 	{
 		String query = "select count(*) from " + tableName;
-		return getNoOfRecord(query);
+		return getNoOfRecord(query,null);
 	}
 
-	/**
-	 * @param queryList queries to be executed
-	 * @throws DynamicExtensionsSystemException
-	 */
-	public static void executeDML(List<String> queryList) throws DynamicExtensionsSystemException
-	{
-		JDBCDAO jdbcDao = null;
 
-		System.out.println(queryList);
-		try
-		{
-			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			for (String query : queryList)
-			{
-				jdbcDao.executeUpdate(query);
-			}
-		}
-
-		catch (DAOException e)
-		{
-			throw new DynamicExtensionsSystemException("Error while retrieving the data", e);
-		}
-		finally
-		{
-			try
-			{
-				jdbcDao.commit();
-				DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
-			}
-			catch (DAOException e)
-			{
-				throw new DynamicExtensionsSystemException("Error while retrieving the data", e);
-			}
-		}
-	}
 
 	/**
 	 * @param entity

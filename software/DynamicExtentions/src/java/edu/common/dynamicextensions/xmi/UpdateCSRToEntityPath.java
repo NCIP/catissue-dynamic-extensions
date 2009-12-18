@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
@@ -18,6 +19,7 @@ import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 
 /**
  * @author falguni_sachde
@@ -109,9 +111,11 @@ public class UpdateCSRToEntityPath
 		JDBCDAO jdbcdao = null;
 		jdbcdao = daoFactory.getJDBCDAO();
 		jdbcdao.openSession(null);
-		String sql = "select ASSOCIATION_ID from  intra_model_association where DE_ASSOCIATION_ID='"
-				+ deAssnId + "'";
-		ResultSet resultSet = jdbcdao.getQueryResultSet(sql);
+		String sql = "select ASSOCIATION_ID from  intra_model_association where DE_ASSOCIATION_ID=?";
+
+		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+		queryDataList.add(new ColumnValueBean("DE_ASSOCIATION_ID", deAssnId));
+		ResultSet resultSet = jdbcdao.getResultSet(sql,queryDataList,null);
 		long intramodelId = 0;
 		if (resultSet.next())
 		{
@@ -238,9 +242,11 @@ public class UpdateCSRToEntityPath
 	private static String getExistingInterMediatePath(Long recEntryEntityId, Long entityId,
 			JDBCDAO jdbcdao) throws DAOException, SQLException
 	{
-		String selSQL = "select intermediate_path  from path where first_entity_id ='"
-				+ recEntryEntityId + "' and last_entity_id = '" + entityId + "'";
-		ResultSet resultSet = jdbcdao.getQueryResultSet(selSQL);
+		String selSQL = "select intermediate_path  from path where first_entity_id =? and last_entity_id = ?";
+		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+		queryDataList.add(new ColumnValueBean("first_entity_id", recEntryEntityId));
+		queryDataList.add(new ColumnValueBean("last_entity_id", entityId));
+		ResultSet resultSet = jdbcdao.getResultSet(selSQL,queryDataList,null);
 		String interPathid = null;
 		if (resultSet.next())
 		{
@@ -266,9 +272,12 @@ public class UpdateCSRToEntityPath
 			String sql;
 			long nextIdPath = getNextId("path", "PATH_ID", jdbcdao);
 			sql = "insert into PATH (PATH_ID, FIRST_ENTITY_ID,"
-			+ "INTERMEDIATE_PATH, LAST_ENTITY_ID) values (" + nextIdPath + "," + firstEntityId + ",'"
-					+ newinterPathid + "'," + secondEntityId + ")";
-			jdbcdao.executeUpdate(sql);
+			+ "INTERMEDIATE_PATH, LAST_ENTITY_ID) values (?,?,?,?)";
+
+			LinkedList<ColumnValueBean> pathColValuebeanList = AnnotationUtil.getcolumnvalueBeanListForPathQuery(nextIdPath,firstEntityId,newinterPathid,secondEntityId);
+			LinkedList<LinkedList<ColumnValueBean>> queryDataList = new LinkedList<LinkedList<ColumnValueBean>>();
+			queryDataList.add(pathColValuebeanList);
+			jdbcdao.executeUpdate(sql,queryDataList);
 
 		}
 	}
@@ -285,7 +294,7 @@ public class UpdateCSRToEntityPath
 			throws SQLException, DAOException
 	{
 		String sql = "select max(" + coloumn + ") from " + tablename;
-		ResultSet resultSet = jdbcdao.getQueryResultSet(sql);
+		ResultSet resultSet = jdbcdao.getResultSet(sql,null,null);
 
 		long nextId = 0;
 		if (resultSet.next())

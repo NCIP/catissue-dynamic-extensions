@@ -7,16 +7,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
-
-import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
-import edu.common.dynamicextensions.processor.DeleteRecordProcessor;
-import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 
 /**
- * 
- * @author Rahul Ner 
+ *
+ * @author Rahul Ner
  */
 public class DeleteRecordAction extends BaseDynamicExtensionsAction
 {
@@ -28,9 +22,9 @@ public class DeleteRecordAction extends BaseDynamicExtensionsAction
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 	{
-		String target = null;
-		try
-		{
+
+		/*try
+		{String target = null;
 			String containerIdentifier = request.getParameter("containerIdentifier");
 			Long recordIdentifier = Long.valueOf(request.getParameter("recordIdentifier"));
 
@@ -51,21 +45,10 @@ public class DeleteRecordAction extends BaseDynamicExtensionsAction
 			{
 				return mapping.getInputForward();
 			}
-		}
-		return mapping.findForward(target);
+		}*/
+		return mapping.findForward("");
 	}
 
-	/**
-	 * 
-	 * @param formDefinitionForm actionform
-	 * @return ActionMessages Messages
-	 */
-	private ActionMessages getSuccessMessage(String entityName, String recordId)
-	{
-		ActionMessages actionMessages = new ActionMessages();
-		actionMessages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(
-				"app.deleteRecord.success", recordId, entityName));
-		return actionMessages;
-	}
+	
 
 }

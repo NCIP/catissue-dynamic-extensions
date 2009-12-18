@@ -291,7 +291,7 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 			try
 			{
 				jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-				resultSet = jdbcDao.getQueryResultSet(queryBuffer.toString());
+				resultSet = jdbcDao.getResultSet(queryBuffer.toString(),null,null);
 				resultSet.next();
 				Long count = resultSet.getLong(1);
 				if (count > 0)

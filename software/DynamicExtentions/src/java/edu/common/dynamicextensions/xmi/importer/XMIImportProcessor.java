@@ -396,7 +396,7 @@ public class XMIImportProcessor
 		{
 			List<String> multiSelMigrationQueries = EntityManagerUtil
 					.updateSqlScriptToMigrateOldDataForMultiselectAttribute(multiselectMigartionScripts);
-			EntityManagerUtil.executeDML(multiSelMigrationQueries);
+			XMIImporterUtil.executeDML(multiSelMigrationQueries);
 		}
 		return dynamicQueryList;
 	}

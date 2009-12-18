@@ -1,7 +1,6 @@
 
 package edu.common.dynamicextensions.entitymanager;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -11,6 +10,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -68,6 +68,7 @@ import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 
 /**
  * This class provides the methods that builds the queries that are required for
@@ -214,7 +215,7 @@ public class DynamicExtensionBaseQueryBuilder
 				FROM_KEYWORD).append(entity.getTableProperties().getName());
 		if (EntityManagerUtil.isPrimaryKeyChanged(entity, dbaseCopy))
 		{
-			int noOfRecords = EntityManagerUtil.getNoOfRecord(query.toString());
+			int noOfRecords = EntityManagerUtil.getNoOfRecord(query.toString(),null);
 			if (noOfRecords != 0)
 			{
 				throw new DynamicExtensionsApplicationException(
@@ -692,17 +693,17 @@ public class DynamicExtensionBaseQueryBuilder
 				query.append(SELECT_KEYWORD + WHITESPACE + targetKey);
 				query.append(WHITESPACE + FROM_KEYWORD + WHITESPACE + tableName + WHITESPACE);
 				query
-						.append(WHITESPACE + WHERE_KEYWORD + WHITESPACE + sourceKey + EQUAL
-								+ recordId);
-
+						.append(WHITESPACE + WHERE_KEYWORD + WHITESPACE + sourceKey + EQUAL + WHITESPACE + QUESTION_MARK);
+				LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+				queryDataList.add(new ColumnValueBean(sourceKey, recordId));
 				if (dao != null && dao.length > 0)
 				{
 					assocValues.put(association, getAssociationRecordValues(query.toString(),
-							dao[0]));
+							dao[0],queryDataList));
 				}
 				else
 				{
-					assocValues.put(association, getAssociationRecordValues(query.toString()));
+					assocValues.put(association, getAssociationRecordValues(query.toString(),queryDataList));
 				}
 			}
 			else if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.ONE)
@@ -730,17 +731,18 @@ public class DynamicExtensionBaseQueryBuilder
 				query.append(WHITESPACE + FROM_KEYWORD + WHITESPACE + tableName + WHITESPACE);
 				query
 						.append(WHITESPACE + WHERE_KEYWORD + WHITESPACE + targetKey + EQUAL
-								+ recordId);
-
+								+ WHITESPACE + QUESTION_MARK);
+				LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+				queryDataList.add(new ColumnValueBean(targetKey, recordId));
 				List<Long> recordIds = null;
 
 				if (dao != null && dao.length > 0)
 				{
-					recordIds = getAssociationRecordValues(query.toString(), dao[0]);
+					recordIds = getAssociationRecordValues(query.toString(), dao[0],queryDataList);
 				}
 				else
 				{
-					recordIds = getAssociationRecordValues(query.toString());
+					recordIds = getAssociationRecordValues(query.toString(),queryDataList);
 				}
 
 				if (association.getSourceRole().getAssociationsType().equals(
@@ -769,8 +771,10 @@ public class DynamicExtensionBaseQueryBuilder
 		mnyToOneAssQry.append(WHITESPACE + FROM_KEYWORD + WHITESPACE
 				+ entity.getTableProperties().getName() + WHITESPACE);
 		mnyToOneAssQry.append(WHITESPACE + WHERE_KEYWORD + WHITESPACE + IDENTIFIER + EQUAL
-				+ recordId);
+				+ QUESTION_MARK);
 
+		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+		queryDataList.add(new ColumnValueBean(IDENTIFIER, recordId));
 		int noOfMany2OneAsso = manyToOneAssocns.size();
 		if (noOfMany2OneAsso != 0)
 		{
@@ -787,7 +791,7 @@ public class DynamicExtensionBaseQueryBuilder
 					jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
 				}
 
-				resultSet = jdbcDao.getQueryResultSet(mnyToOneAssQry.toString());
+				resultSet = jdbcDao.getResultSet(mnyToOneAssQry.toString(),queryDataList,null);
 
 				resultSet.next();
 				for (int i = 0; i < noOfMany2OneAsso; i++)
@@ -831,203 +835,6 @@ public class DynamicExtensionBaseQueryBuilder
 		return assocValues;
 	}
 
-
-
-	/**
-	 * This method creates the queries to remove records for the containment association.
-	 * @param association
-	 * @param recordIds
-	 * @param queries
-	 * @param isLogicalDeletion
-	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
-	 */
-	public void getContenmentAssociationRemoveDataQueryList(AssociationInterface association,
-			List<Long> recordIds, List<String> queries, boolean isLogicalDeletion)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
-	{
-		if (recordIds == null || recordIds.isEmpty())
-		{
-			return;
-		}
-
-		List<Long> chldrnRecIds = getRecordIdListForContainment(association, recordIds);
-		if (chldrnRecIds == null || chldrnRecIds.isEmpty())
-		{
-			return;
-		}
-
-		EntityInterface tgtEntity = association.getTargetEntity();
-
-		// Check if these records are referred to by some other incoming association, if so
-		// then this should not be disabled.
-		Collection<AssociationInterface> associations = tgtEntity.getAssociationCollection();
-		for (AssociationInterface tgtEntAsso : associations)
-		{
-			if (tgtEntAsso.getSourceRole().getAssociationsType().equals(
-					AssociationType.CONTAINTMENT)
-					|| tgtEntAsso.getIsCollection())
-			{
-				getContenmentAssociationRemoveDataQueryList(tgtEntAsso, chldrnRecIds, queries,
-						isLogicalDeletion);
-			}
-		}
-
-		String tableName = DynamicExtensionsUtility.getTableName(association);
-
-		StringBuffer query = new StringBuffer();
-		if (isLogicalDeletion)
-		{
-			query.append(UPDATE_KEYWORD);
-			query.append(WHITESPACE + tableName + WHITESPACE);
-			query.append(SET_KEYWORD + Constants.ACTIVITY_STATUS_COLUMN + EQUAL + "'"
-					+ Status.ACTIVITY_STATUS_DISABLED.toString() + "'");
-			query.append(WHERE_KEYWORD + WHITESPACE + IDENTIFIER + WHITESPACE + IN_KEYWORD);
-			query.append(WHITESPACE + getListToString(chldrnRecIds) + WHITESPACE);
-
-		}
-		else
-		{
-			query.append(DELETE_KEYWORD);
-			query.append(WHITESPACE + tableName + WHITESPACE);
-			query.append(WHERE_KEYWORD + WHITESPACE + IDENTIFIER + WHITESPACE + IN_KEYWORD);
-			query.append(WHITESPACE + getListToString(chldrnRecIds) + WHITESPACE);
-		}
-
-		queries.add(query.toString());
-	}
-
-	/**
-	 * @param entity
-	 * @param recordId
-	 * @param incomingAsso
-	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
-	 */
-	public void validateForDeleteRecord(EntityInterface entity, Long recordId,
-			Collection<AssociationInterface> incomingAsso) throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException
-	{
-		List<Long> recordIds = new ArrayList<Long>();
-		recordIds.add(recordId);
-		validateForDeleteRecord(entity, recordIds, incomingAsso);
-	}
-
-	/**
-	 * This method checks if the record id of given entity is
-	 * referred to by some other entity in some association.
-	 * @param entity
-	 * @param recordIds
-	 * @param incomingAsso
-	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
-	 */
-	public void validateForDeleteRecord(EntityInterface entity, List<Long> recordIds,
-			Collection<AssociationInterface> incomingAsso) throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException
-	{
-		if (incomingAsso == null)
-		{
-			incomingAsso = EntityManager.getInstance().getIncomingAssociations(entity);
-		}
-
-		String tableName = "";
-		String sourceKey = "";
-		String targetKey = "";
-
-		for (AssociationInterface association : incomingAsso)
-		{
-			tableName = DynamicExtensionsUtility.getTableName(association);
-
-			StringBuffer query = new StringBuffer();
-			query.append(SELECT_KEYWORD + COUNT_KEYWORD + "(*)");
-			query.append(FROM_KEYWORD + tableName);
-
-			RoleInterface sourceRole = association.getSourceRole();
-			RoleInterface targetRole = association.getTargetRole();
-
-			Cardinality srcMaxCard = sourceRole.getMaximumCardinality();
-			Cardinality tgtMaxCard = targetRole.getMaximumCardinality();
-
-			// Commented query part checking for Disabled records. Since delete record functionality is removed,
-			// we no longer need to check records 'Disabled'.
-			// Moreover the removed query part was not executed on Oracle because of syntax error.
-			if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.MANY)
-			{
-				// For many to many check into middle table.
-				String srcTable = association.getEntity().getTableProperties().getName();
-				sourceKey = association.getConstraintProperties()
-						.getSrcEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties()
-						.getName();
-				targetKey = association.getConstraintProperties()
-						.getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties()
-						.getName();
-				query.append(" AS m_table join " + srcTable);
-				query.append(" AS s_table on m_table." + sourceKey + "= s_table." + IDENTIFIER);
-				query.append(WHERE_KEYWORD + targetKey + WHITESPACE + IN_KEYWORD + WHITESPACE
-						+ getListToString(recordIds));
-				// query.append(" and " + DynamicExtensionBaseQueryBuilder.getRemoveDisbledRecordsQuery("s_table"));
-			}
-			else if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.ONE)
-			{
-				sourceKey = association.getConstraintProperties()
-						.getSrcEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties()
-						.getName();
-
-				query.append(WHERE_KEYWORD + sourceKey + WHITESPACE + IN_KEYWORD + WHITESPACE
-						+ getListToString(recordIds));
-				// query.append(" and " + DynamicExtensionBaseQueryBuilder.getRemoveDisbledRecordsQuery(""));
-			}
-			else
-			{
-
-				targetKey = association.getConstraintProperties()
-						.getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties()
-						.getName();
-				// For one to one & one to many, check target entity table.
-				query.append(WHERE_KEYWORD + IDENTIFIER + WHITESPACE + IN_KEYWORD + WHITESPACE
-						+ getListToString(recordIds));
-				// query.append(" and " + targetKey);
-				// query.append(" and " + DynamicExtensionBaseQueryBuilder.getRemoveDisbledRecordsQuery(""));
-			}
-
-			if (entityManagerUtil.getNoOfRecord(query.toString()) != 0)
-			{
-				List<String> placeHolders = new ArrayList<String>();
-				placeHolders.add(association.getEntity().getName());
-				throw new DynamicExtensionsApplicationException(
-						"This record is refered by some record of ["
-								+ association.getEntity().getName() + "] ", null, DYEXTN_A_014,
-						placeHolders);
-			}
-		}
-	}
-
-	/**
-	 * This method returns containment record id list for a given parent record id list.
-	 * @param association
-	 * @param recordIds
-	 * @return
-	 * @throws DynamicExtensionsSystemException
-	 */
-	public List<Long> getRecordIdListForContainment(AssociationInterface association,
-			List<Long> recordIds) throws DynamicExtensionsSystemException
-	{
-		String tableName = DynamicExtensionsUtility.getTableName(association);
-
-		String targetKey = association.getConstraintProperties()
-				.getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties().getName();
-
-		StringBuffer cntnmntRecIdQry = new StringBuffer();
-		cntnmntRecIdQry.append(SELECT_KEYWORD + WHITESPACE + IDENTIFIER);
-		cntnmntRecIdQry.append(WHITESPACE + FROM_KEYWORD + WHITESPACE + tableName + WHITESPACE);
-		cntnmntRecIdQry.append(WHERE_KEYWORD + WHITESPACE + targetKey + WHITESPACE + IN_KEYWORD);
-		cntnmntRecIdQry.append(WHITESPACE + getListToString(recordIds) + WHITESPACE);
-
-		List<Long> results = entityManagerUtil.getResultInList(cntnmntRecIdQry.toString());
-
-		return results;
-	}
 
 	/**
 	 * This method returns the queries to remove the the association.
@@ -2394,6 +2201,8 @@ public class DynamicExtensionBaseQueryBuilder
 		boolean isDataPresent = false;
 
 		StringBuffer query = new StringBuffer();
+		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+
 		if (!isAttributeColumnToBeExcluded(savedAttr))
 		{
 			query.append(SELECT_KEYWORD).append(WHITESPACE).append("COUNT").append(OPENING_BRACKET)
@@ -2404,13 +2213,15 @@ public class DynamicExtensionBaseQueryBuilder
 							"IS").append(WHITESPACE).append(NOT_KEYWORD).append(WHITESPACE).append(
 							NULL_KEYWORD).append(WHITESPACE);
 
+
 			if (!(savedAttr.getAttributeTypeInformation() instanceof FileAttributeTypeInformation)
 					&& !(savedAttr.getAttributeTypeInformation() instanceof ObjectAttributeTypeInformation))
 			{
 				query.append(AND_KEYWORD).append(WHITESPACE).append(
 						savedAttr.getColumnProperties().getName()).append(WHITESPACE).append(
 						NOT_KEYWORD).append(WHITESPACE).append(LIKE_KEYWORD).append(WHITESPACE)
-						.append("''");
+						.append(QUESTION_MARK);
+				queryDataList.add(new ColumnValueBean(savedAttr.getColumnProperties().getName(), ""));
 			}
 
 			ResultSet resultSet = null;
@@ -2418,7 +2229,7 @@ public class DynamicExtensionBaseQueryBuilder
 			try
 			{
 				jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-				resultSet = jdbcDao.getQueryResultSet(query.toString());
+				resultSet = jdbcDao.getResultSet(query.toString(),queryDataList,null);
 				resultSet.next();
 				Long count = resultSet.getLong(1);
 				if (count > 0)
@@ -2483,6 +2294,8 @@ public class DynamicExtensionBaseQueryBuilder
 		boolean isDataPresent = false;
 
 		StringBuffer query = new StringBuffer();
+		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+
 		if (savedAttr != null)
 		{
 			query.append(SELECT_KEYWORD).append(WHITESPACE).append("COUNT").append(OPENING_BRACKET)
@@ -2494,14 +2307,15 @@ public class DynamicExtensionBaseQueryBuilder
 							NULL_KEYWORD).append(WHITESPACE).append(AND_KEYWORD).append(WHITESPACE)
 					.append(savedAttr.getColumnProperties().getName()).append(WHITESPACE).append(
 							NOT_KEYWORD).append(WHITESPACE).append(LIKE_KEYWORD).append(WHITESPACE)
-					.append("''");
+					.append(QUESTION_MARK);
 
+				queryDataList.add(new ColumnValueBean(savedAttr.getColumnProperties().getName(), ""));
 			ResultSet resultSet = null;
 			JDBCDAO jdbcDao = null;
 			try
 			{
 				jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-				resultSet = jdbcDao.getQueryResultSet(query.toString());
+				resultSet = jdbcDao.getResultSet(query.toString(),queryDataList,null);
 				resultSet.next();
 				Long count = resultSet.getLong(1);
 				if (count > 0)
@@ -2555,7 +2369,7 @@ public class DynamicExtensionBaseQueryBuilder
 		try
 		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			resultSet = jdbcDao.getQueryResultSet(query.toString());
+			resultSet = jdbcDao.getResultSet(query.toString(),null,null);
 			resultSet.next();
 			Long count = resultSet.getLong(1);
 			if (count > 0)
@@ -2801,6 +2615,7 @@ public class DynamicExtensionBaseQueryBuilder
 		return rlbkQryStack;
 	}
 
+
 	/**
 	 * This method executes the query that selects record identifiers of the target entity
 	 * that are associated to the source entity for a given association.
@@ -2808,7 +2623,7 @@ public class DynamicExtensionBaseQueryBuilder
 	 * @return List of record identifiers of the target entity .
 	 * @throws DynamicExtensionsSystemException
 	 */
-	protected List<Long> getAssociationRecordValues(String query)
+	protected List<Long> getAssociationRecordValues(String query,LinkedList<ColumnValueBean> queryDataList)
 			throws DynamicExtensionsSystemException
 	{
 		List<Long> assoRecords = new ArrayList<Long>();
@@ -2817,7 +2632,7 @@ public class DynamicExtensionBaseQueryBuilder
 		try
 		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			resultSet = jdbcDao.getQueryResultSet(query);
+			resultSet = jdbcDao.getResultSet(query,queryDataList,null);
 
 			while (resultSet.next())
 			{
@@ -2856,7 +2671,7 @@ public class DynamicExtensionBaseQueryBuilder
 	 * @return List of record identifiers of the target entity .
 	 * @throws DynamicExtensionsSystemException
 	 */
-	protected List<Long> getAssociationRecordValues(String query, JDBCDAO jdbcDAO)
+	protected List<Long> getAssociationRecordValues(String query, JDBCDAO jdbcDAO,LinkedList<ColumnValueBean> queryDataList)
 			throws DynamicExtensionsSystemException
 	{
 		List<Long> assoRecords = new ArrayList<Long>();
@@ -2864,7 +2679,7 @@ public class DynamicExtensionBaseQueryBuilder
 		JDBCDAO jdbcDao = jdbcDAO;
 		try
 		{
-			resultSet = jdbcDao.getQueryResultSet(query);
+			resultSet = jdbcDao.getResultSet(query,queryDataList,null);
 
 			while (resultSet.next())
 			{
@@ -2925,12 +2740,13 @@ public class DynamicExtensionBaseQueryBuilder
 			String query = SELECT_KEYWORD + WHITESPACE + COUNT_KEYWORD + OPENING_BRACKET + "*"
 					+ CLOSING_BRACKET + WHITESPACE + FROM_KEYWORD + WHITESPACE + tableName
 					+ WHITESPACE + WHERE_KEYWORD + WHITESPACE + columnName + WHITESPACE + EQUAL
-					+ WHITESPACE + srcRecId;
-
+					+ WHITESPACE + QUESTION_MARK;
+			LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+			queryDataList.add(new ColumnValueBean(columnName, srcRecId));
 			ResultSet resultSet = null;
 			try
 			{
-				resultSet = jdbcDao.getQueryResultSet(query);
+				resultSet = jdbcDao.getResultSet(query,queryDataList,null);
 				resultSet.next();
 
 				// If another source record is already using target record, throw exception.
@@ -2988,14 +2804,15 @@ public class DynamicExtensionBaseQueryBuilder
 			String query = SELECT_KEYWORD + WHITESPACE + COUNT_KEYWORD + OPENING_BRACKET + "*"
 					+ CLOSING_BRACKET + WHITESPACE + FROM_KEYWORD + WHITESPACE + tableName
 					+ WHITESPACE + WHERE_KEYWORD + WHITESPACE + columnName + WHITESPACE + EQUAL
-					+ WHITESPACE + srcRecId;
-
+					+ WHITESPACE + QUESTION_MARK;
+			LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+			queryDataList.add(new ColumnValueBean(columnName, srcRecId));
 			ResultSet resultSet = null;
 			JDBCDAO jdbcDao = null;
 			try
 			{
 				jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-				resultSet = jdbcDao.getQueryResultSet(query);
+				resultSet = jdbcDao.getResultSet(query,queryDataList,null);
 				resultSet.next();
 				// If another source record is already using target record, throw exception.
 				if (resultSet.getInt(1) != 0)
@@ -3028,18 +2845,7 @@ public class DynamicExtensionBaseQueryBuilder
 		}
 	}
 
-	/**
-	 * @param inputs
-	 * @return
-	 */
-	private String getListToString(List<Long> inputs)
-	{
-		String query = inputs.toString();
-		query = query.replace("[", OPENING_BRACKET);
-		query = query.replace("]", CLOSING_BRACKET);
 
-		return query;
-	}
 
 	/**
 	 *
@@ -3196,14 +3002,17 @@ public class DynamicExtensionBaseQueryBuilder
 				OPENING_BRACKET).append(ASTERIX).append(CLOSING_BRACKET).append(WHITESPACE).append(
 				FROM_KEYWORD).append(WHITESPACE).append(tableName).append(WHITESPACE).append(
 				WHERE_KEYWORD).append(WHITESPACE).append(columnName).append(EQUAL).append(
-				frmtedValue).append(" and " + getRemoveDisbledRecordsQuery(""));
+				QUESTION_MARK).append(" and " + Constants.ACTIVITY_STATUS_COLUMN + " <> ?");
 
+		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+		queryDataList.add(new ColumnValueBean(columnName, frmtedValue));
+		queryDataList.add(new ColumnValueBean(Constants.ACTIVITY_STATUS_COLUMN, Status.ACTIVITY_STATUS_DISABLED.toString()));
 		ResultSet resultSet = null;
 		JDBCDAO jdbcDao = null;
 		try
 		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			resultSet = jdbcDao.getQueryResultSet(query.toString());
+			resultSet = jdbcDao.getResultSet(query.toString(),queryDataList,null);
 			resultSet.next();
 			Long count = resultSet.getLong(1);
 			if (count > 0)
@@ -3271,40 +3080,49 @@ public class DynamicExtensionBaseQueryBuilder
 
 		StringBuffer query = new StringBuffer();
 		query.append(UPDATE_KEYWORD).append(tableName).append(SET_KEYWORD);
+		LinkedList<ColumnValueBean> colValBeanList = new LinkedList<ColumnValueBean>();
 
 		if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.MANY)
 		{
 			query = new StringBuffer();
+			String tgtFkColName = constraint.getSrcEntityConstraintKeyProperties()
+					.getTgtForiegnKeyColumnProperties().getName();
+			String srcFkColname = constraint.getTgtEntityConstraintKeyProperties()
+					.getTgtForiegnKeyColumnProperties().getName();
 			query.append(INSERT_INTO_KEYWORD).append(tableName).append(OPENING_BRACKET).append(
-					constraint.getSrcEntityConstraintKeyProperties()
-							.getTgtForiegnKeyColumnProperties().getName()).append(COMMA).append(
-					constraint.getTgtEntityConstraintKeyProperties()
-							.getTgtForiegnKeyColumnProperties().getName()).append(CLOSING_BRACKET)
-					.append("values").append(OPENING_BRACKET).append(srcEntRecId).append(COMMA)
-					.append(tgtEntRecId).append(CLOSING_BRACKET);
+					tgtFkColName).append(COMMA).append(srcFkColname).append(CLOSING_BRACKET)
+					.append("values").append(OPENING_BRACKET).append(QUESTION_MARK).append(COMMA)
+					.append(QUESTION_MARK).append(CLOSING_BRACKET);
+			colValBeanList.add(new ColumnValueBean(tgtFkColName, srcEntRecId));
+			colValBeanList.add(new ColumnValueBean(srcFkColname, tgtEntRecId));
+
 		}
 		else if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.ONE)
 		{
-			query.append(
-					constraint.getSrcEntityConstraintKeyProperties()
-							.getTgtForiegnKeyColumnProperties().getName()).append(EQUAL).append(
-					tgtEntRecId).append(WHERE_KEYWORD).append(IDENTIFIER).append(EQUAL).append(
-					srcEntRecId);
+			String tgtFkColName = constraint.getSrcEntityConstraintKeyProperties()
+					.getTgtForiegnKeyColumnProperties().getName();
+			query.append(tgtFkColName).append(EQUAL).append(QUESTION_MARK).append(WHERE_KEYWORD)
+					.append(IDENTIFIER).append(EQUAL).append(QUESTION_MARK);
+			colValBeanList.add(new ColumnValueBean(tgtFkColName, tgtEntRecId));
+			colValBeanList.add(new ColumnValueBean(IDENTIFIER, srcEntRecId));
 		}
 		else
 		{
-			query.append(
-					constraint.getTgtEntityConstraintKeyProperties()
-							.getTgtForiegnKeyColumnProperties().getName()).append(EQUAL).append(
-					srcEntRecId).append(WHERE_KEYWORD).append(IDENTIFIER).append(EQUAL).append(
-					tgtEntRecId);
+			String srcFkColname = constraint.getTgtEntityConstraintKeyProperties()
+					.getTgtForiegnKeyColumnProperties().getName();
+			query.append(srcFkColname).append(EQUAL).append(QUESTION_MARK).append(WHERE_KEYWORD)
+					.append(IDENTIFIER).append(EQUAL).append(QUESTION_MARK);
+			colValBeanList.add(new ColumnValueBean(srcFkColname, srcEntRecId));
+			colValBeanList.add(new ColumnValueBean(IDENTIFIER, tgtEntRecId));
 		}
 
 		JDBCDAO jdbcDao = null;
 		try
 		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			jdbcDao.executeUpdate(query.toString());
+			LinkedList<LinkedList<ColumnValueBean>> columnValLinkedList = new LinkedList<LinkedList<ColumnValueBean>>();
+			columnValLinkedList.add(colValBeanList);
+			jdbcDao.executeUpdate(query.toString(),columnValLinkedList);
 			jdbcDao.commit();
 		}
 		catch (DAOException e)

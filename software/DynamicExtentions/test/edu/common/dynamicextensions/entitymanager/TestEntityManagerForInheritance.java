@@ -341,11 +341,11 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			Long recordId = entityManagerInterface.insertData(tissueSpecimen, dataValue, null);
 
 			int columnValue = (Integer) executeQuery("select * from "
-					+ specimen.getTableProperties().getName(), INT_TYPE, 2);
+					+ specimen.getTableProperties().getName(), INT_TYPE, 2,null);
 			assertEquals(1, columnValue);
 
 			columnValue = (Integer) executeQuery("select * from "
-					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 2);
+					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 2,null);
 			assertEquals(1, columnValue);
 
 			EntityInterface advanceTissueSpecimenA = createAndPopulateEntity();
@@ -385,15 +385,15 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			recordId = entityManagerInterface.insertData(advanceTissueSpecimenA, dataValue, null);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ specimen.getTableProperties().getName(), INT_TYPE, 1);
+					+ specimen.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(2, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1);
+					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(2, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ advanceTissueSpecimenA.getTableProperties().getName(), INT_TYPE, 1);
+					+ advanceTissueSpecimenA.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 
 		}
@@ -484,11 +484,11 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 
 			//step 4
 			int columnValue = (Integer) executeQuery("select * from "
-					+ specimen.getTableProperties().getName(), INT_TYPE, 2);
+					+ specimen.getTableProperties().getName(), INT_TYPE, 2,null);
 			assertEquals(1, columnValue);
 
 			columnValue = (Integer) executeQuery("select * from "
-					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 2);
+					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 2,null);
 
 			assertEquals(1, columnValue);
 		}
@@ -1136,11 +1136,11 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			entityManagerInterface.insertData(tissueSpecimen, dataValue, null);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ specimen.getTableProperties().getName(), INT_TYPE, 1);
+					+ specimen.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(0, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1);
+					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 		}
 		catch (Exception e)
@@ -1236,15 +1236,15 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			entityManagerInterface.insertData(tissueSpecimen, dataValue, null);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1);
+					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ specimen.getTableProperties().getName(), INT_TYPE, 1);
+					+ specimen.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(0, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ newSpecimen.getTableProperties().getName(), INT_TYPE, 1);
+					+ newSpecimen.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 
 		}
@@ -1368,11 +1368,11 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			Long recordId = entityManagerInterface.insertData(tissueSpecimen, dataValue, null);
 
 			int rowCount = (Integer) executeQuery("select count(*)  from "
-					+ specimen.getTableProperties().getName(), INT_TYPE, 1);
+					+ specimen.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*)  from "
-					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1);
+					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 
 			// Step 3
@@ -1385,11 +1385,11 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 
 			// step 4
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ specimen.getTableProperties().getName(), INT_TYPE, 1);
+					+ specimen.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*)  from "
-					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1);
+					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 
 			dataValue.clear();
@@ -1410,15 +1410,15 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			recordId = entityManagerInterface.insertData(advanceTissueSpecimenA, dataValue, null);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ specimen.getTableProperties().getName(), INT_TYPE, 1);
+					+ specimen.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(2, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1);
+					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(2, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ advanceTissueSpecimenA.getTableProperties().getName(), INT_TYPE, 1);
+					+ advanceTissueSpecimenA.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 
 			//Step 6
@@ -1440,15 +1440,15 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			assertEquals("454647", dataValue.get(quantityInCellCount));
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ specimen.getTableProperties().getName(), INT_TYPE, 1);
+					+ specimen.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(2, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1);
+					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(2, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ advanceTissueSpecimenA.getTableProperties().getName(), INT_TYPE, 1);
+					+ advanceTissueSpecimenA.getTableProperties().getName(), INT_TYPE, 1,null);
 			assertEquals(1, rowCount);
 		}
 		catch (Exception e)
