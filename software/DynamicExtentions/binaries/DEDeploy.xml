@@ -900,11 +900,29 @@
     				</fileset>
     			</copy>
 
-    			<property name="DEHibernateWebCfgFile" value="${base.dir}/classes/DynamicExtensionsHibernate.cfg.xml" />
+    			<property name="classesDEHibernateCfgFile" value="${base.dir}/classes/DynamicExtensionsHibernate.cfg.xml" />
+    			<property name="srcDEHibernateCfgFile" value="${base.dir}/../src/conf/DynamicExtensionsHibernate.cfg.xml" />
     			<property name="caCOREHibernateCfgFile" value="${cacore.dir}/WEB-INF/classes/orm1.cfg.xml"/>
 
+
     			<java classname="edu.wustl.metadata.util.CacoreDEMetadataAppender" fork="true" maxmemory="1024M">
-    				<arg value="${DEHibernateWebCfgFile}" />
+    				<arg value="${classesDEHibernateCfgFile}" />
+    				<arg value="${caCOREHibernateCfgFile}" />
+    			    <classpath>
+    			    	<pathelement location="${base.dir}/classes/" />
+    			    	<fileset dir="${base.dir}/../lib/server">
+    			    		<include name="*.jar" />
+    			    		<exclude name="uml-1.3.jar" />
+    			    	</fileset>
+    			    	<fileset dir="${base.dir}/../lib/extra">
+    			    		<include name="jboss-j2ee.jar" />
+    			    		<include name="jta.jar" />
+    			    	</fileset>
+    			   	</classpath>
+    			</java>
+
+    			<java classname="edu.wustl.metadata.util.CacoreDEMetadataAppender" fork="true" maxmemory="1024M">
+    				<arg value="${srcDEHibernateCfgFile}" />
     				<arg value="${caCOREHibernateCfgFile}" />
     			    <classpath>
     			    	<pathelement location="${base.dir}/classes/" />
