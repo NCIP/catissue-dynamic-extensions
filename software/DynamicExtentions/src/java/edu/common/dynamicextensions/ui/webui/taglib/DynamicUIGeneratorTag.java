@@ -2,10 +2,12 @@
 package edu.common.dynamicextensions.ui.webui.taglib;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.util.logger.Logger;
@@ -14,31 +16,40 @@ public class DynamicUIGeneratorTag extends TagSupport
 {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	/**
-	 * 
-	 */
 
-	protected ContainerInterface containerInterface = null;
+	protected transient ContainerInterface container = null;
+
+	protected Map<BaseAbstractAttributeInterface, Object> previousDataMap;
+
+	public Map<BaseAbstractAttributeInterface, Object> getPreviousDataMap()
+	{
+		return previousDataMap;
+	}
+
+	public void setPreviousDataMap(final Map<BaseAbstractAttributeInterface, Object> previousDataMap)
+	{
+		this.previousDataMap = previousDataMap;
+	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public ContainerInterface getContainerInterface()
 	{
-		return containerInterface;
+		return container;
 	}
 
 	/**
-	 * 
-	 * @param containerInterface
+	 *
+	 * @param container
 	 */
-	public void setContainerInterface(ContainerInterface containerInterface)
+	public void setContainerInterface(final ContainerInterface container)
 	{
-		this.containerInterface = containerInterface;
+		this.container = container;
 	}
 
 	/**
@@ -69,7 +80,7 @@ public class DynamicUIGeneratorTag extends TagSupport
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public int doEndTag()
 	{
@@ -79,17 +90,20 @@ public class DynamicUIGeneratorTag extends TagSupport
 		}
 		try
 		{
-			String caption = (String) pageContext.getSession().getAttribute("OverrideCaption");
-			this.containerInterface.setShowRequiredFieldWarningMessage(Boolean.valueOf(pageContext.getSession().getAttribute("mandatory_Message").toString()));
-			String dataEntryOperation = pageContext.getRequest().getParameter("dataEntryOperation");
-			JspWriter out = pageContext.getOut();
-			out.println(this.containerInterface.generateContainerHTML(caption,dataEntryOperation));
+			final String caption = (String) pageContext.getSession()
+			.getAttribute("OverrideCaption");
+			this.container.setShowRequiredFieldWarningMessage(Boolean.valueOf(pageContext
+					.getSession().getAttribute("mandatory_Message").toString()));
+			final String operation = pageContext.getRequest().getParameter("dataEntryOperation");
+			final JspWriter out = pageContext.getOut();
+			container.setPreviousValueMap(previousDataMap);
+			out.println(this.container.generateContainerHTML(caption, operation));
 		}
-		catch (DynamicExtensionsSystemException e)
+		catch (final DynamicExtensionsSystemException e)
 		{
 			Logger.out.debug("DynamicExtensionsSystemException. No response generated.");
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			Logger.out.debug("IOException. No response generated.");
 		}

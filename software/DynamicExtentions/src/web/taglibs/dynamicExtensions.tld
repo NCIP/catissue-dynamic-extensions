@@ -6,7 +6,7 @@
     <jsp-version>1.1</jsp-version>
     <short-name>dynamicExtensions</short-name>
     <description>A tag library to build Dynamic Extensions Application.</description>
-    
+
 	<tag>
 	     <name>ToolsMenu</name>
 	     <tag-class>edu.common.dynamicextensions.ui.webui.taglib.ToolBoxTag</tag-class>
@@ -63,13 +63,13 @@
 				<required>false</required>
 				<rtexprvalue>true</rtexprvalue>
 				<type>java.lang.String</type>
-	     </attribute>  
+	     </attribute>
 	     <attribute>
 				<name>showSelected</name>
 				<required>false</required>
 				<rtexprvalue>true</rtexprvalue>
 				<type>java.lang.Boolean</type>
-	     </attribute>  
+	     </attribute>
 	     <attribute>
 				<name>styleClass</name>
 				<required>false</required>
@@ -89,7 +89,7 @@
 		      <type>java.util.List</type>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 	     <name>dynamicUIGenerator</name>
 	     <tag-class>edu.common.dynamicextensions.ui.webui.taglib.DynamicUIGeneratorTag</tag-class>
@@ -99,8 +99,15 @@
 				<rtexprvalue>true</rtexprvalue>
 	    		<type>edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface</type>
 	     </attribute>
+
+	     <attribute>
+				<name>previousDataMap</name>
+				<required>false</required>
+				<rtexprvalue>true</rtexprvalue>
+	    		<type>java.util.Map</type>
+	     </attribute>
 	</tag>
-	
+
 	<tag>
 	     <name>displayRecordList</name>
 	     <tag-class>edu.common.dynamicextensions.ui.webui.taglib.DisplayRecordListTag</tag-class>
@@ -123,7 +130,7 @@
 	    		<type>java.lang.String</type>
 	     </attribute>
 	</tag>
-	
+
 	<tag>
 		<name>tree</name>
 		<tag-class>edu.common.dynamicextensions.ui.webui.taglib.TreeGeneratorTag</tag-class>
@@ -158,7 +165,7 @@
 			<type>java.lang.String</type>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 	     <name>multiSelectUsingCombo</name>
 	     <tag-class>edu.common.dynamicextensions.ui.webui.taglib.MultiselectUsingComboAndListTag</tag-class>

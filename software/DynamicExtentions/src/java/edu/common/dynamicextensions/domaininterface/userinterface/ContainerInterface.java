@@ -145,23 +145,20 @@ public interface ContainerInterface extends DynamicExtensionBaseDomainObjectInte
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException
 	 */
-	String generateContainerHTML(String caption, String dataEntryOperation)
-			throws DynamicExtensionsSystemException;
+	String generateContainerHTML(String caption,String dataEntryOperation) throws DynamicExtensionsSystemException;
 
 	/**
 	 * @param caption
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException
 	 */
-	String generateControlsHTML(String caption, String dataEntryOperation,
-			ContainerInterface container) throws DynamicExtensionsSystemException;
+	String generateControlsHTML(String caption,String dataEntryOperation,ContainerInterface container) throws DynamicExtensionsSystemException;
 
 	/**
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 */
-	String generateControlsHTMLAsGrid(List<Map<BaseAbstractAttributeInterface, Object>> valueMap,
-			String dataEntryOperation, ContainerInterface container)
+	String generateControlsHTMLAsGrid(List<Map<BaseAbstractAttributeInterface, Object>> valueMap,String dataEntryOperation,ContainerInterface container)
 			throws DynamicExtensionsSystemException;
 
 	/**
@@ -268,6 +265,7 @@ public interface ContainerInterface extends DynamicExtensionBaseDomainObjectInte
 	 */
 	public HttpServletRequest getRequest();
 
+
 	/**
 	 * @return true if required field warning has to be shown
 	 */
@@ -277,10 +275,19 @@ public interface ContainerInterface extends DynamicExtensionBaseDomainObjectInte
 	 * @param showRequiredFieldWarningMessage the showRequiredFieldWarningMessage to set
 	 */
 	public void setShowRequiredFieldWarningMessage(Boolean showRequiredFieldWarningMessage);
-
 	/**
 	 *
 	 * @return
 	 */
 	public boolean isAllControlsSkipLogicTargetControlsForShowHide();
+
+	/**
+	 * @param set previous page data value map
+	 */
+	public void setPreviousValueMap(Map<BaseAbstractAttributeInterface, Object> peek);
+
+	/**
+	 * @return previous page data value map
+	 */
+	public Map<BaseAbstractAttributeInterface, Object> getPreviousValueMap();
 }
