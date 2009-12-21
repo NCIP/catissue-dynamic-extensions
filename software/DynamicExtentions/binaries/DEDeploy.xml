@@ -804,6 +804,8 @@
     	<property name="xmi.filename" value="${export.dir}/${entity.name}.xmi" />
     	<property name="version.number" value="1.1" />
 
+    	<echo message="Entity Group Name : ${entitygroupname}" />
+    	<available file="${cacore.deployable.dir}/${entitygroupname}/" property="cacore.present" />
     	<if>
     		<equals arg1="${cacore.deployable.dir}/${entitygroupname}" arg2="true"/>
     		<then>
@@ -849,6 +851,14 @@
 				<copy todir="${base.dir}/" file="${dezip.dir}/dynamicextensions.zip" overwrite="true"/>
 
     			<delete>
+					<fileset dir="${export.dir}/">
+						<include name="**/*.txt"/>
+						<include name="**/Package.properties" />
+					</fileset>
+				</delete>
+
+
+    			<delete>
 					<fileset dir="${dezip.dir}">
 						<include name="**/*"/>
 					</fileset>
@@ -856,7 +866,14 @@
 
     		</then>
     		<else>
-		    	<antcall target="export_xmi">
+    			<echo message=" " />
+    			<echo message="-----------------------------------------" />
+    			<echo message="caCore for ${entitygroupname} not generated" />
+    			<echo message="Generating caCore for ${entitygroupname}" />
+    			<echo message="-----------------------------------------" />
+    			<echo message=" " />
+
+    			<antcall target="export_xmi">
     				<param name="setup.method.required" value="False" />
 					<param name="groupname" value="${entitygroupname}"/>
     				<param name="relative.filename" value="${xmi.filename}"/>
