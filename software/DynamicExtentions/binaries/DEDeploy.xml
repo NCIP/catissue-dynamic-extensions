@@ -755,7 +755,7 @@
          ================================= -->
     <target name="generate.cacore.for.imported.xmis" depends="setupClassExecutionEnvironment" description="Generate caCore for imported XMIs">
 
-		<java failonerror="true" classname="edu.wustl.metadata.util.EntityGroupName" fork="yes" >
+		<java failonerror="true" classname="edu.wustl.metadata.util.EntityGroupName" fork="yes" maxmemory="1024m">
 			<arg value="${base.dir}/temp_deaudit_related_files/temp_exported_xmi/"/>
 			<classpath>
 				<pathelement location="${temp.dir.DE}" />
@@ -782,7 +782,7 @@
     	<mkdir dir="${dezip.dir}" />
 		<mkdir dir="${dejar.dir}" />
 
-    	<java failonerror="true" classname="edu.wustl.metadata.util.PackageName" fork="yes" >
+    	<java failonerror="true" classname="edu.wustl.metadata.util.PackageName" fork="yes" maxmemory="1024m">
     		<arg value="${export.dir}/"/>
     		<arg value="${xmi.name}"/>
 			<classpath>
