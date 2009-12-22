@@ -50,7 +50,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	private static final long serialVersionUID = 1234567890L;
 
 	private static final Logger LOGGER = edu.wustl.common.util.logger.Logger
-			.getLogger(AbstractEntityCache.class);
+	.getLogger(AbstractEntityCache.class);
 
 	/**
 	 * List of all the categories loaded in caB2B local database.
@@ -96,7 +96,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * needed because there is no back pointer from PV to Entity
 	 */
 	protected Map<PermissibleValueInterface, EntityInterface> permissibleValueVsEntity =
-			new HashMap<PermissibleValueInterface, EntityInterface>();
+		new HashMap<PermissibleValueInterface, EntityInterface>();
 
 	/**
 	 * Set of all the DyanamicExtensions categories loaded in the database.
@@ -112,7 +112,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * Map with KEY as dynamic extension CategoryAttribute's identifier and Value as CategoryAttribute object
 	 */
 	protected Map<Long, CategoryAttributeInterface> idVsCategoryAttribute =
-			new HashMap<Long, CategoryAttributeInterface>();
+		new HashMap<Long, CategoryAttributeInterface>();
 
 	/**
 	 * Map with KEY as dynamic extension CategoryEntity's's identifier and Value as CategoryEntity object
@@ -123,7 +123,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * Map with KEY as dynamic extension CategoryAssociations's identifier and Value as CategoryAssociations object
 	 */
 	protected Map<Long, CategoryAssociationInterface> idVsCaegoryAssociation =
-			new HashMap<Long, CategoryAssociationInterface>();
+		new HashMap<Long, CategoryAssociationInterface>();
 
 	/**
 	 * Map with KEY as dynamic extension Controls's identifier and Value as Control object
@@ -184,7 +184,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 			categoryList = DynamicExtensionUtility.getAllCategories(hibernateDAO);
 			createCache(categoryList, entityGroups);
 		}
-		catch (DAOException e)
+		catch (final DAOException e)
 		{
 			LOGGER.error("Error while Creating EntityCache. Error: " + e.getMessage());
 			throw new RuntimeException("Exception encountered while creating EntityCache!!", e);
@@ -197,7 +197,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 				{
 					DynamicExtensionsUtility.closeHibernateDAO(hibernateDAO);
 				}
-				catch (DAOException e)
+				catch (final DAOException e)
 				{
 					LOGGER.error("Exception encountered while closing session In EntityCache."
 							+ e.getMessage());
@@ -231,18 +231,18 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param categoryList list of containers to be cached.
 	 * @param entityGroups list of system generated entity groups to be cached.
 	 */
-	private void createCache(List<CategoryInterface> categoryList,
-			Collection<EntityGroupInterface> entityGroups)
+	private void createCache(final List<CategoryInterface> categoryList,
+			final Collection<EntityGroupInterface> entityGroups)
 	{
-		for (EntityGroupInterface entityGroup : entityGroups)
+		for (final EntityGroupInterface entityGroup : entityGroups)
 		{
 			cab2bEntityGroups.add(entityGroup);
-			for (EntityInterface entity : entityGroup.getEntityCollection())
+			for (final EntityInterface entity : entityGroup.getEntityCollection())
 			{
 				addEntityToCache(entity);
 			}
 		}
-		for (CategoryInterface category : categoryList)
+		for (final CategoryInterface category : categoryList)
 		{
 			deCategories.add(category);
 			createCategoryEntityCach(category.getRootCategoryElement());
@@ -255,18 +255,18 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * It will then recursively call the same method for the child category Entities.
 	 * @param categoryEntity
 	 */
-	private void createCategoryEntityCach(CategoryEntityInterface categoryEntity)
+	private void createCategoryEntityCach(final CategoryEntityInterface categoryEntity)
 	{
-		for (Object container : categoryEntity.getContainerCollection())
+		for (final Object container : categoryEntity.getContainerCollection())
 		{
-			ContainerInterface containerInterface = (ContainerInterface) container;
+			final ContainerInterface containerInterface = (ContainerInterface) container;
 			addContainerToCache(containerInterface);
 		}
-		for (CategoryAssociationInterface categoryAssociation : categoryEntity
+		for (final CategoryAssociationInterface categoryAssociation : categoryEntity
 				.getCategoryAssociationCollection())
 		{
-			CategoryEntityInterface targetCategoryEntity = categoryAssociation
-					.getTargetCategoryEntity();
+			final CategoryEntityInterface targetCategoryEntity = categoryAssociation
+			.getTargetCategoryEntity();
 			createCategoryEntityCach(targetCategoryEntity);
 
 		}
@@ -279,7 +279,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param category category which is to be checked for in use state.
 	 * @return true if category is in use else will return false.
 	 */
-	public synchronized boolean isCategoryInUse(CategoryInterface category)
+	public synchronized boolean isCategoryInUse(final CategoryInterface category)
 	{
 		boolean isInUse = false;
 		if(categoriesInUse.contains(category))
@@ -295,7 +295,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * so that it will be available for other users to Edit.
 	 * @param category which is to be released.
 	 */
-	public synchronized void releaseCategoryFromUse(CategoryInterface category)
+	public synchronized void releaseCategoryFromUse(final CategoryInterface category)
 	{
 		categoriesInUse.remove(category);
 	}
@@ -304,7 +304,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * This method will add the given category in use.
 	 * @param category which is to be marked as in use.
 	 */
-	public synchronized void markCategoryInUse(CategoryInterface category)
+	public synchronized void markCategoryInUse(final CategoryInterface category)
 	{
 		categoriesInUse.add(category);
 	}
@@ -323,7 +323,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * This method will add the given category to cache.
 	 * @param category category to be added.
 	 */
-	public synchronized void addCategoryToCache(CategoryInterface category)
+	public synchronized void addCategoryToCache(final CategoryInterface category)
 	{
 		LOGGER.info("adding category to cache"+category);
 		deCategories.remove(category);
@@ -338,7 +338,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * for its controls and AbstractEntity
 	 * @param container
 	 */
-	private void addContainerToCache(ContainerInterface container)
+	private void addContainerToCache(final ContainerInterface container)
 	{
 		idVscontainers.put(container.getId(), container);
 		createControlCache(container.getControlCollection());
@@ -349,9 +349,9 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * Adds all controls into cache.
 	 * @param controlCollection collection of control objects which are  to be cached.
 	 */
-	private void createControlCache(Collection<ControlInterface> controlCollection)
+	private void createControlCache(final Collection<ControlInterface> controlCollection)
 	{
-		for (ControlInterface control : controlCollection)
+		for (final ControlInterface control : controlCollection)
 		{
 			idVsControl.put(control.getId(), control);
 		}
@@ -363,16 +363,16 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param entityGroupsSet in which the entityGroup of the abstractEntity is cached.
 	 * @param categorySet in which the category of the abstractEntity is cached.
 	 */
-	private void addAbstractEntityToCache(AbstractEntityInterface abstractEntity)
+	private void addAbstractEntityToCache(final AbstractEntityInterface abstractEntity)
 	{
 		if (abstractEntity instanceof CategoryEntityInterface)
 		{
-			CategoryEntityInterface categoryEntity = (CategoryEntityInterface) abstractEntity;
+			final CategoryEntityInterface categoryEntity = (CategoryEntityInterface) abstractEntity;
 			addCategoryEntityToCache(categoryEntity);
 		}
 		else
 		{
-			EntityInterface entity = (EntityInterface) abstractEntity;
+			final EntityInterface entity = (EntityInterface) abstractEntity;
 			createEntityCache(entity);
 
 		}
@@ -382,7 +382,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * Adds CategoryEnity into cache.
 	 * @param categoryEntity which should be cached.
 	 */
-	private void addCategoryEntityToCache(CategoryEntityInterface categoryEntity)
+	private void addCategoryEntityToCache(final CategoryEntityInterface categoryEntity)
 	{
 		idVsCaegoryEntity.put(categoryEntity.getId(), categoryEntity);
 		createCategoryAttributeCache(categoryEntity);
@@ -393,9 +393,9 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * It will add all the categoryAssociations of the categoryEntity in the cache.
 	 * @param categoryEntity whose all categoryAssociations should be cached.
 	 */
-	private void createCategoryAssociationCache(CategoryEntityInterface categoryEntity)
+	private void createCategoryAssociationCache(final CategoryEntityInterface categoryEntity)
 	{
-		for (CategoryAssociationInterface assocition : categoryEntity
+		for (final CategoryAssociationInterface assocition : categoryEntity
 				.getCategoryAssociationCollection())
 		{
 			idVsCaegoryAssociation.put(assocition.getId(), assocition);
@@ -407,9 +407,9 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * It will add all the categoryAttributes of the categoryEntity in the cache.
 	 * @param categoryEntity whose all categoryAttributes should be cached.
 	 */
-	private void createCategoryAttributeCache(CategoryEntityInterface categoryEntity)
+	private void createCategoryAttributeCache(final CategoryEntityInterface categoryEntity)
 	{
-		for (CategoryAttributeInterface categoryAttribute : categoryEntity
+		for (final CategoryAttributeInterface categoryAttribute : categoryEntity
 				.getCategoryAttributeCollection())
 		{
 			idVsCategoryAttribute.put(categoryAttribute.getId(), categoryAttribute);
@@ -418,12 +418,12 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	}
 
 	/**
-	* Adds all attribute of given entity into cache
-	* @param entity Entity to process
-	*/
-	private void createAttributeCache(EntityInterface entity)
+	 * Adds all attribute of given entity into cache
+	 * @param entity Entity to process
+	 */
+	private void createAttributeCache(final EntityInterface entity)
 	{
-		for (AttributeInterface attribute : entity.getAttributeCollection())
+		for (final AttributeInterface attribute : entity.getAttributeCollection())
 		{
 			idVsAttribute.put(attribute.getId(), attribute);
 		}
@@ -433,9 +433,9 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * Adds all associations of given entity into cache
 	 * @param entity Entity to process
 	 */
-	private void createAssociationCache(EntityInterface entity)
+	private void createAssociationCache(final EntityInterface entity)
 	{
-		for (AssociationInterface association : entity.getAssociationCollection())
+		for (final AssociationInterface association : entity.getAssociationCollection())
 		{
 			idVsAssociation.put(association.getId(), association);
 			if (!Utility.isInherited(association))
@@ -449,11 +449,11 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * Adds permissible values of all the attributes of given entity into cache
 	 * @param entity Entity whose permissible values are to be processed
 	 */
-	private void createPermissibleValueCache(EntityInterface entity)
+	private void createPermissibleValueCache(final EntityInterface entity)
 	{
-		for (AttributeInterface attribute : entity.getAttributeCollection())
+		for (final AttributeInterface attribute : entity.getAttributeCollection())
 		{
-			for (PermissibleValueInterface value : Utility.getPermissibleValues(attribute))
+			for (final PermissibleValueInterface value : Utility.getPermissibleValues(attribute))
 			{
 				permissibleValueVsEntity.put(value, entity);
 			}
@@ -464,14 +464,14 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @see edu.wustl.cab2b.common.cache.IEntityCache#getEntityOnEntityParameters(java.util.Collection)
 	 */
 	public MatchedClass getEntityOnEntityParameters(
-			Collection<EntityInterface> patternEntityCollection)
+			final Collection<EntityInterface> patternEntityCollection)
 	{
-		MatchedClass matchedClass = new MatchedClass();
-		for (EntityInterface cachedEntity : idVsEntity.values())
+		final MatchedClass matchedClass = new MatchedClass();
+		for (final EntityInterface cachedEntity : idVsEntity.values())
 		{
-			for (EntityInterface patternEntity : patternEntityCollection)
+			for (final EntityInterface patternEntity : patternEntityCollection)
 			{
-				MatchedClassEntry matchedClassEntry = CompareUtil.compare(cachedEntity,
+				final MatchedClassEntry matchedClassEntry = CompareUtil.compare(cachedEntity,
 						patternEntity);
 				if (matchedClassEntry != null)
 				{
@@ -492,16 +492,16 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 *         respective not null fields in the passed Attribute object.
 	 */
 	public MatchedClass getEntityOnAttributeParameters(
-			Collection<AttributeInterface> patternAttributeCollection)
+			final Collection<AttributeInterface> patternAttributeCollection)
 	{
-		MatchedClass matchedClass = new MatchedClass();
-		for (EntityInterface entity : idVsEntity.values())
+		final MatchedClass matchedClass = new MatchedClass();
+		for (final EntityInterface entity : idVsEntity.values())
 		{
-			for (AttributeInterface cachedAttribute : entity.getAttributeCollection())
+			for (final AttributeInterface cachedAttribute : entity.getAttributeCollection())
 			{
-				for (AttributeInterface patternAttribute : patternAttributeCollection)
+				for (final AttributeInterface patternAttribute : patternAttributeCollection)
 				{
-					MatchedClassEntry matchedClassEntry = CompareUtil.compare(cachedAttribute,
+					final MatchedClassEntry matchedClassEntry = CompareUtil.compare(cachedAttribute,
 							patternAttribute);
 					if (matchedClassEntry != null)
 					{
@@ -525,15 +525,15 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 *         object.
 	 */
 	public MatchedClass getEntityOnPermissibleValueParameters(
-			Collection<PermissibleValueInterface> patternPermissibleValueCollection)
+			final Collection<PermissibleValueInterface> patternPermissibleValueCollection)
 	{
-		MatchedClass matchedClass = new MatchedClass();
-		for (PermissibleValueInterface cachedPermissibleValue : permissibleValueVsEntity.keySet())
+		final MatchedClass matchedClass = new MatchedClass();
+		for (final PermissibleValueInterface cachedPermissibleValue : permissibleValueVsEntity.keySet())
 		{
-			for (PermissibleValueInterface patternPermissibleValue : patternPermissibleValueCollection)
+			for (final PermissibleValueInterface patternPermissibleValue : patternPermissibleValueCollection)
 			{
-				EntityInterface cachedEntity = permissibleValueVsEntity.get(cachedPermissibleValue);
-				MatchedClassEntry matchedClassEntry = CompareUtil.compare(cachedPermissibleValue,
+				final EntityInterface cachedEntity = permissibleValueVsEntity.get(cachedPermissibleValue);
+				final MatchedClassEntry matchedClassEntry = CompareUtil.compare(cachedPermissibleValue,
 						patternPermissibleValue, cachedEntity);
 				if (matchedClassEntry != null)
 				{
@@ -552,10 +552,10 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param identifier
 	 * @return
 	 */
-	public EntityGroupInterface getEntityGroupById(Long identifier)
+	public EntityGroupInterface getEntityGroupById(final Long identifier)
 	{
 		EntityGroupInterface entityGroup = null;
-		for (EntityGroupInterface group : cab2bEntityGroups)
+		for (final EntityGroupInterface group : cab2bEntityGroups)
 		{
 			if (group.getId().equals(identifier))
 			{
@@ -578,9 +578,9 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param identifier Id of the entity
 	 * @return Actual Entity for given id.
 	 */
-	public EntityInterface getEntityById(Long identifier)
+	public EntityInterface getEntityById(final Long identifier)
 	{
-		EntityInterface entity = idVsEntity.get(identifier);
+		final EntityInterface entity = idVsEntity.get(identifier);
 		if (entity == null)
 		{
 			throw new RuntimeException("Entity with given id is not present in cache : "
@@ -596,7 +596,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @return <code>true</code> - if entity with given id is present in
 	 *         cache; <code>false</code> otherwise.
 	 */
-	public boolean isEntityPresent(Long identifier)
+	public boolean isEntityPresent(final Long identifier)
 	{
 		return idVsEntity.containsKey(identifier);
 	}
@@ -607,9 +607,9 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param identifier Id of the Attribute
 	 * @return Actual Attribute for given id.
 	 */
-	public AttributeInterface getAttributeById(Long identifier)
+	public AttributeInterface getAttributeById(final Long identifier)
 	{
-		AttributeInterface attribute = idVsAttribute.get(identifier);
+		final AttributeInterface attribute = idVsAttribute.get(identifier);
 		if (attribute == null)
 		{
 			throw new RuntimeException("Attribute with given id is not present in cache : "
@@ -624,9 +624,9 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param identifier Id of the Association
 	 * @return Actual Association for given id.
 	 */
-	public AssociationInterface getAssociationById(Long identifier)
+	public AssociationInterface getAssociationById(final Long identifier)
 	{
-		AssociationInterface association = idVsAssociation.get(identifier);
+		final AssociationInterface association = idVsAssociation.get(identifier);
 		if (association == null)
 		{
 			throw new RuntimeException("Association with given id is not present in cache : "
@@ -641,14 +641,14 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param uniqueStringIdentifier unique String Identifier
 	 * @return Actual Association for given string identifier.
 	 */
-	public AssociationInterface getAssociationByUniqueStringIdentifier(String uniqueStringIdentifier)
+	public AssociationInterface getAssociationByUniqueStringIdentifier(final String uniqueStringIdentifier)
 	{
-		AssociationInterface association = originalAssociations.get(uniqueStringIdentifier);
+		final AssociationInterface association = originalAssociations.get(uniqueStringIdentifier);
 		if (association == null)
 		{
 			throw new RuntimeException(
 					"Association with given uniqueStringIdentifier is not present in cache : "
-							+ uniqueStringIdentifier);
+					+ uniqueStringIdentifier);
 		}
 		return association;
 	}
@@ -657,7 +657,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * It will add the Given Entity in the cache .
 	 * @param entity
 	 */
-	private void createEntityCache(EntityInterface entity)
+	private void createEntityCache(final EntityInterface entity)
 	{
 		idVsEntity.put(entity.getId(), entity);
 		createAttributeCache(entity);
@@ -670,17 +670,17 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * controls containers & attributes.
 	 * @param entity
 	 */
-	public void addEntityToCache(EntityInterface entity)
+	public void addEntityToCache(final EntityInterface entity)
 	{
-		if (entity.getContainerCollection() == null || entity.getContainerCollection().isEmpty())
+		if ((entity.getContainerCollection() == null) || entity.getContainerCollection().isEmpty())
 		{
 			createEntityCache(entity);
 		}
 		else
 		{
-			for (Object container : entity.getContainerCollection())
+			for (final Object container : entity.getContainerCollection())
 			{
-				ContainerInterface containerInterface = (ContainerInterface) container;
+				final ContainerInterface containerInterface = (ContainerInterface) container;
 				addContainerToCache(containerInterface);
 			}
 		}
@@ -700,10 +700,30 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param name name of the entity group
 	 * @return entity group
 	 */
-	public EntityGroupInterface getEntityGroupByName(String name)
+	/**
+	 * This method returns the entity group of given name from cache.
+	 * @param name name of the entity group
+	 * @return entity group
+	 */
+	public EntityGroupInterface getEntityGroupByName(final String name)
+	{
+		EntityGroupInterface entityGroup = getEntityGroupFromCache(name);
+		if (entityGroup == null)
+		{
+			refreshCache();
+			entityGroup = getEntityGroupFromCache(name);
+		}
+		return entityGroup;
+	}
+
+	/**
+	 * @param name
+	 * @return
+	 */
+	private EntityGroupInterface getEntityGroupFromCache(final String name)
 	{
 		EntityGroupInterface entityGroup = null;
-		for (EntityGroupInterface group : cab2bEntityGroups)
+		for (final EntityGroupInterface group : cab2bEntityGroups)
 		{
 			if (group.getName().equals(name))
 			{
@@ -712,6 +732,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 		}
 		return entityGroup;
 	}
+
 
 	/**
 	 * It will return all the categories present in the Database .
@@ -727,10 +748,10 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param identifier.
 	 * @return category with given identifier.
 	 */
-	public CategoryInterface getCategoryById(Long identifier)
+	public CategoryInterface getCategoryById(final Long identifier)
 	{
 		CategoryInterface category = null;
-		for (CategoryInterface deCategory : deCategories)
+		for (final CategoryInterface deCategory : deCategories)
 		{
 			if (deCategory.getId().equals(identifier))
 			{
@@ -751,9 +772,9 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param identifier
 	 * @return categoryAttribute with given identifier
 	 */
-	public CategoryAttributeInterface getCategoryAttributeById(Long identifier)
+	public CategoryAttributeInterface getCategoryAttributeById(final Long identifier)
 	{
-		CategoryAttributeInterface categoryAttribute = idVsCategoryAttribute.get(identifier);
+		final CategoryAttributeInterface categoryAttribute = idVsCategoryAttribute.get(identifier);
 		if (categoryAttribute == null)
 		{
 			throw new RuntimeException(
@@ -767,7 +788,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param identifier
 	 * @return categoryAttribute with given identifier
 	 */
-	public BaseAbstractAttributeInterface getBaseAbstractAttributeById(Long identifier)
+	public BaseAbstractAttributeInterface getBaseAbstractAttributeById(final Long identifier)
 	{
 		BaseAbstractAttributeInterface baseAbstractAttribute = null;
 		baseAbstractAttribute =idVsCategoryAttribute.get(identifier);
@@ -792,9 +813,9 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param identifier
 	 * @return CategoryAssociation with given identifier
 	 */
-	public CategoryAssociationInterface getCategoryAssociationById(Long identifier)
+	public CategoryAssociationInterface getCategoryAssociationById(final Long identifier)
 	{
-		CategoryAssociationInterface categoryAssociation = idVsCaegoryAssociation.get(identifier);
+		final CategoryAssociationInterface categoryAssociation = idVsCaegoryAssociation.get(identifier);
 		if (categoryAssociation == null)
 		{
 			throw new RuntimeException(
@@ -809,9 +830,9 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param identifier
 	 * @return categoryEntity with given identifier
 	 */
-	public CategoryEntityInterface getCategoryEntityById(Long identifier)
+	public CategoryEntityInterface getCategoryEntityById(final Long identifier)
 	{
-		CategoryEntityInterface categoryEntity = idVsCaegoryEntity.get(identifier);
+		final CategoryEntityInterface categoryEntity = idVsCaegoryEntity.get(identifier);
 		if (categoryEntity == null)
 		{
 			throw new RuntimeException("Category Entity with given id is not present in cache : "
@@ -826,7 +847,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param identifier
 	 * @return Container with given identifier
 	 */
-	public ContainerInterface getContainerById(Long identifier)
+	public ContainerInterface getContainerById(final Long identifier)
 	{
 		ContainerInterface container = null;
 		container = idVscontainers.get(identifier);
@@ -844,9 +865,9 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param identifier
 	 * @return Control with given identifier
 	 */
-	public ControlInterface getControlById(Long identifier)
+	public ControlInterface getControlById(final Long identifier)
 	{
-		ControlInterface control = idVsControl.get(identifier);
+		final ControlInterface control = idVsControl.get(identifier);
 		if (control == null)
 		{
 			throw new RuntimeException("Control with given id is not present in cache : "
