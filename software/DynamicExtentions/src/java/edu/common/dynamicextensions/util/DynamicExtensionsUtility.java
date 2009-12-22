@@ -381,7 +381,7 @@ public class DynamicExtensionsUtility
 	{
 		ControlInterface control = null;
 		Collection<ControlInterface> controlCollection = containerInterface
-				.getAllControlsUnderSameDisplayLabel()
+				.getAllControlsUnderSameDisplayLabel();
 		for (ControlInterface controlInterface : controlCollection)
 		{
 			if (controlInterface instanceof AbstractContainmentControlInterface)
