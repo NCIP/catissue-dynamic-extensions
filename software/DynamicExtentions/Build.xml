@@ -112,6 +112,7 @@
 			<classpath refid="app.classpath" />
 		</javac>
 		<copy file="${target.dir}/TestHibernate.cfg.xml" tofile="${target.dir}/DynamicExtensionsHibernate.cfg.xml" overwrite="true" />
+		<antcall target="deploy"></antcall>
 	</target>
 
 
@@ -386,7 +387,6 @@
 		</war>
 		<copy file="dynamicExtensions.war" todir="${dist.dir}" overwrite="true" />
 		<copy file="dynamicExtensions.war" todir="build" overwrite="true" />
-		<delete file="dynamicExtensions.war" />
 		<delete dir="${temp.dir}" />
 	</target>
 
@@ -455,8 +455,7 @@
 	</target>
 	<!--Deploys the application war file at JBOSS server by coping it to deploy directory of application server-->
 	<target name="deploy" depends="build_app_war">
-		<delete file="${jboss.home.dir}/server/default/deploy/dynamicExtensions.war" />
-		<copy file="dynamicExtensions.war" todir="${jboss.home.dir}/server/default/deploy" />
+		<copy file="dynamicExtensions.war" todir="${jboss.home.dir}/server/default/deploy" overwrite="true"/>
 		<sleep seconds="2" />
 	</target>
 
@@ -792,9 +791,11 @@
 			<delete dir="${junit.report.dir}" />
 			<mkdir dir="${junit.report.dir}" />
 
-			<junit printsummary="yes" haltonerror="no" haltonfailure="no" fork="yes" maxmemory="2048m" timeout="10800000">
+			<junit printsummary="yes" haltonerror="no" haltonfailure="no" fork="yes" maxmemory="1024m" timeout="10800000">
 
 				<sysproperty key="net.sourceforge.cobertura.datafile" file="./cobertura/coverage.ser" />
+
+
 				<!--formatter type="plain" usefile="false"/-->
 				<formatter type="xml" />
 				<batchtest todir="${junit.report.dir}">
