@@ -700,11 +700,6 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param name name of the entity group
 	 * @return entity group
 	 */
-	/**
-	 * This method returns the entity group of given name from cache.
-	 * @param name name of the entity group
-	 * @return entity group
-	 */
 	public EntityGroupInterface getEntityGroupByName(final String name)
 	{
 		EntityGroupInterface entityGroup = getEntityGroupFromCache(name);
@@ -725,7 +720,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 		EntityGroupInterface entityGroup = null;
 		for (final EntityGroupInterface group : cab2bEntityGroups)
 		{
-			if (group.getName().equals(name))
+			if ((group.getName() != null) && group.getName().equals(name))
 			{
 				entityGroup = group;
 			}
