@@ -59,7 +59,7 @@ EntityManagerExceptionConstantsInterface
 	protected final static String CSV_FILE_PATH="./src/resources/csv/";
 	protected final static String PV_FILE_PATH="./src/resources/pvs/";
 	protected final static String EDITED_XMI_FILE_PATH="./src/resources/edited_xmi/";
-	protected final static String JBOSS_PATH = "/usr/local/jboss4.2.2.GA18443_https";
+	protected final static String JBOSS_PATH = "https://10.88.199.44:18443/";
 	protected int noOfDefaultColumns = 2;
 
 	//1:ACTIVITY_STATUS 2:IDENTIFIER 3:FILE NAME 4:CONTENTE_TYPE 5:ACTUAL_CONTENTS
