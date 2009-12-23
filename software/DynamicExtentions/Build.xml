@@ -372,6 +372,7 @@
 	<!-- Creates the WAR (Web Application Archive) file of the application -->
 	<target name="build_app_war" depends="compile,init_build_war">
 		<delete file="../DynamicExtentions/build/dynamicExtensions.war" />
+		<copy file="${temp.dir}/WEB-INF/classes/TestHibernate.cfg.xml" tofile="${temp.dir}/WEB-INF/classes/DynamicExtensionsHibernate.cfg.xml" overwrite="true" />
 		<war destfile="dynamicExtensions.war" webxml="src/conf/web.xml">
 			<fileset dir="${temp.dir}">
 				<include name="**/*" />
