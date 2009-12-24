@@ -132,7 +132,7 @@
 		</if>
 	</target>
 
-	<target name="upgrade_db_from_DE_1.3.0_to_DE_1.4.0" description="upgrade db from DE v1.3.0 to v1.4.0">
+	<target name="upgrade_db_from_DE_1.3.0_to_DE_1.3.1" description="upgrade db from DE v1.3.0 to v1.3.1">
 		<delete dir="${de.temp.dir}" failonerror="no" />
 		<mkdir dir="${de.temp.dir}" />
 		<unzip src="dynamicextensions.zip" dest="${de.temp.dir}">
@@ -145,19 +145,19 @@
 		<if>
 			<equals arg1="mysql" arg2="${database.type}" casesensitive="false" />
 			<then>
-				<antcall target="upgrade_db_mysql_from_DE_1.3.0_to_DE_1.4.0" />
+				<antcall target="upgrade_db_mysql_from_DE_1.3.0_to_DE_1.3.1" />
 
 			</then>
 			<elseif>
 				<equals arg1="oracle" arg2="${database.type}" casesensitive="false" />
 				<then>
-					<antcall target="upgrade_db_oracle_from_DE_1.3.0_to_DE_1.4.0" />
+					<antcall target="upgrade_db_oracle_from_DE_1.3.0_to_DE_1.3.1" />
 				</then>
 			</elseif>
 			<elseif>
 				<equals arg1="db2" arg2="${database.type}" casesensitive="false" />
 				<then>
-					<antcall target="upgrade_db_db2_from_DE_1.3.0_to_DE_1.4.0" />
+					<antcall target="upgrade_db_db2_from_DE_1.3.0_to_DE_1.3.1" />
 
 				</then>
 			</elseif>
@@ -165,6 +165,43 @@
 				<echo message="DATABASE INITIALIZATION FAILED PLEASE CHECK DATABASE.TYPE PROPERTY" level="error" />
 			</else>
 		</if>
+		<antcall target="upgrade_calculated_attributes" />
+	</target>
+
+	<target name="upgrade_db_from_DE_1.3.1_to_DE_1.4.0" description="upgrade db from DE v1.3.1 to v1.4.0">
+		<delete dir="${de.temp.dir}" failonerror="no" />
+		<mkdir dir="${de.temp.dir}" />
+		<unzip src="dynamicextensions.zip" dest="${de.temp.dir}">
+		</unzip>
+		<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+			<classpath>
+				<pathelement location="${extra.lib.dir.DE}/ant-contrib.jar" />
+			</classpath>
+		</taskdef>
+		<if>
+			<equals arg1="mysql" arg2="${database.type}" casesensitive="false" />
+			<then>
+				<antcall target="upgrade_db_mysql_from_DE_1.3.1_to_DE_1.4.0" />
+
+			</then>
+			<elseif>
+				<equals arg1="oracle" arg2="${database.type}" casesensitive="false" />
+				<then>
+					<antcall target="upgrade_db_oracle_from_DE_1.3.1_to_DE_1.4.0" />
+				</then>
+			</elseif>
+			<elseif>
+				<equals arg1="db2" arg2="${database.type}" casesensitive="false" />
+				<then>
+					<antcall target="upgrade_db_db2_from_DE_1.3.1_to_DE_1.4.0" />
+
+				</then>
+			</elseif>
+			<else>
+				<echo message="DATABASE INITIALIZATION FAILED PLEASE CHECK DATABASE.TYPE PROPERTY" level="error" />
+			</else>
+		</if>
+		<antcall target="upgrade_calculated_attributes" />
 	</target>
 
 	<target name="upgrade_db_db2_from_DE_1.2.0_to_DE_1.3.0" description="upgrade db db2 from DE 1.2.0 to DE 1.3.0">
@@ -185,24 +222,24 @@
 		</antcall>
 	</target>
 
-	<target name="upgrade_db_db2_from_DE_1.3.0_to_DE_1.4.0" description="upgrade db db2 from DE 1.3.0 to DE 1.4.0">
+	<target name="upgrade_db_db2_from_DE_1.3.1_to_DE_1.4.0" description="upgrade db db2 from DE 1.3.1 to DE 1.4.0">
 		<antcall target="execute_file_db_db2">
-			<param name="sql.file.name" value="${db2.dbupgrade.sql.dir.DE}/Upgrade_DE_Metadata_DE_1.3.0_to_DE_1.4.0.sql" />
+			<param name="sql.file.name" value="${db2.dbupgrade.sql.dir.DE}/Upgrade_DE_Metadata_DE_1.3.1_to_DE_1.4.0.sql" />
 		</antcall>
 	</target>
 
-	<target name="upgrade_db_mysql_from_DE_1.3.0_to_DE_1.4.0" description="upgrade db from DE 1.3.0 to DE 1.4.0 for mysql">
+	<target name="upgrade_db_mysql_from_DE_1.3.1_to_DE_1.4.0" description="upgrade db from DE 1.3.1 to DE 1.4.0 for mysql">
 		<antcall target="execute_file_db_mysql">
-			<param name="sql.file.name" value="${mysql.dbupgrade.sql.dir.DE}/Upgrade_DE_Metadata_DE_1.3.0_to_DE_1.4.0.sql" />
+			<param name="sql.file.name" value="${mysql.dbupgrade.sql.dir.DE}/Upgrade_DE_Metadata_DE_1.3.1_to_DE_1.4.0.sql" />
 		</antcall>
 	</target>
 
-	<target name="upgrade_db_oracle_from_DE_1.3.0_to_DE_1.4.0" description="upgrade db from DE 1.3.0 to DE 1.4.0 for oracle">
+	<target name="upgrade_db_oracle_from_DE_1.3.1_to_DE_1.4.0" description="upgrade db from DE 1.3.1 to DE 1.4.0 for oracle">
 		<antcall target="execute_file_db_oracle">
-			<param name="sql.file.name" value="${oracle.dbupgrade.sql.dir.DE}/Upgrade_DE_Metadata_DE_1.3.0_to_DE_1.4.0.sql" />
+			<param name="sql.file.name" value="${oracle.dbupgrade.sql.dir.DE}/Upgrade_DE_Metadata_DE_1.3.1_to_DE_1.4.0.sql" />
 		</antcall>
 		<sql driver="${oracle.driver.string.DE}" url="jdbc:oracle:thin:@${database.host}:${database.port}:${database.name}" userid="${database.username}" password="${database.password}" onerror="continue" delimiter="/" delimitertype="row" keepformat="yes" rdbms="oracle">
-			<transaction src="${oracle.dbupgrade.sql.dir.DE}/upgrade_DE_integration_sequences_1.3.0_to_1.4.0.sql" />
+			<transaction src="${oracle.dbupgrade.sql.dir.DE}/upgrade_DE_integration_sequences_1.3.1_to_1.4.0.sql" />
 			<transaction>commit</transaction>
 			<classpath>
 				<fileset dir="${lib.dir.DE}">
@@ -210,6 +247,24 @@
 				</fileset>
 			</classpath>
 		</sql>
+	</target>
+
+	<target name="upgrade_db_db2_from_DE_1.3.0_to_DE_1.3.1" description="upgrade db db2 from DE 1.3.0 to DE 1.3.1">
+		<antcall target="execute_file_db_db2">
+			<param name="sql.file.name" value="${db2.dbupgrade.sql.dir.DE}/Upgrade_DE_Metadata_DE_1.3.0_to_DE_1.3.1.sql" />
+		</antcall>
+	</target>
+
+	<target name="upgrade_db_mysql_from_DE_1.3.0_to_DE_1.3.1" description="upgrade db from DE 1.3.0 to DE 1.3.1 for mysql">
+		<antcall target="execute_file_db_mysql">
+			<param name="sql.file.name" value="${mysql.dbupgrade.sql.dir.DE}/Upgrade_DE_Metadata_DE_1.3.0_to_DE_1.3.1.sql" />
+		</antcall>
+	</target>
+
+	<target name="upgrade_db_oracle_from_DE_1.3.0_to_DE_1.3.1" description="upgrade db from DE 1.3.0 to DE 1.3.1 for oracle">
+		<antcall target="execute_file_db_oracle">
+			<param name="sql.file.name" value="${oracle.dbupgrade.sql.dir.DE}/Upgrade_DE_Metadata_DE_1.3.0_to_DE_1.3.1.sql" />
+		</antcall>
 	</target>
 
 	<target name="execute_file_db_mysql" description="execute the DynamicExtensions sql script for mysql">
@@ -475,6 +530,24 @@
 				</fileset>
 			</classpath>
 		</java>
+	</target>
+
+	<target name="upgrade_calculated_attributes" description="Upgrade Category Attributes">
+		<antcall target="setupClassExecutionEnvironment" />
+		<java classname="edu.common.dynamicextensions.util.CalculatedAttributeCreator" fork="true" maxmemory="1024M">
+			<classpath>
+				<pathelement location="${temp.dir.DE}" />
+				<fileset dir="${lib.dir.DE}">
+					<include name="*.jar" />
+					<exclude name="uml-1.3.jar" />
+				</fileset>
+				<fileset dir="${extra.lib.dir.DE}">
+					<include name="jboss-j2ee.jar" />
+					<include name="jta.jar" />
+				</fileset>
+			</classpath>
+		</java>
+
 	</target>
 
 	<property name="groupname" value="" />
