@@ -241,6 +241,18 @@ public interface ControlInterface extends
 	 *
 	 * @return
 	 */
+	Boolean getIsSourceForCalculatedAttribute();
+
+	/**
+	 *
+	 * @param isSourceForCalculatedAttribute
+	 */
+	void setIsSourceForCalculatedAttribute(
+			Boolean isSourceForCalculatedAttribute);
+	/**
+	 *
+	 * @return
+	 */
 	Boolean getIsSkipLogic();
 
 	/**

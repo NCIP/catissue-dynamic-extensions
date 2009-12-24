@@ -30,6 +30,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterfa
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 
@@ -85,8 +86,11 @@ public class UserInterfaceiUtility
 		{
 			htmlForGrid
 					.append("<tr width='100%'><td class='td_color_6e81a6' colspan='3' align='left'>");
-			htmlForGrid.append(((AbstractEntity) subContainer.getAbstractEntity())
-					.getCapitalizedName(subContainer.getCaption()));
+			htmlForGrid.append(((AbstractEntity) subContainer
+					.getAbstractEntity())
+					.getCapitalizedName(DynamicExtensionsUtility
+							.replaceHTMLSpecialCharacters(subContainer
+									.getCaption())));
 			htmlForGrid.append("</td></tr>");
 		}
 
@@ -144,15 +148,21 @@ public class UserInterfaceiUtility
 				htmlForGrid.append("<span class='font_red'>");
 				htmlForGrid.append(subContainer.getRequiredFieldIndicatior());
 				htmlForGrid.append("</span>&nbsp;&nbsp;<span class='font_bl_nor'>");
-				htmlForGrid.append(((BaseAbstractAttribute) control.getBaseAbstractAttribute())
-						.getCapitalizedName(control.getCaption()));
+				htmlForGrid.append(((BaseAbstractAttribute) control
+						.getBaseAbstractAttribute())
+						.getCapitalizedName(DynamicExtensionsUtility
+								.replaceHTMLSpecialCharacters(control
+										.getCaption())));
 				htmlForGrid.append("</span>");
 			}
 			else
 			{
 				htmlForGrid.append("&nbsp;&nbsp;<span class='font_bl_nor'>");
-				htmlForGrid.append(((BaseAbstractAttribute) control.getBaseAbstractAttribute())
-						.getCapitalizedName(control.getCaption()));
+				htmlForGrid.append(((BaseAbstractAttribute) control
+						.getBaseAbstractAttribute())
+						.getCapitalizedName(DynamicExtensionsUtility
+								.replaceHTMLSpecialCharacters(control
+										.getCaption())));
 				htmlForGrid.append("</span>");
 			}
 
@@ -448,8 +458,10 @@ public class UserInterfaceiUtility
 			controlHtmlAsARow.append("&nbsp;</td><td class='formRequiredLabel_withoutBorder'>");
 		}
 
-		controlHtmlAsARow.append(((BaseAbstractAttribute) control.getBaseAbstractAttribute())
-				.getCapitalizedName(control.getCaption()));
+		controlHtmlAsARow.append(((BaseAbstractAttribute) control
+				.getBaseAbstractAttribute())
+				.getCapitalizedName(DynamicExtensionsUtility
+						.replaceHTMLSpecialCharacters(control.getCaption())));
 		controlHtmlAsARow.append("</td><td class='formField_withoutBorder'>");
 		controlHtmlAsARow.append(htmlString);
 		controlHtmlAsARow.append("</td></tr>");

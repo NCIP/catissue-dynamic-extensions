@@ -50,6 +50,14 @@
         />
 
         <property
+            name="isSourceForCalculatedAttribute"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="IS_SRC_FOR_CAL_ATTR"
+        />
+
+        <property
             name="cssClass"
             type="string"
             update="true"

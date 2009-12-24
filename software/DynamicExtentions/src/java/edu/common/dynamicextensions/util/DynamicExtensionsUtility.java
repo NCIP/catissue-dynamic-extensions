@@ -40,6 +40,7 @@ import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -2602,6 +2603,19 @@ public class DynamicExtensionsUtility
 		}
 		return validDatePatternList;
 	}
-
+	/**
+	 * Replace any single and double quotes value with proper escape character	in HTML
+	 * @param value
+	 * @return String value
+	 */
+	public static String replaceHTMLSpecialCharacters(String value)
+	{
+		String escapeStringValue = value;
+		if (escapeStringValue != null && escapeStringValue.length() > 0)
+		{
+			escapeStringValue = StringEscapeUtils.escapeHtml(escapeStringValue);
+		}
+		return escapeStringValue;
+	}
 
 }

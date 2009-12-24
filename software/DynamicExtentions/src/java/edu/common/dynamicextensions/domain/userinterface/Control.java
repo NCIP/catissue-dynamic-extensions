@@ -80,6 +80,10 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	 */
 	protected Boolean isCalculated = false;
 	/**
+	 * Decides whether the control is Source For CalculatedAttribute.
+	 */
+	protected Boolean isSourceForCalculatedAttribute = false;
+	/**
 	 * Decides whether the control should use skip logic
 	 */
 	protected Boolean isSkipLogic = false;
@@ -216,7 +220,23 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	{
 		this.isCalculated = isCalculated;
 	}
-
+	/**
+	 * @hibernate.property name="isSourceForCalculatedAttribute" type="boolean" column="IS_SRC_FOR_CAL_ATTR"
+	 * @return Returns the isHidden.
+	 */
+	public Boolean getIsSourceForCalculatedAttribute()
+	{
+		return isSourceForCalculatedAttribute;
+	}
+	/**
+	 *
+	 * @param isSourceForCalculatedAttribute
+	 */
+	public void setIsSourceForCalculatedAttribute(
+			Boolean isSourceForCalculatedAttribute)
+	{
+		this.isSourceForCalculatedAttribute = isSourceForCalculatedAttribute;
+	}
 	/**
 	 * @param caption The caption to set.
 	 */
@@ -375,8 +395,10 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 
 				for (FormControlNotesInterface fcNote : getFormNotes())
 				{
-					controlHTML.append("<div style='width:100%' class='notes'>" + fcNote.getNote()
-							+ "</div>");
+					controlHTML.append("<div style='width:100%' class='notes'>"
+							+ DynamicExtensionsUtility
+									.replaceHTMLSpecialCharacters(fcNote
+											.getNote()) + "</div>");
 				}
 			}
 
@@ -408,7 +430,8 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		if ((this.showLabel != null) && this.showLabel)
 		{
 			controlHTML.append(((BaseAbstractAttribute) this.getBaseAbstractAttribute())
-					.getCapitalizedName(this.getCaption()));
+					.getCapitalizedName(DynamicExtensionsUtility
+							.replaceHTMLSpecialCharacters(this.getCaption())));
 		}
 		controlHTML.append("</td><td class='formField_withoutBorder' valign='center'>");
 

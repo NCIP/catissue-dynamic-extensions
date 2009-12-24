@@ -94,7 +94,7 @@ public interface CategoryAttributeInterface extends BaseAbstractAttributeInterfa
 	 *
 	 */
 	void setIsRelatedAttribute(Boolean isRelatedAttribute);
-	
+
 	/**
 	 *
 	 */
@@ -105,7 +105,7 @@ public interface CategoryAttributeInterface extends BaseAbstractAttributeInterfa
 	 */
 	void setIsCalculated(Boolean isCalculated);
 	/**
-	 * 
+	 *
 	 * @param formulaInterface
 	 */
 	void setFormula(FormulaInterface formulaInterface);
@@ -115,83 +115,68 @@ public interface CategoryAttributeInterface extends BaseAbstractAttributeInterfa
 	 */
 	FormulaInterface getFormula();
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	Collection<CategoryAttributeInterface> getCalculatedCategoryAttributeCollection();
+	Collection<CategoryAttributeInterface> getCalculatedAttributeCollection();
 	/**
-	 * 
+	 *
+	 * @return
+	 */
+	Collection<CalculatedAttributeInterface> getCalculatedCategoryAttributeCollection();
+	/**
+	 *
 	 * @param calculatedCategoryAttributeCollection
 	 */
 	void setCalculatedCategoryAttributeCollection(
-			Collection<CategoryAttributeInterface> calculatedCategoryAttributeCollection);
-	/**
-	 * 
-	 * @return
-	 */
-	Collection<CategoryAttributeInterface> getCalculatedDependentCategoryAttributes();
-	/**
-	 * 
-	 * @param calculatedDependentCategoryAttributes
-	 */
-	void setCalculatedDependentCategoryAttributes(
-			Collection<CategoryAttributeInterface> calculatedDependentCategoryAttributes);
-	/**
-	 *
-	 */
-	void addCalculatedDependentCategoryAttribute(
-			CategoryAttributeInterface categoryAttributeInterface);
+			Collection<CalculatedAttributeInterface> calculatedCategoryAttributeCollection);
 	/**
 	 *
 	 */
 	void addCalculatedCategoryAttribute(
-			CategoryAttributeInterface categoryAttributeInterface);
+			CalculatedAttributeInterface calculatedAttributeInterface);
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	PermissibleValueInterface getDefaultValuePermissibleValue();
 	/**
 	 * This method removes all Calculated Category Attributes.
 	 */
-	void removeAllCalculatedDependentCategoryAttributes();
-	/**
-	 * This method removes all Calculated Category Attributes.
-	 */
 	void removeAllCalculatedCategoryAttributes();
 	/**
-	 * 
+	 *
 	 * @param isSkipLogic
 	 */
 	void setIsSkipLogic(Boolean isSkipLogic);
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	Boolean getIsSkipLogic();
 	/**
-	 * 
+	 *
 	 * @param permissibleValue
 	 */
 	void addSkipLogicPermissibleValue(PermissibleValueInterface permissibleValue);
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	Collection<PermissibleValueInterface> getSkipLogicPermissibleValues();
 	/**
-	 * 
+	 *
 	 * @param permissibleValue
 	 * @return
 	 */
 	PermissibleValueInterface getSkipLogicPermissibleValue(PermissibleValueInterface permissibleValue);
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	Collection<SkipLogicAttributeInterface> getDependentSkipLogicAttributes();
 	/**
-	 * 
+	 *
 	 * @param dependentSkipLogicAttributes
 	 */
 	void setDependentSkipLogicAttributes(

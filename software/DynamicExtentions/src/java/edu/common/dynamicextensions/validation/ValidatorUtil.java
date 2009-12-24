@@ -73,8 +73,10 @@ public class ValidatorUtil
 									containerInterface);
 					if (control != null)
 					{
-						errorList.addAll(validateAttributes(attributeValueNode, control
-								.getCaption()));
+						errorList.addAll(validateAttributes(attributeValueNode,
+								DynamicExtensionsUtility
+										.replaceHTMLSpecialCharacters(control
+												.getCaption())));
 						if (control instanceof ComboBoxInterface)
 						{
 							boolean isValuePresent = false;
@@ -97,8 +99,11 @@ public class ValidatorUtil
 							}
 							if (!isValuePresent)
 							{
-								errorList.add("Please Enter valid permissible value for attribute "
-										+ control.getCaption());
+								errorList
+										.add("Please Enter valid permissible value for attribute "
+												+ DynamicExtensionsUtility
+														.replaceHTMLSpecialCharacters(control
+																.getCaption()));
 							}
 						}
 					}
@@ -190,7 +195,10 @@ public class ValidatorUtil
 						(AttributeMetadataInterface) abstractAttribute, containerInterface);
 				if ((control != null) && (control.getBaseAbstractAttribute() != null))
 				{
-					errorList.addAll(validateAttributes(attributeValueNode, control.getCaption()));
+					errorList.addAll(validateAttributes(attributeValueNode,
+							DynamicExtensionsUtility
+									.replaceHTMLSpecialCharacters(control
+											.getCaption())));
 				}
 			}
 		}

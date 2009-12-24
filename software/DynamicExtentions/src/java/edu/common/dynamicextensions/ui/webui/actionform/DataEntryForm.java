@@ -43,6 +43,10 @@ public class DataEntryForm extends AbstractActionForm
 	/**
 	 *
 	 */
+	protected String isShowTemplateRecord = "";
+	/**
+	 *
+	 */
 	protected List<String> errorList;
 	/**
 	 *
@@ -356,5 +360,20 @@ public class DataEntryForm extends AbstractActionForm
 		// TODO Auto-generated method stub
 
 	}
-
+	/**
+	 *
+	 * @return
+	 */
+	public String getIsShowTemplateRecord()
+	{
+		return isShowTemplateRecord;
+	}
+	/**
+	 *
+	 * @param isShowTemplateRecord
+	 */
+	public void setIsShowTemplateRecord(String isShowTemplateRecord)
+	{
+		this.isShowTemplateRecord = isShowTemplateRecord;
+	}
 }

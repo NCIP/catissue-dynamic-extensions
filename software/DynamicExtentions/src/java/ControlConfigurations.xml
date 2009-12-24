@@ -13,6 +13,7 @@
 			<dataType name="Text">
 				<validations>
 					<validation-rule name="textLength" isImplicit="true" />
+					<validation-rule name="characterSet" isImplicit="true" />
 				</validations>
 			</dataType>
 			<dataType name="Number">
@@ -77,11 +78,11 @@
 			<common-validation-rule name="allowfuturedate" isImplicit="false" />
 		</validations>
 		<datatypes>
-			
+
 		</datatypes>
 	</control>
 	<!-- rules for Date control end-->
-	
+
 	<!-- rules for File Upload control start -->
 	<control name="FileUploadControl"
 		display-label="eav.caption.FileUploadControlCaption"
@@ -91,7 +92,7 @@
 			<common-validation-rule name="required" isImplicit="false" />
 		</validations>
 	</control>
-		<!-- rules for File Upload control end-->	
+		<!-- rules for File Upload control end-->
 	<!-- <control name="AddSubFormControl"
 		display-label="eav.caption.AddSubFormControl">
 	</control>

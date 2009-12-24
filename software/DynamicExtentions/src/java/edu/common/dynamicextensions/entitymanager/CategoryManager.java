@@ -3306,5 +3306,54 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	{
 		return getAllObjects(CategoryInterface.class.getName());
 	}
-
+	/**
+	 *
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 */
+	public Collection<CategoryAttributeInterface> getAllCalculatedCategoryAttributes()
+			throws DynamicExtensionsSystemException
+	{
+		Collection<CategoryAttributeInterface> categoryAttributes = executeHQL(
+				"getAllCalculatedCategoryAttributes", new HashMap());
+		return categoryAttributes;
+	}
+	/**
+	 *
+	 * @param categoryAttributeCollection
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
+	 */
+	public Collection<CategoryAttributeInterface> updateCategoryAttributes(
+			Collection<CategoryAttributeInterface> categoryAttributeCollection)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
+		HibernateDAO hibernateDAO = null;
+		try
+		{
+			hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
+			for (CategoryAttributeInterface categoryAttributeInterface:categoryAttributeCollection)
+			{
+				hibernateDAO.update(categoryAttributeInterface);
+			}
+			hibernateDAO.commit();
+		}
+		catch (DAOException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e, DYEXTN_S_003);
+		}
+		finally
+		{
+			try
+			{
+				DynamicExtensionsUtility.closeHibernateDAO(hibernateDAO);
+			}
+			catch (DAOException e)
+			{
+				throw new DynamicExtensionsSystemException(e.getMessage(), e, DYEXTN_S_003);
+			}
+		}
+		return categoryAttributeCollection;
+	}
 }

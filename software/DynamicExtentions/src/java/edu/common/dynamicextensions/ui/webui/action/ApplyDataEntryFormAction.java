@@ -130,7 +130,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				if ((actionForward == null) && (errorList != null) && errorList.isEmpty())
 				{
 					String recordIdentifier = storeParentContainer(valueMapStack, containerStack,
-							request, dataEntryForm.getRecordIdentifier());
+							request, dataEntryForm.getRecordIdentifier(),dataEntryForm.getIsShowTemplateRecord());
 					isCallbackURL = redirectCallbackURL(request, response, recordIdentifier,
 							WebUIManagerConstants.SUCCESS, dataEntryForm.getContainerId());
 				}
@@ -768,7 +768,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 	private String storeParentContainer(
 			Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack,
 			Stack<ContainerInterface> containerStack, HttpServletRequest request,
-			String recordIdentifier) throws NumberFormatException,
+			String recordIdentifier,String isShowTemplateRecord) throws NumberFormatException,
 			DynamicExtensionsApplicationException, DynamicExtensionsSystemException, SQLException
 	{
 		String identifier = recordIdentifier;
@@ -786,7 +786,10 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 		}
 
 		String messageKey = "app.successfulDataInsertionMessage";
-		if ((identifier != null) && !identifier.equals(""))
+		if (identifier != null
+				&& !identifier.equals("")
+				&& (isShowTemplateRecord == null || isShowTemplateRecord != null
+						&& !isShowTemplateRecord.equals("true")))
 		{
 			Boolean edited = applyDataEntryFormProcessor.editDataEntryForm(rootContainerInterface,
 					rootValueMap, Long.valueOf(identifier));

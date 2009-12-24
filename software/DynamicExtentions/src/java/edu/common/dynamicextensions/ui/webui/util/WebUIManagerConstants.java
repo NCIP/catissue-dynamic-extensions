@@ -40,6 +40,10 @@ public interface WebUIManagerConstants
 	/**
 	 *
 	 */
+	String IS_SHOW_TEMPLATE_RECORD = "isShowTemplateRecord";
+	/**
+	 *
+	 */
 	String OPERATION_STATUS = "operationStatus";
 	/**
 	 *

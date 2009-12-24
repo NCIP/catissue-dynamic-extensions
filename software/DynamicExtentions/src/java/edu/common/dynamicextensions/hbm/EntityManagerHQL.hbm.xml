@@ -16,19 +16,19 @@
            		AND association.sourceRole.name = ?
 
 	</query>
-	
+
 	<query name="getAssociationBySourceTargetEntity">
 		from Association association
            		where  association.entity.name = ?
            		AND association.name = ?
           		AND association.targetEntity.name = ?
-           		
+
 
 	</query>
-	
+
 	<query name="getAssociationByName">
 		from Association association
-           		where  association.name = ? 		
+           		where  association.name = ?
 	</query>
 
 	<query name="getAssociations">
@@ -36,7 +36,7 @@
 	       	where association.entity.id = ? AND
        			   	association.targetEntity.id = ?
 	</query>
-	
+
 	<query name="getAssociationIds">
        select association.id from Association association
 	       	where association.entity.id = ? AND
@@ -103,7 +103,7 @@
 	<query name="getEntityGroupBeanById">
 		select entityGroup.name,entityGroup.id
 			   from EntityGroup entityGroup
-			   		where entityGroup.isSystemGenerated = false 
+			   		where entityGroup.isSystemGenerated = false
 			   		AND entityGroup.id = ?
 	</query>
 	<query name="checkDuplicateGroupName">
@@ -145,8 +145,8 @@
 	<query name="checkContainerForAbstractEntity">
       select container.id
             from edu.common.dynamicextensions.domain.userinterface.Container container,edu.common.dynamicextensions.domain.AbstractEntity abstractEntity,
-            edu.common.dynamicextensions.domain.Entity entity 
-                        where container.id = ?   AND container.abstractEntity.id = entity.id AND entity.abstract = ?      
+            edu.common.dynamicextensions.domain.Entity entity
+                        where container.id = ?   AND container.abstractEntity.id = entity.id AND entity.abstract = ?
   	</query>
 	<query name="checkContainerForAbstractCategoryEntity">
       select container.id
@@ -174,17 +174,17 @@
 
     <query name="isCategory">
 	 select catEntity.id
-         from  edu.common.dynamicextensions.domain.CategoryEntity catEntity 	
+         from  edu.common.dynamicextensions.domain.CategoryEntity catEntity
             where catEntity.containerCollection.id=?
 	</query>
 
      <query name="getFormsContainerIdFromHookEntiy">
-     select new edu.wustl.common.beans.NameValueBean(entity.entityGroup.name||' -- '||container.caption , container.id) 
-	   from edu.common.dynamicextensions.domain.userinterface.Container container, 
-	   edu.common.dynamicextensions.domain.Entity entity 
-	    
+     select new edu.wustl.common.beans.NameValueBean(entity.entityGroup.name||' -- '||container.caption , container.id)
+	   from edu.common.dynamicextensions.domain.userinterface.Container container,
+	   edu.common.dynamicextensions.domain.Entity entity
+
 		   where container.abstractEntity.id = entity.id and entity.abstract = false and container.abstractEntity.id in
-		   (      
+		   (
 			   select association.targetEntity.id
 			       from Association association
 				       	where association.entity.id = ?
@@ -193,10 +193,10 @@
     </query>
 
 	<query name="getCategoryContainerIdFromHookEntiy">
-	  select new edu.wustl.common.beans.NameValueBean(catColl.name , container.id) 
-	   from edu.common.dynamicextensions.domain.userinterface.Container container  , 
-         edu.common.dynamicextensions.domain.CategoryEntity catEntity 	
-		 join catEntity.categoryCollection as catColl           
+	  select new edu.wustl.common.beans.NameValueBean(catColl.name , container.id)
+	   from edu.common.dynamicextensions.domain.userinterface.Container container  ,
+         edu.common.dynamicextensions.domain.CategoryEntity catEntity
+		 join catEntity.categoryCollection as catColl
 
 		   where container.abstractEntity.id in
 		   (
@@ -207,14 +207,14 @@
 							select association.targetEntity.id
 						       from Association association
 							       	where association.entity.id = ?
-						)						
-			)  
+						)
+			)
 			and catEntity.containerCollection.id=container.id order by catColl.name asc
 	</query>
 
 	<query name="getDynamicTableName">
 	 select tableProperty.name
-		from edu.common.dynamicextensions.domain.userinterface.Container container   
+		from edu.common.dynamicextensions.domain.userinterface.Container container
 			join container.abstractEntity.tablePropertiesCollection tableProperty
 				where container.id = ?
 	</query>
@@ -264,7 +264,7 @@
 		from edu.common.dynamicextensions.domain.userinterface.Container container
 		where container.caption=?
 	</query>
-	
+
     <query name="getRootCategoryEntityCaptionById">
 		select category.name
 		from edu.common.dynamicextensions.domain.Category category
@@ -291,11 +291,11 @@
 	    where container.abstractEntity.id = ?
 	</query>
 	<query name="getTargetEntityIdForCollAttribute">
-   		select association.targetEntity.id	
+   		select association.targetEntity.id
 		from Association association
         where  association.id = ? AND association.isCollection = ?
     </query>
-    
+
     <query name="getContainerCaptionFromEntityId">
 	   select container.caption
 	   	from edu.common.dynamicextensions.domain.userinterface.Container container
@@ -308,7 +308,7 @@
 	</query>
 
 	<query name="getEntityGroupNameByEntityName">
-   		select entity.entityGroup.name 
+   		select entity.entityGroup.name
    			   from Entity entity where entity.name = ? AND entity.id = (select container.abstractEntity.id
                       		from edu.common.dynamicextensions.domain.userinterface.Container container
 	                             where container.id = ?)
@@ -317,7 +317,7 @@
 		select pathAssociation.id
 		from edu.common.dynamicextensions.domain.PathAssociationRelation pathAssociation
 		where pathAssociation.path.id =? order by pathAssociation.id desc
-	</query>	
+	</query>
 	<query name="getAssoIdFrmPathAssoRelationId">
 		select pathAssociation.association.id
 		from edu.common.dynamicextensions.domain.PathAssociationRelation pathAssociation
@@ -345,11 +345,16 @@
 	</query>
 	<query name="getAllCategoryEntityId">
 		select catEntity.id
-        from  edu.common.dynamicextensions.domain.CategoryEntity catEntity 	
+        from  edu.common.dynamicextensions.domain.CategoryEntity catEntity
 	</query>
 	<query name="getCategoryEntityNameByCategoryEntityId">
 		select catEntity.name
-        from  edu.common.dynamicextensions.domain.CategoryEntity catEntity 
+        from  edu.common.dynamicextensions.domain.CategoryEntity catEntity
         where catEntity.id=?
+	</query>
+	<query name="getAllCalculatedCategoryAttributes">
+		select catAttribute
+        from  edu.common.dynamicextensions.domain.CategoryAttribute catAttribute
+        where catAttribute.isCalculated = true
 	</query>
 </hibernate-mapping>

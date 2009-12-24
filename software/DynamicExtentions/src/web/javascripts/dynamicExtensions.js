@@ -2062,9 +2062,45 @@ function getValues()
 function calculateAttributes()
 {
     document.getElementById('dataEntryOperation').value = "calculateAttributes";
-    var dataEntryForm = document.getElementById('dataEntryForm');
-    setWaitCursorforAllObjectHierarchy(dataEntryForm);
-    dataEntryForm.submit();
+	var str = $("dataEntryForm").serialize();
+	jQuery.ajax(
+	{
+				type :"POST",
+				url :"ApplyDataEntryFormAction.do",
+				dataType: "html",
+				data :str,
+				success : function(htmlresult)
+				{
+					var iframe = document.getElementById("skipLogicIframe");
+					if (iframe != null)
+					{
+						var iframeDocument = getIframeDocument(iframe);
+						if (iframeDocument != null)
+						{
+							iframeDocument.body.innerHTML = htmlresult;
+							var calculatedControlsArray =  iframeDocument.getElementsByName("calculatedControl");
+							if (calculatedControlsArray != null)
+							{
+					            var len = calculatedControlsArray.length;
+					            for(var inputIndex = 0; inputIndex < len; inputIndex++)
+					            {
+					            	var calculatedControl = calculatedControlsArray[inputIndex];
+					            	if (calculatedControl != null)
+					            	{
+					            		var calculatedControlDiv = calculatedControl.value;
+					            		var originalDiv = document.getElementById(calculatedControlDiv);
+					            		var calculatedDiv = iframeDocument.getElementById(calculatedControlDiv);
+					            		if (calculatedDiv!= null && originalDiv != null)
+					            		{
+					            			originalDiv.innerHTML = calculatedDiv.innerHTML;
+					            		}
+					            	}
+					            }
+							}
+						}
+					}
+				}
+	});
 }
 function setInsertDataOperation()
 {

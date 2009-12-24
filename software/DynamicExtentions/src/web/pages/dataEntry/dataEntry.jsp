@@ -10,7 +10,7 @@
 <%@ taglib uri="/WEB-INF/dynamicExtensions.tld" prefix="dynamicExtensions" %>
 
 <%-- Imports --%>
-<%@ page language="java" contentType="text/html" %>
+<%@ page language="java" contentType="text/html;charset=iso-8859-1" %>
 <%@ page import="org.apache.struts.action.ActionErrors" %>
 <%@ page import="org.apache.struts.action.ActionMessages" %>
 
@@ -57,6 +57,9 @@
 <c:set var="dataEntryOperation" value="${dataEntryForm.dataEntryOperation}"/>
 <jsp:useBean id="dataEntryOperation" type="java.lang.String"/>
 
+<c:set var="isShowTemplateRecord" value="${dataEntryForm.isShowTemplateRecord}"/>
+<jsp:useBean id="isShowTemplateRecord" type="java.lang.String"/>
+
 <c:set var="recordIdentifier123" value="${dataEntryForm.recordIdentifier}" />
 <jsp:useBean id="recordIdentifier123" type="java.lang.String"/>
 
@@ -89,6 +92,7 @@
 
 <html>
 	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<title><bean:message key="table.heading" /></title>
 		<script>
 		function setFocusToFirstControl()
@@ -283,6 +287,7 @@
 			<input type="hidden" id="childContainerId" name="childContainerId" value=""/>
 			<input type="hidden" id="childRowId" name="childRowId" value=""/>
 			<input type="hidden" id="dataEntryOperation" name="dataEntryOperation" value="<%=dataEntryOperation%>"/>
+			<input type="hidden" id="isShowTemplateRecord" name="isShowTemplateRecord" value="<%=isShowTemplateRecord%>"/>
 			<input type="hidden" id="showFormPreview" name="showFormPreview" value="<%=showFormPreview%>"/>
 			<input type="hidden" id="mode" name="mode" value="<%=mode%>"/>
 			<input type="hidden" id="breadCrumbPosition" name="breadCrumbPosition" value=""/>

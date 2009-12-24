@@ -23,6 +23,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.util.global.ApplicationProperties;
 
 /**
@@ -599,7 +600,8 @@ public class Container extends DynamicExtensionBaseDomainObject
 				addDisplayOptionForRow(container, values, captionHTML, "_caption");
 				captionHTML.append("<td class='td_color_6e81a6' colspan='100' align='left'>");
 				captionHTML.append(((AbstractEntity) getAbstractEntity())
-						.getCapitalizedName(getCaption()));
+						.getCapitalizedName(DynamicExtensionsUtility
+								.replaceHTMLSpecialCharacters(getCaption())));
 				captionHTML.append("<tr ");
 				addDisplayOptionForRow(container, values, captionHTML, "_emptyrow");
 				captionHTML.append("<td height='5'></td></tr>");

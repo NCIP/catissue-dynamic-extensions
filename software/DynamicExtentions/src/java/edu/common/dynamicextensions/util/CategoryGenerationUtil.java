@@ -11,10 +11,12 @@ import java.util.Set;
 
 import edu.common.dynamicextensions.domain.CategoryEntity;
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
+import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.NumericAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.PathAssociationRelationInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
+import edu.common.dynamicextensions.domaininterface.CalculatedAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
@@ -23,6 +25,7 @@ import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.entitymanager.EntityManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
@@ -708,7 +711,30 @@ public class CategoryGenerationUtil
 								|| ((AttributeMetadataInterface) attributes.get(0))
 										.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
 						{
-							categoryAttribute.addCalculatedCategoryAttribute(attributes.get(0));
+							CalculatedAttributeInterface calculatedAttributeInterface = DomainObjectFactory
+									.getInstance().createCalculatedAttribute();
+							calculatedAttributeInterface
+									.setSourceCategoryAttribute(categoryAttribute);
+							calculatedAttributeInterface
+									.setTargetCalculatedAttribute(attributes
+											.get(0));
+							categoryAttribute
+									.addCalculatedCategoryAttribute(calculatedAttributeInterface);
+
+							ContainerInterface sourceContainerInterface = DynamicExtensionsUtility
+									.getContainerForAbstractEntity(attributes
+											.get(0).getCategoryEntity());
+
+							ControlInterface sourceControl = DynamicExtensionsUtility
+									.getControlForAbstractAttribute(
+											(AttributeMetadataInterface) attributes
+													.get(0),
+											sourceContainerInterface,
+											attributes.get(0)
+													.getCategoryEntity()
+													.getName());
+
+							sourceControl.setIsSourceForCalculatedAttribute(Boolean.TRUE);
 						}
 						else
 						{

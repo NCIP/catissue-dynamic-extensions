@@ -10,6 +10,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.TextAreaInterf
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.Constants;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 
 /**
  * @version 1.0
@@ -85,7 +86,8 @@ public class TextArea extends Control implements TextAreaInterface
 	public String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
 		String htmlString = "";
-		String defaultValue = getDefaultValueForControl();
+		String defaultValue = DynamicExtensionsUtility
+				.replaceHTMLSpecialCharacters(getDefaultValueForControl());
 
 		String htmlComponentName = getHTMLComponentName();
 		if (getIsSkipLogicTargetControl())

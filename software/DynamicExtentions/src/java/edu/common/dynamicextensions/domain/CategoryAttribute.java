@@ -10,6 +10,7 @@ import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
+import edu.common.dynamicextensions.domaininterface.CalculatedAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.DataElementInterface;
@@ -94,7 +95,11 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	/**
 	 * Collection of calculated CategoryAttribute Collection.
 	 */
-	protected Collection<CategoryAttributeInterface> calculatedCategoryAttributeCollection = new HashSet<CategoryAttributeInterface>();
+	protected Collection<CalculatedAttributeInterface> calculatedCategoryAttributeCollection = new HashSet<CalculatedAttributeInterface>();
+	/**
+	 * Collection of calculated CategoryAttribute Collection.
+	 */
+	protected Collection<CategoryAttributeInterface> calculatedAttributeCollection = new HashSet<CategoryAttributeInterface>();
 	/**
 	 * Collection of category attributes where in this category attribute is used in formula.
 	 */
@@ -406,43 +411,25 @@ public class CategoryAttribute extends BaseAbstractAttribute
 		this.formulaCollection = formulaCollection;
 	}
 	/**
-	 * @hibernate.set name="calculatedCategoryAttributeCollection" table="DYEXTN_CATEGORY_ATTRIBUTE"
+	 * @hibernate.set name="calculatedAttributeCollection" table="DYEXTN_CATEGORY_ATTRIBUTE"
 	 * cascade="all-delete-orphan" inverse="false" lazy="false"
 	 * @hibernate.collection-key column="CAL_CATEGORY_ATTR_ID"
 	 * @hibernate.cache  usage="read-write"
 	 * @hibernate.collection-one-to-many class="edu.common.dynamicextensions.domain.CategoryAttribute"
-	 * @return Returns the calculatedCategoryAttributeCollection.
+	 * @return Returns the calculatedAttributeCollection.
 	 */
-	public Collection<CategoryAttributeInterface> getCalculatedCategoryAttributeCollection()
+	public Collection<CategoryAttributeInterface> getCalculatedAttributeCollection()
 	{
-		return calculatedCategoryAttributeCollection;
+		return calculatedAttributeCollection;
 	}
 	/**
 	 *
-	 * @param calculatedCategoryAttributeCollection
+	 * @param calculatedAttributeCollection
 	 */
-	public void setCalculatedCategoryAttributeCollection(
-			Collection<CategoryAttributeInterface> calculatedCategoryAttributeCollection)
+	public void setCalculatedAttributeCollection(
+			Collection<CategoryAttributeInterface> calculatedAttributeCollection)
 	{
-		this.calculatedCategoryAttributeCollection = calculatedCategoryAttributeCollection;
-	}
-	/**
-	 *
-	 */
-	public void addCalculatedCategoryAttribute(CategoryAttributeInterface categoryAttributeInterface)
-	{
-		if (this.calculatedCategoryAttributeCollection == null)
-		{
-			this.calculatedCategoryAttributeCollection = new HashSet<CategoryAttributeInterface>();
-		}
-		this.calculatedCategoryAttributeCollection.add(categoryAttributeInterface);
-	}
-	/**
-	 * This method removes all Calculated Category Attributes.
-	 */
-	public void removeAllCalculatedCategoryAttributes()
-	{
-		calculatedCategoryAttributeCollection.clear();
+		this.calculatedAttributeCollection = calculatedAttributeCollection;
 	}
 	/**
 	 * @hibernate.set name="calculatedCategoryAttributeCollection" table="DYEXTN_CATEGORY_ATTRIBUTE"
@@ -466,13 +453,6 @@ public class CategoryAttribute extends BaseAbstractAttribute
 		this.calculatedDependentCategoryAttributes = calculatedDependentCategoryAttributes;
 	}
 	/**
-	 * This method removes all Calculated Category Attributes.
-	 */
-	public void removeAllCalculatedDependentCategoryAttributes()
-	{
-		calculatedCategoryAttributeCollection.clear();
-	}
-	/**
 	 *
 	 */
 	public void addCalculatedDependentCategoryAttribute(CategoryAttributeInterface categoryAttributeInterface)
@@ -482,6 +462,45 @@ public class CategoryAttribute extends BaseAbstractAttribute
 			this.calculatedDependentCategoryAttributes = new HashSet<CategoryAttributeInterface>();
 		}
 		this.calculatedDependentCategoryAttributes.add(categoryAttributeInterface);
+	}
+	/**
+	 * @hibernate.set name="calculatedCategoryAttributeCollection" table="DYEXTN_CALCULATED_ATTRIBUTE"
+	 * cascade="all-delete-orphan" inverse="false" lazy="false"
+	 * @hibernate.collection-key column="CAL_CATEGORY_ATTR_ID"
+	 * @hibernate.cache  usage="read-write"
+	 * @hibernate.collection-one-to-many class="edu.common.dynamicextensions.domain.CalculatedAttribute"
+	 * @return Returns the calculatedCategoryAttributeCollection.
+	 */
+	public Collection<CalculatedAttributeInterface> getCalculatedCategoryAttributeCollection()
+	{
+		return calculatedCategoryAttributeCollection;
+	}
+	/**
+	 *
+	 * @param calculatedCategoryAttributeCollection
+	 */
+	public void setCalculatedCategoryAttributeCollection(
+			Collection<CalculatedAttributeInterface> calculatedCategoryAttributeCollection)
+	{
+		this.calculatedCategoryAttributeCollection = calculatedCategoryAttributeCollection;
+	}
+	/**
+	 *
+	 */
+	public void addCalculatedCategoryAttribute(CalculatedAttributeInterface calculatedAttributeInterface)
+	{
+		if (this.calculatedCategoryAttributeCollection == null)
+		{
+			this.calculatedCategoryAttributeCollection = new HashSet<CalculatedAttributeInterface>();
+		}
+		this.calculatedCategoryAttributeCollection.add(calculatedAttributeInterface);
+	}
+	/**
+	 * This method removes all Calculated Category Attributes.
+	 */
+	public void removeAllCalculatedCategoryAttributes()
+	{
+		calculatedCategoryAttributeCollection.clear();
 	}
 	/**
 	 * This method return the default value for the category attribute if set otherwise

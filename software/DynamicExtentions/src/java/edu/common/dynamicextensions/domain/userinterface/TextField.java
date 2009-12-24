@@ -10,6 +10,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.TextFieldInter
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.Constants;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 
 /**
  * This Class represents the TextField (TextBox) of the HTML page.
@@ -82,11 +83,12 @@ public class TextField extends Control implements TextFieldInterface
 	 */
 	public String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
 	{
-		String defaultValue = getDefaultValueForControl();
+		String defaultValue = DynamicExtensionsUtility
+				.replaceHTMLSpecialCharacters(getDefaultValueForControl());
 
 		String htmlComponentName = getHTMLComponentName();
 		String htmlString = "";
-		if (getIsSkipLogicTargetControl())
+		if (getIsSkipLogicTargetControl() || getIsCalculated())
 		{
 			htmlString += "<div id='" + getHTMLComponentName() + "_div' name='"
 					+ getHTMLComponentName() + "_div'>";
@@ -100,8 +102,17 @@ public class TextField extends Control implements TextFieldInterface
 		}
 		else
 		{
-			htmlString += "<INPUT " + "class='font_bl_nor' " + "name='" + htmlComponentName + "' "
-					+ "id='" + htmlComponentName + "' onchange='isDataChanged();' value='" + defaultValue + "' ";
+			htmlString += "<INPUT "
+					+ "class='font_bl_nor' "
+					+ "name='"
+					+ htmlComponentName
+					+ "' "
+					+ "id='"
+					+ htmlComponentName
+					+ "' onchange=\"isDataChanged();"
+					+ (this.isSourceForCalculatedAttribute != null
+							&& this.isSourceForCalculatedAttribute ? "calculateAttributes();" : "")
+					+ "\" value='" + defaultValue + "' ";
 
 			int columnSize = columns.intValue();
 			if (columnSize > 0)
@@ -144,13 +155,6 @@ public class TextField extends Control implements TextFieldInterface
 			}
 
 			htmlString += "/>";
-			if (this.isCalculated != null && this.isCalculated)
-			{
-				htmlString += "<img src=\"images/de/b_calculate.gif\" alt=\"Calculate\" width=\"62\" height=\"21\" hspace=\"3\" align=\"absmiddle\" onClick=\"calculateAttributes();\" >";
-				htmlString += "<map alt=\"Calculate\">";
-				htmlString += "<area href=\"javascript:calculateAttributes()\" shape=\"default\">";
-				htmlString += "</map>";
-			}
 			//String measurementUnit = getMeasurementUnit(this.getAbstractAttribute());
 			String measurementUnit = this.getAttibuteMetadataInterface().getMeasurementUnit();
 			if (measurementUnit != null)
@@ -166,6 +170,14 @@ public class TextField extends Control implements TextFieldInterface
 		{
 			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
 					+ getHTMLComponentName() + "_div' />";
+		}
+		if (getIsCalculated())
+		{
+			htmlString += "<input type='hidden' name='calculatedControl' id='calculatedControl' value = '"
+					+ getHTMLComponentName() + "_div' />";
+		}
+		if (getIsSkipLogicTargetControl() || getIsCalculated())
+		{
 			htmlString += "</div>";
 		}
 		return htmlString;

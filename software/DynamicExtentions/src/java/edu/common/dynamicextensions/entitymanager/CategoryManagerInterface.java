@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.SemanticPropertyInterface;
@@ -139,5 +140,24 @@ public interface CategoryManagerInterface
 			CategoryEntityInterface rootCatEntity, Long recordId)
 			throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException, SQLException;
+	/**
+	 *
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 */
+	Collection<CategoryAttributeInterface> getAllCalculatedCategoryAttributes()
+			throws DynamicExtensionsSystemException;
+
+	/**
+	 *
+	 * @param categoryAttributeCollection
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
+	 */
+	Collection<CategoryAttributeInterface> updateCategoryAttributes(
+			Collection<CategoryAttributeInterface> categoryAttributeCollection)
+			throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException;
 
 }

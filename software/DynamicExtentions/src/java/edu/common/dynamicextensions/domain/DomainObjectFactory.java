@@ -41,6 +41,7 @@ import edu.common.dynamicextensions.domaininterface.BooleanValueInterface;
 import edu.common.dynamicextensions.domaininterface.ByteArrayValueInterface;
 import edu.common.dynamicextensions.domaininterface.CaDSRDEInterface;
 import edu.common.dynamicextensions.domaininterface.CaDSRValueDomainInfoInterface;
+import edu.common.dynamicextensions.domaininterface.CalculatedAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
@@ -873,7 +874,15 @@ public class DomainObjectFactory
 	{
 		return new SkipLogicAttribute();
 	}
-
+	/**
+	 *
+	 * @return
+	 */
+	public CalculatedAttributeInterface createCalculatedAttribute()
+	{
+		CalculatedAttribute calculatedAttribute = new CalculatedAttribute();
+		return calculatedAttribute;
+	}
 	/**
 	 * @return IdGeneratorInterface
 	 */
