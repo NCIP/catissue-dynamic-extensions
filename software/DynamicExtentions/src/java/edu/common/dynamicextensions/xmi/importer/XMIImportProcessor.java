@@ -190,7 +190,7 @@ public class XMIImportProcessor
 	 * This will set the xmiConfiguration Object to given argument
 	 * @param xmiConfigurationObject configuration Object to use
 	 */
-	public void setXmiConfigurationObject(XMIConfiguration xmiConfigurationObject)
+	public void setXmiConfigurationObject(final XMIConfiguration xmiConfigurationObject)
 	{
 		this.xmiConfigurationObject = xmiConfigurationObject;
 	}
@@ -208,14 +208,14 @@ public class XMIImportProcessor
 	 * @return dynamic QueryList for table creation & their rollback queries
 	 * @throws Exception exception
 	 */
-	public DynamicQueryList processXmi(UmlPackage umlPackage, String entityGroupName,
-			String packageName, List<String> containerNames, HibernateDAO... hibernatedao)
+	public DynamicQueryList processXmi(final UmlPackage umlPackage, final String entityGroupName,
+			final String packageName, final List<String> containerNames, final HibernateDAO... hibernatedao)
 			throws Exception
 	{
-		List<UmlClass> umlClassColl = new ArrayList<UmlClass>();
-		List<UmlAssociation> umlAssociationColl = new ArrayList<UmlAssociation>();
-		List<Generalization> umlGeneralisationColl = new ArrayList<Generalization>();
-		List<EntityInterface> newEntities = new ArrayList<EntityInterface>();
+		final List<UmlClass> umlClassColl = new ArrayList<UmlClass>();
+		final List<UmlAssociation> umlAssociationColl = new ArrayList<UmlAssociation>();
+		final List<Generalization> umlGeneralisationColl = new ArrayList<Generalization>();
+		final List<EntityInterface> newEntities = new ArrayList<EntityInterface>();
 		if (xmiConfigurationObject == null)
 		{
 			throw new DynamicExtensionsSystemException(
@@ -228,7 +228,7 @@ public class XMIImportProcessor
 
 		validate();
 
-		List<EntityGroupInterface> entityGroupColl = retrieveEntityGroup(entityGroupName);
+		final List<EntityGroupInterface> entityGroupColl = retrieveEntityGroup(entityGroupName);
 
 		if ((entityGroupColl == null) || entityGroupColl.isEmpty())
 		{//Add
@@ -246,11 +246,11 @@ public class XMIImportProcessor
 		entityGroup.setIsSystemGenerated(xmiConfigurationObject.isEntityGroupSystemGenerated());
 
 		addTaggedValue(packageName);
-		int noOfClasses = umlClassColl.size();
+		final int noOfClasses = umlClassColl.size();
 		umlClassIdVsEntity = new HashMap<String, EntityInterface>(noOfClasses);
 
 		//Creating entities and entity group.
-		for (UmlClass umlClass : umlClassColl)
+		for (final UmlClass umlClass : umlClassColl)
 		{
 			if (xmiConfigurationObject.isEntityGroupSystemGenerated()
 					&& !umlClass.getName().startsWith(
@@ -329,7 +329,7 @@ public class XMIImportProcessor
 			//			markInheritedAttributes(entityGroup);
 		}
 		// process composite PrimaryKey including inherited primary keys also
-		for (EntityInterface entity : entityGroup.getEntityCollection())
+		for (final EntityInterface entity : entityGroup.getEntityCollection())
 		{
 			//addPrimaryKeyOfParentToChild(entity);
 			processCompositeKey(entity);
@@ -352,16 +352,16 @@ public class XMIImportProcessor
 		if (entityGroup.getId() != null)
 		{
 			//retrievedContainerList populated by containerCollection of each entity
-			Collection<EntityInterface> entityCollection = entityGroup.getEntityCollection();
-			for (EntityInterface entity : entityCollection)
+			final Collection<EntityInterface> entityCollection = entityGroup.getEntityCollection();
+			for (final EntityInterface entity : entityCollection)
 			{
 				retrievedContainerList.addAll(entity.getContainerCollection());
 			}
 		}
 
-		for (UmlClass umlClass : umlClassColl)
+		for (final UmlClass umlClass : umlClassColl)
 		{
-			EntityInterface entity = umlClassIdVsEntity.get(umlClass.refMofId());
+			final EntityInterface entity = umlClassIdVsEntity.get(umlClass.refMofId());
 			//In memory operation
 			createContainer(entity);
 			//to retrieve primary key properties of the attribute of entity
@@ -380,13 +380,13 @@ public class XMIImportProcessor
 		// Persist container in DB.
 		Logger.out.info("Now SAVING DYNAMIC MODEL....");
 		Logger.out.info(" ");
-		DynamicQueryList dynamicQueryList = processPersistence(containerNames,
+		final DynamicQueryList dynamicQueryList = processPersistence(containerNames,
 				xmiConfigurationObject.isEntityGroupSystemGenerated(), xmiConfigurationObject
 						.isCreateTable(), xmiConfigurationObject.isDefaultPackage(),
 				xmiConfigurationObject.getDefaultPackagePrefix(), hibernatedao);
 
-		List<Long> newEntitiesIds = xmiConfigurationObject.getNewEntitiesIds();
-		for (EntityInterface newEntity : newEntities)
+		final List<Long> newEntitiesIds = xmiConfigurationObject.getNewEntitiesIds();
+		for (final EntityInterface newEntity : newEntities)
 		{
 			newEntitiesIds.add(newEntity.getId());
 		}
@@ -394,7 +394,7 @@ public class XMIImportProcessor
 		// a multiselect attribute.IF dao is provided then its the resposibility of the host to execute these Queries.
 		if ((hibernatedao == null) || (hibernatedao.length == 0))
 		{
-			List<String> multiSelMigrationQueries = EntityManagerUtil
+			final List<String> multiSelMigrationQueries = EntityManagerUtil
 					.updateSqlScriptToMigrateOldDataForMultiselectAttribute(multiselectMigartionScripts);
 			XMIImporterUtil.executeDML(multiSelMigrationQueries);
 		}
@@ -407,27 +407,27 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	private void addAssociation(List<UmlAssociation> umlAssociationColl,
-			Map<String, List<String>> parentIdVsChildrenIds)
+	private void addAssociation(final List<UmlAssociation> umlAssociationColl,
+			final Map<String, List<String>> parentIdVsChildrenIds)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		HibernateDAO hibernateDao = null;
 		try
 		{
-			String appName = DynamicExtensionDAO.getInstance().getAppName();
+			final String appName = DynamicExtensionDAO.getInstance().getAppName();
 			hibernateDao = (HibernateDAO) DAOConfigFactory.getInstance().getDAOFactory(appName)
 					.getDAO();
 			hibernateDao.openSession(null);
 
 			if (umlAssociationColl != null)
 			{
-				for (UmlAssociation umlAssociation : umlAssociationColl)
+				for (final UmlAssociation umlAssociation : umlAssociationColl)
 				{
 					addAssociation(umlAssociation, hibernateDao, parentIdVsChildrenIds);
 				}
 			}
 		}
-		catch (DAOException e)
+		catch (final DAOException e)
 		{
 			throw new DynamicExtensionsSystemException(
 					"Exception encountered while populating constraint properties for entity.", e);
@@ -438,7 +438,7 @@ public class XMIImportProcessor
 			{
 				hibernateDao.closeSession();
 			}
-			catch (DAOException e)
+			catch (final DAOException e)
 			{
 				throw new DynamicExtensionsSystemException(
 						"Exception encountered while closing session.", e);
@@ -453,22 +453,22 @@ public class XMIImportProcessor
 	 * @param entity whose composite key is to be processed
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void processCompositeKey(EntityInterface entity)
+	private void processCompositeKey(final EntityInterface entity)
 			throws DynamicExtensionsSystemException
 	{
-		List<String> primaryKeyList = entityVsPrimaryKeyNameList.get(entity);
+		final List<String> primaryKeyList = entityVsPrimaryKeyNameList.get(entity);
 		if (primaryKeyList != null)
 		{
-			for (String primaryKeyName : primaryKeyList)
+			for (final String primaryKeyName : primaryKeyList)
 			{
-				StringTokenizer tokenizer = new StringTokenizer(primaryKeyName,
+				final StringTokenizer tokenizer = new StringTokenizer(primaryKeyName,
 						XMIConstants.DOT_SEPARATOR);
-				String entityName = getNextToken(tokenizer);
-				EntityInterface targetEntity = entityGroup.getEntityByName(entityName);
+				final String entityName = getNextToken(tokenizer);
+				final EntityInterface targetEntity = entityGroup.getEntityByName(entityName);
 				if (targetEntity != null)
 				{
-					String attributeName = getNextToken(tokenizer);
-					AttributeInterface attribute = targetEntity
+					final String attributeName = getNextToken(tokenizer);
+					final AttributeInterface attribute = targetEntity
 							.getEntityAttributeByName(attributeName);
 					if (attribute != null)
 					{
@@ -492,8 +492,8 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void populateEntityProperties(EntityInterface entity, UmlClass umlClass,
-			Map<EntityInterface, Map<String, String>> entityVsMapTagValues)
+	private void populateEntityProperties(final EntityInterface entity, final UmlClass umlClass,
+			final Map<EntityInterface, Map<String, String>> entityVsMapTagValues)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
 		populateEntityUIProperties(entity, umlClass.getTaggedValue());
@@ -507,13 +507,13 @@ public class XMIImportProcessor
 	 * @param entity in which to search for multiselct attributes associaion
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void populateMultiselectAttribute(EntityInterface entity)
+	private void populateMultiselectAttribute(final EntityInterface entity)
 			throws DynamicExtensionsSystemException
 	{
-		Collection<AssociationInterface> associationColl = entity.getAllAssociations();
-		for (AssociationInterface association : associationColl)
+		final Collection<AssociationInterface> associationColl = entity.getAllAssociations();
+		for (final AssociationInterface association : associationColl)
 		{
-			Map<String, String> taggedValueMap = associationVsMapTagValues.get(association);
+			final Map<String, String> taggedValueMap = associationVsMapTagValues.get(association);
 			if (isMultiselectTagValue(taggedValueMap))
 			{
 				association.populateAssociationForConstraintProperties();
@@ -531,12 +531,12 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void processPrimaryKey(EntityInterface entity, Map<String, String> taggedValueMap)
+	private void processPrimaryKey(final EntityInterface entity, final Map<String, String> taggedValueMap)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		String primaryKey = null;
 		AttributeInterface primaryAttribute = null;
-		Collection<AttributeInterface> primKeyAttrColl = entity.getPrimaryKeyAttributeCollection();
+		final Collection<AttributeInterface> primKeyAttrColl = entity.getPrimaryKeyAttributeCollection();
 		resetPrimaryKeyAttributes(primKeyAttrColl);
 		//Deleting primary key collection only in case of edited xmi true and isAddIdAttribute=false
 		//This is specific to CIDER only.As inside Clinportal and Catissue the primarykey will never going to be edited,
@@ -548,19 +548,19 @@ public class XMIImportProcessor
 		}
 
 		primaryKey = taggedValueMap.get(XMIConstants.TAGGED_VALUE_PRIMARYKEY);
-		List<String> primaryKeyAttributeNameList = new ArrayList<String>();
+		final List<String> primaryKeyAttributeNameList = new ArrayList<String>();
 		if ((primaryKey != null) && !"".equals(primaryKey))
 		{
 			//removeIdAttributeFromEntity(entity);
-			String primaryAttributeName[] = primaryKey.split(XMIConstants.COMMA);
-			for (String attributeName : primaryAttributeName)
+			final String primaryAttributeName[] = primaryKey.split(XMIConstants.COMMA);
+			for (final String attributeName : primaryAttributeName)
 			{
-				StringTokenizer tokenizer = new StringTokenizer(attributeName,
+				final StringTokenizer tokenizer = new StringTokenizer(attributeName,
 						XMIConstants.DOT_SEPARATOR);
-				String entityName = getNextToken(tokenizer);
+				final String entityName = getNextToken(tokenizer);
 				if (entity.getName().equals(entityName))
 				{
-					String attribute = getNextToken(tokenizer);
+					final String attribute = getNextToken(tokenizer);
 					primaryAttribute = entity.getEntityAttributeByName(attribute);
 					if (primaryAttribute == null)
 					{
@@ -594,7 +594,7 @@ public class XMIImportProcessor
 	 * @param tokenizer from which to retrieve next token
 	 * @return next token
 	 */
-	private String getNextToken(StringTokenizer tokenizer)
+	private String getNextToken(final StringTokenizer tokenizer)
 	{
 		String token = "";
 		if (tokenizer.hasMoreTokens())
@@ -608,9 +608,9 @@ public class XMIImportProcessor
 	 * It will set the isPrimaryKey to false of the each attribute in the given collection
 	 * @param primKeyAttrColl
 	 */
-	private void resetPrimaryKeyAttributes(Collection<AttributeInterface> primKeyAttrColl)
+	private void resetPrimaryKeyAttributes(final Collection<AttributeInterface> primKeyAttrColl)
 	{
-		for (AttributeInterface attribute : primKeyAttrColl)
+		for (final AttributeInterface attribute : primKeyAttrColl)
 		{
 			if (!attribute.getName().equals(XMIConstants.ID_ATTRIBUTE_NAME))
 			{
@@ -638,10 +638,10 @@ public class XMIImportProcessor
 	 * @return
 	 * @throws BizLogicException
 	 */
-	private List retrieveEntityGroup(String entityGroupName) throws BizLogicException
+	private List retrieveEntityGroup(final String entityGroupName) throws BizLogicException
 	{
 		List<EntityGroupInterface> entityGroupColl = null;
-		DefaultBizLogic defaultBizLogic = BizLogicFactory.getDefaultBizLogic();
+		final DefaultBizLogic defaultBizLogic = BizLogicFactory.getDefaultBizLogic();
 		defaultBizLogic.setAppName(DynamicExtensionDAO.getInstance().getAppName());
 		entityGroupColl = defaultBizLogic.retrieve(EntityGroup.class.getName(),
 				edu.common.dynamicextensions.ui.util.Constants.NAME, entityGroupName);
@@ -660,7 +660,7 @@ public class XMIImportProcessor
 	/**
 	 * @param entityGroupName
 	 */
-	private void setEntityGroupName(String entityGroupName)
+	private void setEntityGroupName(final String entityGroupName)
 	{
 		entityGroup.setShortName(entityGroupName);
 		entityGroup.setName(entityGroupName);
@@ -673,7 +673,7 @@ public class XMIImportProcessor
 	 * add the new taggedValue in it.
 	 * @param packageName
 	 */
-	private void addTaggedValue(String packageName)
+	private void addTaggedValue(final String packageName)
 	{
 		Collection<TaggedValueInterface> tvColl = entityGroup.getTaggedValueCollection();
 		if (tvColl == null)
@@ -702,9 +702,9 @@ public class XMIImportProcessor
 	 * @param umlClassName
 	 * @return
 	 */
-	private boolean checkEntityWithDataTypeEntities(String umlClassName)
+	private boolean checkEntityWithDataTypeEntities(final String umlClassName)
 	{
-		DatatypeMappings dataType = DatatypeMappings.get(umlClassName);
+		final DatatypeMappings dataType = DatatypeMappings.get(umlClassName);
 		boolean flag = false;
 		if ((dataType != null)
 				|| umlClassName
@@ -725,24 +725,24 @@ public class XMIImportProcessor
 	 * @param umlAssociationColl
 	 * @param umlGeneralisationColl
 	 */
-	private void processModel(UmlPackage umlPackage, List<UmlClass> umlClassColl,
-			List<UmlAssociation> umlAssociationColl, List<Generalization> umlGeneralisationColl,
-			List<Dependency> umlDependencyColl, String packageName, boolean isDataModel)
+	private void processModel(final UmlPackage umlPackage, final List<UmlClass> umlClassColl,
+			final List<UmlAssociation> umlAssociationColl, final List<Generalization> umlGeneralisationColl,
+			final List<Dependency> umlDependencyColl, final String packageName, final boolean isDataModel)
 	{
-		ModelManagementPackage modelManagementPackage = umlPackage.getModelManagement();
-		ModelClass modelClass = modelManagementPackage.getModel();
-		Collection<Model> modelColl = modelClass.refAllOfClass();
+		final ModelManagementPackage modelManagementPackage = umlPackage.getModelManagement();
+		final ModelClass modelClass = modelManagementPackage.getModel();
+		final Collection<Model> modelColl = modelClass.refAllOfClass();
 
-		for (Model model : modelColl)
+		for (final Model model : modelColl)
 		{
-			Collection ownedElementColl = model.getOwnedElement();
+			final Collection ownedElementColl = model.getOwnedElement();
 			Logger.out.info(" ");
 			Logger.out.info("MODEL OWNED ELEMENT COLLECTION SIZE = " + ownedElementColl.size());
 			Logger.out.info(" ");
 			Logger.out.info(" ");
-			Iterator iter = ownedElementColl.iterator();
+			final Iterator iter = ownedElementColl.iterator();
 
-			StringTokenizer tokens = new StringTokenizer(packageName, XMIConstants.DOT_SEPARATOR);
+			final StringTokenizer tokens = new StringTokenizer(packageName, XMIConstants.DOT_SEPARATOR);
 			String token = "";
 			if (tokens.hasMoreTokens())
 			{
@@ -755,7 +755,7 @@ public class XMIImportProcessor
 			}
 			else
 			{
-				StringTokenizer initializedTokens = new StringTokenizer(packageName,
+				final StringTokenizer initializedTokens = new StringTokenizer(packageName,
 						XMIConstants.DOT_SEPARATOR);
 				token = "";
 				if (initializedTokens.hasMoreTokens())
@@ -764,10 +764,10 @@ public class XMIImportProcessor
 				}
 				while (iter.hasNext())
 				{
-					Object obj = iter.next();
+					final Object obj = iter.next();
 					if (obj instanceof org.omg.uml.modelmanagement.UmlPackage)
 					{
-						org.omg.uml.modelmanagement.UmlPackage umlPackageObj = (org.omg.uml.modelmanagement.UmlPackage) obj;
+						final org.omg.uml.modelmanagement.UmlPackage umlPackageObj = (org.omg.uml.modelmanagement.UmlPackage) obj;
 						if (token.equalsIgnoreCase(umlPackageObj.getName()))
 						{
 							processSelectedPackage(umlPackageObj, initializedTokens, umlClassColl,
@@ -791,10 +791,10 @@ public class XMIImportProcessor
 	 * @param umlAssociationColl
 	 * @param umlGeneralisationColl
 	 */
-	private void processSelectedPackage(org.omg.uml.modelmanagement.UmlPackage parentPkg,
-			StringTokenizer tokens, List<UmlClass> umlClassColl,
-			List<UmlAssociation> umlAssociationColl, List<Generalization> umlGeneralisationColl,
-			List<Dependency> dependencyColl, boolean isDataModel)
+	private void processSelectedPackage(final org.omg.uml.modelmanagement.UmlPackage parentPkg,
+			final StringTokenizer tokens, final List<UmlClass> umlClassColl,
+			final List<UmlAssociation> umlAssociationColl, final List<Generalization> umlGeneralisationColl,
+			final List<Dependency> dependencyColl, final boolean isDataModel)
 	{
 		String token = "";
 		int temp = 0;
@@ -809,12 +809,12 @@ public class XMIImportProcessor
 		//			processPackage(parentPkg,umlClassColl,umlAssociationColl,umlGeneralisationColl);
 		//		}
 		//		else
-		for (Iterator i = parentPkg.getOwnedElement().iterator(); i.hasNext();)
+		for (final Iterator i = parentPkg.getOwnedElement().iterator(); i.hasNext();)
 		{
-			Object object = i.next();//
+			final Object object = i.next();//
 			if (object instanceof org.omg.uml.modelmanagement.UmlPackage)
 			{
-				org.omg.uml.modelmanagement.UmlPackage subPkg = (org.omg.uml.modelmanagement.UmlPackage) object;
+				final org.omg.uml.modelmanagement.UmlPackage subPkg = (org.omg.uml.modelmanagement.UmlPackage) object;
 				if (token.equalsIgnoreCase(subPkg.getName()))
 				{
 					processSelectedPackage(subPkg, tokens, umlClassColl, umlAssociationColl,
@@ -839,14 +839,14 @@ public class XMIImportProcessor
 	* @param isDataModel
 	*/
 
-	private void processPackageForModel(Model parentPkg, List<UmlClass> umlClasses,
-			List<UmlAssociation> associations, List<Generalization> generalizations,
-			List<Dependency> dependencyColl, boolean isDataModel)
+	private void processPackageForModel(final Model parentPkg, final List<UmlClass> umlClasses,
+			final List<UmlAssociation> associations, final List<Generalization> generalizations,
+			final List<Dependency> dependencyColl, final boolean isDataModel)
 	{
 		isPackagePresent = true;
-		for (Iterator i = parentPkg.getOwnedElement().iterator(); i.hasNext();)
+		for (final Iterator i = parentPkg.getOwnedElement().iterator(); i.hasNext();)
 		{
-			Object obj = i.next();
+			final Object obj = i.next();
 			/*	if (o instanceof org.omg.uml.modelmanagement.UmlPackage && !(packageName.equals(parentPkg.getName())))
 			 {
 			 org.omg.uml.modelmanagement.UmlPackage subPkg = (org.omg.uml.modelmanagement.UmlPackage) o;
@@ -872,13 +872,13 @@ public class XMIImportProcessor
 				}
 				else if (obj instanceof UmlClass)
 				{
-					UmlClass umlClass = (UmlClass) obj;
-					boolean isEntityADatatype = checkEntityWithDataTypeEntities(umlClass.getName());
+					final UmlClass umlClass = (UmlClass) obj;
+					final boolean isEntityADatatype = checkEntityWithDataTypeEntities(umlClass.getName());
 					if (isEntityADatatype)
 					{//Skipping classes having datatype names eg Integer,String etc.
 						continue;
 					}
-					Collection<Generalization> generalizationColl = umlClass.getGeneralization();
+					final Collection<Generalization> generalizationColl = umlClass.getGeneralization();
 					if ((generalizationColl != null) && (generalizationColl.size() > 0))
 					{
 						generalizations.addAll(generalizationColl);
@@ -899,15 +899,15 @@ public class XMIImportProcessor
 	 * @param dependencyColl
 	 * @param isDataModel
 	 */
-	private void processPackage(org.omg.uml.modelmanagement.UmlPackage parentPkg,
-			List<UmlClass> umlClasses, List<UmlAssociation> associations,
-			List<Generalization> generalizations, List<Dependency> dependencyColl,
-			boolean isDataModel)
+	private void processPackage(final org.omg.uml.modelmanagement.UmlPackage parentPkg,
+			final List<UmlClass> umlClasses, final List<UmlAssociation> associations,
+			final List<Generalization> generalizations, final List<Dependency> dependencyColl,
+			final boolean isDataModel)
 	{
 		isPackagePresent = true;
-		for (Iterator i = parentPkg.getOwnedElement().iterator(); i.hasNext();)
+		for (final Iterator i = parentPkg.getOwnedElement().iterator(); i.hasNext();)
 		{
-			Object obj = i.next();
+			final Object obj = i.next();
 			/*	if (o instanceof org.omg.uml.modelmanagement.UmlPackage && !(packageName.equals(parentPkg.getName())))
 			 {
 			 org.omg.uml.modelmanagement.UmlPackage subPkg = (org.omg.uml.modelmanagement.UmlPackage) o;
@@ -934,14 +934,14 @@ public class XMIImportProcessor
 				}
 				else if (obj instanceof UmlClass)
 				{
-					UmlClass umlClass = (UmlClass) obj;
-					boolean isEntityADatatype = checkEntityWithDataTypeEntities(umlClass.getName());
+					final UmlClass umlClass = (UmlClass) obj;
+					final boolean isEntityADatatype = checkEntityWithDataTypeEntities(umlClass.getName());
 					if (isEntityADatatype)
 					{//Skipping classes having datatype names eg Integer,String etc.
 						continue;
 					}
 
-					Collection<Generalization> generalizationColl = umlClass.getGeneralization();
+					final Collection<Generalization> generalizationColl = umlClass.getGeneralization();
 					if ((generalizationColl != null) && (generalizationColl.size() > 0))
 					{
 						generalizations.addAll(generalizationColl);
@@ -966,14 +966,14 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	private EntityInterface createEntity(UmlClass umlClass)
+	private EntityInterface createEntity(final UmlClass umlClass)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
-		String name = umlClass.getName();
+		final String name = umlClass.getName();
 		//EntityInterface entity = deFactory.createEntity();
 		// calling createEntity of EntityProcessor as it generates id attibute for that entity
-		EntityProcessor entityProcessor = EntityProcessor.getInstance();
-		EntityInterface entity = entityProcessor.createEntity();
+		final EntityProcessor entityProcessor = EntityProcessor.getInstance();
+		final EntityInterface entity = entityProcessor.createEntity();
 		entity.setName(name);
 		entity.setDescription(entityGroup.getName() + "--" + umlClass.getName());
 		entity.setAbstract(umlClass.isAbstract());
@@ -990,7 +990,7 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	private AttributeInterface createAttribute(Attribute umlAttribute, EntityInterface entity)
+	private AttributeInterface createAttribute(final Attribute umlAttribute, final EntityInterface entity)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		//Not showing id attribute on UI if Id attribute is to be added by DE which is specified in xmiConfiguration Object
@@ -1002,7 +1002,7 @@ public class XMIImportProcessor
 			//If id attribute is system generated then dont create attribute for user given Id attribute
 			return null;
 		}
-		DataType dataType = DataType.get(umlAttribute.getType().getName());
+		final DataType dataType = DataType.get(umlAttribute.getType().getName());
 		if (dataType != null)
 		{//Temporary solution for unsupported datatypes. Not adding attributes having unsupported datatypes.
 
@@ -1010,15 +1010,15 @@ public class XMIImportProcessor
 					.getName());
 			if (originalAttribute == null)
 			{//New attribute has been created
-				AttributeInterface attribute = dataType.createAttribute(umlAttribute);
+				final AttributeInterface attribute = dataType.createAttribute(umlAttribute);
 				if (attribute != null)
 				{ // to bypass attributes of invalid datatypes
 					attribute.setName(umlAttribute.getName());
 					//					attribute.setDescription(umlAttribute.getTaggedValue().getDescription());
 					//					setSemanticMetadata(attribute, umlAttribute.getSemanticMetadata());
-					Collection<TaggedValue> taggedValueColl = umlAttribute.getTaggedValue();
+					final Collection<TaggedValue> taggedValueColl = umlAttribute.getTaggedValue();
 					populateAttributeUIProperties(attribute, taggedValueColl);
-					Map<String, String> taggedValueMap = attrVsMapTagValues.get(attribute);
+					final Map<String, String> taggedValueMap = attrVsMapTagValues.get(attribute);
 					addSemanticPropertyForAttributes(attribute, taggedValueMap);
 
 					if (isMultiselectTagValue(taggedValueMap))
@@ -1034,9 +1034,9 @@ public class XMIImportProcessor
 			}
 			else
 			{//Attribute has been edited
-				Collection<TaggedValue> taggedValueColl = umlAttribute.getTaggedValue();
+				final Collection<TaggedValue> taggedValueColl = umlAttribute.getTaggedValue();
 				populateAttributeUIProperties(originalAttribute, taggedValueColl);
-				Map<String, String> taggedValueMap = attrVsMapTagValues.get(originalAttribute);
+				final Map<String, String> taggedValueMap = attrVsMapTagValues.get(originalAttribute);
 				if (isMultiselectTagValue(taggedValueMap)
 						&& !entity.isMultiselectAttributePresent(umlAttribute.getName()))
 				{
@@ -1064,35 +1064,35 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	public Collection<String> addAttributes(UmlClass klass, EntityInterface entity)
+	public Collection<String> addAttributes(final UmlClass klass, final EntityInterface entity)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
-		Collection atts = new ArrayList();
-		Collection<String> attributeNames = new HashSet<String>();
-		for (Iterator i = klass.getFeature().iterator(); i.hasNext();)
+		final Collection atts = new ArrayList();
+		final Collection<String> attributeNames = new HashSet<String>();
+		for (final Iterator i = klass.getFeature().iterator(); i.hasNext();)
 		{
-			Object object = i.next();
+			final Object object = i.next();
 			if (object instanceof Attribute)
 			{
 				atts.add(object);
-				Attribute att = (Attribute) object;
+				final Attribute att = (Attribute) object;
 				createAttribute(att, entity);
 				attributeNames.add(att.getName());
 			}
 		}
 		if (xmiConfigurationObject.isAddInheritedAttribute())
 		{
-			Map attsMap = new HashMap();
+			final Map attsMap = new HashMap();
 			UmlClass superClass = XMIUtilities.getSuperClass(klass);
 			AttributeInterface attribute;
 			while (superClass != null)
 			{
-				for (Iterator i = superClass.getFeature().iterator(); i.hasNext();)
+				for (final Iterator i = superClass.getFeature().iterator(); i.hasNext();)
 				{
-					Object object = i.next();
+					final Object object = i.next();
 					if (object instanceof Attribute)
 					{
-						Attribute att = (Attribute) object;
+						final Attribute att = (Attribute) object;
 						if (attsMap.get(att.getName()) == null)
 						{
 							attsMap.put(att.getName(), att);
@@ -1120,18 +1120,18 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	private void removeAttribute(EntityInterface entity, AttributeInterface originalAttribute,
-			Map<String, String> taggedValueMap, DataType dataType, Attribute umlAttribute)
+	private void removeAttribute(final EntityInterface entity, final AttributeInterface originalAttribute,
+			final Map<String, String> taggedValueMap, final DataType dataType, final Attribute umlAttribute)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		originalAttribute.setName(DEConstants.DEPRECATED + originalAttribute.getName());
-		EntityManagerInterface entityManagerInterface = EntityManager.getInstance();
-		ControlInterface controlInterface = entityManagerInterface
+		final EntityManagerInterface entityManagerInterface = EntityManager.getInstance();
+		final ControlInterface controlInterface = entityManagerInterface
 				.getControlByAbstractAttributeIdentifier(originalAttribute.getId());
 
-		AttributeInterface attribute = dataType.createAttribute(umlAttribute);
+		final AttributeInterface attribute = dataType.createAttribute(umlAttribute);
 		addSemanticPropertyForAttributes(attribute, attrVsMapTagValues.get(originalAttribute));
-		AssociationInterface association = addMultiselectAttribute(attribute, umlAttribute,
+		final AssociationInterface association = addMultiselectAttribute(attribute, umlAttribute,
 				taggedValueMap, entity);
 		controlInterface.setBaseAbstractAttribute(association);
 		multiselectMigartionScripts.put(association, EntityManagerUtil
@@ -1145,19 +1145,19 @@ public class XMIImportProcessor
 	 * @param umlAttribute
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private AssociationInterface addMultiselectAttribute(AttributeInterface attribute,
-			Attribute umlAttribute, Map<String, String> taggedValueMap, EntityInterface entity)
+	private AssociationInterface addMultiselectAttribute(final AttributeInterface attribute,
+			final Attribute umlAttribute, final Map<String, String> taggedValueMap, final EntityInterface entity)
 			throws DynamicExtensionsSystemException
 	{
-		DomainObjectFactory factory = DomainObjectFactory.getInstance();
-		AssociationInterface association = createAssociation();
+		final DomainObjectFactory factory = DomainObjectFactory.getInstance();
+		final AssociationInterface association = createAssociation();
 		association.setIsCollection(Boolean.TRUE);
 
-		EntityInterface targetEntity = factory.createEntity();
+		final EntityInterface targetEntity = factory.createEntity();
 		EntityManagerUtil.addIdAttribute(targetEntity);
 		targetEntity.setName(DEConstants.COLLECTIONATTRIBUTECLASS + umlAttribute.getName()
 				+ IdGeneratorUtil.getInstance().getNextUniqeId());
-		String multiSelectTName = taggedValueMap
+		final String multiSelectTName = taggedValueMap
 				.get(XMIConstants.TAGGED_VALUE_MULTISELECT_TABLE_NAME);
 		//In case of catissue metadata integration donot change table name of multiselect entity
 		if ((multiSelectTName != null) && (xmiConfigurationObject.getSkipEntityGroup() != null))
@@ -1189,7 +1189,7 @@ public class XMIImportProcessor
 		// Commented the line as it does not set constraint properties -- because the primarykey attribute
 		// collection is empty at this stage
 		//association.populateAssociationForConstraintProperties();
-		Map<String, String> valueMap = new HashMap<String, String>();
+		final Map<String, String> valueMap = new HashMap<String, String>();
 		valueMap.put(XMIConstants.TAGGED_VALUE_MULTISELECT, getMultiselectTagValue(taggedValueMap));
 		taggedValueMap.remove(XMIConstants.TAGGED_VALUE_MULTISELECT);
 		associationVsMapTagValues.put(association, valueMap);
@@ -1200,10 +1200,10 @@ public class XMIImportProcessor
 	 * @param attribute
 	 * @param taggedValueColl
 	 */
-	private void populateAttributeUIProperties(AttributeInterface attribute,
-			Collection<TaggedValue> taggedValueColl)
+	private void populateAttributeUIProperties(final AttributeInterface attribute,
+			final Collection<TaggedValue> taggedValueColl)
 	{
-		Map<String, String> tagNameVsTagValue = populateTagValueMap(taggedValueColl, attribute);
+		final Map<String, String> tagNameVsTagValue = populateTagValueMap(taggedValueColl, attribute);
 		attrVsMapTagValues.put(attribute, tagNameVsTagValue);
 	}
 
@@ -1211,10 +1211,10 @@ public class XMIImportProcessor
 	 * @param entity
 	 * @param taggedValueColl
 	 */
-	private void populateEntityUIProperties(EntityInterface entity,
-			Collection<TaggedValue> taggedValueColl)
+	private void populateEntityUIProperties(final EntityInterface entity,
+			final Collection<TaggedValue> taggedValueColl)
 	{
-		Map<String, String> tagNameVsTagValue = populateTagValueMap(taggedValueColl, entity);
+		final Map<String, String> tagNameVsTagValue = populateTagValueMap(taggedValueColl, entity);
 		entityVsMapTagValues.put(entity, tagNameVsTagValue);
 	}
 
@@ -1222,10 +1222,10 @@ public class XMIImportProcessor
 	 * @param association
 	 * @param taggedValueColl
 	 */
-	private void populateAssociationUIProperties(AssociationInterface association,
-			Collection<TaggedValue> taggedValueColl)
+	private void populateAssociationUIProperties(final AssociationInterface association,
+			final Collection<TaggedValue> taggedValueColl)
 	{
-		Map<String, String> tagNameVsTagValue = populateTagValueMap(taggedValueColl, association);
+		final Map<String, String> tagNameVsTagValue = populateTagValueMap(taggedValueColl, association);
 		associationVsMapTagValues.put(association, tagNameVsTagValue);
 	}
 
@@ -1233,21 +1233,21 @@ public class XMIImportProcessor
 	 * @param taggedValueColl
 	 * @return
 	 */
-	private Map<String, String> populateTagValueMap(Collection<TaggedValue> taggedValueColl,
-			AbstractMetadataInterface abstrMetaDataObj)
+	private Map<String, String> populateTagValueMap(final Collection<TaggedValue> taggedValueColl,
+			final AbstractMetadataInterface abstrMetaDataObj)
 	{
-		Map<String, String> tagNameVsTagValue = new HashMap<String, String>();
+		final Map<String, String> tagNameVsTagValue = new HashMap<String, String>();
 		String tagName;
-		Collection<TaggedValueInterface> deTaggedValueCollection = new HashSet<TaggedValueInterface>();
-		DomainObjectFactory factory = DomainObjectFactory.getInstance();
+		final Collection<TaggedValueInterface> deTaggedValueCollection = new HashSet<TaggedValueInterface>();
+		final DomainObjectFactory factory = DomainObjectFactory.getInstance();
 		TaggedValueInterface tag;
-		for (TaggedValue taggedValue : taggedValueColl)
+		for (final TaggedValue taggedValue : taggedValueColl)
 		{
 			if (taggedValue.getType() != null)
 			{
-				Collection<String> dataValueColl = taggedValue.getDataValue();
+				final Collection<String> dataValueColl = taggedValue.getDataValue();
 				tagName = taggedValue.getType().getName();
-				for (String value : dataValueColl)
+				for (final String value : dataValueColl)
 				{
 					if (tagName.startsWith(XMIConstants.TAGGED_NAME_PREFIX))
 					{
@@ -1286,10 +1286,10 @@ public class XMIImportProcessor
 	 * @return
 	 */
 	private TaggedValueInterface getTaggedValueObject(
-			Collection<TaggedValueInterface> taggedValueColl, String key)
+			final Collection<TaggedValueInterface> taggedValueColl, final String key)
 	{
 		TaggedValueInterface taggedValue = null;
-		for (TaggedValueInterface tag : taggedValueColl)
+		for (final TaggedValueInterface tag : taggedValueColl)
 		{
 			if (tag.getKey().equals(key))
 			{
@@ -1304,10 +1304,10 @@ public class XMIImportProcessor
 	 * @param entityInterface
 	 * @param taggedValueMap
 	 */
-	private void addSemanticPropertyForEntities(EntityInterface entityInterface,
-			Map<String, String> taggedValueMap)
+	private void addSemanticPropertyForEntities(final EntityInterface entityInterface,
+			final Map<String, String> taggedValueMap)
 	{
-		Collection<SemanticPropertyInterface> semanticPropertyColl = new HashSet<SemanticPropertyInterface>();
+		final Collection<SemanticPropertyInterface> semanticPropertyColl = new HashSet<SemanticPropertyInterface>();
 		//		Concept codes
 		String conceptCode = taggedValueMap
 				.get(XMIConstants.TAGGED_VALUE_OBJECT_CLASS_CONCEPT_CODE);
@@ -1323,15 +1323,15 @@ public class XMIImportProcessor
 					conceptDefinition, term, thesarausName, 0);
 			semanticPropertyColl.add(semanticPropertyInterface);
 
-			Set<String> tagNames = taggedValueMap.keySet();
-			for (String tagName : tagNames)
+			final Set<String> tagNames = taggedValueMap.keySet();
+			for (final String tagName : tagNames)
 			{
 				if (tagName
 						.startsWith(XMIConstants.TAGGED_VALUE_OBJECT_CLASS_QUALIFIER_CONCEPT_CODE))
 				{
-					int beginIndex = XMIConstants.TAGGED_VALUE_OBJECT_CLASS_QUALIFIER_CONCEPT_CODE
+					final int beginIndex = XMIConstants.TAGGED_VALUE_OBJECT_CLASS_QUALIFIER_CONCEPT_CODE
 							.length();
-					String qualifierNumber = tagName.substring(beginIndex);
+					final String qualifierNumber = tagName.substring(beginIndex);
 
 					conceptCode = taggedValueMap
 							.get(XMIConstants.TAGGED_VALUE_OBJECT_CLASS_QUALIFIER_CONCEPT_CODE
@@ -1364,10 +1364,10 @@ public class XMIImportProcessor
 	 * @param seqNo
 	 * @return
 	 */
-	private SemanticPropertyInterface getSemanticProperty(String conceptCode,
-			String conceptDefinition, String term, String thesaurasName, int seqNo)
+	private SemanticPropertyInterface getSemanticProperty(final String conceptCode,
+			final String conceptDefinition, final String term, final String thesaurasName, final int seqNo)
 	{
-		SemanticPropertyInterface semanticProperty = DomainObjectFactory.getInstance()
+		final SemanticPropertyInterface semanticProperty = DomainObjectFactory.getInstance()
 				.createSemanticProperty();
 		semanticProperty.setConceptCode(conceptCode);
 		semanticProperty.setConceptDefinition(conceptDefinition);
@@ -1383,10 +1383,10 @@ public class XMIImportProcessor
 	 * @param taggedValueMap
 	 * @param tag
 	 */
-	private void addSemanticPropertyForAttributes(AttributeInterface attributeInterface,
-			Map<String, String> taggedValueMap)
+	private void addSemanticPropertyForAttributes(final AttributeInterface attributeInterface,
+			final Map<String, String> taggedValueMap)
 	{
-		Collection<SemanticPropertyInterface> semanticPropertyColl = new HashSet<SemanticPropertyInterface>();
+		final Collection<SemanticPropertyInterface> semanticPropertyColl = new HashSet<SemanticPropertyInterface>();
 		//		Concept codes
 		String conceptCode = taggedValueMap.get(XMIConstants.TAGGED_VALUE_PROPERTY_CONCEPT_CODE);
 		if (conceptCode != null)
@@ -1401,14 +1401,14 @@ public class XMIImportProcessor
 					conceptDefinition, term, thesarausName, 0);
 			semanticPropertyColl.add(semanticPropertyInterface);
 
-			Set<String> tagNames = taggedValueMap.keySet();
-			for (String tagName : tagNames)
+			final Set<String> tagNames = taggedValueMap.keySet();
+			for (final String tagName : tagNames)
 			{
 				if (tagName.startsWith(XMIConstants.TAGGED_VALUE_PROPERTY_QUALIFIER_CONCEPT_CODE))
 				{
-					int beginIndex = XMIConstants.TAGGED_VALUE_PROPERTY_QUALIFIER_CONCEPT_CODE
+					final int beginIndex = XMIConstants.TAGGED_VALUE_PROPERTY_QUALIFIER_CONCEPT_CODE
 							.length();
-					String qualifierNumber = tagName.substring(beginIndex);
+					final String qualifierNumber = tagName.substring(beginIndex);
 
 					conceptCode = taggedValueMap
 							.get(XMIConstants.TAGGED_VALUE_PROPERTY_QUALIFIER_CONCEPT_CODE
@@ -1438,16 +1438,16 @@ public class XMIImportProcessor
 	 * @return Map with key as UML-id of parent class and value as list of UML-id of all children classes.
 	 */
 	private Map<String, List<String>> getParentVsChildrenMap(
-			List<Generalization> umlGeneralisationColl)
+			final List<Generalization> umlGeneralisationColl)
 	{
 		HashMap<String, List<String>> parentIdVsChildrenIds = null;
 		if (umlGeneralisationColl != null)
 		{
 			parentIdVsChildrenIds = new HashMap<String, List<String>>(umlGeneralisationColl.size());
-			for (Generalization umlGeneralization : umlGeneralisationColl)
+			for (final Generalization umlGeneralization : umlGeneralisationColl)
 			{
-				String childClass = umlGeneralization.getChild().refMofId();
-				String parentClass = umlGeneralization.getParent().refMofId();
+				final String childClass = umlGeneralization.getChild().refMofId();
+				final String parentClass = umlGeneralization.getParent().refMofId();
 				List<String> children = parentIdVsChildrenIds.get(parentClass);
 				if (children == null)
 				{
@@ -1474,19 +1474,19 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	private void addAssociation(UmlAssociation umlAssociation, HibernateDAO hibernateDao,
-			Map<String, List<String>> parentIdVsChildrenIds)
+	private void addAssociation(final UmlAssociation umlAssociation, final HibernateDAO hibernateDao,
+			final Map<String, List<String>> parentIdVsChildrenIds)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
-		List<AssociationEnd> associationEnds = umlAssociation.getConnection();
+		final List<AssociationEnd> associationEnds = umlAssociation.getConnection();
 		AssociationEnd sourceAssociationEnd = null;
 		AssociationEnd targetAssociationEnd = null;
 
-		Collection<TaggedValue> taggedValueColl = umlAssociation.getTaggedValue();
+		final Collection<TaggedValue> taggedValueColl = umlAssociation.getTaggedValue();
 		String direction = getTaggedValue(taggedValueColl, XMIConstants.TAGGED_NAME_ASSOC_DIRECTION);
 
 		int nullAssoEnd = 0;
-		for (AssociationEnd assoEnd : associationEnds)
+		for (final AssociationEnd assoEnd : associationEnds)
 		{
 			if (assoEnd.getName() == null)
 			{
@@ -1496,7 +1496,7 @@ public class XMIImportProcessor
 
 		if ((nullAssoEnd > 0) && (nullAssoEnd < 2))
 		{//Only 1 name is present hence unidirectional
-			for (AssociationEnd assoEnd : associationEnds)
+			for (final AssociationEnd assoEnd : associationEnds)
 			{
 				if (assoEnd.getName() == null)
 				{
@@ -1533,9 +1533,9 @@ public class XMIImportProcessor
 		//This block is added  because association ends are setting wrong due to above algorithm in case of
 		//Importing  the exported xmi from catissue
 
-		for (AssociationEnd assoEnd : associationEnds)
+		for (final AssociationEnd assoEnd : associationEnds)
 		{
-			String assTagEntityType = getTaggedValue(assoEnd.getTaggedValue(),
+			final String assTagEntityType = getTaggedValue(assoEnd.getTaggedValue(),
 					XMIConstants.TAGGED_VALUE_ASSN_ENTITY);
 			if ((assTagEntityType != null)
 					&& assTagEntityType.equalsIgnoreCase(XMIConstants.ASSN_SRC_ENTITY))
@@ -1550,25 +1550,25 @@ public class XMIImportProcessor
 		}
 		//		getAssociationEnds(sourceAssociationEnd,targetAssociationEnd,associationEnds,direction);
 
-		String sourceAssoTypeTV = getAssociationTypeTV(sourceAssociationEnd.getTaggedValue());
+		final String sourceAssoTypeTV = getAssociationTypeTV(sourceAssociationEnd.getTaggedValue());
 
-		String destinationAssoTypeTV = getAssociationTypeTV(targetAssociationEnd.getTaggedValue());
+		final String destinationAssoTypeTV = getAssociationTypeTV(targetAssociationEnd.getTaggedValue());
 
-		String srcId = sourceAssociationEnd.getParticipant().refMofId();
-		EntityInterface srcEntity = umlClassIdVsEntity.get(srcId);
+		final String srcId = sourceAssociationEnd.getParticipant().refMofId();
+		final EntityInterface srcEntity = umlClassIdVsEntity.get(srcId);
 
-		String tgtId = targetAssociationEnd.getParticipant().refMofId();
-		EntityInterface tgtEntity = umlClassIdVsEntity.get(tgtId);
-		Multiplicity srcMultiplicity = sourceAssociationEnd.getMultiplicity();
-		String sourceRoleName = sourceAssociationEnd.getName();
-		RoleInterface sourceRole = getRole(srcMultiplicity, sourceRoleName, sourceAssoTypeTV);
+		final String tgtId = targetAssociationEnd.getParticipant().refMofId();
+		final EntityInterface tgtEntity = umlClassIdVsEntity.get(tgtId);
+		final Multiplicity srcMultiplicity = sourceAssociationEnd.getMultiplicity();
+		final String sourceRoleName = sourceAssociationEnd.getName();
+		final RoleInterface sourceRole = getRole(srcMultiplicity, sourceRoleName, sourceAssoTypeTV);
 
-		Multiplicity tgtMultiplicity = targetAssociationEnd.getMultiplicity();
-		String tgtRoleName = targetAssociationEnd.getName();
-		RoleInterface targetRole = getRole(tgtMultiplicity, tgtRoleName, destinationAssoTypeTV);
+		final Multiplicity tgtMultiplicity = targetAssociationEnd.getMultiplicity();
+		final String tgtRoleName = targetAssociationEnd.getName();
+		final RoleInterface targetRole = getRole(tgtMultiplicity, tgtRoleName, destinationAssoTypeTV);
 
 		AssociationInterface association = null;
-		Collection<AssociationInterface> existingAssociationColl = srcEntity
+		final Collection<AssociationInterface> existingAssociationColl = srcEntity
 				.getAssociationCollection();
 
 		XMIImportValidator.validateAssociations(entityNameVsAttributeNames, umlAssociation
@@ -1622,12 +1622,12 @@ public class XMIImportProcessor
 	 * @param targetRole
 	 * @return
 	 */
-	private AssociationInterface isAssociationPresent(String umlAssociationName,
-			Collection<AssociationInterface> existingAssociationColl, String srcEntityName,
-			String tgtEntityName, String direction, RoleInterface sourceRole,
-			RoleInterface targetRole)
+	private AssociationInterface isAssociationPresent(final String umlAssociationName,
+			final Collection<AssociationInterface> existingAssociationColl, final String srcEntityName,
+			final String tgtEntityName, final String direction, final RoleInterface sourceRole,
+			final RoleInterface targetRole)
 	{
-		for (AssociationInterface existingAsso : existingAssociationColl)
+		for (final AssociationInterface existingAsso : existingAssociationColl)
 		{
 			if ((umlAssociationName != null)
 					&& umlAssociationName.equalsIgnoreCase(existingAsso.getName())
@@ -1805,16 +1805,16 @@ public class XMIImportProcessor
 	 * @param tagName
 	 * @return
 	 */
-	private String getTaggedValue(Collection<TaggedValue> taggedValueColl, String tagName)
+	private String getTaggedValue(final Collection<TaggedValue> taggedValueColl, final String tagName)
 	{
 		String val = "";
-		for (TaggedValue taggedValue : taggedValueColl)
+		for (final TaggedValue taggedValue : taggedValueColl)
 		{
 			if ((taggedValue.getType() != null)
 					&& taggedValue.getType().getName().equalsIgnoreCase(tagName))
 			{
-				Collection<String> dataValueColl = taggedValue.getDataValue();
-				for (String value : dataValueColl)
+				final Collection<String> dataValueColl = taggedValue.getDataValue();
+				for (final String value : dataValueColl)
 				{
 					val = value;
 					break;
@@ -1831,15 +1831,15 @@ public class XMIImportProcessor
 	 * @param parentIdVsChildrenIds Map with key as UML-id of parent class and value as list of UML-id of all children classes.
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void processInheritance(Map<String, List<String>> parentIdVsChildrenIds)
+	private void processInheritance(final Map<String, List<String>> parentIdVsChildrenIds)
 			throws DynamicExtensionsSystemException
 	{
-		for (Entry<String, List<String>> entry : parentIdVsChildrenIds.entrySet())
+		for (final Entry<String, List<String>> entry : parentIdVsChildrenIds.entrySet())
 		{
-			EntityInterface parent = umlClassIdVsEntity.get(entry.getKey());
-			for (String childId : entry.getValue())
+			final EntityInterface parent = umlClassIdVsEntity.get(entry.getKey());
+			for (final String childId : entry.getValue())
 			{
-				EntityInterface child = umlClassIdVsEntity.get(childId);
+				final EntityInterface child = umlClassIdVsEntity.get(childId);
 				child.setParentEntity(parent);
 			}
 		}
@@ -1849,9 +1849,9 @@ public class XMIImportProcessor
 	 * @param sourceEntity Entity to which a association is to be attached
 	 * @return A association attached to given entity.
 	 */
-	private AssociationInterface getAssociation(EntityInterface sourceEntity, String associationName)
+	private AssociationInterface getAssociation(final EntityInterface sourceEntity, final String associationName)
 	{
-		AssociationInterface association = deFactory.createAssociation();
+		final AssociationInterface association = deFactory.createAssociation();
 		//remove it after getting DE fix,association name should not be compulsory
 		if ((associationName == null) || associationName.equals(""))
 		{
@@ -1872,19 +1872,19 @@ public class XMIImportProcessor
 	 * @param edge UML Association Edge to process
 	 * @return the Role for given UML Association Edge
 	 */
-	private RoleInterface getRole(Multiplicity srcMultiplicity, String sourceRoleName,
-			String associationType)
+	private RoleInterface getRole(final Multiplicity srcMultiplicity, final String sourceRoleName,
+			final String associationType)
 	{
-		Collection<MultiplicityRange> rangeColl = srcMultiplicity.getRange();
+		final Collection<MultiplicityRange> rangeColl = srcMultiplicity.getRange();
 		int minCardinality = 0;
 		int maxCardinality = 0;
-		for (MultiplicityRange range : rangeColl)
+		for (final MultiplicityRange range : rangeColl)
 		{
 			minCardinality = range.getLower();
 			maxCardinality = range.getUpper();
 		}
 
-		RoleInterface role = deFactory.createRole();
+		final RoleInterface role = deFactory.createRole();
 		if ((associationType != null)
 				&& (associationType
 						.equalsIgnoreCase(XMIConstants.TAGGED_VALUE_CONTAINMENT_UNSPECIFIED) || associationType
@@ -1907,7 +1907,7 @@ public class XMIImportProcessor
 	 * @param cardinality intger value of cardinality.
 	 * @return Dynamic Extension's Cardinality enumration
 	 */
-	private DEConstants.Cardinality getCardinality(int cardinality)
+	private DEConstants.Cardinality getCardinality(final int cardinality)
 	{
 		if (cardinality == 0)
 		{
@@ -1927,11 +1927,11 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	private ContainerInterface createNewContainer(EntityInterface entityInterface,
-			ControlsModel controlModel) throws DynamicExtensionsSystemException,
+	private ContainerInterface createNewContainer(final EntityInterface entityInterface,
+			final ControlsModel controlModel) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
-		ContainerInterface containerInterface = deFactory.createContainer();
+		final ContainerInterface containerInterface = deFactory.createContainer();
 		containerInterface.setCaption(entityInterface.getName());
 		containerInterface.setAbstractEntity(entityInterface);
 
@@ -1939,11 +1939,11 @@ public class XMIImportProcessor
 		containerInterface.setRequiredFieldIndicatior("*");
 		containerInterface.setRequiredFieldWarningMessage("indicates required fields.");
 
-		Collection<AbstractAttributeInterface> abstractAttributeCollection = entityInterface
+		final Collection<AbstractAttributeInterface> abstractAttributeCollection = entityInterface
 				.getAbstractAttributeCollection();
 		Integer sequenceNumber = Integer.valueOf(0);
 		ControlInterface controlInterface;
-		for (AbstractAttributeInterface abstractAttributeInterface : abstractAttributeCollection)
+		for (final AbstractAttributeInterface abstractAttributeInterface : abstractAttributeCollection)
 		{
 			controlInterface = getControlForAttribute(abstractAttributeInterface, controlModel);
 			if (controlInterface != null) //no control created for id attribute
@@ -1961,11 +1961,11 @@ public class XMIImportProcessor
 	 * @param entityName
 	 * @return
 	 */
-	private ContainerInterface getContainer(String entityName)
+	private ContainerInterface getContainer(final String entityName)
 	{
 		if ((retrievedContainerList != null) && !retrievedContainerList.isEmpty())
 		{
-			for (ContainerInterface container : retrievedContainerList)
+			for (final ContainerInterface container : retrievedContainerList)
 			{
 				if (container.getCaption().equals(entityName))
 				{
@@ -1980,11 +1980,11 @@ public class XMIImportProcessor
 	 * @param entityName
 	 * @return
 	 */
-	private EntityInterface getEntity(String entityName)
+	private EntityInterface getEntity(final String entityName)
 	{
 		if ((retrievedContainerList != null) && !retrievedContainerList.isEmpty())
 		{
-			for (ContainerInterface container : retrievedContainerList)
+			for (final ContainerInterface container : retrievedContainerList)
 			{
 				if (container.getAbstractEntity().getName().equals(entityName))
 				{
@@ -2000,14 +2000,14 @@ public class XMIImportProcessor
 	 * @param entityInterface
 	 * @throws Exception fails to create container
 	 */
-	protected void createContainer(EntityInterface entityInterface) throws Exception
+	protected void createContainer(final EntityInterface entityInterface) throws Exception
 	{
 		ContainerInterface containerInterface = getContainer(entityInterface.getName());
 
 		/*DynamicExtensionsUtility.getContainerByCaption(entityInterface.getName()); */
 		if (containerInterface == null)//Add
 		{
-			ControlsModel controlModel = new ControlsModel();
+			final ControlsModel controlModel = new ControlsModel();
 			containerInterface = createNewContainer(entityInterface, controlModel);
 		}
 		else
@@ -2027,17 +2027,17 @@ public class XMIImportProcessor
 			 * Hence a new object for editedAttributeColl is created and the
 			 * new attribute is removed from the originalAttributeColl on the basis of objects having id as null
 			 */
-			Collection<AbstractAttributeInterface> savedAssociation = new ArrayList<AbstractAttributeInterface>();
-			Collection<AbstractAttributeInterface> editedAttributeColl = new ArrayList<AbstractAttributeInterface>();
+			final Collection<AbstractAttributeInterface> savedAssociation = new ArrayList<AbstractAttributeInterface>();
+			final Collection<AbstractAttributeInterface> editedAttributeColl = new ArrayList<AbstractAttributeInterface>();
 			editedAttributeColl.addAll(entityInterface.getAbstractAttributeCollection());
 
-			Collection<AbstractAttributeInterface> originalAttributeColl = ((EntityInterface) containerInterface
+			final Collection<AbstractAttributeInterface> originalAttributeColl = ((EntityInterface) containerInterface
 					.getAbstractEntity()).getAbstractAttributeCollection();
 
-			Iterator<AbstractAttributeInterface> abstrAttrIter = originalAttributeColl.iterator();
+			final Iterator<AbstractAttributeInterface> abstrAttrIter = originalAttributeColl.iterator();
 			while (abstrAttrIter.hasNext())
 			{
-				AbstractAttributeInterface originalAttr = abstrAttrIter.next();
+				final AbstractAttributeInterface originalAttr = abstrAttrIter.next();
 				if (originalAttr.getId() == null)
 				{
 					/*
@@ -2054,8 +2054,8 @@ public class XMIImportProcessor
 					abstrAttrIter.remove();
 				}
 			}
-			Collection<AbstractAttributeInterface> attributesToRemove = new HashSet<AbstractAttributeInterface>();
-			for (AbstractAttributeInterface editedAttribute : editedAttributeColl)
+			final Collection<AbstractAttributeInterface> attributesToRemove = new HashSet<AbstractAttributeInterface>();
+			for (final AbstractAttributeInterface editedAttribute : editedAttributeColl)
 			{
 				if (editedAttribute.getName().equalsIgnoreCase(Constants.SYSTEM_IDENTIFIER)
 						&& xmiConfigurationObject.isAddIdAttribute())
@@ -2069,8 +2069,8 @@ public class XMIImportProcessor
 					//the redundant association.
 					removeRedundantAssociation(editedAttribute, attributesToRemove);
 				}
-				ControlsModel controlModel = new ControlsModel();
-				boolean isAttrPresent = getAttrToEdit(originalAttributeColl, editedAttribute);
+				final ControlsModel controlModel = new ControlsModel();
+				final boolean isAttrPresent = getAttrToEdit(originalAttributeColl, editedAttribute);
 
 				if (isAttrPresent)
 				{//Edit
@@ -2098,12 +2098,12 @@ public class XMIImportProcessor
 				//Not for Containment Association Control
 				if (!(editedAttribute instanceof AssociationInterface))
 				{
-					AttributeInterface attribute = (AttributeInterface) editedAttribute;
+					final AttributeInterface attribute = (AttributeInterface) editedAttribute;
 					controlModel.setIsPrimaryKey(attribute.getIsPrimaryKey());
 					controlModel.setIsNullable(attribute.getIsNullable());
 					controlModel.setColumnName(attribute.getColumnProperties().getName());
 
-					ApplyFormControlsProcessor applyFormControlsProcessor = ApplyFormControlsProcessor
+					final ApplyFormControlsProcessor applyFormControlsProcessor = ApplyFormControlsProcessor
 							.getInstance();
 					applyFormControlsProcessor.addControlToForm(containerInterface, controlModel,
 							controlModel, entityInterface.getEntityGroup());
@@ -2115,7 +2115,7 @@ public class XMIImportProcessor
 			/*Bug id:7316
 			 * new associations are added again to the entity
 			 */
-			for (AbstractAttributeInterface savedAssoc : savedAssociation)
+			for (final AbstractAttributeInterface savedAssoc : savedAssociation)
 			{
 				entityInterface.addAbstractAttribute(savedAssoc);
 			}
@@ -2124,7 +2124,7 @@ public class XMIImportProcessor
 			editedAttributeColl.removeAll(attributesToRemove);
 		}
 		entityInterface.addContainer(containerInterface);
-		List<ContainerInterface> containerList = new ArrayList<ContainerInterface>();
+		final List<ContainerInterface> containerList = new ArrayList<ContainerInterface>();
 		containerList.add(containerInterface);
 		entityNameVsContainers.put(entityInterface.getName(), containerList);
 	}
@@ -2137,29 +2137,29 @@ public class XMIImportProcessor
 	 * @param originalAttributes
 	 * @param editedAttribute
 	 */
-	private void setDefaultValueForAttribute(ControlsModel controlModel,
-			Collection<AbstractAttributeInterface> originalAttributes,
-			AbstractAttributeInterface editedAttribute)
+	private void setDefaultValueForAttribute(final ControlsModel controlModel,
+			final Collection<AbstractAttributeInterface> originalAttributes,
+			final AbstractAttributeInterface editedAttribute)
 	{
-		String ctrlModelAttrDefaultVal = controlModel.getAttributeDefaultValue();
+		final String ctrlModelAttrDefaultVal = controlModel.getAttributeDefaultValue();
 
 		if ((ctrlModelAttrDefaultVal != null) && ctrlModelAttrDefaultVal.equalsIgnoreCase(""))
 		{
-			for (AbstractAttributeInterface attribute : originalAttributes)
+			for (final AbstractAttributeInterface attribute : originalAttributes)
 			{
 				if ((attribute instanceof AttributeInterface)
 						&& attribute.getName().equalsIgnoreCase(editedAttribute.getName()))
 				{
-					AttributeTypeInformationInterface attrTypeInfo = ((AttributeInterface) attribute)
+					final AttributeTypeInformationInterface attrTypeInfo = ((AttributeInterface) attribute)
 							.getAttributeTypeInformation();
-					PermissibleValueInterface defaultPermissibleValue = attrTypeInfo
+					final PermissibleValueInterface defaultPermissibleValue = attrTypeInfo
 							.getDefaultValue();
 
 					if ((defaultPermissibleValue != null)
 							&& (defaultPermissibleValue.getValueAsObject() != null))
 					{
 
-						String defaultValueAsString = defaultPermissibleValue.getValueAsObject()
+						final String defaultValueAsString = defaultPermissibleValue.getValueAsObject()
 								.toString();
 						if ((defaultValueAsString != null)
 								&& !defaultValueAsString.equalsIgnoreCase(""))
@@ -2179,8 +2179,8 @@ public class XMIImportProcessor
 	 * @param attribute
 	 * @param controlModel
 	 */
-	private void populateAttributeForPrimaryKey(AttributeInterface attribute,
-			ControlsModel controlModel)
+	private void populateAttributeForPrimaryKey(final AttributeInterface attribute,
+			final ControlsModel controlModel)
 	{
 		if (attribute != null)
 		{
@@ -2195,24 +2195,24 @@ public class XMIImportProcessor
 	 * @param editedAttribute
 	 * @param attributesToRemove
 	 */
-	private void removeRedundantAssociation(AbstractAttributeInterface editedAttribute,
-			Collection<AbstractAttributeInterface> attributesToRemove)
+	private void removeRedundantAssociation(final AbstractAttributeInterface editedAttribute,
+			final Collection<AbstractAttributeInterface> attributesToRemove)
 	{
-		AssociationInterface association = (AssociationInterface) editedAttribute;
-		Collection<AssociationInterface> targetEntityAssociationColl = association
+		final AssociationInterface association = (AssociationInterface) editedAttribute;
+		final Collection<AssociationInterface> targetEntityAssociationColl = association
 				.getTargetEntity().getAssociationCollection();
 
-		EntityInterface originalTargetEntity = getEntity(association.getTargetEntity().getName());
+		final EntityInterface originalTargetEntity = getEntity(association.getTargetEntity().getName());
 		if (originalTargetEntity != null)
 		{
 			//Removing redundant association
-			for (AssociationInterface targetAsso : targetEntityAssociationColl)
+			for (final AssociationInterface targetAsso : targetEntityAssociationColl)
 			{
 				if (targetAsso.getTargetEntity().getName().equalsIgnoreCase(
 						association.getEntity().getName()))
 				{
 					AssociationInterface originalTargetAssociation = null;
-					for (AssociationInterface originalTgtAsso : originalTargetEntity
+					for (final AssociationInterface originalTgtAsso : originalTargetEntity
 							.getAssociationCollection())
 					{
 						if (targetAsso.getName().equalsIgnoreCase(originalTgtAsso.getName()))
@@ -2242,21 +2242,21 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	private void addAttributeAndControl(ControlsModel controlModel,
-			AbstractAttributeInterface editedAttribute, ContainerInterface containerInterface)
+	private void addAttributeAndControl(final ControlsModel controlModel,
+			final AbstractAttributeInterface editedAttribute, final ContainerInterface containerInterface)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		controlModel.setControlOperation(ProcessorConstants.OPERATION_ADD);
-		ControlInterface newcontrol = getControlForAttribute(editedAttribute, controlModel);
+		final ControlInterface newcontrol = getControlForAttribute(editedAttribute, controlModel);
 		if (newcontrol != null)
 		{ //no control created for id attribute
-			int sequenceNumber = DynamicExtensionsUtility
+			final int sequenceNumber = DynamicExtensionsUtility
 					.getSequenceNumberForNextControl(containerInterface);
 			newcontrol.setSequenceNumber(sequenceNumber);
 			//containerInterface.addControl(newcontrol);
 			newcontrol.setParentContainer((Container) containerInterface);
 
-			String userSelectedTool = DynamicExtensionsUtility.getControlName(newcontrol);
+			final String userSelectedTool = DynamicExtensionsUtility.getControlName(newcontrol);
 			controlModel.setUserSelectedTool(userSelectedTool);
 			//For Text Control
 			if (newcontrol instanceof TextFieldInterface)
@@ -2283,18 +2283,18 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	private void editAttributeAndControl(ControlsModel controlModel,
-			AbstractAttributeInterface editedAttribute, ContainerInterface containerInterface)
+	private void editAttributeAndControl(final ControlsModel controlModel,
+			final AbstractAttributeInterface editedAttribute, final ContainerInterface containerInterface)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
-		LoadFormControlsProcessor loadFormControlsProcessor = LoadFormControlsProcessor
+		final LoadFormControlsProcessor loadFormControlsProcessor = LoadFormControlsProcessor
 				.getInstance();
 		controlModel.setControlOperation(ProcessorConstants.OPERATION_EDIT);
 
-		Collection<ControlInterface> originalControlColl = containerInterface
+		final Collection<ControlInterface> originalControlColl = containerInterface
 				.getControlCollection();
 		ControlInterface originalControlObj = null;
-		for (ControlInterface originalcontrol : originalControlColl)
+		for (final ControlInterface originalcontrol : originalControlColl)
 		{
 			if (originalcontrol.getBaseAbstractAttribute().getName().equalsIgnoreCase(
 					editedAttribute.getName()))
@@ -2325,43 +2325,43 @@ public class XMIImportProcessor
 	 * Method to set tagged values(max length, precision, date format) in control model
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void setTaggedValue(ControlsModel controlModel,
-			AbstractAttributeInterface editedAttribute) throws DynamicExtensionsSystemException
+	private void setTaggedValue(final ControlsModel controlModel,
+			final AbstractAttributeInterface editedAttribute) throws DynamicExtensionsSystemException
 	{
 		if (!(editedAttribute instanceof AssociationInterface))
 		{
-			Map<String, String> taggedValueMap = attrVsMapTagValues.get(editedAttribute);
+			final Map<String, String> taggedValueMap = attrVsMapTagValues.get(editedAttribute);
 			if (taggedValueMap != null)
 			{
 				// max length of string from tagged value
-				String maxLen = getMaxLengthTagValue(taggedValueMap);
+				final String maxLen = getMaxLengthTagValue(taggedValueMap);
 				controlModel.setAttributeSize(maxLen);
 
 				//date format tagged value
-				String format = getDateFormatTagValue(taggedValueMap);
+				final String format = getDateFormatTagValue(taggedValueMap);
 				controlModel.setFormat(format);
-				String dateFormat = DynamicExtensionsUtility.getDateFormat(format);
+				final String dateFormat = DynamicExtensionsUtility.getDateFormat(format);
 				controlModel.setDateValueType(dateFormat);
 
 				// precision tagged value
-				Integer precision = getPrecisionTagValue(taggedValueMap,
+				final Integer precision = getPrecisionTagValue(taggedValueMap,
 						((AttributeInterface) editedAttribute).getAttributeTypeInformation());
 				controlModel.setAttributeDecimalPlaces(precision.toString());
 
 				//Added by Prashant
 				//password tagged value
-				String password = getPasswordTagValue(taggedValueMap);
+				final String password = getPasswordTagValue(taggedValueMap);
 				controlModel.setIsPassword(Boolean.parseBoolean(password));
 
 				//Single/Multiline(Number of Lines) tagged Value
 				setMultilineTaggedValue(taggedValueMap, controlModel);
 
 				//NoOfColumns tagged Value
-				String width = getDisplayWidthTagValue(taggedValueMap);
+				final String width = getDisplayWidthTagValue(taggedValueMap);
 				controlModel.setColumns(Integer.parseInt(width));
 
 				//defaultValue tagged Value
-				String defaultValue = getDefaultValueTagValue(taggedValueMap);
+				final String defaultValue = getDefaultValueTagValue(taggedValueMap);
 				controlModel.setAttributeDefaultValue(defaultValue);
 
 				if ((defaultValue != null) && !defaultValue.equalsIgnoreCase(""))
@@ -2370,22 +2370,22 @@ public class XMIImportProcessor
 					controlModel.setDateValueType(ProcessorConstants.DATE_VALUE_SELECT);
 				}
 				//URL tagged value
-				String url = getUrlTagValue(taggedValueMap);
+				final String url = getUrlTagValue(taggedValueMap);
 				controlModel.setIsUrl(Boolean.parseBoolean(url));
 
 				//PHI Attribute tagged value
-				String PHIAttribute = getPHIAttributeTagValue(taggedValueMap);
+				final String PHIAttribute = getPHIAttributeTagValue(taggedValueMap);
 				controlModel.setAttributeIdentified(PHIAttribute);
 
 				//FileFormats tagged value
-				String[] fileFormats = getFileFormatsTagValue(taggedValueMap);
+				final String[] fileFormats = getFileFormatsTagValue(taggedValueMap);
 				controlModel.setFileFormats(fileFormats);
 
 				//For list box or combo box
 				setMultiselectTaggedValue(taggedValueMap, controlModel);
 
 				//For combo box,separator tagged value
-				String separator = getSeparatorTagValue(taggedValueMap);
+				final String separator = getSeparatorTagValue(taggedValueMap);
 				controlModel.setSeparator(separator);
 
 				//set Explicit validation Rules
@@ -2400,13 +2400,13 @@ public class XMIImportProcessor
 	 * @param taggedValueMap
 	 * @param controlModel
 	 */
-	private void setMultiselectTaggedValue(Map<String, String> taggedValueMap,
-			ControlsModel controlModel)
+	private void setMultiselectTaggedValue(final Map<String, String> taggedValueMap,
+			final ControlsModel controlModel)
 	{
 		if (taggedValueMap.containsKey(XMIConstants.TAGGED_VALUE_MULTISELECT))
 		{
 			controlModel.setIsMultiSelect(true);
-			String listBoxHeight = getListBoxHeightTagValue(taggedValueMap);
+			final String listBoxHeight = getListBoxHeightTagValue(taggedValueMap);
 			controlModel.setAttributeNoOfRows(listBoxHeight);
 		}
 
@@ -2417,7 +2417,7 @@ public class XMIImportProcessor
 	 * @param taggedValueMap
 	 * @return
 	 */
-	private String getListBoxHeightTagValue(Map<String, String> taggedValueMap)
+	private String getListBoxHeightTagValue(final Map<String, String> taggedValueMap)
 	{
 		String listBoxHeight = taggedValueMap.get(XMIConstants.TAGGED_VALUE_MULTISELECT);
 		if ((listBoxHeight == null) || listBoxHeight.trim().equals(""))
@@ -2433,9 +2433,9 @@ public class XMIImportProcessor
 	 * @param taggedValueMap
 	 * @return
 	 */
-	private String getSeparatorTagValue(Map<String, String> taggedValueMap)
+	private String getSeparatorTagValue(final Map<String, String> taggedValueMap)
 	{
-		String separator = taggedValueMap.get(XMIConstants.TAGGED_VALUE_SEPARATOR);
+		final String separator = taggedValueMap.get(XMIConstants.TAGGED_VALUE_SEPARATOR);
 		if ((separator == null) || separator.trim().equals(""))
 		{
 			return null;
@@ -2448,13 +2448,13 @@ public class XMIImportProcessor
 	 * @param taggedValueMap
 	 * @param controlModel
 	 */
-	private void setMultilineTaggedValue(Map<String, String> taggedValueMap,
-			ControlsModel controlModel)
+	private void setMultilineTaggedValue(final Map<String, String> taggedValueMap,
+			final ControlsModel controlModel)
 	{
 		if (taggedValueMap.containsKey(XMIConstants.TAGGED_VALUE_MULTILINE))
 		{
 			controlModel.setLinesType(XMIConstants.MULTILINE);
-			String noOFLines = getNoOfRowsTagValue(taggedValueMap);
+			final String noOFLines = getNoOfRowsTagValue(taggedValueMap);
 			controlModel.setRows(Integer.parseInt(noOFLines));
 		}
 	}
@@ -2464,13 +2464,13 @@ public class XMIImportProcessor
 	 * @param taggedValueMap
 	 * @return
 	 */
-	private String[] getFileFormatsTagValue(Map<String, String> taggedValueMap)
+	private String[] getFileFormatsTagValue(final Map<String, String> taggedValueMap)
 	{
-		String fileFormat = taggedValueMap.get(XMIConstants.TAGGED_VALUE_FILE_FORMATS);
+		final String fileFormat = taggedValueMap.get(XMIConstants.TAGGED_VALUE_FILE_FORMATS);
 		if (fileFormat != null)
 		{
-			StringTokenizer stringTokenizer = new StringTokenizer(fileFormat, ",");
-			int size = stringTokenizer.countTokens();
+			final StringTokenizer stringTokenizer = new StringTokenizer(fileFormat, ",");
+			final int size = stringTokenizer.countTokens();
 
 			String[] fileformats = new String[size];
 
@@ -2486,7 +2486,7 @@ public class XMIImportProcessor
 	 * @param taggedValueMap
 	 * @return
 	 */
-	private boolean isMultiselectTagValue(Map<String, String> taggedValueMap)
+	private boolean isMultiselectTagValue(final Map<String, String> taggedValueMap)
 	{
 		if ((taggedValueMap != null)
 				&& taggedValueMap.containsKey(XMIConstants.TAGGED_VALUE_MULTISELECT))
@@ -2500,7 +2500,7 @@ public class XMIImportProcessor
 	 * @param taggedValueMap
 	 * @return
 	 */
-	private String getMultiselectTagValue(Map<String, String> taggedValueMap)
+	private String getMultiselectTagValue(final Map<String, String> taggedValueMap)
 	{
 		if ((taggedValueMap != null)
 				&& taggedValueMap.containsKey(XMIConstants.TAGGED_VALUE_MULTISELECT))
@@ -2515,9 +2515,9 @@ public class XMIImportProcessor
 	 * @param taggedValueMap
 	 * @return
 	 */
-	private String getPHIAttributeTagValue(Map<String, String> taggedValueMap)
+	private String getPHIAttributeTagValue(final Map<String, String> taggedValueMap)
 	{
-		String PHIAttribute = taggedValueMap.get(XMIConstants.TAGGED_VALUE_PHI_ATTRIBUTE);
+		final String PHIAttribute = taggedValueMap.get(XMIConstants.TAGGED_VALUE_PHI_ATTRIBUTE);
 		if ((PHIAttribute == null) || PHIAttribute.trim().equals(""))
 		{
 			return "false";
@@ -2530,7 +2530,7 @@ public class XMIImportProcessor
 	 * @param taggedValueMap
 	 * @return
 	 */
-	private String getDisplayWidthTagValue(Map<String, String> taggedValueMap)
+	private String getDisplayWidthTagValue(final Map<String, String> taggedValueMap)
 	{
 		String width = taggedValueMap.get(XMIConstants.TAGGED_VALUE_DISPLAY_WIDTH);
 		if ((width == null) || width.trim().equals(""))
@@ -2549,7 +2549,7 @@ public class XMIImportProcessor
 	 * @param taggedValueMap
 	 * @return
 	 */
-	private String getMaxLengthTagValue(Map<String, String> taggedValueMap)
+	private String getMaxLengthTagValue(final Map<String, String> taggedValueMap)
 	{
 		String maxLen = taggedValueMap.get(XMIConstants.TAGGED_VALUE_MAX_LENGTH);
 		if ((maxLen == null) || maxLen.trim().equals(""))
@@ -2567,7 +2567,7 @@ public class XMIImportProcessor
 	 * @param taggedValueMap
 	 * @return
 	 */
-	private String getDateFormatTagValue(Map<String, String> taggedValueMap)
+	private String getDateFormatTagValue(final Map<String, String> taggedValueMap)
 	{
 		String format = taggedValueMap.get(XMIConstants.TAGGED_VALUE_DATE_FORMAT);
 		if ((format == null) || format.trim().equals(""))
@@ -2583,7 +2583,7 @@ public class XMIImportProcessor
 	 * @param taggedValueMap
 	 * @return
 	 */
-	private String getNoOfRowsTagValue(Map<String, String> taggedValueMap)
+	private String getNoOfRowsTagValue(final Map<String, String> taggedValueMap)
 	{
 		String noOFRows = taggedValueMap.get(XMIConstants.TAGGED_VALUE_MULTILINE);
 		if ((noOFRows == null) || noOFRows.trim().equals(""))
@@ -2599,9 +2599,9 @@ public class XMIImportProcessor
 	 * @param taggedValueMap
 	 * @return
 	 */
-	private String getDefaultValueTagValue(Map<String, String> taggedValueMap)
+	private String getDefaultValueTagValue(final Map<String, String> taggedValueMap)
 	{
-		String defaultValue = taggedValueMap.get(XMIConstants.TAGGED_VALUE_DEFAULT_VALUE);
+		final String defaultValue = taggedValueMap.get(XMIConstants.TAGGED_VALUE_DEFAULT_VALUE);
 		if ((defaultValue == null) || defaultValue.trim().equals(""))
 		{
 			return "";
@@ -2617,12 +2617,12 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsApplicationException
 	 */
 	private String getDefaultValueForBooleanTagValue(
-			AbstractAttributeInterface abstractAttributeInterface,
-			Map<String, String> taggedValueMap) throws DynamicExtensionsApplicationException,
+			final AbstractAttributeInterface abstractAttributeInterface,
+			final Map<String, String> taggedValueMap) throws DynamicExtensionsApplicationException,
 			DynamicExtensionsSystemException
 	{
 
-		String defaultValue = taggedValueMap.get(XMIConstants.TAGGED_VALUE_DEFAULT_VALUE);
+		final String defaultValue = taggedValueMap.get(XMIConstants.TAGGED_VALUE_DEFAULT_VALUE);
 		String boolValue = ProcessorConstants.FALSE;
 		if ((defaultValue != null) && !defaultValue.trim().equals(""))
 		{
@@ -2638,9 +2638,9 @@ public class XMIImportProcessor
 	 * @param attributeTypeInformation
 	 * @return
 	 */
-	private String getPasswordTagValue(Map<String, String> taggedValueMap)
+	private String getPasswordTagValue(final Map<String, String> taggedValueMap)
 	{
-		String password = taggedValueMap.get(XMIConstants.TAGGED_VALUE_PASSWORD);
+		final String password = taggedValueMap.get(XMIConstants.TAGGED_VALUE_PASSWORD);
 		if ((password == null) || password.trim().equals(""))
 		{
 			return "false";
@@ -2653,9 +2653,9 @@ public class XMIImportProcessor
 	 * @param taggedValueMap
 	 * @return
 	 */
-	private String getUrlTagValue(Map<String, String> taggedValueMap)
+	private String getUrlTagValue(final Map<String, String> taggedValueMap)
 	{
-		String url = taggedValueMap.get(XMIConstants.TAGGED_VALUE_URL);
+		final String url = taggedValueMap.get(XMIConstants.TAGGED_VALUE_URL);
 		if ((url == null) || url.trim().equals(""))
 		{
 			return "false";
@@ -2668,10 +2668,10 @@ public class XMIImportProcessor
 	 * @param editedAttribute
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private Integer getPrecisionTagValue(Map<String, String> taggedValueMap,
-			AttributeTypeInformationInterface attrTypeInfo) throws DynamicExtensionsSystemException
+	private Integer getPrecisionTagValue(final Map<String, String> taggedValueMap,
+			final AttributeTypeInformationInterface attrTypeInfo) throws DynamicExtensionsSystemException
 	{
-		String precision = taggedValueMap.get(XMIConstants.TAGGED_VALUE_PRECISION);
+		final String precision = taggedValueMap.get(XMIConstants.TAGGED_VALUE_PRECISION);
 		Integer precisionDigits = null;
 
 		if ((precision == null) || precision.trim().equals(""))
@@ -2711,13 +2711,13 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	private void editEntityAndContainer(ContainerInterface containerInterface,
-			EntityInterface entityInterface) throws DynamicExtensionsSystemException,
+	private void editEntityAndContainer(final ContainerInterface containerInterface,
+			final EntityInterface entityInterface) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
-		ContainerProcessor containerProcessor = ContainerProcessor.getInstance();
-		EntityProcessor entityProcessor = EntityProcessor.getInstance();
-		ContainerModel containerModel = new ContainerModel();
+		final ContainerProcessor containerProcessor = ContainerProcessor.getInstance();
+		final EntityProcessor entityProcessor = EntityProcessor.getInstance();
+		final ContainerModel containerModel = new ContainerModel();
 
 		//Setting Edited entity name as caption for container.
 		//Also not setting parentform to avoid unnecessary DB call as base container is already present in the container object
@@ -2740,10 +2740,10 @@ public class XMIImportProcessor
 	 * @param editedAttribute
 	 * @return
 	 */
-	private boolean getAttrToEdit(Collection<AbstractAttributeInterface> originalAttributeColl,
-			AbstractAttributeInterface editedAttribute)
+	private boolean getAttrToEdit(final Collection<AbstractAttributeInterface> originalAttributeColl,
+			final AbstractAttributeInterface editedAttribute)
 	{
-		for (AbstractAttributeInterface originalAttribute : originalAttributeColl)
+		for (final AbstractAttributeInterface originalAttribute : originalAttributeColl)
 		{
 			if (editedAttribute.getName().equalsIgnoreCase(originalAttribute.getName()))
 			{
@@ -2757,8 +2757,8 @@ public class XMIImportProcessor
 	 * @param controlModel
 	 * @param editedAttribute
 	 */
-	private void populateControlModel(ControlsModel controlModel,
-			AbstractAttributeInterface editedAttribute)
+	private void populateControlModel(final ControlsModel controlModel,
+			final AbstractAttributeInterface editedAttribute)
 	{
 		if (editedAttribute instanceof AssociationInterface)
 		{
@@ -2766,9 +2766,9 @@ public class XMIImportProcessor
 		}
 		else
 		{
-			AttributeInterface attribute = (AttributeInterface) editedAttribute;
+			final AttributeInterface attribute = (AttributeInterface) editedAttribute;
 
-			AttributeTypeInformationInterface attributeTypeInfo = attribute
+			final AttributeTypeInformationInterface attributeTypeInfo = attribute
 					.getAttributeTypeInformation();
 			if (attributeTypeInfo instanceof DateAttributeTypeInformation)
 			{
@@ -2814,14 +2814,14 @@ public class XMIImportProcessor
 	 * @param parentIdVsChildrenIds
 	 * @throws Exception
 	 */
-	protected void postProcessInheritence(Map<String, List<String>> parentIdVsChildrenIds)
+	protected void postProcessInheritence(final Map<String, List<String>> parentIdVsChildrenIds)
 			throws Exception
 	{
-		for (Entry<String, List<String>> entry : parentIdVsChildrenIds.entrySet())
+		for (final Entry<String, List<String>> entry : parentIdVsChildrenIds.entrySet())
 		{
-			EntityInterface parent = umlClassIdVsEntity.get(entry.getKey());
+			final EntityInterface parent = umlClassIdVsEntity.get(entry.getKey());
 
-			List parentContainerList = entityNameVsContainers.get(parent.getName());
+			final List parentContainerList = entityNameVsContainers.get(parent.getName());
 			ContainerInterface parentContainer = null;
 			if ((parentContainerList == null) || parentContainerList.isEmpty())
 			{
@@ -2831,11 +2831,11 @@ public class XMIImportProcessor
 			{
 				parentContainer = (ContainerInterface) parentContainerList.get(0);
 			}
-			for (String childId : entry.getValue())
+			for (final String childId : entry.getValue())
 			{
-				EntityInterface child = umlClassIdVsEntity.get(childId);
+				final EntityInterface child = umlClassIdVsEntity.get(childId);
 
-				List childContainerList = entityNameVsContainers.get(child.getName());
+				final List childContainerList = entityNameVsContainers.get(child.getName());
 				ContainerInterface childContainer = null;
 				if ((childContainerList == null) || childContainerList.isEmpty())
 				{
@@ -2857,25 +2857,25 @@ public class XMIImportProcessor
 	 */
 	protected void addControlsForAssociation() throws Exception
 	{
-		Set<String> entityIdKeySet = entityNameVsContainers.keySet();
-		for (String entityId : entityIdKeySet)
+		final Set<String> entityIdKeySet = entityNameVsContainers.keySet();
+		for (final String entityId : entityIdKeySet)
 		{
-			List containerList = entityNameVsContainers.get(entityId);
-			ContainerInterface containerInterface = (ContainerInterface) containerList.get(0);
-			Collection<ControlInterface> controlCollection = containerInterface
+			final List containerList = entityNameVsContainers.get(entityId);
+			final ContainerInterface containerInterface = (ContainerInterface) containerList.get(0);
+			final Collection<ControlInterface> controlCollection = containerInterface
 					.getControlCollection();
 
-			for (ControlInterface controlInterface : controlCollection)
+			for (final ControlInterface controlInterface : controlCollection)
 			{
 				if (controlInterface instanceof ContainmentAssociationControl)
 				{
-					ContainmentAssociationControl containmentAssociationControl = (ContainmentAssociationControl) controlInterface;
-					AssociationInterface associationInterface = (AssociationInterface) controlInterface
+					final ContainmentAssociationControl containmentAssociationControl = (ContainmentAssociationControl) controlInterface;
+					final AssociationInterface associationInterface = (AssociationInterface) controlInterface
 							.getBaseAbstractAttribute();
 
-					String targetEntityId = associationInterface.getTargetEntity().getName();
+					final String targetEntityId = associationInterface.getTargetEntity().getName();
 
-					List targetContainerInterfaceList = entityNameVsContainers.get(targetEntityId);
+					final List targetContainerInterfaceList = entityNameVsContainers.get(targetEntityId);
 
 					//					TODO remove this condition to delete association with deleted or renamed entities.
 					//getting container corresponding to renamed or deleted entity which is associated with some association from the retrieved entity group
@@ -2905,18 +2905,18 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsApplicationException
 	 */
 	private ControlInterface getControlForAttribute(
-			AbstractAttributeInterface abstractAttributeInterface, ControlsModel controlModel)
+			final AbstractAttributeInterface abstractAttributeInterface, final ControlsModel controlModel)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		ControlInterface controlInterface = null;
-		AttributeProcessor attributeProcessor = AttributeProcessor.getInstance();
-		ControlProcessor controlProcessor = ControlProcessor.getInstance();
+		final AttributeProcessor attributeProcessor = AttributeProcessor.getInstance();
+		final ControlProcessor controlProcessor = ControlProcessor.getInstance();
 
 		if (abstractAttributeInterface instanceof AssociationInterface)
 		{
 
-			AssociationInterface associationInterface = (AssociationInterface) abstractAttributeInterface;
-			Map<String, String> taggedValueMap = associationVsMapTagValues
+			final AssociationInterface associationInterface = (AssociationInterface) abstractAttributeInterface;
+			final Map<String, String> taggedValueMap = associationVsMapTagValues
 					.get(associationInterface);
 			//If association is system generated,its taggedvaluemap is null ,so return null instead of processing further.
 			//This scenario occurs while importing static model's xmi,like catissuesuite through DE
@@ -2964,7 +2964,7 @@ public class XMIImportProcessor
 					userSelectedControlName = ProcessorConstants.COMBOBOX_CONTROL;
 					controlInterface = deFactory.createComboBox();
 				}
-				String separator = getSeparatorTagValue(taggedValueMap);
+				final String separator = getSeparatorTagValue(taggedValueMap);
 				((SelectControl) controlInterface).setSeparator(separator);
 				addAssociationDisplayAttributes(associationInterface, taggedValueMap,
 						controlInterface);
@@ -2973,22 +2973,22 @@ public class XMIImportProcessor
 				//populate rules
 				attributeProcessor.populateRules(userSelectedControlName, associationInterface,
 						controlModel);
-				String[] ruleNamesString = new String[0];
+				final String[] ruleNamesString = new String[0];
 				controlModel.setValidationRules(ruleNamesString);
 				controlModel.setTempValidationRules(ruleNamesString);
 			}
 		}
 		else
 		{
-			AttributeInterface attributeInterface = (AttributeInterface) abstractAttributeInterface;
-			AttributeTypeInformationInterface attributeTypeInformation = attributeInterface
+			final AttributeInterface attributeInterface = (AttributeInterface) abstractAttributeInterface;
+			final AttributeTypeInformationInterface attributeTypeInformation = attributeInterface
 					.getAttributeTypeInformation();
-			UserDefinedDEInterface userDefinedDEInterface = (UserDefinedDEInterface) attributeTypeInformation
+			final UserDefinedDEInterface userDefinedDEInterface = (UserDefinedDEInterface) attributeTypeInformation
 					.getDataElement();
 			if (!(attributeInterface.getName().equalsIgnoreCase(Constants.SYSTEM_IDENTIFIER) && xmiConfigurationObject
 					.isAddIdAttribute()))
 			{
-				Map<String, String> taggedValueMap = attrVsMapTagValues.get(attributeInterface);
+				final Map<String, String> taggedValueMap = attrVsMapTagValues.get(attributeInterface);
 				if ((userDefinedDEInterface != null)
 						&& (userDefinedDEInterface.getPermissibleValueCollection() != null)
 						&& (userDefinedDEInterface.getPermissibleValueCollection().size() > 0))
@@ -3026,18 +3026,18 @@ public class XMIImportProcessor
 					//populate rules
 					attributeProcessor.populateRules(userSelectedControlName, attributeInterface,
 							controlModel);
-					String[] ruleNamesString = new String[0];
+					final String[] ruleNamesString = new String[0];
 					controlModel.setValidationRules(ruleNamesString);
 					controlModel.setTempValidationRules(ruleNamesString);
 				}
 				else if (attributeTypeInformation instanceof DateAttributeTypeInformation)
 				{
 					controlModel.setDataType(ProcessorConstants.DATATYPE_DATE);
-					String userSelectedControlName = ProcessorConstants.DATEPICKER_CONTROL;
-					String format = getDateFormatTagValue(taggedValueMap);
+					final String userSelectedControlName = ProcessorConstants.DATEPICKER_CONTROL;
+					final String format = getDateFormatTagValue(taggedValueMap);
 					controlModel.setFormat(format);
 					controlInterface = deFactory.createDatePicker();
-					String defaultValue = getDefaultValueTagValue(taggedValueMap);
+					final String defaultValue = getDefaultValueTagValue(taggedValueMap);
 					controlModel.setAttributeDefaultValue(defaultValue);
 					if ((defaultValue != null) && !defaultValue.equalsIgnoreCase(""))
 					{
@@ -3045,7 +3045,7 @@ public class XMIImportProcessor
 					}
 
 					//PHI
-					String strIsIdentified = getPHIAttributeTagValue(taggedValueMap);
+					final String strIsIdentified = getPHIAttributeTagValue(taggedValueMap);
 					if ((strIsIdentified != null) && !strIsIdentified.equalsIgnoreCase(""))
 					{
 						attributeProcessor.populateIsIdentifiedInfo(attributeInterface,
@@ -3060,7 +3060,7 @@ public class XMIImportProcessor
 					//					//populate rules
 					attributeProcessor.populateRules(userSelectedControlName, attributeInterface,
 							controlModel);
-					String[] ruleNamesString = new String[0];
+					final String[] ruleNamesString = new String[0];
 					controlModel.setValidationRules(ruleNamesString);
 					controlModel.setTempValidationRules(ruleNamesString);
 
@@ -3068,13 +3068,13 @@ public class XMIImportProcessor
 				//Creating check box for boolean attributes
 				else if (attributeTypeInformation instanceof BooleanAttributeTypeInformation)
 				{
-					String userSelectedControlName = ProcessorConstants.CHECKBOX_CONTROL;
+					final String userSelectedControlName = ProcessorConstants.CHECKBOX_CONTROL;
 					controlModel.setDataType(ProcessorConstants.DATATYPE_BOOLEAN);
 					controlInterface = deFactory.createCheckBox();
-					String defaultValue = getDefaultValueForBooleanTagValue(attributeInterface,
+					final String defaultValue = getDefaultValueForBooleanTagValue(attributeInterface,
 							taggedValueMap);
 
-					BooleanValueInterface booleanValue = DomainObjectFactory.getInstance()
+					final BooleanValueInterface booleanValue = DomainObjectFactory.getInstance()
 							.createBooleanValue();
 					booleanValue.setValue(Boolean.valueOf(defaultValue));
 
@@ -3085,7 +3085,7 @@ public class XMIImportProcessor
 					//populate rules
 					attributeProcessor.populateRules(userSelectedControlName, attributeInterface,
 							controlModel);
-					String[] ruleNamesString = new String[0];
+					final String[] ruleNamesString = new String[0];
 					controlModel.setValidationRules(ruleNamesString);
 					controlModel.setTempValidationRules(ruleNamesString);
 				}
@@ -3093,20 +3093,20 @@ public class XMIImportProcessor
 				else if (attributeTypeInformation instanceof FileAttributeTypeInformation)
 				{
 					controlModel.setDataType(ProcessorConstants.DATATYPE_FILE);
-					String userSelectedControlName = ProcessorConstants.FILEUPLOAD_CONTROL;
+					final String userSelectedControlName = ProcessorConstants.FILEUPLOAD_CONTROL;
 					controlInterface = deFactory.createFileUploadControl();
 					((FileUploadInterface) controlInterface).setColumns(10);
 					//Setting MaxLength
-					String maxLen = getMaxLengthTagValue(taggedValueMap);
+					final String maxLen = getMaxLengthTagValue(taggedValueMap);
 					controlModel.setAttributeSize(maxLen);
 					//Setting fileformats
-					String[] fileFormats = getFileFormatsTagValue(taggedValueMap);
+					final String[] fileFormats = getFileFormatsTagValue(taggedValueMap);
 					controlModel.setFileFormats(fileFormats);
 					attributeProcessor.populateFileAttributeInterface(
 							(FileAttributeTypeInformation) attributeTypeInformation, controlModel);
 
 					//PHI
-					String strIsIdentified = getPHIAttributeTagValue(taggedValueMap);
+					final String strIsIdentified = getPHIAttributeTagValue(taggedValueMap);
 					if ((strIsIdentified != null) && !strIsIdentified.equalsIgnoreCase(""))
 					{
 						attributeProcessor.populateIsIdentifiedInfo(attributeInterface,
@@ -3117,41 +3117,41 @@ public class XMIImportProcessor
 					//populate rules
 					attributeProcessor.populateRules(userSelectedControlName, attributeInterface,
 							controlModel);
-					String[] ruleNamesString = new String[0];
+					final String[] ruleNamesString = new String[0];
 					controlModel.setValidationRules(ruleNamesString);
 					controlModel.setTempValidationRules(ruleNamesString);
 				}
 				else
 				{
-					String userSelectedControlName = ProcessorConstants.DEFAULT_SELECTED_CONTROL;
+					final String userSelectedControlName = ProcessorConstants.DEFAULT_SELECTED_CONTROL;
 					controlInterface = deFactory.createTextField();
 					((TextFieldInterface) controlInterface).setColumns(10);
 					//Creating Text Control
 					if (attributeTypeInformation instanceof StringAttributeTypeInformation)
 					{
 						controlModel.setDataType(ProcessorConstants.DATATYPE_STRING);
-						String defaultValue = getDefaultValueTagValue(taggedValueMap);
+						final String defaultValue = getDefaultValueTagValue(taggedValueMap);
 						controlModel.setAttributeDefaultValue(defaultValue);
-						String maxLen = getMaxLengthTagValue(taggedValueMap);
+						final String maxLen = getMaxLengthTagValue(taggedValueMap);
 						controlModel.setAttributeSize(maxLen);
 						attributeProcessor.populateStringAttributeInterface(
 								(StringAttributeTypeInformation) attributeTypeInformation,
 								controlModel);
 						//Password
-						String password = getPasswordTagValue(taggedValueMap);
+						final String password = getPasswordTagValue(taggedValueMap);
 						controlModel.setIsPassword(Boolean.parseBoolean(password));
 						//URL
-						String url = getUrlTagValue(taggedValueMap);
+						final String url = getUrlTagValue(taggedValueMap);
 						controlModel.setIsUrl(Boolean.parseBoolean(url));
 
 						//NoOfColumns
-						String width = getDisplayWidthTagValue(taggedValueMap);
+						final String width = getDisplayWidthTagValue(taggedValueMap);
 						controlModel.setColumns(Integer.parseInt(width));
 
 						// Single/Multiline(Number of Lines) tagged Value
 						setMultilineTaggedValue(taggedValueMap, controlModel);
 						//PHI
-						String strIsIdentified = getPHIAttributeTagValue(taggedValueMap);
+						final String strIsIdentified = getPHIAttributeTagValue(taggedValueMap);
 						attributeProcessor.populateIsIdentifiedInfo(attributeInterface,
 								strIsIdentified);
 
@@ -3172,7 +3172,7 @@ public class XMIImportProcessor
 						//populate rules
 						attributeProcessor.populateRules(userSelectedControlName,
 								attributeInterface, controlModel);
-						String[] ruleNamesString = new String[0];
+						final String[] ruleNamesString = new String[0];
 						controlModel.setValidationRules(ruleNamesString);
 						controlModel.setTempValidationRules(ruleNamesString);
 					}
@@ -3181,10 +3181,10 @@ public class XMIImportProcessor
 					{
 						controlModel.setDataType(ProcessorConstants.DATATYPE_NUMBER);
 
-						String defaultValue = getDefaultValueTagValue(taggedValueMap);
+						final String defaultValue = getDefaultValueTagValue(taggedValueMap);
 						controlModel.setAttributeDefaultValue(defaultValue);
 
-						Integer precision = getPrecisionTagValue(taggedValueMap,
+						final Integer precision = getPrecisionTagValue(taggedValueMap,
 								attributeTypeInformation);
 						controlModel.setAttributeDecimalPlaces(precision.toString());
 
@@ -3226,7 +3226,7 @@ public class XMIImportProcessor
 						//populate rules
 						attributeProcessor.populateRules(userSelectedControlName,
 								attributeInterface, controlModel);
-						String[] ruleNamesString = new String[0];
+						final String[] ruleNamesString = new String[0];
 						controlModel.setValidationRules(ruleNamesString);
 						controlModel.setTempValidationRules(ruleNamesString);
 					}
@@ -3248,28 +3248,28 @@ public class XMIImportProcessor
 	 * @param controlInterface
 	 * In case of linking association, this method adds the association display attributes.
 	 */
-	private void addAssociationDisplayAttributes(AssociationInterface associationInterface,
-			Map<String, String> taggedValueMap, ControlInterface controlInterface)
+	private void addAssociationDisplayAttributes(final AssociationInterface associationInterface,
+			final Map<String, String> taggedValueMap, final ControlInterface controlInterface)
 	{
-		EntityInterface targetEntity = associationInterface.getTargetEntity();
-		DomainObjectFactory domainObjectFactory = DomainObjectFactory.getInstance();
+		final EntityInterface targetEntity = associationInterface.getTargetEntity();
+		final DomainObjectFactory domainObjectFactory = DomainObjectFactory.getInstance();
 		//		This method returns all attributes and not associations
-		Collection<AttributeInterface> targetEntityAttrColl = targetEntity.getAttributeCollection();
+		final Collection<AttributeInterface> targetEntityAttrColl = targetEntity.getAttributeCollection();
 		int seqNo = 1;
-		String attributesInAssociationDropDownTagValue = taggedValueMap
+		final String attributesInAssociationDropDownTagValue = taggedValueMap
 				.get(XMIConstants.TAGGED_VALUE_ATTRIBUTES_IN_ASSOCIATION_DROP_DOWN);
 		if (attributesInAssociationDropDownTagValue != null)
 		{
-			StringTokenizer stringTokenizer = new StringTokenizer(
+			final StringTokenizer stringTokenizer = new StringTokenizer(
 					attributesInAssociationDropDownTagValue, ",");
 			while (stringTokenizer.hasMoreTokens())
 			{
-				String attributeName = stringTokenizer.nextToken();
-				for (AttributeInterface attr : targetEntityAttrColl)
+				final String attributeName = stringTokenizer.nextToken();
+				for (final AttributeInterface attr : targetEntityAttrColl)
 				{
 					if (attributeName.equals(attr.getName()))
 					{
-						AssociationDisplayAttributeInterface associationDisplayAttribute = domainObjectFactory
+						final AssociationDisplayAttributeInterface associationDisplayAttribute = domainObjectFactory
 								.createAssociationDisplayAttribute();
 						associationDisplayAttribute.setSequenceNumber(seqNo);
 						associationDisplayAttribute.setAttribute(attr);
@@ -3290,15 +3290,15 @@ public class XMIImportProcessor
 	 * @param controlModel
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void setExplicitValidationRules(Map<String, String> taggedValueMap,
-			ControlsModel controlModel) throws DynamicExtensionsSystemException
+	private void setExplicitValidationRules(final Map<String, String> taggedValueMap,
+			final ControlsModel controlModel) throws DynamicExtensionsSystemException
 	{
-		Map<String, String> taggedValueRuleMap = new HashMap<String, String>();
+		final Map<String, String> taggedValueRuleMap = new HashMap<String, String>();
 		if (taggedValueMap != null)
 		{
-			Set<String> keySetForTaggedValue = taggedValueMap.keySet();
+			final Set<String> keySetForTaggedValue = taggedValueMap.keySet();
 			//Grouping Rule Tagged Values
-			for (String key : keySetForTaggedValue)
+			for (final String key : keySetForTaggedValue)
 			{
 				if (key.startsWith(XMIConstants.TAGGED_VALUE_RULE + XMIConstants.SEPARATOR))
 				{
@@ -3320,19 +3320,19 @@ public class XMIImportProcessor
 	 * @param controlModel
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void populateValidationRule(Map<String, String> taggedValueRuleMap,
-			ControlsModel controlModel) throws DynamicExtensionsSystemException
+	private void populateValidationRule(final Map<String, String> taggedValueRuleMap,
+			final ControlsModel controlModel) throws DynamicExtensionsSystemException
 	{
-		ArrayList<String> ruleNames = new ArrayList<String>();
+		final ArrayList<String> ruleNames = new ArrayList<String>();
 		String ruleName = "";
 		int counter = 0;
 
-		Set<String> keySetForRuleTaggedValueMap = taggedValueRuleMap.keySet();
-		for (String key : keySetForRuleTaggedValueMap)
+		final Set<String> keySetForRuleTaggedValueMap = taggedValueRuleMap.keySet();
+		for (final String key : keySetForRuleTaggedValueMap)
 		{
-			StringTokenizer stringTokenizer = new StringTokenizer(key, XMIConstants.SEPARATOR);
+			final StringTokenizer stringTokenizer = new StringTokenizer(key, XMIConstants.SEPARATOR);
 			int tokenNumber = 0;
-			int count = stringTokenizer.countTokens();
+			final int count = stringTokenizer.countTokens();
 
 			// Seting Rule Tagged Values and parameter values to ControlsModel.
 			if (count <= 3)
@@ -3340,7 +3340,7 @@ public class XMIImportProcessor
 				while (stringTokenizer.hasMoreTokens())
 				{
 					tokenNumber++;
-					String tokenName = stringTokenizer.nextToken();
+					final String tokenName = stringTokenizer.nextToken();
 					// Finding Rule name.
 					if (tokenNumber == 2)
 					{
@@ -3368,8 +3368,8 @@ public class XMIImportProcessor
 			}
 		}
 
-		String[] ruleNamesString = new String[ruleNames.size()];
-		for (String ruleStringName : ruleNames)
+		final String[] ruleNamesString = new String[ruleNames.size()];
+		for (final String ruleStringName : ruleNames)
 		{
 			ruleNamesString[counter++] = ruleStringName;
 		}
@@ -3383,8 +3383,8 @@ public class XMIImportProcessor
 	 * @param entity
 	 * @param duplicateAttributeCollection
 	 */
-	protected void removeInheritedAttributes(EntityInterface entity,
-			List duplicateAttributeCollection)
+	protected void removeInheritedAttributes(final EntityInterface entity,
+			final List duplicateAttributeCollection)
 	{
 		if (duplicateAttributeCollection != null)
 		{
@@ -3403,9 +3403,9 @@ public class XMIImportProcessor
 	 * @param hibernatedao
 	 * @throws Exception
 	 */
-	protected DynamicQueryList processPersistence(List<String> containerNames,
-			boolean isEntityGroupSystemGenerated, boolean isCreateTable, boolean isDefaultPackage,
-			String defaultPackagePrefix, HibernateDAO... hibernatedao) throws Exception
+	protected DynamicQueryList processPersistence(final List<String> containerNames,
+			final boolean isEntityGroupSystemGenerated, final boolean isCreateTable, final boolean isDefaultPackage,
+			final String defaultPackagePrefix, final HibernateDAO... hibernatedao) throws Exception
 	{
 		//Collection<ContainerInterface> containerColl = new HashSet<ContainerInterface>();
 
@@ -3420,22 +3420,22 @@ public class XMIImportProcessor
 				containerName = defaultPackagePrefix + containerName;
 
 			}
-			List containerList = entityNameVsContainers.get(containerName);
+			final List containerList = entityNameVsContainers.get(containerName);
 			if ((containerList == null) || (containerList.size() < 1))
 			{
 				throw new DynamicExtensionsApplicationException("The container name "
 						+ containerName + " does "
 						+ "not match with the container name in the Model.");
 			}
-			ContainerInterface containerInterface = (ContainerInterface) containerList.get(0);
+			final ContainerInterface containerInterface = (ContainerInterface) containerList.get(0);
 			mainContainerList.add(containerInterface);
 		}
 		DynamicQueryList dynamicQueryList;
-		EntityGroupManagerInterface entityGroupManager = EntityGroupManager.getInstance();
+		final EntityGroupManagerInterface entityGroupManager = EntityGroupManager.getInstance();
 		try
 		{
 			//	entityManagerInterface.persistEntityGroupWithAllContainers(entityGroup, mainContainerList);
-			for (ContainerInterface container : mainContainerList)
+			for (final ContainerInterface container : mainContainerList)
 			{
 				entityGroup.addMainContainer(container);
 			}
@@ -3464,11 +3464,11 @@ public class XMIImportProcessor
 				dynamicQueryList = entityGroupManager.persistEntityGroup(entityGroup, hibernatedao);
 			}
 		}
-		catch (DynamicExtensionsApplicationException e)
+		catch (final DynamicExtensionsApplicationException e)
 		{
 			throw new DynamicExtensionsApplicationException(e.getMessage(), e);
 		}
-		catch (DynamicExtensionsSystemException e)
+		catch (final DynamicExtensionsSystemException e)
 		{
 			throw new DynamicExtensionsSystemException(e.getMessage(), e);
 		}
@@ -3480,7 +3480,7 @@ public class XMIImportProcessor
 	 */
 	public AssociationInterface createAssociation()
 	{
-		AssociationInterface associationInterface = DomainObjectFactory.getInstance()
+		final AssociationInterface associationInterface = DomainObjectFactory.getInstance()
 				.createAssociation();
 		return associationInterface;
 	}
@@ -3499,12 +3499,12 @@ public class XMIImportProcessor
 	 * @param defaultPackagePrefix
 	 * @return
 	 */
-	protected boolean isSkipEntity(String entityName, List<String> skipEntityNames,
-			String defaultPackagePrefix)
+	protected boolean isSkipEntity(final String entityName, final List<String> skipEntityNames,
+			final String defaultPackagePrefix)
 	{
 		boolean present = false;
 		String enName = entityName;
-		for (String skipEntityName : skipEntityNames)
+		for (final String skipEntityName : skipEntityNames)
 
 		{
 			if (entityName.startsWith(defaultPackagePrefix))
@@ -3527,14 +3527,14 @@ public class XMIImportProcessor
 	 * @param skipEntityNames
 	 * @throws Exception
 	 */
-	private void processDataModel(UmlPackage umlPackage, String packageName,
-			List<String> skipEntityNames, String defaultPackagePrefix) throws Exception
+	private void processDataModel(final UmlPackage umlPackage, final String packageName,
+			final List<String> skipEntityNames, final String defaultPackagePrefix) throws Exception
 	{
 
-		List<Dependency> sqlDependencyColl = new ArrayList<Dependency>();
-		List<UmlClass> sqlClassColl = new ArrayList<UmlClass>();
-		List<UmlAssociation> sqlAssociationColl = new ArrayList<UmlAssociation>();
-		List<Generalization> sqlGeneralisationColl = new ArrayList<Generalization>();
+		final List<Dependency> sqlDependencyColl = new ArrayList<Dependency>();
+		final List<UmlClass> sqlClassColl = new ArrayList<UmlClass>();
+		final List<UmlAssociation> sqlAssociationColl = new ArrayList<UmlAssociation>();
+		final List<Generalization> sqlGeneralisationColl = new ArrayList<Generalization>();
 
 		//process for data model, not want to process association and generalization so passing null
 		processModel(umlPackage, sqlClassColl, sqlAssociationColl, sqlGeneralisationColl,
@@ -3542,14 +3542,14 @@ public class XMIImportProcessor
 						+ XMIConstants.DOT_SEPARATOR + XMIConstants.PACKAGE_NAME_DATA_MODEL, true);
 		if (isPackagePresent)
 		{
-			List<String> associationNames = new ArrayList<String>();
-			List<EntityInterface> supplierEntities = new ArrayList<EntityInterface>();
+			final List<String> associationNames = new ArrayList<String>();
+			final List<EntityInterface> supplierEntities = new ArrayList<EntityInterface>();
 			// process dependency collection to change name of the table and columns of the entity
 			if (sqlDependencyColl != null)
 			{
-				for (Dependency umlDependency : sqlDependencyColl)
+				for (final Dependency umlDependency : sqlDependencyColl)
 				{
-					EntityInterface supplierEntity = processDependency(umlDependency, packageName,
+					final EntityInterface supplierEntity = processDependency(umlDependency, packageName,
 							skipEntityNames, associationNames, defaultPackagePrefix);
 					if (supplierEntity != null)
 					{
@@ -3568,33 +3568,33 @@ public class XMIImportProcessor
 	 * @param supplierEntities
 	 * @param associationNames
 	 */
-	private void processAssociation(List<EntityInterface> supplierEntities,
-			List<String> associationNames, String defaultPackagePrefix)
+	private void processAssociation(final List<EntityInterface> supplierEntities,
+			final List<String> associationNames, final String defaultPackagePrefix)
 	{
-		for (EntityInterface supplierEntity : supplierEntities)
+		for (final EntityInterface supplierEntity : supplierEntities)
 		{
 
-			for (AssociationInterface asson : supplierEntity.getAssociationCollection())
+			for (final AssociationInterface asson : supplierEntity.getAssociationCollection())
 			{
 
-				for (String assoName : associationNames)
+				for (final String assoName : associationNames)
 				{
-					StringTokenizer assnToken = new StringTokenizer(assoName,
+					final StringTokenizer assnToken = new StringTokenizer(assoName,
 							XMIConstants.COLON_SEPARATOR);
 
-					ArrayList<String> str = new ArrayList<String>();
+					final ArrayList<String> str = new ArrayList<String>();
 
 					while (assnToken.hasMoreTokens())
 					{
 						str.add(assnToken.nextToken());
 					}
 
-					String assonColName = str.get(str.size() - 2);
-					String assonSourceEntityName = str.get(str.size() - 1);
-					String assonTargetEntityName = str.get(1);
+					final String assonColName = str.get(str.size() - 2);
+					final String assonSourceEntityName = str.get(str.size() - 1);
+					final String assonTargetEntityName = str.get(1);
 					String srcEntity = asson.getEntity().getName();
 
-					String supEntityTargetEntityName = asson.getTargetEntity().getName();
+					final String supEntityTargetEntityName = asson.getTargetEntity().getName();
 					if (asson.getEntity().getName().contains(defaultPackagePrefix))
 					{
 						srcEntity = getLastToken(new StringTokenizer(asson.getEntity().getName(),
@@ -3625,28 +3625,28 @@ public class XMIImportProcessor
 	 * @param packageName
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private EntityInterface processDependency(Dependency umlDependency, String packageName,
-			List<String> skipEntityNames, List<String> associationName, String defaultPackagePrefix)
+	private EntityInterface processDependency(final Dependency umlDependency, final String packageName,
+			final List<String> skipEntityNames, final List<String> associationName, final String defaultPackagePrefix)
 			throws DynamicExtensionsSystemException
 	{
 		// here client means the dataclass which is src of dependency
 		// & supplier means the umlclass on which this dataclass depends
 		//set asson foregin key colum in updateattributecolname function.
 
-		Collection<UmlClass> clientColl = umlDependency.getClient();
-		Collection<UmlClass> supplierColl = umlDependency.getSupplier();
+		final Collection<UmlClass> clientColl = umlDependency.getClient();
+		final Collection<UmlClass> supplierColl = umlDependency.getSupplier();
 		String clientId = null;
 		String supplierId = null;
 		EntityInterface supplierEntity = null;
 		EntityInterface entity = null;
 		UmlClass clientClass = null;
 		Map<String, String> tagNameVsTagValue;
-		for (UmlClass client : clientColl)
+		for (final UmlClass client : clientColl)
 		{
 			clientId = client.refMofId();
 			clientClass = client;
 		}
-		for (UmlClass supplier : supplierColl)
+		for (final UmlClass supplier : supplierColl)
 		{
 			supplierId = supplier.refMofId();
 		}
@@ -3660,14 +3660,14 @@ public class XMIImportProcessor
 			{
 				umlClassIdVsEntity.put(clientId, supplierEntity);
 				supplierEntity.getTableProperties().setName(clientClass.getName());
-				Collection<Attribute> umlAttributeCollection = XMIUtilities.getAttributes(
+				final Collection<Attribute> umlAttributeCollection = XMIUtilities.getAttributes(
 						clientClass, false);
-				for (Attribute attr : umlAttributeCollection)
+				for (final Attribute attr : umlAttributeCollection)
 				{
 					tagNameVsTagValue = populateUMLTagValueMap(attr.getTaggedValue());
 					columnNameVsMapTagValues.put(attr.getName(), tagNameVsTagValue);
 					updateAttributeColumnName(supplierEntity, tagNameVsTagValue, packageName, attr);
-					String assnName = tagNameVsTagValue
+					final String assnName = tagNameVsTagValue
 							.get(XMIConstants.TAGGED_VALUE_IMPLEMENTS_ASSOCIATION);
 					if (assnName != null)
 					{
@@ -3688,7 +3688,7 @@ public class XMIImportProcessor
 	 * @param taggedValueColl
 	 * @return
 	 */
-	private String getAssociationTypeTV(Collection taggedValueColl)
+	private String getAssociationTypeTV(final Collection taggedValueColl)
 	{
 		//check for associationtype tag ,first check whether containment type tag is present
 		//If not then check whether containment unspecified type tag is present
@@ -3707,7 +3707,7 @@ public class XMIImportProcessor
 	 * @param tokenizer
 	 * @return
 	 */
-	private String getLastToken(StringTokenizer tokenizer)
+	private String getLastToken(final StringTokenizer tokenizer)
 	{
 		String token = "";
 		while (tokenizer.hasMoreTokens())
@@ -3721,7 +3721,7 @@ public class XMIImportProcessor
 	 * @param tokenizer
 	 * @return
 	 */
-	private String getSecondLastToken(StringTokenizer tokenizer)
+	private String getSecondLastToken(final StringTokenizer tokenizer)
 	{
 		String token = "";
 		String secondLast = "";
@@ -3745,11 +3745,11 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsSystemException
 	 */
 
-	private void updateAttributeColumnName(EntityInterface supplierEntity,
-			Map<String, String> tagNameVsTagValue, String packageName, Attribute newColumn)
+	private void updateAttributeColumnName(final EntityInterface supplierEntity,
+			final Map<String, String> tagNameVsTagValue, final String packageName, final Attribute newColumn)
 			throws DynamicExtensionsSystemException
 	{
-		String mappedAttribute = tagNameVsTagValue.get(XMIConstants.TAGGED_VALUE_MAPPED_ATTRIBUTES);
+		final String mappedAttribute = tagNameVsTagValue.get(XMIConstants.TAGGED_VALUE_MAPPED_ATTRIBUTES);
 
 		supplierEntity.getAssociationCollection();
 		supplierEntity.getAttributeCollection();
@@ -3758,15 +3758,15 @@ public class XMIImportProcessor
 			StringTokenizer tokens = new StringTokenizer(mappedAttribute,
 					XMIConstants.DOT_SEPARATOR);
 
-			StringTokenizer packageTokenizer = new StringTokenizer(packageName,
+			final StringTokenizer packageTokenizer = new StringTokenizer(packageName,
 					XMIConstants.DOT_SEPARATOR);
 
 			validatePackageName(tokens, packageTokenizer);
 			tokens = new StringTokenizer(mappedAttribute, XMIConstants.DOT_SEPARATOR);
-			String umlEntityName = getSecondLastToken(tokens);
-			String umlAttriName = getLastToken(new StringTokenizer(mappedAttribute,
+			final String umlEntityName = getSecondLastToken(tokens);
+			final String umlAttriName = getLastToken(new StringTokenizer(mappedAttribute,
 					XMIConstants.DOT_SEPARATOR));
-			String entityName = getLastToken(new StringTokenizer(supplierEntity.getName(),
+			final String entityName = getLastToken(new StringTokenizer(supplierEntity.getName(),
 					XMIConstants.DOT_SEPARATOR));
 			//take second last from tokens string it gives class name
 			validateEntityName(umlEntityName, entityName);
@@ -3783,11 +3783,11 @@ public class XMIImportProcessor
 	 * @param supplierEntity entity in which the attribute is to be searched
 	 * @param newColumn umlAttribute corresponding to the token attribute
 	 */
-	private void updateAttributeColumnProperties(String token, EntityInterface supplierEntity,
-			Attribute newColumn) throws DynamicExtensionsSystemException
+	private void updateAttributeColumnProperties(final String token, final EntityInterface supplierEntity,
+			final Attribute newColumn) throws DynamicExtensionsSystemException
 	{
 
-		AttributeInterface attribute = supplierEntity.getAttributeByName(token);
+		final AttributeInterface attribute = supplierEntity.getAttributeByName(token);
 		if (attribute == null)
 		{
 			throw new DynamicExtensionsSystemException("Attribute " + token
@@ -3807,7 +3807,7 @@ public class XMIImportProcessor
 	 * @param name
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void validateEntityName(String token, String name)
+	private void validateEntityName(final String token, final String name)
 			throws DynamicExtensionsSystemException
 	{
 
@@ -3825,7 +3825,7 @@ public class XMIImportProcessor
 	 * @param packageTokenizer
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void validatePackageName(StringTokenizer tokens, StringTokenizer packageTokenizer)
+	private void validatePackageName(final StringTokenizer tokens, final StringTokenizer packageTokenizer)
 			throws DynamicExtensionsSystemException
 	{
 
@@ -3848,15 +3848,15 @@ public class XMIImportProcessor
 	 * @param taggedValueColl
 	 * @return
 	 */
-	private Map<String, String> populateUMLTagValueMap(Collection<TaggedValue> taggedValueColl)
+	private Map<String, String> populateUMLTagValueMap(final Collection<TaggedValue> taggedValueColl)
 	{
-		Map<String, String> tagNameVsTagValue = new HashMap<String, String>();
-		for (TaggedValue taggedValue : taggedValueColl)
+		final Map<String, String> tagNameVsTagValue = new HashMap<String, String>();
+		for (final TaggedValue taggedValue : taggedValueColl)
 		{
 			if (taggedValue.getType() != null)
 			{
-				Collection<String> dataValueColl = taggedValue.getDataValue();
-				for (String value : dataValueColl)
+				final Collection<String> dataValueColl = taggedValue.getDataValue();
+				for (final String value : dataValueColl)
 				{
 					tagNameVsTagValue.put(taggedValue.getType().getName(), value);
 				}
@@ -3873,10 +3873,10 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsSystemException fails to add attribute
 	 * @throws DynamicExtensionsApplicationException fails to add attribute
 	 */
-	private void populateAttributes(UmlClass umlClass, EntityInterface entity)
+	private void populateAttributes(final UmlClass umlClass, final EntityInterface entity)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
-		Set<String> attributeColl = (Set<String>) addAttributes(umlClass, entity);
+		final Set<String> attributeColl = (Set<String>) addAttributes(umlClass, entity);
 		entityNameVsAttributeNames.put(entity.getName(), attributeColl);
 	}
 
