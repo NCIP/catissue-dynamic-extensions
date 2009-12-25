@@ -2102,6 +2102,7 @@ function calculateAttributes()
 				}
 	});
 }
+
 function setInsertDataOperation()
 {
 	getValues();

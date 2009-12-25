@@ -2,7 +2,6 @@ package edu.common.dynamicextensions.util;
 
 import java.util.Collection;
 
-import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domaininterface.CalculatedAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.entitymanager.CategoryManager;
@@ -12,7 +11,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 
-public class CalculatedAttributeCreator
+public class UpgradeCalculatedAttributes
 {
 	static
 	{
@@ -29,19 +28,14 @@ public class CalculatedAttributeCreator
 					.getInstance();
 			Collection<CategoryAttributeInterface> calculatedCategoryAttributeCollection = categoryManager
 					.getAllCalculatedCategoryAttributes();
-			DomainObjectFactory domainObjectFactory = DomainObjectFactory.getInstance();
-			for (CategoryAttributeInterface sourceCategoryAttribute : calculatedCategoryAttributeCollection)
+			for (CategoryAttributeInterface calculatedAttribute : calculatedCategoryAttributeCollection)
 			{
-				for (CategoryAttributeInterface targetCategoryAttribute : sourceCategoryAttribute
-						.getCalculatedAttributeCollection())
+				for (CalculatedAttributeInterface calculatedAttributeInterface : calculatedAttribute
+						.getCalculatedCategoryAttributeCollection())
 				{
-					CalculatedAttributeInterface calculatedAttributeInterface = domainObjectFactory
-							.createCalculatedAttribute();
 					calculatedAttributeInterface
-							.setCalculatedAttribute(sourceCategoryAttribute);
-					calculatedAttributeInterface
-							.setSourceForCalculatedAttribute(targetCategoryAttribute);
-					sourceCategoryAttribute.addCalculatedCategoryAttribute(calculatedAttributeInterface);
+							.getSourceForCalculatedAttribute()
+							.setIsSourceForCalculatedAttribute(Boolean.TRUE);
 				}
 			}
 			categoryManager.updateCategoryAttributes(calculatedCategoryAttributeCollection);

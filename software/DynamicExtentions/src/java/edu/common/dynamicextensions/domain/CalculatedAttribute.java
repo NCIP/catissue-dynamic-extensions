@@ -18,40 +18,40 @@ public class CalculatedAttribute extends BaseAbstractAttribute implements Calcul
     /**
      *
      */
-    protected CategoryAttributeInterface sourceCategoryAttribute;
+    protected CategoryAttributeInterface calculatedAttribute;
     /**
      *
      */
-    protected CategoryAttributeInterface targetCalculatedAttribute;
+    protected CategoryAttributeInterface sourceForCalculatedAttribute;
 	/**
 	 * @return
 	 * @hibernate.many-to-one cascade="save-update" column="SOURCE_CAT_ATTR_ID" class="edu.common.dynamicextensions.domain.CategoryAttribute" constrained="true"
 	 */
-    public CategoryAttributeInterface getSourceCategoryAttribute()
+    public CategoryAttributeInterface getCalculatedAttribute()
     {
-        return sourceCategoryAttribute;
+        return calculatedAttribute;
     }
     /**
      *
      */
-    public void setSourceCategoryAttribute(CategoryAttributeInterface sourceSkipLogicAttribute)
+    public void setCalculatedAttribute(CategoryAttributeInterface calculatedAttribute)
     {
-        this.sourceCategoryAttribute = sourceSkipLogicAttribute;
+        this.calculatedAttribute = calculatedAttribute;
     }
 	/**
 	 * @return
 	 * @hibernate.many-to-one cascade="save-update" column="TARGET_CAL_ATTR_ID" class="edu.common.dynamicextensions.domain.CategoryAttribute" constrained="true"
 	 */
-    public CategoryAttributeInterface getTargetCalculatedAttribute()
+    public CategoryAttributeInterface getSourceForCalculatedAttribute()
     {
-        return targetCalculatedAttribute;
+        return sourceForCalculatedAttribute;
     }
     /**
      *
      */
-    public void setTargetCalculatedAttribute(CategoryAttributeInterface targetSkipLogicAttribute)
+    public void setSourceForCalculatedAttribute(CategoryAttributeInterface sourceForCalculatedAttribute)
     {
-        this.targetCalculatedAttribute = targetSkipLogicAttribute;
+        this.sourceForCalculatedAttribute = sourceForCalculatedAttribute;
     }
 
 }

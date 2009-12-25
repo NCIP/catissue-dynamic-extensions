@@ -110,8 +110,8 @@ public class TextField extends Control implements TextFieldInterface
 					+ "id='"
 					+ htmlComponentName
 					+ "' onchange=\"isDataChanged();"
-					+ (this.isSourceForCalculatedAttribute != null
-							&& this.isSourceForCalculatedAttribute ? "calculateAttributes();" : "")
+					+ (this.getIsSourceForCalculatedAttribute() != null
+							&& this.getIsSourceForCalculatedAttribute() ? "calculateAttributes();" : "")
 					+ "\" value='" + defaultValue + "' ";
 
 			int columnSize = columns.intValue();

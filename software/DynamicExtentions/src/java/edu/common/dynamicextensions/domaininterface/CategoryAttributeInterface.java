@@ -195,4 +195,16 @@ public interface CategoryAttributeInterface extends BaseAbstractAttributeInterfa
 	 * This method removes all SkipLogic Attributes.
 	 */
 	void removeAllDependentSkipLogicAttributes();
+	/**
+	 *
+	 * @return
+	 */
+	Boolean getIsSourceForCalculatedAttribute();
+
+	/**
+	 *
+	 * @param isSourceForCalculatedAttribute
+	 */
+	void setIsSourceForCalculatedAttribute(
+			Boolean isSourceForCalculatedAttribute);
 }

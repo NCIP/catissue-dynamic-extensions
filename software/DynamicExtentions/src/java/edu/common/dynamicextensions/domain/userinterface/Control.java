@@ -12,6 +12,7 @@ import edu.common.dynamicextensions.domain.BaseAbstractAttribute;
 import edu.common.dynamicextensions.domain.DynamicExtensionBaseDomainObject;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.DataElementInterface;
 import edu.common.dynamicextensions.domaininterface.FormControlNotesInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
@@ -79,10 +80,6 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	 * Decides whether the control should be autocalculated
 	 */
 	protected Boolean isCalculated = false;
-	/**
-	 * Decides whether the control is Source For CalculatedAttribute.
-	 */
-	protected Boolean isSourceForCalculatedAttribute = false;
 	/**
 	 * Decides whether the control should use skip logic
 	 */
@@ -221,21 +218,18 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		this.isCalculated = isCalculated;
 	}
 	/**
-	 * @hibernate.property name="isSourceForCalculatedAttribute" type="boolean" column="IS_SRC_FOR_CAL_ATTR"
-	 * @return Returns the isHidden.
+	 *
 	 */
 	public Boolean getIsSourceForCalculatedAttribute()
 	{
-		return isSourceForCalculatedAttribute;
-	}
-	/**
-	 *
-	 * @param isSourceForCalculatedAttribute
-	 */
-	public void setIsSourceForCalculatedAttribute(
-			Boolean isSourceForCalculatedAttribute)
-	{
-		this.isSourceForCalculatedAttribute = isSourceForCalculatedAttribute;
+		Boolean isSourceControl = false;
+		BaseAbstractAttributeInterface baseAbstractAttributeInterface = this.baseAbstractAttribute;
+		if (baseAbstractAttributeInterface instanceof CategoryAttributeInterface)
+		{
+			CategoryAttributeInterface categoryAttributeInterface = (CategoryAttributeInterface) baseAbstractAttributeInterface;
+			isSourceControl = categoryAttributeInterface.getIsSourceForCalculatedAttribute();
+		}
+		return isSourceControl;
 	}
 	/**
 	 * @param caption The caption to set.

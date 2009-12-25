@@ -87,6 +87,10 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	/**
 	 *
 	 */
+	protected Boolean isSourceForCalculatedAttribute = false;
+	/**
+	 *
+	 */
 	protected Boolean isSkipLogic;
 	/**
 	 * Collection of formulae.
@@ -676,6 +680,23 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	public void setIsCalculated(Boolean isCalculatedAttribute)
 	{
 		this.isCalculated = isCalculatedAttribute;
+	}
+	/**
+	 * @hibernate.property name="isSourceForCalculatedAttribute" type="boolean" column="IS_SRC_FOR_CAL_ATTR"
+	 * @return Returns the isHidden.
+	 */
+	public Boolean getIsSourceForCalculatedAttribute()
+	{
+		return isSourceForCalculatedAttribute;
+	}
+	/**
+	 *
+	 * @param isSourceForCalculatedAttribute
+	 */
+	public void setIsSourceForCalculatedAttribute(
+			Boolean isSourceForCalculatedAttribute)
+	{
+		this.isSourceForCalculatedAttribute = isSourceForCalculatedAttribute;
 	}
 	/**
 	* @hibernate.property name="isSkipLogic" type="boolean" column="IS_SKIP_LOGIC"

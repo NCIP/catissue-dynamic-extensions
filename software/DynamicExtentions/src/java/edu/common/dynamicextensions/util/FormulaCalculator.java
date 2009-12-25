@@ -79,7 +79,7 @@ public class FormulaCalculator
 		String formula = categoryAttributeInterface.getFormula().getExpression();
 		for (CalculatedAttributeInterface calculatedAttributeInterface : categoryAttributeInterface.getCalculatedCategoryAttributeCollection())
 		{
-			CategoryAttributeInterface calculatedAttribute = calculatedAttributeInterface.getTargetCalculatedAttribute();
+			CategoryAttributeInterface calculatedAttribute = calculatedAttributeInterface.getSourceForCalculatedAttribute();
 			Map<String, String> calculatedKeyValueMap = new HashMap<String, String> ();
 			values.clear();
 			if (calculatedAttribute.getCategoryEntity().equals(categoryAttributeInterface.getCategoryEntity()))
@@ -439,7 +439,7 @@ public class FormulaCalculator
 		formulaParser.parseExpression(categoryAttribute.getFormula().getExpression());
 		for (CalculatedAttributeInterface calculatedAttributeInterface : categoryAttribute.getCalculatedCategoryAttributeCollection())
 		{
-			CategoryAttributeInterface calculatedAttribute = calculatedAttributeInterface.getTargetCalculatedAttribute();
+			CategoryAttributeInterface calculatedAttribute = calculatedAttributeInterface.getSourceForCalculatedAttribute();
 			if (calculatedAttribute.getDefaultValuePermissibleValue() == null)
 			{
 				allCalculatedAttributesPresent = false;

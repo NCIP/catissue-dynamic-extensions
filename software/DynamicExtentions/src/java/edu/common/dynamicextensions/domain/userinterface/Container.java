@@ -17,6 +17,8 @@ import edu.common.dynamicextensions.domain.AbstractEntity;
 import edu.common.dynamicextensions.domain.DynamicExtensionBaseDomainObject;
 import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
@@ -885,5 +887,30 @@ public class Container extends DynamicExtensionBaseDomainObject
 	{
 		this.previousValueMap = previousValueMap;
 	}
-
+	/**
+	 *
+	 * @return
+	 */
+	public boolean getIsSourceCalculatedAttributes()
+	{
+		boolean hasSourceCalculatedAttributes = false;
+		AbstractEntityInterface abstractEntityInterface = this.getAbstractEntity();
+		if (abstractEntityInterface instanceof CategoryEntityInterface)
+		{
+			CategoryEntityInterface categoryEntityInterface = (CategoryEntityInterface) abstractEntityInterface;
+			for (CategoryAttributeInterface categoryAttributeInterface : categoryEntityInterface
+					.getCategoryAttributeCollection())
+			{
+				if (categoryAttributeInterface
+						.getIsSourceForCalculatedAttribute() != null
+						&& categoryAttributeInterface
+								.getIsSourceForCalculatedAttribute())
+				{
+					hasSourceCalculatedAttributes = true;
+					break;
+				}
+			}
+		}
+		return hasSourceCalculatedAttributes;
+	}
 }

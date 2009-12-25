@@ -269,7 +269,7 @@
         />
 
         <many-to-one
-            name="sourceCategoryAttribute"
+            name="calculatedAttribute"
             class="edu.common.dynamicextensions.domain.CategoryAttribute"
             cascade="save-update"
             outer-join="auto"
@@ -279,7 +279,7 @@
         />
 
         <many-to-one
-            name="targetCalculatedAttribute"
+            name="sourceForCalculatedAttribute"
             class="edu.common.dynamicextensions.domain.CategoryAttribute"
             cascade="save-update"
             outer-join="auto"
@@ -756,6 +756,14 @@
             update="true"
             insert="true"
             column="IS_CAL_ATTRIBUTE"
+        />
+
+        <property
+            name="isSourceForCalculatedAttribute"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="IS_SRC_FOR_CAL_ATTR"
         />
 
         <property

@@ -290,4 +290,9 @@ public interface ContainerInterface extends DynamicExtensionBaseDomainObjectInte
 	 * @return previous page data value map
 	 */
 	public Map<BaseAbstractAttributeInterface, Object> getPreviousValueMap();
+	/**
+	 *
+	 * @return
+	 */
+	public boolean getIsSourceCalculatedAttributes();
 }

@@ -10,20 +10,20 @@ public interface CalculatedAttributeInterface
 	 *
 	 * @return
 	 */
-	CategoryAttributeInterface getSourceCategoryAttribute();
+	CategoryAttributeInterface getCalculatedAttribute();
 	/**
 	 *
 	 * @param sourceSkipLogicAttribute
 	 */
-	void setSourceCategoryAttribute(CategoryAttributeInterface sourceSkipLogicAttribute);
+	void setCalculatedAttribute(CategoryAttributeInterface sourceSkipLogicAttribute);
 	/**
 	 *
 	 * @return
 	 */
-	CategoryAttributeInterface getTargetCalculatedAttribute();
+	CategoryAttributeInterface getSourceForCalculatedAttribute();
 	/**
 	 *
 	 * @param targetSkipLogicAttribute
 	 */
-	void setTargetCalculatedAttribute(CategoryAttributeInterface targetSkipLogicAttribute);
+	void setSourceForCalculatedAttribute(CategoryAttributeInterface targetSkipLogicAttribute);
 }

@@ -714,27 +714,16 @@ public class CategoryGenerationUtil
 							CalculatedAttributeInterface calculatedAttributeInterface = DomainObjectFactory
 									.getInstance().createCalculatedAttribute();
 							calculatedAttributeInterface
-									.setSourceCategoryAttribute(categoryAttribute);
+									.setCalculatedAttribute(categoryAttribute);
 							calculatedAttributeInterface
-									.setTargetCalculatedAttribute(attributes
+									.setSourceForCalculatedAttribute(attributes
 											.get(0));
+							calculatedAttributeInterface
+									.getSourceForCalculatedAttribute()
+									.setIsSourceForCalculatedAttribute(
+											Boolean.TRUE);
 							categoryAttribute
 									.addCalculatedCategoryAttribute(calculatedAttributeInterface);
-
-							ContainerInterface sourceContainerInterface = DynamicExtensionsUtility
-									.getContainerForAbstractEntity(attributes
-											.get(0).getCategoryEntity());
-
-							ControlInterface sourceControl = DynamicExtensionsUtility
-									.getControlForAbstractAttribute(
-											(AttributeMetadataInterface) attributes
-													.get(0),
-											sourceContainerInterface,
-											attributes.get(0)
-													.getCategoryEntity()
-													.getName());
-
-							sourceControl.setIsSourceForCalculatedAttribute(Boolean.TRUE);
 						}
 						else
 						{
