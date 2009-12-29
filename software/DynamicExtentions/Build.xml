@@ -1091,7 +1091,7 @@
 					<include name="CategoryCreator.jar" />
 				</fileset>
 				<fileset dir="${base.dir}/lib/server">
-					<include name="washu-commons-1.1.2.jar" />
+					<include name="washu-commons*.jar" />
 					<include name="cog-jglobus.jar" />
 					<include name="log4j.jar" />
 				</fileset>
