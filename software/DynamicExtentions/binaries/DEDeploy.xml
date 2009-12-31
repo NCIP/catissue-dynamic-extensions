@@ -884,8 +884,34 @@
 			</classpath>
 		</java>
 
+		<unzip src="${de.zip.location}/dynamicextensions.zip" dest="${dezip.dir}" overwrite="true" />
 		<property file="${tempcacore.dir}/temp_exported_xmi/EntityGroup.properties" />
 		<foreach list="${entity.group.name}" param="xmi.name" target="export.xmi.and.generate.cacore" />
+
+		<echo message=" " />
+		<echo message="-----------------------------------------" />
+		<echo message=" Now creating dynamicExtensions.zip file " />
+		<echo message="-----------------------------------------" />
+		<echo message=" " />
+
+		<!-- Create dynamicextensions.zip file. -->
+		<zip destfile="${dezip.dir}/dynamicextensions.zip" basedir="${dezip.dir}" />
+
+		<copy todir="${base.dir}/" file="${dezip.dir}/dynamicextensions.zip" overwrite="true" />
+
+		<delete>
+			<fileset dir="${export.dir}/">
+				<include name="**/*.txt" />
+				<include name="**/Package.properties" />
+			</fileset>
+		</delete>
+
+
+		<delete>
+			<fileset dir="${dezip.dir}">
+				<include name="**/*" />
+			</fileset>
+		</delete>
 
 	</target>
 
@@ -930,8 +956,6 @@
 				<echo message="-----------------------------------------" />
 				<echo message=" " />
 
-				<unzip src="${de.zip.location}/dynamicextensions.zip" dest="${dezip.dir}" overwrite="true" />
-
 				<property name="ORM1CfgFile" value="${cacore.deployable.dir}/${entitygroupname}/orm1.cfg.xml" />
 				<property name="DEWebCfgFile" value="${dezip.dir}/conf/DynamicExtensionsHibernateWeb.cfg.xml" />
 
@@ -952,31 +976,6 @@
 				</java>
 
 				<copy todir="${entityGroup.jar.location}/" file="${cacore.deployable.dir}/${entitygroupname}/${entitygroupname}.jar" overwrite="true" />
-
-				<echo message=" " />
-				<echo message="-----------------------------------------" />
-				<echo message=" Now creating dynamicExtensions.zip file " />
-				<echo message="-----------------------------------------" />
-				<echo message=" " />
-
-				<!-- Create dynamicextensions.zip file. -->
-				<zip destfile="${dezip.dir}/dynamicextensions.zip" basedir="${dezip.dir}" />
-
-				<copy todir="${base.dir}/" file="${dezip.dir}/dynamicextensions.zip" overwrite="true" />
-
-				<delete>
-					<fileset dir="${export.dir}/">
-						<include name="**/*.txt" />
-						<include name="**/Package.properties" />
-					</fileset>
-				</delete>
-
-
-				<delete>
-					<fileset dir="${dezip.dir}">
-						<include name="**/*" />
-					</fileset>
-				</delete>
 			</then>
 			<else>
 				<echo message=" " />
