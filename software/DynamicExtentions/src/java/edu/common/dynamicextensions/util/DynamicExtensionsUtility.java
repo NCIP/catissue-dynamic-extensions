@@ -2181,6 +2181,23 @@ public class DynamicExtensionsUtility
 	}
 
 	/**
+	 * Replace any single and double quotes value with proper escape character	in HTML
+	 * @param value
+	 * @return String value
+	 */
+	public static String getUnEscapedStringValue(String value)
+	{
+		String replacedValue = value;
+		replacedValue = replaceUtil(replacedValue, "&#39", "'");
+		replacedValue = replaceUtil(replacedValue, "&#34", "\"");
+		if (replacedValue != null)
+		{
+			replacedValue = replacedValue.trim();
+		}
+		return replacedValue;
+	}
+
+	/**
 	 * @param container
 	 * @return
 	 * @throws DynamicExtensionsSystemException
@@ -2614,6 +2631,7 @@ public class DynamicExtensionsUtility
 	public static String replaceHTMLSpecialCharacters(String value)
 	{
 		String escapeStringValue = value;
+		escapeStringValue = getUnEscapedStringValue(escapeStringValue);
 		if (escapeStringValue != null && escapeStringValue.length() > 0)
 		{
 			escapeStringValue = StringEscapeUtils.escapeHtml(escapeStringValue);
