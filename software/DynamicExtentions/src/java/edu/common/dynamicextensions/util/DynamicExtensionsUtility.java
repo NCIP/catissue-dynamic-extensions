@@ -2309,7 +2309,10 @@ public class DynamicExtensionsUtility
 	 */
 	public static void closeHibernateDAO(HibernateDAO hibernateDao) throws DAOException
 	{
-		hibernateDao.closeSession();
+		if(hibernateDao!=null)
+		{
+			hibernateDao.closeSession();
+		}
 	}
 
 	/**

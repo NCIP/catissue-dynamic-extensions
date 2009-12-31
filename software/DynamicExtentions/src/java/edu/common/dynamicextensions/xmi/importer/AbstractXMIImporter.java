@@ -26,9 +26,9 @@ import org.netbeans.api.mdr.MDRepository;
 import org.omg.uml.UmlPackage;
 import org.openide.util.Lookup;
 
-import edu.common.dynamicextensions.domain.AbstractMetadata;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
+import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.RoleInterface;
 import edu.common.dynamicextensions.domaininterface.databaseproperties.ConstraintPropertiesInterface;
@@ -40,6 +40,7 @@ import edu.common.dynamicextensions.entitymanager.QueryBuilderFactory;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationDirection;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
@@ -48,7 +49,10 @@ import edu.common.dynamicextensions.xmi.DynamicQueryList;
 import edu.common.dynamicextensions.xmi.PathObject;
 import edu.common.dynamicextensions.xmi.UpdateCSRToEntityPath;
 import edu.common.dynamicextensions.xmi.XMIConfiguration;
+import edu.common.dynamicextensions.xmi.XMIConstants;
 import edu.common.dynamicextensions.xmi.XMIUtilities;
+import edu.common.dynamicextensions.xmi.exporter.XMIExporter;
+import edu.common.dynamicextensions.xmi.exporter.XMIExporterUtility;
 import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
@@ -82,7 +86,6 @@ public abstract class AbstractXMIImporter
 	// name of a MOF extent that will contain definition of UML metamodel
 	private static final String UML_MM = "UML";
 
-
 	// repository
 	private static MDRepository rep;
 	// UML extent
@@ -95,14 +98,17 @@ public abstract class AbstractXMIImporter
 
 	private String fileName = "";
 	private String packageName = "";
-	private	String pathCsvFileName = "";
+	private String pathCsvFileName = "";
 	private String coRecObjCsvFName = "";
+
 	private String hookEntityName = "";
+	private EntityInterface hookEntity;
 	private boolean addQueryPaths = true;
 	private boolean isEntGrpSysGented = false;
-	private HibernateDAO hibernatedao=null;
-	private JDBCDAO jdbcdao=null;
-	private String domainModelName="";
+	private boolean isGenerateCacore = true;
+	private HibernateDAO hibernatedao = null;
+	private JDBCDAO jdbcdao = null;
+	private String domainModelName = "";
 
 	/**
 	 * Step 1  : initialize all resources
@@ -117,8 +123,9 @@ public abstract class AbstractXMIImporter
 	public void importXMI(String[] args)
 	{
 		FileInputStream fileInput = null;
+		List<ContainerInterface> mainContainerList = null;
 		try
-		{	//step 1: Initialize Resources
+		{ //step 1: Initialize Resources
 			long processStartTime = System.currentTimeMillis();
 			initializeResources(args);
 			File file = new File(fileName);
@@ -129,10 +136,11 @@ public abstract class AbstractXMIImporter
 			XMIImportProcessor xmiImportProcessor = new XMIImportProcessor();
 			xmiImportProcessor.setXmiConfigurationObject(xmiConfiguration);
 			long processXMIStartTime = System.currentTimeMillis();
-			DynamicQueryList dynamicQueryList = xmiImportProcessor.processXmi(uml,
-					domainModelName, packageName, containerNames,hibernatedao);
-			List<ContainerInterface> mainContainerList=xmiImportProcessor.getMainContainerList();
-			Map<AssociationInterface, String> multiselectMigartionScripts = xmiImportProcessor.getMultiselectMigartionScripts();
+			DynamicQueryList dynamicQueryList = xmiImportProcessor.processXmi(uml, domainModelName,
+					packageName, containerNames, hibernatedao);
+			mainContainerList = xmiImportProcessor.getMainContainerList();
+			Map<AssociationInterface, String> multiselectMigartionScripts = xmiImportProcessor
+					.getMultiselectMigartionScripts();
 			boolean isEditedXmi = xmiImportProcessor.isEditedXmi;
 			generateLogForProcessXMI(processXMIStartTime, isEditedXmi);
 			long assoWithHEstartTime = System.currentTimeMillis();
@@ -140,24 +148,26 @@ public abstract class AbstractXMIImporter
 			integrateWithHookEntity(hibernatedao, dynamicQueryList, mainContainerList, isEditedXmi);
 			//step 4: commit model & create DE Tables
 			LOGGER.info("Now Creating DE Tables....");
-			if(hibernatedao!=null)
+			if (hibernatedao != null)
 			{
-				createDETablesAndSaveEntityGroup(multiselectMigartionScripts,dynamicQueryList);
+				createDETablesAndSaveEntityGroup(multiselectMigartionScripts, dynamicQueryList);
 			}
 			generateLogForHooking(assoWithHEstartTime);
 			long csrStartTime = System.currentTimeMillis();
 
 			//step 5: add Query paths.
-			if(addQueryPaths)
+			if (addQueryPaths)
 			{
 				LOGGER.info("Now Adding Query Paths ....");
-				addQueryPathsForConatiners(hibernatedao, jdbcdao, isEntGrpSysGented, mainContainerList);
+				addQueryPathsForConatiners(hibernatedao, jdbcdao, isEntGrpSysGented,
+						mainContainerList);
 			}
 			jdbcdao.commit();
 			//step 6: associate with clinical study.
 			LOGGER.info("Now associating the clinical study to the main Containers");
-			postProcess(isEditedXmi,coRecObjCsvFName,mainContainerList,domainModelName);
+			postProcess(isEditedXmi, coRecObjCsvFName, mainContainerList, domainModelName);
 			generateLogForCompleteProcess(processStartTime, csrStartTime);
+
 		}
 		catch (Exception e)
 		{
@@ -167,9 +177,65 @@ public abstract class AbstractXMIImporter
 		{
 			closeTransaction(fileInput, hibernatedao, jdbcdao);
 		}
+		exportXmiForCacore(mainContainerList);
 	}
 
+	/**
+	 * It will export the currently Imported model in XMI v 1.1. for generating cacore.
+	 * @param mainContainerList main container list.
+	 */
+	private void exportXmiForCacore(List<ContainerInterface> mainContainerList)
+	{
+		String exportedXmiFilePath = "./temp_deaudit_related_files/temp_exported_xmi/";
 
+		if (mainContainerList == null)
+		{
+			LOGGER.info("Main container list is empty hence not exporting the XMI for cacore!");
+		}
+		else if (isGenerateCacore)
+		{
+			long processStartTime = System.currentTimeMillis();
+			LOGGER.info("Now Exporting xmi for cacore !!");
+			try
+			{
+				EntityGroupInterface entityGroup = ((EntityInterface) mainContainerList.get(0)
+						.getAbstractEntity()).getEntityGroup();
+				if (hookEntity != null)
+				{
+					XMIExporterUtility.addHookEntitiesToGroup(hookEntity, entityGroup);
+				}
+				XMIExporter exporter = new XMIExporter();
+				String[] arguments = {entityGroup.getName(),
+						exportedXmiFilePath + domainModelName + ".xmi",
+						XMIConstants.XMI_VERSION_1_1, hookEntity.getName()};
+				exporter.initilizeInstanceVariables(arguments);
+				exporter.exportXMI(entityGroup, null);
+				generateLogForExportXmi(processStartTime);
+			}
+			catch (Exception e)
+			{
+				LOGGER.fatal("Fatal error while exporting XMI for caCore!!", e);
+			}
+		}
+	}
+
+	/**
+	 * It will log all the timing details for exporting the xmi for cacore.
+	 * @param processStartTime
+	 */
+	private void generateLogForExportXmi(long processStartTime)
+	{
+		long processEndTime = System.currentTimeMillis();
+		long totalTime = processEndTime - processStartTime;
+
+		LOGGER.info(" ");
+		LOGGER.info("#############################################");
+		LOGGER.info("  IMPORT_XMI --> TASK : EXPORT_XMI_FOR_CACORE");
+		LOGGER.info("  -----------------------------------------");
+		LOGGER.info("  Time taken  = " + ((totalTime / 1000) / 60) + " minutes "
+				+ ((totalTime / 1000) % 60) + " seconds");
+		LOGGER.info("#############################################");
+	}
 
 	/**
 	 * It will create the logg statements for the time required to add the Query paths &
@@ -186,7 +252,8 @@ public abstract class AbstractXMIImporter
 		LOGGER.info("#############################################");
 		LOGGER.info("  IMPORT_XMI --> TASK : ADD QUERY PATHS");
 		LOGGER.info("  -----------------------------------------");
-		LOGGER.info("  Time taken  = " + ((totalTime / 1000) / 60)+ " minutes "+ ((totalTime / 1000) % 60) +" seconds");
+		LOGGER.info("  Time taken  = " + ((totalTime / 1000) / 60) + " minutes "
+				+ ((totalTime / 1000) % 60) + " seconds");
 		LOGGER.info("#############################################");
 		LOGGER.info(" ");
 		LOGGER.info(" ");
@@ -204,12 +271,12 @@ public abstract class AbstractXMIImporter
 		LOGGER.info("#############################################");
 		LOGGER.info("  IMPORT_XMI -->TOTAL TIME");
 		LOGGER.info("  -----------------------------------------");
-		LOGGER.info("  Time taken  = " + ((totalTime / 1000) / 60)+ " minutes "+ ((totalTime / 1000) % 60) +" seconds");
+		LOGGER.info("  Time taken  = " + ((totalTime / 1000) / 60) + " minutes "
+				+ ((totalTime / 1000) % 60) + " seconds");
 		LOGGER.info("#############################################");
 		LOGGER.info(" ");
 		LOGGER.info(" ");
 	}
-
 
 	/**
 	 * It will create the logg statements for timing required for Hooking with the static entity.
@@ -224,13 +291,13 @@ public abstract class AbstractXMIImporter
 		LOGGER.info("######################################################################");
 		LOGGER.info("  IMPORT_XMI --> TASK : ASSOCIATE WITH HOOK ENTITY & CREATE DE TABLES");
 		LOGGER.info("  ------------------------------------------------------------------");
-		LOGGER.info("  Time taken  = " + ((assoWithHEtotalTime / 1000) / 60)+" minutes "+((assoWithHEtotalTime / 1000) % 60)+" seconds");
+		LOGGER.info("  Time taken  = " + ((assoWithHEtotalTime / 1000) / 60) + " minutes "
+				+ ((assoWithHEtotalTime / 1000) % 60) + " seconds");
 		LOGGER.info("######################################################################");
 		LOGGER.info(" ");
 		LOGGER.info(" ");
 		LOGGER.info(" ");
 	}
-
 
 	/**
 	 * It will create the Logg statement for timing required for importing the model.
@@ -245,10 +312,10 @@ public abstract class AbstractXMIImporter
 		LOGGER.info("##################################################");
 		LOGGER.info("  IMPORT_XMI --> TASK : IMPORT DYNAMIC MODEL");
 		LOGGER.info("  --------------------------------------");
-		LOGGER.info("  Time taken = " + ((processXMITotalTime / 1000) / 60 )+" minutes "+((processXMITotalTime / 1000) % 60)+"seconds");
+		LOGGER.info("  Time taken = " + ((processXMITotalTime / 1000) / 60) + " minutes "
+				+ ((processXMITotalTime / 1000) % 60) + "seconds");
 		LOGGER.info("##################################################");
 		LOGGER.info(" ");
-
 
 		LOGGER.info(" ");
 		LOGGER.info(" ");
@@ -256,7 +323,6 @@ public abstract class AbstractXMIImporter
 		LOGGER.info(" ");
 		LOGGER.info(" ");
 	}
-
 
 	/**
 	 * It will logg all the arguments passed to import the model.
@@ -271,10 +337,9 @@ public abstract class AbstractXMIImporter
 		LOGGER.info("Condition record object CSV File name = " + coRecObjCsvFName);
 		LOGGER.info("Hook entity = " + hookEntityName);
 		LOGGER.info("Domain model name = " + domainModelName);
+		LOGGER.info("Generate caCore = " + isGenerateCacore);
 		LOGGER.info("******************************************************");
 	}
-
-
 
 	/**
 	 * It will validate all the arguments & initialize all the resources which
@@ -285,16 +350,17 @@ public abstract class AbstractXMIImporter
 	 * @throws DAOException
 	 * @throws Exception exception
 	 */
-	private void initializeResources(String[] args) throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException, CreationFailedException, DAOException
+	private void initializeResources(String[] args) throws DynamicExtensionsApplicationException,
+			DynamicExtensionsSystemException, CreationFailedException, DAOException
 	{
 		validate(args);
 		intitializeInstanceVaribles(args);
-		xmiConfiguration =getXMIConfigurationObject();
+		xmiConfiguration = getXMIConfigurationObject();
 		domainModelName = getDomainModelName(fileName);
 		if (hookEntityName.equalsIgnoreCase("None"))
 		{
 			xmiConfiguration.setEntityGroupSystemGenerated(true);
-			isEntGrpSysGented=true;
+			isEntGrpSysGented = true;
 		}
 		// get the default repository
 		rep = XMIUtilities.getRepository();
@@ -306,7 +372,6 @@ public abstract class AbstractXMIImporter
 		intializeDao();
 		loggAllInstanceVariables();
 	}
-
 
 	/**
 	 * It will initialize all the instance variables with the given arguments.
@@ -335,6 +400,10 @@ public abstract class AbstractXMIImporter
 		{
 			coRecObjCsvFName = args[5];
 		}
+		if (args.length > 6 && DEConstants.FALSE.equalsIgnoreCase(args[6].trim()))
+		{
+			isGenerateCacore = false;
+		}
 	}
 
 	/**
@@ -346,27 +415,33 @@ public abstract class AbstractXMIImporter
 	{
 		if (args.length == 0)
 		{
-			throw new DynamicExtensionsApplicationException("Please Specify the file name to be imported");
+			throw new DynamicExtensionsApplicationException(
+					"Please Specify the file name to be imported");
 		}
 		if (args.length < 2)
 		{
-			throw new DynamicExtensionsApplicationException("Please Specify the Main Container names CSV file name.");
+			throw new DynamicExtensionsApplicationException(
+					"Please Specify the Main Container names CSV file name.");
 		}
 		if (args.length < 3)
 		{
-			throw new DynamicExtensionsApplicationException("Please Specify the name of the Package to be imported");
+			throw new DynamicExtensionsApplicationException(
+					"Please Specify the name of the Package to be imported");
 		}
 		if (args[0] != null && args[0].trim().length() == 0)
 		{
-			throw new DynamicExtensionsApplicationException("Please Specify the file name to be imported");
+			throw new DynamicExtensionsApplicationException(
+					"Please Specify the file name to be imported");
 		}
 		if (args[1] != null && args[1].trim().length() == 0)
 		{
-			throw new DynamicExtensionsApplicationException("Please Specify the Main Container names CSV file name.");
+			throw new DynamicExtensionsApplicationException(
+					"Please Specify the Main Container names CSV file name.");
 		}
 		if (args[2] != null && args[2].trim().length() == 0)
 		{
-			throw new DynamicExtensionsApplicationException("Please Specify the name of the Package to be imported");
+			throw new DynamicExtensionsApplicationException(
+					"Please Specify the name of the Package to be imported");
 		}
 	}
 
@@ -381,11 +456,9 @@ public abstract class AbstractXMIImporter
 		IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		jdbcdao = daoFactory.getJDBCDAO();
 		jdbcdao.openSession(null);
-		hibernatedao =DynamicExtensionsUtility.getHibernateDAO();
+		hibernatedao = DynamicExtensionsUtility.getHibernateDAO();
 
 	}
-
-
 
 	/**
 	 * It will close all the open resource like input stream & daos.
@@ -400,15 +473,15 @@ public abstract class AbstractXMIImporter
 		MDRManager.getDefault().shutdownAll();
 		try
 		{
-			if(hibernatedao!=null)
+			if (hibernatedao != null)
 			{
 				DynamicExtensionsUtility.closeHibernateDAO(hibernatedao);
 			}
-			if(jdbcdao!=null)
+			if (jdbcdao != null)
 			{
 				DynamicExtensionsUtility.closeJDBCDAO(jdbcdao);
 			}
-			if(fileInput!=null)
+			if (fileInput != null)
 			{
 				fileInput.close();
 			}
@@ -420,7 +493,6 @@ public abstract class AbstractXMIImporter
 		}
 		XMIUtilities.cleanUpRepository();
 	}
-
 
 	/**
 	 * It will hook all the mainContainers with the Provided Hook entity.
@@ -443,17 +515,17 @@ public abstract class AbstractXMIImporter
 			// For CLINPORTAL, there is only one hook entity object i.e. RECORD ENTRY
 			//LOGGER.info("Number of main containers = " + mainContainerList.size());
 			LOGGER.info(" ");
-			LOGGER.info("Now associating with hook entity -> "+hookEntityName+"....");
+			LOGGER.info("Now associating with hook entity -> " + hookEntityName + "....");
 			LOGGER.info(" ");
-			DynamicQueryList queryList = associateHookEntity(mainContainerList, hookEntityName ,isEditedXmi, hibernatedao);
-			if(queryList!=null)
+			DynamicQueryList queryList = associateHookEntity(mainContainerList, hookEntityName,
+					isEditedXmi, hibernatedao);
+			if (queryList != null)
 			{
 				dynamicQueryList.getQueryList().addAll(queryList.getQueryList());
 				dynamicQueryList.getRevQueryList().addAll(queryList.getRevQueryList());
 			}
 		}
 	}
-
 
 	/**
 	 * It will add the Query paths for all the Entities & if addQueryPahs argument was
@@ -472,7 +544,7 @@ public abstract class AbstractXMIImporter
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
 			BizLogicException, DAOException
 	{
-		if(hookEntityName.equalsIgnoreCase("None"))
+		if (hookEntityName.equalsIgnoreCase("None"))
 		{
 			LOGGER.info("Main Container list size " + mainContainerList.size());
 			Set<PathObject> processedPathList = new HashSet<PathObject>();
@@ -483,12 +555,13 @@ public abstract class AbstractXMIImporter
 		}
 		else
 		{
-			EntityInterface staticEntity = getStaticEntity(hookEntityName, hibernatedao);
+			EntityInterface staticEntity = XMIUtilities.getStaticEntity(hookEntityName,
+					hibernatedao);
 			for (ContainerInterface mainContainer : mainContainerList)
 			{
 				AnnotationUtil.addNewPathsForExistingMainContainers(staticEntity,
-						((EntityInterface) mainContainer.getAbstractEntity()), true,
-						jdbcdao,staticEntity);
+						((EntityInterface) mainContainer.getAbstractEntity()), true, jdbcdao,
+						staticEntity);
 			}
 
 		}
@@ -499,9 +572,6 @@ public abstract class AbstractXMIImporter
 				.getNewEntitiesIds());
 
 	}
-
-
-
 
 	/**
 	 * It will add the Query paths for which no hook entity is specified.
@@ -518,24 +588,18 @@ public abstract class AbstractXMIImporter
 	{
 		for (ContainerInterface mainContainer : mainContainerList)
 		{
-			AnnotationUtil.addQueryPathsForAllAssociatedEntities(
-					((EntityInterface) mainContainer.getAbstractEntity()), null, null,
-					processedPathList, isEntGrpSysGented, jdbcdao);
+			AnnotationUtil.addQueryPathsForAllAssociatedEntities(((EntityInterface) mainContainer
+					.getAbstractEntity()), null, null, processedPathList, isEntGrpSysGented,
+					jdbcdao);
 		}
 
 		// Following will add Parent Entity's association paths to child Entity also.
 		for (ContainerInterface mainContainer : mainContainerList)
 		{
-			AnnotationUtil
-					.addInheritancePathforSystemGenerated(((EntityInterface) mainContainer
-							.getAbstractEntity()));
+			AnnotationUtil.addInheritancePathforSystemGenerated(((EntityInterface) mainContainer
+					.getAbstractEntity()));
 		}
 	}
-
-
-
-
-
 
 	/**
 	 * It will execute all the queries present in the dynamicQueryList object &
@@ -546,21 +610,24 @@ public abstract class AbstractXMIImporter
 	 * @param dynamicQueryList queries to be fired to create all DE tables.
 	 * @throws DynamicExtensionsSystemException exception.
 	 */
-	private void createDETablesAndSaveEntityGroup(Map<AssociationInterface, String> multiselectMigartionScripts, DynamicQueryList dynamicQueryList) throws DynamicExtensionsSystemException
+	private void createDETablesAndSaveEntityGroup(
+			Map<AssociationInterface, String> multiselectMigartionScripts,
+			DynamicQueryList dynamicQueryList) throws DynamicExtensionsSystemException
 	{
-		Stack<String> rlbkQryStack=new Stack<String>();
+		Stack<String> rlbkQryStack = new Stack<String>();
 		try
 		{
 			DynamicExtensionBaseQueryBuilder queryBuilder = QueryBuilderFactory.getQueryBuilder();
-			if(dynamicQueryList!=null)
+			if (dynamicQueryList != null)
 			{
-				queryBuilder.executeQueries(dynamicQueryList.getQueryList(), dynamicQueryList.getRevQueryList(), rlbkQryStack);
+				queryBuilder.executeQueries(dynamicQueryList.getQueryList(), dynamicQueryList
+						.getRevQueryList(), rlbkQryStack);
 			}
 			hibernatedao.commit();
 		}
 		catch (Exception e)
 		{
-			rollbackQueries(rlbkQryStack,e,hibernatedao);
+			rollbackQueries(rlbkQryStack, e, hibernatedao);
 			throw new DynamicExtensionsSystemException(e.getMessage(), e);
 		}
 		// Execute data migration scripts for attributes that were changed from a normal attribute to
@@ -620,7 +687,6 @@ public abstract class AbstractXMIImporter
 		}
 	}
 
-
 	/**
 	 * It will execute all the Queries present into the stack using the provided dao
 	 * @param revQryStack which contains queries
@@ -645,7 +711,6 @@ public abstract class AbstractXMIImporter
 		}
 	}
 
-
 	/**
 	 * It will call rollback on the given dao.
 	 * @param dao dao which is to be rollbacked.
@@ -666,7 +731,6 @@ public abstract class AbstractXMIImporter
 			}
 		}
 	}
-
 
 	/**
 	 * It will return the name of the domain model. i.e. it will return the name of the file
@@ -691,8 +755,6 @@ public abstract class AbstractXMIImporter
 		return modelName;
 	}
 
-
-
 	/**
 	 * It will add the association between the provided hook entity & all the maincontainers.
 	 * @param mainContainerList main container list.
@@ -705,64 +767,32 @@ public abstract class AbstractXMIImporter
 	 * @throws BizLogicException exception.
 	 * @throws DynamicExtensionsApplicationException exception.
 	 */
-	private DynamicQueryList associateHookEntity(List<ContainerInterface> mainContainerList, String hookentity, boolean isEditedXmi,HibernateDAO hibernatedao) throws DAOException,
-			DynamicExtensionsSystemException, BizLogicException,DynamicExtensionsApplicationException
+	private DynamicQueryList associateHookEntity(List<ContainerInterface> mainContainerList,
+			String hookentity, boolean isEditedXmi, HibernateDAO hibernatedao) throws DAOException,
+			DynamicExtensionsSystemException, BizLogicException,
+			DynamicExtensionsApplicationException
 	{
 		//hooked with the record Entry
-		DynamicQueryList queryList=null;
-		EntityInterface staticEntity = getStaticEntity(hookEntityName, hibernatedao);
+		DynamicQueryList queryList = null;
+		hookEntity = XMIUtilities.getStaticEntity(hookEntityName, hibernatedao);
 		if (isEditedXmi)
 		{//Edit Case
 			List<ContainerInterface> newContainers = new ArrayList<ContainerInterface>();
 			List<ContainerInterface> existingContainers = new ArrayList<ContainerInterface>();
-			separateNewAndExistingContainers(mainContainerList, staticEntity, newContainers,
+			separateNewAndExistingContainers(mainContainerList, hookEntity, newContainers,
 					existingContainers);
 			if (!newContainers.isEmpty())
 			{
-				queryList = addNewIntegrationObjects(staticEntity, newContainers, hibernatedao);
+				queryList = addNewIntegrationObjects(hookEntity, newContainers, hibernatedao);
 			}
 		}
 		else
 		{//Add Case
-			queryList = addNewIntegrationObjects(staticEntity, mainContainerList, hibernatedao);
+			queryList = addNewIntegrationObjects(hookEntity, mainContainerList, hibernatedao);
 		}
 		return queryList;
 
 	}
-
-
-	/**
-	 * It will retrieve the Entity with name given in hook entity using provided DAo
-	 * @param hookEntityName name of the hook entity to retrieve.
-	 * @param hibernatedao dao used for retrieving the hook entity.
-	 * @return the retrieved entity.
-	 * @throws DAOException exception.
-	 * @throws DynamicExtensionsApplicationException exception.
-	 * @throws DynamicExtensionsSystemException
-	 */
-	private EntityInterface getStaticEntity(String hookEntityName, HibernateDAO hibernatedao)
-			throws DAOException, DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException
-	{
-		EntityInterface entity = null;
-		if (hibernatedao == null)
-		{
-			entity = EntityManager.getInstance().getEntityByName(hookEntityName);
-		}
-		else
-		{
-			List staticEntityList = hibernatedao.retrieve(AbstractMetadata.class.getName(), "name",
-					hookEntityName);
-			if (staticEntityList == null || staticEntityList.isEmpty())
-			{
-				throw new DynamicExtensionsSystemException(
-						"Static Entity Not Found, please provide correct static Entity name");
-			}
-			entity = ((EntityInterface) staticEntityList.get(0));
-		}
-		return entity;
-	}
-
 
 	/**
 	 * It will separate the containers in new containers list & existing main container list
@@ -780,8 +810,7 @@ public abstract class AbstractXMIImporter
 		{
 			boolean isAssonPresent = false;
 			EntityInterface entity = (EntityInterface) mainContainer.getAbstractEntity();
-			Collection<AssociationInterface> allAssociations = staticEntity
-					.getAllAssociations();
+			Collection<AssociationInterface> allAssociations = staticEntity.getAllAssociations();
 			for (AssociationInterface association : allAssociations)
 			{
 				if (association.getTargetEntity().getId().compareTo(entity.getId()) == 0)
@@ -802,9 +831,6 @@ public abstract class AbstractXMIImporter
 		}
 	}
 
-
-
-
 	/**
 	 * It will add the new association between static entity & each of the main containers entity.
 	 * @param staticEntity source entity of the association to be added.
@@ -816,16 +842,20 @@ public abstract class AbstractXMIImporter
 	 * @throws BizLogicException exception.
 	 * @throws DynamicExtensionsApplicationException exception.
 	 */
-	protected DynamicQueryList addNewIntegrationObjects(EntityInterface staticEntity, List<ContainerInterface> mainContainerList, HibernateDAO hibernatedao) throws DynamicExtensionsSystemException, DAOException,
-			BizLogicException,DynamicExtensionsApplicationException
+	protected DynamicQueryList addNewIntegrationObjects(EntityInterface staticEntity,
+			List<ContainerInterface> mainContainerList, HibernateDAO hibernatedao)
+			throws DynamicExtensionsSystemException, DAOException, BizLogicException,
+			DynamicExtensionsApplicationException
 	{
 
 		List<AssociationInterface> asso = new ArrayList<AssociationInterface>();
-		for (Iterator<ContainerInterface> iterator = mainContainerList.iterator(); iterator.hasNext();)
+		for (Iterator<ContainerInterface> iterator = mainContainerList.iterator(); iterator
+				.hasNext();)
 		{
 
 			ContainerInterface containerInterface = iterator.next();
-			AssociationInterface association = addAssociationForEntities(staticEntity, (EntityInterface) containerInterface.getAbstractEntity());
+			AssociationInterface association = addAssociationForEntities(staticEntity,
+					(EntityInterface) containerInterface.getAbstractEntity());
 			asso.add(association);
 			//staticEntity.addAssociation(association);
 		}
@@ -841,19 +871,18 @@ public abstract class AbstractXMIImporter
 					false, null, hibernatedao);
 		}
 
-		List<String> queriesList =new ArrayList<String>();
+		List<String> queriesList = new ArrayList<String>();
 		List<String> revQueryList = new ArrayList<String>();
 		for (AssociationInterface associationInterface : asso)
 		{
-			queriesList.addAll(QueryBuilderFactory.getQueryBuilder().getQueryPartForAssociation(associationInterface, revQueryList, true));
+			queriesList.addAll(QueryBuilderFactory.getQueryBuilder().getQueryPartForAssociation(
+					associationInterface, revQueryList, true));
 		}
 		DynamicQueryList dynamicQueryList = new DynamicQueryList();
 		dynamicQueryList.setQueryList(queriesList);
 		dynamicQueryList.setRevQueryList(revQueryList);
 		return dynamicQueryList;
 	}
-
-
 
 	/**
 	 *It will create a new association object between the staticEntity & dynamicEntity.
@@ -863,9 +892,9 @@ public abstract class AbstractXMIImporter
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	public AssociationInterface addAssociationForEntities(
-			EntityInterface staticEntity, EntityInterface dynamicEntity)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	public AssociationInterface addAssociationForEntities(EntityInterface staticEntity,
+			EntityInterface dynamicEntity) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
 		//Create source role and target role for the association
 		String roleName = staticEntity.getId().toString().concat("_").concat(
@@ -876,12 +905,12 @@ public abstract class AbstractXMIImporter
 				Cardinality.ZERO, Cardinality.MANY);
 
 		//Create association with the created source and target roles.
-		AssociationInterface association = getAssociation(dynamicEntity, AssociationDirection.SRC_DESTINATION, roleName,
-				sourceRole, targetRole);
+		AssociationInterface association = getAssociation(dynamicEntity,
+				AssociationDirection.SRC_DESTINATION, roleName, sourceRole, targetRole);
 
 		//Create constraint properties for the created association.
-		ConstraintPropertiesInterface constProperts = AnnotationUtil.getConstraintProperties(staticEntity,
-				dynamicEntity);
+		ConstraintPropertiesInterface constProperts = AnnotationUtil.getConstraintProperties(
+				staticEntity, dynamicEntity);
 		association.setConstraintProperties(constProperts);
 
 		//Add association to the static entity and save it.
@@ -933,8 +962,6 @@ public abstract class AbstractXMIImporter
 		return role;
 	}
 
-
-
 	/**
 	 * It will read the file specified by given path & then create alist of names specified in that file
 	 * which are comma separated.
@@ -969,19 +996,18 @@ public abstract class AbstractXMIImporter
 	 * Initializes the MOF repository.
 	 * @throws Exception exception.
 	 */
-	private static void init() throws DynamicExtensionsSystemException,CreationFailedException
+	private static void init() throws DynamicExtensionsSystemException, CreationFailedException
 	{
 		uml = (UmlPackage) rep.getExtent(UML_INSTANCE);
 
 		if (uml == null)
-		{System.out.println();
+		{
 			// UML extent does not exist -> create it (note that in case one want's to instantiate
 			// a metamodel other than MOF, they need to provide the second parameter of the createExtent
 			// method which indicates the metamodel package that should be instantiated)
 			uml = (UmlPackage) rep.createExtent(UML_INSTANCE, getUmlPackage());
 		}
 	}
-
 
 	/**
 	 * Finds "UML" package -> this is the topmost package of UML metamodel - that's the
@@ -1000,7 +1026,7 @@ public abstract class AbstractXMIImporter
 	{
 		// get the MOF extent containing definition of UML metamodel
 		ModelPackage umlMM = (ModelPackage) rep.getExtent(UML_MM);
-		MofPackage result =null;
+		MofPackage result = null;
 		try
 		{
 			if (umlMM == null)
@@ -1010,7 +1036,8 @@ public abstract class AbstractXMIImporter
 			}
 			// find package named "UML" in this extent
 			result = getUmlPackage(umlMM);
-			reader.read(UmlPackage.class.getResource("resources/01-02-15_Diff.xml").toString(), umlMM);
+			reader.read(UmlPackage.class.getResource("resources/01-02-15_Diff.xml").toString(),
+					umlMM);
 			// try to find the "UML" package again
 			result = getUmlPackage(umlMM);
 			if (result == null)
@@ -1022,9 +1049,10 @@ public abstract class AbstractXMIImporter
 				result = getUmlPackage(umlMM);
 			}
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			throw new DynamicExtensionsSystemException("Exception occured while Intializing UML Package",e);
+			throw new DynamicExtensionsSystemException(
+					"Exception occured while Intializing UML Package", e);
 		}
 		return result;
 	}
@@ -1036,7 +1064,7 @@ public abstract class AbstractXMIImporter
 	private static MofPackage getUmlPackage(ModelPackage umlMM)
 	{
 		// iterate through all instances of package
-		MofPackage pkg=null;
+		MofPackage pkg = null;
 		for (Iterator it = umlMM.getMofPackage().refAllOfClass().iterator(); it.hasNext();)
 		{
 			pkg = (MofPackage) it.next();
@@ -1053,7 +1081,6 @@ public abstract class AbstractXMIImporter
 		return pkg;
 	}
 
-
 	/**
 	 * This method will return the List of Association which contains the association list upto the hook entity from some base entity
 	 * so that indirect path from the base entity (i.e. the first entity which is source of the first association in the association list)
@@ -1063,15 +1090,15 @@ public abstract class AbstractXMIImporter
 	 * @throws DynamicExtensionsSystemException exception
 	 * @throws DynamicExtensionsApplicationException exception
 	 */
-	protected abstract List<AssociationInterface> getAssociationListForCurratedPath(HibernateDAO hibernatedao)throws DynamicExtensionsSystemException,DynamicExtensionsApplicationException;
-
+	protected abstract List<AssociationInterface> getAssociationListForCurratedPath(
+			HibernateDAO hibernatedao) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException;
 
 	/**
 	 * It will return the xmiconfiguration object to be used while importing the model
 	 * @return XMIConfiguration object
 	 */
 	protected abstract XMIConfiguration getXMIConfigurationObject();
-
 
 	/**
 	 * This method will be implemented by the host application & it can do whatever it wants after the
@@ -1086,7 +1113,7 @@ public abstract class AbstractXMIImporter
 	 * @throws DynamicExtensionsApplicationException exception.
 	 */
 	protected abstract void postProcess(boolean isEditedXmi, String coRecObjCsvFName,
-			List<ContainerInterface> mainContainerList, String domainModelName) throws BizLogicException, DAOException, DynamicExtensionsApplicationException;
-
+			List<ContainerInterface> mainContainerList, String domainModelName)
+			throws BizLogicException, DAOException, DynamicExtensionsApplicationException;
 
 }

@@ -23,6 +23,10 @@ import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterfac
 import edu.common.dynamicextensions.entitymanager.EntityManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.wustl.common.util.logger.Logger;
+import edu.wustl.common.util.logger.LoggerConfig;
+import edu.wustl.dao.HibernateDAO;
+import edu.wustl.dao.exception.DAOException;
 
 /**
  * @author falguni_sachde
@@ -33,20 +37,27 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 public class XMIExporterUtility
 {
 
+	static
+	{
+		LoggerConfig.configureLogger(System.getProperty("user.dir"));
+	}
+	private static final Logger LOGGER = Logger.getCommonLogger(XMIExporterUtility.class);
 	/**
 	 * @param hookEntityName
 	 * @param entityGroup
+	 * @param hibernatedao
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
+	 * @throws DAOException
 	 */
-	public static void addHookEntitiesToGroup(final String hookEntityName,
+	public static void addHookEntitiesToGroup(EntityInterface staticEntity,
 			final EntityGroupInterface entityGroup) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
-			{
-		final Collection<ContainerInterface> mainContainers = entityGroup.getMainContainerCollection();
-		System.out.println("mainContainers.size(): " + mainContainers.size());
+	{
+		final Collection<ContainerInterface> mainContainers = entityGroup
+				.getMainContainerCollection();
+		LOGGER.info("mainContainers.size(): " + mainContainers.size());
 		EntityInterface xmiStaticEntity = null;
-		final EntityInterface staticEntity = getHookEntityByName(hookEntityName);
 		xmiStaticEntity = getHookEntityDetailsForXMI(staticEntity);
 		entityGroup.addEntity(xmiStaticEntity);
 		xmiStaticEntity.setEntityGroup(entityGroup);
@@ -56,18 +67,18 @@ public class XMIExporterUtility
 					(EntityInterface) mainContainer.getAbstractEntity());
 			if (association == null)
 			{
-				throw new DynamicExtensionsApplicationException(hookEntityName
+				throw new DynamicExtensionsApplicationException(staticEntity.getName()
 						+ " Hook Entity is not associated with the "
 						+ mainContainer.getAbstractEntity());
 			}
 			else
 			{
-				System.out.println("Association = " + association);
+				LOGGER.info("Association = " + association);
 				xmiStaticEntity.addAssociation(association);
 			}
 		}
 
-			}
+	}
 
 	/**
 	 * @param staticEntity
@@ -76,7 +87,7 @@ public class XMIExporterUtility
 	 * @throws DynamicExtensionsSystemException
 	 */
 	private static EntityInterface getHookEntityDetailsForXMI(final EntityInterface srcEntity)
-	throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		//For XMI : add only id , name and table properties
 		final EntityInterface xmiEntity = new Entity();
@@ -115,7 +126,7 @@ public class XMIExporterUtility
 	private static AssociationInterface getHookEntityAssociation(final EntityInterface srcEntity,
 			final EntityInterface targetEntity) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
-			{
+	{
 		AssociationInterface association = null;
 		final Collection<AssociationInterface> associations = srcEntity.getAllAssociations();
 		for (final AssociationInterface staticAssociation : associations)
@@ -133,7 +144,7 @@ public class XMIExporterUtility
 		}
 
 		return association;
-			}
+	}
 
 	/**
 	 * @param entity
@@ -164,12 +175,13 @@ public class XMIExporterUtility
 
 	/**
 	 * @param name
+	 * @param hibernatedao
 	 * @return
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public static EntityInterface getHookEntityByName(final String name)
-	throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+	public static EntityInterface getHookEntityByName(final String name, HibernateDAO hibernatedao)
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
 		final EntityInterface entity = EntityManager.getInstance().getEntityByName(name);
 		if (entity == null)
@@ -186,19 +198,22 @@ public class XMIExporterUtility
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public static String getHookEntityName(final EntityGroupInterface entityGroup)
+	public static EntityInterface getHookEntityName(final EntityGroupInterface entityGroup)
 			throws DynamicExtensionsSystemException
 	{
 		final EntityManagerInterface entityManager = EntityManager.getInstance();
-		final List<ContainerInterface> mainContainerList = new ArrayList<ContainerInterface>(entityGroup.getMainContainerCollection());
-		final EntityInterface targetEntity = (EntityInterface) mainContainerList.get(0).getAbstractEntity();
-		final Collection<AssociationInterface> associationCollection = entityManager.getIncomingAssociations(targetEntity);
-		String hookEntity = null;
-		for(final AssociationInterface associationInterface: associationCollection)
+		final List<ContainerInterface> mainContainerList = new ArrayList<ContainerInterface>(
+				entityGroup.getMainContainerCollection());
+		final EntityInterface targetEntity = (EntityInterface) mainContainerList.get(0)
+				.getAbstractEntity();
+		final Collection<AssociationInterface> associationCollection = entityManager
+				.getIncomingAssociations(targetEntity);
+		EntityInterface hookEntity = null;
+		for (AssociationInterface associationInterface : associationCollection)
 		{
-			if(associationInterface.getEntity().getEntityGroup().getIsSystemGenerated())
+			if (associationInterface.getEntity().getEntityGroup().getIsSystemGenerated())
 			{
-				hookEntity = associationInterface.getEntity().getName();
+				hookEntity = associationInterface.getEntity();
 				break;
 			}
 		}

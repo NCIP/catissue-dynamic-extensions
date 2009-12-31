@@ -62,6 +62,7 @@ import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
 import edu.common.dynamicextensions.domain.BooleanAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
+import edu.common.dynamicextensions.domain.EntityGroup;
 import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.NumericAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.StringAttributeTypeInformation;
@@ -94,6 +95,7 @@ import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DataTypeFactoryInitializationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationDirection;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
@@ -101,7 +103,9 @@ import edu.common.dynamicextensions.xmi.XMIConstants;
 import edu.common.dynamicextensions.xmi.XMIUtilities;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
+import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
+import edu.wustl.dao.exception.DAOException;
 
 
 /**
@@ -136,6 +140,10 @@ public class XMIExporter
 	private String groupName;
 	private String filename;
 	private String hookEntityName;
+
+	private EntityGroupInterface entityGroup ;
+	private EntityInterface staticEntity ;
+
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.xmi.exporter.XMIExportInterface#exportXMI(java.lang.String, javax.jmi.reflect.RefPackage, java.lang.String)
 	 */
@@ -197,20 +205,41 @@ public class XMIExporter
 	 */
 	public void exportXMI() throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
-		final EntityGroupInterface entityGroup = EntityManager.getInstance().getEntityGroupByName(groupName);
-		if(entityGroup==null)
+		EntityInterface hookEntity=staticEntity;
+		if (XMIConstants.XMI_VERSION_1_1.equalsIgnoreCase(xmiVersion))
+		{
+			if (XMIConstants.NONE.equalsIgnoreCase(hookEntityName))
+			{
+				hookEntity = XMIExporterUtility.getHookEntityName(entityGroup);
+			}
+			XMIExporterUtility
+					.addHookEntitiesToGroup(hookEntity, entityGroup);
+
+		}
+		exportXMI(entityGroup, null);
+	}
+
+	/**
+	 * It will retrieve the entity group with the given name using the passed hibernateDao.
+	 * @param hibernateDao hibernateDao used for retrieving the entity group.
+	 * @param groupName entity group name to retrieve.
+	 * @return entity group with given name
+	 * @throws DynamicExtensionsApplicationException exception.
+	 * @throws DynamicExtensionsSystemException exception.
+	 * @throws DAOException exception.
+	 */
+	private EntityGroupInterface getEntityGroup(HibernateDAO hibernateDao , String groupName) throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException, DAOException
+	{
+		List entityGroupList=null;
+
+		entityGroupList = hibernateDao.retrieve(EntityGroup.class.getName(), "name",groupName);
+
+		if (entityGroupList == null || entityGroupList.isEmpty())
 		{
 			throw new DynamicExtensionsApplicationException("Specified group does not exist. Could not export to XMI");
 		}
-		if(XMIConstants.XMI_VERSION_1_1.equalsIgnoreCase(xmiVersion) )
-		{
-			if(XMIConstants.NONE.equalsIgnoreCase(hookEntityName))
-			{
-				hookEntityName = XMIExporterUtility.getHookEntityName(entityGroup);
-			}
-			XMIExporterUtility.addHookEntitiesToGroup(hookEntityName,entityGroup);
-		}
-		exportXMI(entityGroup, null);
+		 EntityGroupInterface entityGroup = ((EntityGroupInterface) entityGroupList.get(0));
+		return entityGroup;
 	}
 
 	/**
@@ -234,11 +263,11 @@ public class XMIExporter
 				//groupName = entityGroup.getName();
 				//UML Model generation
 				generateUMLModel(entityGroup, modelpackageName);
+
 				//Data Model creation
 				generateDataModel(entityGroup);
 				writeXMIFile(umlPackage);
 			}
-
 		}
 		catch (final CreationFailedException e)
 		{
@@ -2582,7 +2611,7 @@ public class XMIExporter
 	 * args[1]=File name
 	 * args[2] = xmi version
 	 * args[3]=hook entity name
-	 * @param args
+	 * @param args arguments array
 	 */
 	public static void main(final String[] args)
 	{
@@ -2591,6 +2620,7 @@ public class XMIExporter
 		{
 			final XMIExporter xmiExporter = new XMIExporter();
 			xmiExporter.initilizeInstanceVariables(args);
+			xmiExporter.retrieveEntityGroups();
 			xmiExporter.exportXMI();
 
 		}
@@ -2600,9 +2630,41 @@ public class XMIExporter
 		}
 	}
 
+	/**
+	 * This method will retrive Entity group & static entity required for exporting the xmi.
+	 * it will initialize the global variables foe it.
+	 * @throws DAOException exception.
+	 * @throws DynamicExtensionsApplicationException exception.
+	 * @throws DynamicExtensionsSystemException exception.
+	 */
+	private void retrieveEntityGroups() throws DAOException, DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+	{
+		HibernateDAO hibernateDao =null;
+		try
+		{
+			hibernateDao = DynamicExtensionsUtility.getHibernateDAO();
+			entityGroup = getEntityGroup(hibernateDao,groupName);
+			staticEntity = XMIUtilities.getStaticEntity(hookEntityName,hibernateDao);
+		}
+		catch(DAOException e)
+		{
+			throw new DynamicExtensionsSystemException("Error occured while retrieving the entityGroup.",e);
+		}
+		finally
+		{
+			DynamicExtensionsUtility.closeHibernateDAO(hibernateDao);
+		}
+
+	}
 
 
-	private void initilizeInstanceVariables(final String[] args)throws  DynamicExtensionsApplicationException
+	/**
+	 * It will validate & initialize all the instance variables which are reqiured for
+	 * exporting the xmi.
+	 * @param args arguments array from which variables should be initialized.
+	 * @throws DynamicExtensionsApplicationException exception.
+	 */
+	public void initilizeInstanceVariables(final String[] args)throws  DynamicExtensionsApplicationException
 	{
 		validate(args);
 		groupName = args[0];
@@ -2619,6 +2681,7 @@ public class XMIExporter
 		if((args.length>3) && !"".equals(args[3].trim()))
 		{
 			hookEntityName = args[3].trim();
+
 		}
 		/*if(XMIConstants.XMI_VERSION_1_1.equals(xmiVersion) && XMIConstants.NONE.equals(hookEntityName))
 		{
@@ -2627,6 +2690,11 @@ public class XMIExporter
 		generateLogForVariables();
 	}
 
+
+
+	/**
+	 *It will log all the variables for information.
+	 */
 	private void generateLogForVariables()
 	{
 		LOGGER.info("************EXPORT XMI GIVEN PARAMETERS***********");
@@ -2638,6 +2706,11 @@ public class XMIExporter
 
 	}
 
+	/**
+	 * It will validate the given arguments with what was expected.
+	 * @param args arguments array.
+	 * @throws DynamicExtensionsApplicationException exception is thrown if expected arguments are not proper.
+	 */
 	private void validate(final String[] args) throws DynamicExtensionsApplicationException
 	{
 		if(args.length<2)

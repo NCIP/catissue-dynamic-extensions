@@ -396,7 +396,7 @@
 			<arg value="${hookentity}" />
 			<arg value="${addQueryPaths}" />
 			<arg value="${condition}" />
-
+			<arg value="${generate.cacore}" />
 			<classpath>
 				<pathelement location="${temp.dir.DE}" />
 				<fileset dir="${lib.dir.DE}">
@@ -586,6 +586,7 @@
 				<antcall target="setupClassExecutionEnvironment" />
 			</else>
 		</if>
+
 		<java classname="edu.common.dynamicextensions.xmi.exporter.XMIExporter" fork="true" maxmemory="1024M">
 			<arg value="${groupname}" />
 			<arg value="${relative.filename}" />
@@ -955,7 +956,7 @@
 				<echo message="Skipping caCore generation for ${entitygroupname}" />
 				<echo message="-----------------------------------------" />
 				<echo message=" " />
-
+				
 				<property name="ORM1CfgFile" value="${cacore.deployable.dir}/${entitygroupname}/orm1.cfg.xml" />
 				<property name="DEWebCfgFile" value="${dezip.dir}/conf/DynamicExtensionsHibernateWeb.cfg.xml" />
 
@@ -976,7 +977,7 @@
 				</java>
 
 				<copy todir="${entityGroup.jar.location}/" file="${cacore.deployable.dir}/${entitygroupname}/${entitygroupname}.jar" overwrite="true" />
-			</then>
+		</then>
 			<else>
 				<echo message=" " />
 				<echo message="-----------------------------------------" />
@@ -984,15 +985,26 @@
 				<echo message="Generating caCore for ${entitygroupname}" />
 				<echo message="-----------------------------------------" />
 				<echo message=" " />
+				<available file="${xmi.filename}" property="isExportedFilePresent" />
+				<if>
 
-				<antcall target="export_xmi">
-					<param name="setup.method.required" value="False" />
-					<param name="groupname" value="${entitygroupname}" />
-					<param name="relative.filename" value="${xmi.filename}" />
-					<param name="version" value="${version.number}" />
-					<param name="hookentity" value="${hook.entity.value}" />
-				</antcall>
-
+					<equals arg1="true" arg2="${isExportedFilePresent}" casesensitive="false" />
+					<then>
+						<echo message="-------------------------------------------------" />
+						<echo message="XMI present hence not exporting XMI for CACORE" />
+						<echo message="-------------------------------------------------" />
+						<echo message=" " />
+					</then>
+					<else>
+						<antcall target="export_xmi">
+							<param name="setup.method.required" value="False" />
+							<param name="groupname" value="${entitygroupname}" />
+							<param name="relative.filename" value="${xmi.filename}" />
+							<param name="version" value="${version.number}" />
+							<param name="hookentity" value="${hook.entity.value}" />
+						</antcall>
+					</else>
+				</if>
 				<antcall target="generate.cacore" />
 			</else>
 		</if>

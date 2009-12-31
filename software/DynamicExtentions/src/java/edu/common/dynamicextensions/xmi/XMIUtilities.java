@@ -39,10 +39,16 @@ import org.omg.uml.foundation.core.UmlAssociation;
 import org.omg.uml.foundation.core.UmlClass;
 import org.openide.util.Lookup;
 
+import edu.common.dynamicextensions.domain.Entity;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
+import edu.common.dynamicextensions.entitymanager.EntityManager;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.HibernateDAO;
+import edu.wustl.dao.exception.DAOException;
 
 /**
  * @author preeti_lodha
@@ -314,5 +320,38 @@ public class XMIUtilities
 		atts = attsMap.values();
 		return atts;
 	}
+
+	/**
+	 * It will retrieve the Entity with name given in hook entity using provided DAo
+	 * @param hookEntityName name of the hook entity to retrieve.
+	 * @param hibernatedao dao used for retrieving the hook entity.
+	 * @return the retrieved entity.
+	 * @throws DAOException exception.
+	 * @throws DynamicExtensionsApplicationException exception.
+	 * @throws DynamicExtensionsSystemException exception.
+	 */
+	public static EntityInterface getStaticEntity(String hookEntityName, HibernateDAO hibernatedao)
+			throws DAOException, DynamicExtensionsApplicationException,
+			DynamicExtensionsSystemException
+	{
+		EntityInterface entity = null;
+		if (hibernatedao == null)
+		{
+			entity = EntityManager.getInstance().getEntityByName(hookEntityName);
+		}
+		else
+		{
+			List staticEntityList = hibernatedao.retrieve(Entity.class.getName(), "name",
+					hookEntityName);
+			if (staticEntityList == null || staticEntityList.isEmpty())
+			{
+				throw new DynamicExtensionsSystemException(
+						"Static Entity Not Found, please provide correct static Entity name");
+			}
+			entity = ((EntityInterface) staticEntityList.get(0));
+		}
+		return entity;
+	}
+
 
 }
