@@ -124,6 +124,7 @@ public abstract class AbstractXMIImporter
 	{
 		FileInputStream fileInput = null;
 		List<ContainerInterface> mainContainerList = null;
+		boolean isImportSuccess = true;
 		try
 		{ //step 1: Initialize Resources
 			long processStartTime = System.currentTimeMillis();
@@ -172,12 +173,16 @@ public abstract class AbstractXMIImporter
 		catch (Exception e)
 		{
 			LOGGER.fatal("Fatal error reading XMI!!", e);
+			isImportSuccess = false;
 		}
 		finally
 		{
 			closeTransaction(fileInput, hibernatedao, jdbcdao);
 		}
-		exportXmiForCacore(mainContainerList);
+		if(isImportSuccess)
+		{
+			exportXmiForCacore(mainContainerList);
+		}
 	}
 
 	/**
@@ -207,7 +212,7 @@ public abstract class AbstractXMIImporter
 				XMIExporter exporter = new XMIExporter();
 				String[] arguments = {entityGroup.getName(),
 						exportedXmiFilePath + domainModelName + ".xmi",
-						XMIConstants.XMI_VERSION_1_1, hookEntity.getName()};
+						XMIConstants.XMI_VERSION_1_1, hookEntityName};
 				exporter.initilizeInstanceVariables(arguments);
 				exporter.exportXMI(entityGroup, null);
 				generateLogForExportXmi(processStartTime);
