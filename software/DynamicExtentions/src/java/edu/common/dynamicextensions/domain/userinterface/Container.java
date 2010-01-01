@@ -593,6 +593,14 @@ public class Container extends DynamicExtensionBaseDomainObject
 	private void addCaption(final StringBuffer captionHTML, final String caption, final ContainerInterface container,
 			final List<Object> values) throws DynamicExtensionsSystemException
 	{
+		// Check added for CSD project to ensure that HTML is generated for mock
+		// container with NULL id.
+		boolean isIdNull = false;
+		if (id == null) {
+			isIdNull = true;
+			id = -1L;
+		}
+		
 		//check if Id in caption matches current id - if yes then it is main form, so replace caption
 		if ((caption == null) || !caption.endsWith(id.toString()))
 		{
@@ -616,7 +624,11 @@ public class Container extends DynamicExtensionBaseDomainObject
 					.substring(0, (caption.length() - 1 - id.toString().length())));
 			captionHTML.append("<tr><td height='5'></td></tr>");
 		}
-
+		
+		if(isIdNull)
+		{
+			id = null;
+		}
 	}
 
 	/**
