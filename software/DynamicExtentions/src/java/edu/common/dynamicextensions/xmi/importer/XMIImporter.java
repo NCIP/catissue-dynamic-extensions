@@ -22,8 +22,6 @@ public class XMIImporter extends AbstractXMIImporter
 	 */
 	public static void main(String[] args)
 	{
-
-		args[3]="edu.wustl.clinportal.domain.ParticipantRecordEntry";
 		XMIImporter xmiImporter = new XMIImporter();
 		xmiImporter.importXMI(args);
 	}
