@@ -74,8 +74,9 @@ public class CharacterSetValidator implements ValidatorRuleInterface
 		{
 			while ((character = reader.read()) != -1)
 			{
-				if (character < 32 || (character > 126 && character < 160)
-						|| character > 255)
+				if ((character < 32 && character != 9 && character != 10 && character != 13)
+                        || (character > 126 && character < 160)
+                        || character > 255)
 				{
 					placeHolders.add(controlCaption);
 					placeHolders.add(String.valueOf((char) character));
