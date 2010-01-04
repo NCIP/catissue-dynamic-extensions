@@ -34,7 +34,10 @@ log4j.appender.HIBERNATE.layout.ConversionPattern= %-5p %d %c - %m%n
 
 log4j.logger.edu.wustl.clinportal=info, LOGFILE
 
+# for logging only info level messages for c3p0, if it is commented then huge debug statements are added in log
+log4j.logger.com.mchange =info,LOGFILE
+
 #For logging hibernate api messages uncomment either of the following
 ### log just the SQL
 # log4j.logger.org.hibernate.SQL=debug,HIBERNATE
-#log4j.logger.org.hibernate=info,HIBERNATE
+log4j.logger.org.hibernate=info,HIBERNATE
