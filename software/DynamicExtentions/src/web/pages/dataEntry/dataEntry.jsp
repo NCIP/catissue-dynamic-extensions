@@ -247,13 +247,13 @@
 
 														<c:if test='${(isTopLevelEntity=="false") && ((showInDiv=="null") || (showInDiv=="true"))}'>
 															<td align='center'>
-																<input type="image" src="<%=request.getContextPath()%>/images/de/b_submit.gif" width="62" height="21" align="middle" onClick="return showParentContainerInsertDataPage()"/>
+																<input type="image" id="btnDESubmit" src="<%=request.getContextPath()%>/images/de/b_submit.gif" width="62" height="21" align="middle" onClick="return showParentContainerInsertDataPage()"/>
 															</td>
 														</c:if>
 
 														<c:if test='${(mode=="edit") && (isTopLevelEntity=="true") && ((showInDiv=="null") || (showInDiv=="true"))}'>
 															<td align='center'>
-																<input type="image" src="<%=request.getContextPath()%>/images/de/b_submit.gif" width="62" height="21" align="middle" onClick="return setInsertDataOperation()"/>
+																<input type="image" id="btnDESubmit" src="<%=request.getContextPath()%>/images/de/b_submit.gif" width="62" height="21" align="middle" onClick="return setInsertDataOperation()"/>
 															</td>
 														<!-- BUG 7662 FIXED. Each Cancel should take you one level up in the containment hierarchy and finally the Cancel on Main Class should take you to the Add Records page.-->
 														</c:if>
@@ -266,7 +266,7 @@
 
 														<c:if test='${!((mode=="view") && (isTopLevelEntity=="false"))  && ((showInDiv=="null") || (showInDiv=="true"))}'>
 															<td align='center'>
-																<input type="button" style="border: 0px; background-image: url(<%=request.getContextPath()%>/images/de/b_cancel.gif); height: 21px; width: 62px;" align="middle" onClick="cancelInsertData()"/>
+																<input type="button" id="btnDECancel" style="border: 0px; background-image: url(<%=request.getContextPath()%>/images/de/b_cancel.gif); height: 21px; width: 62px;" align="middle" onClick="cancelInsertData()"/>
 															</td>
 														</c:if>
 													</c:otherwise>
