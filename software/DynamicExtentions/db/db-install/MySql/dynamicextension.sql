@@ -34,6 +34,10 @@ alter table DYEXTN_BOOLEAN_TYPE_INFO drop foreign key FK28F1809FE5294FA3;
 alter table DYEXTN_BYTE_ARRAY_TYPE_INFO drop foreign key FK18BDA73E5294FA3;
 alter table DYEXTN_CADSRDE drop foreign key FK588A250953CC4A77;
 alter table DYEXTN_CADSR_VALUE_DOMAIN_INFO drop foreign key FK1C9AA3641333996E;
+alter table DYEXTN_CALCULATED_ATTRIBUTE drop foreign key FK8D70ECD8B314DD24;
+alter table DYEXTN_CALCULATED_ATTRIBUTE drop foreign key FK8D70ECD8BDAACCB6;
+alter table DYEXTN_CALCULATED_ATTRIBUTE drop foreign key FK8D70ECD85CC8694E;
+alter table DYEXTN_CALCULATED_ATTRIBUTE drop foreign key FK8D70ECD85697A453;
 alter table DYEXTN_CATEGORY drop foreign key FKD33DE81B54A9F59D;
 alter table DYEXTN_CATEGORY drop foreign key FKD33DE81B728B19BE;
 alter table DYEXTN_CATEGORY drop foreign key FKD33DE81B854AC01B;
@@ -167,6 +171,7 @@ drop table if exists DYEXTN_BOOLEAN_TYPE_INFO;
 drop table if exists DYEXTN_BYTE_ARRAY_TYPE_INFO;
 drop table if exists DYEXTN_CADSRDE;
 drop table if exists DYEXTN_CADSR_VALUE_DOMAIN_INFO;
+drop table if exists DYEXTN_CALCULATED_ATTRIBUTE;
 drop table if exists DYEXTN_CATEGORY;
 drop table if exists DYEXTN_CATEGORY_ASSOCIATION;
 drop table if exists DYEXTN_CATEGORY_ATTRIBUTE;
@@ -243,9 +248,9 @@ create table DE_COLL_ATTR_RECORD_VALUES (IDENTIFIER bigint not null auto_increme
 create table DE_FILE_ATTR_RECORD_VALUES (IDENTIFIER bigint not null auto_increment, CONTENT_TYPE varchar(255), FILE_CONTENT blob, FILE_NAME varchar(255), RECORD_ID bigint, primary key (IDENTIFIER));
 create table DE_OBJECT_ATTR_RECORD_VALUES (IDENTIFIER bigint not null auto_increment, CLASS_NAME varchar(255), OBJECT_CONTENT blob, RECORD_ID bigint, primary key (IDENTIFIER));
 create table DYEXTN_ABSTRACT_ENTITY (id bigint not null, primary key (id));
-create table DYEXTN_ABSTRACT_FORM_CONTEXT (IDENTIFIER bigint not null auto_increment, FORM_LABEL varchar(255), CONTAINER_ID bigint, ACTIVITY_STATUS varchar(10), HIDE_FORM bit, primary key (IDENTIFIER));
+create table DYEXTN_ABSTRACT_FORM_CONTEXT (IDENTIFIER bigint not null auto_increment, FORM_LABEL varchar(255), ACTIVITY_STATUS varchar(10), HIDE_FORM bit, CONTAINER_ID bigint, primary key (IDENTIFIER));
 create table DYEXTN_ABSTRACT_METADATA (IDENTIFIER bigint not null auto_increment, CREATED_DATE date, DESCRIPTION text, LAST_UPDATED date, NAME text, PUBLIC_ID varchar(255), primary key (IDENTIFIER));
-create table DYEXTN_ABSTRACT_RECORD_ENTRY (IDENTIFIER bigint not null auto_increment, ACTIVITY_STATUS varchar(10), ABSTRACT_FORM_CONTEXT_ID bigint, MODIFIED_DATE date, MODIFIED_BY varchar(255), primary key (IDENTIFIER));
+create table DYEXTN_ABSTRACT_RECORD_ENTRY (IDENTIFIER bigint not null auto_increment, ABSTRACT_FORM_CONTEXT_ID bigint, ACTIVITY_STATUS varchar(10), MODIFIED_BY varchar(255), MODIFIED_DATE date, primary key (IDENTIFIER));
 create table DYEXTN_ABSTR_CAT_ATTR (ID bigint not null auto_increment, CATEGORIAL_CLASS_ID bigint, DE_SOURCE_CLASS_ATTRIBUTE_ID bigint, ABSTR_CATEGORIAL_ATTRIBUTE_ID bigint, primary key (ID));
 create table DYEXTN_ABSTR_CONTAIN_CTR (IDENTIFIER bigint not null, CONTAINER_ID bigint, primary key (IDENTIFIER));
 create table DYEXTN_ASSOCIATION (IDENTIFIER bigint not null, IS_COLLECTION bit, DIRECTION varchar(255), TARGET_ENTITY_ID bigint, SOURCE_ROLE_ID bigint, TARGET_ROLE_ID bigint, IS_SYSTEM_GENERATED bit, primary key (IDENTIFIER));
@@ -260,9 +265,10 @@ create table DYEXTN_BOOLEAN_TYPE_INFO (IDENTIFIER bigint not null, primary key (
 create table DYEXTN_BYTE_ARRAY_TYPE_INFO (IDENTIFIER bigint not null, CONTENT_TYPE varchar(255), primary key (IDENTIFIER));
 create table DYEXTN_CADSRDE (IDENTIFIER bigint not null, PUBLIC_ID varchar(255), primary key (IDENTIFIER));
 create table DYEXTN_CADSR_VALUE_DOMAIN_INFO (IDENTIFIER bigint not null auto_increment, DATATYPE varchar(255), NAME varchar(255), TYPE varchar(255), PRIMITIVE_ATTRIBUTE_ID bigint, primary key (IDENTIFIER));
+create table DYEXTN_CALCULATED_ATTRIBUTE (IDENTIFIER bigint not null, SOURCE_CAT_ATTR_ID bigint, TARGET_CAL_ATTR_ID bigint, CAL_CATEGORY_ATTR_ID bigint, primary key (IDENTIFIER));
 create table DYEXTN_CATEGORY (IDENTIFIER bigint not null, USER_ID bigint, ROOT_CATEGORY_ELEMENT bigint, CATEGORY_ENTITY_ID bigint, primary key (IDENTIFIER));
 create table DYEXTN_CATEGORY_ASSOCIATION (IDENTIFIER bigint not null, CATEGORY_ENTIY_ID bigint, CATEGORY_ENTITY_ID bigint, primary key (IDENTIFIER));
-create table DYEXTN_CATEGORY_ATTRIBUTE (IDENTIFIER bigint not null, ABSTRACT_ATTRIBUTE_ID bigint, CATEGORY_ENTIY_ID bigint, IS_VISIBLE bit, IS_RELATTRIBUTE bit, IS_CAL_ATTRIBUTE bit, IS_SKIP_LOGIC bit, CAL_CATEGORY_ATTR_ID bigint, CAL_DEPENDENT_CATEGORY_ATTR_ID bigint, CATEGORY_ENTITY_ID bigint, primary key (IDENTIFIER));
+create table DYEXTN_CATEGORY_ATTRIBUTE (IDENTIFIER bigint not null, ABSTRACT_ATTRIBUTE_ID bigint, CATEGORY_ENTIY_ID bigint, IS_VISIBLE bit, IS_RELATTRIBUTE bit, IS_CAL_ATTRIBUTE bit, IS_SRC_FOR_CAL_ATTR bit, IS_SKIP_LOGIC bit, CAL_CATEGORY_ATTR_ID bigint, CAL_DEPENDENT_CATEGORY_ATTR_ID bigint, CATEGORY_ENTITY_ID bigint, primary key (IDENTIFIER));
 create table DYEXTN_CATEGORY_ENTITY (IDENTIFIER bigint not null, NUMBER_OF_ENTRIES integer, ENTITY_ID bigint, OWN_PARENT_CATEGORY_ENTITY_ID bigint, TREE_PARENT_CATEGORY_ENTITY_ID bigint, IS_CREATETABLE bit, REL_ATTR_CAT_ENTITY_ID bigint, CATEGORY_ASSOCIATION_ID bigint, PARENT_CATEGORY_ENTITY_ID bigint, primary key (IDENTIFIER));
 create table DYEXTN_CAT_ASSO_CTL (IDENTIFIER bigint not null, primary key (IDENTIFIER));
 create table DYEXTN_CHECK_BOX (IDENTIFIER bigint not null, primary key (IDENTIFIER));
@@ -361,6 +367,10 @@ alter table DYEXTN_BOOLEAN_TYPE_INFO add index FK28F1809FE5294FA3 (IDENTIFIER), 
 alter table DYEXTN_BYTE_ARRAY_TYPE_INFO add index FK18BDA73E5294FA3 (IDENTIFIER), add constraint FK18BDA73E5294FA3 foreign key (IDENTIFIER) references DYEXTN_ATTRIBUTE_TYPE_INFO (IDENTIFIER);
 alter table DYEXTN_CADSRDE add index FK588A250953CC4A77 (IDENTIFIER), add constraint FK588A250953CC4A77 foreign key (IDENTIFIER) references DYEXTN_DATA_ELEMENT (IDENTIFIER);
 alter table DYEXTN_CADSR_VALUE_DOMAIN_INFO add index FK1C9AA3641333996E (PRIMITIVE_ATTRIBUTE_ID), add constraint FK1C9AA3641333996E foreign key (PRIMITIVE_ATTRIBUTE_ID) references DYEXTN_PRIMITIVE_ATTRIBUTE (IDENTIFIER);
+alter table DYEXTN_CALCULATED_ATTRIBUTE add index FK8D70ECD8B314DD24 (TARGET_CAL_ATTR_ID), add constraint FK8D70ECD8B314DD24 foreign key (TARGET_CAL_ATTR_ID) references DYEXTN_CATEGORY_ATTRIBUTE (IDENTIFIER);
+alter table DYEXTN_CALCULATED_ATTRIBUTE add index FK8D70ECD8BDAACCB6 (SOURCE_CAT_ATTR_ID), add constraint FK8D70ECD8BDAACCB6 foreign key (SOURCE_CAT_ATTR_ID) references DYEXTN_CATEGORY_ATTRIBUTE (IDENTIFIER);
+alter table DYEXTN_CALCULATED_ATTRIBUTE add index FK8D70ECD85CC8694E (IDENTIFIER), add constraint FK8D70ECD85CC8694E foreign key (IDENTIFIER) references DYEXTN_BASE_ABSTRACT_ATTRIBUTE (IDENTIFIER);
+alter table DYEXTN_CALCULATED_ATTRIBUTE add index FK8D70ECD85697A453 (CAL_CATEGORY_ATTR_ID), add constraint FK8D70ECD85697A453 foreign key (CAL_CATEGORY_ATTR_ID) references DYEXTN_CATEGORY_ATTRIBUTE (IDENTIFIER);
 alter table DYEXTN_CATEGORY add index FKD33DE81B54A9F59D (ROOT_CATEGORY_ELEMENT), add constraint FKD33DE81B54A9F59D foreign key (ROOT_CATEGORY_ELEMENT) references DYEXTN_CATEGORY_ENTITY (IDENTIFIER);
 alter table DYEXTN_CATEGORY add index FKD33DE81B728B19BE (IDENTIFIER), add constraint FKD33DE81B728B19BE foreign key (IDENTIFIER) references DYEXTN_ABSTRACT_METADATA (IDENTIFIER);
 alter table DYEXTN_CATEGORY add index FKD33DE81B854AC01B (CATEGORY_ENTITY_ID), add constraint FKD33DE81B854AC01B foreign key (CATEGORY_ENTITY_ID) references DYEXTN_CATEGORY_ENTITY (IDENTIFIER);
@@ -474,7 +484,7 @@ drop table if exists ASSOCIATION;
 /* Possible values for ASSOCIATION_TYPE are 1 and 2
 ASSOCIATION_TYPE = 1 represents INTER_MODEL_ASSOCIATION.
 ASSOCIATION_TYPE = 2 represents INTRA_MODEL_ASSOCIATION.
-*/     
+*/
 create table ASSOCIATION(
     ASSOCIATION_ID    bigint    not null,
     ASSOCIATION_TYPE  INT(8)    not null ,
@@ -487,12 +497,12 @@ create table INTER_MODEL_ASSOCIATION(
     LEFT_ATTRIBUTE_ID   bigint  not null,
     RIGHT_ENTITY_ID     bigint  not null,
     RIGHT_ATTRIBUTE_ID  bigint  not null,
-    primary key (ASSOCIATION_ID) 
+    primary key (ASSOCIATION_ID)
 );
 create table INTRA_MODEL_ASSOCIATION(
     ASSOCIATION_ID    bigint    not null references ASSOCIATION(ASSOCIATION_ID),
     DE_ASSOCIATION_ID bigint    not null,
-    primary key (ASSOCIATION_ID) 
+    primary key (ASSOCIATION_ID)
 );
 
 
