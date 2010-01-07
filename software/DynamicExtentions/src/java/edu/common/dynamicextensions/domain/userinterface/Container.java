@@ -35,9 +35,9 @@ import edu.wustl.common.util.global.ApplicationProperties;
  * @hibernate.cache  usage="read-write"
  */
 public class Container extends DynamicExtensionBaseDomainObject
-		implements
-			Serializable,
-			ContainerInterface
+implements
+Serializable,
+ContainerInterface
 {
 
 	/**
@@ -424,9 +424,6 @@ public class Container extends DynamicExtensionBaseDomainObject
 			baseContainer = baseContainer.getBaseContainer();
 		}
 
-		Collections.sort(controls);
-		Collections.reverse(controls);
-
 		return controls;
 	}
 
@@ -435,12 +432,12 @@ public class Container extends DynamicExtensionBaseDomainObject
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public String generateContainerHTML(final String caption, final String dataEntryOperation)
-			throws DynamicExtensionsSystemException
+	throws DynamicExtensionsSystemException
 	{
 		final StringBuffer containerHTML = new StringBuffer();
 
 		containerHTML
-				.append("<table summary='' cellpadding='3' cellspacing='0' align='center' width='100%'>");
+		.append("<table summary='' cellpadding='3' cellspacing='0' align='center' width='100%'>");
 
 		if ((getMode() != null)
 				&& getMode().equalsIgnoreCase(WebUIManagerConstants.EDIT_MODE)
@@ -498,7 +495,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 	 */
 	public String generateControlsHTML(final String caption, final String dataEntryOperation,
 			final ContainerInterface container) throws DynamicExtensionsSystemException
-	{
+			{
 		final StringBuffer controlHTML = new StringBuffer();
 		final List<Object> values = new ArrayList<Object>();
 
@@ -570,8 +567,8 @@ public class Container extends DynamicExtensionBaseDomainObject
 				if (control.getIsSkipLogicTargetControl())
 				{
 					controlHTML
-							.append("<input type='hidden' name='skipLogicHideControls' id='skipLogicHideControls' value = '"
-									+ control.getHTMLComponentName() + "_row_div' />");
+					.append("<input type='hidden' name='skipLogicHideControls' id='skipLogicHideControls' value = '"
+							+ control.getHTMLComponentName() + "_row_div' />");
 				}
 			}
 			controlHTML.append(control.generateHTML(container));
@@ -583,7 +580,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 		showAssociationControlsAsLink = false;
 
 		return controlHTML.toString();
-	}
+			}
 
 	/**
 	 * @param captionHTML
@@ -592,7 +589,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 	 */
 	private void addCaption(final StringBuffer captionHTML, final String caption, final ContainerInterface container,
 			final List<Object> values) throws DynamicExtensionsSystemException
-	{
+			{
 		// Check added for CSD project to ensure that HTML is generated for mock
 		// container with NULL id.
 		boolean isIdNull = false;
@@ -600,7 +597,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 			isIdNull = true;
 			id = -1L;
 		}
-		
+
 		//check if Id in caption matches current id - if yes then it is main form, so replace caption
 		if ((caption == null) || !caption.endsWith(id.toString()))
 		{
@@ -624,12 +621,12 @@ public class Container extends DynamicExtensionBaseDomainObject
 					.substring(0, (caption.length() - 1 - id.toString().length())));
 			captionHTML.append("<tr><td height='5'></td></tr>");
 		}
-		
+
 		if(isIdNull)
 		{
 			id = null;
 		}
-	}
+			}
 
 	/**
 	 *
@@ -640,7 +637,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 	 */
 	private void addDisplayOptionForRow(final ContainerInterface container, final List<Object> values,
 			final StringBuffer captionHTML, final String id) throws DynamicExtensionsSystemException
-	{
+			{
 		if (isAllControlsSkipLogicTargetControlsForShowHide())
 		{
 			final List<ControlInterface> controls = getAllControlsUnderSameDisplayLabel();
@@ -674,15 +671,15 @@ public class Container extends DynamicExtensionBaseDomainObject
 					captionHTML.append(" style='display:row' >");
 				}
 				captionHTML
-						.append("<input type='hidden' name='skipLogicHideControls' id='skipLogicHideControls' value = '"
-								+ control.getHTMLComponentName() + id + "_container_div' />");
+				.append("<input type='hidden' name='skipLogicHideControls' id='skipLogicHideControls' value = '"
+						+ control.getHTMLComponentName() + id + "_container_div' />");
 			}
 		}
 		else
 		{
 			captionHTML.append(" style='display:row' >");
 		}
-	}
+			}
 
 	/**
 	 *
@@ -692,10 +689,10 @@ public class Container extends DynamicExtensionBaseDomainObject
 	public String generateControlsHTMLAsGrid(
 			final List<Map<BaseAbstractAttributeInterface, Object>> valueMaps, final String dataEntryOperation,
 			final ContainerInterface container) throws DynamicExtensionsSystemException
-	{
+			{
 		return UserInterfaceiUtility.generateHTMLforGrid(this, valueMaps, dataEntryOperation,
 				container);
-	}
+			}
 
 	/**
 	 * @return
@@ -735,7 +732,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 	 * @see edu.common.dynamicextensions.domaininterface.userinterface.ContainmentAssociationControlInterface#generateLinkHTML()
 	 */
 	public String generateLink(final ContainerInterface container)
-			throws DynamicExtensionsSystemException
+	throws DynamicExtensionsSystemException
 	{
 		String details = "";
 		final boolean isDataPresent = UserInterfaceiUtility.isDataPresent(container
@@ -765,7 +762,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 
 		final StringBuffer linkHTML = new StringBuffer();
 		linkHTML
-				.append("<img src='images/de/ic_det.gif' alt='Details' width='12' height='12' hspace='3' border='0' align='absmiddle'><a href='#' style='cursor:hand' class='set1' onclick='showChildContainerInsertDataPage(");
+		.append("<img src='images/de/ic_det.gif' alt='Details' width='12' height='12' hspace='3' border='0' align='absmiddle'><a href='#' style='cursor:hand' class='set1' onclick='showChildContainerInsertDataPage(");
 		linkHTML.append(container.getId());
 		linkHTML.append(",this)'>");
 		linkHTML.append(details);
@@ -906,17 +903,17 @@ public class Container extends DynamicExtensionBaseDomainObject
 	public boolean getIsSourceCalculatedAttributes()
 	{
 		boolean hasSourceCalculatedAttributes = false;
-		AbstractEntityInterface abstractEntityInterface = this.getAbstractEntity();
+		final AbstractEntityInterface abstractEntityInterface = this.getAbstractEntity();
 		if (abstractEntityInterface instanceof CategoryEntityInterface)
 		{
-			CategoryEntityInterface categoryEntityInterface = (CategoryEntityInterface) abstractEntityInterface;
-			for (CategoryAttributeInterface categoryAttributeInterface : categoryEntityInterface
+			final CategoryEntityInterface categoryEntityInterface = (CategoryEntityInterface) abstractEntityInterface;
+			for (final CategoryAttributeInterface categoryAttributeInterface : categoryEntityInterface
 					.getCategoryAttributeCollection())
 			{
-				if (categoryAttributeInterface
-						.getIsSourceForCalculatedAttribute() != null
+				if ((categoryAttributeInterface
+						.getIsSourceForCalculatedAttribute() != null)
 						&& categoryAttributeInterface
-								.getIsSourceForCalculatedAttribute())
+						.getIsSourceForCalculatedAttribute())
 				{
 					hasSourceCalculatedAttributes = true;
 					break;
