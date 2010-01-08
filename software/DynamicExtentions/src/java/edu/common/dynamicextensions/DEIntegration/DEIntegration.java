@@ -222,7 +222,7 @@ public class DEIntegration implements IntegrationInterface
 		EntityManagerUtil entityManagerUtil = new EntityManagerUtil();
 		String entitySql = "select identifier from " + tableName + " where " + columnName + "=?";
 
-		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+		List<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 		queryDataList.add(new ColumnValueBean(columnName, Long.valueOf(hookEntityRecId)));
 		recIdList = entityManagerUtil.getResultInList(entitySql,queryDataList);
 

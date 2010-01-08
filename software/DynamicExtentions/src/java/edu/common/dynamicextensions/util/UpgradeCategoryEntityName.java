@@ -67,7 +67,7 @@ public class UpgradeCategoryEntityName implements DynamicExtensionsQueryBuilderC
 				query.append(WHITESPACE + WHERE_KEYWORD + WHITESPACE
 						+ DEConstants.CATEGORY_ENTITY_ID + EQUAL + QUESTION_MARK);
 
-				LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+				List<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 				queryDataList.add(new ColumnValueBean(DEConstants.CATEGORY_ENTITY_ID , categoryEntityId));
 				List<Long> pathIdColl = entityManagerUtil.getResultInList(query.toString(),queryDataList);
 				if (pathIdColl != null && !pathIdColl.isEmpty())

@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -77,7 +76,7 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 	 * @param query Query to which append it in its IN clause
 	 * @return LinkedList of column value bean for executing this query using prepared statement
 	 */
-	public static LinkedList<ColumnValueBean> appendListToQueryInCluase(List inputs,StringBuffer query)
+	/*public static LinkedList<ColumnValueBean> appendListToQueryInCluase(List inputs,StringBuffer query)
 	{
 		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 		query.append(OPENING_BRACKET);
@@ -93,7 +92,7 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
         query.append(CLOSING_BRACKET);
 
 		return queryDataList;
-	}
+	}*/
 
 
 	/**
@@ -103,7 +102,7 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 	 * @return number of records.
 	 * @throws DynamicExtensionsSystemException exception.
 	 */
-	public static int getNoOfRecord(String query,LinkedList<ColumnValueBean> queryDataList) throws DynamicExtensionsSystemException
+	public static int getNoOfRecord(String query,List<ColumnValueBean> queryDataList) throws DynamicExtensionsSystemException
 	{
 		ResultSet resultSet = null;
 		JDBCDAO jdbcDao = null;
@@ -150,7 +149,8 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 			throws DynamicExtensionsSystemException
 	{
 		// Query to get next identifier.
-		StringBuffer query = new StringBuffer("SELECT MAX(IDENTIFIER) FROM " + tableName);
+		StringBuffer query = new StringBuffer("SELECT MAX(IDENTIFIER) FROM ");
+		query.append(tableName);
 		JDBCDAO jdbcDao = null;
 		try
 		{
@@ -210,7 +210,7 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 	 * @return list of records.
 	 * @throws DynamicExtensionsSystemException exception.
 	 */
-	public List<Long> getResultInList(String query,LinkedList<ColumnValueBean> queryDataList) throws DynamicExtensionsSystemException
+	public List<Long> getResultInList(String query,List<ColumnValueBean> queryDataList) throws DynamicExtensionsSystemException
 	{
 		List<Long> results = new ArrayList<Long>();
 
