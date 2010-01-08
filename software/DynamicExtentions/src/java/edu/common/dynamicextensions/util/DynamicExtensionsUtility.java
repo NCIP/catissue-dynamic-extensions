@@ -2603,7 +2603,6 @@ public class DynamicExtensionsUtility
 		try
 		{
 			document = saxReader.read(inputStream);
-			Element pattern = null;
 
 			Element datePatternsElement = document.getRootElement();
 			Iterator patternIterator = datePatternsElement.elementIterator("pattern");
