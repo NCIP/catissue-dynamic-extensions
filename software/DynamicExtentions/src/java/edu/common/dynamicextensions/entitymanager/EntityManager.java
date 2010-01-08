@@ -585,7 +585,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
         List<Map<AbstractAttributeInterface, Object>> dataValMaps = new ArrayList<Map<AbstractAttributeInterface, Object>>();
         dataValMaps.add(dataValue);
 
-        Long usrId = ((userId != null && userId.length != 0) ? userId[0] : null);
+//        Long usrId = ((userId != null && userId.length != 0) ? userId[0] : null);
 
         Set<Object> auditableDEObjects = new HashSet<Object>();
 
@@ -654,7 +654,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
             throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
     {
         boolean isSuccess = false;
-        Long usrId = ((userId != null && userId.length != 0) ? userId[0] : null);
+//        Long usrId = ((userId != null && userId.length != 0) ? userId[0] : null);
 
         HibernateDAO hibernateDAO = hibernateDao;
 
