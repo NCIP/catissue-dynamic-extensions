@@ -2097,6 +2097,12 @@ function calculateAttributes()
 					            	}
 					            }
 							}
+							//On error: error_div on the dataEntry.jsp is populated with error list
+							if(iframeDocument.getElementById("error_div")!= null)
+							{
+								var errorString = iframeDocument.getElementById("error_div").innerHTML;
+								printErrors(errorString)
+							}
 						}
 					}
 				}
@@ -2762,22 +2768,9 @@ function paster(response)
 	}
 	var errorString = reponseList[1];
 	//PRINT ERRORS IF ANY
-	var errorHTML = "<table width=\"100%\" height=\"30\"  border=\"0\" cellpadding=\"4\" cellspacing=\"4\" class=\"td_color_FFFFCC\">";
-	var errors = reponseList[1].split(',');
-
-	for(var i = 0 ;i<errors.length;i++)
-	{
-		if(errors[i].length>0)
-		{
-			errorHTML +=  "<tr><th align=\"center\" class=\"font_bl_nor\"><img src=\"images/de/ic_error.gif\" alt=\"Error\" width=\"28\" height=\"25\" hspace=\"3\" align=\"absmiddle\">"
-			+errors[i]+"<br />"
-		}
-
-	}
-	errorHTML += "</table>";
-
-	document.getElementById("error_div").innerHTML =  errorHTML;
+	printErrors(errorString);
 	//ERROR PRINTING FINISHED
+
 	//GET EXTING HTML AND REMOVE THE TABLE
 	var existingTableHTML = document.getElementById(conatinerId+"_table").innerHTML;
 	var existingTable = document.getElementById(conatinerId+"_table");
@@ -2836,6 +2829,26 @@ function paster(response)
 
 }
 
+function printErrors(errorString)
+{
+	//PRINT ERRORS IF ANY
+	var errorHTML = "<table width=\"100%\" height=\"30\"  border=\"0\" cellpadding=\"4\" cellspacing=\"4\" class=\"td_color_FFFFCC\">";
+	var errors = errorString.split(',');
+
+	for(var i = 0 ;i<errors.length;i++)
+	{
+		if(errors[i].length>0)
+		{
+			errorHTML +=  "<tr><th align=\"center\" class=\"font_bl_nor\"><img src=\"images/de/ic_error.gif\" alt=\"Error\" width=\"28\" height=\"25\" hspace=\"3\" align=\"absmiddle\">"
+			+errors[i]+"<br />"
+		}
+
+	}
+	errorHTML += "</table>";
+
+	document.getElementById("error_div").innerHTML =  errorHTML;
+	//ERROR PRINTING FINISHED
+}
 function executeComboScripts()
 {
 	var temp = document.getElementsByName("auto_complete_dropdown");

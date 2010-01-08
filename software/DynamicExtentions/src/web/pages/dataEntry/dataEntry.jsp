@@ -168,7 +168,7 @@
 							</c:if>
 							<tr valign="top">
 								<td colspan="7">
-									<div id ='error_div'>&nbsp;</div>
+									<div id ='error_div'><%=errorList.isEmpty()?"":errorList%></div>
 									<table  align='center' width='100%'>
 										<tr>
 											<%
