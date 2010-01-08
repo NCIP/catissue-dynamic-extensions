@@ -137,6 +137,9 @@ public class DEConstants
 	public static final String ATTRIBUTE_IDENTIFIER = "attributeIdentifier";
 	public static final String RECORD_IDENTIFIER = "recordIdentifier";
 
+	public static final String JAVA_UTIL_COLLECTION_CLASS = "java.util.Collection";
+	public static final String GET_ID = "getId";
+
 	public enum Cardinality {
 		ZERO(0), ONE(1), MANY(100);
 

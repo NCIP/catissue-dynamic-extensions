@@ -321,7 +321,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			}
 			catch (final DAOException e)
 			{
-				throw (DynamicExtensionsSystemException) handleRollback(e, "Error while closing",
+				throw (DynamicExtensionsSystemException) handleRollback(e, "Error while closing,",
 						jdbcDao, true);
 			}
 		}
@@ -571,7 +571,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				catch (final DAOException e)
 				{
 					throw new DynamicExtensionsApplicationException(
-							"Exception encountered while inserting records for related attributes!",
+							"Exception encountered while inserting records for related attributes!!",
 							e);
 				}
 			}
@@ -652,7 +652,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		catch (final Exception e)
 		{
 			throw new DynamicExtensionsApplicationException(
-					"Exception encountered while inserting records for related attributes!", e);
+					"Exception encountered while inserting records for related attributes. ", e);
 		}
 			}
 
@@ -669,7 +669,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		catch (final Exception e)
 		{
 			throw new DynamicExtensionsApplicationException(
-					"Exception encountered while inserting records for related attributes!", e);
+					"Exception encountered while inserting records for related attributes!!", e);
 		}
 			}
 
@@ -920,7 +920,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 					}
 					containedObjects.add(targetObject);
 					invokeSetterMethod(sourceObject.getClass(), targetRoleName, Class
-							.forName("java.util.Collection"), sourceObject, containedObjects);
+							.forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS), sourceObject, containedObjects);
 					hibernateDao.update(sourceObject);
 					invokeSetterMethod(targetObject.getClass(), sourceRoleName, Class
 							.forName(sourceObjectClassName), targetObject, sourceObject);
@@ -931,7 +931,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		catch (final Exception e)
 		{
 			throw new DynamicExtensionsApplicationException(
-					"Exception encountered while inserting records for related attributes!", e);
+					"Exception encountered while inserting records for related attributes!!", e);
 		}
 	}
 
@@ -1227,13 +1227,13 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 							containedObjects.add(targetObject);
 
 							invokeSetterMethod(sourceObject.getClass(), targetRoleName, Class
-									.forName("java.util.Collection"), sourceObject,
+									.forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS), sourceObject,
 									containedObjects);
 
 							hibernateDao.insert(targetObject);
 							hibernateDao.update(sourceObject);
 
-							final Method method = targetObject.getClass().getMethod("getId");
+							final Method method = targetObject.getClass().getMethod(DEConstants.GET_ID);
 							final Object updatedObject = method.invoke(targetObject);
 							final Long entityId = Long.valueOf(updatedObject.toString());
 
@@ -1290,11 +1290,11 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 								final Set<Object> containedObjects = new HashSet<Object>();
 								containedObjects.add(targetObject);
 								invokeSetterMethod(sourceObject.getClass(), targetRoleName, Class
-										.forName("java.util.Collection"), sourceObject,
+										.forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS), sourceObject,
 										containedObjects);
 								hibernateDao.insert(targetObject);
 								hibernateDao.update(sourceObject);
-								final Method method = targetObject.getClass().getMethod("getId");
+								final Method method = targetObject.getClass().getMethod(DEConstants.GET_ID);
 								final Object updatedObject = method.invoke(targetObject);
 								final Long entityId = Long.valueOf(updatedObject.toString());
 
@@ -1862,7 +1862,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 											invokeSetterMethod(sourceObject.getClass(),
 													targetRoleName, Class
-													.forName("java.util.Collection"),
+													.forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS),
 													sourceObject, containedObjects);
 										}
 										else
@@ -1881,7 +1881,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 										hibernateDao.update(targetObject);
 
 										final Method method = targetObject.getClass()
-										.getMethod("getId");
+										.getMethod(DEConstants.GET_ID);
 										final Object objectId = method.invoke(targetObject);
 										final Long insertedObjectId = Long.valueOf(objectId.toString());
 
@@ -2319,7 +2319,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 									containedObjects.add(targetObject);
 
 									invokeSetterMethod(sourceObject.getClass(), targetRoleName,
-											Class.forName("java.util.Collection"), sourceObject,
+											Class.forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS), sourceObject,
 											containedObjects);
 								}
 								else
@@ -2335,7 +2335,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 								hibernateDao.update(targetObject);
 
-								final Method method = targetObject.getClass().getMethod("getId");
+								final Method method = targetObject.getClass().getMethod(DEConstants.GET_ID);
 								final Object updatedObject = method.invoke(targetObject);
 								final Long entityId = Long.valueOf(updatedObject.toString());
 
@@ -3151,7 +3151,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		}
 		catch (final DAOException e)
 		{
-			throw new DynamicExtensionsSystemException("Error executing query ", e);
+			throw new DynamicExtensionsSystemException("Error executing query, ", e);
 		}
 		catch (final NumberFormatException e)
 		{
