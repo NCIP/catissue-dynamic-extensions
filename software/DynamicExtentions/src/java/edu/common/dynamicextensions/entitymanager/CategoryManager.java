@@ -50,6 +50,7 @@ import edu.common.dynamicextensions.util.CategoryGenerationUtil;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.FormulaCalculator;
 import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.common.dynamicextensions.util.global.ErrorConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.dao.HibernateDAO;
@@ -323,8 +324,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			}
 			catch (final DAOException e)
 			{
-				throw (DynamicExtensionsSystemException) handleRollback(e, "Error while closing",
-						jdbcDao, true);
+				throw (DynamicExtensionsSystemException) handleRollback(e,
+						ErrorConstants.ERROR_WHILE_CLOSING, jdbcDao, true);
 			}
 		}
 
@@ -576,7 +577,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				catch (final DAOException e)
 				{
 					throw new DynamicExtensionsApplicationException(
-							"Exception encountered while inserting records for related attributes!",
+							ErrorConstants.ERROR_ENCNTR_INSERTING_REC,
 							e);
 				}
 			}
@@ -659,7 +660,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		catch (final Exception e)
 		{
 			throw new DynamicExtensionsApplicationException(
-					"Exception encountered while inserting records for related attributes!", e);
+					ErrorConstants.ERROR_ENCNTR_INSERTING_REC, e);
 		}
 	}
 
@@ -677,7 +678,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		catch (final Exception e)
 		{
 			throw new DynamicExtensionsApplicationException(
-					"Exception encountered while inserting records for related attributes!", e);
+					ErrorConstants.ERROR_ENCNTR_INSERTING_REC, e);
 		}
 	}
 
@@ -948,7 +949,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		catch (final Exception e)
 		{
 			throw new DynamicExtensionsApplicationException(
-					"Exception encountered while inserting records for related attributes!", e);
+					ErrorConstants.ERROR_ENCNTR_INSERTING_REC, e);
 		}
 	}
 
@@ -1115,7 +1116,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		catch (final Exception e)
 		{
 			throw new DynamicExtensionsApplicationException(
-					"Exception encountered while inserting records for related attributes!", e);
+					ErrorConstants.ERROR_ENCNTR_INSERTING_REC, e);
 		}
 	}
 
@@ -1344,7 +1345,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		catch (final Exception e)
 		{
 			throw new DynamicExtensionsApplicationException(
-					"Exception encountered while inserting records for related attributes!", e);
+					ErrorConstants.ERROR_ENCNTR_INSERTING_REC, e);
 		}
 	}
 
@@ -1469,14 +1470,14 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 					catch (final DAOException e)
 					{
 						throw (DynamicExtensionsSystemException) handleRollback(e,
-								"Error while closing", hibernateDao, true);
+								ErrorConstants.ERROR_WHILE_CLOSING, hibernateDao, true);
 					}
 				}
 			}
 			catch (final DAOException e)
 			{
-				throw (DynamicExtensionsSystemException) handleRollback(e, "Error while closing",
-						jdbcDao, true);
+				throw (DynamicExtensionsSystemException) handleRollback(e,
+						ErrorConstants.ERROR_WHILE_CLOSING, jdbcDao, true);
 			}
 		}
 
@@ -2613,8 +2614,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			}
 			catch (final DAOException e)
 			{
-				throw (DynamicExtensionsSystemException) handleRollback(e, "Error while closing",
-						jdbcDAO, true);
+				throw (DynamicExtensionsSystemException) handleRollback(e,
+						ErrorConstants.ERROR_WHILE_CLOSING, jdbcDAO, true);
 			}
 		}
 
@@ -3256,15 +3257,15 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		}
 		catch (final DAOException e)
 		{
-			throw new DynamicExtensionsSystemException("Error executing query ", e);
+			throw new DynamicExtensionsSystemException(ErrorConstants.ERROR_EXECUTING_QUERY, e);
 		}
 		catch (final NumberFormatException e)
 		{
-			throw new DynamicExtensionsSystemException("Error executing query ", e);
+			throw new DynamicExtensionsSystemException(ErrorConstants.ERROR_EXECUTING_QUERY, e);
 		}
 		catch (final SQLException e)
 		{
-			throw new DynamicExtensionsSystemException("Error executing query ", e);
+			throw new DynamicExtensionsSystemException(ErrorConstants.ERROR_EXECUTING_QUERY, e);
 		}
 		finally
 		{
@@ -3274,7 +3275,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			}
 			catch (final DAOException e)
 			{
-				throw new DynamicExtensionsSystemException("Error executing query ", e);
+				throw new DynamicExtensionsSystemException(ErrorConstants.ERROR_EXECUTING_QUERY, e);
 			}
 		}
 		return recordIds;

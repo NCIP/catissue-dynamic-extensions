@@ -953,7 +953,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
                             {
                                 for (Object obj : containedObjects)
                                 {
-                                    Method method = (obj.getClass()).getMethod("getId");
+                                    Method method = obj.getClass().getMethod("getId");
                                     Object object = method.invoke(obj);
                                     Long identifier = Long.valueOf(object.toString());
 
@@ -2026,7 +2026,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
         String tableName = "dyextn_database_properties";
         String NAME = "NAME";
 
-        StringBuffer query = new StringBuffer();
+        StringBuffer query = new StringBuffer(80);
         query.append(SELECT_KEYWORD + WHITESPACE + NAME);
         query.append(WHITESPACE + FROM_KEYWORD + WHITESPACE + tableName + WHITESPACE);
         query.append(WHERE_KEYWORD + WHITESPACE + IDENTIFIER + WHITESPACE + EQUAL);
