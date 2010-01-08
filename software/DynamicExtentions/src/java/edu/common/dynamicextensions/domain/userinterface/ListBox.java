@@ -14,6 +14,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ListBoxInterfa
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.beans.NameValueBean;
 
 /**
@@ -195,15 +196,16 @@ public class ListBox extends SelectControl implements ListBoxInterface
 			for (NameValueBean nameValueBean : nameValueBeans)
 			{
 				if (values != null && !values.isEmpty()
-						&& values.contains(nameValueBean.getValue()))
+						&& (values.contains(nameValueBean.getValue())
+								|| values.contains(DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean.getValue()))))
 				{
 					htmlString.append("<OPTION VALUE='").append(nameValueBean.getValue()).append(
-							"' SELECTED>").append(nameValueBean.getName());
+							"' SELECTED>").append(DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean.getName()));
 				}
 				else
 				{
 					htmlString.append("<OPTION VALUE='").append(nameValueBean.getValue()).append(
-							"'>").append(nameValueBean.getName());
+							"'>").append(DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean.getName()));
 				}
 			}
 		}

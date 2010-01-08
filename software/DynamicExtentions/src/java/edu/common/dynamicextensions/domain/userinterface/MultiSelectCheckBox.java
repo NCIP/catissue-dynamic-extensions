@@ -151,7 +151,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 							+ (this.isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
 									+ "','" + identifier + "','" + parentContainerId + "');" : "")
 							+ "\" /><img src='images/de/spacer.gif' width='2' height='2'>"
-							+ "<label for=\"" + htmlComponentName + "\">" + nameValueBean.getName()
+							+ "<label for=\"" + htmlComponentName + "\">" + DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean.getName())
 							+ "</label> <img src='images/de/spacer.gif' width='3' height='3'>";
 				}
 				else

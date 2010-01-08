@@ -13,6 +13,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.RadioButtonInt
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.beans.NameValueBean;
 
 /**
@@ -72,7 +73,7 @@ public class RadioButton extends Control implements RadioButtonInterface
 		{
 			for (NameValueBean nameValueBean : nameValueBeanList)
 			{
-				String optionName = nameValueBean.getName();
+				String optionName = DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean.getName());
 				String optionValue = nameValueBean.getValue();
 				if (optionValue.equals(defaultValue))
 				{

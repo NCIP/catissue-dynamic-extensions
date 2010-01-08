@@ -11,6 +11,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.beans.NameValueBean;
 
 /**
@@ -285,7 +286,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 			{
 				if (nameValueBean.getValue().equals(defaultValue))
 				{
-					htmlString = "<span class='font_bl_s'> " + nameValueBean.getName() + "</span>";
+					htmlString = "<span class='font_bl_s'> " + DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean.getName()) + "</span>";
 					break;
 				}
 			}
