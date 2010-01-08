@@ -19,6 +19,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.webui.action.BaseDynamicExtensionsAction;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.global.CommonServiceLocator;
@@ -116,6 +117,7 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 		{
 			if (nvb.getName().toLowerCase(locale).contains(query.toLowerCase(locale)))
 			{
+				nvb.setName(DynamicExtensionsUtility.getUnEscapedStringValue(nvb.getName()));
 				querySpecificNVBeans.add(nvb);
 			}
 		}
