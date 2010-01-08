@@ -35,9 +35,9 @@ import edu.wustl.common.util.global.ApplicationProperties;
  * @hibernate.cache  usage="read-write"
  */
 public class Container extends DynamicExtensionBaseDomainObject
-implements
-Serializable,
-ContainerInterface
+		implements
+			Serializable,
+			ContainerInterface
 {
 
 	/**
@@ -424,6 +424,9 @@ ContainerInterface
 			baseContainer = baseContainer.getBaseContainer();
 		}
 
+		Collections.sort(controls);
+		Collections.reverse(controls);
+
 		return controls;
 	}
 
@@ -432,12 +435,12 @@ ContainerInterface
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public String generateContainerHTML(final String caption, final String dataEntryOperation)
-	throws DynamicExtensionsSystemException
+			throws DynamicExtensionsSystemException
 	{
 		final StringBuffer containerHTML = new StringBuffer();
 
 		containerHTML
-		.append("<table summary='' cellpadding='3' cellspacing='0' align='center' width='100%'>");
+				.append("<table summary='' cellpadding='3' cellspacing='0' align='center' width='100%'>");
 
 		if ((getMode() != null)
 				&& getMode().equalsIgnoreCase(WebUIManagerConstants.EDIT_MODE)
@@ -495,7 +498,7 @@ ContainerInterface
 	 */
 	public String generateControlsHTML(final String caption, final String dataEntryOperation,
 			final ContainerInterface container) throws DynamicExtensionsSystemException
-			{
+	{
 		final StringBuffer controlHTML = new StringBuffer();
 		final List<Object> values = new ArrayList<Object>();
 
@@ -567,8 +570,8 @@ ContainerInterface
 				if (control.getIsSkipLogicTargetControl())
 				{
 					controlHTML
-					.append("<input type='hidden' name='skipLogicHideControls' id='skipLogicHideControls' value = '"
-							+ control.getHTMLComponentName() + "_row_div' />");
+							.append("<input type='hidden' name='skipLogicHideControls' id='skipLogicHideControls' value = '"
+									+ control.getHTMLComponentName() + "_row_div' />");
 				}
 			}
 			controlHTML.append(control.generateHTML(container));
@@ -580,7 +583,7 @@ ContainerInterface
 		showAssociationControlsAsLink = false;
 
 		return controlHTML.toString();
-			}
+	}
 
 	/**
 	 * @param captionHTML
@@ -589,7 +592,7 @@ ContainerInterface
 	 */
 	private void addCaption(final StringBuffer captionHTML, final String caption, final ContainerInterface container,
 			final List<Object> values) throws DynamicExtensionsSystemException
-			{
+	{
 		// Check added for CSD project to ensure that HTML is generated for mock
 		// container with NULL id.
 		boolean isIdNull = false;
@@ -626,7 +629,7 @@ ContainerInterface
 		{
 			id = null;
 		}
-			}
+	}
 
 	/**
 	 *
@@ -637,7 +640,7 @@ ContainerInterface
 	 */
 	private void addDisplayOptionForRow(final ContainerInterface container, final List<Object> values,
 			final StringBuffer captionHTML, final String id) throws DynamicExtensionsSystemException
-			{
+	{
 		if (isAllControlsSkipLogicTargetControlsForShowHide())
 		{
 			final List<ControlInterface> controls = getAllControlsUnderSameDisplayLabel();
@@ -671,15 +674,15 @@ ContainerInterface
 					captionHTML.append(" style='display:row' >");
 				}
 				captionHTML
-				.append("<input type='hidden' name='skipLogicHideControls' id='skipLogicHideControls' value = '"
-						+ control.getHTMLComponentName() + id + "_container_div' />");
+						.append("<input type='hidden' name='skipLogicHideControls' id='skipLogicHideControls' value = '"
+								+ control.getHTMLComponentName() + id + "_container_div' />");
 			}
 		}
 		else
 		{
 			captionHTML.append(" style='display:row' >");
 		}
-			}
+	}
 
 	/**
 	 *
@@ -689,10 +692,10 @@ ContainerInterface
 	public String generateControlsHTMLAsGrid(
 			final List<Map<BaseAbstractAttributeInterface, Object>> valueMaps, final String dataEntryOperation,
 			final ContainerInterface container) throws DynamicExtensionsSystemException
-			{
+	{
 		return UserInterfaceiUtility.generateHTMLforGrid(this, valueMaps, dataEntryOperation,
 				container);
-			}
+	}
 
 	/**
 	 * @return
@@ -732,7 +735,7 @@ ContainerInterface
 	 * @see edu.common.dynamicextensions.domaininterface.userinterface.ContainmentAssociationControlInterface#generateLinkHTML()
 	 */
 	public String generateLink(final ContainerInterface container)
-	throws DynamicExtensionsSystemException
+			throws DynamicExtensionsSystemException
 	{
 		String details = "";
 		final boolean isDataPresent = UserInterfaceiUtility.isDataPresent(container
@@ -762,7 +765,7 @@ ContainerInterface
 
 		final StringBuffer linkHTML = new StringBuffer();
 		linkHTML
-		.append("<img src='images/de/ic_det.gif' alt='Details' width='12' height='12' hspace='3' border='0' align='absmiddle'><a href='#' style='cursor:hand' class='set1' onclick='showChildContainerInsertDataPage(");
+				.append("<img src='images/de/ic_det.gif' alt='Details' width='12' height='12' hspace='3' border='0' align='absmiddle'><a href='#' style='cursor:hand' class='set1' onclick='showChildContainerInsertDataPage(");
 		linkHTML.append(container.getId());
 		linkHTML.append(",this)'>");
 		linkHTML.append(details);
@@ -913,7 +916,7 @@ ContainerInterface
 				if ((categoryAttributeInterface
 						.getIsSourceForCalculatedAttribute() != null)
 						&& categoryAttributeInterface
-						.getIsSourceForCalculatedAttribute())
+								.getIsSourceForCalculatedAttribute())
 				{
 					hasSourceCalculatedAttributes = true;
 					break;
