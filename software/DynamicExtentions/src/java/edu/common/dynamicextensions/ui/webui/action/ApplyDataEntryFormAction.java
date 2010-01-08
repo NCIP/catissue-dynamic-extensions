@@ -140,7 +140,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 					if ((request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME) != null)
 							&& (request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME).trim()
 									.length() > 0)
-							&& (DEConstants.CANCEl.equalsIgnoreCase(request
+							&& (DEConstants.CANCEL.equalsIgnoreCase(request
 									.getParameter(WebUIManagerConstants.MODE_PARAM_NAME)) || WebUIManagerConstants.EDIT_MODE
 									.equalsIgnoreCase(request
 											.getParameter(WebUIManagerConstants.MODE_PARAM_NAME))))

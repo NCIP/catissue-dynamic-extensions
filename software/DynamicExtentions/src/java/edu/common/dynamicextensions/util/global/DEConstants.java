@@ -112,11 +112,11 @@ public class DEConstants
 	public static final String NAME = "NAME";
 	public static final String APPLICATION_RESOURCES = "ApplicationResources";
 	public static final int TWO = 2;
-	public static String DATE = "date";
-	public static String DATE_RANGE = "dateRange";
+	public static final String DATE = "date";
+	public static final String DATE_RANGE = "dateRange";
 	public static final String ALLOW_FUTURE_DATE = "allowfuturedate";
 	public static final String RANGE = "range";
-	public static final String CANCEl = "cancel";
+	public static final String CANCEL = "cancel";
 	public static final String IS_DIRTY = "isDirty";
 	public static final String BREAD_CRUMB_POSITION = "breadCrumbPosition";
 	public static final String HTML_SPACE = "&nbsp;";
