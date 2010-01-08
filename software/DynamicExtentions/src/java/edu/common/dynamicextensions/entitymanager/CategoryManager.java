@@ -321,7 +321,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			}
 			catch (final DAOException e)
 			{
-				throw (DynamicExtensionsSystemException) handleRollback(e, "Error while closing,",
+				throw (DynamicExtensionsSystemException) handleRollback(e, "Error while closing",
 						jdbcDao, true);
 			}
 		}
@@ -571,8 +571,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				catch (final DAOException e)
 				{
 					throw new DynamicExtensionsApplicationException(
-							"Exception encountered while inserting records for related attributes!!",
-							e);
+					"Exception encountered while inserting records for related attributes!",e);
 				}
 			}
 		}
@@ -652,7 +651,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		catch (final Exception e)
 		{
 			throw new DynamicExtensionsApplicationException(
-					"Exception encountered while inserting records for related attributes. ", e);
+					"Exception encountered while inserting records for related attributes!", e);
 		}
 			}
 
@@ -669,7 +668,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		catch (final Exception e)
 		{
 			throw new DynamicExtensionsApplicationException(
-					"Exception encountered while inserting records for related attributes!!", e);
+					"Exception encountered while inserting records for related attributes!", e);
 		}
 			}
 
@@ -891,9 +890,9 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 					Object targetObject = null;
 
 					// Create a new instance.
-					final Class targetClass = Class.forName(packageName + "." + targetEntity.getName());
-					final Constructor targetConstructor = targetClass.getConstructor();
-					targetObject = targetConstructor.newInstance();
+					final Class targetObjectClass = Class.forName(packageName + "." + targetEntity.getName());
+					final Constructor targetObjectConstructor = targetObjectClass.getConstructor();
+					targetObject = targetObjectConstructor.newInstance();
 
 					final Object value = catAttribute.getDefaultValue();
 					setRelatedAttributeValues(targetObjectClassName, (BaseAbstractAttribute) attribute,
@@ -931,7 +930,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		catch (final Exception e)
 		{
 			throw new DynamicExtensionsApplicationException(
-					"Exception encountered while inserting records for related attributes!!", e);
+					"Exception encountered while inserting records for related attributes!", e);
 		}
 	}
 
@@ -1571,49 +1570,94 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 						}
 
 						final PathInterface paths = categoryEnt.getPath();
-						final List<PathAssociationRelationInterface> allPathAsso = paths
-						.getSortedPathAssociationRelationCollection();
-						for (final PathAssociationRelationInterface pathAssociation : allPathAsso)
-						{
-							final StringBuffer entityName = new StringBuffer(pathAssociation
-									.getAssociation().getEntity().getName());
-							final String catEntityName = "[" + pathAssociation.getSourceInstanceId() + "]";
-							entityName.append(catEntityName);
+                        final List<PathAssociationRelationInterface> allPathAsso = paths
+                        .getSortedPathAssociationRelationCollection();
+                        for (final PathAssociationRelationInterface pathAssociation : allPathAsso)
+                        {
+                            final StringBuffer entityName = new StringBuffer(pathAssociation
+                                    .getAssociation().getEntity().getName());
+                            final String catEntityName = "[" + pathAssociation.getSourceInstanceId() + "]";
+                            entityName.append(catEntityName);
 
-							final Long sourceEntityId = fullKeyMap.get(entityName.toString());
-							if (sourceEntityId != null)
-							{
-								previousEntityId = sourceEntityId;
-							}
-							final AssociationInterface asso = lastAsso;
-							String packageName = null;
-							packageName = getPackageName(lastAsso.getEntity(), packageName);
+                            final StringBuffer targetEntName = new StringBuffer(pathAssociation
+                                                                             .getAssociation().getTargetEntity().getName());
+                           final String targetcatEntityName = "[" + pathAssociation.getTargetInstanceId() + "]";
+                           targetEntName.append(targetcatEntityName);
 
-							final StringBuffer sourceObjectClassName = new StringBuffer(packageName);
-							final EntityInterface sourceEntity = asso.getEntity();
-							sourceObjectClassName.append('.').append(sourceEntity.getName());
+                            final Long sourceEntityId = fullKeyMap.get(entityName.toString());
+                            Long targetEntityId = fullKeyMap.get(targetEntName.toString());
+                            if (sourceEntityId != null)
+                            {
+                                previousEntityId = sourceEntityId;
+                            }
+                            if(targetEntityId==null)
+                            {
+                                targetEntityId = entityId;
+                            }
+                            final AssociationInterface asso = pathAssociation.getAssociation();
+                            String packageName = null;
+                            packageName = getPackageName(asso.getEntity(), packageName);
 
-							final StringBuffer targetObjectClassName = new StringBuffer(packageName);
-							final EntityInterface targetEntity = asso.getTargetEntity();
-							targetObjectClassName.append('.').append(targetEntity.getName());
+                            final StringBuffer sourceObjectClassName = new StringBuffer(packageName);
+                            final EntityInterface sourceEntity = asso.getEntity();
+                            sourceObjectClassName.append('.').append(sourceEntity.getName());
 
-							final Object sourceObject = hibernateDao.retrieveById(sourceObjectClassName
-									.toString(), previousEntityId);
+                            final StringBuffer targetObjectClassName = new StringBuffer(packageName);
+                            final EntityInterface targetEntity = asso.getTargetEntity();
+                            targetObjectClassName.append('.').append(targetEntity.getName());
 
-							final Object targetObject = hibernateDao.retrieveById(targetObjectClassName
-									.toString(), entityId);
+                            final Object sourceObject = hibernateDao.retrieveById(sourceObjectClassName
+                                    .toString(), previousEntityId);
 
-							String sourceRoleName = lastAsso.getSourceRole().getName();
-							sourceRoleName = sourceRoleName.substring(0, 1).toUpperCase()
-							+ sourceRoleName.substring(1, sourceRoleName.length());
+                            final Object targetObject = hibernateDao.retrieveById(targetObjectClassName
+                                    .toString(), targetEntityId);
 
-							invokeSetterMethod(targetObject.getClass(), sourceRoleName, Class
-									.forName(sourceObjectClassName.toString()), targetObject,
-									sourceObject);
+                            String sourceRoleName = asso.getSourceRole().getName();
+                            sourceRoleName = sourceRoleName.substring(0, 1).toUpperCase()
+                            + sourceRoleName.substring(1, sourceRoleName.length());
 
-							hibernateDao.update(targetObject);
-						}
-					}
+                            invokeSetterMethod(targetObject.getClass(), sourceRoleName, Class
+                                    .forName(sourceObjectClassName.toString()), targetObject,
+                                    sourceObject);
+
+                            hibernateDao.update(targetObject);
+                            // Get the associated object(s).
+
+                            String targetRoleName = asso.getTargetRole().getName();
+                            targetRoleName = targetRoleName.substring(0, 1).toUpperCase()
+                            + targetRoleName.substring(1, targetRoleName.length());
+                            final Object associatedObjects = invokeGetterMethod(sourceObject
+                                    .getClass(), targetRoleName, sourceObject);
+
+                            final Cardinality targetMaxCardinality = lastAsso.getTargetRole()
+                            .getMaximumCardinality();
+                            if (targetMaxCardinality != Cardinality.ONE)
+                            {
+                                Collection<Object> containedObjects = null;
+                                if (associatedObjects != null)
+                                {
+                                    containedObjects = (Collection) associatedObjects;
+                                }
+                                else
+                                {
+                                    containedObjects = new HashSet<Object>();
+                                }
+
+                                containedObjects.add(targetObject);
+
+                                invokeSetterMethod(sourceObject.getClass(), targetRoleName,
+                                        Class.forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS), sourceObject,
+                                        containedObjects);
+                            }
+                            else
+                            {
+                                invokeSetterMethod(sourceObject.getClass(), targetRoleName,
+                                        targetObject.getClass(), sourceObject, targetObject);
+                            }
+
+                            hibernateDao.update(sourceObject);
+                        }
+                    }
 
 					CategoryEntityInterface catEntity = categoryEnt;
 					final String categoryEntName = DynamicExtensionsUtility
@@ -3151,7 +3195,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		}
 		catch (final DAOException e)
 		{
-			throw new DynamicExtensionsSystemException("Error executing query, ", e);
+			throw new DynamicExtensionsSystemException("Error executing query ", e);
 		}
 		catch (final NumberFormatException e)
 		{
