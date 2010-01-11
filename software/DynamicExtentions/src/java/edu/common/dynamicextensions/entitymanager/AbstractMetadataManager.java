@@ -60,9 +60,9 @@ import edu.wustl.dao.util.NamedQueryParam;
  *
  */
 public abstract class AbstractMetadataManager
-		implements
-			EntityManagerExceptionConstantsInterface,
-			DynamicExtensionsQueryBuilderConstantsInterface
+implements
+EntityManagerExceptionConstantsInterface,
+DynamicExtensionsQueryBuilderConstantsInterface
 {
 
 	/**
@@ -113,10 +113,10 @@ public abstract class AbstractMetadataManager
 	 */
 	public DynamicExtensionBaseDomainObjectInterface getObjectByName(String className,
 			String objectName) throws DynamicExtensionsSystemException
-	{
+			{
 		DynamicExtensionBaseDomainObjectInterface dyExtBsDmnObj = null;
 
-		if (objectName != null && !"".equals(objectName))
+		if ((objectName != null) && !"".equals(objectName))
 		{
 
 			// Get the instance of the default biz logic.
@@ -134,13 +134,13 @@ public abstract class AbstractMetadataManager
 				throw new DynamicExtensionsSystemException(e.getMessage(), e);
 			}
 
-			if (objects != null && !objects.isEmpty())
+			if ((objects != null) && !objects.isEmpty())
 			{
 				dyExtBsDmnObj = (DynamicExtensionBaseDomainObjectInterface) objects.get(0);
 			}
 		}
 		return dyExtBsDmnObj;
-	}
+			}
 
 	/**
 	 * This method takes the class name, object name and returns the object.
@@ -150,13 +150,13 @@ public abstract class AbstractMetadataManager
 	 */
 	public DynamicExtensionBaseDomainObjectInterface getObjectByName(String className,
 			String objectName, HibernateDAO hibernateDao) throws DynamicExtensionsSystemException
-	{
+			{
 		DynamicExtensionBaseDomainObjectInterface dyExtBsDmnObj = null;
 
-		if (objectName != null && !"".equals(objectName))
+		if ((objectName != null) && !"".equals(objectName))
 		{
 
-			List objects ;
+			List objects;
 
 			try
 			{
@@ -167,14 +167,14 @@ public abstract class AbstractMetadataManager
 				throw new DynamicExtensionsSystemException(e.getMessage(), e);
 			}
 
-			if (objects != null && !objects.isEmpty())
+			if ((objects != null) && !objects.isEmpty())
 			{
 				dyExtBsDmnObj = (DynamicExtensionBaseDomainObjectInterface) objects.get(0);
 			}
 
 		}
 		return dyExtBsDmnObj;
-	}
+			}
 
 	/**
 	 * Returns all instances in the whole system for a given type of the object
@@ -184,10 +184,10 @@ public abstract class AbstractMetadataManager
 	 * @throws DynamicExtensionsApplicationException
 	 */
 	protected Collection getAllObjects(String objectName) throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException
+	DynamicExtensionsApplicationException
 	{
 		AbstractBizLogic bizLogic = BizLogicFactory.getDefaultBizLogic();
-		Collection objects =null;
+		Collection objects = null;
 
 		try
 		{
@@ -216,7 +216,7 @@ public abstract class AbstractMetadataManager
 	protected DynamicExtensionBaseDomainObject getObjectByIdentifier(String objectName,
 			String identifier) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
-	{
+			{
 		AbstractBizLogic bizLogic = BizLogicFactory.getDefaultBizLogic();
 		DynamicExtensionBaseDomainObject dyExtBsDmnObj;
 		try
@@ -225,7 +225,7 @@ public abstract class AbstractMetadataManager
 			List objects = bizLogic.retrieve(objectName, DEConstants.OBJ_IDENTIFIER, Long
 					.valueOf(identifier));
 
-			if (objects == null || objects.isEmpty())
+			if ((objects == null) || objects.isEmpty())
 			{
 				Logger.out.debug("Required Obejct not found: Object Name*" + objectName
 						+ "*   identifier  *" + identifier + "*");
@@ -240,7 +240,7 @@ public abstract class AbstractMetadataManager
 		}
 
 		return dyExtBsDmnObj;
-	}
+			}
 
 	/**
 	 * This method is called when there any exception occurs while generating the data table queries
@@ -257,7 +257,7 @@ public abstract class AbstractMetadataManager
 	 */
 	protected void rollbackQueries(Stack<String> revQryStack,
 			AbstractMetadataInterface abstrMetadata, Exception exception, DAO dao)
-			throws DynamicExtensionsSystemException
+	throws DynamicExtensionsSystemException
 	{
 		String message = "";
 		if (dao != null)
@@ -272,7 +272,7 @@ public abstract class AbstractMetadataManager
 						excep);
 			}
 		}
-		if (revQryStack != null && !revQryStack.isEmpty())
+		if ((revQryStack != null) && !revQryStack.isEmpty())
 		{
 			JDBCDAO jdbcDao = null;
 			try
@@ -336,7 +336,7 @@ public abstract class AbstractMetadataManager
 	 * @throws DynamicExtensionsSystemException
 	 */
 	protected Collection executeHQL(String queryName, Map<String, NamedQueryParam> substParams)
-			throws DynamicExtensionsSystemException
+	throws DynamicExtensionsSystemException
 	{
 		Collection objects = null;
 		HibernateDAO hibernateDAO = null;
@@ -377,7 +377,7 @@ public abstract class AbstractMetadataManager
 	 */
 	protected Query substitutionParameterForQuery(Query query,
 			Map<String, HQLPlaceHolderObject> substParams) throws HibernateException
-	{
+			{
 		for (int counter = 0; counter < substParams.size(); counter++)
 		{
 			HQLPlaceHolderObject plcHolderObj = substParams.get(Integer.toBinaryString(counter));
@@ -401,19 +401,19 @@ public abstract class AbstractMetadataManager
 		}
 
 		return query;
-	}
+			}
 
 	/**
-	*
-	* @param hibernateDAO
-	* @param queryName
-	* @param substParams
-	* @return
-	* @throws DynamicExtensionsSystemException
-	*/
+	 *
+	 * @param hibernateDAO
+	 * @param queryName
+	 * @param substParams
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 */
 	protected Collection executeHQL(HibernateDAO hibernateDAO, String queryName,
 			Map<String, NamedQueryParam> substParams) throws DynamicExtensionsSystemException
-	{
+			{
 		Collection deObjects;
 
 		try
@@ -426,7 +426,7 @@ public abstract class AbstractMetadataManager
 		}
 
 		return deObjects;
-	}
+			}
 
 	/**
 	 * This method persists an entity group and the associated entities and also creates the data table
@@ -441,13 +441,13 @@ public abstract class AbstractMetadataManager
 	 */
 	protected DynamicQueryList persistDynamicExtensionObject(
 			AbstractMetadataInterface abstrMetadata, HibernateDAO... hibernateDAO)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		List<String> revQueries = new LinkedList<String>();
 		List<String> queries = new ArrayList<String>();
 		Stack<String> rlbkQryStack = new Stack<String>();
 		DynamicQueryList dynamicQueryList = new DynamicQueryList();
-		if (hibernateDAO != null && hibernateDAO.length > 0)
+		if ((hibernateDAO != null) && (hibernateDAO.length > 0))
 		{
 			preProcess(abstrMetadata, revQueries, queries);
 
@@ -472,7 +472,7 @@ public abstract class AbstractMetadataManager
 	 * @throws DynamicExtensionsApplicationException
 	 */
 	private DynamicQueryList persistDynamicExtensionObject(AbstractMetadataInterface abstrMetadata)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		List<String> revQueries = new LinkedList<String>();
 		List<String> queries = new ArrayList<String>();
@@ -527,11 +527,11 @@ public abstract class AbstractMetadataManager
 	 */
 	public DynamicQueryList persistDynamicExtensionObjectMetdata(
 			AbstractMetadataInterface abstrMetadata, HibernateDAO... hibernateDAO)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		Stack<String> rlbkQryStack = new Stack<String>();
 		HibernateDAO newHibernateDAO = null;
-		if (hibernateDAO != null && hibernateDAO.length > 0)
+		if ((hibernateDAO != null) && (hibernateDAO.length > 0))
 		{
 			newHibernateDAO = hibernateDAO[0];
 			saveDynamicExtensionObject(abstrMetadata, newHibernateDAO, rlbkQryStack);
@@ -573,7 +573,7 @@ public abstract class AbstractMetadataManager
 	 */
 	private void saveDynamicExtensionObject(AbstractMetadataInterface abstrMetadata,
 			HibernateDAO hibernateDAO, Stack<String> rlbkQryStack)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		try
 		{
@@ -611,10 +611,8 @@ public abstract class AbstractMetadataManager
 	 * @param isExcToBeWrpd
 	 * @return
 	 */
-	protected Exception handleRollback(Exception exception, String excMessage, DAO dao,
-			boolean isExcToBeWrpd)
+	protected void handleRollback(Exception exception, String excMessage, DAO dao)
 	{
-		Exception newException = exception;
 		try
 		{
 			dao.rollback();
@@ -623,13 +621,6 @@ public abstract class AbstractMetadataManager
 		{
 			Logger.out.error(e.getMessage());
 		}
-
-		if (isExcToBeWrpd)
-		{
-			newException = new DynamicExtensionsSystemException(excMessage, exception);
-		}
-
-		return newException;
 
 	}
 
@@ -644,7 +635,7 @@ public abstract class AbstractMetadataManager
 	protected List<String> getDynamicQueryList(EntityGroupInterface entityGroup,
 			List<String> revQueries, List<String> queries) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
-	{
+			{
 		List<EntityInterface> entities = DynamicExtensionsUtility.getUnsavedEntities(entityGroup);
 
 		for (EntityInterface entity : entities)
@@ -652,7 +643,7 @@ public abstract class AbstractMetadataManager
 			List<String> createQueries = getQueryBuilderInstance().getCreateEntityQueryList(
 					(Entity) entity, revQueries);
 
-			if (createQueries != null && !createQueries.isEmpty())
+			if ((createQueries != null) && !createQueries.isEmpty())
 			{
 				queries.addAll(createQueries);
 			}
@@ -663,21 +654,21 @@ public abstract class AbstractMetadataManager
 			List<String> updateQueries = getQueryBuilderInstance().getUpdateEntityQueryList(
 					(Entity) entity, revQueries);
 
-			if (updateQueries != null && !updateQueries.isEmpty())
+			if ((updateQueries != null) && !updateQueries.isEmpty())
 			{
 				queries.addAll(updateQueries);
 			}
 		}
 
 		List<EntityInterface> savedEntities = DynamicExtensionsUtility
-				.getSavedEntities(entityGroup);
+		.getSavedEntities(entityGroup);
 
 		HibernateDAO hibernateDAO = null;
 		try
 		{
 			String appName = DynamicExtensionDAO.getInstance().getAppName();
 			hibernateDAO = (HibernateDAO) DAOConfigFactory.getInstance().getDAOFactory(appName)
-					.getDAO();
+			.getDAO();
 			hibernateDAO.openSession(null);
 			for (EntityInterface savedEntity : savedEntities)
 			{
@@ -686,7 +677,7 @@ public abstract class AbstractMetadataManager
 
 				List<String> updateQueries = getQueryBuilderInstance().getUpdateEntityQueryList(
 						(Entity) savedEntity, dbaseCopy, revQueries, hibernateDAO);
-				if (updateQueries != null && !updateQueries.isEmpty())
+				if ((updateQueries != null) && !updateQueries.isEmpty())
 				{
 					queries.addAll(updateQueries);
 				}
@@ -714,7 +705,7 @@ public abstract class AbstractMetadataManager
 		}
 
 		return queries;
-	}
+			}
 
 	/**
 	 * @param entity
@@ -722,7 +713,7 @@ public abstract class AbstractMetadataManager
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public List<EntityRecord> getAllRecords(AbstractEntityInterface entity)
-			throws DynamicExtensionsSystemException
+	throws DynamicExtensionsSystemException
 	{
 		List<EntityRecord> records;
 		JDBCDAO jdbcDao = null;
@@ -764,9 +755,9 @@ public abstract class AbstractMetadataManager
 	}
 
 	/**
-	* @param results
-	* @return
-	*/
+	 * @param results
+	 * @return
+	 */
 	protected List<EntityRecord> getRecordList(List<List> results)
 	{
 		List<EntityRecord> records = new ArrayList<EntityRecord>();
@@ -775,7 +766,7 @@ public abstract class AbstractMetadataManager
 
 		for (List innnerList : results)
 		{
-			if (innnerList != null && !innnerList.isEmpty())
+			if ((innnerList != null) && !innnerList.isEmpty())
 			{
 				identifier = (String) innnerList.get(0);
 				if (identifier != null)
@@ -802,19 +793,19 @@ public abstract class AbstractMetadataManager
 	 */
 	protected Object setObjectProperty(AbstractAttribute attribute, String dataType, Class klass,
 			Map<AbstractAttributeInterface, Object> dataValue, Object returnedObj) throws Exception
-	{
+			{
 		Object value = null;
 
 		String attrName = attribute.getName();
 		attrName = attrName.substring(0, 1).toUpperCase()
-				+ attrName.substring(1, attrName.length());
+		+ attrName.substring(1, attrName.length());
 		value = dataValue.get(attribute);
 
 		if ("Long".equals(dataType))
 		{
 			Long longValue = null;
 
-			if (value != null && !("".equals(value)))
+			if ((value != null) && !("".equals(value)))
 			{
 				longValue = Long.valueOf(value.toString());
 			}
@@ -827,7 +818,7 @@ public abstract class AbstractMetadataManager
 		{
 			Float floatValue = null;
 
-			if (value != null && !("".equals(value)))
+			if ((value != null) && !("".equals(value)))
 			{
 				floatValue = new Float(value.toString());
 			}
@@ -840,7 +831,7 @@ public abstract class AbstractMetadataManager
 		{
 			Double doubleValue = null;
 
-			if (value != null && !("".equals(value)))
+			if ((value != null) && !("".equals(value)))
 			{
 				doubleValue = new Double(value.toString());
 			}
@@ -853,7 +844,7 @@ public abstract class AbstractMetadataManager
 		{
 			Short shortValue = null;
 
-			if (value != null && !("".equals(value)))
+			if ((value != null) && !("".equals(value)))
 			{
 				shortValue = Short.valueOf(value.toString());
 			}
@@ -866,7 +857,7 @@ public abstract class AbstractMetadataManager
 		{
 			Integer integerValue = null;
 
-			if (value != null && !("".equals(value)))
+			if ((value != null) && !("".equals(value)))
 			{
 				integerValue = Integer.valueOf(value.toString());
 			}
@@ -879,7 +870,7 @@ public abstract class AbstractMetadataManager
 		{
 			Boolean booleanValue = null;
 
-			if (value != null && !("".equals(value)))
+			if ((value != null) && !("".equals(value)))
 			{
 				if ("1".equals(value))
 				{
@@ -900,13 +891,14 @@ public abstract class AbstractMetadataManager
 		else if ("Date".equals(dataType))
 		{
 			Date dateValue = null;
-			if (value != null && !("".equals(value)))
+			if ((value != null) && !("".equals(value)))
 			{
 				Attribute attr = (Attribute) attribute;
 				DateAttributeTypeInformation dateAttributeTypeInf = (DateAttributeTypeInformation) attr
-						.getAttributeTypeInformation();
+				.getAttributeTypeInformation();
 
-				String format = DynamicExtensionsUtility.getDateFormat(dateAttributeTypeInf.getFormat());
+				String format = DynamicExtensionsUtility.getDateFormat(dateAttributeTypeInf
+						.getFormat());
 
 				SimpleDateFormat formatter = new SimpleDateFormat(format);
 				dateValue = formatter.parse(value.toString());
@@ -920,7 +912,7 @@ public abstract class AbstractMetadataManager
 		{
 			String stringValue = null;
 
-			if (value != null && !("".equals(value)))
+			if ((value != null) && !("".equals(value)))
 			{
 				stringValue = value.toString();
 			}
@@ -931,7 +923,7 @@ public abstract class AbstractMetadataManager
 		}
 
 		return returnedObj;
-	}
+			}
 
 	/**
 	 * This method sets the object properties. It invokes appropriate setter method
@@ -946,19 +938,19 @@ public abstract class AbstractMetadataManager
 	 */
 	protected Object setObjectProperty(AbstractAttribute attribute, String dataType, Class klass,
 			Object walue, Object returnedObj) throws Exception
-	{
+			{
 		Object value = null;
 
 		String attrName = attribute.getName();
 		attrName = attrName.substring(0, 1).toUpperCase()
-				+ attrName.substring(1, attrName.length());
+		+ attrName.substring(1, attrName.length());
 		value = walue;
 
 		if ("Long".equals(dataType))
 		{
 			Long longValue = null;
 
-			if (value != null && !("".equals(value)))
+			if ((value != null) && !("".equals(value)))
 			{
 				longValue = Long.valueOf(value.toString());
 			}
@@ -971,7 +963,7 @@ public abstract class AbstractMetadataManager
 		{
 			Float floatValue = null;
 
-			if (value != null && !("".equals(value)))
+			if ((value != null) && !("".equals(value)))
 			{
 				floatValue = new Float(value.toString());
 			}
@@ -984,7 +976,7 @@ public abstract class AbstractMetadataManager
 		{
 			Double doubleValue = null;
 
-			if (value != null && !("".equals(value)))
+			if ((value != null) && !("".equals(value)))
 			{
 				doubleValue = new Double(value.toString());
 			}
@@ -997,7 +989,7 @@ public abstract class AbstractMetadataManager
 		{
 			Short shortValue = null;
 
-			if (value != null && !("".equals(value)))
+			if ((value != null) && !("".equals(value)))
 			{
 				shortValue = Short.valueOf(value.toString());
 			}
@@ -1010,7 +1002,7 @@ public abstract class AbstractMetadataManager
 		{
 			Integer integerValue = null;
 
-			if (value != null && !("".equals(value)))
+			if ((value != null) && !("".equals(value)))
 			{
 				integerValue = Integer.valueOf(value.toString());
 			}
@@ -1023,7 +1015,7 @@ public abstract class AbstractMetadataManager
 		{
 			Boolean booleanValue = null;
 
-			if (value != null && !("".equals(value)))
+			if ((value != null) && !("".equals(value)))
 			{
 				if ("1".equals(value))
 				{
@@ -1044,11 +1036,11 @@ public abstract class AbstractMetadataManager
 		else if ("Date".equals(dataType))
 		{
 			Date dateValue = null;
-			if (value != null && !("".equals(value)))
+			if ((value != null) && !("".equals(value)))
 			{
 				Attribute attr = (Attribute) attribute;
 				DateAttributeTypeInformation dateAttributeTypeInf = (DateAttributeTypeInformation) attr
-						.getAttributeTypeInformation();
+				.getAttributeTypeInformation();
 
 				String format = dateAttributeTypeInf.getFormat();
 				if (format == null)
@@ -1068,7 +1060,7 @@ public abstract class AbstractMetadataManager
 		{
 			String stringValue = null;
 
-			if (value != null && !("".equals(value)))
+			if ((value != null) && !("".equals(value)))
 			{
 				stringValue = value.toString();
 			}
@@ -1079,7 +1071,7 @@ public abstract class AbstractMetadataManager
 		}
 
 		return returnedObj;
-	}
+			}
 
 	/**
 	 * @param klass
@@ -1091,10 +1083,10 @@ public abstract class AbstractMetadataManager
 	 */
 	protected void invokeSetterMethod(Class klass, String property, Class argumentType,
 			Object invokeOnObject, Object argument) throws Exception
-	{
+			{
 		Method setter = klass.getMethod("set" + property, argumentType);
 		setter.invoke(invokeOnObject, argument);
-	}
+			}
 
 	/**
 	 * @param klass
@@ -1104,7 +1096,7 @@ public abstract class AbstractMetadataManager
 	 * @throws Exception
 	 */
 	protected Object invokeGetterMethod(Class klass, String property, Object invokeOnObject)
-			throws Exception
+	throws Exception
 	{
 		Method getter = klass.getMethod("get" + property);
 		Object returnedObject = getter.invoke(invokeOnObject);
@@ -1120,7 +1112,7 @@ public abstract class AbstractMetadataManager
 	protected String getPackageName(EntityInterface entity, String packageName)
 	{
 		Set<TaggedValueInterface> taggedValues = (Set<TaggedValueInterface>) entity
-				.getEntityGroup().getTaggedValueCollection();
+		.getEntityGroup().getTaggedValueCollection();
 		Iterator<TaggedValueInterface> taggedValuesIter = taggedValues.iterator();
 		while (taggedValuesIter.hasNext())
 		{
