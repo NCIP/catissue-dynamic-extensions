@@ -112,7 +112,7 @@ public class TextField extends Control implements TextFieldInterface
 					+ "' onchange=\"isDataChanged();"
 					+ (this.getIsSourceForCalculatedAttribute() != null
 							&& this.getIsSourceForCalculatedAttribute() ? "calculateAttributes();" : "")
-					+ "\" value='" + defaultValue + "' ";
+					+ "\" value='" + DynamicExtensionsUtility.getEscapedStringValue(defaultValue) + "' ";
 
 			int columnSize = columns.intValue();
 			if (columnSize > 0)
