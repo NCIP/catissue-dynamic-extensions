@@ -1663,28 +1663,28 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 							String targetRoleName = asso.getTargetRole().getName();
 							targetRoleName = targetRoleName.substring(0, 1).toUpperCase()
 									+ targetRoleName.substring(1, targetRoleName.length());
-							final Object associatedObjects = invokeGetterMethod(sourceObject
+							final Object associatedObject = invokeGetterMethod(sourceObject
 									.getClass(), targetRoleName, sourceObject);
 
 							final Cardinality targetMaxCardinality = lastAsso.getTargetRole()
 									.getMaximumCardinality();
 							if (targetMaxCardinality != Cardinality.ONE)
 							{
-								Collection<Object> containedObjects = null;
-								if (associatedObjects != null)
+								Collection<Object> containedObjectColl = null;
+								if (associatedObject != null)
 								{
-									containedObjects = (Collection) associatedObjects;
+									containedObjectColl = (Collection) associatedObject;
 								}
 								else
 								{
-									containedObjects = new HashSet<Object>();
+									containedObjectColl = new HashSet<Object>();
 								}
 
-								containedObjects.add(targetObject);
+								containedObjectColl.add(targetObject);
 
 								invokeSetterMethod(sourceObject.getClass(), targetRoleName, Class
 										.forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS),
-										sourceObject, containedObjects);
+										sourceObject, containedObjectColl);
 							}
 							else
 							{
