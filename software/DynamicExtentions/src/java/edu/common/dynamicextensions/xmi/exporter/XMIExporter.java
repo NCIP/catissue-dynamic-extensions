@@ -205,16 +205,11 @@ public class XMIExporter
 	 */
 	public void exportXMI() throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
-		EntityInterface hookEntity=staticEntity;
 		if (XMIConstants.XMI_VERSION_1_1.equalsIgnoreCase(xmiVersion))
 		{
-			if (XMIConstants.NONE.equalsIgnoreCase(hookEntityName))
-			{
-				hookEntity = XMIExporterUtility.getHookEntityName(entityGroup);
-			}
+			staticEntity = XMIExporterUtility.getHookEntityName(entityGroup);
 			XMIExporterUtility
-					.addHookEntitiesToGroup(hookEntity, entityGroup);
-
+					.addHookEntitiesToGroup(staticEntity, entityGroup);
 		}
 		exportXMI(entityGroup, null);
 	}
@@ -2644,7 +2639,6 @@ public class XMIExporter
 		{
 			hibernateDao = DynamicExtensionsUtility.getHibernateDAO();
 			entityGroup = getEntityGroup(hibernateDao,groupName);
-			staticEntity = XMIUtilities.getStaticEntity(hookEntityName,hibernateDao);
 		}
 		catch(DAOException e)
 		{
