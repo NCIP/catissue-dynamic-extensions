@@ -23,12 +23,10 @@ import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInte
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
-import edu.common.dynamicextensions.domaininterface.userinterface.ComboBoxInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ListBoxInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.MultiSelectInterface;
-import edu.common.dynamicextensions.domaininterface.userinterface.TextFieldInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleParameterInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
@@ -54,11 +52,9 @@ import edu.wustl.dao.exception.DAOException;
 public class CategoryValidator
 {
 
-	Long entityGroupId;
+	private Long entityGroupId;
 
-	CategoryCSVFileParser categoryFileParser;
-
-	String errorMessage = "";
+	private final CategoryCSVFileParser categoryFileParser;
 
 	/**
 	 * @param entityGroup
@@ -219,9 +215,8 @@ public class CategoryValidator
 			if (rule.getName().equalsIgnoreCase(CategoryCSVConstants.RANGE)
 					|| rule.getName().equalsIgnoreCase(ProcessorConstants.DATE_RANGE))
 			{
-				Set<RuleParameterInterface> ruleParameters = new HashSet<RuleParameterInterface>(
-						rule.getRuleParameterCollection());
-
+				Collection<RuleParameterInterface> ruleParameters = rule
+						.getRuleParameterCollection();
 				for (RuleParameterInterface ruleParameter : ruleParameters)
 				{
 					if (ruleParameter.getName().equalsIgnoreCase(CategoryCSVConstants.MIN))
@@ -300,7 +295,8 @@ public class CategoryValidator
 			{
 				throw new DynamicExtensionsSystemException(ApplicationProperties
 						.getValue(CategoryConstants.CREATE_CAT_FAILS)
-						+ ApplicationProperties.getValue(e.getErrorCode()) + attribute.getName(), e);
+						+ ApplicationProperties.getValue(e.getErrorCode(), e.getPlaceHolderList()),
+						e);
 			}
 		}
 		else
@@ -310,7 +306,8 @@ public class CategoryValidator
 			try
 			{
 				// Fix to support different date formats in DE :Pavan.
-				catAttrValue = getRuleDateInAttributeDateFormat(catAttrValue,attribute.getAttributeTypeInformation(),attribute.getName());
+				catAttrValue = getRuleDateInAttributeDateFormat(catAttrValue, attribute
+						.getAttributeTypeInformation(), attribute.getName());
 				dateRangeValidator.validate((AttributeMetadataInterface) attribute, catAttrValue,
 						values, attribute.getName());
 			}
@@ -318,7 +315,8 @@ public class CategoryValidator
 			{
 				throw new DynamicExtensionsSystemException(ApplicationProperties
 						.getValue(CategoryConstants.CREATE_CAT_FAILS)
-						+ ApplicationProperties.getValue(e.getErrorCode()) + attribute.getName(), e);
+						+ ApplicationProperties.getValue(e.getErrorCode(), e.getPlaceHolderList())
+						+ attribute.getName(), e);
 			}
 		}
 	}
@@ -332,11 +330,14 @@ public class CategoryValidator
 	 * @return the date in the Given date pattern
 	 * @throws DynamicExtensionsValidationException exception.
 	 */
-	private static String getRuleDateInAttributeDateFormat(String catAttrValue, AttributeTypeInformationInterface attributeTypeInformation, String controlCaption) throws DynamicExtensionsValidationException
+	private static String getRuleDateInAttributeDateFormat(String catAttrValue,
+			AttributeTypeInformationInterface attributeTypeInformation, String controlCaption)
+			throws DynamicExtensionsValidationException
 	{
 
 		DateAttributeTypeInformation dateAttributeTypeInformation = (DateAttributeTypeInformation) attributeTypeInformation;
-		String dateFormat = DynamicExtensionsUtility.getDateFormat(dateAttributeTypeInformation.getFormat());
+		String dateFormat = DynamicExtensionsUtility.getDateFormat(dateAttributeTypeInformation
+				.getFormat());
 		if (dateFormat.equals(ProcessorConstants.MONTH_YEAR_FORMAT))
 		{
 			catAttrValue = DynamicExtensionsUtility.formatMonthAndYearDate(catAttrValue, false);
@@ -349,12 +350,12 @@ public class CategoryValidator
 		}
 		try
 		{
-			Date catAttDate=null;
+			Date catAttDate = null;
 			catAttrValue = catAttrValue.replace('/', '-');
 			catAttDate = Utility.parseDate(catAttrValue, ProcessorConstants.SQL_DATE_ONLY_FORMAT);
 			SimpleDateFormat simpleDateFormatter = new SimpleDateFormat(
-					ProcessorConstants.DATE_ONLY_FORMAT, CommonServiceLocator
-							.getInstance().getDefaultLocale());
+					ProcessorConstants.DATE_ONLY_FORMAT, CommonServiceLocator.getInstance()
+							.getDefaultLocale());
 			catAttrValue = simpleDateFormatter.format(catAttDate);
 		}
 		catch (ParseException ParseException)
@@ -362,8 +363,8 @@ public class CategoryValidator
 			List<String> placeHolders = new ArrayList<String>();
 			placeHolders.add(controlCaption);
 			placeHolders.add(dateFormat);
-			throw new DynamicExtensionsValidationException("Validation failed",
-					ParseException, "dynExtn.validation.Date", placeHolders);
+			throw new DynamicExtensionsValidationException("Validation failed", ParseException,
+					"dynExtn.validation.Date", placeHolders);
 		}
 
 		return catAttrValue;
@@ -427,7 +428,8 @@ public class CategoryValidator
 			FutureDateValidator futureDateValidation = new FutureDateValidator();
 			try
 			{
-			String defaultDateValue = getRuleDateInAttributeDateFormat(value.replaceAll("/", "-"),attribute.getAttributeTypeInformation(), attribute.getName());
+				String defaultDateValue = getRuleDateInAttributeDateFormat(value.replaceAll("/",
+						"-"), attribute.getAttributeTypeInformation(), attribute.getName());
 				futureDateValidation.validate((AttributeMetadataInterface) attribute,
 						defaultDateValue, null, attribute.getName());
 			}
@@ -435,7 +437,8 @@ public class CategoryValidator
 			{
 				throw new DynamicExtensionsSystemException(ApplicationProperties
 						.getValue(CategoryConstants.CREATE_CAT_FAILS)
-						+ ApplicationProperties.getValue(e.getErrorCode()) + attribute.getName(), e);
+						+ ApplicationProperties.getValue(e.getErrorCode(), e.getPlaceHolderList()),
+						e);
 			}
 		}
 
@@ -554,10 +557,10 @@ public class CategoryValidator
 		{
 			Boolean isMultiSelect = ((MultiSelectInterface) control).getIsMultiSelect();
 			Boolean IsUsingAutoCompleteDropdown = false;
-			if(control instanceof ListBoxInterface)
+			if (control instanceof ListBoxInterface)
 			{
 				IsUsingAutoCompleteDropdown = ((ListBoxInterface) control)
-					.getIsUsingAutoCompleteDropdown();
+						.getIsUsingAutoCompleteDropdown();
 			}
 
 			if (IsUsingAutoCompleteDropdown != null && IsUsingAutoCompleteDropdown)
@@ -584,15 +587,7 @@ public class CategoryValidator
 
 			if (isMultiSelect != null && isMultiSelect && abstractAttribute != null)
 			{
-				if (!(abstractAttribute instanceof AssociationInterface))
-				{
-					throw new DynamicExtensionsSystemException(ApplicationProperties
-							.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties
-									.getValue(CategoryConstants.INVALID_MULTI_SELECT)
-							+ attributeName);
-				}
-				else
+				if (abstractAttribute instanceof AssociationInterface)
 				{
 					Boolean isCollection = ((AssociationInterface) abstractAttribute)
 							.getIsCollection();
@@ -604,6 +599,15 @@ public class CategoryValidator
 										.getValue(CategoryConstants.INVALID_MULTI_SELECT)
 								+ attributeName);
 					}
+				}
+				else
+				{
+					throw new DynamicExtensionsSystemException(ApplicationProperties
+							.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties
+									.getValue(CategoryConstants.INVALID_MULTI_SELECT)
+							+ attributeName);
+
 				}
 			}
 		}
@@ -691,6 +695,15 @@ public class CategoryValidator
 		{
 			if (attrTypeInfo instanceof NumericAttributeTypeInformation)
 			{
+				if (!DynamicExtensionsUtility.isNumeric(minValue)
+						|| !DynamicExtensionsUtility.isNumeric(maxValue))
+				{
+					throw new DynamicExtensionsSystemException(ApplicationProperties
+							.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties
+									.getValue(CategoryConstants.INCORRECT_NUMBER_RANGE)
+							+ attribute.getName());
+				}
 				if (Double.parseDouble(minValue) > Double.parseDouble(maxValue))
 				{
 					throw new DynamicExtensionsSystemException(ApplicationProperties
@@ -735,59 +748,6 @@ public class CategoryValidator
 					+ ApplicationProperties
 							.getValue("dyExtn.category.validation.singleLineDisaply"));
 		}
-	}
-
-	/**
-	 * @param controlCollection
-	 * @return
-	 */
-	private static ControlEnum getAllowedControlType(List<ControlInterface> controlCollection)
-	{
-		ControlEnum controlEnum = null;
-		for (ControlInterface controlInterface : controlCollection)
-		{
-			if (controlInterface.getBaseAbstractAttribute() != null)
-			{
-				if (controlInterface instanceof ListBoxInterface)
-				{
-					controlEnum = ControlEnum.LIST_BOX_CONTROL;
-				}
-				else if (controlInterface instanceof TextFieldInterface)
-				{
-					controlEnum = ControlEnum.TEXT_FIELD_CONTROL;
-				}
-				else if (controlInterface instanceof ComboBoxInterface)
-				{
-					controlEnum = ControlEnum.COMBO_BOX_CONTROL;
-				}
-			}
-		}
-
-		return controlEnum;
-	}
-
-	/**
-	 * @param containerInterface
-	 * @param sequenceNumber
-	 * @return
-	 */
-	private static List<ControlInterface> getAllControlWithSameSequenceNumber(
-			ContainerInterface containerInterface, Integer sequenceNumber)
-	{
-		Collection<ControlInterface> controlCollection = containerInterface.getControlCollection();
-		List<ControlInterface> controlsWithSameSequenceNumber = new ArrayList<ControlInterface>();
-		if (controlCollection != null && controlCollection.size() > 0)
-		{
-			for (ControlInterface controlInterface : controlCollection)
-			{
-				if (sequenceNumber.equals(controlInterface.getSequenceNumber()))
-				{
-					controlsWithSameSequenceNumber.add(controlInterface);
-				}
-			}
-		}
-
-		return controlsWithSameSequenceNumber;
 	}
 
 	/**

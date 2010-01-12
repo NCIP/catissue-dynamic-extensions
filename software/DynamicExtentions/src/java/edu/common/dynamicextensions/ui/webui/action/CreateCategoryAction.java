@@ -21,14 +21,13 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import edu.common.dynamicextensions.category.CategoryCreatorConstants;
-import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
+import edu.common.dynamicextensions.util.CategoryGenerationUtil;
 import edu.common.dynamicextensions.util.CategoryHelper;
 import edu.common.dynamicextensions.util.CategoryHelperInterface;
 import edu.common.dynamicextensions.util.ZipUtility;
-import edu.common.dynamicextensions.util.parser.CategoryFileParser;
 import edu.common.dynamicextensions.util.parser.CategoryGenerator;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.util.logger.Logger;
@@ -112,7 +111,7 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 		String fileNameString = request.getParameter(CategoryCreatorConstants.CATEGORY_NAMES_FILE);
 		if (fileNameString == null || "".equals(fileNameString.trim()))
 		{
-			fileNameList = getCategoryFileListInDirectory(new File(tempDirName),"");
+			fileNameList = CategoryGenerationUtil.getCategoryFileListInDirectory(new File(tempDirName),"");
 			//throw new DynamicExtensionsSystemException("Please provide names of the Category Files To be created");
 		}
 		else
@@ -131,49 +130,6 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 		return fileNameList;
 	}
 
-	/**
-	 * It will search in the given base directory & will find out all the category
-	 * files present in the given directory.
-	 * @param baseDirectory directory in which to search for the files.
-	 * @param relativePath path used to reach the category files.
-	 * @return list of the file names relative to the given base directory.
-	 * @throws DynamicExtensionsSystemException exception.
-	 */
-	private List<String> getCategoryFileListInDirectory(File baseDirectory,String relativePath)
-			throws DynamicExtensionsSystemException
-	{
-		List<String> fileNameList = new ArrayList<String>();
-		try
-		{
-			for (File file : baseDirectory.listFiles())
-			{
-				if (file.isDirectory())
-				{
-					String childDirPath = relativePath + file.getName() + "/";
-					fileNameList.addAll(getCategoryFileListInDirectory(file,childDirPath));
-				}
-				else
-				{
-					CategoryFileParser categoryFileParser = DomainObjectFactory.getInstance().createCategoryFileParser(file.getAbsolutePath(),"");
-					 if (categoryFileParser!=null)
-					 {
-						 if(categoryFileParser.isCategoryFile())
-						 {
-							 fileNameList.add(relativePath+file.getName());
-						 }
-						 categoryFileParser.closeResources();
-					 }
-				}
-			}
-		}
-		catch (IOException e)
-		{
-			throw new DynamicExtensionsSystemException(
-					"Exception occured while reading the category file names ", e);
-
-		}
-		return fileNameList;
-	}
 
 
 	/**

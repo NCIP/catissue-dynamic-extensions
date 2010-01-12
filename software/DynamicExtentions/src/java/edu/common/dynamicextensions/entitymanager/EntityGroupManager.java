@@ -202,7 +202,7 @@ public class EntityGroupManager extends AbstractMetadataManager
 			throws DynamicExtensionsSystemException
 	{
 		EntityGroupInterface entityGroup = null;
-		if ((shortName == null) || shortName.equals(""))
+		if (shortName == null || shortName.equals(""))
 		{
 			return entityGroup;
 		}
@@ -218,7 +218,7 @@ public class EntityGroupManager extends AbstractMetadataManager
 			// Call retrieve method to get the entity group object based on the given value of short name.
 			final Collection<EntityGroupInterface> entityGroups = defBizLogic.retrieve(EntityGroup.class.getName(),
 					"shortName", shortName);
-			if ((entityGroups != null) && !entityGroups.isEmpty())
+			if (entityGroups != null && !entityGroups.isEmpty())
 			{
 				entityGroup = entityGroups.iterator().next();
 			}
@@ -397,7 +397,7 @@ public class EntityGroupManager extends AbstractMetadataManager
 		EntityInterface entityObject = null;
 		for (EntityInterface entity : entities)
 		{
-			if ((entity.getId() != null) && entity.getId().equals(entityId))
+			if (entity.getId() != null && entity.getId().equals(entityId))
 			{
 				entityObject = entity;
 				break;
@@ -421,10 +421,10 @@ public class EntityGroupManager extends AbstractMetadataManager
 					+ entityGroup.getName() + "'";
 			List result = jdbcDao.executeQuery(query);
 
-			if ((result != null) && !result.isEmpty())
+			if (result != null && !result.isEmpty())
 			{
 				List count = (List) result.get(0);
-				if ((count != null) && !count.isEmpty())
+				if (count != null && !count.isEmpty())
 				{
 					int noOfOccurances = Integer.parseInt((String) count.get(0));
 					if (noOfOccurances > 0)

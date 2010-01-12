@@ -47,17 +47,7 @@ public class ZipUtility
 				destinationPath = destination + "/";
 			}
 			zipinputstream = new ZipInputStream(new FileInputStream(filename));
-			ZipEntry zipentry = zipinputstream.getNextEntry();
-			while (zipentry != null)
-			{
-				if (!zipentry.isDirectory())
-				{
-					String entryName = zipentry.getName();
-					extractZipEntryToFile(destinationPath, zipinputstream, entryName);
-					zipinputstream.closeEntry();
-				}
-				zipentry = zipinputstream.getNextEntry();
-			}
+			extractZip(zipinputstream, destinationPath);
 			zipinputstream.close();
 		}
 		catch (IOException e)
@@ -70,6 +60,29 @@ public class ZipUtility
 			{
 				zipinputstream.close();
 			}
+		}
+	}
+
+	/**
+	 * This method will extract the zip to which zipinputstream is pointing to destinationPath
+	 * @param zipinputstream pointing to zip
+	 * @param destinationPath destination path.
+	 * @throws IOException exception.
+	 * @throws DynamicExtensionsSystemException exception.
+	 */
+	private static void extractZip(ZipInputStream zipinputstream, String destinationPath)
+			throws IOException, DynamicExtensionsSystemException
+	{
+		ZipEntry zipentry = zipinputstream.getNextEntry();
+		while (zipentry != null)
+		{
+			if (!zipentry.isDirectory())
+			{
+				String entryName = zipentry.getName();
+				extractZipEntryToFile(destinationPath, zipinputstream, entryName);
+				zipinputstream.closeEntry();
+			}
+			zipentry = zipinputstream.getNextEntry();
 		}
 	}
 
@@ -91,12 +104,7 @@ public class ZipUtility
 		try
 		{
 			File newFile = new File(destinationPath + entryName);
-			File parentFile = newFile.getParentFile();
-			if (parentFile != null && !parentFile.exists() && !parentFile.mkdirs())
-			{
-				// this is condition when mkdirs is failed to create the directories
-				throw new DynamicExtensionsSystemException("Can not create directory " + parentFile);
-			}
+			createParentDirectories(newFile);
 			fileoutputstream = new FileOutputStream(newFile);
 			int bytesRead = zipinputstream.read(buf, 0, 1024);
 			while (bytesRead > -1)
@@ -111,6 +119,23 @@ public class ZipUtility
 			{
 				fileoutputstream.close();
 			}
+		}
+	}
+
+	/**
+	 * This method will verify if the parent directories of the newFile exist or not &
+	 * if not present will try to create it else will return.
+	 * @param newFile file whose parents to create
+	 * @throws DynamicExtensionsSystemException occured if make directories for parent fails.
+	 */
+	private static void createParentDirectories(File newFile)
+			throws DynamicExtensionsSystemException
+	{
+		File parentFile = newFile.getParentFile();
+		if (parentFile != null && !parentFile.exists() && !parentFile.mkdirs())
+		{
+			// this is condition when mkdirs is failed to create the directories
+			throw new DynamicExtensionsSystemException("Can not create directory " + parentFile);
 		}
 	}
 
@@ -136,6 +161,12 @@ public class ZipUtility
 			if (destZip.exists() && !destZip.delete())
 			{
 				LOGGER.error("can not delete " + destZipFile);
+			}
+			File folder = new File(srcFolder);
+			if (!folder.exists() || !folder.isDirectory())
+			{
+				throw new DynamicExtensionsSystemException(srcFolder
+						+ "does not exist. Please specify correct path");
 			}
 			fileWriter = new FileOutputStream(destZip);
 			zip = new ZipOutputStream(fileWriter);
@@ -215,11 +246,7 @@ public class ZipUtility
 
 	{
 		File folder = new File(srcFolder);
-		if (!folder.exists() || !folder.isDirectory())
-		{
-			throw new DynamicExtensionsSystemException(srcFolder
-					+ "does not exist. Please specify correct path");
-		}
+
 		for (String fileName : folder.list())
 		{
 			if ("".equals(path))

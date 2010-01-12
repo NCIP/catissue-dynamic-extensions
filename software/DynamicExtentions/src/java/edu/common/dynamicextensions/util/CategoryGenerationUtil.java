@@ -1,6 +1,8 @@
 
 package edu.common.dynamicextensions.util;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,6 +33,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
+import edu.common.dynamicextensions.util.parser.CategoryFileParser;
 import edu.common.dynamicextensions.util.parser.FormulaParser;
 import edu.common.dynamicextensions.validation.category.CategoryValidator;
 import edu.wustl.cab2b.server.cache.EntityCache;
@@ -937,4 +940,49 @@ public class CategoryGenerationUtil
 		}
 		return allLongValues;
 	}
+
+	/**
+	 * It will search in the given base directory & will find out all the category
+	 * files present in the given directory.
+	 * @param baseDirectory directory in which to search for the files.
+	 * @param relativePath path used to reach the category files.
+	 * @return list of the file names relative to the given base directory.
+	 * @throws DynamicExtensionsSystemException exception.
+	 */
+	public static List<String> getCategoryFileListInDirectory(File baseDirectory,String relativePath)
+			throws DynamicExtensionsSystemException
+	{
+		List<String> fileNameList = new ArrayList<String>();
+		try
+		{
+			for (File file : baseDirectory.listFiles())
+			{
+				if (file.isDirectory())
+				{
+					String childDirPath = relativePath + file.getName() + "/";
+					fileNameList.addAll(getCategoryFileListInDirectory(file,childDirPath));
+				}
+				else
+				{
+					CategoryFileParser categoryFileParser = DomainObjectFactory.getInstance().createCategoryFileParser(file.getAbsolutePath(),"");
+					 if (categoryFileParser!=null)
+					 {
+						 if(categoryFileParser.isCategoryFile())
+						 {
+							 fileNameList.add(relativePath+file.getName());
+						 }
+						 categoryFileParser.closeResources();
+					 }
+				}
+			}
+		}
+		catch (IOException e)
+		{
+			throw new DynamicExtensionsSystemException(
+					"Exception occured while reading the category file names ", e);
+
+		}
+		return fileNameList;
+	}
+
 }

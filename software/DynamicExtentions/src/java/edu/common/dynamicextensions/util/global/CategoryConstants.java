@@ -33,27 +33,29 @@ public class CategoryConstants
 	public final static String NO_TEXTAREA = "incorrectControlTypeTextArea";
 
 	public final static String WRONG_INST_INFO = "wrongInstanceInformation";
-	
+
 	public final static String INCORRECT_INST_INFO = "incorrectInstanceInformation";
 
 	public final static String NULL_CONTROL = "nullControl";
 
 	public final static String INVALID_MULTI_SELECT = "invalidMultiselect";
-	
+
 	public final static String NO_MULTI_SELECT_WITH_ACD = "noMultiSelectWithACD";
-	
+
 	public final static String NO_NOOFROWS_WITH_ACD = "noNoOfRowsWithACD";
 
 	public final static String INVALID_CONTROL_FOR_MULTI_SELECT = "invalidControlForMultiselect";
 
 	public final static String INCORRECT_MINMAX = "incorrectMinMax";
 
+	public final static String INCORRECT_NUMBER_RANGE = "dynExtn.validation.Number.range";
+
 	public final static String INCORRECT_MINMAX_DATE = "incorrectMinMaxDate";
 
 	public final static String NO_PV_FOR_ATTR = "noPVForAttribute";
 
 	public final static String ATTR_NOT_PRESENT = "attributeNotPresent";
-	
+
 	public final static String PV_ATTR_NOT_PRESENT = "noPVForSkipLogicAttribute";
 
 	public final static String ATTR = "attribute";
@@ -61,23 +63,23 @@ public class CategoryConstants
 	public final static String HEADING = "HEADING";
 
 	public final static String NOTE = "NOTE";
-	
+
 	public final static String PV_EDIT = "pvedit";
-	
+
 	public final static String SINGLE_LINE_DISPLAY_START = "SingleLineDisplay:start";
-	
+
 	public final static String SINGLE_LINE_DISPLAY_END = "SingleLineDisplay:end";
-	
+
 	public static final String TRUE = "true";
-	
+
 	public static final String DATE = "date";
-	
+
 	public static final String ALLOW_FUTURE_DATE = "allowfuturedate";
-	
+
 	public final static String NO_OVERRIDE_FUTURE_DATE_RULE = "cannotOverrideFutureDateRule";
-	
+
 	public final static String CONFLICTING_RULES_PRESENT = "conflictingRulesPresent";
-	
+
 	public final static String ALL = "all";
 
 }
