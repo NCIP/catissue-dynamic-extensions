@@ -905,17 +905,18 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 					final Constructor targetObjectConstructor = targetObjectClass.getConstructor();
 					targetObject = targetObjectConstructor.newInstance();
 
-					final Object value = catAttribute.getDefaultValue();
+					final Object defaultvalue = catAttribute.getDefaultValue();
 					setRelatedAttributeValues(targetObjectClassName,
-							(BaseAbstractAttribute) attribute, value, targetObject);
+							(BaseAbstractAttribute) attribute, defaultvalue, targetObject);
+
+					String targetRoleName = association.getTargetRole().getName();
+					targetRoleName = targetRoleName.substring(0, 1).toUpperCase()
+							+ targetRoleName.substring(1, targetRoleName.length());
 
 					String sourceRoleName = association.getSourceRole().getName();
 					sourceRoleName = sourceRoleName.substring(0, 1).toUpperCase()
 							+ sourceRoleName.substring(1, sourceRoleName.length());
 
-					String targetRoleName = association.getTargetRole().getName();
-					targetRoleName = targetRoleName.substring(0, 1).toUpperCase()
-							+ targetRoleName.substring(1, targetRoleName.length());
 					hibernateDao.insert(targetObject);
 					final Object associatedObjects = invokeGetterMethod(sourceObject.getClass(),
 							targetRoleName, sourceObject);
