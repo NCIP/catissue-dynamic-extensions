@@ -2090,36 +2090,34 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		AttributeInterface attribute = null;
 		AbstractAttributeInterface abstractAttribute;
 		String name;
-		if ((entityName == null) || entityName.equals("") || (attributeName == null)
-				|| attributeName.equals(""))
+		if ((entityName != null) && !(entityName.equals("")) && (attributeName != null)
+				&& !(attributeName.equals("")))
 		{
-			return attribute;
-		}
 
-		EntityInterface entity = getEntityByName(entityName);
-		if (entity != null)
-		{
-			Collection<AbstractAttributeInterface> abstrAttributes = entity
-			.getAbstractAttributeCollection();
-			if (abstrAttributes != null)
+			EntityInterface entity = getEntityByName(entityName);
+			if (entity != null)
 			{
-				Iterator<AbstractAttributeInterface> abstrAttrIter = abstrAttributes.iterator();
-				while (abstrAttrIter.hasNext())
+				Collection<AbstractAttributeInterface> abstrAttributes = entity
+				.getAbstractAttributeCollection();
+				if (abstrAttributes != null)
 				{
-					abstractAttribute = abstrAttrIter.next();
-					if (abstractAttribute instanceof AttributeInterface)
+					Iterator<AbstractAttributeInterface> abstrAttrIter = abstrAttributes.iterator();
+					while (abstrAttrIter.hasNext())
 					{
-						attribute = (AttributeInterface) abstractAttribute;
-						name = attribute.getName();
-						if ((name != null) && name.equals(attributeName))
+						abstractAttribute = abstrAttrIter.next();
+						if (abstractAttribute instanceof AttributeInterface)
 						{
-							return attribute;
+							attribute = (AttributeInterface) abstractAttribute;
+							name = attribute.getName();
+							if ((name != null) && name.equals(attributeName))
+							{
+								return attribute;
+							}
 						}
 					}
 				}
 			}
 		}
-
 		return attribute;
 	}
 
@@ -2580,7 +2578,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		Entity entity = (Entity) entityObj;
 		if (isDataTblPresent)
 		{
-			((Entity) entityObj).setDataTableState(DATA_TABLE_STATE_ALREADY_PRESENT);
+			((Entity) entityObj).setDataTableState(DATA_TBL_STATE_ALREADY_PRESENT);
 		}
 		else
 		{

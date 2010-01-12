@@ -26,9 +26,9 @@ public class UpgradeCalculatedAttributes
 		{
 			CategoryManagerInterface categoryManager = CategoryManager
 					.getInstance();
-			Collection<CategoryAttributeInterface> calculatedCategoryAttributeCollection = categoryManager
+			Collection<CategoryAttributeInterface> calculatedCatAttributeColl = categoryManager
 					.getAllCalculatedCategoryAttributes();
-			for (CategoryAttributeInterface calculatedAttribute : calculatedCategoryAttributeCollection)
+			for (CategoryAttributeInterface calculatedAttribute : calculatedCatAttributeColl)
 			{
 				for (CalculatedAttributeInterface calculatedAttributeInterface : calculatedAttribute
 						.getCalculatedCategoryAttributeCollection())
@@ -38,7 +38,7 @@ public class UpgradeCalculatedAttributes
 							.setIsSourceForCalculatedAttribute(Boolean.TRUE);
 				}
 			}
-			categoryManager.updateCategoryAttributes(calculatedCategoryAttributeCollection);
+			categoryManager.updateCategoryAttributes(calculatedCatAttributeColl);
 		}
 		catch (DynamicExtensionsSystemException e)
 		{

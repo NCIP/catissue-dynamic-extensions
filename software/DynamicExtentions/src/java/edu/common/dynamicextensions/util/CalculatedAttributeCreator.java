@@ -27,10 +27,10 @@ public class CalculatedAttributeCreator
 		{
 			CategoryManagerInterface categoryManager = CategoryManager
 					.getInstance();
-			Collection<CategoryAttributeInterface> calculatedCategoryAttributeCollection = categoryManager
+			Collection<CategoryAttributeInterface> calculatedCategoryAttrColl = categoryManager
 					.getAllCalculatedCategoryAttributes();
 			DomainObjectFactory domainObjectFactory = DomainObjectFactory.getInstance();
-			for (CategoryAttributeInterface sourceCategoryAttribute : calculatedCategoryAttributeCollection)
+			for (CategoryAttributeInterface sourceCategoryAttribute : calculatedCategoryAttrColl)
 			{
 				for (CategoryAttributeInterface targetCategoryAttribute : sourceCategoryAttribute
 						.getCalculatedAttributeCollection())
@@ -44,7 +44,7 @@ public class CalculatedAttributeCreator
 					sourceCategoryAttribute.addCalculatedCategoryAttribute(calculatedAttributeInterface);
 				}
 			}
-			categoryManager.updateCategoryAttributes(calculatedCategoryAttributeCollection);
+			categoryManager.updateCategoryAttributes(calculatedCategoryAttrColl);
 		}
 		catch (DynamicExtensionsSystemException e)
 		{

@@ -144,12 +144,12 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 				List<PathAssociationRelationInterface> pathAssociationCollection = calculatedAttribute
 				.getCategoryEntity().getPath()
 				.getSortedPathAssociationRelationCollection();
-				PathAssociationRelationInterface pathAssociationRelationInterface = pathAssociationCollection
+				PathAssociationRelationInterface pathAssoRelationInterface = pathAssociationCollection
 				.get(pathAssociationCollection.size() - 1);
 				String attributeName = calculatedAttribute.getCategoryEntity()
 				.getEntity().getName()
 				+ "_"
-				+ pathAssociationRelationInterface
+				+ pathAssoRelationInterface
 				.getTargetInstanceId().toString()
 				+ "_"
 				+ calculatedAttribute.getAbstractAttribute().getName();
@@ -181,7 +181,7 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 				List<PathAssociationRelationInterface> pathAssociationCollection = attribute
 						.getCategoryEntity()
 				.getPath().getSortedPathAssociationRelationCollection();
-				PathAssociationRelationInterface pathAssociationRelationInterface = pathAssociationCollection
+				PathAssociationRelationInterface pathAssoRelationInterface = pathAssociationCollection
 				.get(pathAssociationCollection.size() - 1);
 				AttributeMetadataInterface attributeInterface = (AttributeMetadataInterface) attribute
 						.getAbstractAttribute();
@@ -192,7 +192,7 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 					formulaParser.setVariableValue(attribute.getCategoryEntity()
 							.getEntity().getName()
 							+ "_"
-							+ pathAssociationRelationInterface
+							+ pathAssoRelationInterface
 							.getTargetInstanceId().toString()
 							+ "_"
 							+ attributeInterface.getName(),
@@ -218,7 +218,7 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 							formulaParser.setVariableValue(attribute.getCategoryEntity()
 									.getEntity().getName()
 									+ "_"
-									+ pathAssociationRelationInterface
+									+ pathAssoRelationInterface
 									.getTargetInstanceId().toString()
 									+ "_"
 									+ attributeInterface.getName(),
@@ -304,12 +304,12 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 						List<PathAssociationRelationInterface> pathAssociationCollection = categoryAttribute
 						.getCategoryEntity().getPath()
 						.getSortedPathAssociationRelationCollection();
-						PathAssociationRelationInterface pathAssociationRelationInterface = pathAssociationCollection
+						PathAssociationRelationInterface pathAssoRelationInterface = pathAssociationCollection
 						.get(pathAssociationCollection.size() - 1);
 						calculatedKeyValueMap.put(categoryAttribute
 								.getCategoryEntity().getEntity().getName()
 								+ "_"
-								+ pathAssociationRelationInterface
+								+ pathAssoRelationInterface
 								.getTargetInstanceId().toString()
 								+ "_"
 								+ categoryAttribute.getAbstractAttribute()
@@ -510,7 +510,7 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 				List<PathAssociationRelationInterface> pathAssociationCollection = attribute
 						.getCategoryEntity()
 				.getPath().getSortedPathAssociationRelationCollection();
-				PathAssociationRelationInterface pathAssociationRelationInterface = pathAssociationCollection
+				PathAssociationRelationInterface pathAssoRelationInterface = pathAssociationCollection
 				.get(pathAssociationCollection.size() - 1);
 				if (attributeInterface.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
 				{
@@ -519,7 +519,7 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 					formulaParser.setVariableValue(attribute.getCategoryEntity()
 							.getEntity().getName()
 							+ "_"
-							+ pathAssociationRelationInterface
+							+ pathAssoRelationInterface
 							.getTargetInstanceId().toString()
 							+ "_"
 							+ attributeInterface.getName(),
@@ -540,7 +540,7 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 					formulaParser.setVariableValue(attribute.getCategoryEntity()
 							.getEntity().getName()
 							+ "_"
-							+ pathAssociationRelationInterface
+							+ pathAssoRelationInterface
 							.getTargetInstanceId().toString()
 							+ "_"
 							+ attribute.getAbstractAttribute().getName(),
@@ -574,10 +574,10 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 				{
 					try
 					{
-						NumericAttributeTypeInformation numericAttributeTypeInformation = ((NumericAttributeTypeInformation) ((AttributeMetadataInterface) categoryAttribute)
+						NumericAttributeTypeInformation numericAttributeTypeInfo = ((NumericAttributeTypeInformation) ((AttributeMetadataInterface) categoryAttribute)
 								.getAttributeTypeInformation());
-						defaultValue = numericAttributeTypeInformation
-						.getPermissibleValueForString(numericAttributeTypeInformation
+						defaultValue = numericAttributeTypeInfo
+						.getPermissibleValueForString(numericAttributeTypeInfo
 								.getFormattedValue(formulaValue));
 					}
 					catch (ParseException e)

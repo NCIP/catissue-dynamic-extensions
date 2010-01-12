@@ -57,6 +57,7 @@ import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.ConstraintKeyPropertiesComparator;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.common.dynamicextensions.util.global.ErrorConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.wustl.common.util.Utility;
@@ -804,11 +805,13 @@ public class DynamicExtensionBaseQueryBuilder
 			}
 			catch (SQLException e)
 			{
-				throw new DynamicExtensionsSystemException("Exception in query execution", e);
+				throw new DynamicExtensionsSystemException(ErrorConstants.EXCEPTION_IN_EXEC_QUERY,
+						e);
 			}
 			catch (DAOException e)
 			{
-				throw new DynamicExtensionsSystemException("Exception in query execution", e);
+				throw new DynamicExtensionsSystemException(ErrorConstants.EXCEPTION_IN_EXEC_QUERY,
+						e);
 			}
 			finally
 			{
@@ -2220,8 +2223,21 @@ public class DynamicExtensionBaseQueryBuilder
 
 		StringBuffer query = new StringBuffer();
 		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+		if (isAttributeColumnToBeExcluded(savedAttr))
+		{
+			Collection<Integer> records = EntityManager.getInstance().getAttributeRecordsCount(
+					savedAttr.getEntity().getId(), savedAttr.getId());
 
-		if (!isAttributeColumnToBeExcluded(savedAttr))
+			if (records != null && !records.isEmpty())
+			{
+				Integer count = records.iterator().next();
+				if (count > 0)
+				{
+					isDataPresent = true;
+				}
+			}
+		}
+		else
 		{
 			query.append(SELECT_KEYWORD).append(WHITESPACE).append("COUNT").append(OPENING_BRACKET)
 					.append(ASTERIX).append(CLOSING_BRACKET).append(WHITESPACE)
@@ -2259,12 +2275,12 @@ public class DynamicExtensionBaseQueryBuilder
 			catch (DAOException e)
 			{
 				throw new DynamicExtensionsSystemException(
-						"Can not check the availability of data", e);
+						ErrorConstants.CANNOT_CHECK_AVAIL_OF_DATA, e);
 			}
 			catch (SQLException e)
 			{
 				throw new DynamicExtensionsSystemException(
-						"Can not check the availability of data", e);
+						ErrorConstants.CANNOT_CHECK_AVAIL_OF_DATA, e);
 			}
 			finally
 			{
@@ -2279,20 +2295,6 @@ public class DynamicExtensionBaseQueryBuilder
 					{
 						throw new DynamicExtensionsSystemException(e.getMessage(), e);
 					}
-				}
-			}
-		}
-		else
-		{
-			Collection<Integer> records = EntityManager.getInstance().getAttributeRecordsCount(
-					savedAttr.getEntity().getId(), savedAttr.getId());
-
-			if (records != null && !records.isEmpty())
-			{
-				Integer count = records.iterator().next();
-				if (count > 0)
-				{
-					isDataPresent = true;
 				}
 			}
 		}
@@ -2345,12 +2347,12 @@ public class DynamicExtensionBaseQueryBuilder
 			catch (DAOException e)
 			{
 				throw new DynamicExtensionsSystemException(
-						"Can not check the availability of data", e);
+						ErrorConstants.CANNOT_CHECK_AVAIL_OF_DATA, e);
 			}
 			catch (SQLException e)
 			{
 				throw new DynamicExtensionsSystemException(
-						"Can not check the availability of data", e);
+						ErrorConstants.CANNOT_CHECK_AVAIL_OF_DATA, e);
 			}
 			finally
 			{
@@ -2398,11 +2400,11 @@ public class DynamicExtensionBaseQueryBuilder
 		}
 		catch (DAOException e)
 		{
-			throw new DynamicExtensionsSystemException("Can not check the availability of data", e);
+			throw new DynamicExtensionsSystemException(ErrorConstants.CANNOT_CHECK_AVAIL_OF_DATA, e);
 		}
 		catch (SQLException e)
 		{
-			throw new DynamicExtensionsSystemException("Can not check the availability of data", e);
+			throw new DynamicExtensionsSystemException(ErrorConstants.CANNOT_CHECK_AVAIL_OF_DATA, e);
 		}
 		finally
 		{
@@ -2659,11 +2661,11 @@ public class DynamicExtensionBaseQueryBuilder
 		}
 		catch (DAOException e)
 		{
-			throw new DynamicExtensionsSystemException("Exception in query execution", e);
+			throw new DynamicExtensionsSystemException(ErrorConstants.EXCEPTION_IN_EXEC_QUERY, e);
 		}
 		catch (SQLException e)
 		{
-			throw new DynamicExtensionsSystemException("Exception in query execution", e);
+			throw new DynamicExtensionsSystemException(ErrorConstants.EXCEPTION_IN_EXEC_QUERY, e);
 		}
 		finally
 		{
@@ -2706,11 +2708,11 @@ public class DynamicExtensionBaseQueryBuilder
 		}
 		catch (DAOException e)
 		{
-			throw new DynamicExtensionsSystemException("Exception in query execution", e);
+			throw new DynamicExtensionsSystemException(ErrorConstants.EXCEPTION_IN_EXEC_QUERY, e);
 		}
 		catch (SQLException e)
 		{
-			throw new DynamicExtensionsSystemException("Exception in query execution", e);
+			throw new DynamicExtensionsSystemException(ErrorConstants.EXCEPTION_IN_EXEC_QUERY, e);
 		}
 		finally
 		{
