@@ -106,7 +106,7 @@ public class RemovePVValues
 			String line = null;
 			while ((line = reader.readLine()) != null)
 			{
-				if (line.trim().length() != 0)//skip the line if it is blank
+				if (line != null && line.trim().length() != 0)//skip the line if it is blank
 				{
 					delPVList.add(line);
 				}
