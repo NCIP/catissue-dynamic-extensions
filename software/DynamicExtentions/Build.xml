@@ -34,9 +34,8 @@
 	<property name="db2.dir" value="${base.dir}/db/db-install/db2" />
 	<property name="db2.dir" value="${base.dir}/db/db-upgrade/db2" />
 	<property name="meta.dir" value="${base.dir}/binaries/META-INF" />
-
+	<property name="test.model.dir" value="${basedir}/CPUML/TestModels/TestModel_withTags/edited" />
 	<property name="temp.hdoclet.dir" value="${basedir}/temp" />
-
 	<property name="junit.report.dir" value="${base.dir}/reports/junit" />
 	<property name="de_release_dir" value="${basedir}/binaries/de_release" />
 	<property name="is_generate_schema" value="true" />
@@ -107,12 +106,13 @@
 	</target>
 
 	<target name="compile_test_cases" depends="compile">
+		<copy file="${extra_lib.dir}/jta.jar" todir="${lib.dir}">
+		</copy>
 		<javac destdir="${target.dir}" includes="**/*.*" includeAntRuntime="false" debug="true">
 			<src path="${test.dir}" />
 			<classpath refid="app.classpath" />
 		</javac>
 		<copy file="${target.dir}/TestHibernate.cfg.xml" tofile="${target.dir}/DynamicExtensionsHibernate.cfg.xml" overwrite="true" />
-		<antcall target="deploy"></antcall>
 	</target>
 
 
@@ -456,8 +456,9 @@
 	</target>
 	<!--Deploys the application war file at JBOSS server by coping it to deploy directory of application server-->
 	<target name="deploy" depends="build_app_war">
-		<copy file="dynamicExtensions.war" todir="${jboss.home.dir}/server/default/deploy" overwrite="true"/>
-		<sleep seconds="2" />
+		<delete file="${jboss.home.dir}/bin/cobertura.ser">
+		</delete>
+		<copy file="dynamicExtensions.war" todir="${jboss.home.dir}/server/default/deploy" overwrite="true" />
 	</target>
 
 
@@ -788,10 +789,21 @@
 			</replaceregexp>
 		</target>
 
-		<target name="run_junit" depends="import.static.and.test.model" >
+		<target name="run_junit">
 			<delete dir="${junit.report.dir}" />
 			<mkdir dir="${junit.report.dir}" />
-
+			<echo message="Now shutting down the server" />
+			<antcall target="stop-appserver" />
+			<antcall target="sleep">
+				<param name="sleep-time-seconds" value="240" />
+			</antcall>
+			<echo message="Shut down complete" />
+			<delete file="${jboss.home.dir}/bin/cobertura.ser"/>
+			<antcall target="start-appserver" />
+			<antcall target="sleep">
+				<param name="sleep-time-seconds" value="300" />
+			</antcall>
+			<echo message="Junit started running" />
 			<junit printsummary="yes" haltonerror="no" haltonfailure="no" fork="yes" maxmemory="1024m" timeout="10800000">
 
 				<sysproperty key="net.sourceforge.cobertura.datafile" file="./cobertura/coverage.ser" />
@@ -816,7 +828,12 @@
 
 				<classpath refid="cobertura.classpath" />
 			</junit>
-
+			<echo message="Now shutting down the server" />
+			<antcall target="stop-appserver" />
+			<antcall target="sleep">
+				<param name="sleep-time-seconds" value="240" />
+			</antcall>
+			<echo message="Shut down complete" />
 			<junitreport todir="${junit.report.dir}">
 				<fileset dir="${junit.report.dir}">
 					<include name="TEST-*.xml" />
@@ -831,30 +848,54 @@
 			</delete>-->
 		</target>
 
-	<!-- - - - - - - - - - - - - - - - - -
+		<!-- - - - - - - - - - - - - - - - - -
           target: import.static.and.test.model
          - - - - - - - - - - - - - - - - - -->
-    <target name="import.static.and.test.model">
-		<ant antfile="DEDeploy.xml" dir="./binaries/" target="import.xmi.for.testcases">
-			<property name="filename" value="${basedir}/${resource.dir}/xmi/TestStaticModel.xmi" />
-			<property name="mainContainerList" value="${basedir}/${resource.dir}/csv/staticModelContainers.csv" />
-			<property name="package" value="staticModel" />
-			<property name="hookentity" value="none" />
-			<property name="addQueryPaths" value="false" />
-		</ant>
+		<target name="import.static.and.test.model">
+			<ant antfile="DEDeploy.xml" dir="./binaries/" target="import.xmi.for.testcases">
+				<property name="filename" value="${basedir}/${resource.dir}/xmi/TestStaticModel.xmi" />
+				<property name="mainContainerList" value="${basedir}/${resource.dir}/csv/staticModelContainers.csv" />
+				<property name="package" value="staticModel" />
+				<property name="hookentity" value="none" />
+				<property name="addQueryPaths" value="false" />
+				<property name="generate.cacore" value="false" />
+			</ant>
 
-		<echo message="Static Model loaded Successfully" />
+			<echo message="Static Model loaded Successfully" />
+			<echo message="Now importing the test model for junits" />
+			<ant antfile="DEDeploy.xml" dir="./binaries/" target="import.xmi.to.generate.cacore">
+				<property name="xmi.name" value="${test.model.dir}/test.xmi" />
+				<property name="mainContainerList" value="${test.model.dir}/main.csv" />
+				<property name="package.name" value="annotations" />
+				<property name="hookentity" value="edu.wustl.catissuecore.domain.RecordEntry" />
+				<property name="addQueryPaths" value="false" />
+				<property name="testcases" value="True" />
+			</ant>
 
-		<ant antfile="DEDeploy.xml" dir="./binaries/" target="import.xmi.to.generate.cacore">
-			<property name="xmi.name" value="${basedir}/${resource.dir}/xmi/TestCases.xmi" />
-			<property name="mainContainerList" value="${basedir}/${resource.dir}/csv/testcases.csv" />
-			<property name="package.name" value="clinannotations" />
-			<property name="hookentity" value="edu.wustl.catissuecore.domain.RecordEntry" />
-			<property name="addQueryPaths" value="false" />
-			<property name="testcases" value="True" />
-		</ant>
-    </target>
+			<echo message="Test Model loaded Successfully" />
+			<echo message="Now importing the Permissible values of test model for junits" />
+			<antcall target="import.pvs.testcases">
+				<param name="permissibleValuesFile" value="${test.model.dir}/TestModel_pv.csv" />
+			</antcall>
 
+		</target>
+		<target name="import.pvs.testcases" description="Import permissible values for testcases">
+			<java classname="edu.common.dynamicextensions.util.parser.ImportPermissibleValues" fork="true" maxmemory="1024M">
+				<arg value="${permissibleValuesFile}" />
+				<classpath>
+					<pathelement location="${base.dir}/binaries/classes/" />
+					<fileset dir="${base.dir}/lib/server">
+						<include name="*.jar" />
+						<exclude name="uml-1.3.jar" />
+					</fileset>
+					<fileset dir="${base.dir}/lib/extra">
+						<include name="jboss-j2ee.jar" />
+						<include name="jta.jar" />
+					</fileset>
+				</classpath>
+			</java>
+
+		</target>
 
 		<!-- Cobertura -->
 		<path id="cobertura.classpath">
@@ -868,13 +909,99 @@
 
 		<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
 
+		<target name="checkout_test_model">
+			<delete dir="${base.dir}/CPUML" />
+			<mkdir dir="${base.dir}/CPUML/TestModels/TestModel_withTags/edited" />
+			<antcall target="do_checkout">
+				<param name="repository.url" value="http://ps6086.persistent.co.in:8080/svn/WashuProjects/ClinportalUMLModels/branches/CPUML/TestModels/TestModel_withTags/edited" />
+				<param name="destination.dir" value="${basedir}/CPUML/TestModels/TestModel_withTags/edited" />
+				<param name="user.id" value="${svn.user.id}" />
+				<param name="user.password" value="${svn.user.password}" />
+			</antcall>
+			<copy todir="${test.model.dir}" file="${resource.dir}/catNames2.txt" />
+		</target>
 
 		<target name="generate_codecoverage_report">
+
 			<ant target="compile_test_cases" />
+			<ant target="checkout_test_model" />
 			<ant antfile="src/conf/cobertura.xml" target="instrument" />
+			<antcall target="import.static.and.test.model"/>
+			<antcall target="deploy" />
 			<ant target="run_junit" />
-			<ant antfile="src/conf/cobertura.xml" target="coverage.report" />
+			<ant antfile="src/conf/cobertura.xml" target="coverage.report" >
+				<property name="jboss.home.dir" value="${jboss.home.dir}" />
+				</ant>
 			<ant antfile="src/conf/cobertura.xml" target="coverage.check" />
+		</target>
+
+		<!-- =================================
+	          target: start-appserver
+	         ================================= -->
+		<target name="start-appserver" description="--> starts the application server...">
+			<if>
+				<contains substring="unix" casesensitive="no" string="${os.name}" />
+				<then>
+					<exec dir="${basedir}/script" executable="sh" spawn="true">
+						<arg line="jbossStart.sh" />
+						<arg line="${jboss.home.dir}"/>
+					</exec>
+				</then>
+				<elseif>
+					<contains substring="Linux" casesensitive="no" string="${os.name}" />
+					<then>
+						<exec dir="${basedir}/script" executable="sh" spawn="true">
+							<arg line="jbossStart.sh" />
+							<arg line="${jboss.home.dir}"/>
+						</exec>
+					</then>
+				</elseif>
+				<else>
+					<exec dir="${jboss.home.dir}/bin/" executable="run.bat" resolveexecutable="true" spawn="true">
+						<arg line="-b 0.0.0.0" />
+					</exec>
+				</else>
+			</if>
+
+
+
+		</target>
+
+		<!-- =================================
+	          target: stop-appserver
+	         ================================= -->
+		<target name="stop-appserver" description="--> stops the application server...">
+			<if>
+				<contains substring="unix" casesensitive="no" string="${os.name}" />
+				<then>
+					<exec dir="${jboss.home.dir}/bin/" executable="sh" resolveexecutable="true" failonerror="false" failifexecutionfails="false">
+												<arg line="shutdown.sh -s 0.0.0.0:21099" />
+											</exec>
+				</then>
+				<elseif>
+					<contains substring="Linux" casesensitive="no" string="${os.name}" />
+					<then>
+						<exec dir="${jboss.home.dir}/bin/" executable="sh" resolveexecutable="true" failonerror="false" failifexecutionfails="false">
+							<arg line="shutdown.sh -s 0.0.0.0:21099" />
+						</exec>
+					</then>
+				</elseif>
+				<else>
+					<exec dir="${jboss.home.dir}/bin/" executable="shutdown.bat" resolveexecutable="true" failonerror="false" failifexecutionfails="false">
+						<arg line="-s 0.0.0.0:21099" />
+					</exec>
+				</else>
+			</if>
+
+		</target>
+
+		<!-- =================================
+	          target: Sleep for a few seconds
+	         ================================= -->
+		<target name="sleep">
+			<echo>Sleeping for ${sleep-time-seconds} seconds ... </echo>
+			<sleep seconds="${sleep-time-seconds}" />
+
 		</target>
 
 		<property name="filename" value="" />
@@ -940,26 +1067,27 @@
 
 		<!-- SVN checkout start-->
 		<target name="do_checkout">
+			<antcall target="check_os" />
 			<if>
 				<contains substring="Windows" casesensitive="no" string="${os.name}" />
 				<then>
 					<exec dir="${basedir}/script" executable="cmd">
 						<arg line="/c do_checkout.bat" />
-						<arg value="${svn.repository.url}" />
-						<arg value="${temp.hdoclet.dir}/project" />
-						<arg value="${svn.user.id}" />
-						<arg value="${svn.user.password}" />
+						<arg value="${repository.url}" />
+						<arg value="${destination.dir}" />
+						<arg value="${user.id}" />
+						<arg value="${user.password}" />
 					</exec>
 				</then>
 				<elseif>
 					<contains substring="Linux" casesensitive="no" string="${os.name}" />
 					<then>
-						<exec dir="${basedir}/script" executable="cmd">
-							<arg line="/c do_checkout.sh" />
-							<arg value="${svn.repository.url}" />
-							<arg value="${temp.hdoclet.dir}/project" />
-							<arg value="${svn.user.id}" />
-							<arg value="${svn.user.password}" />
+						<exec dir="${basedir}/script" executable="sh">
+							<arg line="do_checkout.sh" />
+							<arg value="${repository.url}" />
+							<arg value="${destination.dir}" />
+							<arg value="${user.id}" />
+							<arg value="${user.password}" />
 						</exec>
 					</then>
 				</elseif>
@@ -967,12 +1095,12 @@
 					<if>
 						<contains substring="unix" casesensitive="no" string="${os.name}" />
 						<then>
-							<exec dir="${basedir}/script" executable="cmd">
-								<arg line="/c do_checkout.sh" />
-								<arg value="${svn.repository.url}" />
-								<arg value="${temp.hdoclet.dir}/project" />
-								<arg value="${svn.user.id}" />
-								<arg value="${svn.user.password}" />
+							<exec dir="${basedir}/script" executable="sh">
+								<arg line="do_checkout.sh" />
+								<arg value="${repository.url}" />
+								<arg value="${destination.dir}" />
+								<arg value="${user.id}" />
+								<arg value="${user.password}" />
 							</exec>
 						</then>
 					</if>
@@ -986,14 +1114,12 @@
 				<contains substring="unix" casesensitive="no" string="${os.name}" />
 				<then>
 					<copy file="${basedir}/script/create_release.bat" tofile="${basedir}/script/create_release.sh" overwrite="true" />
-					<copy file="${basedir}/script/do_checkout.bat" tofile="${basedir}/script/do_checkout.sh" overwrite="true" />
 					<copy file="${basedir}/script/run_junit.bat" tofile="${basedir}/script/run_junit.sh" overwrite="true" />
 				</then>
 				<elseif>
 					<contains substring="Linux" casesensitive="no" string="${os.name}" />
 					<then>
 						<copy file="${basedir}/script/create_release.bat" tofile="${basedir}/script/create_release.sh" overwrite="true" />
-						<copy file="${basedir}/script/do_checkout.bat" tofile="${basedir}/script/do_checkout.sh" overwrite="true" />
 						<copy file="${basedir}/script/run_junit.bat" tofile="${basedir}/script/run_junit.sh" overwrite="true" />
 					</then>
 				</elseif>
@@ -1010,8 +1136,12 @@
 		<!-- DE release target start-->
 		<target name="de_release">
 			<antcall target="init_release" />
-			<antcall target="check_os" />
-			<antcall target="do_checkout" />
+			<antcall target="do_checkout">
+				<param name="repository.url" value="${svn.repository.url}" />
+				<param name="destination.dir" value="${temp.hdoclet.dir}/project" />
+				<param name="user.id" value="${svn.user.id}" />
+				<param name="user.password" value="${svn.user.password}" />
+			</antcall>
 			<antcall target="create_junit_reports_for_release" />
 			<if>
 				<contains substring="Windows" casesensitive="no" string="${os.name}" />

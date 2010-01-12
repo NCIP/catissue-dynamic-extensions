@@ -9,14 +9,11 @@
 package edu.common.dynamicextensions.util;
 
 import java.io.IOException;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.LinkedList;
 
 import junit.framework.TestCase;
-import edu.common.dynamicextensions.category.CategoryCreator;
 import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
@@ -44,7 +41,7 @@ EntityManagerExceptionConstantsInterface
 	static
 	{
 		System.setProperty("app.propertiesFile", System.getProperty("user.dir") + "/build.xml");
-		LoggerConfig.configureLogger(System.getProperty("user.dir") + "/src/");
+		LoggerConfig.configureLogger(System.getProperty("user.dir") + "/src/java/");
 		try
 		{
 			ErrorKey.init("~");
@@ -59,7 +56,7 @@ EntityManagerExceptionConstantsInterface
 	protected final static String CSV_FILE_PATH="./src/resources/csv/";
 	protected final static String PV_FILE_PATH="./src/resources/pvs/";
 	protected final static String EDITED_XMI_FILE_PATH="./src/resources/edited_xmi/";
-	protected final static String JBOSS_PATH = "https://10.88.199.44:18443/dynamicExtensions";
+	protected final static String JBOSS_PATH = "http://10.88.199.44:46210/dynamicExtensions";
 	protected int noOfDefaultColumns = 2;
 
 	//1:ACTIVITY_STATUS 2:IDENTIFIER 3:FILE NAME 4:CONTENTE_TYPE 5:ACTUAL_CONTENTS
@@ -213,12 +210,12 @@ EntityManagerExceptionConstantsInterface
 	{
 		ResultSetMetaData metadata = null;
 		int count = 0;
+		ResultSet result = null;
 		final JDBCDAO jdbcDao = getJDBCDAO();
-		PreparedStatement statement = null;
 		try
 		{
-			statement = jdbcDao.getPreparedStatement(query);
-			metadata = statement.executeQuery().getMetaData();
+			result = jdbcDao.getResultSet(query, null, null);
+			metadata = result.getMetaData();
 			count = metadata.getColumnCount();
 		}
 		catch (final Exception e)
@@ -230,7 +227,7 @@ EntityManagerExceptionConstantsInterface
 		{
 			try
 			{
-				statement.close();
+				jdbcDao.closeStatement(result);
 				closeJDBCDAO(jdbcDao);
 			}
 			catch (final Exception e)
@@ -251,14 +248,14 @@ EntityManagerExceptionConstantsInterface
 	protected int getColumntype(final String query, final int columnNumber)
 	{
 		ResultSetMetaData metadata = null;
+		ResultSet result = null;
 		int type = 0;
 		JDBCDAO jdbcDao = null;
-		PreparedStatement statement = null;
 		try
 		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			statement = jdbcDao.getPreparedStatement(query);
-			metadata = statement.executeQuery().getMetaData();
+			result = jdbcDao.getResultSet(query, null, null);
+			metadata = result.getMetaData();
 			type = metadata.getColumnType(columnNumber);
 		}
 		catch (final Exception e)
@@ -270,7 +267,7 @@ EntityManagerExceptionConstantsInterface
 		{
 			try
 			{
-				statement.close();
+				jdbcDao.closeStatement(result);
 				DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
 			}
 			catch (final Exception e)
@@ -299,22 +296,6 @@ EntityManagerExceptionConstantsInterface
 		}
 	}
 
-	/**
-	 * It will execute actual query passed.
-	 * @param conn connection to be used
-	 * @param query to be executed
-	 * @param statement
-	 * @param metadata Object to be used for metadata
-	 * @return
-	 * @throws SQLException
-	 */
-	private ResultSetMetaData executeQueryForMetadata(final JDBCDAO jdbcDao, final String query,
-			ResultSetMetaData metadata) throws DAOException, SQLException
-			{
-		final PreparedStatement statement = jdbcDao.getPreparedStatement(query);
-		metadata = statement.executeQuery().getMetaData();
-		return metadata;
-			}
 
 	/**
 	 * Open the connection for use
@@ -372,11 +353,11 @@ EntityManagerExceptionConstantsInterface
 	{
 		final String query = "select * from " + tableName;
 		final JDBCDAO jdbcDao = getJDBCDAO();
-		java.sql.PreparedStatement statement = null;
+		ResultSet result = null;
 		try
 		{
-			statement = jdbcDao.getPreparedStatement(query);
-			statement.executeQuery();
+			result = jdbcDao.getResultSet(query, null, null);
+
 		}
 		catch (final Exception e)
 		{
@@ -386,7 +367,6 @@ EntityManagerExceptionConstantsInterface
 		{
 			try
 			{
-				statement.close();
 				jdbcDao.closeSession();
 			}
 			catch (final Exception e)
@@ -427,17 +407,7 @@ EntityManagerExceptionConstantsInterface
 		return role;
 	}
 
-	/**
-	 * @param categoryFilePath
-	 */
-	protected void createCaegory(final String categoryFilePath)
-	{
-		//		String[] args2 = {categoryFilePath, };
-		final String[] args2 = {categoryFilePath, JBOSS_PATH};
-		final CategoryCreator categoryCreator = new CategoryCreator();
-		categoryCreator.main(args2);
 
-	}
 
 	/**
 	 * @param xmi
