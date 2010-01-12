@@ -6,121 +6,121 @@ package edu.common.dynamicextensions.util.parser;
  * This interface defines all the keywords used in the
  * csv file used for the category creation.
  */
-public interface CategoryCSVConstants
+public class CategoryCSVConstants
 {
 
 	/**
 	 * This keyword used to mark the beginning of the new category definition.
 	 */
-	String FORM_DEFINITION = "Form_Definition";
+	public static final String FORM_DEFINITION = "Form_Definition";
 
 	/**
 	 * This keyword is used before specifying the permissible values.
 	 */
-	String PERMISSIBLE_VALUES = "Permissible_Values";
+	public static final String PERMISSIBLE_VALUES = "Permissible_Values";
 
 	/**
 	 * This keyword is used before specifying the permissible values
 	 * file name, where permissible values are line separated.
 	 */
-	String PERMISSIBLE_VALUES_FILE = "Permissible_Values_File";
+	public static final String PERMISSIBLE_VALUES_FILE = "Permissible_Values_File";
 
 	/**
 	 * This keyword is used before defining the options available for a control.
 	 */
-	String OPTIONS = "options";
+	public static final String OPTIONS = "options";
 	/**
 	 * This keyword is used before defining the options available for a control.
 	 */
-	String PERMISSIBLE_VALUE_OPTIONS = "PermVal_Options";
+	public static final String PERMISSIBLE_VALUE_OPTIONS = "PermVal_Options";
 
 	/**
 	 * Defines rules for a particular category attribute.
 	 */
-	String RULES = "Rules";
+	public static final String RULES = "Rules";
 
 	/**
 	 * Defines range for a particular category attribute.
 	 */
-	String RANGE = "range";
+	public static final String RANGE = "range";
 
-	String DATE_RANGE = "dateRange";
+	public static final String DATE_RANGE = "dateRange";
 
 	/**
 	 * Defines minimum value of the range.
 	 */
-	String MIN = "min";
+	public static final String MIN = "min";
 
 	/**
 	 * Defines maximum value of the range.
 	 */
-	String MAX = "max";
+	public static final String MAX = "max";
 
 	/**
 	 * Defines Uniqueness for a particular category attribute value.
 	 */
-	String UNIQUE = "unique";
+	public static final String UNIQUE = "unique";
 
 	/**
 	 * Defines mandatory condition for a particular category attribute value.
 	 */
-	String REQUIRED = "required";
+	public static final String REQUIRED = "required";
 
 	/**
 	 * Defines for turning off future date validation.
 	 */
-	String ALLOW_FUTURE_DATE = "allowfuturedate";
+	public static final String ALLOW_FUTURE_DATE = "allowfuturedate";
 
 	/**
 	 * Defines for date rule validation.
 	 */
-	String DATE = "date";
+	public static final String DATE = "date";
 
 	/**
 	 * This keyword used to define the label for the form
 	 */
-	String DISPLAY_LABLE = "Display_Label";
+	public static final String DISPLAY_LABLE = "Display_Label";
 
 	/**
 	 * This keyword used to define the label for the form
 	 */
-	String SINGLE = "single";
+	public static final String SINGLE = "single";
 
 	/**
 	 * This keyword used to define the label for the form
 	 */
-	String MULTILINE = "multiline";
+	public static final String MULTILINE = "multiline";
 
 	/**
 	 * This keyword is used to specify whether to override permissible values
 	 */
-	String OVERRIDE_PV = "override_pv";
+	public static final String OVERRIDE_PV = "override_pv";
 
 	/**
 	 * This keyword used to define the label for the form
 	 */
-	String RELATED_ATTIBUTE = "RelatedAttribute:";
+	public static final String RELATED_ATTIBUTE = "RelatedAttribute:";
 	/**
 	 * This keyword used to define the label for the form
 	 */
-	String SKIP_LOGIC_ATTIBUTE = "SkipLogicAttribute:";
+	public static final String SKIP_LOGIC_ATTIBUTE = "SkipLogicAttribute:";
 
-	String INSTANCE = "instance:";
+	public static final String INSTANCE = "instance:";
 
 	/**
 	 * default value of the attribute
 	 */
-	String DEFAULT_VALUE = "defaultValue";
+	public static final String DEFAULT_VALUE = "defaultValue";
 
 	/**
 	 * DE Error messages file
 	 */
-	String DYEXTN_ERROR_MESSAGES_FILE = "DynamicExtensionsErrorsMessages";
+	public static final String DYEXTN_ERROR_MESSAGES_FILE = "DynamicExtensionsErrorsMessages";
 
-	String TEXT_AREA = "textArea";
+	public static final String TEXT_AREA = "textArea";
 
-	String SEPARATOR = "separator";
+	public static final String SEPARATOR = "separator";
 
-	String COMMON_OPTIONS = "commonOptions";
+	public static final String COMMON_OPTIONS = "commonOptions";
 }
 
