@@ -215,7 +215,7 @@ public class DynamicExtensionBaseQueryBuilder
 				FROM_KEYWORD).append(entity.getTableProperties().getName());
 		if (EntityManagerUtil.isPrimaryKeyChanged(entity, dbaseCopy))
 		{
-			int noOfRecords = EntityManagerUtil.getNoOfRecord(query.toString(),null);
+			int noOfRecords = EntityManagerUtil.getNoOfRecord(query.toString(), null);
 			if (noOfRecords != 0)
 			{
 				throw new DynamicExtensionsApplicationException(
@@ -662,8 +662,8 @@ public class DynamicExtensionBaseQueryBuilder
 	{
 		Collection<AssociationInterface> associations = entity.getAssociationCollection();
 		Iterator<AssociationInterface> assocIter = associations.iterator();
-		StringBuffer mnyToOneAssQry = new StringBuffer();
-		mnyToOneAssQry.append(SELECT_KEYWORD + WHITESPACE);
+		StringBuffer mnyToOneAssQry = new StringBuffer(SELECT_KEYWORD);
+		mnyToOneAssQry.append(WHITESPACE);
 		List<Association> manyToOneAssocns = new ArrayList<Association>();
 
 		Map<Association, List<?>> assocValues = new HashMap<Association, List<?>>();
@@ -692,18 +692,19 @@ public class DynamicExtensionBaseQueryBuilder
 				// For many to many, get values from the middle table.
 				query.append(SELECT_KEYWORD + WHITESPACE + targetKey);
 				query.append(WHITESPACE + FROM_KEYWORD + WHITESPACE + tableName + WHITESPACE);
-				query
-						.append(WHITESPACE + WHERE_KEYWORD + WHITESPACE + sourceKey + EQUAL + WHITESPACE + QUESTION_MARK);
+				query.append(WHITESPACE + WHERE_KEYWORD + WHITESPACE + sourceKey + EQUAL
+						+ WHITESPACE + QUESTION_MARK);
 				LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 				queryDataList.add(new ColumnValueBean(sourceKey, recordId));
 				if (dao != null && dao.length > 0)
 				{
 					assocValues.put(association, getAssociationRecordValues(query.toString(),
-							dao[0],queryDataList));
+							dao[0], queryDataList));
 				}
 				else
 				{
-					assocValues.put(association, getAssociationRecordValues(query.toString(),queryDataList));
+					assocValues.put(association, getAssociationRecordValues(query.toString(),
+							queryDataList));
 				}
 			}
 			else if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.ONE)
@@ -729,20 +730,19 @@ public class DynamicExtensionBaseQueryBuilder
 						.getName();
 				query.append(SELECT_KEYWORD + WHITESPACE + IDENTIFIER);
 				query.append(WHITESPACE + FROM_KEYWORD + WHITESPACE + tableName + WHITESPACE);
-				query
-						.append(WHITESPACE + WHERE_KEYWORD + WHITESPACE + targetKey + EQUAL
-								+ WHITESPACE + QUESTION_MARK);
+				query.append(WHITESPACE + WHERE_KEYWORD + WHITESPACE + targetKey + EQUAL
+						+ WHITESPACE + QUESTION_MARK);
 				LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 				queryDataList.add(new ColumnValueBean(targetKey, recordId));
 				List<Long> recordIds = null;
 
 				if (dao != null && dao.length > 0)
 				{
-					recordIds = getAssociationRecordValues(query.toString(), dao[0],queryDataList);
+					recordIds = getAssociationRecordValues(query.toString(), dao[0], queryDataList);
 				}
 				else
 				{
-					recordIds = getAssociationRecordValues(query.toString(),queryDataList);
+					recordIds = getAssociationRecordValues(query.toString(), queryDataList);
 				}
 
 				if (association.getSourceRole().getAssociationsType().equals(
@@ -791,7 +791,7 @@ public class DynamicExtensionBaseQueryBuilder
 					jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
 				}
 
-				resultSet = jdbcDao.getResultSet(mnyToOneAssQry.toString(),queryDataList,null);
+				resultSet = jdbcDao.getResultSet(mnyToOneAssQry.toString(), queryDataList, null);
 
 				resultSet.next();
 				for (int i = 0; i < noOfMany2OneAsso; i++)
@@ -834,7 +834,6 @@ public class DynamicExtensionBaseQueryBuilder
 
 		return assocValues;
 	}
-
 
 	/**
 	 * This method returns the queries to remove the the association.
@@ -1524,7 +1523,8 @@ public class DynamicExtensionBaseQueryBuilder
 							+ getDatabaseTypeAndSize(cnstrKeyProp.getSrcPrimaryKeyAttribute())
 							+ COMMA);
 				}
-				query.append(PRIMARY_KEY_CONSTRAINT + CLOSING_BRACKET);
+				query.append(PRIMARY_KEY_CONSTRAINT);
+				query.append(CLOSING_BRACKET);
 				String rollbackQuery = DROP_KEYWORD + WHITESPACE + TABLE_KEYWORD + WHITESPACE
 						+ tableName;
 
@@ -1612,21 +1612,36 @@ public class DynamicExtensionBaseQueryBuilder
 			List<String> revQueries, boolean isAddAssoQry)
 	{
 		String queryToReturn;
-		StringBuffer query = new StringBuffer();
-		query.append(ALTER_TABLE + WHITESPACE + tableName + WHITESPACE + ADD_KEYWORD + WHITESPACE);
-		query.append(columnName + WHITESPACE + dataType + WHITESPACE);
-		String rollbackQuery = ALTER_TABLE + WHITESPACE + tableName + WHITESPACE + DROP_KEYWORD
-				+ WHITESPACE + COLUMN_KEYWORD + WHITESPACE + columnName;
+		StringBuffer query = new StringBuffer(ALTER_TABLE);
+		query.append(WHITESPACE);
+		query.append(tableName);
+		query.append(WHITESPACE);
+		query.append(ADD_KEYWORD);
+		query.append(WHITESPACE);
+		query.append(columnName);
+		query.append(WHITESPACE);
+		query.append(dataType);
+		query.append(WHITESPACE);
+
+		StringBuffer rollbackQuery = new StringBuffer(ALTER_TABLE);
+		rollbackQuery.append(WHITESPACE);
+		rollbackQuery.append(tableName);
+		rollbackQuery.append(WHITESPACE);
+		rollbackQuery.append(DROP_KEYWORD);
+		rollbackQuery.append(WHITESPACE);
+		rollbackQuery.append(COLUMN_KEYWORD);
+		rollbackQuery.append(WHITESPACE);
+		rollbackQuery.append(columnName);
 
 		if (isAddAssoQry)
 		{
-			revQueries.add(rollbackQuery);
+			revQueries.add(rollbackQuery.toString());
 			queryToReturn = query.toString();
 		}
 		else
 		{
 			revQueries.add(query.toString());
-			queryToReturn = rollbackQuery;
+			queryToReturn = rollbackQuery.toString();
 		}
 		return queryToReturn;
 	}
@@ -1669,9 +1684,9 @@ public class DynamicExtensionBaseQueryBuilder
 				else
 				{
 					// Check for other modification in the attributes such a unique constraint change.
-					List<String> modifiedAttrQueries = processModifyAttribute(attribute,
-							savedAttribute, attrRlbkQries);
-					attrQueries.addAll(modifiedAttrQueries);
+					List<String> modAttrQueries = processModifyAttribute(attribute, savedAttribute,
+							attrRlbkQries);
+					attrQueries.addAll(modAttrQueries);
 				}
 			}
 		}
@@ -1873,9 +1888,12 @@ public class DynamicExtensionBaseQueryBuilder
 						columnName.add(savedAttribute.getColumnProperties().getName());
 
 						String type = "";
-						String remAttrRlbkQry = ALTER_TABLE + WHITESPACE + tableName + WHITESPACE
-								+ ADD_KEYWORD + WHITESPACE + OPENING_BRACKET
-								+ getQueryPartForAttribute(savedAttribute, type, true);
+						StringBuffer remAttrRlbkQry = new StringBuffer(ALTER_TABLE);
+						remAttrRlbkQry.append(WHITESPACE);
+						remAttrRlbkQry.append(tableName);
+						remAttrRlbkQry.append(WHITESPACE + ADD_KEYWORD + WHITESPACE
+								+ OPENING_BRACKET
+								+ getQueryPartForAttribute(savedAttribute, type, true));
 
 						if (savedAttribute.getAttributeTypeInformation() instanceof FileAttributeTypeInformation)
 						{
@@ -1883,16 +1901,16 @@ public class DynamicExtensionBaseQueryBuilder
 									+ UNDERSCORE + FILE_NAME);
 							columnName.add(savedAttribute.getColumnProperties().getName()
 									+ UNDERSCORE + CONTENT_TYPE);
-							remAttrRlbkQry = remAttrRlbkQry + COMMA
-									+ extraColumnQueryStringForFileAttribute(savedAttribute);
+							remAttrRlbkQry.append(COMMA
+									+ extraColumnQueryStringForFileAttribute(savedAttribute));
 						}
 
-						remAttrRlbkQry = remAttrRlbkQry + CLOSING_BRACKET;
+						remAttrRlbkQry.append(CLOSING_BRACKET);
 
 						String remAttrQuery = getDropColumnQuery(tableName, columnName);
 
 						attrQueries.add(remAttrQuery);
-						attrRlbkQries.add(remAttrRlbkQry);
+						attrRlbkQries.add(remAttrRlbkQry.toString());
 					}
 				}
 			}
@@ -2213,7 +2231,6 @@ public class DynamicExtensionBaseQueryBuilder
 							"IS").append(WHITESPACE).append(NOT_KEYWORD).append(WHITESPACE).append(
 							NULL_KEYWORD).append(WHITESPACE);
 
-
 			if (!(savedAttr.getAttributeTypeInformation() instanceof FileAttributeTypeInformation)
 					&& !(savedAttr.getAttributeTypeInformation() instanceof ObjectAttributeTypeInformation))
 			{
@@ -2221,7 +2238,8 @@ public class DynamicExtensionBaseQueryBuilder
 						savedAttr.getColumnProperties().getName()).append(WHITESPACE).append(
 						NOT_KEYWORD).append(WHITESPACE).append(LIKE_KEYWORD).append(WHITESPACE)
 						.append(QUESTION_MARK);
-				queryDataList.add(new ColumnValueBean(savedAttr.getColumnProperties().getName(), ""));
+				queryDataList
+						.add(new ColumnValueBean(savedAttr.getColumnProperties().getName(), ""));
 			}
 
 			ResultSet resultSet = null;
@@ -2229,7 +2247,7 @@ public class DynamicExtensionBaseQueryBuilder
 			try
 			{
 				jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-				resultSet = jdbcDao.getResultSet(query.toString(),queryDataList,null);
+				resultSet = jdbcDao.getResultSet(query.toString(), queryDataList, null);
 				resultSet.next();
 				Long count = resultSet.getLong(1);
 				if (count > 0)
@@ -2309,13 +2327,13 @@ public class DynamicExtensionBaseQueryBuilder
 							NOT_KEYWORD).append(WHITESPACE).append(LIKE_KEYWORD).append(WHITESPACE)
 					.append(QUESTION_MARK);
 
-				queryDataList.add(new ColumnValueBean(savedAttr.getColumnProperties().getName(), ""));
+			queryDataList.add(new ColumnValueBean(savedAttr.getColumnProperties().getName(), ""));
 			ResultSet resultSet = null;
 			JDBCDAO jdbcDao = null;
 			try
 			{
 				jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-				resultSet = jdbcDao.getResultSet(query.toString(),queryDataList,null);
+				resultSet = jdbcDao.getResultSet(query.toString(), queryDataList, null);
 				resultSet.next();
 				Long count = resultSet.getLong(1);
 				if (count > 0)
@@ -2369,7 +2387,7 @@ public class DynamicExtensionBaseQueryBuilder
 		try
 		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			resultSet = jdbcDao.getResultSet(query.toString(),null,null);
+			resultSet = jdbcDao.getResultSet(query.toString(), null, null);
 			resultSet.next();
 			Long count = resultSet.getLong(1);
 			if (count > 0)
@@ -2615,7 +2633,6 @@ public class DynamicExtensionBaseQueryBuilder
 		return rlbkQryStack;
 	}
 
-
 	/**
 	 * This method executes the query that selects record identifiers of the target entity
 	 * that are associated to the source entity for a given association.
@@ -2623,8 +2640,8 @@ public class DynamicExtensionBaseQueryBuilder
 	 * @return List of record identifiers of the target entity .
 	 * @throws DynamicExtensionsSystemException
 	 */
-	protected List<Long> getAssociationRecordValues(String query,LinkedList<ColumnValueBean> queryDataList)
-			throws DynamicExtensionsSystemException
+	protected List<Long> getAssociationRecordValues(String query,
+			LinkedList<ColumnValueBean> queryDataList) throws DynamicExtensionsSystemException
 	{
 		List<Long> assoRecords = new ArrayList<Long>();
 		ResultSet resultSet = null;
@@ -2632,7 +2649,7 @@ public class DynamicExtensionBaseQueryBuilder
 		try
 		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			resultSet = jdbcDao.getResultSet(query,queryDataList,null);
+			resultSet = jdbcDao.getResultSet(query, queryDataList, null);
 
 			while (resultSet.next())
 			{
@@ -2671,15 +2688,15 @@ public class DynamicExtensionBaseQueryBuilder
 	 * @return List of record identifiers of the target entity .
 	 * @throws DynamicExtensionsSystemException
 	 */
-	protected List<Long> getAssociationRecordValues(String query, JDBCDAO jdbcDAO,LinkedList<ColumnValueBean> queryDataList)
-			throws DynamicExtensionsSystemException
+	protected List<Long> getAssociationRecordValues(String query, JDBCDAO jdbcDAO,
+			LinkedList<ColumnValueBean> queryDataList) throws DynamicExtensionsSystemException
 	{
 		List<Long> assoRecords = new ArrayList<Long>();
 		ResultSet resultSet = null;
 		JDBCDAO jdbcDao = jdbcDAO;
 		try
 		{
-			resultSet = jdbcDao.getResultSet(query,queryDataList,null);
+			resultSet = jdbcDao.getResultSet(query, queryDataList, null);
 
 			while (resultSet.next())
 			{
@@ -2746,7 +2763,7 @@ public class DynamicExtensionBaseQueryBuilder
 			ResultSet resultSet = null;
 			try
 			{
-				resultSet = jdbcDao.getResultSet(query,queryDataList,null);
+				resultSet = jdbcDao.getResultSet(query, queryDataList, null);
 				resultSet.next();
 
 				// If another source record is already using target record, throw exception.
@@ -2812,7 +2829,7 @@ public class DynamicExtensionBaseQueryBuilder
 			try
 			{
 				jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-				resultSet = jdbcDao.getResultSet(query,queryDataList,null);
+				resultSet = jdbcDao.getResultSet(query, queryDataList, null);
 				resultSet.next();
 				// If another source record is already using target record, throw exception.
 				if (resultSet.getInt(1) != 0)
@@ -2844,8 +2861,6 @@ public class DynamicExtensionBaseQueryBuilder
 			}
 		}
 	}
-
-
 
 	/**
 	 *
@@ -3006,13 +3021,14 @@ public class DynamicExtensionBaseQueryBuilder
 
 		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 		queryDataList.add(new ColumnValueBean(columnName, frmtedValue));
-		queryDataList.add(new ColumnValueBean(Constants.ACTIVITY_STATUS_COLUMN, Status.ACTIVITY_STATUS_DISABLED.toString()));
+		queryDataList.add(new ColumnValueBean(Constants.ACTIVITY_STATUS_COLUMN,
+				Status.ACTIVITY_STATUS_DISABLED.toString()));
 		ResultSet resultSet = null;
 		JDBCDAO jdbcDao = null;
 		try
 		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			resultSet = jdbcDao.getResultSet(query.toString(),queryDataList,null);
+			resultSet = jdbcDao.getResultSet(query.toString(), queryDataList, null);
 			resultSet.next();
 			Long count = resultSet.getLong(1);
 			if (count > 0)
@@ -3122,7 +3138,7 @@ public class DynamicExtensionBaseQueryBuilder
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
 			LinkedList<LinkedList<ColumnValueBean>> columnValLinkedList = new LinkedList<LinkedList<ColumnValueBean>>();
 			columnValLinkedList.add(colValBeanList);
-			jdbcDao.executeUpdate(query.toString(),columnValLinkedList);
+			jdbcDao.executeUpdate(query.toString(), columnValLinkedList);
 			jdbcDao.commit();
 		}
 		catch (DAOException e)
