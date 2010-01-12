@@ -916,13 +916,13 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 
 					if (targetMaxCardinality != Cardinality.ONE)
 					{
-						if (associatedObjects != null)
+						if (associatedObjects == null)
 						{
-							containedObjects = (Collection) associatedObjects;
+							containedObjects = new HashSet<Object>();
 						}
 						else
 						{
-							containedObjects = new HashSet<Object>();
+							containedObjects = (Collection) associatedObjects;
 						}
 					}
 
@@ -1463,15 +1463,16 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 
 			StringBuffer query = new StringBuffer();
 
-			if (!areMultipleAttr)
-			{
-				query.append(selectClause + fromClause + whereClause);
-			}
-			else
+			if (areMultipleAttr)
 			{
 				query.append(multipleColClause);
 				query.append(WHERE_KEYWORD
 						+ queryBuilder.getRemoveDisbledRecordsQuery(tableNames.get(0)));
+			}
+			else
+			{
+				query.append(selectClause + fromClause + whereClause);
+
 			}
 
 			JDBCDAO jdbcDao = null;
@@ -1482,17 +1483,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 
 				if (results != null)
 				{
-					if (!areMultipleAttr)
-					{
-						for (int i = 0; i < results.size(); i++)
-						{
-							List innerList = (List) results.get(i);
-							Long recordId = Long.parseLong((String) innerList.get(0));
-							innerList.remove(0);
-							assoRecords.put(recordId, innerList);
-						}
-					}
-					else
+					if (areMultipleAttr)
 					{
 						for (int i = 0; i < results.size(); i++)
 						{
@@ -1516,6 +1507,16 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 								innerList.remove(0);
 								assoRecords.put(recordId, innerList);
 							}
+						}
+					}
+					else
+					{
+						for (int i = 0; i < results.size(); i++)
+						{
+							List innerList = (List) results.get(i);
+							Long recordId = Long.parseLong((String) innerList.get(0));
+							innerList.remove(0);
+							assoRecords.put(recordId, innerList);
 						}
 					}
 				}
