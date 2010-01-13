@@ -117,6 +117,7 @@ public class TextField extends Control implements TextFieldInterface
 			int columnSize = columns.intValue();
 			if (columnSize > 0)
 			{
+				htmlString += "size='" + columnSize + "' ";
 				htmlString += "style='width:" + (columnSize+1) + "ex' ";
 			}
 			else
