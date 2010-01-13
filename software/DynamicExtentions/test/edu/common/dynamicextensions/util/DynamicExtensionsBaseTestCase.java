@@ -34,8 +34,8 @@ import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
 
 public class DynamicExtensionsBaseTestCase extends TestCase
-implements
-EntityManagerExceptionConstantsInterface
+		implements
+			EntityManagerExceptionConstantsInterface
 {
 
 	static
@@ -52,11 +52,12 @@ EntityManagerExceptionConstantsInterface
 			e.printStackTrace();
 		}
 	}
-	protected final static String XMI_FILE_PATH="./src/resources/xmi/";
-	protected final static String CSV_FILE_PATH="./src/resources/csv/";
-	protected final static String PV_FILE_PATH="./src/resources/pvs/";
-	protected final static String EDITED_XMI_FILE_PATH="./src/resources/edited_xmi/";
+	protected final static String XMI_FILE_PATH = "./src/resources/xmi/";
+	protected final static String CSV_FILE_PATH = "./src/resources/csv/";
+	protected final static String PV_FILE_PATH = "./src/resources/pvs/";
+	protected final static String EDITED_XMI_FILE_PATH = "./src/resources/edited_xmi/";
 	protected final static String JBOSS_PATH = "http://10.88.199.44:46210/dynamicExtensions";
+	protected final static String TEST_ENTITYGROUP_NAME = "test";
 	protected int noOfDefaultColumns = 2;
 
 	//1:ACTIVITY_STATUS 2:IDENTIFIER 3:FILE NAME 4:CONTENTE_TYPE 5:ACTUAL_CONTENTS
@@ -112,14 +113,15 @@ EntityManagerExceptionConstantsInterface
 	 * @param columnNumber of which value is to be retrieved
 	 * @return Object of the value
 	 */
-	protected Object executeQuery(final String query, final String returnType, final int columnNumber,final LinkedList<ColumnValueBean> queryDataList)
+	protected Object executeQuery(final String query, final String returnType,
+			final int columnNumber, final LinkedList<ColumnValueBean> queryDataList)
 	{
 		ResultSet resultSet = null;
 		Object ans = null;
 		final JDBCDAO jdbcDao = getJDBCDAO();
 		try
 		{
-			resultSet = jdbcDao.getResultSet(query,queryDataList,null);
+			resultSet = jdbcDao.getResultSet(query, queryDataList, null);
 			resultSet.next();
 			if (STRING_TYPE.equals(returnType))
 			{
@@ -296,7 +298,6 @@ EntityManagerExceptionConstantsInterface
 		}
 	}
 
-
 	/**
 	 * Open the connection for use
 	 * @return connection
@@ -378,14 +379,15 @@ EntityManagerExceptionConstantsInterface
 		return true;
 	}
 
-	protected String getActivityStatus(final EntityInterface entity, final Long recordId) throws Exception
+	protected String getActivityStatus(final EntityInterface entity, final Long recordId)
+			throws Exception
 	{
 		final StringBuffer query = new StringBuffer();
-		query.append("select "+ Constants.ACTIVITY_STATUS_COLUMN+ " from"+entity.getTableProperties().getName()+" where identifier = ?" );
+		query.append("select " + Constants.ACTIVITY_STATUS_COLUMN + " from"
+				+ entity.getTableProperties().getName() + " where identifier = ?");
 		final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 		queryDataList.add(new ColumnValueBean(Constants.IDENTIFIER, recordId));
-		return (String) executeQuery(query.toString(),
-				STRING_TYPE, 1,queryDataList);
+		return (String) executeQuery(query.toString(), STRING_TYPE, 1, queryDataList);
 
 	}
 
@@ -407,16 +409,15 @@ EntityManagerExceptionConstantsInterface
 		return role;
 	}
 
-
-
 	/**
 	 * @param xmi
 	 * @param mainContainerList
 	 * @param packageName
 	 */
-	protected void importModel(final String xmi, final String mainContainerList, final String packageName)
+	protected void importModel(final String xmi, final String mainContainerList,
+			final String packageName)
 	{
-		final String[] args1 = {xmi,mainContainerList,packageName," "};
+		final String[] args1 = {xmi, mainContainerList, packageName, " "};
 		XMIImporter.main(args1);
 
 	}
