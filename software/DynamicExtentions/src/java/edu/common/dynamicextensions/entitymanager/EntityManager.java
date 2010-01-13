@@ -1954,58 +1954,12 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		return entityId;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.common.dynamicextensions.entitymanager.EntityManagerInterface#getContainerIdForEntity(java.lang.Long)
+	/**
+	 * @deprecated Use method getContainerIdFromEntityId(Long entityId)
 	 */
 	public Long getContainerIdForEntity(Long entityId) throws DynamicExtensionsSystemException
 	{
-		Long identifier = null;
-		String tableName = "dyextn_container";
-
-		StringBuffer query = new StringBuffer();
-		query.append(SELECT_KEYWORD + WHITESPACE + IDENTIFIER);
-		query.append(WHITESPACE + FROM_KEYWORD + WHITESPACE + tableName + WHITESPACE);
-		query.append(WHERE_KEYWORD + WHITESPACE + "ENTITY_ID" + WHITESPACE + EQUAL + QUESTION_MARK);
-
-		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
-		queryDataList.add(new ColumnValueBean("ENTITY_ID", entityId.toString()));
-		ResultSet resultSet = null;
-		JDBCDAO jdbcDao = null;
-		try
-		{
-			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			resultSet = jdbcDao.getResultSet(query.toString(), queryDataList, null);
-			if (resultSet != null)
-			{
-				resultSet.next();
-				identifier = resultSet.getLong(IDENTIFIER);
-			}
-		}
-		catch (DAOException e)
-		{
-			Logger.out.debug(e.getMessage());
-		}
-		catch (SQLException e)
-		{
-			Logger.out.debug(e.getMessage());
-		}
-		finally
-		{
-			if (resultSet != null)
-			{
-				try
-				{
-					jdbcDao.closeStatement(resultSet);
-					DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
-				}
-				catch (DAOException e)
-				{
-					throw new DynamicExtensionsSystemException(e.getMessage(), e);
-				}
-			}
-		}
-
-		return identifier;
+		return getContainerIdFromEntityId(entityId);
 	}
 
 	/* (non-Javadoc)
