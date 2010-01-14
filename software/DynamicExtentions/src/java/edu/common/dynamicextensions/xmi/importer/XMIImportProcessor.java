@@ -95,8 +95,6 @@ import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.HibernateDAO;
-import edu.wustl.dao.daofactory.DAOConfigFactory;
-import edu.wustl.dao.exception.DAOException;
 
 /**
  *
@@ -209,8 +207,8 @@ public class XMIImportProcessor
 	 * @throws Exception exception
 	 */
 	public DynamicQueryList processXmi(final UmlPackage umlPackage, final String entityGroupName,
-			final String packageName, final List<String> containerNames, final HibernateDAO... hibernatedao)
-			throws Exception
+			final String packageName, final List<String> containerNames,
+			final HibernateDAO... hibernatedao) throws Exception
 	{
 		final List<UmlClass> umlClassColl = new ArrayList<UmlClass>();
 		final List<UmlAssociation> umlAssociationColl = new ArrayList<UmlAssociation>();
@@ -401,7 +399,6 @@ public class XMIImportProcessor
 		return dynamicQueryList;
 	}
 
-
 	/**
 	 * @param umlAssociationColl
 	 * @throws DynamicExtensionsSystemException
@@ -414,11 +411,7 @@ public class XMIImportProcessor
 		HibernateDAO hibernateDao = null;
 		try
 		{
-			final String appName = DynamicExtensionDAO.getInstance().getAppName();
-			hibernateDao = (HibernateDAO) DAOConfigFactory.getInstance().getDAOFactory(appName)
-					.getDAO();
-			hibernateDao.openSession(null);
-
+			hibernateDao = DynamicExtensionsUtility.getHibernateDAO();
 			if (umlAssociationColl != null)
 			{
 				for (final UmlAssociation umlAssociation : umlAssociationColl)
@@ -427,22 +420,9 @@ public class XMIImportProcessor
 				}
 			}
 		}
-		catch (final DAOException e)
-		{
-			throw new DynamicExtensionsSystemException(
-					"Exception encountered while populating constraint properties for entity.", e);
-		}
 		finally
 		{
-			try
-			{
-				hibernateDao.closeSession();
-			}
-			catch (final DAOException e)
-			{
-				throw new DynamicExtensionsSystemException(
-						"Exception encountered while closing session.", e);
-			}
+			DynamicExtensionsUtility.closeDAO(hibernateDao);
 		}
 
 	}
@@ -531,12 +511,14 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void processPrimaryKey(final EntityInterface entity, final Map<String, String> taggedValueMap)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	private void processPrimaryKey(final EntityInterface entity,
+			final Map<String, String> taggedValueMap) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
 		String primaryKey = null;
 		AttributeInterface primaryAttribute = null;
-		final Collection<AttributeInterface> primKeyAttrColl = entity.getPrimaryKeyAttributeCollection();
+		final Collection<AttributeInterface> primKeyAttrColl = entity
+				.getPrimaryKeyAttributeCollection();
 		resetPrimaryKeyAttributes(primKeyAttrColl);
 		//Deleting primary key collection only in case of edited xmi true and isAddIdAttribute=false
 		//This is specific to CIDER only.As inside Clinportal and Catissue the primarykey will never going to be edited,
@@ -726,8 +708,10 @@ public class XMIImportProcessor
 	 * @param umlGeneralisationColl
 	 */
 	private void processModel(final UmlPackage umlPackage, final List<UmlClass> umlClassColl,
-			final List<UmlAssociation> umlAssociationColl, final List<Generalization> umlGeneralisationColl,
-			final List<Dependency> umlDependencyColl, final String packageName, final boolean isDataModel)
+			final List<UmlAssociation> umlAssociationColl,
+			final List<Generalization> umlGeneralisationColl,
+			final List<Dependency> umlDependencyColl, final String packageName,
+			final boolean isDataModel)
 	{
 		final ModelManagementPackage modelManagementPackage = umlPackage.getModelManagement();
 		final ModelClass modelClass = modelManagementPackage.getModel();
@@ -742,7 +726,8 @@ public class XMIImportProcessor
 			Logger.out.info(" ");
 			final Iterator iter = ownedElementColl.iterator();
 
-			final StringTokenizer tokens = new StringTokenizer(packageName, XMIConstants.DOT_SEPARATOR);
+			final StringTokenizer tokens = new StringTokenizer(packageName,
+					XMIConstants.DOT_SEPARATOR);
 			String token = "";
 			if (tokens.hasMoreTokens())
 			{
@@ -793,7 +778,8 @@ public class XMIImportProcessor
 	 */
 	private void processSelectedPackage(final org.omg.uml.modelmanagement.UmlPackage parentPkg,
 			final StringTokenizer tokens, final List<UmlClass> umlClassColl,
-			final List<UmlAssociation> umlAssociationColl, final List<Generalization> umlGeneralisationColl,
+			final List<UmlAssociation> umlAssociationColl,
+			final List<Generalization> umlGeneralisationColl,
 			final List<Dependency> dependencyColl, final boolean isDataModel)
 	{
 		String token = "";
@@ -873,12 +859,14 @@ public class XMIImportProcessor
 				else if (obj instanceof UmlClass)
 				{
 					final UmlClass umlClass = (UmlClass) obj;
-					final boolean isEntityADatatype = checkEntityWithDataTypeEntities(umlClass.getName());
+					final boolean isEntityADatatype = checkEntityWithDataTypeEntities(umlClass
+							.getName());
 					if (isEntityADatatype)
 					{//Skipping classes having datatype names eg Integer,String etc.
 						continue;
 					}
-					final Collection<Generalization> generalizationColl = umlClass.getGeneralization();
+					final Collection<Generalization> generalizationColl = umlClass
+							.getGeneralization();
 					if ((generalizationColl != null) && (generalizationColl.size() > 0))
 					{
 						generalizations.addAll(generalizationColl);
@@ -935,13 +923,15 @@ public class XMIImportProcessor
 				else if (obj instanceof UmlClass)
 				{
 					final UmlClass umlClass = (UmlClass) obj;
-					final boolean isEntityADatatype = checkEntityWithDataTypeEntities(umlClass.getName());
+					final boolean isEntityADatatype = checkEntityWithDataTypeEntities(umlClass
+							.getName());
 					if (isEntityADatatype)
 					{//Skipping classes having datatype names eg Integer,String etc.
 						continue;
 					}
 
-					final Collection<Generalization> generalizationColl = umlClass.getGeneralization();
+					final Collection<Generalization> generalizationColl = umlClass
+							.getGeneralization();
 					if ((generalizationColl != null) && (generalizationColl.size() > 0))
 					{
 						generalizations.addAll(generalizationColl);
@@ -990,8 +980,9 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	private AttributeInterface createAttribute(final Attribute umlAttribute, final EntityInterface entity)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	private AttributeInterface createAttribute(final Attribute umlAttribute,
+			final EntityInterface entity) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
 		//Not showing id attribute on UI if Id attribute is to be added by DE which is specified in xmiConfiguration Object
 		AttributeInterface originalAttribute = null;
@@ -1036,7 +1027,8 @@ public class XMIImportProcessor
 			{//Attribute has been edited
 				final Collection<TaggedValue> taggedValueColl = umlAttribute.getTaggedValue();
 				populateAttributeUIProperties(originalAttribute, taggedValueColl);
-				final Map<String, String> taggedValueMap = attrVsMapTagValues.get(originalAttribute);
+				final Map<String, String> taggedValueMap = attrVsMapTagValues
+						.get(originalAttribute);
 				if (isMultiselectTagValue(taggedValueMap)
 						&& !entity.isMultiselectAttributePresent(umlAttribute.getName()))
 				{
@@ -1120,8 +1112,9 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	private void removeAttribute(final EntityInterface entity, final AttributeInterface originalAttribute,
-			final Map<String, String> taggedValueMap, final DataType dataType, final Attribute umlAttribute)
+	private void removeAttribute(final EntityInterface entity,
+			final AttributeInterface originalAttribute, final Map<String, String> taggedValueMap,
+			final DataType dataType, final Attribute umlAttribute)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		originalAttribute.setName(DEConstants.DEPRECATED + originalAttribute.getName());
@@ -1146,8 +1139,8 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsSystemException
 	 */
 	private AssociationInterface addMultiselectAttribute(final AttributeInterface attribute,
-			final Attribute umlAttribute, final Map<String, String> taggedValueMap, final EntityInterface entity)
-			throws DynamicExtensionsSystemException
+			final Attribute umlAttribute, final Map<String, String> taggedValueMap,
+			final EntityInterface entity) throws DynamicExtensionsSystemException
 	{
 		final DomainObjectFactory factory = DomainObjectFactory.getInstance();
 		final AssociationInterface association = createAssociation();
@@ -1203,7 +1196,8 @@ public class XMIImportProcessor
 	private void populateAttributeUIProperties(final AttributeInterface attribute,
 			final Collection<TaggedValue> taggedValueColl)
 	{
-		final Map<String, String> tagNameVsTagValue = populateTagValueMap(taggedValueColl, attribute);
+		final Map<String, String> tagNameVsTagValue = populateTagValueMap(taggedValueColl,
+				attribute);
 		attrVsMapTagValues.put(attribute, tagNameVsTagValue);
 	}
 
@@ -1225,7 +1219,8 @@ public class XMIImportProcessor
 	private void populateAssociationUIProperties(final AssociationInterface association,
 			final Collection<TaggedValue> taggedValueColl)
 	{
-		final Map<String, String> tagNameVsTagValue = populateTagValueMap(taggedValueColl, association);
+		final Map<String, String> tagNameVsTagValue = populateTagValueMap(taggedValueColl,
+				association);
 		associationVsMapTagValues.put(association, tagNameVsTagValue);
 	}
 
@@ -1365,7 +1360,8 @@ public class XMIImportProcessor
 	 * @return
 	 */
 	private SemanticPropertyInterface getSemanticProperty(final String conceptCode,
-			final String conceptDefinition, final String term, final String thesaurasName, final int seqNo)
+			final String conceptDefinition, final String term, final String thesaurasName,
+			final int seqNo)
 	{
 		final SemanticPropertyInterface semanticProperty = DomainObjectFactory.getInstance()
 				.createSemanticProperty();
@@ -1474,8 +1470,8 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	private void addAssociation(final UmlAssociation umlAssociation, final HibernateDAO hibernateDao,
-			final Map<String, List<String>> parentIdVsChildrenIds)
+	private void addAssociation(final UmlAssociation umlAssociation,
+			final HibernateDAO hibernateDao, final Map<String, List<String>> parentIdVsChildrenIds)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		final List<AssociationEnd> associationEnds = umlAssociation.getConnection();
@@ -1552,7 +1548,8 @@ public class XMIImportProcessor
 
 		final String sourceAssoTypeTV = getAssociationTypeTV(sourceAssociationEnd.getTaggedValue());
 
-		final String destinationAssoTypeTV = getAssociationTypeTV(targetAssociationEnd.getTaggedValue());
+		final String destinationAssoTypeTV = getAssociationTypeTV(targetAssociationEnd
+				.getTaggedValue());
 
 		final String srcId = sourceAssociationEnd.getParticipant().refMofId();
 		final EntityInterface srcEntity = umlClassIdVsEntity.get(srcId);
@@ -1565,7 +1562,8 @@ public class XMIImportProcessor
 
 		final Multiplicity tgtMultiplicity = targetAssociationEnd.getMultiplicity();
 		final String tgtRoleName = targetAssociationEnd.getName();
-		final RoleInterface targetRole = getRole(tgtMultiplicity, tgtRoleName, destinationAssoTypeTV);
+		final RoleInterface targetRole = getRole(tgtMultiplicity, tgtRoleName,
+				destinationAssoTypeTV);
 
 		AssociationInterface association = null;
 		final Collection<AssociationInterface> existingAssociationColl = srcEntity
@@ -1623,9 +1621,9 @@ public class XMIImportProcessor
 	 * @return
 	 */
 	private AssociationInterface isAssociationPresent(final String umlAssociationName,
-			final Collection<AssociationInterface> existingAssociationColl, final String srcEntityName,
-			final String tgtEntityName, final String direction, final RoleInterface sourceRole,
-			final RoleInterface targetRole)
+			final Collection<AssociationInterface> existingAssociationColl,
+			final String srcEntityName, final String tgtEntityName, final String direction,
+			final RoleInterface sourceRole, final RoleInterface targetRole)
 	{
 		for (final AssociationInterface existingAsso : existingAssociationColl)
 		{
@@ -1805,7 +1803,8 @@ public class XMIImportProcessor
 	 * @param tagName
 	 * @return
 	 */
-	private String getTaggedValue(final Collection<TaggedValue> taggedValueColl, final String tagName)
+	private String getTaggedValue(final Collection<TaggedValue> taggedValueColl,
+			final String tagName)
 	{
 		String val = "";
 		for (final TaggedValue taggedValue : taggedValueColl)
@@ -1849,7 +1848,8 @@ public class XMIImportProcessor
 	 * @param sourceEntity Entity to which a association is to be attached
 	 * @return A association attached to given entity.
 	 */
-	private AssociationInterface getAssociation(final EntityInterface sourceEntity, final String associationName)
+	private AssociationInterface getAssociation(final EntityInterface sourceEntity,
+			final String associationName)
 	{
 		final AssociationInterface association = deFactory.createAssociation();
 		//remove it after getting DE fix,association name should not be compulsory
@@ -2034,7 +2034,8 @@ public class XMIImportProcessor
 			final Collection<AbstractAttributeInterface> originalAttributeColl = ((EntityInterface) containerInterface
 					.getAbstractEntity()).getAbstractAttributeCollection();
 
-			final Iterator<AbstractAttributeInterface> abstrAttrIter = originalAttributeColl.iterator();
+			final Iterator<AbstractAttributeInterface> abstrAttrIter = originalAttributeColl
+					.iterator();
 			while (abstrAttrIter.hasNext())
 			{
 				final AbstractAttributeInterface originalAttr = abstrAttrIter.next();
@@ -2159,8 +2160,8 @@ public class XMIImportProcessor
 							&& (defaultPermissibleValue.getValueAsObject() != null))
 					{
 
-						final String defaultValueAsString = defaultPermissibleValue.getValueAsObject()
-								.toString();
+						final String defaultValueAsString = defaultPermissibleValue
+								.getValueAsObject().toString();
 						if ((defaultValueAsString != null)
 								&& !defaultValueAsString.equalsIgnoreCase(""))
 						{
@@ -2202,7 +2203,8 @@ public class XMIImportProcessor
 		final Collection<AssociationInterface> targetEntityAssociationColl = association
 				.getTargetEntity().getAssociationCollection();
 
-		final EntityInterface originalTargetEntity = getEntity(association.getTargetEntity().getName());
+		final EntityInterface originalTargetEntity = getEntity(association.getTargetEntity()
+				.getName());
 		if (originalTargetEntity != null)
 		{
 			//Removing redundant association
@@ -2243,8 +2245,9 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsApplicationException
 	 */
 	private void addAttributeAndControl(final ControlsModel controlModel,
-			final AbstractAttributeInterface editedAttribute, final ContainerInterface containerInterface)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			final AbstractAttributeInterface editedAttribute,
+			final ContainerInterface containerInterface) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
 		controlModel.setControlOperation(ProcessorConstants.OPERATION_ADD);
 		final ControlInterface newcontrol = getControlForAttribute(editedAttribute, controlModel);
@@ -2284,8 +2287,9 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsApplicationException
 	 */
 	private void editAttributeAndControl(final ControlsModel controlModel,
-			final AbstractAttributeInterface editedAttribute, final ContainerInterface containerInterface)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			final AbstractAttributeInterface editedAttribute,
+			final ContainerInterface containerInterface) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
 		final LoadFormControlsProcessor loadFormControlsProcessor = LoadFormControlsProcessor
 				.getInstance();
@@ -2326,7 +2330,8 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsSystemException
 	 */
 	private void setTaggedValue(final ControlsModel controlModel,
-			final AbstractAttributeInterface editedAttribute) throws DynamicExtensionsSystemException
+			final AbstractAttributeInterface editedAttribute)
+			throws DynamicExtensionsSystemException
 	{
 		if (!(editedAttribute instanceof AssociationInterface))
 		{
@@ -2669,7 +2674,8 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsSystemException
 	 */
 	private Integer getPrecisionTagValue(final Map<String, String> taggedValueMap,
-			final AttributeTypeInformationInterface attrTypeInfo) throws DynamicExtensionsSystemException
+			final AttributeTypeInformationInterface attrTypeInfo)
+			throws DynamicExtensionsSystemException
 	{
 		final String precision = taggedValueMap.get(XMIConstants.TAGGED_VALUE_PRECISION);
 		Integer precisionDigits = null;
@@ -2740,7 +2746,8 @@ public class XMIImportProcessor
 	 * @param editedAttribute
 	 * @return
 	 */
-	private boolean getAttrToEdit(final Collection<AbstractAttributeInterface> originalAttributeColl,
+	private boolean getAttrToEdit(
+			final Collection<AbstractAttributeInterface> originalAttributeColl,
 			final AbstractAttributeInterface editedAttribute)
 	{
 		for (final AbstractAttributeInterface originalAttribute : originalAttributeColl)
@@ -2875,7 +2882,8 @@ public class XMIImportProcessor
 
 					final String targetEntityId = associationInterface.getTargetEntity().getName();
 
-					final List targetContainerInterfaceList = entityNameVsContainers.get(targetEntityId);
+					final List targetContainerInterfaceList = entityNameVsContainers
+							.get(targetEntityId);
 
 					//					TODO remove this condition to delete association with deleted or renamed entities.
 					//getting container corresponding to renamed or deleted entity which is associated with some association from the retrieved entity group
@@ -2905,8 +2913,9 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsApplicationException
 	 */
 	private ControlInterface getControlForAttribute(
-			final AbstractAttributeInterface abstractAttributeInterface, final ControlsModel controlModel)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			final AbstractAttributeInterface abstractAttributeInterface,
+			final ControlsModel controlModel) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
 		ControlInterface controlInterface = null;
 		final AttributeProcessor attributeProcessor = AttributeProcessor.getInstance();
@@ -2988,7 +2997,8 @@ public class XMIImportProcessor
 			if (!(attributeInterface.getName().equalsIgnoreCase(Constants.SYSTEM_IDENTIFIER) && xmiConfigurationObject
 					.isAddIdAttribute()))
 			{
-				final Map<String, String> taggedValueMap = attrVsMapTagValues.get(attributeInterface);
+				final Map<String, String> taggedValueMap = attrVsMapTagValues
+						.get(attributeInterface);
 				if ((userDefinedDEInterface != null)
 						&& (userDefinedDEInterface.getPermissibleValueCollection() != null)
 						&& (userDefinedDEInterface.getPermissibleValueCollection().size() > 0))
@@ -3071,8 +3081,8 @@ public class XMIImportProcessor
 					final String userSelectedControlName = ProcessorConstants.CHECKBOX_CONTROL;
 					controlModel.setDataType(ProcessorConstants.DATATYPE_BOOLEAN);
 					controlInterface = deFactory.createCheckBox();
-					final String defaultValue = getDefaultValueForBooleanTagValue(attributeInterface,
-							taggedValueMap);
+					final String defaultValue = getDefaultValueForBooleanTagValue(
+							attributeInterface, taggedValueMap);
 
 					final BooleanValueInterface booleanValue = DomainObjectFactory.getInstance()
 							.createBooleanValue();
@@ -3254,7 +3264,8 @@ public class XMIImportProcessor
 		final EntityInterface targetEntity = associationInterface.getTargetEntity();
 		final DomainObjectFactory domainObjectFactory = DomainObjectFactory.getInstance();
 		//		This method returns all attributes and not associations
-		final Collection<AttributeInterface> targetEntityAttrColl = targetEntity.getAttributeCollection();
+		final Collection<AttributeInterface> targetEntityAttrColl = targetEntity
+				.getAttributeCollection();
 		int seqNo = 1;
 		final String attributesInAssociationDropDownTagValue = taggedValueMap
 				.get(XMIConstants.TAGGED_VALUE_ATTRIBUTES_IN_ASSOCIATION_DROP_DOWN);
@@ -3404,8 +3415,9 @@ public class XMIImportProcessor
 	 * @throws Exception
 	 */
 	protected DynamicQueryList processPersistence(final List<String> containerNames,
-			final boolean isEntityGroupSystemGenerated, final boolean isCreateTable, final boolean isDefaultPackage,
-			final String defaultPackagePrefix, final HibernateDAO... hibernatedao) throws Exception
+			final boolean isEntityGroupSystemGenerated, final boolean isCreateTable,
+			final boolean isDefaultPackage, final String defaultPackagePrefix,
+			final HibernateDAO... hibernatedao) throws Exception
 	{
 		//Collection<ContainerInterface> containerColl = new HashSet<ContainerInterface>();
 
@@ -3549,8 +3561,8 @@ public class XMIImportProcessor
 			{
 				for (final Dependency umlDependency : sqlDependencyColl)
 				{
-					final EntityInterface supplierEntity = processDependency(umlDependency, packageName,
-							skipEntityNames, associationNames, defaultPackagePrefix);
+					final EntityInterface supplierEntity = processDependency(umlDependency,
+							packageName, skipEntityNames, associationNames, defaultPackagePrefix);
 					if (supplierEntity != null)
 					{
 						supplierEntities.add(supplierEntity);
@@ -3625,8 +3637,9 @@ public class XMIImportProcessor
 	 * @param packageName
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private EntityInterface processDependency(final Dependency umlDependency, final String packageName,
-			final List<String> skipEntityNames, final List<String> associationName, final String defaultPackagePrefix)
+	private EntityInterface processDependency(final Dependency umlDependency,
+			final String packageName, final List<String> skipEntityNames,
+			final List<String> associationName, final String defaultPackagePrefix)
 			throws DynamicExtensionsSystemException
 	{
 		// here client means the dataclass which is src of dependency
@@ -3746,10 +3759,11 @@ public class XMIImportProcessor
 	 */
 
 	private void updateAttributeColumnName(final EntityInterface supplierEntity,
-			final Map<String, String> tagNameVsTagValue, final String packageName, final Attribute newColumn)
-			throws DynamicExtensionsSystemException
+			final Map<String, String> tagNameVsTagValue, final String packageName,
+			final Attribute newColumn) throws DynamicExtensionsSystemException
 	{
-		final String mappedAttribute = tagNameVsTagValue.get(XMIConstants.TAGGED_VALUE_MAPPED_ATTRIBUTES);
+		final String mappedAttribute = tagNameVsTagValue
+				.get(XMIConstants.TAGGED_VALUE_MAPPED_ATTRIBUTES);
 
 		supplierEntity.getAssociationCollection();
 		supplierEntity.getAttributeCollection();
@@ -3783,8 +3797,9 @@ public class XMIImportProcessor
 	 * @param supplierEntity entity in which the attribute is to be searched
 	 * @param newColumn umlAttribute corresponding to the token attribute
 	 */
-	private void updateAttributeColumnProperties(final String token, final EntityInterface supplierEntity,
-			final Attribute newColumn) throws DynamicExtensionsSystemException
+	private void updateAttributeColumnProperties(final String token,
+			final EntityInterface supplierEntity, final Attribute newColumn)
+			throws DynamicExtensionsSystemException
 	{
 
 		final AttributeInterface attribute = supplierEntity.getAttributeByName(token);
@@ -3825,8 +3840,8 @@ public class XMIImportProcessor
 	 * @param packageTokenizer
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void validatePackageName(final StringTokenizer tokens, final StringTokenizer packageTokenizer)
-			throws DynamicExtensionsSystemException
+	private void validatePackageName(final StringTokenizer tokens,
+			final StringTokenizer packageTokenizer) throws DynamicExtensionsSystemException
 	{
 
 		String subPackageName = "";

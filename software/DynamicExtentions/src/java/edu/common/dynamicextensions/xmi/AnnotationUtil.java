@@ -39,13 +39,10 @@ import edu.common.dynamicextensions.util.global.DEConstants.AssociationDirection
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.wustl.common.exception.BizLogicException;
-import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
-import edu.wustl.dao.daofactory.DAOConfigFactory;
-import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
 
@@ -70,7 +67,6 @@ public class AnnotationUtil
 	private static String pathInsertStatement = "insert into PATH (PATH_ID, FIRST_ENTITY_ID,"
 			+ "INTERMEDIATE_PATH, LAST_ENTITY_ID) values (?,?,?,?)";
 
-
 	/**
 	 * It will add the Association between the staticEntityId & dynamicEntityId.
 	 * @param staticEntityId association's source entity ID
@@ -82,7 +78,8 @@ public class AnnotationUtil
 	 * @throws DynamicExtensionsApplicationException exception
 	 */
 	public static synchronized Long addAssociation(Long staticEntityId, Long dynamicEntityId,
-			boolean isEntityFromXmi) throws DynamicExtensionsSystemException, BizLogicException, DynamicExtensionsApplicationException
+			boolean isEntityFromXmi) throws DynamicExtensionsSystemException, BizLogicException,
+			DynamicExtensionsApplicationException
 	{
 
 		AssociationInterface association = null;
@@ -100,22 +97,15 @@ public class AnnotationUtil
 
 			association = addAssociationForEntities(staticEntity, dynamicEntity);
 
-
-
 			staticEntity = EntityManager.getInstance().persistEntityMetadataForAnnotation(
 					staticEntity, true, false, association);
 
 			//Add the column related to the association to the entity table of the associated entities.
 			EntityManager.getInstance().addAssociationColumn(association);
 
-			String appName = CommonServiceLocator.getInstance().getAppName();
-			IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
-
-			jdbcdao = daoFactory.getJDBCDAO();
-			jdbcdao.openSession(null);
-
+			jdbcdao = DynamicExtensionsUtility.getJDBCDAO();
 			addQueryPaths(staticEntity, dynamicEntity, isEntityFromXmi, association.getId(),
-					jdbcdao,staticEntity);
+					jdbcdao, staticEntity);
 			jdbcdao.commit();
 		}
 		catch (DAOException e)
@@ -126,15 +116,8 @@ public class AnnotationUtil
 		}
 		finally
 		{
-			try
-			{
-				DynamicExtensionsUtility.closeHibernateDAO(dao);
-				jdbcdao.closeSession();
-			}
-			catch (DAOException e)
-			{
-				LOGGER.error("Exception occured while closing Dao", e);
-			}
+			DynamicExtensionsUtility.closeDAO(dao);
+			DynamicExtensionsUtility.closeDAO(jdbcdao);
 
 		}
 
@@ -152,9 +135,9 @@ public class AnnotationUtil
 	 * @throws BizLogicException
 	 */
 	public static void addQueryPaths(EntityInterface staticEntity, EntityInterface dynamicEntity,
-			boolean isEntityFromXmi, Long associationId, JDBCDAO jdbcdao,
-			EntityInterface hookEntity) throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException, BizLogicException
+			boolean isEntityFromXmi, Long associationId, JDBCDAO jdbcdao, EntityInterface hookEntity)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
+			BizLogicException
 	{
 		Set<PathObject> processedPathList = new HashSet<PathObject>();
 		if (!isMapPopulated || !isEntityFromXmi)
@@ -202,8 +185,8 @@ public class AnnotationUtil
 	{
 		AssociationInterface association = null;
 		association = getAssociationForEntity(staticEntity, dynamicEntity);
-		addQueryPaths(staticEntity, dynamicEntity, isEntityFromXmi, association.getId(),
-					jdbcdao, hookEntity);
+		addQueryPaths(staticEntity, dynamicEntity, isEntityFromXmi, association.getId(), jdbcdao,
+				hookEntity);
 		return association.getId();
 	}
 
@@ -357,7 +340,6 @@ public class AnnotationUtil
 		addInheritancePaths(maxPathId, dynamicEntity);
 	}
 
-
 	public static boolean isPathAdded(Long staticEntityId, Long dynamicEntityId, JDBCDAO jdbcdao)/*, Long deAssociationId*/
 	throws DynamicExtensionsSystemException
 	{
@@ -369,7 +351,7 @@ public class AnnotationUtil
 			LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 			queryDataList.add(new ColumnValueBean("FIRST_ENTITY_ID", staticEntityId));
 			queryDataList.add(new ColumnValueBean("LAST_ENTITY_ID", dynamicEntityId));
-			ispathAdded = isQueryReturnsResults(jdbcdao,checkForPathQuery,queryDataList);
+			ispathAdded = isQueryReturnsResults(jdbcdao, checkForPathQuery, queryDataList);
 		}
 		catch (SQLException e)
 		{
@@ -383,11 +365,12 @@ public class AnnotationUtil
 		return ispathAdded;
 	}
 
-	private static boolean isQueryReturnsResults(JDBCDAO jdbcdao, String checkForPathQuery,LinkedList<ColumnValueBean> queryDataList) throws DAOException, SQLException
+	private static boolean isQueryReturnsResults(JDBCDAO jdbcdao, String checkForPathQuery,
+			LinkedList<ColumnValueBean> queryDataList) throws DAOException, SQLException
 	{
 		boolean ispathAdded = false;
 		ResultSet resultSet = null; // NOPMD - DD anomaly
-		resultSet = jdbcdao.getResultSet(checkForPathQuery,queryDataList,null);
+		resultSet = jdbcdao.getResultSet(checkForPathQuery, queryDataList, null);
 		if (resultSet != null)
 		{
 			while (resultSet.next())
@@ -423,7 +406,7 @@ public class AnnotationUtil
 			queryDataList.add(new ColumnValueBean("FIRST_ENTITY_ID", staticEntityId));
 			queryDataList.add(new ColumnValueBean("LAST_ENTITY_ID", dynamicEntityId));
 			queryDataList.add(new ColumnValueBean("intermediate_path", "%\\_%"));
-			ispathAdded = isQueryReturnsResults(jdbcdao, checkForPathQuery,queryDataList);
+			ispathAdded = isQueryReturnsResults(jdbcdao, checkForPathQuery, queryDataList);
 		}
 		catch (SQLException e)
 		{
@@ -436,8 +419,6 @@ public class AnnotationUtil
 
 		return ispathAdded;
 	}
-
-
 
 	/**
 	 * @param staticEntity
@@ -517,14 +498,15 @@ public class AnnotationUtil
 
 		try
 		{
-		Long maxPathId = getMaxId("path_id", "path");
-		maxPathId += 1;
-		insertNewPaths(maxPathId, staticEntityId, dynamicEntity, deAssociationID,
-				isEntGrpSysGenrtd, jdbcdao);
+			Long maxPathId = getMaxId("path_id", "path");
+			maxPathId += 1;
+			insertNewPaths(maxPathId, staticEntityId, dynamicEntity, deAssociationID,
+					isEntGrpSysGenrtd, jdbcdao);
 		}
 		catch (DAOException e)
 		{
-			throw new DynamicExtensionsSystemException("Exception occured while adding the Query paths",e);
+			throw new DynamicExtensionsSystemException(
+					"Exception occured while adding the Query paths", e);
 		}
 	}
 
@@ -538,54 +520,56 @@ public class AnnotationUtil
 	 */
 	private static void insertNewPaths(Long maxPathId, Long staticEntityId,
 			EntityInterface dynamicEntity, Long deAssociationID, boolean isEntGrpSysGenrtd,
-			JDBCDAO jdbcdao) throws DynamicExtensionsSystemException,DAOException
+			JDBCDAO jdbcdao) throws DynamicExtensionsSystemException, DAOException
 	{
 		Long intraModAssonId = getMaxId("ASSOCIATION_ID", "ASSOCIATION");
 		intraModAssonId += 1;
-		List<Map<String,LinkedList<ColumnValueBean>>> queryList = new ArrayList<Map<String,LinkedList<ColumnValueBean>>>();
+		List<Map<String, LinkedList<ColumnValueBean>>> queryList = new ArrayList<Map<String, LinkedList<ColumnValueBean>>>();
 
-		Map<String,LinkedList<ColumnValueBean>> assnQueryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
+		Map<String, LinkedList<ColumnValueBean>> assnQueryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
 		String associationQuery = "insert into ASSOCIATION (ASSOCIATION_ID, ASSOCIATION_TYPE) values (?,?)";
 		LinkedList<ColumnValueBean> assnQueryColValBeanList = new LinkedList<ColumnValueBean>();
 		assnQueryColValBeanList.add(new ColumnValueBean("ASSOCIATION_ID", intraModAssonId));
-		assnQueryColValBeanList.add(new ColumnValueBean("ASSOCIATION_TYPE", Integer.valueOf(edu.wustl.cab2b.server.path.AssociationType.INTRA_MODEL_ASSOCIATION.getValue())));
+		assnQueryColValBeanList.add(new ColumnValueBean("ASSOCIATION_TYPE", Integer
+				.valueOf(edu.wustl.cab2b.server.path.AssociationType.INTRA_MODEL_ASSOCIATION
+						.getValue())));
 		assnQueryVsDataList.put(associationQuery, assnQueryColValBeanList);
 		queryList.add(assnQueryVsDataList);
 
-		Map<String,LinkedList<ColumnValueBean>> intraQueryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
-			String intraModelQuery = "insert into INTRA_MODEL_ASSOCIATION (ASSOCIATION_ID, DE_ASSOCIATION_ID) values (?,?)";
-			LinkedList<ColumnValueBean> intraQueryColValueBeanList = new LinkedList<ColumnValueBean>();
-			intraQueryColValueBeanList.add(new ColumnValueBean("ASSOCIATION_ID", intraModAssonId));
-			intraQueryColValueBeanList.add(new ColumnValueBean("DE_ASSOCIATION_ID", deAssociationID));
-			intraQueryVsDataList.put(intraModelQuery, intraQueryColValueBeanList);
-			queryList.add(intraQueryVsDataList);
+		Map<String, LinkedList<ColumnValueBean>> intraQueryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
+		String intraModelQuery = "insert into INTRA_MODEL_ASSOCIATION (ASSOCIATION_ID, DE_ASSOCIATION_ID) values (?,?)";
+		LinkedList<ColumnValueBean> intraQueryColValueBeanList = new LinkedList<ColumnValueBean>();
+		intraQueryColValueBeanList.add(new ColumnValueBean("ASSOCIATION_ID", intraModAssonId));
+		intraQueryColValueBeanList.add(new ColumnValueBean("DE_ASSOCIATION_ID", deAssociationID));
+		intraQueryVsDataList.put(intraModelQuery, intraQueryColValueBeanList);
+		queryList.add(intraQueryVsDataList);
 
-			Map<String,LinkedList<ColumnValueBean>> pathQueryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
-			 LinkedList<ColumnValueBean> pathQueryColValBeanList = getcolumnvalueBeanListForPathQuery(
-					maxPathId, staticEntityId, intraModAssonId.toString(), dynamicEntity.getId());
-			 pathQueryVsDataList.put(pathInsertStatement, pathQueryColValBeanList);
-			 queryList.add(pathQueryVsDataList);
-			//adding paths for derived entities of static entity
-			maxPathId = addChildPathsStaticEntity(maxPathId, staticEntityId, dynamicEntity.getId(),
-					intraModAssonId.toString(), queryList, jdbcdao);
+		Map<String, LinkedList<ColumnValueBean>> pathQueryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
+		LinkedList<ColumnValueBean> pathQueryColValBeanList = getcolumnvalueBeanListForPathQuery(
+				maxPathId, staticEntityId, intraModAssonId.toString(), dynamicEntity.getId());
+		pathQueryVsDataList.put(pathInsertStatement, pathQueryColValBeanList);
+		queryList.add(pathQueryVsDataList);
+		//adding paths for derived entities of static entity
+		maxPathId = addChildPathsStaticEntity(maxPathId, staticEntityId, dynamicEntity.getId(),
+				intraModAssonId.toString(), queryList, jdbcdao);
 
-			//adding paths for derived entities of dynamic entity
-			maxPathId = addChildPathsDynamicEntity(maxPathId, staticEntityId,
-					dynamicEntity.getId(), intraModAssonId.toString(), queryList, jdbcdao);
+		//adding paths for derived entities of dynamic entity
+		maxPathId = addChildPathsDynamicEntity(maxPathId, staticEntityId, dynamicEntity.getId(),
+				intraModAssonId.toString(), queryList, jdbcdao);
 
-			DynamicExtensionsUtility.executeDML(queryList);
-			maxPathId += 1;
-			if (!isEntGrpSysGenrtd)
-			{
-				maxPathId = addIndirectPaths(maxPathId, staticEntityId, dynamicEntity.getId(),
-						intraModAssonId, jdbcdao);
-			}
-
-			addInheritancePaths(maxPathId, dynamicEntity);
+		DynamicExtensionsUtility.executeDML(queryList);
+		maxPathId += 1;
+		if (!isEntGrpSysGenrtd)
+		{
+			maxPathId = addIndirectPaths(maxPathId, staticEntityId, dynamicEntity.getId(),
+					intraModAssonId, jdbcdao);
 		}
 
+		addInheritancePaths(maxPathId, dynamicEntity);
+	}
+
 	public static LinkedList<ColumnValueBean> getcolumnvalueBeanListForPathQuery(Long maxPathId,
-			Long staticEntityId,String intraModAssonId, Long dynamicEntityId )
+			Long staticEntityId, String intraModAssonId, Long dynamicEntityId)
 	{
 		LinkedList<ColumnValueBean> pathQueryColValBeanList = new LinkedList<ColumnValueBean>();
 		pathQueryColValBeanList.add(new ColumnValueBean("PATH_ID", maxPathId));
@@ -594,10 +578,6 @@ public class AnnotationUtil
 		pathQueryColValBeanList.add(new ColumnValueBean("LAST_ENTITY_ID", dynamicEntityId));
 		return pathQueryColValBeanList;
 	}
-
-
-
-
 
 	/**
 	 * This method adds paths from derived entities of static entity to derived entities of dynamic entity
@@ -610,7 +590,8 @@ public class AnnotationUtil
 	 * @throws DynamicExtensionsSystemException
 	 */
 	private static Long addPathsChildStaticChildDynamic(Long maxPathId, Long staticEntityId,
-			Long dynChldEntityId, String intraModAssonId, List<Map<String, LinkedList<ColumnValueBean>>> queryList, JDBCDAO jdbcdao)
+			Long dynChldEntityId, String intraModAssonId,
+			List<Map<String, LinkedList<ColumnValueBean>>> queryList, JDBCDAO jdbcdao)
 			throws DynamicExtensionsSystemException
 	{
 		Collection<EntityInterface> statChldEntes = entyVsChldEnts.get(staticEntityId);
@@ -623,9 +604,10 @@ public class AnnotationUtil
 				if (!ispathAdded)
 				{
 					maxPathId = maxPathId + 1;
-					Map<String,LinkedList<ColumnValueBean>> pathQueryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
+					Map<String, LinkedList<ColumnValueBean>> pathQueryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
 					LinkedList<ColumnValueBean> pathQueryColValBeanList = getcolumnvalueBeanListForPathQuery(
-							maxPathId, staticChildEntity.getId(), intraModAssonId.toString(), dynChldEntityId);
+							maxPathId, staticChildEntity.getId(), intraModAssonId.toString(),
+							dynChldEntityId);
 					pathQueryVsDataList.put(pathInsertStatement, pathQueryColValBeanList);
 					queryList.add(pathQueryVsDataList);
 				}
@@ -648,7 +630,8 @@ public class AnnotationUtil
 	 * @throws DynamicExtensionsSystemException
 	 */
 	private static Long addChildPathsDynamicEntity(Long maxPathId, Long staticEntityId,
-			Long dynamicEntityId, String intraModlAssonId, List<Map<String, LinkedList<ColumnValueBean>>> queryList, JDBCDAO jdbcdao)
+			Long dynamicEntityId, String intraModlAssonId,
+			List<Map<String, LinkedList<ColumnValueBean>>> queryList, JDBCDAO jdbcdao)
 			throws DynamicExtensionsSystemException
 	{
 		if (hookEntityId != null && staticEntityId.compareTo(hookEntityId) != 0)
@@ -663,9 +646,10 @@ public class AnnotationUtil
 					if (!ispathAdded)
 					{
 						maxPathId = maxPathId + 1;
-						Map<String,LinkedList<ColumnValueBean>> pathQueryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
+						Map<String, LinkedList<ColumnValueBean>> pathQueryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
 						LinkedList<ColumnValueBean> pathQueryColValBeanList = getcolumnvalueBeanListForPathQuery(
-									maxPathId, staticEntityId, intraModlAssonId.toString(), childEntity.getId());
+								maxPathId, staticEntityId, intraModlAssonId.toString(), childEntity
+										.getId());
 						pathQueryVsDataList.put(pathInsertStatement, pathQueryColValBeanList);
 						queryList.add(pathQueryVsDataList);
 					}
@@ -693,7 +677,8 @@ public class AnnotationUtil
 	 * @throws DynamicExtensionsSystemException
 	 */
 	private static Long addChildPathsStaticEntity(Long maxPathId, Long staticEntityId,
-			Long dynamicEntityId, String intrModAssnId, List<Map<String, LinkedList<ColumnValueBean>>> queryList, JDBCDAO jdbcdao)
+			Long dynamicEntityId, String intrModAssnId,
+			List<Map<String, LinkedList<ColumnValueBean>>> queryList, JDBCDAO jdbcdao)
 			throws DynamicExtensionsSystemException
 	{
 
@@ -707,7 +692,7 @@ public class AnnotationUtil
 				if (!ispathAdded)
 				{
 					maxPathId++;
-					Map<String,LinkedList<ColumnValueBean>> pathQueryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
+					Map<String, LinkedList<ColumnValueBean>> pathQueryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
 					LinkedList<ColumnValueBean> pathQueryColValBeanList = getcolumnvalueBeanListForPathQuery(
 							maxPathId, childEntity.getId(), intrModAssnId, dynamicEntityId);
 					pathQueryVsDataList.put(pathInsertStatement, pathQueryColValBeanList);
@@ -737,22 +722,20 @@ public class AnnotationUtil
 			//This map is added because the following algo creates multiple paths between same entities
 			//The map will contains only single unique path between entities
 			Map<String, Object> mapQuery = new HashMap<String, Object>();
-			List<Map<String,LinkedList<ColumnValueBean>>> queryList = new ArrayList<Map<String,LinkedList<ColumnValueBean>>>();
+			List<Map<String, LinkedList<ColumnValueBean>>> queryList = new ArrayList<Map<String, LinkedList<ColumnValueBean>>>();
 			String sql = "";
 			String intermediatePath = "";
 			Long last_entity_id = null;
 			Long first_entity_id = null;
 			boolean ispathAdded = false;
-			String appName = CommonServiceLocator.getInstance().getAppName();
-			IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 			JDBCDAO jdbcdao = null;
 
 			while (entity.getParentEntity() != null)
 			{
 				try
 				{
-					jdbcdao = daoFactory.getJDBCDAO();
-					jdbcdao.openSession(null);
+					jdbcdao = DynamicExtensionsUtility.getJDBCDAO();
+
 					//replicate outgoing paths of parent entity (outgoing associations)
 					Collection<AssociationInterface> allAssociations = entity.getParentEntity()
 							.getAllAssociations();
@@ -762,8 +745,9 @@ public class AnnotationUtil
 						intermediatePath = "";
 						sql = "select INTERMEDIATE_PATH,LAST_ENTITY_ID from path where FIRST_ENTITY_ID=?";
 						LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
-						queryDataList.add(new ColumnValueBean("FIRST_ENTITY_ID", association.getEntity().getId()));
-						resultSet = jdbcdao.getResultSet(sql,queryDataList,null);
+						queryDataList.add(new ColumnValueBean("FIRST_ENTITY_ID", association
+								.getEntity().getId()));
+						resultSet = jdbcdao.getResultSet(sql, queryDataList, null);
 						List<ArrayList<String>> idlist = new ArrayList<ArrayList<String>>();
 						while (resultSet.next())
 						{
@@ -781,14 +765,17 @@ public class AnnotationUtil
 							ispathAdded = isPathAdded(entity.getId(), last_entity_id, jdbcdao);
 							if (!ispathAdded)
 							{
-								Map<String, LinkedList<ColumnValueBean>> queryVsDataList=new HashMap<String, LinkedList<ColumnValueBean>>();
+								Map<String, LinkedList<ColumnValueBean>> queryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
 								LinkedList<ColumnValueBean> pathQueryColValBeanList = getcolumnvalueBeanListForPathQuery(
-										maxPathId, entity.getId(), intermediatePath.toString(), last_entity_id);
-								String uniquepathStr = entity.getId() + "_" + intermediatePath + "_" + last_entity_id;
+										maxPathId, entity.getId(), intermediatePath.toString(),
+										last_entity_id);
+								String uniquepathStr = entity.getId() + "_" + intermediatePath
+										+ "_" + last_entity_id;
 								if (!mapQuery.containsKey(uniquepathStr))
 								{
 									mapQuery.put(uniquepathStr, null);
-									queryVsDataList.put(pathInsertStatement,pathQueryColValBeanList);
+									queryVsDataList.put(pathInsertStatement,
+											pathQueryColValBeanList);
 									queryList.add(queryVsDataList);
 									maxPathId++;
 								}
@@ -802,8 +789,9 @@ public class AnnotationUtil
 					sql = "select FIRST_ENTITY_ID,INTERMEDIATE_PATH from path where LAST_ENTITY_ID=?";
 
 					LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
-					queryDataList.add(new ColumnValueBean("LAST_ENTITY_ID", entity.getParentEntity().getId()));
-					resultSet = jdbcdao.getResultSet(sql,queryDataList,null);
+					queryDataList.add(new ColumnValueBean("LAST_ENTITY_ID", entity
+							.getParentEntity().getId()));
+					resultSet = jdbcdao.getResultSet(sql, queryDataList, null);
 					List<ArrayList<String>> idlist = new ArrayList<ArrayList<String>>();
 					while (resultSet.next())
 					{
@@ -825,15 +813,18 @@ public class AnnotationUtil
 							ispathAdded = isPathAdded(first_entity_id, entity.getId(), jdbcdao);
 							if (!ispathAdded)
 							{
-								Map<String, LinkedList<ColumnValueBean>> queryVsDataList=new HashMap<String, LinkedList<ColumnValueBean>>();
+								Map<String, LinkedList<ColumnValueBean>> queryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
 								LinkedList<ColumnValueBean> pathQueryColValBeanList = getcolumnvalueBeanListForPathQuery(
-										maxPathId, first_entity_id, intermediatePath.toString(), entity.getId());
-								String uniquepathStr = first_entity_id + "_" + intermediatePath	+ "_" + entity.getId();
+										maxPathId, first_entity_id, intermediatePath.toString(),
+										entity.getId());
+								String uniquepathStr = first_entity_id + "_" + intermediatePath
+										+ "_" + entity.getId();
 
 								if (!mapQuery.containsKey(uniquepathStr))
 								{
 									mapQuery.put(uniquepathStr, null);
-									queryVsDataList.put(pathInsertStatement,pathQueryColValBeanList);
+									queryVsDataList.put(pathInsertStatement,
+											pathQueryColValBeanList);
 									queryList.add(queryVsDataList);
 									maxPathId++;
 								}
@@ -844,7 +835,7 @@ public class AnnotationUtil
 				finally
 				{
 
-					jdbcdao.closeSession();
+					DynamicExtensionsUtility.closeDAO(jdbcdao);
 				}
 				entity = entity.getParentEntity();
 
@@ -878,7 +869,7 @@ public class AnnotationUtil
 
 	{
 		ResultSet resultSet = null; // NOPMD - DD anomaly
-		List<Map<String,LinkedList<ColumnValueBean>>> queryList = new ArrayList<Map<String,LinkedList<ColumnValueBean>>>();
+		List<Map<String, LinkedList<ColumnValueBean>>> queryList = new ArrayList<Map<String, LinkedList<ColumnValueBean>>>();
 
 		try
 		{
@@ -889,10 +880,9 @@ public class AnnotationUtil
 
 				LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 				queryDataList.add(new ColumnValueBean("LAST_ENTITY_ID", staticEntityId));
-				resultSet = jdbcdao.getResultSet(query,queryDataList,null);
+				resultSet = jdbcdao.getResultSet(query, queryDataList, null);
 				while (resultSet.next())
 				{
-
 
 					Long firstEntityId = resultSet.getLong(1);
 					String path = resultSet.getString(2);
@@ -901,7 +891,7 @@ public class AnnotationUtil
 					LinkedList<ColumnValueBean> pathQueryColValBeanList = getcolumnvalueBeanListForPathQuery(
 							maxPathId, firstEntityId, path.toString(), dynamicEntityId);
 					Map<String, LinkedList<ColumnValueBean>> queryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
-					queryVsDataList.put(pathInsertStatement,pathQueryColValBeanList);
+					queryVsDataList.put(pathInsertStatement, pathQueryColValBeanList);
 					queryList.add(queryVsDataList);
 					maxPathId = addChildPathsDynamicEntity(maxPathId, firstEntityId,
 							dynamicEntityId, path, queryList, jdbcdao);
@@ -932,52 +922,41 @@ public class AnnotationUtil
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private static Long getMaxId(String columnName, String tableName) throws DynamicExtensionsSystemException
+	private static Long getMaxId(String columnName, String tableName)
+			throws DynamicExtensionsSystemException
 	{
 		String query = "select max(" + columnName + ") from " + tableName;
 		ResultSet resultSet = null;
 		Long maxId = null;
-		String appName = CommonServiceLocator.getInstance().getAppName();
-		IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 		JDBCDAO jdbcdao = null;
 		try
 		{
-			jdbcdao = daoFactory.getJDBCDAO();
-			jdbcdao.openSession(null);
-			resultSet = jdbcdao.getResultSet(query,null,null);
+			jdbcdao = DynamicExtensionsUtility.getJDBCDAO();
+			resultSet = jdbcdao.getResultSet(query, null, null);
 			resultSet.next();
 			maxId = resultSet.getLong(1);
 			jdbcdao.closeStatement(resultSet);
 		}
 		catch (Exception e)
 		{
-			throw new DynamicExtensionsSystemException("Exception while getting max id",e);
+			throw new DynamicExtensionsSystemException("Exception while getting max id", e);
 
 		}
 		finally
 		{
-			try
-			{
-				jdbcdao.closeSession();
-			}
-			catch (DAOException e)
-			{
-				throw new DynamicExtensionsSystemException("DAOException while closing database objects",e);
-			}
+			DynamicExtensionsUtility.closeDAO(jdbcdao);
 		}
 		return maxId;
 	}
 
 	public static void setHookEntityId(EntityInterface hookEntity)
 	{
-		hookEntityId=Long.valueOf(0);
-		if(hookEntity!=null)
+		hookEntityId = Long.valueOf(0);
+		if (hookEntity != null)
 		{
 			hookEntityId = hookEntity.getId();
 		}
 	}
-
-
 
 	/**
 	 * @param conditions

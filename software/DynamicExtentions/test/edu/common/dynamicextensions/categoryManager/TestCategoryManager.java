@@ -164,7 +164,8 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 	}
 
-	private Collection<String> getSavedCategoryNames() throws DAOException, SQLException
+	private Collection<String> getSavedCategoryNames() throws DAOException, SQLException,
+			DynamicExtensionsSystemException
 	{
 		Collection<String> categoryNameCollection = new ArrayList<String>();
 		String catNameSql = " select name from DYEXTN_ABSTRACT_METADATA where identifier in (select identifier from dyextn_category)";
@@ -185,7 +186,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 
 			{
 				jdbcdao.closeStatement(resultSet);
-				DynamicExtensionsUtility.closeJDBCDAO(jdbcdao);
+				DynamicExtensionsUtility.closeDAO(jdbcdao);
 			}
 		}
 		return categoryNameCollection;

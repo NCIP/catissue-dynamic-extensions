@@ -70,7 +70,6 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 		}
 	}*/
 
-
 	/**
 	 * @param inputs list which should be aappended to query
 	 * @param query Query to which append it in its IN clause
@@ -80,20 +79,19 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 	{
 		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 		query.append(OPENING_BRACKET);
-        int index = 0;
+	    int index = 0;
 		query.append(QUESTION_MARK);
-        queryDataList.add(new ColumnValueBean(IDENTIFIER, inputs.get(index++)));
-        for(;index<inputs.size();index++)
-        {
-        	query.append(COMMA);
-        	queryDataList.add(new ColumnValueBean(IDENTIFIER, inputs.get(index++)));
-        	query.append(QUESTION_MARK);
-        }
-        query.append(CLOSING_BRACKET);
+	    queryDataList.add(new ColumnValueBean(IDENTIFIER, inputs.get(index++)));
+	    for(;index<inputs.size();index++)
+	    {
+	    	query.append(COMMA);
+	    	queryDataList.add(new ColumnValueBean(IDENTIFIER, inputs.get(index++)));
+	    	query.append(QUESTION_MARK);
+	    }
+	    query.append(CLOSING_BRACKET);
 
 		return queryDataList;
 	}*/
-
 
 	/**
 	 * This will return the no of records returned by the Query.
@@ -102,14 +100,15 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 	 * @return number of records.
 	 * @throws DynamicExtensionsSystemException exception.
 	 */
-	public static int getNoOfRecord(String query,List<ColumnValueBean> queryDataList) throws DynamicExtensionsSystemException
+	public static int getNoOfRecord(String query, List<ColumnValueBean> queryDataList)
+			throws DynamicExtensionsSystemException
 	{
 		ResultSet resultSet = null;
 		JDBCDAO jdbcDao = null;
 		try
 		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			resultSet = jdbcDao.getResultSet(query,queryDataList,null);
+			resultSet = jdbcDao.getResultSet(query, queryDataList, null);
 			resultSet.next();
 			return resultSet.getInt(1);
 		}
@@ -128,7 +127,7 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 				try
 				{
 					jdbcDao.closeStatement(resultSet);
-					DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+					DynamicExtensionsUtility.closeDAO(jdbcDao);
 				}
 				catch (DAOException e)
 				{
@@ -137,7 +136,6 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 			}
 		}
 	}
-
 
 	/**
 	 * Method generates the next identifier for the table that stores the value of the passes entity.
@@ -166,7 +164,7 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 				try
 				{
 					jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-					resultSet = jdbcDao.getResultSet(query.toString(),null,null);
+					resultSet = jdbcDao.getResultSet(query.toString(), null, null);
 					resultSet.next();
 					identifier = resultSet.getLong(1);
 					identifier = identifier + 1;
@@ -178,7 +176,7 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 						try
 						{
 							jdbcDao.closeStatement(resultSet);
-							DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+							DynamicExtensionsUtility.closeDAO(jdbcDao);
 						}
 						catch (DAOException e)
 						{
@@ -210,7 +208,8 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 	 * @return list of records.
 	 * @throws DynamicExtensionsSystemException exception.
 	 */
-	public List<Long> getResultInList(String query,List<ColumnValueBean> queryDataList) throws DynamicExtensionsSystemException
+	public List<Long> getResultInList(String query, List<ColumnValueBean> queryDataList)
+			throws DynamicExtensionsSystemException
 	{
 		List<Long> results = new ArrayList<Long>();
 
@@ -219,7 +218,7 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 		try
 		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			resultSet = jdbcDao.getResultSet(query,queryDataList,null);
+			resultSet = jdbcDao.getResultSet(query, queryDataList, null);
 			while (resultSet.next())
 			{
 				Long identifier = resultSet.getLong(1);
@@ -239,7 +238,7 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 			try
 			{
 				jdbcDao.closeStatement(resultSet);
-				DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+				DynamicExtensionsUtility.closeDAO(jdbcDao);
 			}
 			catch (DAOException e)
 			{
@@ -364,7 +363,7 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 					dbaseCopy = (Entity) DynamicExtensionsUtility.getCleanObject(Entity.class
 							.getCanonicalName(), entityId);
 				}
-				catch (DAOException e)
+				catch (DynamicExtensionsSystemException e)
 				{
 					Logger.out.debug(e.getMessage());
 				}
@@ -565,10 +564,8 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 			throws DynamicExtensionsSystemException
 	{
 		String query = "select count(*) from " + tableName;
-		return getNoOfRecord(query,null);
+		return getNoOfRecord(query, null);
 	}
-
-
 
 	/**
 	 * @param entity

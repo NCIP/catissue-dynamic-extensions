@@ -6,13 +6,14 @@ import java.util.List;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.IdGenerator;
 import edu.common.dynamicextensions.domaininterface.IdGeneratorInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.exception.DAOException;
 
 /**
  * This is singleton util class is used to generate unique ids.
- * 
+ *
  * @author kunal_kamble
  * @version 1.0
  */
@@ -33,7 +34,7 @@ public class IdGeneratorUtil
 
 	/**
 	 * Returns the instance of the IdGeneratorUtil class.
-	 * 
+	 *
 	 * @return idGeneratorUtil singleton instance of the IdGeneratorUtil.
 	 */
 	public static synchronized IdGeneratorUtil getInstance()
@@ -53,7 +54,7 @@ public class IdGeneratorUtil
 	public static synchronized Long getNextUniqeId()
 	{
 		Long nextAvailableId = null;
-		HibernateDAO hibernateDAO=null;
+		HibernateDAO hibernateDAO = null;
 
 		try
 		{
@@ -67,7 +68,7 @@ public class IdGeneratorUtil
 
 				idGeneratorObject.setNextAvailableId(Long.valueOf(2));
 				idGeneratorObject.setId(Long.valueOf(1));
-				hibernateDAO.insert(idGeneratorObject);				
+				hibernateDAO.insert(idGeneratorObject);
 				hibernateDAO.commit();
 				return nextAvailableId;
 			}
@@ -97,11 +98,11 @@ public class IdGeneratorUtil
 		{
 			try
 			{
-				DynamicExtensionsUtility.closeHibernateDAO(hibernateDAO);
+				DynamicExtensionsUtility.closeDAO(hibernateDAO);
 			}
-			catch(DAOException exception)
+			catch (DynamicExtensionsSystemException e)
 			{
-				Logger.out.debug("Could not close session.", exception);
+				Logger.out.debug("Could not close transaction", e);
 			}
 		}
 

@@ -25,6 +25,7 @@ import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.cab2b.common.beans.MatchedClass;
 import edu.wustl.cab2b.common.beans.MatchedClassEntry;
@@ -50,7 +51,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	private static final long serialVersionUID = 1234567890L;
 
 	private static final Logger LOGGER = edu.wustl.common.util.logger.Logger
-	.getLogger(AbstractEntityCache.class);
+			.getLogger(AbstractEntityCache.class);
 
 	/**
 	 * List of all the categories loaded in caB2B local database.
@@ -95,8 +96,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * Map with KEY as a permissible value (PV) and VALUE as its Entity. This is
 	 * needed because there is no back pointer from PV to Entity
 	 */
-	protected Map<PermissibleValueInterface, EntityInterface> permissibleValueVsEntity =
-		new HashMap<PermissibleValueInterface, EntityInterface>();
+	protected Map<PermissibleValueInterface, EntityInterface> permissibleValueVsEntity = new HashMap<PermissibleValueInterface, EntityInterface>();
 
 	/**
 	 * Set of all the DyanamicExtensions categories loaded in the database.
@@ -111,8 +111,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	/**
 	 * Map with KEY as dynamic extension CategoryAttribute's identifier and Value as CategoryAttribute object
 	 */
-	protected Map<Long, CategoryAttributeInterface> idVsCategoryAttribute =
-		new HashMap<Long, CategoryAttributeInterface>();
+	protected Map<Long, CategoryAttributeInterface> idVsCategoryAttribute = new HashMap<Long, CategoryAttributeInterface>();
 
 	/**
 	 * Map with KEY as dynamic extension CategoryEntity's's identifier and Value as CategoryEntity object
@@ -122,8 +121,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	/**
 	 * Map with KEY as dynamic extension CategoryAssociations's identifier and Value as CategoryAssociations object
 	 */
-	protected Map<Long, CategoryAssociationInterface> idVsCaegoryAssociation =
-		new HashMap<Long, CategoryAssociationInterface>();
+	protected Map<Long, CategoryAssociationInterface> idVsCaegoryAssociation = new HashMap<Long, CategoryAssociationInterface>();
 
 	/**
 	 * Map with KEY as dynamic extension Controls's identifier and Value as Control object
@@ -141,7 +139,6 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 *  category task by more than one user at a time.
 	 */
 	protected long catFileNameCounter = 1L;
-
 
 	/**
 	 * This method gives the singleton cache object. If cache is not present then it
@@ -189,22 +186,25 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 			LOGGER.error("Error while Creating EntityCache. Error: " + e.getMessage());
 			throw new RuntimeException("Exception encountered while creating EntityCache!!", e);
 		}
+		catch (DynamicExtensionsSystemException e)
+		{
+			LOGGER.error("Error while Creating EntityCache. Error: " + e.getMessage());
+			throw new RuntimeException("Exception encountered while creating EntityCache!!", e);
+		}
 		finally
 		{
-			if (hibernateDAO != null)
+			try
 			{
-				try
-				{
-					DynamicExtensionsUtility.closeHibernateDAO(hibernateDAO);
-				}
-				catch (final DAOException e)
-				{
-					LOGGER.error("Exception encountered while closing session In EntityCache."
-							+ e.getMessage());
-					throw new RuntimeException(
-							"Exception encountered while closing session In EntityCache.", e);
-				}
+				DynamicExtensionsUtility.closeDAO(hibernateDAO);
 			}
+			catch (final DynamicExtensionsSystemException e)
+			{
+				LOGGER.error("Exception encountered while closing session In EntityCache."
+						+ e.getMessage());
+				throw new RuntimeException(
+						"Exception encountered while closing session In EntityCache.", e);
+			}
+
 		}
 		LOGGER.info("Initializing cache DONE");
 	}
@@ -266,12 +266,11 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 				.getCategoryAssociationCollection())
 		{
 			final CategoryEntityInterface targetCategoryEntity = categoryAssociation
-			.getTargetCategoryEntity();
+					.getTargetCategoryEntity();
 			createCategoryEntityCach(targetCategoryEntity);
 
 		}
 	}
-
 
 	/**
 	 * This method verifies weather the current category is in use by some user in
@@ -282,9 +281,9 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	public synchronized boolean isCategoryInUse(final CategoryInterface category)
 	{
 		boolean isInUse = false;
-		if(categoriesInUse.contains(category))
+		if (categoriesInUse.contains(category))
 		{
-			isInUse=true;
+			isInUse = true;
 		}
 		return isInUse;
 
@@ -325,7 +324,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 */
 	public synchronized void addCategoryToCache(final CategoryInterface category)
 	{
-		LOGGER.info("adding category to cache"+category);
+		LOGGER.info("adding category to cache" + category);
 		deCategories.remove(category);
 		deCategories.add(category);
 		createCategoryEntityCach(category.getRootCategoryElement());
@@ -501,8 +500,8 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 			{
 				for (final AttributeInterface patternAttribute : patternAttributeCollection)
 				{
-					final MatchedClassEntry matchedClassEntry = CompareUtil.compare(cachedAttribute,
-							patternAttribute);
+					final MatchedClassEntry matchedClassEntry = CompareUtil.compare(
+							cachedAttribute, patternAttribute);
 					if (matchedClassEntry != null)
 					{
 						matchedClass.addMatchedClassEntry(matchedClassEntry);
@@ -528,13 +527,15 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 			final Collection<PermissibleValueInterface> patternPermissibleValueCollection)
 	{
 		final MatchedClass matchedClass = new MatchedClass();
-		for (final PermissibleValueInterface cachedPermissibleValue : permissibleValueVsEntity.keySet())
+		for (final PermissibleValueInterface cachedPermissibleValue : permissibleValueVsEntity
+				.keySet())
 		{
 			for (final PermissibleValueInterface patternPermissibleValue : patternPermissibleValueCollection)
 			{
-				final EntityInterface cachedEntity = permissibleValueVsEntity.get(cachedPermissibleValue);
-				final MatchedClassEntry matchedClassEntry = CompareUtil.compare(cachedPermissibleValue,
-						patternPermissibleValue, cachedEntity);
+				final EntityInterface cachedEntity = permissibleValueVsEntity
+						.get(cachedPermissibleValue);
+				final MatchedClassEntry matchedClassEntry = CompareUtil.compare(
+						cachedPermissibleValue, patternPermissibleValue, cachedEntity);
 				if (matchedClassEntry != null)
 				{
 					matchedClass.addEntity(cachedEntity);
@@ -641,14 +642,15 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param uniqueStringIdentifier unique String Identifier
 	 * @return Actual Association for given string identifier.
 	 */
-	public AssociationInterface getAssociationByUniqueStringIdentifier(final String uniqueStringIdentifier)
+	public AssociationInterface getAssociationByUniqueStringIdentifier(
+			final String uniqueStringIdentifier)
 	{
 		final AssociationInterface association = originalAssociations.get(uniqueStringIdentifier);
 		if (association == null)
 		{
 			throw new RuntimeException(
 					"Association with given uniqueStringIdentifier is not present in cache : "
-					+ uniqueStringIdentifier);
+							+ uniqueStringIdentifier);
 		}
 		return association;
 	}
@@ -728,7 +730,6 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 		return entityGroup;
 	}
 
-
 	/**
 	 * It will return all the categories present in the Database .
 	 * @return Collection of the CategoryInterface in the database.
@@ -786,7 +787,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	public BaseAbstractAttributeInterface getBaseAbstractAttributeById(final Long identifier)
 	{
 		BaseAbstractAttributeInterface baseAbstractAttribute = null;
-		baseAbstractAttribute =idVsCategoryAttribute.get(identifier);
+		baseAbstractAttribute = idVsCategoryAttribute.get(identifier);
 		if (baseAbstractAttribute == null)
 		{
 			baseAbstractAttribute = idVsAttribute.get(identifier);
@@ -810,7 +811,8 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 */
 	public CategoryAssociationInterface getCategoryAssociationById(final Long identifier)
 	{
-		final CategoryAssociationInterface categoryAssociation = idVsCaegoryAssociation.get(identifier);
+		final CategoryAssociationInterface categoryAssociation = idVsCaegoryAssociation
+				.get(identifier);
 		if (categoryAssociation == null)
 		{
 			throw new RuntimeException(

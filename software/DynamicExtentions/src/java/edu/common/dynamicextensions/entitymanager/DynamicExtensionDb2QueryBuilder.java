@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
 import edu.common.dynamicextensions.domain.AbstractAttribute;
 import edu.common.dynamicextensions.domain.Attribute;
 import edu.common.dynamicextensions.domain.BooleanAttributeTypeInformation;
@@ -29,8 +28,6 @@ import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.JDBCDAO;
-import edu.wustl.dao.daofactory.DAOConfigFactory;
-import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
 
 /**
@@ -160,16 +157,14 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 				}
 				else
 				{
-					String appName = DynamicExtensionDAO.getInstance().getAppName();
-					IDAOFactory factory = DAOConfigFactory.getInstance().getDAOFactory(appName);
 					JDBCDAO jdbcDAO;
 					try
 					{
-						jdbcDAO = factory.getJDBCDAO();
+						jdbcDAO = DynamicExtensionsUtility.getJDBCDAO();
 						formattedvalue = jdbcDAO.getStrTodateFunction() + "('" + str.trim() + "','"
 								+ DynamicExtensionsUtility.getSQLDateFormat(datePattern) + "')";
 					}
-					catch (DAOException e)
+					catch (DynamicExtensionsSystemException e)
 					{
 						Logger.out.error(e.getMessage());
 					}
@@ -291,7 +286,7 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 			try
 			{
 				jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-				resultSet = jdbcDao.getResultSet(queryBuffer.toString(),null,null);
+				resultSet = jdbcDao.getResultSet(queryBuffer.toString(), null, null);
 				resultSet.next();
 				Long count = resultSet.getLong(1);
 				if (count > 0)
@@ -314,7 +309,7 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 				try
 				{
 					jdbcDao.closeStatement(resultSet);
-					DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+					DynamicExtensionsUtility.closeDAO(jdbcDao);
 				}
 				catch (DAOException e)
 				{

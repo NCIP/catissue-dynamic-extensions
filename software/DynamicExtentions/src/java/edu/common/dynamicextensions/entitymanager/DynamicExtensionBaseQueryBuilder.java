@@ -298,35 +298,28 @@ public class DynamicExtensionBaseQueryBuilder
 		EntityInterface dbDepEntityParent;
 		String frnCnstrRlbkQry;
 		String frnCnstrRemQry;
-		try
+		for (EntityInterface depEntity : entityColl)
 		{
-			for (EntityInterface depEntity : entityColl)
+			if (depEntity.getParentEntity() != null && depEntity.getParentEntity().equals(entity))
 			{
-				if (depEntity.getParentEntity() != null
-						&& depEntity.getParentEntity().equals(entity))
-				{
 
-					dbDepEntity = (EntityInterface) DynamicExtensionsUtility.getCleanObject(
-							Entity.class.getCanonicalName(), depEntity.getId());
-					dbDepEntityParent = dbDepEntity.getParentEntity();
-					frnCnstrRemQry = queryBuilder.getForeignKeyRemoveConstraintQueryForInheritance(
-							dbDepEntity, dbDepEntityParent);
-					queries.add(frnCnstrRemQry);
+				dbDepEntity = (EntityInterface) DynamicExtensionsUtility.getCleanObject(
+						Entity.class.getCanonicalName(), depEntity.getId());
+				dbDepEntityParent = dbDepEntity.getParentEntity();
+				frnCnstrRemQry = queryBuilder.getForeignKeyRemoveConstraintQueryForInheritance(
+						dbDepEntity, dbDepEntityParent);
+				queries.add(frnCnstrRemQry);
 
-					frnCnstrRlbkQry = getForeignKeyConstraintQueryForInheritance(dbDepEntity,
-							dbDepEntityParent);
-					attrRlbkQries.add(frnCnstrRlbkQry);
+				frnCnstrRlbkQry = getForeignKeyConstraintQueryForInheritance(dbDepEntity,
+						dbDepEntityParent);
+				attrRlbkQries.add(frnCnstrRlbkQry);
 
-					queries.addAll(queryBuilder.getAddColumnQueryForForeignKeyConstraint(
-							dbDepEntity, dbDepEntityParent, attrRlbkQries, false));
+				queries.addAll(queryBuilder.getAddColumnQueryForForeignKeyConstraint(dbDepEntity,
+						dbDepEntityParent, attrRlbkQries, false));
 
-				}
 			}
 		}
-		catch (DAOException exception)
-		{
-			throw new DynamicExtensionsSystemException(exception.getMessage(), exception);
-		}
+
 		return queries;
 	}
 
@@ -825,7 +818,7 @@ public class DynamicExtensionBaseQueryBuilder
 					}
 					else
 					{
-						DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+						DynamicExtensionsUtility.closeDAO(jdbcDao);
 					}
 				}
 				catch (DAOException e)
@@ -2289,7 +2282,7 @@ public class DynamicExtensionBaseQueryBuilder
 					try
 					{
 						jdbcDao.closeStatement(resultSet);
-						DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+						DynamicExtensionsUtility.closeDAO(jdbcDao);
 					}
 					catch (DAOException e)
 					{
@@ -2359,7 +2352,7 @@ public class DynamicExtensionBaseQueryBuilder
 				try
 				{
 					jdbcDao.closeStatement(resultSet);
-					DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+					DynamicExtensionsUtility.closeDAO(jdbcDao);
 				}
 				catch (DAOException e)
 				{
@@ -2411,7 +2404,7 @@ public class DynamicExtensionBaseQueryBuilder
 			try
 			{
 				jdbcDao.closeStatement(resultSet);
-				DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+				DynamicExtensionsUtility.closeDAO(jdbcDao);
 			}
 			catch (DAOException e)
 			{
@@ -2621,15 +2614,7 @@ public class DynamicExtensionBaseQueryBuilder
 		}
 		finally
 		{
-			try
-			{
-				DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
-			}
-			catch (DAOException e)
-			{
-				throw new DynamicExtensionsSystemException(
-						"Exception occured while commiting transaction", e, DYEXTN_S_002);
-			}
+			DynamicExtensionsUtility.closeDAO(jdbcDao);
 		}
 
 		return rlbkQryStack;
@@ -2672,7 +2657,7 @@ public class DynamicExtensionBaseQueryBuilder
 			try
 			{
 				jdbcDao.closeStatement(resultSet);
-				DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+				DynamicExtensionsUtility.closeDAO(jdbcDao);
 			}
 			catch (DAOException e)
 			{
@@ -2853,7 +2838,7 @@ public class DynamicExtensionBaseQueryBuilder
 				try
 				{
 					jdbcDao.closeStatement(resultSet);
-					DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+					DynamicExtensionsUtility.closeDAO(jdbcDao);
 				}
 				catch (DAOException e)
 				{
@@ -2944,21 +2929,9 @@ public class DynamicExtensionBaseQueryBuilder
 					frmtedValue = jdbcDao.getStrTodateFunction() + "('" + str.trim() + "','"
 							+ DynamicExtensionsUtility.getSQLDateFormat(datePattern) + "')";
 				}
-				catch (DAOException e)
-				{
-					throw new DynamicExtensionsSystemException("Not able to create DAO object.", e);
-				}
 				finally
 				{
-					try
-					{
-						DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
-					}
-					catch (DAOException e)
-					{
-						throw new DynamicExtensionsSystemException(
-								"Not able to create DAO object.", e);
-					}
+					DynamicExtensionsUtility.closeDAO(jdbcDao);
 				}
 			}
 		}
@@ -3051,7 +3024,7 @@ public class DynamicExtensionBaseQueryBuilder
 			try
 			{
 				jdbcDao.closeStatement(resultSet);
-				DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+				DynamicExtensionsUtility.closeDAO(jdbcDao);
 			}
 			catch (DAOException e)
 			{
@@ -3149,14 +3122,7 @@ public class DynamicExtensionBaseQueryBuilder
 		}
 		finally
 		{
-			try
-			{
-				DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
-			}
-			catch (DAOException e)
-			{
-				throw new DynamicExtensionsSystemException(e.getMessage(), e);
-			}
+			DynamicExtensionsUtility.closeDAO(jdbcDao);
 		}
 	}
 

@@ -76,7 +76,7 @@ import gov.nih.nci.cagrid.syncgts.core.SyncGTS;
 
 /**
  * Utility Class contain general methods used through out the application.
- * 
+ *
  * @author Chandrakant Talele
  * @author Gautam Shetty
  */
@@ -88,7 +88,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 
 	/**
 	 * Checks whether passed attribute/association is inherited.
-	 * 
+	 *
 	 * @param abstractAttribute
 	 *            Attribute/Association to check.
 	 * @return TRUE if it is inherited else returns FALSE
@@ -108,10 +108,10 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 	/**
 	 * Generates unique string identifier for given association. It is generated
 	 * by concatenating
-	 * 
+	 *
 	 * sourceEntityName +{@link Constants#CONNECTOR} + sourceRoleName +{@link Constants#CONNECTOR} +
 	 * targetRoleName +{@link Constants#CONNECTOR} + TargetEntityName
-	 * 
+	 *
 	 * @param association
 	 *            Association
 	 * @return Unique string to represent given association
@@ -130,7 +130,8 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 	 * @param string4 String
 	 * @return Concatenated string made after connecting s1, s2, s3, s4 by {@link Constants#CONNECTOR}
 	 */
-	public static String concatStrings(String string1, String string2, String string3, String string4)
+	public static String concatStrings(String string1, String string2, String string3,
+			String string4)
 	{
 		StringBuffer buff = new StringBuffer();
 		buff.append(string1);
@@ -147,7 +148,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 	 * Compares whether given searchPattern is present in passed searchString.
 	 * If it is present returns the position where match found. Otherwise it
 	 * returns -1.
-	 * 
+	 *
 	 * @param searchPattern
 	 * @param searchString
 	 * @return The position where match found, otherwise returns -1.
@@ -167,7 +168,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 
 	/**
 	 * Returns the entity group of given entity
-	 * 
+	 *
 	 * @param entity
 	 *            Entity to check
 	 * @return Returns parent Entity Group
@@ -219,7 +220,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 
 	/**
 	 * Checks whether passed Entity is a category or not.
-	 * 
+	 *
 	 * @param entity
 	 *            Entity to check
 	 * @return Returns TRUE if given entity is Category, else returns false.
@@ -232,7 +233,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 
 	/**
 	 * Converts DE data type to queryObject dataType.
-	 * 
+	 *
 	 * @param type
 	 *            the DE attribute type.
 	 * @return the DataType.
@@ -320,7 +321,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 	/**
 	 * Returns the display name if present as tagged value. Else returns the
 	 * actual name of the entity
-	 * 
+	 *
 	 * @param entity
 	 *            The entity to process
 	 * @return The display name.
@@ -360,7 +361,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 
 	/**
 	 * This method trims out package name form the entity name
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -490,7 +491,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 
 	/**
 	 * Converts attribute set into a alphabetically sorted list.
-	 * 
+	 *
 	 * @param inputAttributeSet
 	 *            Attribute set to sort
 	 * @return Sorted list of attributes
@@ -526,7 +527,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 
 	/**
 	 * This method converts stack trace to the string representation
-	 * 
+	 *
 	 * @param aThrowable
 	 *            throwable object
 	 * @return String representation of the stack trace
@@ -542,7 +543,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 	/**
 	 * Get the specified resource first look into the cab2b.home otherwise look
 	 * into the classpath
-	 * 
+	 *
 	 * @param resource
 	 *            the name of the resource
 	 * @return the URL for the resource
@@ -573,17 +574,17 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 	 * @param values
 	 * @return
 	 * @throws HibernateException
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public static Collection<?> executeHQL(String queryName, List<Object> values)
 			throws HibernateException, DynamicExtensionsSystemException
 	{
 		Collection objects = new HashSet();
-		HibernateDAO hibernateDAO=null;
+		HibernateDAO hibernateDAO = null;
 		try
 		{
-			hibernateDAO =DynamicExtensionsUtility.getHibernateDAO();
-			objects=hibernateDAO.executeNamedQuery(queryName, null);
+			hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
+			objects = hibernateDAO.executeNamedQuery(queryName, null);
 		}
 		catch (DAOException e)
 		{
@@ -592,16 +593,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 
 		finally
 		{
-			try
-			{
-				DynamicExtensionsUtility.closeHibernateDAO(hibernateDAO);
-			}
-			catch (DAOException e)
-			{
-				throw new DynamicExtensionsSystemException(
-						"Exception occured while closing the session", e, DYEXTN_S_001);
-			}
-
+			DynamicExtensionsUtility.closeDAO(hibernateDAO);
 		}
 
 		return objects;
@@ -611,9 +603,10 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 	 * @param queryName
 	 * @return
 	 * @throws HibernateException
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
-	public static Collection<?> executeHQL(String queryName) throws HibernateException, DynamicExtensionsSystemException
+	public static Collection<?> executeHQL(String queryName) throws HibernateException,
+			DynamicExtensionsSystemException
 	{
 		return executeHQL(queryName, null);
 	}
@@ -621,7 +614,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 	/**
 	 * This method replaces the occurrence of find string with replacement in
 	 * original string.
-	 * 
+	 *
 	 * @param originalString
 	 * @param find
 	 * @param replacement
@@ -629,7 +622,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 	 */
 	public static String replaceAllWords(String originalString, String find, String replacement)
 	{
-		String original=originalString;
+		String original = originalString;
 		if (original == null || find == null || replacement == null)
 		{
 			return null;
@@ -647,7 +640,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 
 	/**
 	 * Loads properties from a file present in classpath to java objects.
-	 * If any exception occurs, it is callers responsibility to handle it. 
+	 * If any exception occurs, it is callers responsibility to handle it.
 	 * @param propertyfile Name of property file. It MUST be present in classpath
 	 * @return Properties loaded from given file.
 	 */
@@ -677,16 +670,16 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 
 	/**
 	 * Returns a fomatted string.
-	 * 
+	 *
 	 * Example : -------------------------------------------
 	 * -----Input-------|------Output------------- xaQaUtWsdkjsSbAd > Xa Qa Ut
 	 * Wsdkjs Sb Ad tomDickAndHarry > Tom Dick And Harry id > Identifier
 	 * pubmedCount > Pubmed Count organism > Organism chromosomeMap > Chromosome
 	 * Map pubmed5Count > Pubmed5 Count 1234 > 1234
 	 * ---------------------------------------------
-	 * 
+	 *
 	 * Note: first character should be in lower case.
-	 * 
+	 *
 	 * @param str
 	 *            String to format.
 	 * @return formatted string.
@@ -787,7 +780,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 	}
 
 	/**
-	 * 
+	 *
 	 * @param str
 	 * @param countOfUpperCaseLetter
 	 * @return
@@ -882,20 +875,20 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 	/**
 	 * This method get the formatted date given the raw date and the string format.
 	 * If not format is not specified then the default format will be dd/MM/yyyy HH:mm. For example, 01/01/1000 01:01
-	 * 
+	 *
 	 * @param date
 	 * @param dateFormatAsString
 	 * @return
 	 */
 	public static String getFormattedDate(Date date, String dateFormatAsString)
 	{
-		String dateFormat=dateFormatAsString;
+		String dateFormat = dateFormatAsString;
 		if (null == dateFormat || dateFormat.length() == 0)
 		{
 			dateFormat = "dd/MM/yyyy HH:mm";
 		}
-		Locale locale= CommonServiceLocator.getInstance().getDefaultLocale();
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat,locale);
+		Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, locale);
 		return simpleDateFormat.format(date);
 	}
 
@@ -920,7 +913,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 
 	/**
 	 * @param query caB2B query to check
-	 * @return TRUE : if given query is being fired on at-least one service containing https 
+	 * @return TRUE : if given query is being fired on at-least one service containing https
 	 */
 	public static boolean hasAnySecureService(ICab2bQuery query)
 	{
@@ -978,7 +971,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 		catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
-			throw new RuntimeException("Error occurred while generating globus certificates",e,
+			throw new RuntimeException("Error occurred while generating globus certificates", e,
 					ErrorCodeConstants.CDS_004);
 		}
 	}
@@ -1000,18 +993,18 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 			catch (IOException e)
 			{
 				logger.error(e.getMessage(), e);
-				throw new RuntimeException("Unable to copy CA certificates to [user.home]/.globus",e,
-						ErrorCodeConstants.CDS_003);
+				throw new RuntimeException("Unable to copy CA certificates to [user.home]/.globus",
+						e, ErrorCodeConstants.CDS_003);
 			}
 		}
 	}
 
 	/**
 	 * Prepares the array of search targets from the check box values selected by user.
-	 * @param searchClass TRUE if class search is selected 
-	 * @param searchAttribute TRUE if attribute search is selected 
-	 * @param searchPv TRUE if permissible value search is selected 
-	 * @param includeDesc TRUE if description is to be searched 
+	 * @param searchClass TRUE if class search is selected
+	 * @param searchAttribute TRUE if attribute search is selected
+	 * @param searchPv TRUE if permissible value search is selected
+	 * @param includeDesc TRUE if description is to be searched
 	 * @return Integer array of selections made by user.
 	 */
 	public static int[] prepareSearchTarget(boolean searchClass, boolean searchAttribute,

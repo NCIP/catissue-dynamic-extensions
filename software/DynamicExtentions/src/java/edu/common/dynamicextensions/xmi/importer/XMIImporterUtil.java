@@ -97,7 +97,7 @@ public class XMIImporterUtil
 			try
 			{
 				jdbcDao.commit();
-				DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+				DynamicExtensionsUtility.closeDAO(jdbcDao);
 			}
 			catch (DAOException e)
 			{

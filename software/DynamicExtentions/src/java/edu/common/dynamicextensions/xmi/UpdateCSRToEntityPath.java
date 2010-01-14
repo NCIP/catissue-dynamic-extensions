@@ -12,12 +12,11 @@ import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 import edu.wustl.dao.JDBCDAO;
-import edu.wustl.dao.daofactory.DAOConfigFactory;
-import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
 
@@ -39,22 +38,23 @@ public class UpdateCSRToEntityPath
 	//Logger
 	private static final Logger LOGGER = Logger.getCommonLogger(UpdateCSRToEntityPath.class);
 
-
 	/**
 	 * @param entityGroupId
 	 * @param newEntitiesIds
 	 */
-	public static void addCuratedPathsFromToAllEntities(List<AssociationInterface> startAssociationList,List<Long> newEntitiesIds)
+	public static void addCuratedPathsFromToAllEntities(
+			List<AssociationInterface> startAssociationList, List<Long> newEntitiesIds)
 	{
 		String staticEntAssnId;
 
 		try
 		{
 			int associationListSize = startAssociationList.size();
-			if(associationListSize >= 1)
+			if (associationListSize >= 1)
 			{
 				firstEntityId = startAssociationList.get(0).getEntity().getId();
-				lastEntityId = startAssociationList.get(associationListSize-1).getTargetEntity().getId();
+				lastEntityId = startAssociationList.get(associationListSize - 1).getTargetEntity()
+						.getId();
 				staticEntAssnId = getStaticEntityAssnIds(startAssociationList);
 				addPathForEntityGroup(staticEntAssnId, newEntitiesIds);
 			}
@@ -73,11 +73,12 @@ public class UpdateCSRToEntityPath
 	 * @throws DAOException
 	 * @throws SQLException
 	 */
-	private static String getStaticEntityAssnIds(List<AssociationInterface> associationList) throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException, DAOException, SQLException
+	private static String getStaticEntityAssnIds(List<AssociationInterface> associationList)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
+			DAOException, SQLException
 	{
-		StringBuffer strIntramoelAssnId=new StringBuffer();
-		for(AssociationInterface association : associationList)
+		StringBuffer strIntramoelAssnId = new StringBuffer();
+		for (AssociationInterface association : associationList)
 		{
 			strIntramoelAssnId.append(getIntraModelAssonId(association.getId()).toString());
 			strIntramoelAssnId.append('_');
@@ -90,32 +91,29 @@ public class UpdateCSRToEntityPath
 
 	private static void removeLastUnderscore(StringBuffer strIntramoelAssnId)
 	{
-		int lastIndex = strIntramoelAssnId.length()-1;
-		if(strIntramoelAssnId.charAt(lastIndex)=='_')
+		int lastIndex = strIntramoelAssnId.length() - 1;
+		if (strIntramoelAssnId.charAt(lastIndex) == '_')
 		{
 			strIntramoelAssnId.deleteCharAt(lastIndex);
 		}
 	}
-
 
 	/**
 	 * @param strDEAssnId
 	 * @return
 	 * @throws DAOException
 	 * @throws SQLException
+	 * @throws DynamicExtensionsSystemException
 	 */
-	private static Long getIntraModelAssonId(Long deAssnId) throws DAOException, SQLException
+	private static Long getIntraModelAssonId(Long deAssnId) throws DAOException, SQLException,
+			DynamicExtensionsSystemException
 	{
-		DAOConfigFactory daocConfigFactory = DAOConfigFactory.getInstance();
-		IDAOFactory daoFactory = daocConfigFactory.getDAOFactory("dynamicExtention");
-		JDBCDAO jdbcdao = null;
-		jdbcdao = daoFactory.getJDBCDAO();
-		jdbcdao.openSession(null);
+		JDBCDAO jdbcdao = DynamicExtensionsUtility.getJDBCDAO();
 		String sql = "select ASSOCIATION_ID from  intra_model_association where DE_ASSOCIATION_ID=?";
 
 		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 		queryDataList.add(new ColumnValueBean("DE_ASSOCIATION_ID", deAssnId));
-		ResultSet resultSet = jdbcdao.getResultSet(sql,queryDataList,null);
+		ResultSet resultSet = jdbcdao.getResultSet(sql, queryDataList, null);
 		long intramodelId = 0;
 		if (resultSet.next())
 		{
@@ -123,7 +121,7 @@ public class UpdateCSRToEntityPath
 
 		}
 		jdbcdao.closeStatement(resultSet);
-		jdbcdao.closeSession();
+		DynamicExtensionsUtility.closeDAO(jdbcdao);
 		return intramodelId;
 	}
 
@@ -206,18 +204,15 @@ public class UpdateCSRToEntityPath
 			throws DynamicExtensionsSystemException, DAOException, SQLException
 	{
 		LOGGER.info("Adding paths for " + entityIds.size() + " entities....");
-		DAOConfigFactory daocConfigFactory = DAOConfigFactory.getInstance();
-		IDAOFactory daoFactory = daocConfigFactory.getDAOFactory("dynamicExtention");
-		JDBCDAO jdbcdao = null;
-		jdbcdao = daoFactory.getJDBCDAO();
-		jdbcdao.openSession(null);
+
+		JDBCDAO jdbcdao = DynamicExtensionsUtility.getJDBCDAO();
+
 		for (Long entityId : entityIds)
 		{
 			if (!AnnotationUtil.isPathAdded(firstEntityId, entityId, jdbcdao))
 			{
 				// It is an intermediate path from record entry to given entity.
-				String interPathAssn = getExistingInterMediatePath(lastEntityId, entityId,
-						jdbcdao);
+				String interPathAssn = getExistingInterMediatePath(lastEntityId, entityId, jdbcdao);
 				if (interPathAssn != null)
 				{
 					String curatePathString = strAssnId + "_" + interPathAssn;
@@ -226,9 +221,8 @@ public class UpdateCSRToEntityPath
 				}
 			}
 		}
-
 		jdbcdao.commit();
-		jdbcdao.closeSession();
+		DynamicExtensionsUtility.closeDAO(jdbcdao);
 	}
 
 	/**
@@ -246,7 +240,7 @@ public class UpdateCSRToEntityPath
 		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 		queryDataList.add(new ColumnValueBean("first_entity_id", recEntryEntityId));
 		queryDataList.add(new ColumnValueBean("last_entity_id", entityId));
-		ResultSet resultSet = jdbcdao.getResultSet(selSQL,queryDataList,null);
+		ResultSet resultSet = jdbcdao.getResultSet(selSQL, queryDataList, null);
 		String interPathid = null;
 		if (resultSet.next())
 		{
@@ -272,12 +266,14 @@ public class UpdateCSRToEntityPath
 			String sql;
 			long nextIdPath = getNextId("path", "PATH_ID", jdbcdao);
 			sql = "insert into PATH (PATH_ID, FIRST_ENTITY_ID,"
-			+ "INTERMEDIATE_PATH, LAST_ENTITY_ID) values (?,?,?,?)";
+					+ "INTERMEDIATE_PATH, LAST_ENTITY_ID) values (?,?,?,?)";
 
-			LinkedList<ColumnValueBean> pathColValuebeanList = AnnotationUtil.getcolumnvalueBeanListForPathQuery(nextIdPath,firstEntityId,newinterPathid,secondEntityId);
+			LinkedList<ColumnValueBean> pathColValuebeanList = AnnotationUtil
+					.getcolumnvalueBeanListForPathQuery(nextIdPath, firstEntityId, newinterPathid,
+							secondEntityId);
 			LinkedList<LinkedList<ColumnValueBean>> queryDataList = new LinkedList<LinkedList<ColumnValueBean>>();
 			queryDataList.add(pathColValuebeanList);
-			jdbcdao.executeUpdate(sql,queryDataList);
+			jdbcdao.executeUpdate(sql, queryDataList);
 
 		}
 	}
@@ -294,7 +290,7 @@ public class UpdateCSRToEntityPath
 			throws SQLException, DAOException
 	{
 		String sql = "select max(" + coloumn + ") from " + tablename;
-		ResultSet resultSet = jdbcdao.getResultSet(sql,null,null);
+		ResultSet resultSet = jdbcdao.getResultSet(sql, null, null);
 
 		long nextId = 0;
 		if (resultSet.next())

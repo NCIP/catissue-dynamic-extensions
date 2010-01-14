@@ -18,11 +18,10 @@ import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.entitymanager.EntityManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 import edu.wustl.dao.JDBCDAO;
-import edu.wustl.dao.daofactory.DAOConfigFactory;
-import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
 
 /**
@@ -77,13 +76,12 @@ public class RemovePVValues
 	 * @param entityName
 	 * @param attributeName
 	 * @param filePath
-	 * @throws DAOException
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsSystemException
 	 * @throws IOException
 	 */
 	private void removePV(String entitygroupName, String entityName, String attributeName,
-			String filePath) throws DAOException, DynamicExtensionsSystemException, IOException
+			String filePath) throws DynamicExtensionsSystemException, IOException
 	{
 
 		EntityManagerInterface entityManager = EntityManager.getInstance();
@@ -170,16 +168,12 @@ public class RemovePVValues
 	 * @param sqlList
 	 * @throws DAOException
 	 */
-	void executeSQL(ArrayList<String> sqlList) throws DAOException
+	void executeSQL(ArrayList<String> sqlList) throws DynamicExtensionsSystemException
 	{
 		JDBCDAO jdbcdao = null;
 		try
 		{
-			DAOConfigFactory daocConfigFactory = DAOConfigFactory.getInstance();
-			IDAOFactory daoFactory = daocConfigFactory.getDAOFactory("dynamicExtention");
-
-			jdbcdao = daoFactory.getJDBCDAO();
-			jdbcdao.openSession(null);
+			jdbcdao = DynamicExtensionsUtility.getJDBCDAO();
 			for (String str : sqlList)
 			{
 				jdbcdao.executeUpdate(str);
@@ -190,18 +184,11 @@ public class RemovePVValues
 		}
 		catch (DAOException e)
 		{
-			throw e;
+			throw new DynamicExtensionsSystemException("Error occured during DB operation.", e);
 		}
 		finally
 		{
-			try
-			{
-				jdbcdao.closeSession();
-			}
-			catch (DAOException e)
-			{
-				throw e;
-			}
+			DynamicExtensionsUtility.closeDAO(jdbcdao);
 		}
 	}
 

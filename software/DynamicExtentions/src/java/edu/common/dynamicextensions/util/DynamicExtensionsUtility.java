@@ -109,6 +109,7 @@ import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
+import edu.wustl.dao.DAO;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
@@ -1621,15 +1622,9 @@ public class DynamicExtensionsUtility
 		}
 		else if (identifier != null)
 		{
-			try
-			{
-				dbaseCopy = (Entity) DynamicExtensionsUtility.getCleanObject(Entity.class
-						.getCanonicalName(), identifier);
-			}
-			catch (DAOException e)
-			{
-				throw new DynamicExtensionsSystemException(e.getMessage(), e);
-			}
+			dbaseCopy = (Entity) DynamicExtensionsUtility.getCleanObject(Entity.class
+					.getCanonicalName(), identifier);
+
 			if (EntityManagerUtil.isParentChanged((Entity) childEntity, dbaseCopy)
 					|| EntityManagerUtil.isPrimaryKeyChanged(parentEntity))
 			{
@@ -1713,16 +1708,8 @@ public class DynamicExtensionsUtility
 		else
 		{
 			AssociationInterface dbaseCopy;
-			try
-			{
-				dbaseCopy = (AssociationInterface) DynamicExtensionsUtility.getCleanObject(
-						Association.class.getCanonicalName(), identifier);
-			}
-			catch (DAOException e)
-			{
-				throw new DynamicExtensionsSystemException(e.getMessage(), e);
-			}
-
+			dbaseCopy = (AssociationInterface) DynamicExtensionsUtility.getCleanObject(
+					Association.class.getCanonicalName(), identifier);
 			if (EntityManagerUtil.isCardinalityChanged(association, dbaseCopy)
 					|| EntityManagerUtil.isPrimaryKeyChanged(association.getEntity())
 					|| EntityManagerUtil.isPrimaryKeyChanged(association.getTargetEntity()))
@@ -1966,16 +1953,8 @@ public class DynamicExtensionsUtility
 			throw new DynamicExtensionsSystemException("Unable to parse given date.", e);
 		}
 
-		String appName = DynamicExtensionDAO.getInstance().getAppName();
-		JDBCDAO jdbcDao = null;
-		try
-		{
-			jdbcDao = DAOConfigFactory.getInstance().getDAOFactory(appName).getJDBCDAO();
-		}
-		catch (DAOException e)
-		{
-			throw new DynamicExtensionsSystemException("Unable to JDBCDAO object.", e);
-		}
+		JDBCDAO jdbcDao = getJDBCDAO();
+
 		formattedvalue = jdbcDao.getStrTodateFunction() + "('" + simpleDateFormat.format(date)
 				+ "','" + ProcessorConstants.ORCL_CAT_REL_ATTR_FORMAT + "')";
 
@@ -2154,12 +2133,14 @@ public class DynamicExtensionsUtility
 	 * @return String query
 	 * @throws DAOException Generic DAO Exception
 	 * @throws ClassNotFoundException
+	 * @throws DynamicExtensionsSystemException
 	 */
-	public static List executeQuery(String hql) throws DAOException, ClassNotFoundException
+	public static List executeQuery(String hql) throws DAOException, ClassNotFoundException,
+			DynamicExtensionsSystemException
 	{
 		HibernateDAO dao = DynamicExtensionsUtility.getHibernateDAO();
 		List list = dao.executeQuery(hql);
-		DynamicExtensionsUtility.closeHibernateDAO(dao);
+		DynamicExtensionsUtility.closeDAO(dao);
 		return list;
 	}
 
@@ -2268,67 +2249,85 @@ public class DynamicExtensionsUtility
 	 * @throws DAOException generic DAO exception.
 	 */
 	public static Object getCleanObject(String sourceObjectName, Long identifier)
-			throws DAOException
+			throws DynamicExtensionsSystemException
 	{
 		HibernateDAO hibernateDao = null;
 		try
 		{
-			String appName = DynamicExtensionDAO.getInstance().getAppName();
-			hibernateDao = (HibernateDAO) DAOConfigFactory.getInstance().getDAOFactory(appName)
-					.getDAO();
-			hibernateDao.openSession(null);
+
+			hibernateDao = DynamicExtensionsUtility.getHibernateDAO();
 			return hibernateDao.retrieveById(sourceObjectName, identifier);
+		}
+		catch (DAOException e)
+		{
+			throw new DynamicExtensionsSystemException("Error while retrieving the Clean Object", e);
 		}
 		finally
 		{
-			hibernateDao.closeSession();
+			DynamicExtensionsUtility.closeDAO(hibernateDao);
 		}
 	}
 
 	/**
 	 * @return jdbcDao
-	 * @throws DAOException generic DAO exception
+	 * @throws DynamicExtensionsSystemException
 	 */
-	public static JDBCDAO getJDBCDAO() throws DAOException
+	public static JDBCDAO getJDBCDAO() throws DynamicExtensionsSystemException
 	{
-
 		String appName = DynamicExtensionDAO.getInstance().getAppName();
-		JDBCDAO jdbcDao = DAOConfigFactory.getInstance().getDAOFactory(appName).getJDBCDAO();
-		jdbcDao.openSession(null);
+		JDBCDAO jdbcDao = null;
+		try
+		{
+			jdbcDao = DAOConfigFactory.getInstance().getDAOFactory(appName).getJDBCDAO();
+			jdbcDao.openSession(null);
+		}
+		catch (DAOException e)
+		{
+			throw new DynamicExtensionsSystemException(
+					"Error occured while opening the DAO session", e);
+		}
 		return jdbcDao;
 	}
 
 	/**
 	 * @return hibernateDao
-	 * @throws DAOException generic DAO exception
+	 * @throws DynamicExtensionsSystemException
 	 */
-	public static HibernateDAO getHibernateDAO() throws DAOException
+	public static HibernateDAO getHibernateDAO() throws DynamicExtensionsSystemException
 	{
 		String appName = DynamicExtensionDAO.getInstance().getAppName();
-		HibernateDAO hibernateDao = (HibernateDAO) DAOConfigFactory.getInstance().getDAOFactory(
-				appName).getDAO();
-		hibernateDao.openSession(null);
+		HibernateDAO hibernateDao = null;
+		try
+		{
+			hibernateDao = (HibernateDAO) DAOConfigFactory.getInstance().getDAOFactory(appName)
+					.getDAO();
+			hibernateDao.openSession(null);
+		}
+		catch (DAOException e)
+		{
+			throw new DynamicExtensionsSystemException(
+					"Error occured while opening the DAO session", e);
+		}
 		return hibernateDao;
 	}
 
 	/**
 	 * @param jdbcDao DAO object
+	 * @throws DynamicExtensionsSystemException
 	 * @throws DAOException generic DAO exception
 	 */
-	public static void closeJDBCDAO(JDBCDAO jdbcDao) throws DAOException
+	public static void closeDAO(DAO dao) throws DynamicExtensionsSystemException
 	{
-		jdbcDao.closeSession();
-	}
-
-	/**
-	 * @param hibernateDao DAO object
-	 * @throws DAOException generic DAO exception
-	 */
-	public static void closeHibernateDAO(HibernateDAO hibernateDao) throws DAOException
-	{
-		if(hibernateDao!=null)
+		if (dao != null)
 		{
-			hibernateDao.closeSession();
+			try
+			{
+				dao.closeSession();
+			}
+			catch (DAOException e)
+			{
+				throw new DynamicExtensionsSystemException("Eror while closing the DAO", e);
+			}
 		}
 	}
 
@@ -2336,20 +2335,22 @@ public class DynamicExtensionsUtility
 	 * @param queryList queries to be executed
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public static void executeDML(List<Map<String,LinkedList<ColumnValueBean>>> queryList) throws DynamicExtensionsSystemException
+	public static void executeDML(List<Map<String, LinkedList<ColumnValueBean>>> queryList)
+			throws DynamicExtensionsSystemException
 	{
 		JDBCDAO jdbcDao = null;
 		try
 		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			for(Map<String,LinkedList<ColumnValueBean>> query : queryList)
+			for (Map<String, LinkedList<ColumnValueBean>> query : queryList)
 			{
-			for (Map.Entry<String,LinkedList<ColumnValueBean>> queryRecord : query.entrySet())
-			{
-				LinkedList<LinkedList<ColumnValueBean>> colValBeanList = new LinkedList<LinkedList<ColumnValueBean>>();
-				colValBeanList.add(queryRecord.getValue());
-				jdbcDao.executeUpdate(queryRecord.getKey(),colValBeanList);
-			}}
+				for (Map.Entry<String, LinkedList<ColumnValueBean>> queryRecord : query.entrySet())
+				{
+					LinkedList<LinkedList<ColumnValueBean>> colValBeanList = new LinkedList<LinkedList<ColumnValueBean>>();
+					colValBeanList.add(queryRecord.getValue());
+					jdbcDao.executeUpdate(queryRecord.getKey(), colValBeanList);
+				}
+			}
 		}
 
 		catch (DAOException e)
@@ -2361,7 +2362,7 @@ public class DynamicExtensionsUtility
 			try
 			{
 				jdbcDao.commit();
-				DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+				DynamicExtensionsUtility.closeDAO(jdbcDao);
 			}
 			catch (DAOException e)
 			{
@@ -2381,10 +2382,7 @@ public class DynamicExtensionsUtility
 		HibernateDAO hibernateDao = null;
 		try
 		{
-			String appName = DynamicExtensionDAO.getInstance().getAppName();
-			hibernateDao = (HibernateDAO) DAOConfigFactory.getInstance().getDAOFactory(appName)
-					.getDAO();
-			hibernateDao.openSession(null);
+			hibernateDao = DynamicExtensionsUtility.getHibernateDAO();
 
 			// populate entity for generating constraint properties if it has any parent set
 			for (EntityInterface entity : entityGroup.getEntityCollection())
@@ -2393,22 +2391,9 @@ public class DynamicExtensionsUtility
 						.isAddColumnForInherianceInChild(), hibernateDao);
 			}
 		}
-		catch (DAOException e)
-		{
-			throw new DynamicExtensionsSystemException(
-					"Exception encountered while populating constraint properties for entity.", e);
-		}
 		finally
 		{
-			try
-			{
-				hibernateDao.closeSession();
-			}
-			catch (DAOException e)
-			{
-				throw new DynamicExtensionsSystemException(
-						"Exception encountered while closing session.", e);
-			}
+			DynamicExtensionsUtility.closeDAO(hibernateDao);
 		}
 	}
 
@@ -2622,6 +2607,7 @@ public class DynamicExtensionsUtility
 		}
 		return validDatePatternList;
 	}
+
 	/**
 	 * Replace any single and double quotes value with proper escape character	in HTML
 	 * @param value

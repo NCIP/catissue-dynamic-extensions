@@ -141,7 +141,7 @@ public class DEIntegration implements IntegrationInterface
 		finally
 		{
 			jdbcDao.closeStatement(resultSet);
-			DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+			DynamicExtensionsUtility.closeDAO(jdbcDao);
 		}
 
 		return catRecIds;
@@ -343,7 +343,7 @@ public class DEIntegration implements IntegrationInterface
 			try
 			{
 				jdbcDao.closeStatement(resultSet);
-				DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+				DynamicExtensionsUtility.closeDAO(jdbcDao);
 			}
 			catch (DAOException e)
 			{

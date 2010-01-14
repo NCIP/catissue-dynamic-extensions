@@ -54,14 +54,11 @@ import edu.common.dynamicextensions.xmi.XMIUtilities;
 import edu.common.dynamicextensions.xmi.exporter.XMIExporter;
 import edu.common.dynamicextensions.xmi.exporter.XMIExporterUtility;
 import edu.wustl.common.exception.BizLogicException;
-import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
-import edu.wustl.dao.daofactory.DAOConfigFactory;
-import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
 
 /**
@@ -179,7 +176,7 @@ public abstract class AbstractXMIImporter
 		{
 			closeTransaction(fileInput, hibernatedao, jdbcdao);
 		}
-		if(isImportSuccess)
+		if (isImportSuccess)
 		{
 			exportXmiForCacore(mainContainerList);
 		}
@@ -356,7 +353,7 @@ public abstract class AbstractXMIImporter
 	 * @throws Exception exception
 	 */
 	private void initializeResources(String[] args) throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException, CreationFailedException, DAOException
+			DynamicExtensionsSystemException, CreationFailedException
 	{
 		validate(args);
 		intitializeInstanceVaribles(args);
@@ -454,13 +451,10 @@ public abstract class AbstractXMIImporter
 	 * It will create the instances of the hibernate & jdbc DAOs for furthure use.
 	 * @throws DAOException exception
 	 */
-	private void intializeDao() throws DAOException
+	private void intializeDao() throws DynamicExtensionsSystemException
 	{
 
-		String appName = CommonServiceLocator.getInstance().getAppName();
-		IDAOFactory daoFactory = DAOConfigFactory.getInstance().getDAOFactory(appName);
-		jdbcdao = daoFactory.getJDBCDAO();
-		jdbcdao.openSession(null);
+		jdbcdao = DynamicExtensionsUtility.getJDBCDAO();
 		hibernatedao = DynamicExtensionsUtility.getHibernateDAO();
 
 	}
@@ -478,14 +472,8 @@ public abstract class AbstractXMIImporter
 		MDRManager.getDefault().shutdownAll();
 		try
 		{
-			if (hibernatedao != null)
-			{
-				DynamicExtensionsUtility.closeHibernateDAO(hibernatedao);
-			}
-			if (jdbcdao != null)
-			{
-				DynamicExtensionsUtility.closeJDBCDAO(jdbcdao);
-			}
+			DynamicExtensionsUtility.closeDAO(hibernatedao);
+			DynamicExtensionsUtility.closeDAO(jdbcdao);
 			if (fileInput != null)
 			{
 				fileInput.close();
@@ -672,16 +660,8 @@ public abstract class AbstractXMIImporter
 			}
 			finally
 			{
-				try
-				{
-					DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
-				}
-				catch (DAOException e1)
-				{
-					LOGGER.error(e1.getMessage());
-					throw new DynamicExtensionsSystemException("fail to close connection", e1);
-				}
 
+				DynamicExtensionsUtility.closeDAO(jdbcDao);
 				//logDebug("rollbackQueries", DynamicExtensionsUtility.getStackTrace(exception));
 				DynamicExtensionsSystemException xception = new DynamicExtensionsSystemException(
 						message, exception);

@@ -240,18 +240,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		}
 		finally
 		{
-			if (hibernateDAO != null)
-			{
-				try
-				{
-					DynamicExtensionsUtility.closeHibernateDAO(hibernateDAO);
-				}
-				catch (final DAOException e)
-				{
-					throw new DynamicExtensionsSystemException(
-							"Exception encountered while closing session.", e);
-				}
-			}
+			DynamicExtensionsUtility.closeDAO(hibernateDAO);
 		}
 
 		return queries;
@@ -309,21 +298,16 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		catch (final DAOException e)
 		{
 			handleRollback(e, "Error while inserting data", jdbcDao);
+			throw new DynamicExtensionsSystemException("Error while inserting data", e);
 		}
 		catch (final SQLException e)
 		{
 			handleRollback(e, "Error while inserting data", jdbcDao);
+			throw new DynamicExtensionsSystemException("Error while inserting data", e);
 		}
 		finally
 		{
-			try
-			{
-				DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
-			}
-			catch (final DAOException e)
-			{
-				handleRollback(e, ErrorConstants.ERROR_WHILE_CLOSING, jdbcDao);
-			}
+			DynamicExtensionsUtility.closeDAO(jdbcDao);
 		}
 
 		return recordIds;
@@ -565,18 +549,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		}
 		finally
 		{
-			if (hibernateDao != null)
-			{
-				try
-				{
-					DynamicExtensionsUtility.closeHibernateDAO(hibernateDao);
-				}
-				catch (final DAOException e)
-				{
-					throw new DynamicExtensionsApplicationException(
-							ErrorConstants.ERROR_ENCNTR_INSERTING_REC, e);
-				}
-			}
+			DynamicExtensionsUtility.closeDAO(hibernateDao);
 		}
 
 		return identifier;
@@ -1446,28 +1419,13 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		catch (final Exception e)
 		{
 			handleRollback(e, "Error while editing data", jdbcDao);
+			throw new DynamicExtensionsSystemException("Error while editing data", e);
 		}
 		finally
 		{
-			try
-			{
-				DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
-				if (hibernateDao != null)
-				{
-					try
-					{
-						DynamicExtensionsUtility.closeHibernateDAO(hibernateDao);
-					}
-					catch (final DAOException e)
-					{
-						handleRollback(e, ErrorConstants.ERROR_WHILE_CLOSING, hibernateDao);
-					}
-				}
-			}
-			catch (final DAOException e)
-			{
-				handleRollback(e, ErrorConstants.ERROR_WHILE_CLOSING, jdbcDao);
-			}
+
+			DynamicExtensionsUtility.closeDAO(jdbcDao);
+			DynamicExtensionsUtility.closeDAO(hibernateDao);
 		}
 
 		return isEdited;
@@ -1655,7 +1613,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 							final Object associatedObject = invokeGetterMethod(sourceObject
 									.getClass(), targetRoleName, sourceObject);
 
-							final Cardinality targetMaxCardinality = lastAsso.getTargetRole()
+							final Cardinality targetMaxCardinality = asso.getTargetRole()
 									.getMaximumCardinality();
 							if (targetMaxCardinality != Cardinality.ONE)
 							{
@@ -2590,20 +2548,9 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			jdbcDAO = DynamicExtensionsUtility.getJDBCDAO();
 			retrieveRecords(rootCatEntity, dataValue, recordId, jdbcDAO);
 		}
-		catch (final DAOException e)
-		{
-			handleRollback(e, "Error while retrieving data", jdbcDAO);
-		}
 		finally
 		{
-			try
-			{
-				DynamicExtensionsUtility.closeJDBCDAO(jdbcDAO);
-			}
-			catch (final DAOException e)
-			{
-				handleRollback(e, ErrorConstants.ERROR_WHILE_CLOSING, jdbcDAO);
-			}
+			DynamicExtensionsUtility.closeDAO(jdbcDAO);
 		}
 
 		final Map<BaseAbstractAttributeInterface, Object> curatedRecords = new HashMap<BaseAbstractAttributeInterface, Object>();
@@ -3332,7 +3279,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			try
 			{
 				jdbcDAO.closeStatement(resultSet);
-				DynamicExtensionsUtility.closeJDBCDAO(jdbcDAO);
+				DynamicExtensionsUtility.closeDAO(jdbcDAO);
 			}
 			catch (final DAOException e)
 			{
@@ -3458,14 +3405,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		}
 		finally
 		{
-			try
-			{
-				DynamicExtensionsUtility.closeHibernateDAO(hibernateDAO);
-			}
-			catch (final DAOException e)
-			{
-				throw new DynamicExtensionsSystemException(e.getMessage(), e, DYEXTN_S_003);
-			}
+			DynamicExtensionsUtility.closeDAO(hibernateDAO);
 		}
 		return categoryAttributeCollection;
 	}

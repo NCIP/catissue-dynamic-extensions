@@ -14,12 +14,12 @@ import java.sql.ResultSetMetaData;
 import java.util.LinkedList;
 
 import junit.framework.TestCase;
-import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.RoleInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerExceptionConstantsInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
@@ -29,8 +29,6 @@ import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 import edu.wustl.dao.JDBCDAO;
-import edu.wustl.dao.daofactory.DAOConfigFactory;
-import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
 
 public class DynamicExtensionsBaseTestCase extends TestCase
@@ -118,9 +116,10 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	{
 		ResultSet resultSet = null;
 		Object ans = null;
-		final JDBCDAO jdbcDao = getJDBCDAO();
+		JDBCDAO jdbcDao = null;
 		try
 		{
+			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
 			resultSet = jdbcDao.getResultSet(query, queryDataList, null);
 			resultSet.next();
 			if (STRING_TYPE.equals(returnType))
@@ -142,7 +141,7 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 		{
 			try
 			{
-				closeJDBCDAO(jdbcDao);
+				DynamicExtensionsUtility.closeDAO(jdbcDao);
 			}
 			catch (final Exception e)
 			{
@@ -213,9 +212,10 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 		ResultSetMetaData metadata = null;
 		int count = 0;
 		ResultSet result = null;
-		final JDBCDAO jdbcDao = getJDBCDAO();
+		JDBCDAO jdbcDao = null;
 		try
 		{
+			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
 			result = jdbcDao.getResultSet(query, null, null);
 			metadata = result.getMetaData();
 			count = metadata.getColumnCount();
@@ -230,7 +230,7 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 			try
 			{
 				jdbcDao.closeStatement(result);
-				closeJDBCDAO(jdbcDao);
+				DynamicExtensionsUtility.closeDAO(jdbcDao);
 			}
 			catch (final Exception e)
 			{
@@ -270,7 +270,7 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 			try
 			{
 				jdbcDao.closeStatement(result);
-				DynamicExtensionsUtility.closeJDBCDAO(jdbcDao);
+				DynamicExtensionsUtility.closeDAO(jdbcDao);
 			}
 			catch (final Exception e)
 			{
@@ -283,52 +283,19 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	}
 
 	/**
-	 * Close the connection
-	 * @param conn
-	 */
-	private void closeJDBCDAO(final JDBCDAO jdbcDao)
-	{
-		try
-		{
-			jdbcDao.closeSession();
-		}
-		catch (final DAOException e)
-		{
-			throw new RuntimeException(e.getCause());
-		}
-	}
-
-	/**
-	 * Open the connection for use
-	 * @return connection
-	 */
-	private JDBCDAO getJDBCDAO()
-	{
-		JDBCDAO jdbcDao = null;
-		try
-		{
-			final String appName = DynamicExtensionDAO.getInstance().getAppName();
-			jdbcDao = DAOConfigFactory.getInstance().getDAOFactory(appName).getJDBCDAO();
-			jdbcDao.openSession(null);
-		}
-		catch (final DAOException e)
-		{
-			e.printStackTrace();
-		}
-		return jdbcDao;
-	}
-
-	/**
-	 * @param query query to be executed
-	 * @return  ResultSetMetaData
-	 */
+	* @param query query to be executed
+	* @return  ResultSetMetaData
+	* @throws DynamicExtensionsSystemException
+	*/
 	protected ResultSetMetaData executeQueryDDL(final String query)
+			throws DynamicExtensionsSystemException
 	{
 		//      Checking whether the data table is created properly or not.
-		final JDBCDAO jdbcDao = getJDBCDAO();
+		JDBCDAO jdbcDao = null;
 		java.sql.PreparedStatement statement = null;
 		try
 		{
+			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
 			statement = jdbcDao.getPreparedStatement(query);
 			statement.execute();
 			jdbcDao.commit();
@@ -340,7 +307,7 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 		}
 		finally
 		{
-			closeJDBCDAO(jdbcDao);
+			DynamicExtensionsUtility.closeDAO(jdbcDao);
 		}
 
 		return null;
@@ -353,10 +320,12 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	protected boolean isTablePresent(final String tableName)
 	{
 		final String query = "select * from " + tableName;
-		final JDBCDAO jdbcDao = getJDBCDAO();
+		JDBCDAO jdbcDao = null;
+
 		ResultSet result = null;
 		try
 		{
+			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
 			result = jdbcDao.getResultSet(query, null, null);
 
 		}
@@ -368,7 +337,7 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 		{
 			try
 			{
-				jdbcDao.closeSession();
+				DynamicExtensionsUtility.closeDAO(jdbcDao);
 			}
 			catch (final Exception e)
 			{
