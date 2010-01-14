@@ -129,8 +129,7 @@ public abstract class AbstractBaseMetadataManager
 	protected JDBCDAO executeRevertQueryStack(Stack<String> revQryStack) throws DAOException,
 			DynamicExtensionsSystemException
 	{
-		JDBCDAO jdbcDao;
-		jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
+		JDBCDAO jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
 		while (!revQryStack.empty())
 		{
 			String query = revQryStack.pop();
@@ -300,7 +299,7 @@ public abstract class AbstractBaseMetadataManager
 		}
 		finally
 		{
-			abstractMetadataManagerHelper.closeDao(hibernateDAO);
+			DynamicExtensionsUtility.closeDAO(hibernateDAO);
 		}
 
 		return objects;
@@ -544,8 +543,10 @@ public abstract class AbstractBaseMetadataManager
 	 *            the exc message
 	 * @param dao
 	 *            the dao
+	 * @throws DynamicExtensionsSystemException
 	 */
-	protected void handleRollback(Exception exception, String excMessage, DAO dao)
+	protected void handleRollback(String excMessage, DAO dao)
+			throws DynamicExtensionsSystemException
 	{
 		try
 		{
@@ -553,7 +554,7 @@ public abstract class AbstractBaseMetadataManager
 		}
 		catch (DAOException e)
 		{
-			Logger.out.error(e.getMessage());
+			throw new DynamicExtensionsSystemException(excMessage);
 		}
 
 	}

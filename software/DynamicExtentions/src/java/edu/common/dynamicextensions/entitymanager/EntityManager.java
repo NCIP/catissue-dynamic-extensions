@@ -610,7 +610,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		}
 		catch (Exception e)
 		{
-			handleRollback(e, DATA_INSERTION_ERROR_MESSAGE, hibernateDAO);
+			handleRollback(DATA_INSERTION_ERROR_MESSAGE, hibernateDAO);
 			throw new DynamicExtensionsSystemException(DATA_INSERTION_ERROR_MESSAGE, e);
 		}
 		finally
@@ -695,7 +695,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		}
 		catch (DynamicExtensionsApplicationException e)
 		{
-			handleRollback(e, DATA_INSERTION_ERROR_MESSAGE, hibernateDAO);
+			handleRollback(DATA_INSERTION_ERROR_MESSAGE, hibernateDAO);
 			throw new DynamicExtensionsSystemException(DATA_INSERTION_ERROR_MESSAGE, e);
 		}
 		catch (DAOException e)
@@ -1264,13 +1264,13 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		}
 		catch (DynamicExtensionsApplicationException e)
 		{
-			handleRollback(e, "Error while Retrieving  data", hibernateDAO);
+			handleRollback("Error while Retrieving  data", hibernateDAO);
 			throw new DynamicExtensionsSystemException("Error while Retrieving  data", e);
 
 		}
 		catch (DAOException e)
 		{
-			handleRollback(e, "Error while Retrieving  data", hibernateDAO);
+			handleRollback("Error while Retrieving  data", hibernateDAO);
 			throw new DynamicExtensionsSystemException("Error while Retrieving  data", e);
 		}
 		finally

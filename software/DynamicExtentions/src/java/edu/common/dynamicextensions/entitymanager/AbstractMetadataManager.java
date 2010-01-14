@@ -284,25 +284,10 @@ public abstract class AbstractMetadataManager extends AbstractBaseMetadataManage
 			}
 			finally
 			{
-				closeHibernateDao(newHibernateDAO);
+				DynamicExtensionsUtility.closeDAO(newHibernateDAO);
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Close hibernate dao.
-	 *
-	 * @param newHibernateDAO
-	 *            the new hibernate dao
-	 *
-	 * @throws DynamicExtensionsSystemException
-	 *             the dynamic extensions system exception
-	 */
-	private void closeHibernateDao(HibernateDAO newHibernateDAO)
-			throws DynamicExtensionsSystemException
-	{
-		DynamicExtensionsUtility.closeDAO(newHibernateDAO);
 	}
 
 	/**
@@ -398,7 +383,7 @@ public abstract class AbstractMetadataManager extends AbstractBaseMetadataManage
 		}
 		finally
 		{
-			abstractMetadataManagerHelper.closeDao(hibernateDAO);
+			DynamicExtensionsUtility.closeDAO(hibernateDAO);
 		}
 
 		return queries;
@@ -506,24 +491,10 @@ public abstract class AbstractMetadataManager extends AbstractBaseMetadataManage
 		}
 		finally
 		{
-			closeJdbcDao(jdbcDao);
+			DynamicExtensionsUtility.closeDAO(jdbcDao);
 		}
 
 		return records;
-	}
-
-	/**
-	 * Close jdbc dao.
-	 *
-	 * @param jdbcDao
-	 *            the jdbc dao
-	 *
-	 * @throws DynamicExtensionsSystemException
-	 *             the dynamic extensions system exception
-	 */
-	private void closeJdbcDao(JDBCDAO jdbcDao) throws DynamicExtensionsSystemException
-	{
-		DynamicExtensionsUtility.closeDAO(jdbcDao);
 	}
 
 	/**
