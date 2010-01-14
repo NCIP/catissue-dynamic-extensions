@@ -38,11 +38,13 @@
       		<exclude name="**/edu/common/dynamicextensions/ui/*.class"/>
       		<exclude name="**/listener/*.class"/>
       		<exclude name="**/entitymanager/DynamicExtensionDb2QueryBuilder.class"/>
-      		<exclude name="**/entitymanager/DynamicExtensionMsSQLServerQueryBuilder.class"/>
+    		<exclude name="**/entitymanager/DynamicExtensionMsSQLServerQueryBuilder.class"/>
       		<exclude name="**/entitymanager/ContainerInformationObject.class"/>
       		<exclude name="**/entitymanager/DynamicExtensionMySQLQueryBuilder.class"/>
       		<exclude name="**/entitymanager/DynamicExtensionPostGreSQLQueryBuilder.class"/>
       		<exclude name="**/entitymanager/*Interface*.class"/>
+    		<exclude name="**/util/DatabaseCleaner.class"/>
+    	    <exclude name="**/util/DynamicExtensionsBaseTestCase.class"/>
 
        </fileset>
     </cobertura-instrument>
