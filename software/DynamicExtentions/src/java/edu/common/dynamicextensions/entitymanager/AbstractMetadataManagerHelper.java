@@ -15,6 +15,7 @@ import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.HQLPlaceHolderObject;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.exception.DAOException;
@@ -160,11 +161,7 @@ public final class AbstractMetadataManagerHelper implements
         DateAttributeTypeInformation dateAttributeTypeInf = (DateAttributeTypeInformation) attr
                 .getAttributeTypeInformation();
 
-        String format = dateAttributeTypeInf.getFormat();
-        if (format == null)
-        {
-            format = ProcessorConstants.DATE_ONLY_FORMAT;
-        }
+        String format = DynamicExtensionsUtility.getDateFormat(dateAttributeTypeInf.getFormat());
 
         SimpleDateFormat formatter = new SimpleDateFormat(format, Locale
                 .getDefault());
