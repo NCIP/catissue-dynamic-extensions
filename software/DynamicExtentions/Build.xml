@@ -924,7 +924,8 @@
 		<target name="generate_codecoverage_report">
 
 			<ant target="compile_test_cases" />
-			<ant target="checkout_test_model" />
+			<!--<ant target="checkout_test_model" />-->
+				<copy todir="${test.model.dir}" file="${resource.dir}/catNames2.txt" />
 			<ant antfile="src/conf/cobertura.xml" target="instrument" />
 			<antcall target="import.static.and.test.model"/>
 			<antcall target="deploy" />
