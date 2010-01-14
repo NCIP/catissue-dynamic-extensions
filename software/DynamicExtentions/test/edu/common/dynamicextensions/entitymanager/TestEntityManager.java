@@ -9,7 +9,6 @@
 
 package edu.common.dynamicextensions.entitymanager;
 
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -45,7 +44,6 @@ import edu.common.dynamicextensions.domaininterface.NumericTypeInformationInterf
 import edu.common.dynamicextensions.domaininterface.ObjectAttributeRecordValueInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.SemanticPropertyInterface;
-import edu.common.dynamicextensions.domaininterface.StringValueInterface;
 import edu.common.dynamicextensions.domaininterface.TaggedValueInterface;
 import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
 import edu.common.dynamicextensions.domaininterface.databaseproperties.ConstraintPropertiesInterface;
@@ -122,86 +120,86 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	{
 		//TODO : Currently DE doesn't support this scenario. So commenting test case for timebeing
 
-//		EntityGroupInterface entityGroup = DomainObjectFactory.getInstance().createEntityGroup();
-//		entityGroup.setName("test_" + new Double(Math.random()).toString());
-//		//Step 1
-//		Entity entity = (Entity) createAndPopulateEntity();
-//		entity.setName("Stock Quote");
-//		entity.setEntityGroup(entityGroup);
-//		entityGroup.addEntity(entity);
-//		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-//
-//		try
-//		{
-//			//Step 2
-//			EntityInterface savedEntity = EntityManagerInterface.persistEntity(entity);
-//
-//			//Step 3 Edit entity-- Add extra attribute
-//			AttributeInterface floatAtribute = DomainObjectFactory.getInstance()
-//					.createFloatAttribute();
-//			floatAtribute.setName("Price");
-//
-//			savedEntity.addAbstractAttribute(floatAtribute);
-//			//Step 4
-//			EntityInterface editedEntity = EntityManagerInterface.persistEntity(savedEntity);
-//
-//			Map dataValue = new HashMap();
-//
-//			//          dataValue.put(floatAtribute, "15.90");
-//			//          entityManagerInterface.insertData(editedEntity, dataValue);
-//			//
-//			//          dataValue.put(floatAtribute, "16.90");
-//			//          entityManagerInterface.insertData(editedEntity, dataValue);
-//			//
-//			//          Long id = new EntityManagerUtil().getNextIdentifier(editedEntity.getTableProperties().getName());
-//			//          System.out.println(id);
-//
-//			//Edit entity
-//			AttributeInterface floatAtribute1 = DomainObjectFactory.getInstance()
-//					.createFloatAttribute();
-//			floatAtribute.setName("NewPrice");
-//			editedEntity.addAbstractAttribute(floatAtribute1);
-//
-//			assertEquals(noOfDefaultColumns + 1, getColumnCount("select * from "
-//					+ editedEntity.getTableProperties().getName()));
-//
-//			int rowCount = (Integer) executeQuery("select count(*) from "
-//					+ editedEntity.getTableProperties().getName(), INT_TYPE, 1, null);
-//			assertEquals(0, rowCount);
-//
-//			//Step 5
-//			EntityInterface newEditedEntity = EntityManagerInterface.persistEntity(editedEntity);
-//			dataValue.put(floatAtribute1, "21");
-//			EntityManagerInterface.insertData(newEditedEntity, dataValue, null);
-//			//Step 6
-//
-//			assertEquals(noOfDefaultColumns + 2, getColumnCount("select * from "
-//					+ editedEntity.getTableProperties().getName()));
-//
-//			rowCount = (Integer) executeQuery("select count(*) from "
-//					+ editedEntity.getTableProperties().getName(), INT_TYPE, 1, null);
-//			assertEquals(1, rowCount);
-//
-//			EntityManagerInterface.insertData(newEditedEntity, dataValue, null);
-//			rowCount = (Integer) executeQuery("select count(*) from "
-//					+ editedEntity.getTableProperties().getName(), INT_TYPE, 1, null);
-//			assertEquals(2, rowCount);
-//		}
-//		catch (DynamicExtensionsSystemException e)
-//		{
-//			e.printStackTrace();
-//			fail();
-//		}
-//		catch (DynamicExtensionsApplicationException e)
-//		{
-//			e.printStackTrace();
-//			fail();
-//		}
-//		catch (Exception e)
-//		{
-//			e.printStackTrace();
-//			fail();
-//		}
+		//		EntityGroupInterface entityGroup = DomainObjectFactory.getInstance().createEntityGroup();
+		//		entityGroup.setName("test_" + new Double(Math.random()).toString());
+		//		//Step 1
+		//		Entity entity = (Entity) createAndPopulateEntity();
+		//		entity.setName("Stock Quote");
+		//		entity.setEntityGroup(entityGroup);
+		//		entityGroup.addEntity(entity);
+		//		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
+		//
+		//		try
+		//		{
+		//			//Step 2
+		//			EntityInterface savedEntity = EntityManagerInterface.persistEntity(entity);
+		//
+		//			//Step 3 Edit entity-- Add extra attribute
+		//			AttributeInterface floatAtribute = DomainObjectFactory.getInstance()
+		//					.createFloatAttribute();
+		//			floatAtribute.setName("Price");
+		//
+		//			savedEntity.addAbstractAttribute(floatAtribute);
+		//			//Step 4
+		//			EntityInterface editedEntity = EntityManagerInterface.persistEntity(savedEntity);
+		//
+		//			Map dataValue = new HashMap();
+		//
+		//			//          dataValue.put(floatAtribute, "15.90");
+		//			//          entityManagerInterface.insertData(editedEntity, dataValue);
+		//			//
+		//			//          dataValue.put(floatAtribute, "16.90");
+		//			//          entityManagerInterface.insertData(editedEntity, dataValue);
+		//			//
+		//			//          Long id = new EntityManagerUtil().getNextIdentifier(editedEntity.getTableProperties().getName());
+		//			//          System.out.println(id);
+		//
+		//			//Edit entity
+		//			AttributeInterface floatAtribute1 = DomainObjectFactory.getInstance()
+		//					.createFloatAttribute();
+		//			floatAtribute.setName("NewPrice");
+		//			editedEntity.addAbstractAttribute(floatAtribute1);
+		//
+		//			assertEquals(noOfDefaultColumns + 1, getColumnCount("select * from "
+		//					+ editedEntity.getTableProperties().getName()));
+		//
+		//			int rowCount = (Integer) executeQuery("select count(*) from "
+		//					+ editedEntity.getTableProperties().getName(), INT_TYPE, 1, null);
+		//			assertEquals(0, rowCount);
+		//
+		//			//Step 5
+		//			EntityInterface newEditedEntity = EntityManagerInterface.persistEntity(editedEntity);
+		//			dataValue.put(floatAtribute1, "21");
+		//			EntityManagerInterface.insertData(newEditedEntity, dataValue, null);
+		//			//Step 6
+		//
+		//			assertEquals(noOfDefaultColumns + 2, getColumnCount("select * from "
+		//					+ editedEntity.getTableProperties().getName()));
+		//
+		//			rowCount = (Integer) executeQuery("select count(*) from "
+		//					+ editedEntity.getTableProperties().getName(), INT_TYPE, 1, null);
+		//			assertEquals(1, rowCount);
+		//
+		//			EntityManagerInterface.insertData(newEditedEntity, dataValue, null);
+		//			rowCount = (Integer) executeQuery("select count(*) from "
+		//					+ editedEntity.getTableProperties().getName(), INT_TYPE, 1, null);
+		//			assertEquals(2, rowCount);
+		//		}
+		//		catch (DynamicExtensionsSystemException e)
+		//		{
+		//			e.printStackTrace();
+		//			fail();
+		//		}
+		//		catch (DynamicExtensionsApplicationException e)
+		//		{
+		//			e.printStackTrace();
+		//			fail();
+		//		}
+		//		catch (Exception e)
+		//		{
+		//			e.printStackTrace();
+		//			fail();
+		//		}
 	}
 
 	/**
@@ -387,75 +385,75 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	public void testEditAttributeTypeChange()
 	{
 		//TODO : Currently DE doesn't support this scenario. So commenting test case for timebeing
-//		EntityGroup entityGroup = (EntityGroup) DomainObjectFactory.getInstance()
-//				.createEntityGroup();
-//		entityGroup.setName("testGroup" + new Double(Math.random()).toString());
-//		Entity entity;
-//		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-//		String appName = DynamicExtensionDAO.getInstance().getAppName();
-//		String dyType = DAOConfigFactory.getInstance().getDAOFactory(appName).getDataBaseType();
-//		try
-//		{
-//			//Step 1
-//			entity = (Entity) createAndPopulateEntity();
-//			entityGroup.addEntity(entity);
-//			entity.setEntityGroup(entityGroup);
-//			AttributeInterface ssn = DomainObjectFactory.getInstance().createIntegerAttribute();
-//			ssn.setName("SSN of participant");
-//			entity.addAbstractAttribute(ssn);
-//			entity.setName("test");
-//			//Step 2
-//			entity = (Entity) EntityManagerInterface.persistEntity(entity);
-//
-//			//Step 3
-//			if (dyType.equals(edu.common.dynamicextensions.util.global.DEConstants.MYSQL_DATABASE))
-//			{
-//				assertEquals(getColumntype(
-//						"select * from " + entity.getTableProperties().getName(), 3), Types.INTEGER);
-//			}
-//			else if (dyType
-//					.equals(edu.common.dynamicextensions.util.global.DEConstants.DB2_DATABASE))
-//			{
-//				assertEquals(getColumntype(
-//						"select * from " + entity.getTableProperties().getName(), 3), Types.DECIMAL);
-//			}
-//			else
-//			{
-//				assertEquals(getColumntype(
-//						"select * from " + entity.getTableProperties().getName(), 3), Types.NUMERIC);
-//			}
-//
-//			//Step 4
-//			AttributeTypeInformationInterface stringAttributeType = new StringAttributeTypeInformation();
-//			ssn.setAttributeTypeInformation(stringAttributeType);
-//			//Step 5
-//			//entity = (Entity) EntityManager.getInstance().persistEntity(entity);
-//			entity = (Entity) EntityManagerInterface.persistEntity(entity);
-//
-//			//Step 6
-//			if (dyType.equals(edu.common.dynamicextensions.util.global.DEConstants.MYSQL_DATABASE))
-//			{
-//
-//				assertEquals(getColumntype(
-//						"select * from " + entity.getTableProperties().getName(), 3),
-//						Types.LONGVARCHAR);
-//			}
-//			else
-//			{
-//				assertEquals(getColumntype(
-//						"select * from " + entity.getTableProperties().getName(), 3), Types.VARCHAR);
-//			}
-//		}
-//		catch (DynamicExtensionsApplicationException e)
-//		{
-//			fail();
-//			e.printStackTrace();
-//		}
-//		catch (DynamicExtensionsSystemException e)
-//		{
-//			fail();
-//			e.printStackTrace();
-//		}
+		//		EntityGroup entityGroup = (EntityGroup) DomainObjectFactory.getInstance()
+		//				.createEntityGroup();
+		//		entityGroup.setName("testGroup" + new Double(Math.random()).toString());
+		//		Entity entity;
+		//		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
+		//		String appName = DynamicExtensionDAO.getInstance().getAppName();
+		//		String dyType = DAOConfigFactory.getInstance().getDAOFactory(appName).getDataBaseType();
+		//		try
+		//		{
+		//			//Step 1
+		//			entity = (Entity) createAndPopulateEntity();
+		//			entityGroup.addEntity(entity);
+		//			entity.setEntityGroup(entityGroup);
+		//			AttributeInterface ssn = DomainObjectFactory.getInstance().createIntegerAttribute();
+		//			ssn.setName("SSN of participant");
+		//			entity.addAbstractAttribute(ssn);
+		//			entity.setName("test");
+		//			//Step 2
+		//			entity = (Entity) EntityManagerInterface.persistEntity(entity);
+		//
+		//			//Step 3
+		//			if (dyType.equals(edu.common.dynamicextensions.util.global.DEConstants.MYSQL_DATABASE))
+		//			{
+		//				assertEquals(getColumntype(
+		//						"select * from " + entity.getTableProperties().getName(), 3), Types.INTEGER);
+		//			}
+		//			else if (dyType
+		//					.equals(edu.common.dynamicextensions.util.global.DEConstants.DB2_DATABASE))
+		//			{
+		//				assertEquals(getColumntype(
+		//						"select * from " + entity.getTableProperties().getName(), 3), Types.DECIMAL);
+		//			}
+		//			else
+		//			{
+		//				assertEquals(getColumntype(
+		//						"select * from " + entity.getTableProperties().getName(), 3), Types.NUMERIC);
+		//			}
+		//
+		//			//Step 4
+		//			AttributeTypeInformationInterface stringAttributeType = new StringAttributeTypeInformation();
+		//			ssn.setAttributeTypeInformation(stringAttributeType);
+		//			//Step 5
+		//			//entity = (Entity) EntityManager.getInstance().persistEntity(entity);
+		//			entity = (Entity) EntityManagerInterface.persistEntity(entity);
+		//
+		//			//Step 6
+		//			if (dyType.equals(edu.common.dynamicextensions.util.global.DEConstants.MYSQL_DATABASE))
+		//			{
+		//
+		//				assertEquals(getColumntype(
+		//						"select * from " + entity.getTableProperties().getName(), 3),
+		//						Types.LONGVARCHAR);
+		//			}
+		//			else
+		//			{
+		//				assertEquals(getColumntype(
+		//						"select * from " + entity.getTableProperties().getName(), 3), Types.VARCHAR);
+		//			}
+		//		}
+		//		catch (DynamicExtensionsApplicationException e)
+		//		{
+		//			fail();
+		//			e.printStackTrace();
+		//		}
+		//		catch (DynamicExtensionsSystemException e)
+		//		{
+		//			fail();
+		//			e.printStackTrace();
+		//		}
 	}
 
 	/**
@@ -689,109 +687,109 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	public void testEditEntityWithCollectionAttribute()
 	{
 
-//		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-//		try
-//		{
-//			DomainObjectFactory factory = DomainObjectFactory.getInstance();
-//
-//			EntityGroup entityGroup = (EntityGroup) factory.createEntityGroup();
-//			entityGroup.setName("testGroup" + new Double(Math.random()).toString());
-//
-//			EntityInterface user = createAndPopulateEntity();
-//			EntityManagerUtil.addIdAttribute(user);
-//
-//			// Step 2
-//			EntityInterface address = createAndPopulateEntity();
-//			EntityManagerUtil.addIdAttribute(address);
-//			address.setName("address");
-//
-//			AttributeInterface streetAttribute = factory.createStringAttribute();
-//			streetAttribute.setName("street name");
-//			address.addAbstractAttribute(streetAttribute);
-//
-//			// Step 3
-//			AssociationInterface association = factory.createAssociation();
-//			association.setTargetEntity(address);
-//			association.setAssociationDirection(AssociationDirection.SRC_DESTINATION);
-//			association.setName("UserAddress");
-//			association.setSourceRole(getRole(AssociationType.ASSOCIATION, "User",
-//					Cardinality.ZERO, Cardinality.ONE));
-//			association.setTargetRole(getRole(AssociationType.ASSOCIATION, "address",
-//					Cardinality.ZERO, Cardinality.MANY));
-//			association.setIsCollection(new Boolean(true));
-//
-//			user.addAbstractAttribute(association);
-//			DynamicExtensionsUtility.getConstraintPropertiesForAssociation(association);
-//			entityGroup.addEntity(user);
-//			user.setEntityGroup(entityGroup);
-//			entityGroup.addEntity(address);
-//			address.setEntityGroup(entityGroup);
-//
-//			user = EntityManagerInterface.persistEntity(user);
-//
-//			Entity savedEntity = (Entity) EntityManagerInterface.getEntityByIdentifier(user.getId()
-//					.toString());
-//			assertEquals(user.getName(), savedEntity.getName());
-//
-//			Map dataValue = new HashMap();
-//			List dataList = new ArrayList();
-//
-//			Map dataMapFirst = new HashMap();
-//			dataMapFirst.put(streetAttribute, "xyz");
-//			dataList.add(dataMapFirst);
-//
-//			Map dataMapSecond = new HashMap();
-//			dataMapSecond.put(streetAttribute, "abc");
-//			dataList.add(dataMapSecond);
-//
-//			//dataValue.put(commentsAttributes, "this is not default comment");
-//			dataValue.put(association, dataList);
-//
-//			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue, null);
-//
-//			Map map = EntityManagerInterface.getRecordById(savedEntity, recordId);
-//
-//			System.out.println(map);
-//
-//			dataMapFirst.put(streetAttribute, "rajesh");
-//
-//			EntityManagerInterface.editData(savedEntity, dataValue, recordId, null);
-//
-//			map = EntityManagerInterface.getRecordById(savedEntity, recordId);
-//
-//			System.out.println(map);
+		//		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
+		//		try
+		//		{
+		//			DomainObjectFactory factory = DomainObjectFactory.getInstance();
+		//
+		//			EntityGroup entityGroup = (EntityGroup) factory.createEntityGroup();
+		//			entityGroup.setName("testGroup" + new Double(Math.random()).toString());
+		//
+		//			EntityInterface user = createAndPopulateEntity();
+		//			EntityManagerUtil.addIdAttribute(user);
+		//
+		//			// Step 2
+		//			EntityInterface address = createAndPopulateEntity();
+		//			EntityManagerUtil.addIdAttribute(address);
+		//			address.setName("address");
+		//
+		//			AttributeInterface streetAttribute = factory.createStringAttribute();
+		//			streetAttribute.setName("street name");
+		//			address.addAbstractAttribute(streetAttribute);
+		//
+		//			// Step 3
+		//			AssociationInterface association = factory.createAssociation();
+		//			association.setTargetEntity(address);
+		//			association.setAssociationDirection(AssociationDirection.SRC_DESTINATION);
+		//			association.setName("UserAddress");
+		//			association.setSourceRole(getRole(AssociationType.ASSOCIATION, "User",
+		//					Cardinality.ZERO, Cardinality.ONE));
+		//			association.setTargetRole(getRole(AssociationType.ASSOCIATION, "address",
+		//					Cardinality.ZERO, Cardinality.MANY));
+		//			association.setIsCollection(new Boolean(true));
+		//
+		//			user.addAbstractAttribute(association);
+		//			DynamicExtensionsUtility.getConstraintPropertiesForAssociation(association);
+		//			entityGroup.addEntity(user);
+		//			user.setEntityGroup(entityGroup);
+		//			entityGroup.addEntity(address);
+		//			address.setEntityGroup(entityGroup);
+		//
+		//			user = EntityManagerInterface.persistEntity(user);
+		//
+		//			Entity savedEntity = (Entity) EntityManagerInterface.getEntityByIdentifier(user.getId()
+		//					.toString());
+		//			assertEquals(user.getName(), savedEntity.getName());
+		//
+		//			Map dataValue = new HashMap();
+		//			List dataList = new ArrayList();
+		//
+		//			Map dataMapFirst = new HashMap();
+		//			dataMapFirst.put(streetAttribute, "xyz");
+		//			dataList.add(dataMapFirst);
+		//
+		//			Map dataMapSecond = new HashMap();
+		//			dataMapSecond.put(streetAttribute, "abc");
+		//			dataList.add(dataMapSecond);
+		//
+		//			//dataValue.put(commentsAttributes, "this is not default comment");
+		//			dataValue.put(association, dataList);
+		//
+		//			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue, null);
+		//
+		//			Map map = EntityManagerInterface.getRecordById(savedEntity, recordId);
+		//
+		//			System.out.println(map);
+		//
+		//			dataMapFirst.put(streetAttribute, "rajesh");
+		//
+		//			EntityManagerInterface.editData(savedEntity, dataValue, recordId, null);
+		//
+		//			map = EntityManagerInterface.getRecordById(savedEntity, recordId);
+		//
+		//			System.out.println(map);
 
-			//			String tableName = newEntity.getTableProperties().getName();
-			//			System.out.println("===========table name " + tableName);
-			//			assertTrue(isTablePresent(tableName));
-			//			ResultSetMetaData metaData = executeQueryForMetadata("select * from " + tableName);
-			//			assertEquals(metaData.getColumnCount(), noOfDefaultColumns);
-			//
-			//			userNameAttribute = (AttributeInterface) newEntity.getAttributeByIdentifier(userNameAttribute.getId());
-			//			userNameAttribute.setIsCollection(false);
-			//
-			//			newEntity = (Entity) EntityManagerInterface.persistEntity(newEntity);
-			//
-			//			tableName = newEntity.getTableProperties().getName();
-			//			assertTrue(isTablePresent(tableName));
-			//			metaData = executeQueryForMetadata("select * from " + tableName);
-			//			assertEquals(metaData.getColumnCount(), noOfDefaultColumns + 1);
-			//
-			//			userNameAttribute = (AttributeInterface) newEntity.getAttributeByIdentifier(userNameAttribute.getId());
-			//			userNameAttribute.setIsCollection(true);
-			//
-			//			newEntity = (Entity) EntityManagerInterface.persistEntity(newEntity);
-			//
-			//			tableName = newEntity.getTableProperties().getName();
-			//			assertTrue(isTablePresent(tableName));
-			//			metaData = executeQueryForMetadata("select * from " + tableName);
-			//			assertEquals(metaData.getColumnCount(), noOfDefaultColumns);
-//		}
-//		catch (Exception e)
-//		{
-//			Logger.out.debug(e.getMessage());
-//			fail("Exception occured");
-//		}
+		//			String tableName = newEntity.getTableProperties().getName();
+		//			System.out.println("===========table name " + tableName);
+		//			assertTrue(isTablePresent(tableName));
+		//			ResultSetMetaData metaData = executeQueryForMetadata("select * from " + tableName);
+		//			assertEquals(metaData.getColumnCount(), noOfDefaultColumns);
+		//
+		//			userNameAttribute = (AttributeInterface) newEntity.getAttributeByIdentifier(userNameAttribute.getId());
+		//			userNameAttribute.setIsCollection(false);
+		//
+		//			newEntity = (Entity) EntityManagerInterface.persistEntity(newEntity);
+		//
+		//			tableName = newEntity.getTableProperties().getName();
+		//			assertTrue(isTablePresent(tableName));
+		//			metaData = executeQueryForMetadata("select * from " + tableName);
+		//			assertEquals(metaData.getColumnCount(), noOfDefaultColumns + 1);
+		//
+		//			userNameAttribute = (AttributeInterface) newEntity.getAttributeByIdentifier(userNameAttribute.getId());
+		//			userNameAttribute.setIsCollection(true);
+		//
+		//			newEntity = (Entity) EntityManagerInterface.persistEntity(newEntity);
+		//
+		//			tableName = newEntity.getTableProperties().getName();
+		//			assertTrue(isTablePresent(tableName));
+		//			metaData = executeQueryForMetadata("select * from " + tableName);
+		//			assertEquals(metaData.getColumnCount(), noOfDefaultColumns);
+		//		}
+		//		catch (Exception e)
+		//		{
+		//			Logger.out.debug(e.getMessage());
+		//			fail("Exception occured");
+		//		}
 	}
 
 	/**
@@ -873,34 +871,37 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	{
 		try
 		{
-			EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName("Test");
-	        EntityInterface clinicalAnnotations = testModel.getEntityByName("Chemotherapy");
-	        AttributeInterface startDate = (AttributeInterface)clinicalAnnotations.getAbstractAttributeByName("startDate");
-	        AttributeInterface endDate = (AttributeInterface)clinicalAnnotations.getAbstractAttributeByName("endDate");
+			EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
+					"Test");
+			EntityInterface clinicalAnnotations = testModel.getEntityByName("Chemotherapy");
+			AttributeInterface startDate = (AttributeInterface) clinicalAnnotations
+					.getAbstractAttributeByName("startDate");
+			AttributeInterface endDate = (AttributeInterface) clinicalAnnotations
+					.getAbstractAttributeByName("endDate");
 
-	        Map dataValue = new HashMap();
+			Map dataValue = new HashMap();
 
-	        //dataValue.put(commentsAttributes, "this is not default comment");
-	        dataValue.put(startDate, "02-2009");
-	        dataValue.put(endDate, "2009");
+			//dataValue.put(commentsAttributes, "this is not default comment");
+			dataValue.put(startDate, "02-2009");
+			dataValue.put(endDate, "2009");
 
-	        EntityManagerInterface manager = EntityManager.getInstance();
-	        Long recordId = manager.insertData(clinicalAnnotations, dataValue, null);
-	        assertNotNull(recordId);
-	        Map map = manager.getRecordById(clinicalAnnotations, recordId);
+			EntityManagerInterface manager = EntityManager.getInstance();
+			Long recordId = manager.insertData(clinicalAnnotations, dataValue, null);
+			assertNotNull(recordId);
+			Map map = manager.getRecordById(clinicalAnnotations, recordId);
 
-	        assertEquals("02-2009", map.get(startDate));
+			assertEquals("02-2009", map.get(startDate));
 			assertEquals("2009", map.get(endDate));
 
 			dataValue = new HashMap();
 
-	        dataValue.put(startDate, "08-2010");
-	        dataValue.put(endDate, "2010");
+			dataValue.put(startDate, "08-2010");
+			dataValue.put(endDate, "2010");
 
-	        manager.editData(clinicalAnnotations, dataValue, recordId, null, null);
+			manager.editData(clinicalAnnotations, dataValue, recordId, null, null);
 
-	        map = manager.getRecordById(clinicalAnnotations, recordId);
-	        assertEquals("08-2010", map.get(startDate));
+			map = manager.getRecordById(clinicalAnnotations, recordId);
+			assertEquals("08-2010", map.get(startDate));
 			assertEquals("2010", map.get(endDate));
 
 		}
@@ -931,44 +932,53 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	{
 		try
 		{
-			EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName("Test");
-            EntityInterface clinicalAnnotations = testModel.getEntityByName("ClinicalAnnotations");
-            AssociationInterface pathAnnoChildAssocn = (AssociationInterface)clinicalAnnotations.getAbstractAttributeByName("PathAnnoChild");
+			EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
+					"Test");
+			EntityInterface clinicalAnnotations = testModel.getEntityByName("ClinicalAnnotations");
+			AssociationInterface pathAnnoChildAssocn = (AssociationInterface) clinicalAnnotations
+					.getAbstractAttributeByName("PathAnnoChild");
 
-            Map dataValue = new HashMap();
-            List dataList = new ArrayList();
-            Map dataMapFirst = new HashMap();
-            dataMapFirst.put(pathAnnoChildAssocn.getTargetEntity().getAttributeByName("detectionDateChild"), "02-02-2009");
-            dataMapFirst.put(pathAnnoChildAssocn.getTargetEntity().getAttributeByName("malignantChild"), "true");
+			Map dataValue = new HashMap();
+			List dataList = new ArrayList();
+			Map dataMapFirst = new HashMap();
+			dataMapFirst.put(pathAnnoChildAssocn.getTargetEntity().getAttributeByName(
+					"detectionDateChild"), "02-02-2009");
+			dataMapFirst.put(pathAnnoChildAssocn.getTargetEntity().getAttributeByName(
+					"malignantChild"), "true");
 
-            dataList.add(dataMapFirst);
+			dataList.add(dataMapFirst);
 
-            //dataValue.put(commentsAttributes, "this is not default comment");
-            dataValue.put(pathAnnoChildAssocn, dataList);
+			//dataValue.put(commentsAttributes, "this is not default comment");
+			dataValue.put(pathAnnoChildAssocn, dataList);
 
-            EntityManagerInterface manager = EntityManager.getInstance();
-            Long recordId = manager.insertData(clinicalAnnotations, dataValue, null);
-            Map map = manager.getRecordById(clinicalAnnotations, recordId);
+			EntityManagerInterface manager = EntityManager.getInstance();
+			Long recordId = manager.insertData(clinicalAnnotations, dataValue, null);
+			Map map = manager.getRecordById(clinicalAnnotations, recordId);
 
-            Map recMap =  (Map)((List) map.get(pathAnnoChildAssocn)).get(0);
-			assertEquals("02-02-2009", recMap.get(pathAnnoChildAssocn.getTargetEntity().getAttributeByName("detectionDateChild")));
+			Map recMap = (Map) ((List) map.get(pathAnnoChildAssocn)).get(0);
+			assertEquals("02-02-2009", recMap.get(pathAnnoChildAssocn.getTargetEntity()
+					.getAttributeByName("detectionDateChild")));
 
 			dataValue = new HashMap();
-            dataList = new ArrayList();
-            dataMapFirst = new HashMap();
-            dataMapFirst.put(pathAnnoChildAssocn.getTargetEntity().getAttributeByName("detectionDateChild"), "04-04-2009");
-            dataMapFirst.put(pathAnnoChildAssocn.getTargetEntity().getAttributeByName("malignantChild"), "false");
+			dataList = new ArrayList();
+			dataMapFirst = new HashMap();
+			dataMapFirst.put(pathAnnoChildAssocn.getTargetEntity().getAttributeByName(
+					"detectionDateChild"), "04-04-2009");
+			dataMapFirst.put(pathAnnoChildAssocn.getTargetEntity().getAttributeByName(
+					"malignantChild"), "false");
 
-            dataList.add(dataMapFirst);
+			dataList.add(dataMapFirst);
 
-            //dataValue.put(commentsAttributes, "this is not default comment");
-            dataValue.put(pathAnnoChildAssocn, dataList);
+			//dataValue.put(commentsAttributes, "this is not default comment");
+			dataValue.put(pathAnnoChildAssocn, dataList);
 
-            boolean isEditData = manager.editData(clinicalAnnotations, dataValue, recordId, null, null);
-            map = manager.getRecordById(clinicalAnnotations, recordId);
+			boolean isEditData = manager.editData(clinicalAnnotations, dataValue, recordId, null,
+					null);
+			map = manager.getRecordById(clinicalAnnotations, recordId);
 
-            recMap =  (Map)((List) map.get(pathAnnoChildAssocn)).get(0);
-			assertEquals("04-04-2009", recMap.get(pathAnnoChildAssocn.getTargetEntity().getAttributeByName("detectionDateChild")));
+			recMap = (Map) ((List) map.get(pathAnnoChildAssocn)).get(0);
+			assertEquals("04-04-2009", recMap.get(pathAnnoChildAssocn.getTargetEntity()
+					.getAttributeByName("detectionDateChild")));
 
 		}
 		catch (Exception e)
@@ -1261,23 +1271,26 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	{
 		try
 		{
-			EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName("Test");
-            EntityInterface clinicalAnnotations = testModel.getEntityByName("Chemotherapy");
-            AttributeInterface startDate = (AttributeInterface)clinicalAnnotations.getAbstractAttributeByName("startDate");
-            AttributeInterface endDate = (AttributeInterface)clinicalAnnotations.getAbstractAttributeByName("endDate");
+			EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
+					"Test");
+			EntityInterface clinicalAnnotations = testModel.getEntityByName("Chemotherapy");
+			AttributeInterface startDate = (AttributeInterface) clinicalAnnotations
+					.getAbstractAttributeByName("startDate");
+			AttributeInterface endDate = (AttributeInterface) clinicalAnnotations
+					.getAbstractAttributeByName("endDate");
 
-            Map dataValue = new HashMap();
+			Map dataValue = new HashMap();
 
-            //dataValue.put(commentsAttributes, "this is not default comment");
-            dataValue.put(startDate, "02-2009");
-            dataValue.put(endDate, "2009");
+			//dataValue.put(commentsAttributes, "this is not default comment");
+			dataValue.put(startDate, "02-2009");
+			dataValue.put(endDate, "2009");
 
-            EntityManagerInterface manager = EntityManager.getInstance();
-            Long recordId = manager.insertData(clinicalAnnotations, dataValue, null);
-            assertNotNull(recordId);
-            Map map = manager.getRecordById(clinicalAnnotations, recordId);
+			EntityManagerInterface manager = EntityManager.getInstance();
+			Long recordId = manager.insertData(clinicalAnnotations, dataValue, null);
+			assertNotNull(recordId);
+			Map map = manager.getRecordById(clinicalAnnotations, recordId);
 
-            assertEquals("02-2009", map.get(startDate));
+			assertEquals("02-2009", map.get(startDate));
 			assertEquals("2009", map.get(endDate));
 
 		}
@@ -2237,77 +2250,6 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	}
 
 	/**
-	 * PURPOSE : to test the method insertData for attribute having default value specified.
-	 * EXPECTED BEHAVIOR : since default value is only for display purpose, it should not be persisted
-	 *                     if user has explicitly removed this value /not mentioned for the attribute.
-	 *
-	 * TEST CASE FLOW :
-	 * 1.Create an entity
-	 * 2.Persist the entity.
-	 * 3.Insert data without specifying value for the attribute that has some default value.
-	 * 4.Check that the value for that attribute is null.
-	 */
-	public void testInsertDataWithdefaultValue()
-	{
-		DomainObjectFactory factory = DomainObjectFactory.getInstance();
-		EntityGroupInterface entityGroup = factory.createEntityGroup();
-		entityGroup.setName("test_" + new Double(Math.random()).toString());
-		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-		Entity entity = (Entity) createAndPopulateEntity();
-		entity.setName("Stock Quote");
-
-		try
-		{
-			//Step 1.
-			AttributeInterface commentsAttributes = factory.createStringAttribute();
-			commentsAttributes.setName("comments");
-			StringValueInterface defaultValue = factory.createStringValue();
-			defaultValue.setValue("this is default value");
-			commentsAttributes.getAttributeTypeInformation().setDefaultValue(defaultValue);
-
-			entity.addAbstractAttribute(commentsAttributes);
-
-			AttributeInterface tempAttributes = factory.createStringAttribute();
-			tempAttributes.setName("temp");
-			entity.addAbstractAttribute(tempAttributes);
-			EntityManagerUtil.addIdAttribute(entity);
-			entityGroup.addEntity(entity);
-			entity.setEntityGroup(entityGroup);
-			//Step 2.
-			EntityInterface savedEntity = EntityManagerInterface.persistEntity(entity);
-
-			//Step 3.
-			Map dataValue = new HashMap();
-			//dataValue.put(commentsAttributes, "this is not default comment");
-			dataValue.put(tempAttributes, "temp");
-
-			EntityManagerInterface.insertData(savedEntity, dataValue, null);
-
-			//Step 4.
-			String status = (String) executeQuery("select * from "
-					+ savedEntity.getTableProperties().getName(), STRING_TYPE, 3, null);
-
-			assertEquals(null, status);
-		}
-		catch (DynamicExtensionsSystemException e)
-		{
-			fail();
-			Logger.out.debug(e.getStackTrace());
-		}
-		catch (DynamicExtensionsApplicationException e)
-		{
-			fail();
-			Logger.out.debug(e.getStackTrace());
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail();
-			Logger.out.debug(e.getStackTrace());
-		}
-	}
-
-	/**
 	 * PURPOSE : to test the fix for bug 3209.
 	 *
 	 *
@@ -2505,70 +2447,6 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	//      }
 	//
 	//  }
-	/**
-	 *
-	 */
-	public void testInsertDataForDate()
-	{
-		DomainObjectFactory factory = DomainObjectFactory.getInstance();
-		EntityGroupInterface entityGroup = factory.createEntityGroup();
-		entityGroup.setName("test_" + new Double(Math.random()).toString());
-		//Step 1
-		Entity entity = (Entity) createAndPopulateEntity();
-		entity.setName("Stock Quote");
-		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-
-		try
-		{
-			AttributeInterface floatAtribute = DomainObjectFactory.getInstance()
-					.createFloatAttribute();
-			floatAtribute.setName("Price");
-
-			AttributeInterface commentsAttributes = DomainObjectFactory.getInstance()
-					.createStringAttribute();
-			commentsAttributes.setName("coomments");
-
-			AttributeInterface startDate = DomainObjectFactory.getInstance().createDateAttribute();
-			startDate.setName("startDate");
-			((DateAttributeTypeInformation) startDate.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEANDTIME);
-
-			AttributeInterface endDate = DomainObjectFactory.getInstance().createDateAttribute();
-			((DateAttributeTypeInformation) endDate.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
-			endDate.setName("endDate");
-
-			entity.addAbstractAttribute(floatAtribute);
-			entity.addAbstractAttribute(commentsAttributes);
-			entity.addAbstractAttribute(startDate);
-			entity.addAbstractAttribute(endDate);
-			entityGroup.addEntity(entity);
-			entity.setEntityGroup(entityGroup);
-			//Step 2
-			EntityInterface savedEntity = EntityManagerInterface.persistEntity(entity);
-
-			Map dataValue = new HashMap();
-			dataValue.put(floatAtribute, "15.90");
-			String startDateValue = "11" + ProcessorConstants.DATE_SEPARATOR + "12"
-					+ ProcessorConstants.DATE_SEPARATOR + "1982 10:11";
-			dataValue.put(startDate, startDateValue);
-			String endDateValue = "01" + ProcessorConstants.DATE_SEPARATOR + "12"
-					+ ProcessorConstants.DATE_SEPARATOR + "1982";
-			dataValue.put(endDate, endDateValue);
-
-			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue, null);
-
-			dataValue = EntityManagerInterface.getRecordById(entity, recordId);
-
-			assertEquals(startDateValue, dataValue.get(startDate));
-			assertEquals(endDateValue, dataValue.get(endDate));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail();
-		}
-	}
 
 	/**
 	 * Create a date only attribute, and try to insert a future date value
@@ -2642,73 +2520,123 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	 */
 	public void testInsertDataForDateWithDifferentFormats()
 	{
-		DomainObjectFactory factory = DomainObjectFactory.getInstance();
-		EntityGroupInterface entityGroup = factory.createEntityGroup();
-		entityGroup.setName("DATE_TEST" + new Double(Math.random()).toString());
-
-		//Step 1
-		Entity entity = (Entity) createAndPopulateEntity();
-		entity.setName("DateForm");
-		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-
+		// For Date Only Format &&  For Date - Time Format
 		try
 		{
-			AttributeInterface dateOnly = DomainObjectFactory.getInstance().createDateAttribute();
-			((DateAttributeTypeInformation) dateOnly.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
-			dateOnly.setName("dateOnly");
 
-			AttributeInterface dateTime = DomainObjectFactory.getInstance().createDateAttribute();
-			((DateAttributeTypeInformation) dateTime.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEANDTIME);
-			dateTime.setName("dateTime");
+			EntityGroupInterface testGroup = EntityGroupManager.getInstance().getEntityGroupByName(
+					TEST_ENTITYGROUP_NAME);
+			//Step 1. Retrieve the Chemotheropy entity in which "duration" attribute have the Default value of 6;
+			EntityInterface diagnosis = testGroup.getEntityByName("Diagnosis");
+			AttributeInterface diagnosisAtt = diagnosis.getAttributeByName("diagnosis");
+			AttributeInterface dateTimeAtt = diagnosis.getAttributeByName("diagnosisDate");
+			AttributeInterface dateOnlyAtt = diagnosis.getAttributeByName("followupDiagnosisDate");
 
-			AttributeInterface yearOnlyDate = DomainObjectFactory.getInstance()
-					.createDateAttribute();
-			((DateAttributeTypeInformation) yearOnlyDate.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_YEARONLY);
-			yearOnlyDate.setName("yearOnlyDate");
-
-			AttributeInterface monthYearDate = DomainObjectFactory.getInstance()
-					.createDateAttribute();
-			((DateAttributeTypeInformation) monthYearDate.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_MONTHANDYEAR);
-			monthYearDate.setName("monthYearDate");
-
-			entity.addAbstractAttribute(dateOnly);
-			entity.addAbstractAttribute(dateTime);
-			entity.addAbstractAttribute(yearOnlyDate);
-			entity.addAbstractAttribute(monthYearDate);
-
-			entityGroup.addEntity(entity);
-			entity.setEntityGroup(entityGroup);
-			//Step 2
-			EntityInterface savedEntity = EntityManagerInterface.persistEntity(entity);
-
+			//Step 2.
 			Map dataValue = new HashMap();
-			dataValue.put(dateOnly, "01" + ProcessorConstants.DATE_SEPARATOR + "12"
-					+ ProcessorConstants.DATE_SEPARATOR + "1982");
-			dataValue.put(dateTime, "11" + ProcessorConstants.DATE_SEPARATOR + "12"
-					+ ProcessorConstants.DATE_SEPARATOR + "1982 10:11");
-			dataValue.put(yearOnlyDate, "1900");
-			dataValue.put(monthYearDate, "09" + ProcessorConstants.DATE_SEPARATOR + "1900");
+			//dataValue.put(commentsAttributes, "this is not default comment");
+			String testDateTime = "10" + ProcessorConstants.DATE_SEPARATOR + "08"
+					+ ProcessorConstants.DATE_SEPARATOR + "1998 11:30";
+			String testDateValue = "10" + ProcessorConstants.DATE_SEPARATOR + "08"
+					+ ProcessorConstants.DATE_SEPARATOR + "1998";
 
-			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue, null);
+			dataValue.put(diagnosisAtt, "true");
+			dataValue.put(dateTimeAtt, testDateTime);
+			dataValue.put(dateOnlyAtt, testDateValue);
 
-			dataValue = EntityManagerInterface.getRecordById(entity, recordId);
+			EntityManagerInterface entityManager = EntityManager.getInstance();
+			Long recordId = entityManager.insertData(diagnosis, dataValue, null);
 
-			assertEquals("11" + ProcessorConstants.DATE_SEPARATOR + "12"
-					+ ProcessorConstants.DATE_SEPARATOR + "1982 10:11", dataValue.get(dateTime));
-			assertEquals("01" + ProcessorConstants.DATE_SEPARATOR + "12"
-					+ ProcessorConstants.DATE_SEPARATOR + "1982", dataValue.get(dateOnly));
-			assertEquals("1900", dataValue.get(yearOnlyDate));
-			assertEquals("09" + ProcessorConstants.DATE_SEPARATOR + "1900", dataValue
-					.get(monthYearDate));
+			//Step 3.
+			dataValue = entityManager.getRecordById(diagnosis, recordId);
+
+			assertEquals(testDateTime, dataValue.get(dateTimeAtt));
+			assertEquals(testDateValue, dataValue.get(dateOnlyAtt));
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 			fail();
+			Logger.out.debug(e.getStackTrace());
+		}
+
+		// For Month Year && Year Only Format
+		try
+		{
+
+			EntityGroupInterface testGroup = EntityGroupManager.getInstance().getEntityGroupByName(
+					TEST_ENTITYGROUP_NAME);
+			//Step 1. Retrieve the Chemotheropy entity in which "duration" attribute have the Default value of 6;
+			EntityInterface chemoTheropyEntity = testGroup.getEntityByName("Chemotherapy");
+			AttributeInterface durationAtt = chemoTheropyEntity.getAttributeByName("duration");
+			AttributeInterface monthYearAtt = chemoTheropyEntity.getAttributeByName("startDate");
+			AttributeInterface yearOnlyAtt = chemoTheropyEntity.getAttributeByName("endDate");
+
+			//Step 2.
+			Map dataValue = new HashMap();
+			//dataValue.put(commentsAttributes, "this is not default comment");
+			String monthYearValue = "10" + ProcessorConstants.DATE_SEPARATOR + "1998";
+			String yearValue = "1998";
+			dataValue.put(durationAtt, "15");
+			dataValue.put(monthYearAtt, monthYearValue);
+			dataValue.put(yearOnlyAtt, yearValue);
+			EntityManagerInterface entityManager = EntityManager.getInstance();
+			Long recordId = entityManager.insertData(chemoTheropyEntity, dataValue, null);
+
+			//Step 3.
+			dataValue = entityManager.getRecordById(chemoTheropyEntity, recordId);
+
+			assertEquals("15", dataValue.get(durationAtt));
+			assertEquals("15", dataValue.get(durationAtt));
+			assertEquals(yearValue, dataValue.get(yearOnlyAtt));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail();
+			Logger.out.debug(e.getStackTrace());
+		}
+
+	}
+
+	/**
+	 *
+	 */
+	public void testInsertDataForDate()
+	{
+		try
+		{
+			EntityGroupInterface testGroup = EntityGroupManager.getInstance().getEntityGroupByName(
+					TEST_ENTITYGROUP_NAME);
+			//Step 1. Retrieve the Chemotheropy entity in which "duration" attribute have the Default value of 6;
+			EntityInterface labTestEntity = testGroup.getEntityByName("LabTest");
+			AttributeInterface quantResult = labTestEntity.getAttributeByName("quantResult");
+			AttributeInterface testAgent = labTestEntity.getAttributeByName("testAgent");
+			AttributeInterface testDate = labTestEntity.getAttributeByName("testDate");
+
+			//Step 2. insert data
+			Map dataValue = new HashMap();
+			//dataValue.put(commentsAttributes, "this is not default comment");
+			dataValue.put(quantResult, "15.90");
+			dataValue.put(testAgent, "test Agent");
+			String testDateValue = "10" + ProcessorConstants.DATE_SEPARATOR + "08"
+					+ ProcessorConstants.DATE_SEPARATOR + "1998";
+			dataValue.put(testDate, testDateValue);
+
+			EntityManagerInterface entityManager = EntityManager.getInstance();
+			Long recordId = entityManager.insertData(labTestEntity, dataValue, null);
+
+			//Step 3. Validate data
+			dataValue = entityManager.getRecordById(labTestEntity, recordId);
+
+			assertEquals("test Agent", dataValue.get(testAgent));
+			assertEquals(testDateValue, dataValue.get(testDate));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail();
+			Logger.out.debug(e.getStackTrace());
 		}
 	}
 
