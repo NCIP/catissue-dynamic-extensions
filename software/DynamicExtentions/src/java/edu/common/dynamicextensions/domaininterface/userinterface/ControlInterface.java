@@ -1,7 +1,10 @@
 package edu.common.dynamicextensions.domaininterface.userinterface;
 
+import java.util.Collection;
 import java.util.List;
+
 import edu.common.dynamicextensions.domain.userinterface.Container;
+import edu.common.dynamicextensions.domain.userinterface.beans.UIProperty;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.DynamicExtensionBaseDomainObjectInterface;
@@ -409,4 +412,17 @@ public interface ControlInterface extends
 	 * @return
 	 */
 	boolean getIsEnumeratedControl();
+	
+	/**
+	 * It creates a {@code Collection<UIProperty>} which contains all UI related properties for the {@code ControlInterface}.
+	 *  Here, {@link UIProperty} has key-value pairs.
+	 * @return
+	 */
+	Collection<UIProperty> getControlTypeValues();
+	
+	/**
+     * It sets the {@link UIProperty} (key-value pair) for this ControlInterface.
+     * @return
+     */
+    void setControlTypeValues(Collection<UIProperty> uiProperties);
 }
