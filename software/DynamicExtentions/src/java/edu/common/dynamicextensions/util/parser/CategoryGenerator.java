@@ -1226,14 +1226,14 @@ public class CategoryGenerator
 		final String displayLable = categoryFileParser.getDisplyLable();
 		final List<String> categoryEntityName = new ArrayList<String>();
 		String categoryEntName = null;
-
 		try
 		{
 			categoryFileParser.readNext();
-			final String[] categoryPaths = categoryFileParser.getCategoryPaths();
+			List<String> categoryPaths = CategoryGenerationUtil
+					.getCategoryEntityPath(categoryFileParser.getCategoryPaths());
 			//categoryValidator.validateContainersUnderSameDisplayLabel(categoryPaths, showCaption);
 			ContainerInterface temp = null;
-			for (final String categoryPath : categoryPaths)
+			for (String categoryPath : categoryPaths)
 			{
 				categoryEntName = CategoryGenerationUtil.getCategoryEntityName(categoryPath,
 						entityNameAssociationMap);
@@ -1271,9 +1271,9 @@ public class CategoryGenerator
 		return categoryEntityName;
 	}
 
-	private ContainerInterface createForm(final String displayLable, final String categoryPath,
-			final List<String> categoryEntityNameList, final String categoryEntityName,
-			final String[] categoryPaths, final boolean showCaption)
+	private ContainerInterface createForm(String displayLable, String categoryPath,
+			List<String> categoryEntityNameList, String categoryEntityName,
+			List<String> categoryPaths, boolean showCaption)
 			throws DynamicExtensionsSystemException
 	{
 		String entityName = null;
@@ -1405,7 +1405,7 @@ public class CategoryGenerator
 	 * @param newCategoryEntityName
 	 * @return
 	 */
-	private String getCategoryPath(final String[] categoryPaths, final String newCategoryEntityName)
+	private String getCategoryPath(List<String> categoryPaths, String newCategoryEntityName)
 	{
 		String categoryPath = null;
 		for (final String string : categoryPaths)

@@ -316,10 +316,14 @@ public class CategoryGenerationUtil
 				if (associations.size() == size)
 				{
 					throw new DynamicExtensionsSystemException(ApplicationProperties
-							.getValue(CategoryConstants.CREATE_CAT_FAILS) +
-							"Error in defining path for the entity " + entityName + ": "
-									+ sourceEntity.getName() + " --> " + targetEntityName
-									+ "  Association does not exist.");
+							.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ "Error in defining path for the entity "
+							+ entityName
+							+ ": "
+							+ sourceEntity.getName()
+							+ " --> "
+							+ targetEntityName
+							+ "  Association does not exist.");
 				}
 				// Source entity should now be target entity.
 				sourceEntity = targetEntity;
@@ -541,6 +545,27 @@ public class CategoryGenerationUtil
 	}
 
 	/**
+	 * The path which are used for Root Cat Entity path should always be
+	 * NAME[1]->Name[1] but user can only specify Name[1] & thus this method modifies the instance
+	 * information if only NAME[1] is given to NAME[1]->NAME[1].
+	 * @param categoryEntityPath paths.
+	 * @return list of modified category entity paths.
+	 */
+	public static List<String> getCategoryEntityPath(String[] categoryEntityPath)
+	{
+		List<String> categoryEntityPathList = new ArrayList<String>();
+		for (String categoryPath : categoryEntityPath)
+		{
+			if (!categoryPath.contains("->"))
+			{
+				categoryPath = categoryPath.concat("->" + categoryPath);
+			}
+			categoryEntityPathList.add(categoryPath);
+		}
+		return categoryEntityPathList;
+	}
+
+	/**
 	 * category names in CSV are of format <entity_name>[instance_Number]
 	 * @param categoryNameInCSV
 	 * @return
@@ -629,10 +654,10 @@ public class CategoryGenerationUtil
 						.getTargetCategoryEntity();
 				List<PathAssociationRelationInterface> pathAssociationCollection = categoryEntityInterface
 						.getPath().getSortedPathAssociationRelationCollection();
-				PathAssociationRelationInterface pathAssociationRelationInterface = pathAssociationCollection
+				PathAssociationRelationInterface pathAssociationRelInterface = pathAssociationCollection
 						.get(pathAssociationCollection.size() - 1);
 				if (categoryEntityInterface.getEntity().getName().equals(entityName)
-						&& pathAssociationRelationInterface.getTargetInstanceId().equals(
+						&& pathAssociationRelInterface.getTargetInstanceId().equals(
 								instanceNumber))
 				{
 					for (CategoryAttributeInterface categoryAttributeInterface : categoryAssociationInterface
@@ -715,15 +740,11 @@ public class CategoryGenerationUtil
 						{
 							CalculatedAttributeInterface calculatedAttributeInterface = DomainObjectFactory
 									.getInstance().createCalculatedAttribute();
-							calculatedAttributeInterface
-									.setCalculatedAttribute(categoryAttribute);
-							calculatedAttributeInterface
-									.setSourceForCalculatedAttribute(attributes
-											.get(0));
-							calculatedAttributeInterface
-									.getSourceForCalculatedAttribute()
-									.setIsSourceForCalculatedAttribute(
-											Boolean.TRUE);
+							calculatedAttributeInterface.setCalculatedAttribute(categoryAttribute);
+							calculatedAttributeInterface.setSourceForCalculatedAttribute(attributes
+									.get(0));
+							calculatedAttributeInterface.getSourceForCalculatedAttribute()
+									.setIsSourceForCalculatedAttribute(Boolean.TRUE);
 							categoryAttribute
 									.addCalculatedCategoryAttribute(calculatedAttributeInterface);
 						}
@@ -765,17 +786,17 @@ public class CategoryGenerationUtil
 			throws DynamicExtensionsSystemException
 	{
 		StringBuffer categoryEntityName = new StringBuffer();
-		String entityNameForEntityAssociationMap = CategoryGenerationUtil
+		String entityNameForEntityAssocMap = CategoryGenerationUtil
 				.getEntityNameForAssociationMap(categoryEntityInstancePath);
 
 		//e.g Annotations[1]->PhysicalExam[2]
 		String[] pathWithInstance = categoryEntityInstancePath.split("->");
 
 		int counter = 0;
-		if (entityNameAssociationMap.get(entityNameForEntityAssociationMap) != null)
+		if (entityNameAssociationMap.get(entityNameForEntityAssocMap) != null)
 		{
 			for (AssociationInterface association : entityNameAssociationMap
-					.get(entityNameForEntityAssociationMap))
+					.get(entityNameForEntityAssocMap))
 			{
 				String sourceEntityName = pathWithInstance[counter];
 				String targetEntityName = pathWithInstance[counter + 1];
@@ -827,7 +848,8 @@ public class CategoryGenerationUtil
 	 * @param permissibleValueColl permisibleValueCollection
 	 * @return true if all values are Integer else false
 	 */
-	public static boolean isAllPermissibleValuesInteger(Collection<PermissibleValueInterface> permissibleValueColl)
+	public static boolean isAllPermissibleValuesInteger(
+			Collection<PermissibleValueInterface> permissibleValueColl)
 	{
 		boolean allIntegerValues = false;
 		Iterator<PermissibleValueInterface> itrPVInteger = permissibleValueColl.iterator();
@@ -851,7 +873,8 @@ public class CategoryGenerationUtil
 	 * @param permissibleValueColl permisibleValueCollection
 	 * @return true if all values are Double else false
 	 */
-	public static boolean isAllPermissibleValuesDouble(Collection<PermissibleValueInterface> permissibleValueColl)
+	public static boolean isAllPermissibleValuesDouble(
+			Collection<PermissibleValueInterface> permissibleValueColl)
 	{
 		boolean allDoubleValues = false;
 		Iterator<PermissibleValueInterface> itrPVInteger = permissibleValueColl.iterator();
@@ -875,7 +898,8 @@ public class CategoryGenerationUtil
 	 * @param permissibleValueColl permisibleValueCollection
 	 * @return true if all values are Float else false
 	 */
-	public static boolean isAllPermissibleValuesFloat(Collection<PermissibleValueInterface> permissibleValueColl)
+	public static boolean isAllPermissibleValuesFloat(
+			Collection<PermissibleValueInterface> permissibleValueColl)
 	{
 		boolean allFloatValues = false;
 		Iterator<PermissibleValueInterface> itrPVInteger = permissibleValueColl.iterator();
@@ -899,7 +923,8 @@ public class CategoryGenerationUtil
 	 * @param permissibleValueColl permisibleValueCollection
 	 * @return true if all values are Short else false
 	 */
-	public static boolean isAllPermissibleValuesShort(Collection<PermissibleValueInterface> permissibleValueColl)
+	public static boolean isAllPermissibleValuesShort(
+			Collection<PermissibleValueInterface> permissibleValueColl)
 	{
 		boolean allShortValues = false;
 		Iterator<PermissibleValueInterface> itrPVInteger = permissibleValueColl.iterator();
@@ -923,7 +948,8 @@ public class CategoryGenerationUtil
 	 * @param permissibleValueColl permisibleValueCollection
 	 * @return true if all values are Long else false
 	 */
-	public static boolean isAllPermissibleValuesLong(Collection<PermissibleValueInterface> permissibleValueColl)
+	public static boolean isAllPermissibleValuesLong(
+			Collection<PermissibleValueInterface> permissibleValueColl)
 	{
 		boolean allLongValues = false;
 		Iterator<PermissibleValueInterface> itrPVInteger = permissibleValueColl.iterator();
@@ -949,8 +975,8 @@ public class CategoryGenerationUtil
 	 * @return list of the file names relative to the given base directory.
 	 * @throws DynamicExtensionsSystemException exception.
 	 */
-	public static List<String> getCategoryFileListInDirectory(File baseDirectory,String relativePath)
-			throws DynamicExtensionsSystemException
+	public static List<String> getCategoryFileListInDirectory(File baseDirectory,
+			String relativePath) throws DynamicExtensionsSystemException
 	{
 		List<String> fileNameList = new ArrayList<String>();
 		try
@@ -960,19 +986,20 @@ public class CategoryGenerationUtil
 				if (file.isDirectory())
 				{
 					String childDirPath = relativePath + file.getName() + "/";
-					fileNameList.addAll(getCategoryFileListInDirectory(file,childDirPath));
+					fileNameList.addAll(getCategoryFileListInDirectory(file, childDirPath));
 				}
 				else
 				{
-					CategoryFileParser categoryFileParser = DomainObjectFactory.getInstance().createCategoryFileParser(file.getAbsolutePath(),"");
-					 if (categoryFileParser!=null)
-					 {
-						 if(categoryFileParser.isCategoryFile())
-						 {
-							 fileNameList.add(relativePath+file.getName());
-						 }
-						 categoryFileParser.closeResources();
-					 }
+					CategoryFileParser categoryFileParser = DomainObjectFactory.getInstance()
+							.createCategoryFileParser(file.getAbsolutePath(), "");
+					if (categoryFileParser != null)
+					{
+						if (categoryFileParser.isCategoryFile())
+						{
+							fileNameList.add(relativePath + file.getName());
+						}
+						categoryFileParser.closeResources();
+					}
 				}
 			}
 		}
