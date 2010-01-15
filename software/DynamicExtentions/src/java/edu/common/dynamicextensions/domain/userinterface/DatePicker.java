@@ -3,10 +3,13 @@ package edu.common.dynamicextensions.domain.userinterface;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import edu.common.dynamicextensions.domain.CategoryAttribute;
+import edu.common.dynamicextensions.domain.userinterface.beans.UIProperty;
+import edu.common.dynamicextensions.domain.userinterface.enums.DatePickerEnum;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
@@ -44,7 +47,6 @@ public class DatePicker extends Control implements DatePickerInterface
 	 */
 	private Boolean showCalendar = true;
 
-
 	/**
 	 * This method returns the showCalendar of the DatePicker.
 	 *
@@ -57,7 +59,6 @@ public class DatePicker extends Control implements DatePickerInterface
 		return showCalendar;
 	}
 
-
 	/**
 	 * @param showCalendar the showCalendar to set
 	 */
@@ -65,6 +66,7 @@ public class DatePicker extends Control implements DatePickerInterface
 	{
 		this.showCalendar = showCalendar;
 	}
+
 	/**
 	 * This method generates the HTML code for DatePicker control on the HTML
 	 * form
@@ -73,16 +75,19 @@ public class DatePicker extends Control implements DatePickerInterface
 	 * @throws DynamicExtensionsSystemException
 	 *             if couldn't generate the HTML name for the Control.
 	 */
-	protected String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateEditModeHTML(ContainerInterface container)
+			throws DynamicExtensionsSystemException
 	{
-		AttributeTypeInformationInterface attributeTypeInformation = ((AttributeMetadataInterface) getBaseAbstractAttribute()).getAttributeTypeInformation();
+		AttributeTypeInformationInterface attributeTypeInformation = ((AttributeMetadataInterface) getBaseAbstractAttribute())
+				.getAttributeTypeInformation();
 		String dateFormat = ControlsUtility.getDateFormat(attributeTypeInformation);
 
 		String defaultValue = getDefaultValueForControl();
 		if (value == null)
 		{
 
-			if (defaultValue != null && defaultValue.length() > 0 && getAttibuteMetadataInterface() != null
+			if (defaultValue != null && defaultValue.length() > 0
+					&& getAttibuteMetadataInterface() != null
 					&& getAttibuteMetadataInterface() instanceof CategoryAttribute)
 			{
 				CategoryAttributeInterface categoryAttribute = (CategoryAttributeInterface) getAttibuteMetadataInterface();
@@ -142,49 +147,72 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ htmlComponentName
 					+ "' id='"
 					+ htmlComponentName
-					+ "' title='Calendar ["+ProcessorConstants.DATE_ONLY_FORMAT+"]' value='"
-					+ ((defaultValue != null && defaultValue.trim().length()>0) ? defaultValue : ProcessorConstants.DATE_ONLY_FORMAT)
+					+ "' title='Calendar ["
+					+ ProcessorConstants.DATE_ONLY_FORMAT
+					+ "]' value='"
+					+ ((defaultValue != null && defaultValue.trim().length() > 0)
+							? defaultValue
+							: ProcessorConstants.DATE_ONLY_FORMAT)
 					+ "'"
-					+ (((isReadOnly != null && isReadOnly) || (isSkipLogicReadOnly != null && isSkipLogicReadOnly)) ? " disabled='"
-							+ ProcessorConstants.TRUE : "")
-					+ " onchange='isDataChanged();' onfocus=\"javascript:clearDate('"+htmlComponentName+"','"+ProcessorConstants.DATE_ONLY_FORMAT+"');\""
+					+ (((isReadOnly != null && isReadOnly) || (isSkipLogicReadOnly != null && isSkipLogicReadOnly))
+							? " disabled='" + ProcessorConstants.TRUE
+							: "")
+					+ " onchange='isDataChanged();' onfocus=\"javascript:clearDate('"
+					+ htmlComponentName
+					+ "','"
+					+ ProcessorConstants.DATE_ONLY_FORMAT
+					+ "');\""
 					+ " style=\"color:"
-					+ ((defaultValue != null && defaultValue.trim().length()>0) ? "black;\"" : "#A9A9A9;\"")
-					+ "/>";
-			if(getShowCalendar())
+					+ ((defaultValue != null && defaultValue.trim().length() > 0)
+							? "black;\""
+							: "#A9A9A9;\"") + "/>";
+			if (getShowCalendar())
 			{
 				output += "<A onclick=\"showCalendar('"
-					+ htmlComponentName
-					+ "', "
-					+ DynamicExtensionsUtility.getCurrentYear()
-					+ ", "
-					+ DynamicExtensionsUtility.getCurrentMonth()
-					+ ", "
-					+ DynamicExtensionsUtility.getCurrentDay()
-					+ ", '"+ProcessorConstants.DATE_ONLY_FORMAT+"', 'dataEntryForm', '"
-					+ htmlComponentName
-					+ "', event, 1900, 2020);\" href=\"javascript://\">"
-					+ "&nbsp;<IMG alt=\"" + dateFormatString + " ["+ProcessorConstants.DATE_ONLY_FORMAT+"]\" src=\"images/de/calendar.gif\" border=0 /></A>"
-					+ "<DIV id=slcalcod"
-					+ htmlComponentName
-					+ " style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">";
-			if(getParentContainer().isAjaxRequest())
-			{
-				String imgsrc = getParentContainer().getRequest().getContextPath()+"/images/de/";
-				String filePath = getParentContainer().getRequest().getSession().getServletContext().getRealPath("/javascripts/de/CalendarComponent.js");
-				String jsFunctionName = DEConstants.PROCESS_AJAX_CAL_SCRIPT;
-				Object[] jsFunctionParameters = {htmlComponentName,DynamicExtensionsUtility.getCurrentDay(),DynamicExtensionsUtility.getCurrentMonth(),DynamicExtensionsUtility.getCurrentYear(),imgsrc};
-				String jsOutput = DynamicExtensionsUtility.executeJavaScriptFunc(filePath,jsFunctionName,jsFunctionParameters);
-				output +=jsOutput;
-			}
-			else
-			{
-				output += "<SCRIPT>printCalendar('" + htmlComponentName + "',"
-				+ DynamicExtensionsUtility.getCurrentDay() + ","
-				+ DynamicExtensionsUtility.getCurrentMonth() + ","
-				+ DynamicExtensionsUtility.getCurrentYear() + ");</SCRIPT>";
-			}
-			output +="</DIV>";
+						+ htmlComponentName
+						+ "', "
+						+ DynamicExtensionsUtility.getCurrentYear()
+						+ ", "
+						+ DynamicExtensionsUtility.getCurrentMonth()
+						+ ", "
+						+ DynamicExtensionsUtility.getCurrentDay()
+						+ ", '"
+						+ ProcessorConstants.DATE_ONLY_FORMAT
+						+ "', 'dataEntryForm', '"
+						+ htmlComponentName
+						+ "', event, 1900, 2020);\" href=\"javascript://\">"
+						+ "&nbsp;<IMG alt=\""
+						+ dateFormatString
+						+ " ["
+						+ ProcessorConstants.DATE_ONLY_FORMAT
+						+ "]\" src=\"images/de/calendar.gif\" border=0 /></A>"
+						+ "<DIV id=slcalcod"
+						+ htmlComponentName
+						+ " style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">";
+				if (getParentContainer().isAjaxRequest())
+				{
+					String imgsrc = getParentContainer().getRequest().getContextPath()
+							+ "/images/de/";
+					String filePath = getParentContainer().getRequest().getSession()
+							.getServletContext()
+							.getRealPath("/javascripts/de/CalendarComponent.js");
+					String jsFunctionName = DEConstants.PROCESS_AJAX_CAL_SCRIPT;
+					Object[] jsFunctionParameters = {htmlComponentName,
+							DynamicExtensionsUtility.getCurrentDay(),
+							DynamicExtensionsUtility.getCurrentMonth(),
+							DynamicExtensionsUtility.getCurrentYear(), imgsrc};
+					String jsOutput = DynamicExtensionsUtility.executeJavaScriptFunc(filePath,
+							jsFunctionName, jsFunctionParameters);
+					output += jsOutput;
+				}
+				else
+				{
+					output += "<SCRIPT>printCalendar('" + htmlComponentName + "',"
+							+ DynamicExtensionsUtility.getCurrentDay() + ","
+							+ DynamicExtensionsUtility.getCurrentMonth() + ","
+							+ DynamicExtensionsUtility.getCurrentYear() + ");</SCRIPT>";
+				}
+				output += "</DIV>";
 			}
 		}
 		else if (dateFormat.equals(ProcessorConstants.DATE_TIME_FORMAT))
@@ -193,51 +221,76 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ htmlComponentName
 					+ "' id='"
 					+ htmlComponentName
-					+ "' title='Calendar ["+ProcessorConstants.DATE_TIME_FORMAT+"]' value='"
-					+ ((defaultValue != null && defaultValue.trim().length()>0) ? defaultValue : ProcessorConstants.DATE_TIME_FORMAT)
+					+ "' title='Calendar ["
+					+ ProcessorConstants.DATE_TIME_FORMAT
+					+ "]' value='"
+					+ ((defaultValue != null && defaultValue.trim().length() > 0)
+							? defaultValue
+							: ProcessorConstants.DATE_TIME_FORMAT)
 					+ "'"
-					+ (((isReadOnly != null && isReadOnly) || (isSkipLogicReadOnly != null && isSkipLogicReadOnly)) ? " disabled='"
-							+ ProcessorConstants.TRUE : "")
-					+ " onchange='isDataChanged();' onfocus=\"javascript:clearDate('"+htmlComponentName+"','"+ProcessorConstants.DATE_TIME_FORMAT+"');\""
+					+ (((isReadOnly != null && isReadOnly) || (isSkipLogicReadOnly != null && isSkipLogicReadOnly))
+							? " disabled='" + ProcessorConstants.TRUE
+							: "")
+					+ " onchange='isDataChanged();' onfocus=\"javascript:clearDate('"
+					+ htmlComponentName
+					+ "','"
+					+ ProcessorConstants.DATE_TIME_FORMAT
+					+ "');\""
 					+ " style=\"color:"
-					+ ((defaultValue != null && defaultValue.trim().length()>0) ? "black;\"" : "#A9A9A9;\"")
-					+ "/>";
-			if(getShowCalendar())
+					+ ((defaultValue != null && defaultValue.trim().length() > 0)
+							? "black;\""
+							: "#A9A9A9;\"") + "/>";
+			if (getShowCalendar())
 			{
 				output += "<A onclick=\"showCalendar('"
-					+ htmlComponentName
-					+ "', "
-					+ DynamicExtensionsUtility.getCurrentYear()
-					+ ", "
-					+ DynamicExtensionsUtility.getCurrentMonth()
-					+ ", "
-					+ DynamicExtensionsUtility.getCurrentDay()
-					+ ", '"+ProcessorConstants.DATE_ONLY_FORMAT+"', 'dataEntryForm', '"
-					+ htmlComponentName
-					+ "', event, 1900, 2020);\" href=\"javascript://\">"
-					+ "&nbsp;<IMG alt=\"" + dateFormatString + " ["+ProcessorConstants.DATE_TIME_FORMAT+"]\" src=\"images/de/calendar.gif\" border=0 />&nbsp;</A>"
-					+ "<DIV id=slcalcod"
-					+ htmlComponentName
-					+ " style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">";
-			if(getParentContainer().isAjaxRequest())
-			{
-				String imgsrc = getParentContainer().getRequest().getContextPath()+"/images/de/";
-				String filePath = getParentContainer().getRequest().getSession().getServletContext().getRealPath("/javascripts/de/CalendarComponent.js");
-				String jsFunctionName = DEConstants.PRINT_TIME_CAL_FOR_AJAX;
-				Object[] jsFunctionParameters = {htmlComponentName,DynamicExtensionsUtility.getCurrentDay(),DynamicExtensionsUtility.getCurrentMonth(),DynamicExtensionsUtility.getCurrentYear(), DynamicExtensionsUtility.getCurrentHours(),DynamicExtensionsUtility.getCurrentMinutes(),imgsrc };
-				String jsOutput = DynamicExtensionsUtility.executeJavaScriptFunc(filePath,jsFunctionName,jsFunctionParameters);
-				output +=jsOutput;
-			}
-			else
-			{
-				output += "<SCRIPT>printTimeCalendar('" + htmlComponentName + "',"
-				+ DynamicExtensionsUtility.getCurrentDay() + ","
-				+ DynamicExtensionsUtility.getCurrentMonth() + ","
-				+ DynamicExtensionsUtility.getCurrentYear() + ","
-				+ DynamicExtensionsUtility.getCurrentHours() + ","
-				+ DynamicExtensionsUtility.getCurrentMinutes() + ");</SCRIPT>";
-			}
-			output +="</DIV>";
+						+ htmlComponentName
+						+ "', "
+						+ DynamicExtensionsUtility.getCurrentYear()
+						+ ", "
+						+ DynamicExtensionsUtility.getCurrentMonth()
+						+ ", "
+						+ DynamicExtensionsUtility.getCurrentDay()
+						+ ", '"
+						+ ProcessorConstants.DATE_ONLY_FORMAT
+						+ "', 'dataEntryForm', '"
+						+ htmlComponentName
+						+ "', event, 1900, 2020);\" href=\"javascript://\">"
+						+ "&nbsp;<IMG alt=\""
+						+ dateFormatString
+						+ " ["
+						+ ProcessorConstants.DATE_TIME_FORMAT
+						+ "]\" src=\"images/de/calendar.gif\" border=0 />&nbsp;</A>"
+						+ "<DIV id=slcalcod"
+						+ htmlComponentName
+						+ " style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">";
+				if (getParentContainer().isAjaxRequest())
+				{
+					String imgsrc = getParentContainer().getRequest().getContextPath()
+							+ "/images/de/";
+					String filePath = getParentContainer().getRequest().getSession()
+							.getServletContext()
+							.getRealPath("/javascripts/de/CalendarComponent.js");
+					String jsFunctionName = DEConstants.PRINT_TIME_CAL_FOR_AJAX;
+					Object[] jsFunctionParameters = {htmlComponentName,
+							DynamicExtensionsUtility.getCurrentDay(),
+							DynamicExtensionsUtility.getCurrentMonth(),
+							DynamicExtensionsUtility.getCurrentYear(),
+							DynamicExtensionsUtility.getCurrentHours(),
+							DynamicExtensionsUtility.getCurrentMinutes(), imgsrc};
+					String jsOutput = DynamicExtensionsUtility.executeJavaScriptFunc(filePath,
+							jsFunctionName, jsFunctionParameters);
+					output += jsOutput;
+				}
+				else
+				{
+					output += "<SCRIPT>printTimeCalendar('" + htmlComponentName + "',"
+							+ DynamicExtensionsUtility.getCurrentDay() + ","
+							+ DynamicExtensionsUtility.getCurrentMonth() + ","
+							+ DynamicExtensionsUtility.getCurrentYear() + ","
+							+ DynamicExtensionsUtility.getCurrentHours() + ","
+							+ DynamicExtensionsUtility.getCurrentMinutes() + ");</SCRIPT>";
+				}
+				output += "</DIV>";
 			}
 		}
 		else if (dateFormat.equals(ProcessorConstants.MONTH_YEAR_FORMAT))
@@ -246,47 +299,69 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ htmlComponentName
 					+ "' id='"
 					+ htmlComponentName
-					+ "' title='Calender ["+ProcessorConstants.MONTH_YEAR_FORMAT+"]' value='"
-					+ ((defaultValue != null && defaultValue.trim().length()>0) ? defaultValue : ProcessorConstants.MONTH_YEAR_FORMAT)
+					+ "' title='Calender ["
+					+ ProcessorConstants.MONTH_YEAR_FORMAT
+					+ "]' value='"
+					+ ((defaultValue != null && defaultValue.trim().length() > 0)
+							? defaultValue
+							: ProcessorConstants.MONTH_YEAR_FORMAT)
 					+ "'"
-					+ (((isReadOnly != null && isReadOnly) || (isSkipLogicReadOnly != null && isSkipLogicReadOnly)) ? " disabled='"
-							+ ProcessorConstants.TRUE : "")
-					+ " onchange='isDataChanged();' onfocus=\"javascript:clearDate('"+htmlComponentName+"','"+ProcessorConstants.MONTH_YEAR_FORMAT+"');\""
+					+ (((isReadOnly != null && isReadOnly) || (isSkipLogicReadOnly != null && isSkipLogicReadOnly))
+							? " disabled='" + ProcessorConstants.TRUE
+							: "")
+					+ " onchange='isDataChanged();' onfocus=\"javascript:clearDate('"
+					+ htmlComponentName
+					+ "','"
+					+ ProcessorConstants.MONTH_YEAR_FORMAT
+					+ "');\""
 					+ " style=\"color:"
-					+ ((defaultValue != null && defaultValue.trim().length()>0) ? "black;\"" : "#A9A9A9;\"")
-					+ "/>";
-			if(getShowCalendar())
+					+ ((defaultValue != null && defaultValue.trim().length() > 0)
+							? "black;\""
+							: "#A9A9A9;\"") + "/>";
+			if (getShowCalendar())
 			{
 				output += "<A onclick=\"showCalendar('"
-					+ htmlComponentName
-					+ "', "
-					+ DynamicExtensionsUtility.getCurrentYear()
-					+ ", "
-					+ DynamicExtensionsUtility.getCurrentMonth()
-					+ ", "
-					+ 0
-					+ ", '"+ProcessorConstants.MONTH_YEAR_FORMAT+"', 'dataEntryForm', '"
-					+ htmlComponentName
-					+ "', event, 1900, 2020);\" href=\"javascript://\">&nbsp;<IMG alt=\"" + dateFormatString + "["+ProcessorConstants.MONTH_YEAR_FORMAT+"]\" src=\"images/de/calendar.gif\" border=0 />&nbsp;</A>"
-					+ "<DIV id=slcalcod"
-					+ htmlComponentName
-					+ " style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">";
-			if(getParentContainer().isAjaxRequest())
-			{
-				String imgsrc = getParentContainer().getRequest().getContextPath()+"/images/de/";
-				String filePath = getParentContainer().getRequest().getSession().getServletContext().getRealPath("/javascripts/de/CalendarComponent.js");
-				String jsFunctionName = DEConstants.PRINT_MON_YEAR_CAL_FOR_AJAX;
-				Object[] jsFunctionParameters = {htmlComponentName,DynamicExtensionsUtility.getCurrentMonth(),DynamicExtensionsUtility.getCurrentYear(),imgsrc};
-				String jsOutput = DynamicExtensionsUtility.executeJavaScriptFunc(filePath,jsFunctionName,jsFunctionParameters);
-				output +=jsOutput;
-			}
-			else
-			{
-				output +="<SCRIPT>printMonthYearCalendar('" + htmlComponentName + "',"
-				+ DynamicExtensionsUtility.getCurrentMonth() + ","
-				+ DynamicExtensionsUtility.getCurrentYear() + ");</SCRIPT>";
-			}
-			output +="</DIV>";
+						+ htmlComponentName
+						+ "', "
+						+ DynamicExtensionsUtility.getCurrentYear()
+						+ ", "
+						+ DynamicExtensionsUtility.getCurrentMonth()
+						+ ", "
+						+ 0
+						+ ", '"
+						+ ProcessorConstants.MONTH_YEAR_FORMAT
+						+ "', 'dataEntryForm', '"
+						+ htmlComponentName
+						+ "', event, 1900, 2020);\" href=\"javascript://\">&nbsp;<IMG alt=\""
+						+ dateFormatString
+						+ "["
+						+ ProcessorConstants.MONTH_YEAR_FORMAT
+						+ "]\" src=\"images/de/calendar.gif\" border=0 />&nbsp;</A>"
+						+ "<DIV id=slcalcod"
+						+ htmlComponentName
+						+ " style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">";
+				if (getParentContainer().isAjaxRequest())
+				{
+					String imgsrc = getParentContainer().getRequest().getContextPath()
+							+ "/images/de/";
+					String filePath = getParentContainer().getRequest().getSession()
+							.getServletContext()
+							.getRealPath("/javascripts/de/CalendarComponent.js");
+					String jsFunctionName = DEConstants.PRINT_MON_YEAR_CAL_FOR_AJAX;
+					Object[] jsFunctionParameters = {htmlComponentName,
+							DynamicExtensionsUtility.getCurrentMonth(),
+							DynamicExtensionsUtility.getCurrentYear(), imgsrc};
+					String jsOutput = DynamicExtensionsUtility.executeJavaScriptFunc(filePath,
+							jsFunctionName, jsFunctionParameters);
+					output += jsOutput;
+				}
+				else
+				{
+					output += "<SCRIPT>printMonthYearCalendar('" + htmlComponentName + "',"
+							+ DynamicExtensionsUtility.getCurrentMonth() + ","
+							+ DynamicExtensionsUtility.getCurrentYear() + ");</SCRIPT>";
+				}
+				output += "</DIV>";
 			}
 		}
 		else if (dateFormat.equals(ProcessorConstants.YEAR_ONLY_FORMAT))
@@ -296,46 +371,67 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ htmlComponentName
 					+ "' id='"
 					+ htmlComponentName
-					+ "' title='["+ProcessorConstants.YEAR_ONLY_FORMAT+"]' value='"
-					+ ((defaultValue != null && defaultValue.trim().length()>0) ? defaultValue : ProcessorConstants.YEAR_ONLY_FORMAT)
+					+ "' title='["
+					+ ProcessorConstants.YEAR_ONLY_FORMAT
+					+ "]' value='"
+					+ ((defaultValue != null && defaultValue.trim().length() > 0)
+							? defaultValue
+							: ProcessorConstants.YEAR_ONLY_FORMAT)
 					+ "'"
-					+ (((isReadOnly != null && isReadOnly) || (isSkipLogicReadOnly != null && isSkipLogicReadOnly)) ? " disabled='"
-							+ ProcessorConstants.TRUE : "")
-					+ " onchange='isDataChanged();' onfocus=\"javascript:clearDate('"+htmlComponentName+"','"+ProcessorConstants.YEAR_ONLY_FORMAT+"');\""
+					+ (((isReadOnly != null && isReadOnly) || (isSkipLogicReadOnly != null && isSkipLogicReadOnly))
+							? " disabled='" + ProcessorConstants.TRUE
+							: "")
+					+ " onchange='isDataChanged();' onfocus=\"javascript:clearDate('"
+					+ htmlComponentName
+					+ "','"
+					+ ProcessorConstants.YEAR_ONLY_FORMAT
+					+ "');\""
 					+ " style=\"color:"
-					+ ((defaultValue != null && defaultValue.trim().length()>0) ? "black;\"" : "#A9A9A9;\"")
-					+ "/>";
-			if(getShowCalendar())
+					+ ((defaultValue != null && defaultValue.trim().length() > 0)
+							? "black;\""
+							: "#A9A9A9;\"") + "/>";
+			if (getShowCalendar())
 			{
 				output += "<A onclick=\"showCalendar('"
-					+ htmlComponentName
-					+ "', "
-					+ DynamicExtensionsUtility.getCurrentYear()
-					+ ", "
-					+ 0
-					+ ", "
-					+ 0
-					+ ", '"+ProcessorConstants.YEAR_ONLY_FORMAT+"', 'dataEntryForm', '"
-					+ htmlComponentName
-					+ "', event, 1900, 2020);\" href=\"javascript://\">&nbsp;<IMG alt=\"" + dateFormatString + " ["+ProcessorConstants.YEAR_ONLY_FORMAT+"]\" src=\"images/de/calendar.gif\" border=0 />&nbsp;</A>"
-					+ "<DIV id=slcalcod"
-					+ htmlComponentName
-					+ " style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">";
-			if(getParentContainer().isAjaxRequest())
-			{
-				String imgsrc = getParentContainer().getRequest().getContextPath()+"/images/de/";
-				String filePath = getParentContainer().getRequest().getSession().getServletContext().getRealPath("/javascripts/de/CalendarComponent.js");
-				String jsFunctionName = DEConstants.PRINT_YEAR_CAL_FOR_AJAX;
-				Object[] jsFunctionParameters = {htmlComponentName, DynamicExtensionsUtility.getCurrentYear(),imgsrc};
-				String jsOutput = DynamicExtensionsUtility.executeJavaScriptFunc(filePath,jsFunctionName,jsFunctionParameters);
-				output +=jsOutput;
-			}
-			else
-			{
-				output +="<SCRIPT>printYearCalendar('" + htmlComponentName + "',"
-				+ DynamicExtensionsUtility.getCurrentYear() + ");</SCRIPT>";
-			}
-			output +="</DIV>";
+						+ htmlComponentName
+						+ "', "
+						+ DynamicExtensionsUtility.getCurrentYear()
+						+ ", "
+						+ 0
+						+ ", "
+						+ 0
+						+ ", '"
+						+ ProcessorConstants.YEAR_ONLY_FORMAT
+						+ "', 'dataEntryForm', '"
+						+ htmlComponentName
+						+ "', event, 1900, 2020);\" href=\"javascript://\">&nbsp;<IMG alt=\""
+						+ dateFormatString
+						+ " ["
+						+ ProcessorConstants.YEAR_ONLY_FORMAT
+						+ "]\" src=\"images/de/calendar.gif\" border=0 />&nbsp;</A>"
+						+ "<DIV id=slcalcod"
+						+ htmlComponentName
+						+ " style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">";
+				if (getParentContainer().isAjaxRequest())
+				{
+					String imgsrc = getParentContainer().getRequest().getContextPath()
+							+ "/images/de/";
+					String filePath = getParentContainer().getRequest().getSession()
+							.getServletContext()
+							.getRealPath("/javascripts/de/CalendarComponent.js");
+					String jsFunctionName = DEConstants.PRINT_YEAR_CAL_FOR_AJAX;
+					Object[] jsFunctionParameters = {htmlComponentName,
+							DynamicExtensionsUtility.getCurrentYear(), imgsrc};
+					String jsOutput = DynamicExtensionsUtility.executeJavaScriptFunc(filePath,
+							jsFunctionName, jsFunctionParameters);
+					output += jsOutput;
+				}
+				else
+				{
+					output += "<SCRIPT>printYearCalendar('" + htmlComponentName + "',"
+							+ DynamicExtensionsUtility.getCurrentYear() + ");</SCRIPT>";
+				}
+				output += "</DIV>";
 			}
 		}
 		if (getIsSkipLogicTargetControl())
@@ -400,7 +496,8 @@ public class DatePicker extends Control implements DatePickerInterface
 	 * @param rowId
 	 * @return htmlString for view mode
 	 */
-	protected String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(ContainerInterface container)
+			throws DynamicExtensionsSystemException
 	{
 		String htmlString = "";
 		if (value != null)
@@ -420,6 +517,7 @@ public class DatePicker extends Control implements DatePickerInterface
 	{
 		return null;
 	}
+
 	/**
 	 * set value as string for a control
 	 * @param listOfValues list of permissible value
@@ -429,6 +527,7 @@ public class DatePicker extends Control implements DatePickerInterface
 		// TODO Auto-generated method stub
 
 	}
+
 	/**
 	 * This method return default value for a control
 	 * @param rowId
@@ -453,6 +552,7 @@ public class DatePicker extends Control implements DatePickerInterface
 		}
 		return defaultValue;
 	}
+
 	/**
 	 *
 	 */
@@ -460,4 +560,33 @@ public class DatePicker extends Control implements DatePickerInterface
 	{
 		return false;
 	}
+
+	public Collection<UIProperty> getControlTypeValues()
+	{
+		Collection<UIProperty> uiProperties = super.getControlTypeValues();
+		DatePickerEnum[] uiPropertyValues = DatePickerEnum.values();
+
+		for (DatePickerEnum propertyType : uiPropertyValues)
+		{
+			String controlProperty = propertyType.getControlProperty(this);
+			if (controlProperty != null)
+			{
+				uiProperties.add(new UIProperty(propertyType.getValue(), controlProperty));
+			}
+		}
+
+		return uiProperties;
+	}
+
+	public void setControlTypeValues(Collection<UIProperty> uiProperties)
+	{
+		super.setControlTypeValues(uiProperties);
+
+		for (UIProperty uiProperty : uiProperties)
+		{
+			DatePickerEnum propertyType = DatePickerEnum.getValue(uiProperty.getKey());
+			propertyType.setControlProperty(this, uiProperty.getValue());
+		}
+	}
+
 }
