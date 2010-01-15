@@ -1,8 +1,11 @@
 
 package edu.common.dynamicextensions.domain.userinterface;
 
+import java.util.Collection;
 import java.util.List;
 
+import edu.common.dynamicextensions.domain.userinterface.beans.UIProperty;
+import edu.common.dynamicextensions.domain.userinterface.enums.TextAreaEnum;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
@@ -25,10 +28,12 @@ public class TextArea extends Control implements TextAreaInterface
 	 *
 	 */
 	private static final long serialVersionUID = 201964699680324430L;
+
 	/**
 	 * Number of columns in the text area.
 	 */
 	protected Integer columns;
+
 	/**
 	 * Number of rows in the text area.
 	 */
@@ -83,7 +88,8 @@ public class TextArea extends Control implements TextAreaInterface
 	 * @return HTML code for TextArea
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
+	public String generateEditModeHTML(ContainerInterface container)
+			throws DynamicExtensionsSystemException
 	{
 		String htmlString = "";
 		String defaultValue = DynamicExtensionsUtility
@@ -95,12 +101,13 @@ public class TextArea extends Control implements TextAreaInterface
 			htmlString += "<div id='" + getHTMLComponentName() + "_div' name='"
 					+ getHTMLComponentName() + "_div'>";
 		}
-		htmlString += "<textarea " + "class='font_bl_nor' " + "name='" + htmlComponentName
-				+ "' " + "id='" + htmlComponentName + "' ";
+		htmlString += "<textarea " + "class='font_bl_nor' " + "name='" + htmlComponentName + "' "
+				+ "id='" + htmlComponentName + "' ";
 
 		//If control is defined as read only through category CSV file,make it Disabled
 
-		if ((this.isReadOnly != null && getIsReadOnly()) || (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly))
+		if ((this.isReadOnly != null && getIsReadOnly())
+				|| (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly))
 		{
 			htmlString += ProcessorConstants.DISABLED;
 		}
@@ -134,7 +141,8 @@ public class TextArea extends Control implements TextAreaInterface
 
 		if (maxChars > 0)
 		{
-			htmlString += " onchange='isDataChanged();' onblur='textCounter(this," + maxChars + ")'  ";
+			htmlString += " onchange='isDataChanged();' onblur='textCounter(this," + maxChars
+					+ ")'  ";
 		}
 
 		htmlString += " wrap='virtual'>";
@@ -168,7 +176,8 @@ public class TextArea extends Control implements TextAreaInterface
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domain.userinterface.Control#generateViewModeHTML()
 	 */
-	protected String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(ContainerInterface container)
+			throws DynamicExtensionsSystemException
 	{
 
 		String htmlgenerated = "&nbsp;";
@@ -179,7 +188,6 @@ public class TextArea extends Control implements TextAreaInterface
 		return htmlgenerated;
 
 	}
-
 
 	/**
 	 * @param rowId
@@ -213,6 +221,7 @@ public class TextArea extends Control implements TextAreaInterface
 		// TODO Auto-generated method stub
 
 	}
+
 	/**
 	 *
 	 */
@@ -220,4 +229,33 @@ public class TextArea extends Control implements TextAreaInterface
 	{
 		return false;
 	}
+
+	public Collection<UIProperty> getControlTypeValues()
+	{
+		Collection<UIProperty> uiProperties = super.getControlTypeValues();
+		TextAreaEnum[] uiPropertyValues = TextAreaEnum.values();
+
+		for (TextAreaEnum propertyType : uiPropertyValues)
+		{
+			String controlProperty = propertyType.getControlProperty(this);
+			if (controlProperty != null)
+			{
+				uiProperties.add(new UIProperty(propertyType.getValue(), controlProperty));
+			}
+		}
+
+		return uiProperties;
+	}
+
+	public void setControlTypeValues(Collection<UIProperty> uiProperties)
+	{
+		super.setControlTypeValues(uiProperties);
+
+		for (UIProperty uiProperty : uiProperties)
+		{
+			TextAreaEnum propertyType = TextAreaEnum.getValue(uiProperty.getKey());
+			propertyType.setControlProperty(this, uiProperty.getValue());
+		}
+	}
+
 }
