@@ -1,3 +1,4 @@
+
 package edu.common.dynamicextensions.domain.userinterface.enums;
 
 import edu.common.dynamicextensions.domain.CategoryAttribute;
@@ -6,74 +7,88 @@ import edu.common.dynamicextensions.domain.userinterface.TextArea;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 
 public enum TextAreaEnum {
-    WIDTH("WIDTH") {
-        @Override
-        public String getControlProperty(TextArea control) {
-            Integer rows2 = control.getRows();
-            return String.valueOf(rows2);
-        }
+	WIDTH("WIDTH") {
 
-        @Override
-        public void setControlProperty(TextArea control, String propertyToBeSet) {
-            control.setRows(Integer.valueOf(propertyToBeSet));
-        }
-    },
-    HEIGHT("HEIGHT") {
-        @Override
-        public String getControlProperty(TextArea control) {
-            Integer columns2 = control.getColumns();
-            return String.valueOf(columns2);
-        }
+		public String getControlProperty(TextArea control)
+		{
+			Integer rows2 = control.getRows();
+			return String.valueOf(rows2);
+		}
 
-        @Override
-        public void setControlProperty(TextArea control, String propertyToBeSet) {
-            control.setColumns(Integer.valueOf(propertyToBeSet));
-        }
-    },
-    MAXLENGTH("MAXLENGTH") {
-        @Override
-        public String getControlProperty(TextArea control) {
-            CategoryAttribute baseAbstractAttribute2 = (CategoryAttribute)control.getBaseAbstractAttribute();
-            AttributeInterface attribute = baseAbstractAttribute2.getAttribute();
-            StringAttributeTypeInformation attributeTypeInformation = (StringAttributeTypeInformation)attribute.getAttributeTypeInformation();
-            Integer maxLength = attributeTypeInformation.getSize();
-            return String.valueOf(maxLength);
-        }
+		public void setControlProperty(TextArea control, String propertyToBeSet)
+		{
+			control.setRows(Integer.valueOf(propertyToBeSet));
+		}
+	},
+	HEIGHT("HEIGHT") {
 
-        @Override
-        public void setControlProperty(TextArea control, String propertyToBeSet) {
-            CategoryAttribute baseAbstractAttribute2 = (CategoryAttribute)control.getBaseAbstractAttribute();
-            AttributeInterface attribute = baseAbstractAttribute2.getAttribute();
-            StringAttributeTypeInformation attributeTypeInformation = (StringAttributeTypeInformation)attribute.getAttributeTypeInformation();
-            attributeTypeInformation.setSize(Integer.valueOf(propertyToBeSet));
-        }
-    };
-    private String name;
+		public String getControlProperty(TextArea control)
+		{
+			Integer columns2 = control.getColumns();
+			return String.valueOf(columns2);
+		}
 
-    TextAreaEnum() {
+		public void setControlProperty(TextArea control, String propertyToBeSet)
+		{
+			control.setColumns(Integer.valueOf(propertyToBeSet));
+		}
+	},
+	MAXLENGTH("MAXLENGTH") {
 
-    }
+		public String getControlProperty(TextArea control)
+		{
+			CategoryAttribute baseAbstractAttribute2 = (CategoryAttribute) control
+					.getBaseAbstractAttribute();
+			AttributeInterface attribute = baseAbstractAttribute2.getAttribute();
+			StringAttributeTypeInformation attributeTypeInformation = (StringAttributeTypeInformation) attribute
+					.getAttributeTypeInformation();
+			Integer maxLength = attributeTypeInformation.getSize();
+			return String.valueOf(maxLength);
+		}
 
-    TextAreaEnum(String name) {
-        this.name = name;
-    }
+		public void setControlProperty(TextArea control, String propertyToBeSet)
+		{
+			CategoryAttribute baseAbstractAttribute2 = (CategoryAttribute) control
+					.getBaseAbstractAttribute();
+			AttributeInterface attribute = baseAbstractAttribute2.getAttribute();
+			StringAttributeTypeInformation attributeTypeInformation = (StringAttributeTypeInformation) attribute
+					.getAttributeTypeInformation();
+			attributeTypeInformation.setSize(Integer.valueOf(propertyToBeSet));
+		}
+	};
 
-    public abstract void setControlProperty(TextArea control, String propertyToBeSet);
+	private String name;
 
-    public abstract String getControlProperty(TextArea control);
+	TextAreaEnum()
+	{
 
-    public String getValue() {
-        return name;
-    }
+	}
 
-    public static TextAreaEnum getValue(String nameToBeFound) {
+	TextAreaEnum(String name)
+	{
+		this.name = name;
+	}
 
-        TextAreaEnum[] propertyTypes = TextAreaEnum.values();
-        for (TextAreaEnum propertyType : propertyTypes) {
-            if (propertyType.getValue().equalsIgnoreCase(nameToBeFound)) {
-                return propertyType;
-            }
-        }
-        return null;
-    }
+	public abstract void setControlProperty(TextArea control, String propertyToBeSet);
+
+	public abstract String getControlProperty(TextArea control);
+
+	public String getValue()
+	{
+		return name;
+	}
+
+	public static TextAreaEnum getValue(String nameToBeFound)
+	{
+
+		TextAreaEnum[] propertyTypes = TextAreaEnum.values();
+		for (TextAreaEnum propertyType : propertyTypes)
+		{
+			if (propertyType.getValue().equalsIgnoreCase(nameToBeFound))
+			{
+				return propertyType;
+			}
+		}
+		return null;
+	}
 }

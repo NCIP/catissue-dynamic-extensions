@@ -1,77 +1,90 @@
+
 package edu.common.dynamicextensions.domain.userinterface.enums;
 
 import edu.common.dynamicextensions.domain.userinterface.ListBox;
 
 public enum ListBoxEnum {
-    ISMULTILINE("ISMULTILINE") {
-        @Override
-        public String getControlProperty(ListBox control) {
-            if (control.getIsMultiSelect() == null) {
-                return null;
-            }
-            return String.valueOf(control.getIsMultiSelect());
-        }
+	ISMULTILINE("ISMULTILINE") {
 
-        @Override
-        public void setControlProperty(ListBox control, String propertyToBeSet) {
-            control.setIsMultiSelect(Boolean.valueOf(propertyToBeSet));
-        }
-    },
-    NUMBEROFROWS("NUMBEROFROWS") {
-        @Override
-        public String getControlProperty(ListBox control) {
-            if (control.getNoOfRows() == null) {
-                return null;
-            }
-            return String.valueOf(control.getNoOfRows());
-        }
+		public String getControlProperty(ListBox control)
+		{
+			if (control.getIsMultiSelect() == null)
+			{
+				return null;
+			}
+			return String.valueOf(control.getIsMultiSelect());
+		}
 
-        @Override
-        public void setControlProperty(ListBox control, String propertyToBeSet) {
-            control.setNoOfRows(Integer.valueOf(propertyToBeSet));
-        }
-    },
-    ISAUTOCOMPLETE("ISAUTOCOMPLETE") {
-        @Override
-        public String getControlProperty(ListBox control) {
-            if (control.getIsUsingAutoCompleteDropdown() == null) {
-                return null;
-            }
-            return String.valueOf(control.getIsUsingAutoCompleteDropdown());
-        }
+		public void setControlProperty(ListBox control, String propertyToBeSet)
+		{
+			control.setIsMultiSelect(Boolean.valueOf(propertyToBeSet));
+		}
+	},
+	NUMBEROFROWS("NUMBEROFROWS") {
 
-        @Override
-        public void setControlProperty(ListBox control, String propertyToBeSet) {
-            control.setIsUsingAutoCompleteDropdown(Boolean.valueOf(propertyToBeSet));
-        }
-    };
+		public String getControlProperty(ListBox control)
+		{
+			if (control.getNoOfRows() == null)
+			{
+				return null;
+			}
+			return String.valueOf(control.getNoOfRows());
+		}
 
-    private String name;
+		public void setControlProperty(ListBox control, String propertyToBeSet)
+		{
+			control.setNoOfRows(Integer.valueOf(propertyToBeSet));
+		}
+	},
+	ISAUTOCOMPLETE("ISAUTOCOMPLETE") {
 
-    ListBoxEnum() {
+		public String getControlProperty(ListBox control)
+		{
+			if (control.getIsUsingAutoCompleteDropdown() == null)
+			{
+				return null;
+			}
+			return String.valueOf(control.getIsUsingAutoCompleteDropdown());
+		}
 
-    }
+		public void setControlProperty(ListBox control, String propertyToBeSet)
+		{
+			control.setIsUsingAutoCompleteDropdown(Boolean.valueOf(propertyToBeSet));
+		}
+	};
 
-    ListBoxEnum(String name) {
-        this.name = name;
-    }
+	private String name;
 
-    public abstract void setControlProperty(ListBox control, String propertyToBeSet);
+	ListBoxEnum()
+	{
 
-    public abstract String getControlProperty(ListBox control);
+	}
 
-    public String getValue() {
-        return name;
-    }
+	ListBoxEnum(String name)
+	{
+		this.name = name;
+	}
 
-    public static ListBoxEnum getValue(String nameToBeFound) {
+	public abstract void setControlProperty(ListBox control, String propertyToBeSet);
 
-        ListBoxEnum[] propertyTypes = ListBoxEnum.values();
-        for (ListBoxEnum propertyType : propertyTypes) {
-            if (propertyType.getValue().equalsIgnoreCase(nameToBeFound)) {
-                return propertyType;
-            }
-        }
-        throw new IllegalArgumentException(nameToBeFound + ": is not a valid property");
-    }
+	public abstract String getControlProperty(ListBox control);
+
+	public String getValue()
+	{
+		return name;
+	}
+
+	public static ListBoxEnum getValue(String nameToBeFound)
+	{
+
+		ListBoxEnum[] propertyTypes = ListBoxEnum.values();
+		for (ListBoxEnum propertyType : propertyTypes)
+		{
+			if (propertyType.getValue().equalsIgnoreCase(nameToBeFound))
+			{
+				return propertyType;
+			}
+		}
+		throw new IllegalArgumentException(nameToBeFound + ": is not a valid property");
+	}
 }

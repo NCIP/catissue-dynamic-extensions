@@ -1,3 +1,4 @@
+
 package edu.common.dynamicextensions.domain.userinterface.enums;
 
 import edu.common.dynamicextensions.domain.userinterface.DatePicker;
@@ -5,82 +6,95 @@ import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
 
 public enum DatePickerEnum {
-    RANGEMIN ("RANGEMIN"){
-        @Override
-        public String getControlProperty(DatePicker control) {
-            boolean result = ControlsUtility.isRuleDefined(CategoryCSVConstants.MIN, control);
-            String ruleName = null;
-            if(result==true){
-                ruleName = CategoryCSVConstants.MIN;
-            }
-            return ruleName;
-        }
+	RANGEMIN("RANGEMIN") {
 
-        @Override
-        public void setControlProperty(DatePicker control, String propertyToBeSet) {
-        	ControlsUtility.defineRule(CategoryCSVConstants.MIN, control);
-        }
-    },
-    RANGEMAX ("RANGEMAX"){
-        @Override
-        public String getControlProperty(DatePicker control) {
-            boolean result = ControlsUtility.isRuleDefined(CategoryCSVConstants.MAX, control);
-            String ruleName = null;
-            if(result==true){
-                ruleName = CategoryCSVConstants.MAX;
-            }
-            return ruleName;
-        }
+		public String getControlProperty(DatePicker control)
+		{
+			boolean result = ControlsUtility.isRuleDefined(CategoryCSVConstants.MIN, control);
+			String ruleName = null;
+			if (result == true)
+			{
+				ruleName = CategoryCSVConstants.MIN;
+			}
+			return ruleName;
+		}
 
-        @Override
-        public void setControlProperty(DatePicker control, String propertyToBeSet) {
-        	ControlsUtility.defineRule(CategoryCSVConstants.MAX, control);
-        }
-    },
-    ALLOWFUTUREDATE("ALLOWFUTUREDATE") {
-        @Override
-        public String getControlProperty(DatePicker control) {
-            
-            boolean result = ControlsUtility.isRuleDefined(CategoryCSVConstants.ALLOW_FUTURE_DATE, control);
-            String ruleName = null;
-            if(result==true){
-                ruleName= CategoryCSVConstants.ALLOW_FUTURE_DATE;
-            }
-            return ruleName;
-        }
+		public void setControlProperty(DatePicker control, String propertyToBeSet)
+		{
+			ControlsUtility.defineRule(CategoryCSVConstants.MIN, control);
+		}
+	},
+	RANGEMAX("RANGEMAX") {
 
-        @Override
-        public void setControlProperty(DatePicker control, String propertyToBeSet) {
-        	ControlsUtility.defineRule(CategoryCSVConstants.ALLOW_FUTURE_DATE, control);
-        }
-    };
+		public String getControlProperty(DatePicker control)
+		{
+			boolean result = ControlsUtility.isRuleDefined(CategoryCSVConstants.MAX, control);
+			String ruleName = null;
+			if (result == true)
+			{
+				ruleName = CategoryCSVConstants.MAX;
+			}
+			return ruleName;
+		}
 
-    private String name;
+		public void setControlProperty(DatePicker control, String propertyToBeSet)
+		{
+			ControlsUtility.defineRule(CategoryCSVConstants.MAX, control);
+		}
+	},
+	ALLOWFUTUREDATE("ALLOWFUTUREDATE") {
 
-    DatePickerEnum() {
+		public String getControlProperty(DatePicker control)
+		{
 
-    }
+			boolean result = ControlsUtility.isRuleDefined(CategoryCSVConstants.ALLOW_FUTURE_DATE,
+					control);
+			String ruleName = null;
+			if (result == true)
+			{
+				ruleName = CategoryCSVConstants.ALLOW_FUTURE_DATE;
+			}
+			return ruleName;
+		}
 
-    DatePickerEnum(String name) {
-        this.name = name;
-    }
+		public void setControlProperty(DatePicker control, String propertyToBeSet)
+		{
+			ControlsUtility.defineRule(CategoryCSVConstants.ALLOW_FUTURE_DATE, control);
+		}
+	};
 
-    public abstract void setControlProperty(DatePicker control, String propertyToBeSet);
+	private String name;
 
-    public abstract String getControlProperty(DatePicker control);
+	DatePickerEnum()
+	{
 
-    public String getValue() {
-        return name;
-    }
+	}
 
-    public static DatePickerEnum getValue(String nameToBeFound) {
+	DatePickerEnum(String name)
+	{
+		this.name = name;
+	}
 
-        DatePickerEnum[] propertyTypes = DatePickerEnum.values();
-        for (DatePickerEnum propertyType : propertyTypes) {
-            if (propertyType.getValue().equalsIgnoreCase(nameToBeFound)) {
-                return propertyType;
-            }
-        }
-        throw new IllegalArgumentException(nameToBeFound + ": is not a valid property");
-    }
+	public abstract void setControlProperty(DatePicker control, String propertyToBeSet);
+
+	public abstract String getControlProperty(DatePicker control);
+
+	public String getValue()
+	{
+		return name;
+	}
+
+	public static DatePickerEnum getValue(String nameToBeFound)
+	{
+
+		DatePickerEnum[] propertyTypes = DatePickerEnum.values();
+		for (DatePickerEnum propertyType : propertyTypes)
+		{
+			if (propertyType.getValue().equalsIgnoreCase(nameToBeFound))
+			{
+				return propertyType;
+			}
+		}
+		throw new IllegalArgumentException(nameToBeFound + ": is not a valid property");
+	}
 }

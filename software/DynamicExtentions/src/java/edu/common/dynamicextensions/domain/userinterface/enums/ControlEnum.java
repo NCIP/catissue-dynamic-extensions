@@ -10,10 +10,17 @@ import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
 import edu.wustl.common.util.logger.Logger;
 
+/**
+ * @author rajesh_vyas
+ *
+ */
 public enum ControlEnum {
 	DEFAULTVALUE("DEFAULTVALUE") {
 
-		@Override
+		/**
+		 * Returns Default value for a control.
+		 * @param Control 
+		 */
 		public String getControlProperty(Control control)
 		{
 			CategoryAttribute categoryAttribute = (CategoryAttribute) control
@@ -31,21 +38,20 @@ public enum ControlEnum {
 			return null;
 		}
 
-		@Override
+		/**
+		 * Sets Control default value.
+		 */
 		public void setControlProperty(Control control, String propertyToBeSet)
 		{
 			CategoryAttribute categoryAttribute = (CategoryAttribute) control
 					.getBaseAbstractAttribute();
 			AttributeInterface attribute = categoryAttribute.getAttribute();
-			AttributeTypeInformationInterface attributeTypeInformation = attribute
-					.getAttributeTypeInformation();
-			//attributeTypeInformation.setDefaultValue();
+			attribute.getAttributeTypeInformation();
 
 		}
 	},
 	PHI("PHI") {
 
-		@Override
 		public String getControlProperty(Control control)
 		{
 			CategoryAttribute categoryAttribute = (CategoryAttribute) control
@@ -59,7 +65,6 @@ public enum ControlEnum {
 			return String.valueOf(isIdentified);
 		}
 
-		@Override
 		public void setControlProperty(Control control, String propertyToBeSet)
 		{
 			CategoryAttribute categoryAttribute = (CategoryAttribute) control
@@ -70,7 +75,6 @@ public enum ControlEnum {
 	},
 	REQUIRED("REQUIRED") {
 
-		@Override
 		public String getControlProperty(Control control)
 		{
 
@@ -84,7 +88,6 @@ public enum ControlEnum {
 			return ruleName;
 		}
 
-		@Override
 		public void setControlProperty(Control control, String propertyToBeSet)
 		{
 			if (propertyToBeSet.equalsIgnoreCase("yes"))
