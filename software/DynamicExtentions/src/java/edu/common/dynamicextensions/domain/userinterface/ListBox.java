@@ -2,8 +2,11 @@
 package edu.common.dynamicextensions.domain.userinterface;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import edu.common.dynamicextensions.domain.userinterface.beans.UIProperty;
+import edu.common.dynamicextensions.domain.userinterface.enums.ListBoxEnum;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
@@ -49,7 +52,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 	/**
 	 * The list of values to be displayed in the ListBox
 	 */
-	private List listOfValues = null;
+	private final List listOfValues = null;
 
 	/**
 	 * This method returns the Number of rows to be displayed on the UI for ListBox.
@@ -195,17 +198,23 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		{
 			for (NameValueBean nameValueBean : nameValueBeans)
 			{
-				if (values != null && !values.isEmpty()
-						&& (values.contains(nameValueBean.getValue())
-								|| values.contains(DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean.getValue()))))
+				if (values != null
+						&& !values.isEmpty()
+						&& (values.contains(nameValueBean.getValue()) || values
+								.contains(DynamicExtensionsUtility
+										.getUnEscapedStringValue(nameValueBean.getValue()))))
 				{
 					htmlString.append("<OPTION VALUE='").append(nameValueBean.getValue()).append(
-							"' SELECTED>").append(DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean.getName()));
+							"' SELECTED>").append(
+							DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean
+									.getName()));
 				}
 				else
 				{
 					htmlString.append("<OPTION VALUE='").append(nameValueBean.getValue()).append(
-							"'>").append(DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean.getName()));
+							"'>").append(
+							DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean
+									.getName()));
 				}
 			}
 		}
@@ -304,9 +313,9 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		}
 		if (getIsSkipLogicTargetControl())
 		{
-			htmlString.append("<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
-							+ getHTMLComponentName()
-							+ "_div' />");
+			htmlString
+					.append("<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
+							+ getHTMLComponentName() + "_div' />");
 			htmlString.append("</div>");
 		}
 		return htmlString.toString();
@@ -453,11 +462,40 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		// TODO Auto-generated method stub
 
 	}
+
 	/**
 	 *
 	 */
 	public boolean getIsEnumeratedControl()
 	{
 		return true;
+	}
+
+	public Collection<UIProperty> getControlTypeValues()
+	{
+		Collection<UIProperty> uiProperties = super.getControlTypeValues();
+		ListBoxEnum[] uiPropertyValues = ListBoxEnum.values();
+
+		for (ListBoxEnum propertyType : uiPropertyValues)
+		{
+			String controlProperty = propertyType.getControlProperty(this);
+			if (controlProperty != null)
+			{
+				uiProperties.add(new UIProperty(propertyType.getValue(), controlProperty));
+			}
+		}
+
+		return uiProperties;
+	}
+
+	public void setControlTypeValues(Collection<UIProperty> uiProperties)
+	{
+		super.setControlTypeValues(uiProperties);
+
+		for (UIProperty uiProperty : uiProperties)
+		{
+			ListBoxEnum propertyType = ListBoxEnum.getValue(uiProperty.getKey());
+			propertyType.setControlProperty(this, uiProperty.getValue());
+		}
 	}
 }
