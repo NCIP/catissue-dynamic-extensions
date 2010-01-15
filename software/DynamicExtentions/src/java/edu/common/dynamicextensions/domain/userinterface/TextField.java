@@ -1,8 +1,11 @@
 
 package edu.common.dynamicextensions.domain.userinterface;
 
+import java.util.Collection;
 import java.util.List;
 
+import edu.common.dynamicextensions.domain.userinterface.beans.UIProperty;
+import edu.common.dynamicextensions.domain.userinterface.enums.TextFieldEnum;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
@@ -81,7 +84,8 @@ public class TextField extends Control implements TextFieldInterface
 	 * @return HTML code for TextField
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
+	public String generateEditModeHTML(ContainerInterface container)
+			throws DynamicExtensionsSystemException
 	{
 		String defaultValue = DynamicExtensionsUtility
 				.replaceHTMLSpecialCharacters(getDefaultValueForControl());
@@ -111,14 +115,16 @@ public class TextField extends Control implements TextFieldInterface
 					+ htmlComponentName
 					+ "' onchange=\"isDataChanged();"
 					+ (this.getIsSourceForCalculatedAttribute() != null
-							&& this.getIsSourceForCalculatedAttribute() ? "calculateAttributes();" : "")
-					+ "\" value='" + DynamicExtensionsUtility.getEscapedStringValue(defaultValue) + "' ";
+							&& this.getIsSourceForCalculatedAttribute()
+							? "calculateAttributes();"
+							: "") + "\" value='"
+					+ DynamicExtensionsUtility.getEscapedStringValue(defaultValue) + "' ";
 
 			int columnSize = columns.intValue();
 			if (columnSize > 0)
 			{
 				htmlString += "size='" + columnSize + "' ";
-				htmlString += "style='width:" + (columnSize+1) + "ex' ";
+				htmlString += "style='width:" + (columnSize + 1) + "ex' ";
 			}
 			else
 			{
@@ -136,7 +142,8 @@ public class TextField extends Control implements TextFieldInterface
 
 			//set isdisabled property
 
-			if ((this.isReadOnly != null && this.isReadOnly) || (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly))
+			if ((this.isReadOnly != null && this.isReadOnly)
+					|| (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly))
 			{
 				htmlString += " readonly='" + ProcessorConstants.TRUE + "' ";
 			}
@@ -215,7 +222,8 @@ public class TextField extends Control implements TextFieldInterface
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domain.userinterface.Control#generateViewModeHTML()
 	 */
-	protected String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(ContainerInterface container)
+			throws DynamicExtensionsSystemException
 	{
 		String defaultValue = getDefaultValueForControl();
 		String htmlString = "&nbsp;";
@@ -251,15 +259,13 @@ public class TextField extends Control implements TextFieldInterface
 			}
 			if (isUrl != null && (isUrl.booleanValue()))
 			{
-				defaultValue = this.getAttibuteMetadataInterface()
-						.getDefaultValue();
+				defaultValue = this.getAttibuteMetadataInterface().getDefaultValue();
 			}
 			else
 			{
 				if (this.value == null)
 				{
-					defaultValue = this.getAttibuteMetadataInterface()
-							.getDefaultValue();
+					defaultValue = this.getAttibuteMetadataInterface().getDefaultValue();
 					if (defaultValue == null || (defaultValue.length() == 0))
 					{
 						defaultValue = "";
@@ -293,11 +299,41 @@ public class TextField extends Control implements TextFieldInterface
 		// TODO Auto-generated method stub
 
 	}
+
 	/**
 	 *
 	 */
 	public boolean getIsEnumeratedControl()
 	{
 		return false;
+	}
+
+	public Collection<UIProperty> getControlTypeValues()
+	{
+		Collection<UIProperty> controlTypeValues = super.getControlTypeValues();
+		TextFieldEnum[] uiPropertyValues = TextFieldEnum.values();
+
+		for (TextFieldEnum propertyType : uiPropertyValues)
+		{
+			String controlProperty = propertyType.getControlProperty(this);
+			//LOGGER.debug("Control property value is: " + controlProperty);
+			if (controlProperty != null)
+			{
+				controlTypeValues.add(new UIProperty(propertyType.getValue(), controlProperty));
+			}
+		}
+
+		return controlTypeValues;
+	}
+
+	public void setControlTypeValues(Collection<UIProperty> uiProperties)
+	{
+		super.setControlTypeValues(uiProperties);
+
+		for (UIProperty uiProperty : uiProperties)
+		{
+			TextFieldEnum propertyType = TextFieldEnum.getValue(uiProperty.getKey());
+			propertyType.setControlProperty(this, uiProperty.getValue());
+		}
 	}
 }
