@@ -10,6 +10,8 @@ import java.util.List;
 
 import edu.common.dynamicextensions.domain.BaseAbstractAttribute;
 import edu.common.dynamicextensions.domain.DynamicExtensionBaseDomainObject;
+import edu.common.dynamicextensions.domain.userinterface.beans.UIProperty;
+import edu.common.dynamicextensions.domain.userinterface.enums.ControlEnum;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
@@ -68,46 +70,57 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	 * Decides whether the control should be disabled or not
 	 */
 	protected Boolean isReadOnly = false;
+
 	/**
 	 * Decides whether the control should be disabled or not
 	 */
 	protected Boolean isSkipLogicReadOnly = false;
+
 	/**
 	 * Decides whether the control should be disabled or not
 	 */
 	protected Boolean isSelectiveReadOnly = false;
+
 	/**
 	 * Decides whether the control should be autocalculated
 	 */
 	protected Boolean isCalculated = false;
+
 	/**
 	 * Decides whether the control should use skip logic
 	 */
 	protected Boolean isSkipLogic = false;
+
 	/**
 	 * Decides whether the control should use skip logic
 	 */
 	protected Boolean isSkipLogicTargetControl = false;
+
 	/**
 	 * Decides whether the control should use skip logic
 	 */
 	protected Boolean isSkipLogicShowHideTargetControl = false;
+
 	/**
 	 * Decides whether the control should use skip logic
 	 */
 	protected Boolean isShowHide = false;
+
 	/**
 	 * Decides whether the control should use skip logic
 	 */
 	protected Boolean isSkipLogicLoadPermValues = false;
+
 	/**
 	 * Decides whether the control should use skip logic
 	 */
 	protected Boolean isSkipLogicDefaultValue = false;
+
 	/**
 	 *
 	 */
 	protected ControlInterface sourceSkipControl = null;
+
 	/**
 	 *
 	 */
@@ -142,10 +155,12 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	 * Attribute to which this control is associated.
 	 */
 	protected BaseAbstractAttribute baseAbstractAttribute;
+
 	/**
 	 *
 	 */
 	protected Boolean sequenceNumberChanged = false;
+
 	/**
 	 *
 	 */
@@ -217,6 +232,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	{
 		this.isCalculated = isCalculated;
 	}
+
 	/**
 	 *
 	 */
@@ -231,6 +247,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		}
 		return isSourceControl;
 	}
+
 	/**
 	 * @param caption The caption to set.
 	 */
@@ -390,9 +407,8 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 				for (FormControlNotesInterface fcNote : getFormNotes())
 				{
 					controlHTML.append("<div style='width:100%' class='notes'>"
-							+ DynamicExtensionsUtility
-									.replaceHTMLSpecialCharacters(fcNote
-											.getNote()) + "</div>");
+							+ DynamicExtensionsUtility.replaceHTMLSpecialCharacters(fcNote
+									.getNote()) + "</div>");
 				}
 			}
 
@@ -424,8 +440,8 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		if ((this.showLabel != null) && this.showLabel)
 		{
 			controlHTML.append(((BaseAbstractAttribute) this.getBaseAbstractAttribute())
-					.getCapitalizedName(DynamicExtensionsUtility
-							.replaceHTMLSpecialCharacters(this.getCaption())));
+					.getCapitalizedName(DynamicExtensionsUtility.replaceHTMLSpecialCharacters(this
+							.getCaption())));
 		}
 		controlHTML.append("</td><td class='formField_withoutBorder' valign='center'>");
 
@@ -1114,5 +1130,46 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	public void setIsSkipLogicDefaultValue(Boolean isSkipLogicDefaultValue)
 	{
 		this.isSkipLogicDefaultValue = isSkipLogicDefaultValue;
+	}
+
+	/**
+	 * 
+	 */
+	public Collection<UIProperty> getControlTypeValues()
+	{
+		Collection<UIProperty> uiProperties = new ArrayList<UIProperty>();
+		ControlEnum[] uiPropertyValues = ControlEnum.values();
+
+		for (ControlEnum propertyType : uiPropertyValues)
+		{
+			String controlProperty = propertyType.getControlProperty(this);
+			//LOGGER.debug("Control property value is: " + controlProperty);
+			if (controlProperty != null)
+			{
+				uiProperties.add(new UIProperty(propertyType.getValue(), controlProperty));
+			}
+		}
+
+		return uiProperties;
+	}
+
+	/**
+	 * 
+	 */
+	public void setControlTypeValues(Collection<UIProperty> uiProperties)
+	{
+		Collection<UIProperty> uiPropertiesToBeRemoved = new ArrayList<UIProperty>();
+
+		for (UIProperty uiProperty : uiProperties)
+		{
+			ControlEnum propertyType = ControlEnum.getValue(uiProperty.getKey());
+			if (propertyType == null)
+			{
+				continue;
+			}
+			propertyType.setControlProperty(this, uiProperty.getValue());
+			uiPropertiesToBeRemoved.add(uiProperty);
+		}
+		uiProperties.removeAll(uiPropertiesToBeRemoved);
 	}
 }
