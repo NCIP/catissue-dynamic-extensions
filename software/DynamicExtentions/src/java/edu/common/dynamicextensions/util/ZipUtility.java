@@ -1,5 +1,8 @@
+
 package edu.common.dynamicextensions.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -8,10 +11,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import javax.servlet.http.HttpServletRequest;
+
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
-
 
 /**
  * This class contains the utility method to create zip, extract zip etc.
@@ -20,6 +24,7 @@ import edu.wustl.common.util.logger.LoggerConfig;
  */
 public class ZipUtility
 {
+
 	static
 	{
 		LoggerConfig.configureLogger(System.getProperty("user.dir"));
@@ -44,7 +49,7 @@ public class ZipUtility
 			String destinationPath = "";
 			if (destination != null && !"".equals(destination))
 			{
-				destinationPath = destination + "/";
+				destinationPath = destination + File.separator;
 			}
 			zipinputstream = new ZipInputStream(new FileInputStream(filename));
 			extractZip(zipinputstream, destinationPath);
@@ -52,7 +57,8 @@ public class ZipUtility
 		}
 		catch (IOException e)
 		{
-			throw new DynamicExtensionsSystemException("Can not extract the zip, zip may be currupted", e);
+			throw new DynamicExtensionsSystemException(
+					"Can not extract the zip, zip may be currupted", e);
 		}
 		finally
 		{
@@ -184,6 +190,10 @@ public class ZipUtility
 			{
 				zip.close();
 			}
+			if (fileWriter != null)
+			{
+				fileWriter.close();
+			}
 		}
 		return destZip;
 	}
@@ -243,7 +253,6 @@ public class ZipUtility
 	 */
 	private static void addFolderToZip(String path, String srcFolder, ZipOutputStream zip)
 			throws DynamicExtensionsSystemException, IOException
-
 	{
 		File folder = new File(srcFolder);
 
@@ -259,4 +268,60 @@ public class ZipUtility
 			}
 		}
 	}
+
+	/**
+	 * This method will download the Zip file usin the outputStream in request in the provided tempDirName.
+	 * If tempDirName dir does not exists then it will create it first & then download the zip in that folder.
+	 * @param request from which to download the Zip file.
+	 * @param tempDirName directory name in which to download it.
+	 * @throws IOException Exception.
+	 * @throws DynamicExtensionsSystemException Exception
+	 */
+	public static void downloadZipFile(HttpServletRequest request, String tempDirName,
+			String fileName) throws IOException, DynamicExtensionsSystemException
+	{
+		BufferedInputStream reader = null;
+		BufferedOutputStream fileWriter = null;
+		//DirOperationsUtility.getInstance().createNewTempDirectory(tempDirName);
+		String completeFileName = tempDirName + File.separator + fileName;
+		try
+		{
+			reader = new BufferedInputStream(request.getInputStream());
+			File file = new File(completeFileName);
+			if (file.exists() && !file.delete())
+			{
+				LOGGER.error("Can not delete file : " + file);
+			}
+			fileWriter = new BufferedOutputStream(new FileOutputStream(file));
+
+			byte[] buffer = new byte[1024];
+			int len = reader.read(buffer);
+			while (len >= 0)
+			{
+				fileWriter.write(buffer, 0, len);
+				len = reader.read(buffer);
+			}
+			fileWriter.flush();
+
+		}
+		catch (IOException e)
+		{
+			throw new DynamicExtensionsSystemException(
+					"Exception occured while downloading the zip on server", e);
+
+		}
+		finally
+		{
+			if (fileWriter != null)
+			{
+				fileWriter.close();
+			}
+			if (reader != null)
+			{
+				reader.close();
+			}
+		}
+		extractZipToDestination(completeFileName, tempDirName);
+	}
+
 }

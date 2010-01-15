@@ -1,29 +1,17 @@
 
 package edu.common.dynamicextensions.category;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSession;
 
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.ZipUtility;
+import edu.common.dynamicextensions.utility.HTTPSConnection;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 
@@ -72,87 +60,38 @@ public class CategoryCreator
 	 */
 	public void createCategory(String[] args)
 	{
+		HTTPSConnection httpsConnection = HTTPSConnection.getInstance();
 		try
 		{
 			// trust all the https connections
-			acceptAllHttpsConnections();
+			httpsConnection.acceptAllHttpsConnections();
 			// Initialize all instance variables
 			initializeResources(args);
 
 			// open the servlet connection
-			URLConnection servletConnection = openServletConnection(serverUrl);
+			URLConnection servletConnection = httpsConnection.openServletConnection(serverUrl);
 
 			// upload the Zip file to server
-			uploadFileToServer(servletConnection, zipFile);
+			httpsConnection.uploadFileToServer(servletConnection, zipFile);
 
 			// read the response from server
-			processResponse(servletConnection);
+			httpsConnection.processResponse(servletConnection);
 		}
 		catch (IOException e)
 		{
-			LOGGER.error("Exception : "+e.getLocalizedMessage());
+			LOGGER.error("Exception : " + e.getLocalizedMessage());
 			LOGGER.info("For more information please check :/log/dynamicExtentions.log");
 			LOGGER.debug("Exception occured is as follows : ", e);
 		}
 		catch (DynamicExtensionsSystemException e)
 		{
-			LOGGER.error("Exception : "+e.getLocalizedMessage());
+			LOGGER.error("Exception : " + e.getLocalizedMessage());
 			LOGGER.info("For more information please check :/log/dynamicExtentions.log");
 			LOGGER.debug("Exception occured is as follows : ", e);
 		}
 	}
 
-	/**
-	 * This method will upload the given file to the given URLConnection.
-	 * @param servletConnection url on which to upload the file.
-	 * @param file file to be uploaded.
-	 * @throws IOException Exception.
-	 * @throws DynamicExtensionsSystemException Exception.
-	 */
-	private void uploadFileToServer(URLConnection servletConnection, File file) throws IOException,
-			DynamicExtensionsSystemException
-	{
-		BufferedInputStream csvReader = null;
-		BufferedOutputStream servletWriter = null;
-		byte[] buffer = new byte[1024];
-		try
-		{
-			csvReader = new BufferedInputStream(new FileInputStream(file));
-			servletWriter = getServletWriter(servletConnection);
-			int len = csvReader.read(buffer);
-			while (len >= 0)
-			{
-				servletWriter.write(buffer, 0, len);
-				len = csvReader.read(buffer);
-			}
-			servletWriter.flush();
-		}
-		catch (FileNotFoundException e)
-		{
-			// TODO Auto-generated catch block
-			throw new DynamicExtensionsSystemException(
-					"File not found, please specify correct file path.", e);
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			throw new DynamicExtensionsSystemException("Exception occured while creating category",
-					e);
-		}
-		finally
-		{
-			if (servletWriter != null)
-			{
-				servletWriter.close();
-			}
-			if (csvReader != null)
-			{
-				csvReader.close();
-			}
 
-		}
-
-	}
 
 	/**
 	 * It will validate all the necessary parameters are provided & are valid.
@@ -170,7 +109,7 @@ public class CategoryCreator
 			validate(args);
 			zipFile = ZipUtility.zipFolder(args[0], "tempCategoryDir.zip");
 			String url = args[1] + "/CreateCategoryAction.do?";
-			String categoryFilenameString ="";
+			String categoryFilenameString = "";
 			if (args.length > 2 && !"".equals(args[2].trim()))
 			{
 				categoryFilenameString = getCategoryFilenameString(args[2]);
@@ -181,7 +120,8 @@ public class CategoryCreator
 				isMetadataOnly = true;
 			}
 			serverUrl = new URL(url + CategoryCreatorConstants.METADATA_ONLY + "=" + isMetadataOnly
-					+ "&" + CategoryCreatorConstants.CATEGORY_NAMES_FILE + "=" + categoryFilenameString);
+					+ "&" + CategoryCreatorConstants.CATEGORY_NAMES_FILE + "="
+					+ categoryFilenameString);
 		}
 		catch (MalformedURLException e)
 		{
@@ -198,23 +138,19 @@ public class CategoryCreator
 	{
 		if (args.length == 0)
 		{
-			throw new DynamicExtensionsSystemException(
-					"Please specify category files folder path.");
+			throw new DynamicExtensionsSystemException("Please specify category files folder path.");
 		}
 		if (args.length < 2)
 		{
-			throw new DynamicExtensionsSystemException(
-					"Please specify the AppplicationURL.");
+			throw new DynamicExtensionsSystemException("Please specify the AppplicationURL.");
 		}
 		if (args[0] != null && args[0].trim().length() == 0)
 		{
-			throw new DynamicExtensionsSystemException(
-					"Please specify category files folder path.");
+			throw new DynamicExtensionsSystemException("Please specify category files folder path.");
 		}
 		if (args[1] != null && args[1].trim().length() == 0)
 		{
-			throw new DynamicExtensionsSystemException(
-					"Please specify the  AppplicationURL.");
+			throw new DynamicExtensionsSystemException("Please specify the  AppplicationURL.");
 		}
 	}
 
@@ -241,7 +177,8 @@ public class CategoryCreator
 				//read each line of text file
 				while (line != null)
 				{
-					catFileNameString.append(line.trim()).append(CategoryCreatorConstants.CAT_FILE_NAME_SEPARATOR);
+					catFileNameString.append(line.trim()).append(
+							CategoryCreatorConstants.CAT_FILE_NAME_SEPARATOR);
 					line = bufRdr.readLine();
 				}
 			}
@@ -267,157 +204,7 @@ public class CategoryCreator
 	}
 
 	/**
-	 * This method will get the ouput stream from the given  servletConnection.
-	 * @param servletConnection url connection from which to get the output Stream.
-	 * @return BufferedOutputStream for writing to the URL.
-	 * @throws DynamicExtensionsSystemException Exception.
-	 */
-	private BufferedOutputStream getServletWriter(URLConnection servletConnection)
-			throws DynamicExtensionsSystemException
-	{
-		BufferedOutputStream servletWriter;
-
-		try
-		{
-			servletWriter = new BufferedOutputStream(servletConnection.getOutputStream());
-		}
-		catch (IOException e)
-		{
-			throw new DynamicExtensionsSystemException(
-					"Please verify the Correct URL is specified & the server is running", e);
-		}
-		return servletWriter;
-	}
-
-	/**
-	 * This method will wait for accepting the Response From the Server.
-	 * In response server will send the Exception object if anything wrong happened else will
-	 * return null.
-	 * @param servletConnection Connection from which
-	 * @throws IOException
-	 * @throws DynamicExtensionsSystemException
-	 */
-	private void processResponse(URLConnection servletConnection) throws IOException,
-			DynamicExtensionsSystemException
-	{
-		ObjectInputStream inputFromServlet = null;
-		try
-		{
-			inputFromServlet = new ObjectInputStream(servletConnection.getInputStream());
-
-			Object exceptionOccured = inputFromServlet.readObject();
-			if (exceptionOccured instanceof Exception)
-			{
-				LOGGER.info("exception occured");
-				Exception serverException = (Exception) exceptionOccured;
-				throw new DynamicExtensionsSystemException(serverException.getLocalizedMessage(), serverException);
-			}
-			else if (exceptionOccured instanceof Map)
-			{
-				printReport((Map<String, Exception>) exceptionOccured);
-			}
-		}
-		catch (IOException e)
-		{
-			throw new DynamicExtensionsSystemException(
-					"Can not connect to server, please verify server is running", e);
-		}
-		catch (ClassNotFoundException e)
-		{
-
-			throw new DynamicExtensionsSystemException("Class not found " + e.getLocalizedMessage(),
-					e);
-		}
-		finally
-		{
-			if (inputFromServlet != null)
-			{
-				inputFromServlet.close();
-			}
-		}
-	}
-
-	private void printReport(Map<String, Exception> exceptionOccured)
-	{
-		for (Entry<String, Exception> entry : exceptionOccured.entrySet())
-		{
-			if (entry.getValue() == null)
-			{
-				LOGGER.info("Category creation successfull for file :" + entry.getKey());
-			}
-			else
-			{
-				LOGGER.error("Category creation failed for file : " + entry.getKey());
-				LOGGER.error("Exception : "+ entry.getValue().getCause().getLocalizedMessage());
-				LOGGER.error("For more details please check ./log/dynamicExtentions.log" );
-				LOGGER.debug("Exception : ", entry.getValue());
-			}
-		}
-
-	}
-
-	/**
-	 * This method will open the connection to the URL given in the argument.
-	 * It will also set the parameter to the connection like don't use the cached version
-	 * & program will write something to the URL & also wait for response.
-	 * @param serverUrl URL to which connection is required
-	 * @return Urlconnection object for the given serverUrl.
-	 * @throws IOException exception
-	 */
-	private URLConnection openServletConnection(URL serverUrl) throws DynamicExtensionsSystemException
-	{
-		URLConnection servletConnection;
-		try
-		{
-			servletConnection = serverUrl.openConnection();
-
-			// I m going to write something to servlet & also will be waiting to read from servlet
-			servletConnection.setDoInput(true);
-			servletConnection.setDoOutput(true);
-
-			// Don't use a cached version of URL connection.
-			servletConnection.setUseCaches(false);
-			servletConnection.setDefaultUseCaches(false);
-
-			// Specify the content type that we will send binary data
-			servletConnection.setRequestProperty("Content-Type", "application/octet-stream");
-		}
-		catch(IOException e)
-		{
-			throw new DynamicExtensionsSystemException("Please verify the ApplicationURL and also verify that the server is running.",e);
-		}
-		return servletConnection;
-	}
-
-	/**
-	 * This method will force the client to accept the all server certificates as trusted.
-	 * @throws DynamicExtensionsSystemException
-	 * @throws Exception
-	 */
-	public void acceptAllHttpsConnections() throws DynamicExtensionsSystemException
-	{
-
-		// Now you are tell the JRE to ignore the hostname
-		HostnameVerifier hostVerifier = new HostnameVerifier()
-		{
-
-			/* (non-Javadoc)
-			 * @see javax.net.ssl.HostnameVerifier#verify(java.lang.String, javax.net.ssl.SSLSession)
-			 */
-			public boolean verify(String urlHostName, SSLSession session)
-			{
-				return true;
-			}
-		};
-		// Now telling the JRE to trust any https server.
-		// If you know the URL that you are connecting to then this should not be a problem
-		trustAllHttpsCertificates();
-		HttpsURLConnection.setDefaultHostnameVerifier(hostVerifier);
-
-	}
-
-	/**
-	 * This is the overrided version of trust manager which will trust all the https connections
+	 * This is the overridden version of trust manager which will trust all the https connections
 	 * @author pavan_kalantri
 	 *
 	 */
@@ -485,39 +272,6 @@ public class CategoryCreator
 	private static void trustAllHttpsCertificates() throws DynamicExtensionsSystemException
 	{
 
-		//  Create a trust manager that does not validate certificate chains:
-		try
-		{
-			javax.net.ssl.TrustManager[] trustAllCerts =
-
-			new javax.net.ssl.TrustManager[1];
-
-			javax.net.ssl.TrustManager trustMnger = new DerivedTrustManager();
-
-			trustAllCerts[0] = trustMnger;
-
-			javax.net.ssl.SSLContext sslContext;
-
-			sslContext = javax.net.ssl.SSLContext.getInstance("SSL");
-
-			sslContext.init(null, trustAllCerts, null);
-
-			javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(
-
-			sslContext.getSocketFactory());
-		}
-		catch (NoSuchAlgorithmException e)
-		{
-			throw new DynamicExtensionsSystemException(
-					"Error occured while accepting the server certificates", e);
-		}
-		catch (KeyManagementException e)
-		{
-			throw new DynamicExtensionsSystemException(
-					"Error occured while accepting the server certificates", e);
-
-		}
 	}
-
 
 }

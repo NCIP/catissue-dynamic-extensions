@@ -1,10 +1,7 @@
 
 package edu.common.dynamicextensions.ui.webui.action;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -27,6 +24,7 @@ import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.CategoryGenerationUtil;
 import edu.common.dynamicextensions.util.CategoryHelper;
 import edu.common.dynamicextensions.util.CategoryHelperInterface;
+import edu.common.dynamicextensions.util.DirOperationsUtility;
 import edu.common.dynamicextensions.util.ZipUtility;
 import edu.common.dynamicextensions.util.parser.CategoryGenerator;
 import edu.wustl.cab2b.server.cache.EntityCache;
@@ -56,6 +54,7 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 	/* (non-Javadoc)
 	 * @see org.apache.struts.actions.DispatchAction#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
+	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 	{
@@ -65,7 +64,7 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 				+ EntityCache.getInstance().getNextIdForCategoryFileGeneration();
 		try
 		{
-			downloadZipFile(request, tempDirName);
+			ZipUtility.downloadZipFile(request, tempDirName , "categoryZip.zip");
 			List<String> fileNamesList = getCategoryFileNames(request, tempDirName);
 
 			for (String name : fileNamesList)
@@ -91,7 +90,7 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 		}
 		finally
 		{
-			deleteDirectory(new File(tempDirName));
+			DirOperationsUtility.getInstance().deleteDirectory(new File(tempDirName));
 		}
 		return null;
 	}
@@ -128,108 +127,6 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 			}
 		}
 		return fileNameList;
-	}
-
-
-
-	/**
-	 * This method will first of all delete all the files & folders
-	 * present in the given file object & then will delete the given Directory.
-	 * @param path directory which is to be deleted.
-	 * @return true if deletion is succesfull.
-	 */
-	public boolean deleteDirectory(File path)
-	{
-		if (path.exists())
-		{
-			File[] files = path.listFiles();
-			for (int i = 0; i < files.length; i++)
-			{
-				if (files[i].isDirectory())
-				{
-					deleteDirectory(files[i]);
-				}
-				else if (!files[i].delete())
-				{
-					LOGGER.error("Can not delete file " + files[i]);
-				}
-			}
-		}
-		return path.delete();
-	}
-
-	/**
-	 * This method will download the Zip file usin the outputStream in request in the provided tempDirName.
-	 * If tempDirName dir does not exists then it will create it first & then download the zip in that folder.
-	 * @param request from which to download the Zip file.
-	 * @param tempDirName directory name in which to download it.
-	 * @throws IOException Exception.
-	 * @throws DynamicExtensionsSystemException Exception
-	 */
-	private void downloadZipFile(HttpServletRequest request, String tempDirName)
-			throws IOException, DynamicExtensionsSystemException
-	{
-		BufferedInputStream reader = null;
-		BufferedOutputStream fileWriter = null;
-		createNewTempDirectory(tempDirName);
-		String fileName = tempDirName + "/categoryZip.zip";
-		try
-		{
-			reader = new BufferedInputStream(request.getInputStream());
-			File file = new File(fileName);
-			if (file.exists() && !file.delete())
-			{
-				LOGGER.error("Can not delete file : " + file);
-			}
-			fileWriter = new BufferedOutputStream(new FileOutputStream(file));
-
-			byte[] buffer = new byte[1024];
-			int len = reader.read(buffer);
-			while (len >= 0)
-			{
-				fileWriter.write(buffer, 0, len);
-				len = reader.read(buffer);
-			}
-			fileWriter.flush();
-
-		}
-		catch (IOException e)
-		{
-			throw new DynamicExtensionsSystemException(
-					"Exception occured while downloading the zip on server", e);
-
-		}
-		finally
-		{
-			if (fileWriter != null)
-			{
-				fileWriter.close();
-			}
-			if (reader != null)
-			{
-				reader.close();
-			}
-		}
-		ZipUtility.extractZipToDestination(fileName, tempDirName);
-	}
-
-	/**
-	 * This method will delete the directory with the name tempDirName if present & then will
-	 * create the new one for use.
-	 * @param tempDirName name of the directory to be created.
-	 * @throws DynamicExtensionsSystemException Exception.
-	 */
-	private void createNewTempDirectory(String tempDirName) throws DynamicExtensionsSystemException
-	{
-		File tempDir = new File(tempDirName);
-		if (tempDir.exists())
-		{
-			deleteDirectory(new File(tempDirName));
-		}
-		if (!tempDir.mkdirs())
-		{
-			throw new DynamicExtensionsSystemException("Unable to create tempDirectory");
-		}
 	}
 
 	/**
