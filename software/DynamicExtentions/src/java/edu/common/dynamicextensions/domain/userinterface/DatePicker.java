@@ -7,9 +7,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import edu.common.dynamicextensions.category.beans.UIProperty;
+import edu.common.dynamicextensions.category.enums.DatePickerEnum;
 import edu.common.dynamicextensions.domain.CategoryAttribute;
-import edu.common.dynamicextensions.domain.userinterface.beans.UIProperty;
-import edu.common.dynamicextensions.domain.userinterface.enums.DatePickerEnum;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;

@@ -8,10 +8,10 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import edu.common.dynamicextensions.category.beans.UIProperty;
+import edu.common.dynamicextensions.category.enums.ControlEnum;
 import edu.common.dynamicextensions.domain.BaseAbstractAttribute;
 import edu.common.dynamicextensions.domain.DynamicExtensionBaseDomainObject;
-import edu.common.dynamicextensions.domain.userinterface.beans.UIProperty;
-import edu.common.dynamicextensions.domain.userinterface.enums.ControlEnum;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import edu.common.dynamicextensions.domain.userinterface.beans.UIProperty;
-import edu.common.dynamicextensions.domain.userinterface.enums.ListBoxEnum;
+import edu.common.dynamicextensions.category.beans.UIProperty;
+import edu.common.dynamicextensions.category.enums.ListBoxEnum;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
