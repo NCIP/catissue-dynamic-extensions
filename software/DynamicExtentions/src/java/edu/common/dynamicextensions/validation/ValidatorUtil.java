@@ -282,7 +282,7 @@ public class ValidatorUtil
 	 * @param abstractAttribute
 	 * @return
 	 */
-	private static Collection<RuleInterface> getRuleCollection(
+	public static Collection<RuleInterface> getRuleCollection(
 			BaseAbstractAttributeInterface abstractAttribute)
 	{
 		AttributeMetadataInterface attribute = (AttributeMetadataInterface) abstractAttribute;
