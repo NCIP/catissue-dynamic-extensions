@@ -2847,6 +2847,7 @@ function printErrors(errorString)
 	errorHTML += "</table>";
 
 	document.getElementById("error_div").innerHTML =  errorHTML;
+	document.getElementById('error_div').style.display="";
 	//ERROR PRINTING FINISHED
 }
 function executeComboScripts()
