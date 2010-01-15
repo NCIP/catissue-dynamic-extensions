@@ -168,13 +168,13 @@ public class CacoreDEMetadataAppender {
 
 class DtdResolver implements EntityResolver {
 
+	private static final String HIBERNATECONFIG = "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd";
+    private static final String HIBERNATEMAPPING = "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd";
+
     public InputSource resolveEntity(final String publicId, final String systemId) throws SAXException, IOException {
         InputSource inputSource = null;
 
-        final String hibernateConfig = "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd";
-        final String hibernateMapping = "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd";
-
-        if (systemId.contains(hibernateConfig) || systemId.contains(hibernateMapping)) {
+        if (systemId.contains(HIBERNATECONFIG) || systemId.contains(HIBERNATEMAPPING)) {
             inputSource = new InputSource(new StringReader(""));
         }
         return inputSource;
