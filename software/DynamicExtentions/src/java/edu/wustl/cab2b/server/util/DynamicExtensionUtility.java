@@ -483,7 +483,7 @@ public class DynamicExtensionUtility
 	/**
 	 * Creates and returns a new one to many association between source target entities.
 	 * @param srcEntity source entity of the new association
-	 * @param tarEntity target enetiyt of the new association
+	 * @param tarEntity target entity of the new association
 	 * @return new association
 	 * @throws DynamicExtensionsSystemException
 	 */
@@ -548,6 +548,7 @@ public class DynamicExtensionUtility
 		}
 		return entityGroups;
 	}
+
 
 	/**
 	 * It will retrieve all the categories present in the dataBase.
