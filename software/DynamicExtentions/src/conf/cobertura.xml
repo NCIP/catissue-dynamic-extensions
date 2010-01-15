@@ -62,7 +62,7 @@
 
   	<delete dir="./cobertura/report"/>
    	<mkdir dir="./cobertura/report"/>
-	<copy tofile="./cobertura/cobertura1.ser" file="${jboss.home.dir}/bin/cobertura.ser"/>
+	<copy tofile="./cobertura/cobertura1.ser" file="${jboss.home.dir}/bin/cobertura.ser" failonerror="false"/>
   	<cobertura-merge datafile="./cobertura/cobertura.ser">
   	    <fileset dir="./cobertura">
   	        <include name="cobertura1.ser" />
