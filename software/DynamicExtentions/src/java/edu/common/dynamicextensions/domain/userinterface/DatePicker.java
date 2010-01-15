@@ -561,6 +561,9 @@ public class DatePicker extends Control implements DatePickerInterface
 		return false;
 	}
 
+	/**
+	 * Returns collection of key-value pairs.
+	 */
 	public Collection<UIProperty> getControlTypeValues()
 	{
 		Collection<UIProperty> uiProperties = super.getControlTypeValues();
@@ -578,6 +581,9 @@ public class DatePicker extends Control implements DatePickerInterface
 		return uiProperties;
 	}
 
+	/**
+	 * Set collection of key-value pairs for a control.
+	 */
 	public void setControlTypeValues(Collection<UIProperty> uiProperties)
 	{
 		super.setControlTypeValues(uiProperties);

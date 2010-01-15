@@ -308,6 +308,9 @@ public class TextField extends Control implements TextFieldInterface
 		return false;
 	}
 
+	/**
+	 * Returns collection of key-value pairs.
+	 */
 	public Collection<UIProperty> getControlTypeValues()
 	{
 		Collection<UIProperty> controlTypeValues = super.getControlTypeValues();
@@ -326,6 +329,9 @@ public class TextField extends Control implements TextFieldInterface
 		return controlTypeValues;
 	}
 
+	/**
+	 * Set collection of key-value pairs for a control.
+	 */
 	public void setControlTypeValues(Collection<UIProperty> uiProperties)
 	{
 		super.setControlTypeValues(uiProperties);

@@ -230,6 +230,9 @@ public class TextArea extends Control implements TextAreaInterface
 		return false;
 	}
 
+	/**
+	 * Returns collection of key-value pairs.
+	 */
 	public Collection<UIProperty> getControlTypeValues()
 	{
 		Collection<UIProperty> uiProperties = super.getControlTypeValues();
@@ -247,6 +250,9 @@ public class TextArea extends Control implements TextAreaInterface
 		return uiProperties;
 	}
 
+	/**
+	 * Set collection of key-value pairs for a control.
+	 */
 	public void setControlTypeValues(Collection<UIProperty> uiProperties)
 	{
 		super.setControlTypeValues(uiProperties);

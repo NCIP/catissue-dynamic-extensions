@@ -471,6 +471,9 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		return true;
 	}
 
+	/**
+	 * Returns collection of key-value pairs.
+	 */
 	public Collection<UIProperty> getControlTypeValues()
 	{
 		Collection<UIProperty> uiProperties = super.getControlTypeValues();
@@ -488,6 +491,9 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		return uiProperties;
 	}
 
+	/**
+	 * Set collection of key-value pairs for a control.
+	 */
 	public void setControlTypeValues(Collection<UIProperty> uiProperties)
 	{
 		super.setControlTypeValues(uiProperties);
