@@ -1,12 +1,13 @@
 
 package edu.common.dynamicextensions.category.enums;
 
+/**
+ * Enum for attribute specific rules.
+ * @author rajesh_vyas
+ *
+ */
 public enum AttributeEnum {
 	PERMISSIBLEVALUES("PERMISSIBLEVALUES"), CALCULATED("CALCULATED"), DEFAULTVALUE("DEFAULTVALUE");
-
-	private AttributeEnum()
-	{
-	}
 
 	private AttributeEnum(String name)
 	{
@@ -15,22 +16,31 @@ public enum AttributeEnum {
 
 	private String name;
 
+	/**
+	 * Returns name of a Enum. 
+	 * @return
+	 */
 	public String getName()
 	{
 		return name;
 	}
 
+	/**
+	 * Returns AttributeEnum for a given String.
+	 * @param attributeEnumName
+	 * @return
+	 */
 	public static AttributeEnum getAttributeEnum(String attributeEnumName)
 	{
 		AttributeEnum[] values = AttributeEnum.values();
-
+		AttributeEnum attributeEnumMatched = null;
 		for (AttributeEnum attributeEnum : values)
 		{
 			if (attributeEnum.getName().equalsIgnoreCase(attributeEnumName))
 			{
-				return attributeEnum;
+				attributeEnumMatched = attributeEnum;
 			}
 		}
-		return null;
+		return attributeEnumMatched;
 	}
 }

@@ -55,25 +55,31 @@ public enum ListBoxEnum {
 
 	private String name;
 
-	ListBoxEnum()
-	{
-
-	}
-
 	ListBoxEnum(String name)
 	{
 		this.name = name;
 	}
 
+	/** Abstract method for all enums to get control property */
 	public abstract void setControlProperty(ListBox control, String propertyToBeSet);
 
+	/** Abstract method for all enums to set control property */
 	public abstract String getControlProperty(ListBox control);
 
+	/**
+	 * Returns value of Enum.
+	 * @return
+	 */
 	public String getValue()
 	{
 		return name;
 	}
 
+	/**
+	 * Returns Enum for given String.
+	 * @param nameToBeFound
+	 * @return
+	 */
 	public static ListBoxEnum getValue(String nameToBeFound)
 	{
 

@@ -59,25 +59,31 @@ public enum TextAreaEnum {
 
 	private String name;
 
-	TextAreaEnum()
-	{
-
-	}
-
 	TextAreaEnum(String name)
 	{
 		this.name = name;
 	}
 
+	/** Abstract method for all enums to get control property */
 	public abstract void setControlProperty(TextArea control, String propertyToBeSet);
 
+	/** Abstract method for all enums to set control property */
 	public abstract String getControlProperty(TextArea control);
 
+	/**
+	 * Returns name of Enum.
+	 * @return
+	 */
 	public String getValue()
 	{
 		return name;
 	}
 
+	/**
+	 * Returns Enum for given string.
+	 * @param nameToBeFound
+	 * @return
+	 */
 	public static TextAreaEnum getValue(String nameToBeFound)
 	{
 

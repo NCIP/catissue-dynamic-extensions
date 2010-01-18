@@ -8,13 +8,17 @@ import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInte
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
-import edu.wustl.common.util.logger.Logger;
 
+/**
+ * This Enum sets all UIProperties that are common for all type of controls. 
+ * @author rajesh_vyas
+ *
+ */
 public enum ControlEnum {
 	DEFAULTVALUE("DEFAULTVALUE") {
 
 		/**
-		 * Returns Default value for a control.
+		 * Returns String representation of Default value for a control.
 		 */
 		public String getControlProperty(Control control)
 		{
@@ -24,13 +28,13 @@ public enum ControlEnum {
 			AttributeTypeInformationInterface attributeTypeInformation = attribute
 					.getAttributeTypeInformation();
 			PermissibleValueInterface defaultValue2 = attributeTypeInformation.getDefaultValue();
-
+			String defaultValue = null;
 			if (defaultValue2 != null && defaultValue2.getValueAsObject() != null)
 			{
 				Object valueAsObject = defaultValue2.getValueAsObject();
-				return valueAsObject.toString();
+				defaultValue = valueAsObject.toString();
 			}
-			return null;
+			return defaultValue;
 		}
 
 		/**
@@ -42,24 +46,30 @@ public enum ControlEnum {
 					.getBaseAbstractAttribute();
 			AttributeInterface attribute = categoryAttribute.getAttribute();
 			attribute.getAttributeTypeInformation();
-
 		}
 	},
 	PHI("PHI") {
 
+		/**
+		 * Returns String representation for PHI value. 
+		 */
 		public String getControlProperty(Control control)
 		{
 			CategoryAttribute categoryAttribute = (CategoryAttribute) control
 					.getBaseAbstractAttribute();
 			AttributeInterface attribute = categoryAttribute.getAttribute();
 			Boolean isIdentified = attribute.getIsIdentified();
-			if (isIdentified == null)
+			String isPHIString = null;
+			if (isIdentified != null)
 			{
-				return null;
+				isPHIString = String.valueOf(isIdentified);
 			}
-			return String.valueOf(isIdentified);
+			return isPHIString;
 		}
 
+		/**
+		 * Sets value for PHI.   
+		 */
 		public void setControlProperty(Control control, String propertyToBeSet)
 		{
 			CategoryAttribute categoryAttribute = (CategoryAttribute) control
@@ -70,19 +80,24 @@ public enum ControlEnum {
 	},
 	REQUIRED("REQUIRED") {
 
+		/**
+		 * Returns string represenation for Required rule of Control. 
+		 */
 		public String getControlProperty(Control control)
 		{
-
 			String ruleName = null;
 			boolean result = ControlsUtility.isRuleDefined(CategoryCSVConstants.REQUIRED, control);
 
-			if (result == true)
+			if (result)
 			{
 				ruleName = "yes";
 			}
 			return ruleName;
 		}
 
+		/**
+		 * Sets required Rule.
+		 */
 		public void setControlProperty(Control control, String propertyToBeSet)
 		{
 			if (propertyToBeSet.equalsIgnoreCase("yes"))
@@ -92,40 +107,44 @@ public enum ControlEnum {
 		}
 	};
 
-	private static final Logger LOGGER = Logger.getCommonLogger(ControlEnum.class);
-
 	private String name;
-
-	ControlEnum()
-	{
-
-	}
 
 	ControlEnum(String name)
 	{
 		this.name = name;
 	}
 
+	/** Abstract method for all enums to set control property */
 	public abstract void setControlProperty(Control control, String propertyToBeSet);
 
+	/** Abstract method for all enums to get control property */
 	public abstract String getControlProperty(Control control);
 
+	/**
+	 * Returns name of Enum.
+	 * @return
+	 */
 	public String getValue()
 	{
 		return name;
 	}
 
+	/**
+	 * Returns Enum for a given String.
+	 * @param nameToBeFound
+	 * @return
+	 */
 	public static ControlEnum getValue(String nameToBeFound)
 	{
-
 		ControlEnum[] propertyTypes = ControlEnum.values();
+		ControlEnum matchedEnum = null;
 		for (ControlEnum propertyType : propertyTypes)
 		{
 			if (propertyType.getValue().equalsIgnoreCase(nameToBeFound))
 			{
-				return propertyType;
+				matchedEnum = propertyType;
 			}
 		}
-		return null;
+		return matchedEnum;
 	}
 }

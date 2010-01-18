@@ -74,7 +74,7 @@ public enum TextFieldEnum {
 			boolean result = ControlsUtility.isRuleDefined(CategoryCSVConstants.MIN, control);
 			//ControlsUtility.
 			String ruleName = null;
-			if (result == true)
+			if (result)
 			{
 				ruleName = CategoryCSVConstants.MIN;
 			}
@@ -92,7 +92,7 @@ public enum TextFieldEnum {
 		{
 			boolean result = ControlsUtility.isRuleDefined(CategoryCSVConstants.MAX, control);
 			String ruleName = null;
-			if (result == true)
+			if (result)
 			{
 				ruleName = CategoryCSVConstants.MAX;
 			}
@@ -155,25 +155,31 @@ public enum TextFieldEnum {
 
 	private String name;
 
-	TextFieldEnum()
-	{
-
-	}
-
 	TextFieldEnum(String name)
 	{
 		this.name = name;
 	}
 
+	/** Abstract method for all enums to get control property */
 	public abstract void setControlProperty(TextField control, String propertyToBeSet);
 
+	/** Abstract method for all enums to set control property */
 	public abstract String getControlProperty(TextField control);
 
+	/**
+	 * Returns name of Enum.
+	 * @return
+	 */
 	public String getValue()
 	{
 		return name;
 	}
 
+	/**
+	 * Returns Enum for given string.
+	 * @param nameToBeFound
+	 * @return
+	 */
 	public static TextFieldEnum getValue(String nameToBeFound)
 	{
 
