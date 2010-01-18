@@ -14,7 +14,7 @@ import edu.wustl.common.util.logger.LoggerConfig;
  * @author gaurav_mehta
  *
  */
-public class DirOperationsUtility
+public final class DirOperationsUtility
 {
 
 	static

@@ -49,7 +49,7 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 	}
 	private static final Logger LOGGER = Logger.getCommonLogger(CreateCategoryAction.class);
 
-	private static final String CATEGORY_DIR_PREFIX = "CategoryDirectory";
+	private static final String CAT_DIR_PREFIX = "CategoryDirectory";
 
 	/* (non-Javadoc)
 	 * @see org.apache.struts.actions.DispatchAction#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -59,8 +59,8 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 			HttpServletRequest request, HttpServletResponse response)
 	{
 		LOGGER.info("In create category action");
-		Map<String, Exception> catNameVsException = new HashMap<String, Exception>();
-		String tempDirName = CATEGORY_DIR_PREFIX
+		Map<String, Exception> catNameVsExcep = new HashMap<String, Exception>();
+		String tempDirName = CAT_DIR_PREFIX
 				+ EntityCache.getInstance().getNextIdForCategoryFileGeneration();
 		try
 		{
@@ -72,14 +72,14 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 				if (ProcessorConstants.TRUE.equalsIgnoreCase(request
 						.getParameter(CategoryCreatorConstants.METADATA_ONLY)))
 				{
-					createCategory(name, tempDirName, true, catNameVsException);
+					createCategory(name, tempDirName, true, catNameVsExcep);
 				}
 				else
 				{
-					createCategory(name, tempDirName, false, catNameVsException);
+					createCategory(name, tempDirName, false, catNameVsExcep);
 				}
 			}
-			sendResponse(response, catNameVsException);
+			sendResponse(response, catNameVsExcep);
 
 			LOGGER.info("Create category action completed successfully");
 		}
@@ -156,11 +156,11 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 	 * @param filePath path of the file from which to create category.
 	 * @param baseDirectory directory from which all the paths are mentioned.
 	 * @param isPersistMetadataOnly if true saves only the metadata , does not create the dynamic tables for category
-	 * @param catNameVsException this  is a report map in which the entry is made for each category
+	 * @param catNameVsExcep this  is a report map in which the entry is made for each category
 	 * the value will be null if category creation is successful else exception occured will be its value.
 	 */
 	public void createCategory(String filePath, String baseDirectory,
-			boolean isPersistMetadataOnly, Map<String, Exception> catNameVsException)
+			boolean isPersistMetadataOnly, Map<String, Exception> catNameVsExcep)
 	{
 		CategoryInterface category = null;
 		CategoryHelperInterface categoryHelper = new CategoryHelper();
@@ -195,12 +195,12 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 				LOGGER.info("Saved category " + category.getName() + " successfully");
 			}
 			LOGGER.info("Form definition file " + filePath + " executed successfully.");
-			catNameVsException.put(filePath, null);
+			catNameVsExcep.put(filePath, null);
 		}
 		catch (Exception ex)
 		{
 			LOGGER.error("Error occured while creating category", ex);
-			catNameVsException.put(filePath, ex);
+			catNameVsExcep.put(filePath, ex);
 		}
 		finally
 		{

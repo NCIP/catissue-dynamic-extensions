@@ -43,7 +43,6 @@ public class ImportPVAction extends BaseDynamicExtensionsAction
 	{
 		try
 		{
-
 			ZipUtility.downloadZipFile(request, pvDir, "pv.zip");
 			LOGGER.info("Artifacts Downloaded");
 

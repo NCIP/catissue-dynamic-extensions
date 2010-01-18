@@ -33,9 +33,9 @@ public class CategoryCreator
 
 	private static final Logger LOGGER = Logger.getCommonLogger(CategoryCreator.class);
 
-	private File zipFile;
-	private URL serverUrl;
-	private boolean isMetadataOnly = false;
+	private static File zipFile;
+	private static URL serverUrl;
+	private static boolean isMetadataOnly = false;
 
 	/**
 	 * This method will internally call the category creation on server.
@@ -109,10 +109,10 @@ public class CategoryCreator
 			validate(args);
 			zipFile = ZipUtility.zipFolder(args[0], "tempCategoryDir.zip");
 			String url = args[1] + "/CreateCategoryAction.do?";
-			String categoryFilenameString = "";
+			String catFilename = "";
 			if (args.length > 2 && !"".equals(args[2].trim()))
 			{
-				categoryFilenameString = getCategoryFilenameString(args[2]);
+				catFilename = getCategoryFilenameString(args[2]);
 
 			}
 			if (args.length > 3 && args[3].equalsIgnoreCase("true"))
@@ -121,7 +121,7 @@ public class CategoryCreator
 			}
 			serverUrl = new URL(url + CategoryCreatorConstants.METADATA_ONLY + "=" + isMetadataOnly
 					+ "&" + CategoryCreatorConstants.CATEGORY_NAMES_FILE + "="
-					+ categoryFilenameString);
+					+ catFilename);
 		}
 		catch (MalformedURLException e)
 		{
@@ -157,15 +157,15 @@ public class CategoryCreator
 	/**
 	 * This method will read the names of the category files mentioned in the file "categoryListFileName"
 	 * given in the arguments & create a string of category file names separated with the '!=!' token.
-	 * @param categoryListFileName name of the file in which category files path are mentioned.
+	 * @param listCatFileName name of the file in which category files path are mentioned.
 	 * @return the string formed from category file names with'!=!' in between.
 	 * @throws DynamicExtensionsSystemException Exception.
 	 * @throws IOException Exception.
 	 */
-	private String getCategoryFilenameString(String categoryListFileName)
+	private String getCategoryFilenameString(String listCatFileName)
 			throws DynamicExtensionsSystemException, IOException
 	{
-		File objFile = new File(categoryListFileName);
+		File objFile = new File(listCatFileName);
 		BufferedReader bufRdr = null;
 		StringBuffer catFileNameString = new StringBuffer();
 		if (objFile.exists())
@@ -185,7 +185,7 @@ public class CategoryCreator
 			catch (IOException e)
 			{
 				throw new DynamicExtensionsSystemException("Can not read from file "
-						+ categoryListFileName, e);
+						+ listCatFileName, e);
 			}
 			finally
 			{
@@ -198,7 +198,7 @@ public class CategoryCreator
 		else
 		{
 			throw new DynamicExtensionsSystemException("Category names file not found at "
-					+ categoryListFileName);
+					+ listCatFileName);
 		}
 		return catFileNameString.toString();
 	}
@@ -262,16 +262,4 @@ public class CategoryCreator
 			// TODO Auto-generated catch block
 		}
 	}
-
-	/**
-	 * This will set the default trust manager to the one which we just created so that
-	 * it will accept all the connections.
-	 * @throws DynamicExtensionsSystemException
-	 * @throws Exception
-	 */
-	private static void trustAllHttpsCertificates() throws DynamicExtensionsSystemException
-	{
-
-	}
-
 }
