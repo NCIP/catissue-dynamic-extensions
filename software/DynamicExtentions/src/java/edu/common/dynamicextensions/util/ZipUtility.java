@@ -282,7 +282,7 @@ public class ZipUtility
 	{
 		BufferedInputStream reader = null;
 		BufferedOutputStream fileWriter = null;
-		//DirOperationsUtility.getInstance().createNewTempDirectory(tempDirName);
+		DirOperationsUtility.getInstance().createNewTempDirectory(tempDirName);
 		String completeFileName = tempDirName + File.separator + fileName;
 		try
 		{
