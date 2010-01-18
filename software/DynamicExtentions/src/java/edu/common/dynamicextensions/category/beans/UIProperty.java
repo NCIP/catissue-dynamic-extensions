@@ -20,11 +20,17 @@ public class UIProperty
 
 	private Collection<UIProperty> uiProperty;
 
+	/**
+	 * Initializes internal data structures. 
+	 */
 	public UIProperty()
 	{
 		uiProperty = new ArrayList<UIProperty>();
 	}
 
+	/**
+	 * Instantiate key-value pair. Initializes internal data structures. 
+	 */
 	public UIProperty(String key, String value)
 	{
 		super();
@@ -33,6 +39,9 @@ public class UIProperty
 		uiProperty = new ArrayList<UIProperty>();
 	}
 
+	/**
+	 * Instantiate key-value pair and Collection of UIProperty. 
+	 */
 	public UIProperty(String key, String value, Collection<UIProperty> uiProperty)
 	{
 		super();
@@ -41,42 +50,72 @@ public class UIProperty
 		this.uiProperty = uiProperty;
 	}
 
+	/**
+	 * Adds a UIProperty to Collection.
+	 * @param propertyToBeAdd
+	 */
 	public void add(UIProperty propertyToBeAdd)
 	{
 		uiProperty.add(propertyToBeAdd);
 	}
 
+	/**
+	 * Returns Collection of UIProperty. 
+	 * @return
+	 */
 	public Collection<UIProperty> getUiProperty()
 	{
 		return uiProperty;
 	}
 
+	/**
+	 * Sets a Collection of UIProperty.
+	 * @param uiProperty
+	 */
 	public void setUiProperty(Collection<UIProperty> uiProperty)
 	{
 		this.uiProperty = uiProperty;
 	}
 
+	/**
+	 * Returns key for this UIProperty.
+	 * @return
+	 */
 	public String getKey()
 	{
 		return key;
 	}
 
+	/**
+	 * Sets key for this UIProperty.
+	 * @param key
+	 */
 	public void setKey(String key)
 	{
 		this.key = key;
 	}
 
+	/**
+	 * Returns Value of this UIProperty.
+	 * @return
+	 */
 	public String getValue()
 	{
 		return value;
 	}
 
+	/**
+	 * Sets the value for this UIProperty.
+	 * @param value
+	 */
 	public void setValue(String value)
 	{
 		this.value = value;
 	}
 
-	@Override
+	/**
+	 * Overrides toString()
+	 */
 	public String toString()
 	{
 		return "UIProperty [key=" + key + ", value=" + value + "]";
