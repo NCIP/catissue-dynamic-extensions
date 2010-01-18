@@ -6,15 +6,22 @@ import edu.common.dynamicextensions.domain.userinterface.ListBox;
 public enum ListBoxEnum {
 	ISMULTILINE("ISMULTILINE") {
 
+		/**
+		 * Returns String representation of multiline value for a control.
+		 */
 		public String getControlProperty(ListBox control)
 		{
-			if (control.getIsMultiSelect() == null)
+			String multiSelectString = null;
+			if (control.getIsMultiSelect() != null)
 			{
-				return null;
+				multiSelectString = String.valueOf(control.getIsMultiSelect());
 			}
-			return String.valueOf(control.getIsMultiSelect());
+			return multiSelectString;
 		}
 
+		/**
+		 * Sets String representation of multiline value for a control.
+		 */
 		public void setControlProperty(ListBox control, String propertyToBeSet)
 		{
 			control.setIsMultiSelect(Boolean.valueOf(propertyToBeSet));
@@ -22,15 +29,22 @@ public enum ListBoxEnum {
 	},
 	NUMBEROFROWS("NUMBEROFROWS") {
 
+		/**
+		 * Returns String representation of Number of rows value for a control.
+		 */
 		public String getControlProperty(ListBox control)
 		{
-			if (control.getNoOfRows() == null)
+			String numberOfRowsString = null;
+			if (control.getNoOfRows() != null)
 			{
-				return null;
+				numberOfRowsString = String.valueOf(control.getNoOfRows());
 			}
-			return String.valueOf(control.getNoOfRows());
+			return numberOfRowsString;
 		}
 
+		/**
+		 * Sets String representation of number of rows value for a control.
+		 */
 		public void setControlProperty(ListBox control, String propertyToBeSet)
 		{
 			control.setNoOfRows(Integer.valueOf(propertyToBeSet));
@@ -38,15 +52,22 @@ public enum ListBoxEnum {
 	},
 	ISAUTOCOMPLETE("ISAUTOCOMPLETE") {
 
+		/**
+		 * Returns String representation of Autocomplete value for a control.
+		 */
 		public String getControlProperty(ListBox control)
 		{
+			String autoSelectString = null;
 			if (control.getIsUsingAutoCompleteDropdown() == null)
 			{
-				return null;
+				autoSelectString = String.valueOf(control.getIsUsingAutoCompleteDropdown());
 			}
-			return String.valueOf(control.getIsUsingAutoCompleteDropdown());
+			return autoSelectString;
 		}
 
+		/**
+		 * Sets String representation of Autocomplete value for a control.
+		 */
 		public void setControlProperty(ListBox control, String propertyToBeSet)
 		{
 			control.setIsUsingAutoCompleteDropdown(Boolean.valueOf(propertyToBeSet));

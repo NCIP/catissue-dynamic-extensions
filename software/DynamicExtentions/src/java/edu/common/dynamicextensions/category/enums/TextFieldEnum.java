@@ -14,6 +14,9 @@ import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
 public enum TextFieldEnum {
 	MAXLENGTH("MAXLENGTH") {
 
+		/**
+		 * Returns String representation of max-length value for a control.
+		 */
 		public String getControlProperty(TextField control)
 		{
 			CategoryAttribute baseAbstractAttribute2 = (CategoryAttribute) control
@@ -43,6 +46,9 @@ public enum TextFieldEnum {
 			return String.valueOf(maxLength);
 		}
 
+		/**
+		 * Sets String representation of maxlength value for a control.
+		 */
 		public void setControlProperty(TextField control, String propertyToBeSet)
 		{
 			CategoryAttribute baseAbstractAttribute2 = (CategoryAttribute) control
@@ -69,6 +75,9 @@ public enum TextFieldEnum {
 	},
 	RANGEMIN("RANGEMIN") {
 
+		/**
+		 * Returns String representation of range-min value for a control.
+		 */
 		public String getControlProperty(TextField control)
 		{
 			boolean result = ControlsUtility.isRuleDefined(CategoryCSVConstants.MIN, control);
@@ -81,6 +90,9 @@ public enum TextFieldEnum {
 			return ruleName;
 		}
 
+		/**
+		 * Sets String representation of range-min value for a control.
+		 */
 		public void setControlProperty(TextField control, String propertyToBeSet)
 		{
 			ControlsUtility.defineRule(CategoryCSVConstants.MIN, control);
@@ -88,6 +100,9 @@ public enum TextFieldEnum {
 	},
 	RANGEMAX("RANGEMAX") {
 
+		/**
+		 * Returns String representation of range-max value for a control.
+		 */
 		public String getControlProperty(TextField control)
 		{
 			boolean result = ControlsUtility.isRuleDefined(CategoryCSVConstants.MAX, control);
@@ -99,6 +114,9 @@ public enum TextFieldEnum {
 			return ruleName;
 		}
 
+		/**
+		 * Sets String representation of range-max value for a control.
+		 */
 		public void setControlProperty(TextField control, String propertyToBeSet)
 		{
 			ControlsUtility.defineRule(CategoryCSVConstants.MAX, control);
@@ -106,15 +124,22 @@ public enum TextFieldEnum {
 	},
 	ISPASSWORD("ISPASSWORD") {
 
+		/**
+		 * Returns String representation of password value for a control.
+		 */
 		public String getControlProperty(TextField control)
 		{
-			if (control.getIsPassword() == null)
+			String passwordString = null;
+			if (control.getIsPassword() != null)
 			{
-				return null;
+				passwordString = String.valueOf(control.getIsPassword());
 			}
-			return String.valueOf(control.getIsPassword());
+			return passwordString;
 		}
 
+		/**
+		 * Sets String representation of password value for a control.
+		 */
 		public void setControlProperty(TextField control, String propertyToBeSet)
 		{
 			control.setIsPassword(Boolean.valueOf(propertyToBeSet));
@@ -122,15 +147,22 @@ public enum TextFieldEnum {
 	},
 	ISURL("ISURL") {
 
+		/**
+		 * Returns String representation of url value for a control.
+		 */
 		public String getControlProperty(TextField control)
 		{
-			if (control.getIsUrl() == null)
+			String urlString = null;
+			if (control.getIsUrl() != null)
 			{
-				return null;
+				urlString = String.valueOf(control.getIsUrl());
 			}
-			return String.valueOf(control.getIsUrl());
+			return urlString;
 		}
 
+		/**
+		 * Sets String representation of url value for a control.
+		 */
 		public void setControlProperty(TextField control, String propertyToBeSet)
 		{
 			control.setIsUrl(Boolean.valueOf(propertyToBeSet));
@@ -138,15 +170,22 @@ public enum TextFieldEnum {
 	},
 	COLUMNS("COLUMNS") {
 
+		/**
+		 * Returns String representation of columns value for a control.
+		 */
 		public String getControlProperty(TextField control)
 		{
-			if (control.getColumns() == null)
+			String culumsString = null;
+			if (control.getColumns() != null)
 			{
-				return null;
+				culumsString = String.valueOf(control.getColumns());
 			}
-			return String.valueOf(control.getColumns());
+			return culumsString;
 		}
 
+		/**
+		 * Sets String representation of columns value for a control.
+		 */
 		public void setControlProperty(TextField control, String propertyToBeSet)
 		{
 			control.setColumns(Integer.valueOf(propertyToBeSet));
@@ -182,7 +221,6 @@ public enum TextFieldEnum {
 	 */
 	public static TextFieldEnum getValue(String nameToBeFound)
 	{
-
 		TextFieldEnum[] propertyTypes = TextFieldEnum.values();
 		for (TextFieldEnum propertyType : propertyTypes)
 		{

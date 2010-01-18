@@ -9,12 +9,18 @@ import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 public enum TextAreaEnum {
 	WIDTH("WIDTH") {
 
+		/**
+		 * Returns String representation of width value for a control.
+		 */
 		public String getControlProperty(TextArea control)
 		{
 			Integer rows2 = control.getRows();
 			return String.valueOf(rows2);
 		}
 
+		/**
+		 * Sets String representation of width value for a control.
+		 */
 		public void setControlProperty(TextArea control, String propertyToBeSet)
 		{
 			control.setRows(Integer.valueOf(propertyToBeSet));
@@ -22,12 +28,18 @@ public enum TextAreaEnum {
 	},
 	HEIGHT("HEIGHT") {
 
+		/**
+		 * Returns String representation of height value for a control.
+		 */
 		public String getControlProperty(TextArea control)
 		{
 			Integer columns2 = control.getColumns();
 			return String.valueOf(columns2);
 		}
 
+		/**
+		 * Sets String representation of height value for a control.
+		 */
 		public void setControlProperty(TextArea control, String propertyToBeSet)
 		{
 			control.setColumns(Integer.valueOf(propertyToBeSet));
@@ -35,6 +47,9 @@ public enum TextAreaEnum {
 	},
 	MAXLENGTH("MAXLENGTH") {
 
+		/**
+		 * Returns String representation of max-length value for a control.
+		 */
 		public String getControlProperty(TextArea control)
 		{
 			CategoryAttribute baseAbstractAttribute2 = (CategoryAttribute) control
@@ -46,6 +61,9 @@ public enum TextAreaEnum {
 			return String.valueOf(maxLength);
 		}
 
+		/**
+		 * Sets String representation of max-length value for a control.
+		 */
 		public void setControlProperty(TextArea control, String propertyToBeSet)
 		{
 			CategoryAttribute baseAbstractAttribute2 = (CategoryAttribute) control
@@ -86,15 +104,15 @@ public enum TextAreaEnum {
 	 */
 	public static TextAreaEnum getValue(String nameToBeFound)
 	{
-
 		TextAreaEnum[] propertyTypes = TextAreaEnum.values();
+		TextAreaEnum matchedEnum = null;
 		for (TextAreaEnum propertyType : propertyTypes)
 		{
 			if (propertyType.getValue().equalsIgnoreCase(nameToBeFound))
 			{
-				return propertyType;
+				matchedEnum = propertyType;
 			}
 		}
-		return null;
+		return matchedEnum;
 	}
 }
