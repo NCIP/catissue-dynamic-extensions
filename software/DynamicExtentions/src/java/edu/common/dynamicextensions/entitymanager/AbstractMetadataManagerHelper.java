@@ -89,54 +89,76 @@ public final class AbstractMetadataManagerHelper
 			ParseException, NoSuchMethodException, IllegalAccessException,
 			InvocationTargetException
 	{
-		Object dataValue;
+		Object dataValue = null;
 		String dataTypeClassName;
-		if (isNotEmptyString(value))
+		if ("Long".equals(dataType))
 		{
-			if ("Long".equals(dataType))
+			if (isNotEmptyString(value))
 			{
 				dataValue = Long.valueOf(value.toString());
-				dataTypeClassName = Long.class.getName();
 			}
-			else if ("Float".equals(dataType))
+			dataTypeClassName = Long.class.getName();
+		}
+		else if ("Float".equals(dataType))
+		{
+			if (isNotEmptyString(value))
 			{
 				dataValue = new Float(value.toString());
-				dataTypeClassName = Float.class.getName();
 			}
-			else if ("Double".equals(dataType))
+			dataTypeClassName = Float.class.getName();
+
+		}
+		else if ("Double".equals(dataType))
+		{
+			if (isNotEmptyString(value))
 			{
 				dataValue = new Double(value.toString());
-				dataTypeClassName = Double.class.getName();
 			}
-			else if ("Short".equals(dataType))
+			dataTypeClassName = Double.class.getName();
+		}
+		else if ("Short".equals(dataType))
+		{
+			if (isNotEmptyString(value))
 			{
 				dataValue = Short.valueOf(value.toString());
-				dataTypeClassName = Short.class.getName();
 			}
-			else if ("Integer".equals(dataType))
+			dataTypeClassName = Short.class.getName();
+		}
+		else if ("Integer".equals(dataType))
+		{
+			if (isNotEmptyString(value))
 			{
 				dataValue = Integer.valueOf(value.toString());
-				dataTypeClassName = Integer.class.getName();
 			}
-			else if ("Boolean".equals(dataType))
+			dataTypeClassName = Integer.class.getName();
+		}
+		else if ("Boolean".equals(dataType))
+		{
+			if (isNotEmptyString(value))
 			{
 				String boolVal = ("1".equals(value)) ? "true" : "false";
 				dataValue = Boolean.valueOf(boolVal);
-				dataTypeClassName = Boolean.class.getName();
 			}
-			else if ("Date".equals(dataType))
+			dataTypeClassName = Boolean.class.getName();
+		}
+		else if ("Date".equals(dataType))
+		{
+			if (isNotEmptyString(value))
 			{
 				dataValue = getDateValue(attribute, value);
-				dataTypeClassName = Date.class.getName();
 			}
-			else
+			dataTypeClassName = Date.class.getName();
+		}
+		else
+		{
+			if (isNotEmptyString(value))
 			{
 				dataValue = value.toString();
-				dataTypeClassName = String.class.getName();
 			}
-			invokeSetterMethod(klass, attrName, Class.forName(dataTypeClassName), returnedObj,
-					dataValue);
+			dataTypeClassName = String.class.getName();
 		}
+		invokeSetterMethod(klass, attrName, Class.forName(dataTypeClassName), returnedObj,
+				dataValue);
 	}
 
 	/**
