@@ -443,13 +443,21 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				// Insert blank record in all parent entity tables of root category entity so use insertDataForHeirarchy and add all keys to keymap, recordmap, fullkeymap.
 				final Map<AbstractAttributeInterface, Object> attributes = new HashMap<AbstractAttributeInterface, Object>();
 				final EntityManagerInterface entityManager = EntityManager.getInstance();
+				EntityInterface rootEntity = catEntity.getEntity();
 				//Long entityId = entityManager.insertDataForHeirarchy(catEntity.getEntity(), attributes,
 				//jdbcDao, identifier);
-				final Long entityId = entityManager.insertData(catEntity.getEntity(), attributes,
+				final Long entityId = entityManager.insertData(rootEntity, attributes,
 						hibernateDao, identifier);
+
 				keyMap.put(rootCatEntName, entityId);
 				fullKeyMap.put(rootCatEntName, entityId);
 
+				while (rootEntity.getParentEntity() != null)
+				{
+					rootEntity = rootEntity.getParentEntity();
+					keyMap.put(rootEntity.getName() + "[1]", entityId);
+					fullKeyMap.put(rootEntity.getName() + "[1]", entityId);
+				}
 				final List<Long> identifiers = new ArrayList<Long>();
 				identifiers.add(entityId);
 				records.put(rootCatEntName, identifiers);
@@ -1206,18 +1214,34 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 										targetObject);
 							}
 
-							String targetRoleName = association.getSourceRole().getName();
+							String targetRoleName = association.getTargetRole().getName();
 							targetRoleName = targetRoleName.substring(0, 1).toUpperCase()
 									+ targetRoleName.substring(1, targetRoleName.length());
 
 							// Put the target object in a collection and
 							// save it as a collection of the source object.
-							final Set<Object> containedObjects = new HashSet<Object>();
+							/*final Set<Object> containedObjects = new HashSet<Object>();
 							containedObjects.add(targetObject);
 
 							invokeSetterMethod(sourceObject.getClass(), targetRoleName, Class
 									.forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS), sourceObject,
-									containedObjects);
+									containedObjects);*/
+
+							Cardinality targetMaxCardinality = association.getTargetRole()
+									.getMaximumCardinality();
+							if (targetMaxCardinality != Cardinality.ONE)
+							{
+								Set<Object> containedObjects = new HashSet<Object>();
+								containedObjects.add(targetObject);
+								invokeSetterMethod(sourceObject.getClass(), targetRoleName, Class
+										.forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS),
+										sourceObject, containedObjects);
+							}
+							else
+							{
+								invokeSetterMethod(sourceObject.getClass(), targetRoleName,
+										targetObject.getClass(), sourceObject, targetObject);
+							}
 
 							hibernateDao.insert(targetObject);
 							hibernateDao.update(sourceObject);
@@ -1274,17 +1298,33 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 									setRelatedAttributeValues(targetObjectClassName, attr, value,
 											targetObject);
 								}
-								String targetRoleName = association.getSourceRole().getName();
+								String targetRoleName = association.getTargetRole().getName();
 								targetRoleName = targetRoleName.substring(0, 1).toUpperCase()
 										+ targetRoleName.substring(1, targetRoleName.length());
 
 								// Put the target object in a collection and
 								// save it as a collection of the source object.
-								final Set<Object> containedObjects = new HashSet<Object>();
+								/*final Set<Object> containedObjects = new HashSet<Object>();
 								containedObjects.add(targetObject);
 								invokeSetterMethod(sourceObject.getClass(), targetRoleName, Class
 										.forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS),
-										sourceObject, containedObjects);
+										sourceObject, containedObjects);*/
+								Cardinality targetMaxCardinality = association.getTargetRole()
+										.getMaximumCardinality();
+								if (targetMaxCardinality != Cardinality.ONE)
+								{
+									Set<Object> containedObjects = new HashSet<Object>();
+									containedObjects.add(targetObject);
+									invokeSetterMethod(sourceObject.getClass(), targetRoleName,
+											Class.forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS),
+											sourceObject, containedObjects);
+								}
+								else
+								{
+									invokeSetterMethod(sourceObject.getClass(), targetRoleName,
+											targetObject.getClass(), sourceObject, targetObject);
+								}
+
 								hibernateDao.insert(targetObject);
 								hibernateDao.update(sourceObject);
 								final Method method = targetObject.getClass().getMethod(
@@ -1361,6 +1401,14 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 						.getCategoryEntityName(rootCatEntity.getName());
 				keyMap.put(catEntityName, entityRecId);
 				fullKeyMap.put(catEntityName, entityRecId);
+				EntityInterface rootEntity = rootCatEntity.getEntity();
+				while (rootEntity.getParentEntity() != null)
+				{
+					rootEntity = rootEntity.getParentEntity();
+					keyMap.put(rootEntity.getName() + "[1]", entityRecId);
+					fullKeyMap.put(rootEntity.getName() + "[1]", entityRecId);
+				}
+
 				final List<Long> identifiers = new ArrayList<Long>();
 				identifiers.add(entityRecId);
 				recordsMap.put(catEntityName, identifiers);
@@ -2326,9 +2374,10 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 										+ association.getEntity().getName();
 								final String targetObjectClassName = packageName + "."
 										+ association.getTargetEntity().getName();
-
+								Long Identifier = fullKeyMap.get(association.getEntity().getName()
+										+ "[" + par.getSourceInstanceId() + "]");
 								final Object sourceObject = hibernateDao.retrieveById(
-										sourceObjectClassName, sourceEntityId);
+										sourceObjectClassName, Identifier);
 								Object targetObject = null;
 								final Class targetObjectClass = Class
 										.forName(targetObjectClassName);
