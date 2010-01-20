@@ -872,7 +872,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
-					"Test");
+					TEST_ENTITYGROUP_NAME);
 			EntityInterface clinicalAnnotations = testModel.getEntityByName("Chemotherapy");
 			AttributeInterface startDate = (AttributeInterface) clinicalAnnotations
 					.getAbstractAttributeByName("startDate");
@@ -933,7 +933,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
-					"Test");
+					TEST_ENTITYGROUP_NAME);
 			EntityInterface clinicalAnnotations = testModel.getEntityByName("ClinicalAnnotations");
 			AssociationInterface pathAnnoChildAssocn = (AssociationInterface) clinicalAnnotations
 					.getAbstractAttributeByName("PathAnnoChild");
@@ -1272,7 +1272,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
-					"Test");
+					TEST_ENTITYGROUP_NAME);
 			EntityInterface clinicalAnnotations = testModel.getEntityByName("Chemotherapy");
 			AttributeInterface startDate = (AttributeInterface) clinicalAnnotations
 					.getAbstractAttributeByName("startDate");
@@ -3870,7 +3870,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
-					"TestCases");
+					TEST_ENTITYGROUP_NAME);
 			EntityInterface clinicalAnnotations = testModel.getEntityByName("ClinicalAnnotations");
 			AssociationInterface pathAnnoChildAssocn = (AssociationInterface) clinicalAnnotations
 					.getAbstractAttributeByName("PathAnnoChild");
