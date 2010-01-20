@@ -8,18 +8,18 @@ public class AssociationTreeObject
 {
 
 	/**
-	 * 
+	 *
 	 */
-	Long identifier;
+	private Long identifier;
 
 	/**
-	 * 
+	 *
 	 */
 
-	String label;
+	private String label;
 
 	/**
-	 * 
+	 *
 	 * @param identifier
 	 * @param label
 	 */
@@ -30,7 +30,7 @@ public class AssociationTreeObject
 	}
 
 	/**
-	 * 
+	 *
 	 *
 	 */
 	public AssociationTreeObject()
@@ -39,12 +39,12 @@ public class AssociationTreeObject
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	Collection associationTreeObjCollection;
+	private Collection associationTreeObjCollection;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Collection getAssociationTreeObjectCollection()
@@ -53,7 +53,7 @@ public class AssociationTreeObject
 	}
 
 	/**
-	 * 
+	 *
 	 * @param associationTreeObjCollection
 	 */
 	public void setAssociationTreeObjectCollection(Collection associationTreeObjCollection)
@@ -62,12 +62,12 @@ public class AssociationTreeObject
 	}
 
 	/**
-	 * 
+	 *
 	 * @param associationTreeObject
 	 */
 	public void addAssociationTreeObject(AssociationTreeObject associationTreeObject)
 	{
-		if (this.associationTreeObjCollection == null)
+		if (associationTreeObjCollection == null)
 		{
 			associationTreeObjCollection = new HashSet();
 		}
@@ -75,7 +75,7 @@ public class AssociationTreeObject
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Long getId()
@@ -84,7 +84,7 @@ public class AssociationTreeObject
 	}
 
 	/**
-	 * 
+	 *
 	 * @param identifier
 	 */
 	public void setId(Long identifier)
@@ -93,7 +93,7 @@ public class AssociationTreeObject
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getLabel()
@@ -102,7 +102,7 @@ public class AssociationTreeObject
 	}
 
 	/**
-	 * 
+	 *
 	 * @param label
 	 */
 	public void setLabel(String label)
