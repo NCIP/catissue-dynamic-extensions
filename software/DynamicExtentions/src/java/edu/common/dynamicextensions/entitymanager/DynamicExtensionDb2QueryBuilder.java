@@ -110,16 +110,13 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 				{
 					if (((List) value).size() > 0)
 					{
-						formattedvalue = "'"
-								+ DynamicExtensionsUtility
-										.getEscapedStringValue((String) ((List) value).get(0))
-								+ "'";
+						formattedvalue = DynamicExtensionsUtility
+										.getEscapedStringValue((String) ((List) value).get(0));
 					}
 				}
 				else
 				{
-					formattedvalue = "'"
-							+ DynamicExtensionsUtility.getEscapedStringValue((String) value) + "'";
+					formattedvalue = DynamicExtensionsUtility.getEscapedStringValue((String) value);
 				}
 			}
 			else if (attributeInformation instanceof DateAttributeTypeInformation)
