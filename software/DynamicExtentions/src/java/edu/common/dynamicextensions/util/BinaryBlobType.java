@@ -74,14 +74,16 @@ public class BinaryBlobType implements CompositeUserType
 	 */
 	public Type[] getPropertyTypes()
 	{
+		Type[] propertyType;
 		if (isBlob)
 		{
-			return new Type[]{Hibernate.BLOB};
+			propertyType = new Type[]{Hibernate.BLOB};
 		}
 		else
 		{
-			return new Type[]{Hibernate.BINARY};
+			propertyType = new Type[]{Hibernate.BINARY};
 		}
+		return propertyType;
 	}
 
 	/**
@@ -159,25 +161,27 @@ public class BinaryBlobType implements CompositeUserType
 	 *
 	 * @throws java.sql.SQLException
 	 */
-	public Object nullSafeGet(ResultSet resultSet, String[] names, SessionImplementor session, Object owner)
-			throws HibernateException, SQLException
+	public Object nullSafeGet(ResultSet resultSet, String[] names, SessionImplementor session,
+			Object owner) throws HibernateException, SQLException
 	{
+		Object objectToReturn;
 		if (isBlob)
 		{
 			Blob blob = (Blob) Hibernate.BLOB.nullSafeGet(resultSet, names, session, owner);
 			if (blob == null)
 			{
-				return null;
+				objectToReturn = null;
 			}
 			else
 			{
-				return copyData(blob.getBinaryStream());
+				objectToReturn = copyData(blob.getBinaryStream());
 			}
 		}
 		else
 		{
-			return Hibernate.BINARY.nullSafeGet(resultSet, names, session, owner);
+			objectToReturn = Hibernate.BINARY.nullSafeGet(resultSet, names, session, owner);
 		}
+		return objectToReturn;
 	}
 
 	/**
@@ -307,10 +311,11 @@ public class BinaryBlobType implements CompositeUserType
 		{
 			output = new ByteArrayOutputStream();
 			byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-			int pointerPosition = 0;
-			while (-1 != (pointerPosition = input.read(buffer)))
+			int pointerPosition = input.read(buffer);
+			while (-1 != pointerPosition)
 			{
 				output.write(buffer, 0, pointerPosition);
+				pointerPosition = input.read(buffer);
 			}
 			return output.toByteArray();
 
