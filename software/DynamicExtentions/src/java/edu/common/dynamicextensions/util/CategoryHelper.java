@@ -81,9 +81,9 @@ import edu.wustl.metadata.util.DyExtnObjectCloner;
 public class CategoryHelper implements CategoryHelperInterface
 {
 
-	CategoryManagerInterface categoryManager = CategoryManager.getInstance();
+	private final CategoryManagerInterface categoryManager = CategoryManager.getInstance();
 	private CategoryFileParser categoryFileParser;
-	private static final String CATEGORY_ATTRIBUTE_NAME_POSTFIX = "Category Attribute";
+	private static final String CAT_ATTRIBUTE_NAME_POSTFIX = "Category Attribute";
 
 	/**
 	 * Default constructor
@@ -124,9 +124,10 @@ public class CategoryHelper implements CategoryHelperInterface
 		{
 			synchronized (category)
 			{
-				if(EntityCache.getInstance().isCategoryInUse(category))
+				if (EntityCache.getInstance().isCategoryInUse(category))
 				{
-					throw new DynamicExtensionsSystemException("Category In Use Please Try Agian after some time");
+					throw new DynamicExtensionsSystemException(
+							"Category In Use Please Try Agian after some time");
 				}
 				else
 				{
@@ -148,8 +149,8 @@ public class CategoryHelper implements CategoryHelperInterface
 	 */
 	private CategoryInterface getCategoryFromCache(String name)
 	{
-		CategoryInterface category=null;
-		for(CategoryInterface cat : EntityCache.getInstance().getAllCategories())
+		CategoryInterface category = null;
+		for (CategoryInterface cat : EntityCache.getInstance().getAllCategories())
 		{
 			if (name.equals(cat.getName()))
 			{
@@ -168,7 +169,7 @@ public class CategoryHelper implements CategoryHelperInterface
 	 */
 	public void releaseLockOnCategory(CategoryInterface category)
 	{
-		if(category!=null && category.getId()!=null)
+		if (category != null && category.getId() != null)
 		{
 			synchronized (category)
 			{
@@ -176,6 +177,7 @@ public class CategoryHelper implements CategoryHelperInterface
 			}
 		}
 	}
+
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.categoryManager.CategoryHelperInterface#saveCategory(edu.common.dynamicextensions.domaininterface.CategoryInterface)
 	 */
@@ -457,7 +459,7 @@ public class CategoryHelper implements CategoryHelperInterface
 			String attributeName, CategoryEntityInterface categoryEntity)
 	{
 		CategoryAttributeInterface categoryAttribute = categoryEntity
-				.getAttributeByName(attributeName + " " + CATEGORY_ATTRIBUTE_NAME_POSTFIX);
+				.getAttributeByName(attributeName + " " + CAT_ATTRIBUTE_NAME_POSTFIX);
 		if (categoryAttribute == null)
 		{
 			categoryAttribute = createCategoryAttribute(entity, attributeName, categoryEntity);
