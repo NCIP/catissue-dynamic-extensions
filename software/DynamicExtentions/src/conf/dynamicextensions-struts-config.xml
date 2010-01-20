@@ -231,6 +231,12 @@ PUBLIC
 		validate="false"
 		scope="request">
 		</action>
+
+		<action path="/ImportPVAction"
+		type="edu.common.dynamicextensions.ui.webui.action.ImportPVAction"
+		validate="false"
+		scope="request">
+		</action>
 	</action-mappings>
 
 	<message-resources parameter="ApplicationResources" />
