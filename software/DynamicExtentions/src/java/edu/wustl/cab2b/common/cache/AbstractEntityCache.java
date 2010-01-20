@@ -9,12 +9,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
 import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
+import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
@@ -23,6 +25,7 @@ import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
+import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
@@ -524,13 +527,13 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 *         object.
 	 */
 	public MatchedClass getEntityOnPermissibleValueParameters(
-			final Collection<PermissibleValueInterface> patternPermissibleValueCollection)
+			final Collection<PermissibleValueInterface> patternPermValueColl)
 	{
 		final MatchedClass matchedClass = new MatchedClass();
 		for (final PermissibleValueInterface cachedPermissibleValue : permissibleValueVsEntity
 				.keySet())
 		{
-			for (final PermissibleValueInterface patternPermissibleValue : patternPermissibleValueCollection)
+			for (final PermissibleValueInterface patternPermissibleValue : patternPermValueColl)
 			{
 				final EntityInterface cachedEntity = permissibleValueVsEntity
 						.get(cachedPermissibleValue);
@@ -873,4 +876,46 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 		return control;
 	}
 
+	public synchronized void updatePermissibleValues(EntityInterface entity, Long attributeId,
+			AttributeTypeInformationInterface attrTypeInfo)
+	{
+		AttributeInterface cachedattribute = entityCache.getAttributeById(attributeId);
+		cachedattribute.setAttributeTypeInformation(attrTypeInfo);
+
+		Set<Entry<PermissibleValueInterface, EntityInterface>> pvVsEntity = permissibleValueVsEntity
+				.entrySet();
+		List<PermissibleValueInterface> toBeRemovedPVs = new ArrayList<PermissibleValueInterface>();
+		for (Entry<PermissibleValueInterface, EntityInterface> entry : pvVsEntity)
+		{
+			if (entry.getValue().getName().equalsIgnoreCase(entity.getName()))
+			{
+				toBeRemovedPVs.add(entry.getKey());
+			}
+		}
+		for (PermissibleValueInterface pvList : toBeRemovedPVs)
+		{
+			permissibleValueVsEntity.remove(pvList);
+		}
+		updatePermissibleValueMap(entity);
+
+	}
+
+	private void updatePermissibleValueMap(EntityInterface entity)
+	{
+		Collection<AttributeInterface> allAttributes = entity.getAllAttributes();
+		Collection<PermissibleValueInterface> allPVs;
+		for (AttributeInterface attribute : allAttributes)
+		{
+			UserDefinedDEInterface userDefinedDE = (UserDefinedDEInterface) attribute
+					.getAttributeTypeInformation().getDataElement();
+			if (userDefinedDE != null)
+			{
+				allPVs = userDefinedDE.getPermissibleValues();
+				for (PermissibleValueInterface permissibleValue : allPVs)
+				{
+					permissibleValueVsEntity.put(permissibleValue, entity);
+				}
+			}
+		}
+	}
 }

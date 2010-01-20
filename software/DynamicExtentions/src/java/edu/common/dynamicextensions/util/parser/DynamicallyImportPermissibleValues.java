@@ -29,6 +29,8 @@ public class DynamicallyImportPermissibleValues
 
 	public static String pvFileName = "pvFileName";
 
+	public static String startFolder = "startFolder";
+
 	static
 	{
 		LoggerConfig.configureLogger(System.getProperty("user.dir"));
@@ -60,7 +62,7 @@ public class DynamicallyImportPermissibleValues
 
 			//create required artifacts to be uploaded to server
 			createArtifacts(args);
-			LOGGER.info("Artifacts trusted");
+			LOGGER.info("Artifacts Created");
 
 			// open the servlet connection
 			URLConnection servletConnection = httpsConnection.openServletConnection(serverConnURL);
@@ -91,15 +93,29 @@ public class DynamicallyImportPermissibleValues
 	private void createArtifacts(String[] args) throws DynamicExtensionsSystemException,
 			IOException, MalformedURLException
 	{
-		File file = new File(args[0]);
-		String xmiFileName = file.getName();
+		String pvFileName = args[0];
+		boolean fileNameNotPResent = false;
+		if (pvFileName == null || pvFileName.length()==0)
+		{
+			fileNameNotPResent = true;
+		}
+		String pvDir = args[1];
+		LOGGER.info("PV Dir path:" + pvDir);
 
-		pvZip = ZipUtility.zipFolder(args[1], "ImportPVDir.zip");
+		String folderName = pvDir.substring((pvDir.lastIndexOf('/') + 1), pvDir.length());
+		pvZip = ZipUtility.zipFolder(pvDir, "ImportPVDir.zip");
 
 		StringBuffer url = new StringBuffer(args[2] + "/ImportPVAction.do?");
-		url.append(pvFileName);
+		url.append(startFolder);
 		url.append('=');
-		url.append(xmiFileName);
+		url.append(folderName);
+		if (!fileNameNotPResent)
+		{
+			url.append('&');
+			url.append(DynamicallyImportPermissibleValues.pvFileName);
+			url.append('=');
+			url.append(pvFileName);
+		}
 
 		//System.out.println(url.toString());
 		serverConnURL = new URL(url.toString());

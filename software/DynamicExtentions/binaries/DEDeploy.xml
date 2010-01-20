@@ -532,12 +532,9 @@
 	<target name="import_permissible_values" description="Import permissible values">
 		<antcall target="setupClassExecutionEnvironment" />
 
-		<mkdir dir="${base.dir}/tempPVDir"/>
-		<copy file="${permissibleValuesFile}" todir="${base.dir}/tempPVDir"/>
-
 		<java classname="edu.common.dynamicextensions.util.parser.DynamicallyImportPermissibleValues" fork="true" maxmemory="1024M">
 			<arg value="${permissibleValuesFile}" />
-			<arg value="${base.dir}/tempPVDir"/>
+			<arg value="${pv.dir}"/>
 			<arg value="${Application.url}" />
 			<classpath>
 				<pathelement location="${temp.dir.DE}" />
@@ -552,9 +549,9 @@
 			</classpath>
 		</java>
 
-		<delete dir="${base.dir}/tempPVDir" />
-		<delete file="${base.dir}/ImportPVDir.zip" />
-		<delete dir="${de.temp.dir}" />
+		<!--delete dir="${base.dir}/tempPVDir" /-->
+		<!--delete file="${base.dir}/ImportPVDir.zip" /-->
+		<!--delete dir="${de.temp.dir}" /-->
 
 	</target>
 

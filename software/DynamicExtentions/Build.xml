@@ -187,6 +187,7 @@
 				<include name="**/interfaceactions/**.class" />
 				<include name="**/hbm/**/*.*" />
 				<include name="**/dynamicextensions/util/**/*.*" />
+				<include name="**/dynamicextensions/utility/**/*.*" />
 				<include name="**/dynamicextensions/validation/**/*.*" />
 				<include name="**/dynamicextensions/category/**/*.*" />
 				<include name="**/common/util/**/*.*" />

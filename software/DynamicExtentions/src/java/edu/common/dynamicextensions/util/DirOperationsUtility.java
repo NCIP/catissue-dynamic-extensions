@@ -35,7 +35,8 @@ public final class DirOperationsUtility
 		return dirOperations;
 	}
 
-	private DirOperationsUtility(){
+	private DirOperationsUtility()
+	{
 
 	}
 
@@ -47,14 +48,21 @@ public final class DirOperationsUtility
 	 */
 	public void createNewTempDirectory(String tempDirName) throws DynamicExtensionsSystemException
 	{
-		File tempDir = new File(tempDirName);
-		if (tempDir.exists())
+		if ((tempDirName.length()!=0) && tempDirName != null)
 		{
-			deleteDirectory(new File(tempDirName));
+			File tempDir = new File(tempDirName);
+			if (tempDir.exists())
+			{
+				deleteDirectory(new File(tempDirName));
+			}
+			if (!tempDir.mkdirs())
+			{
+				throw new DynamicExtensionsSystemException("Unable to create tempDirectory");
+			}
 		}
-		if (!tempDir.mkdirs())
+		else
 		{
-			throw new DynamicExtensionsSystemException("Unable to create tempDirectory");
+			LOGGER.info("Given temp directory is empty");
 		}
 	}
 

@@ -452,12 +452,14 @@ public class CategoryGenerationUtil
 	public static EntityGroupInterface getEntityGroup(CategoryInterface category,
 			String entityGroupName)
 	{
+		EntityGroupInterface entityGroup;
 		if (category.getRootCategoryElement() != null)
 		{
-			return category.getRootCategoryElement().getEntity().getEntityGroup();
+			entityGroup = category.getRootCategoryElement().getEntity().getEntityGroup();
 		}
 
-		return EntityCache.getInstance().getEntityGroupByName(entityGroupName);
+		entityGroup = EntityCache.getInstance().getEntityGroupByName(entityGroupName);
+		return entityGroup;
 
 	}
 
@@ -577,8 +579,8 @@ public class CategoryGenerationUtil
 		if (categoryEntityInstancePath != null)
 		{
 			String[] categoryEntitiesInPath = categoryEntityInstancePath.split("->");
-			String newCategoryEntityName = categoryEntitiesInPath[categoryEntitiesInPath.length - 1];
-			entityName = getEntityName(newCategoryEntityName);
+			String newCatEntityName = categoryEntitiesInPath[categoryEntitiesInPath.length - 1];
+			entityName = getEntityName(newCatEntityName);
 		}
 		return entityName;
 	}
@@ -594,8 +596,8 @@ public class CategoryGenerationUtil
 		EntityInterface entityInterface = null;
 		if (assoList != null && !assoList.isEmpty())
 		{
-			AssociationInterface associationInterface = assoList.get(assoList.size() - 1);
-			entityInterface = associationInterface.getTargetEntity();
+			AssociationInterface association = assoList.get(assoList.size() - 1);
+			entityInterface = association.getTargetEntity();
 		}
 		return entityInterface;
 	}
@@ -607,22 +609,22 @@ public class CategoryGenerationUtil
 	 *
 	 */
 	public static void setDefaultValueForCalculatedAttributes(CategoryInterface category,
-			CategoryEntityInterface rootCategoryEntity, Long lineNumber)
+			CategoryEntityInterface rootCatEntity, Long lineNumber)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
-		for (CategoryAssociationInterface categoryAssociationInterface : rootCategoryEntity
+		for (CategoryAssociationInterface categoryAssociationInterface : rootCatEntity
 				.getCategoryAssociationCollection())
 		{
 			for (CategoryAttributeInterface categoryAttributeInterface : categoryAssociationInterface
 					.getTargetCategoryEntity().getAllCategoryAttributes())
 			{
-				Boolean isCalculatedAttribute = categoryAttributeInterface.getIsCalculated();
-				if (isCalculatedAttribute != null && isCalculatedAttribute)
+				Boolean isCalcAttr = categoryAttributeInterface.getIsCalculated();
+				if (isCalcAttr != null && isCalcAttr)
 				{
 					setDefaultValue(categoryAttributeInterface, category);
 					FormulaCalculator formulaCalculator = new FormulaCalculator();
 					String message = formulaCalculator.setDefaultValueForCalculatedAttributes(
-							categoryAttributeInterface, rootCategoryEntity.getCategory());
+							categoryAttributeInterface, rootCatEntity.getCategory());
 					if (message != null && message.length() > 0)
 					{
 						throw new DynamicExtensionsSystemException(ApplicationProperties
@@ -642,23 +644,22 @@ public class CategoryGenerationUtil
 	 * @return
 	 */
 	public static void getCategoryAttribute(String entityName, Long instanceNumber,
-			String attributeName, CategoryEntityInterface rootCategoryEntity,
+			String attributeName, CategoryEntityInterface rootCatEntity,
 			List<CategoryAttributeInterface> attributes)
 	{
-		if (rootCategoryEntity != null)
+		if (rootCatEntity != null)
 		{
-			for (CategoryAssociationInterface categoryAssociationInterface : rootCategoryEntity
+			for (CategoryAssociationInterface categoryAssociationInterface : rootCatEntity
 					.getCategoryAssociationCollection())
 			{
-				CategoryEntityInterface categoryEntityInterface = categoryAssociationInterface
+				CategoryEntityInterface categoryEntity = categoryAssociationInterface
 						.getTargetCategoryEntity();
-				List<PathAssociationRelationInterface> pathAssociationCollection = categoryEntityInterface
+				List<PathAssociationRelationInterface> pathAssoCollection = categoryEntity
 						.getPath().getSortedPathAssociationRelationCollection();
-				PathAssociationRelationInterface pathAssociationRelInterface = pathAssociationCollection
-						.get(pathAssociationCollection.size() - 1);
-				if (categoryEntityInterface.getEntity().getName().equals(entityName)
-						&& pathAssociationRelInterface.getTargetInstanceId().equals(
-								instanceNumber))
+				PathAssociationRelationInterface pathAssoRel = pathAssoCollection
+						.get(pathAssoCollection.size() - 1);
+				if (categoryEntity.getEntity().getName().equals(entityName)
+						&& pathAssoRel.getTargetInstanceId().equals(instanceNumber))
 				{
 					for (CategoryAttributeInterface categoryAttributeInterface : categoryAssociationInterface
 							.getTargetCategoryEntity().getCategoryAttributeCollection())
@@ -738,15 +739,13 @@ public class CategoryGenerationUtil
 								|| ((AttributeMetadataInterface) attributes.get(0))
 										.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
 						{
-							CalculatedAttributeInterface calculatedAttributeInterface = DomainObjectFactory
+							CalculatedAttributeInterface calculatedAttribute = DomainObjectFactory
 									.getInstance().createCalculatedAttribute();
-							calculatedAttributeInterface.setCalculatedAttribute(categoryAttribute);
-							calculatedAttributeInterface.setSourceForCalculatedAttribute(attributes
-									.get(0));
-							calculatedAttributeInterface.getSourceForCalculatedAttribute()
+							calculatedAttribute.setCalculatedAttribute(categoryAttribute);
+							calculatedAttribute.setSourceForCalculatedAttribute(attributes.get(0));
+							calculatedAttribute.getSourceForCalculatedAttribute()
 									.setIsSourceForCalculatedAttribute(Boolean.TRUE);
-							categoryAttribute
-									.addCalculatedCategoryAttribute(calculatedAttributeInterface);
+							categoryAttribute.addCalculatedCategoryAttribute(calculatedAttribute);
 						}
 						else
 						{
@@ -1008,6 +1007,51 @@ public class CategoryGenerationUtil
 			throw new DynamicExtensionsSystemException(
 					"Exception occured while reading the category file names ", e);
 
+		}
+		return fileNameList;
+	}
+
+	/**
+	 * It will search in the given base directory & will find out all the Permissible Value
+	 * files present in the given directory.
+	 * @param baseDirectory directory in which to search for the files.
+	 * @param relativePath path used to reach the category files.
+	 * @return list of the file names relative to the given base directory.
+	 * @throws DynamicExtensionsSystemException exception.
+	 */
+	public static List<String> getPVFileListInDirectory(File baseDirectory, String relativePath)
+			throws DynamicExtensionsSystemException
+	{
+		List<String> fileNameList = new ArrayList<String>();
+		try
+		{
+			for (File file : baseDirectory.listFiles())
+			{
+				if (file.isDirectory())
+				{
+					String childDirPath = relativePath + file.getName() + "/";
+					fileNameList.addAll(getPVFileListInDirectory(file, childDirPath));
+				}
+				else
+				{
+					CategoryFileParser categoryFileParser = DomainObjectFactory.getInstance()
+							.createCategoryFileParser(file.getAbsolutePath(), "");
+					if (categoryFileParser != null && categoryFileParser.isPVFile())
+					{
+						fileNameList.add(relativePath + file.getName());
+					}
+					if (categoryFileParser != null)
+					{
+						categoryFileParser.closeResources();
+					}
+
+				}
+			}
+		}
+		catch (IOException e)
+		{
+			throw new DynamicExtensionsSystemException(
+					"Exception occured while reading the Permissible Value file", e);
 		}
 		return fileNameList;
 	}
