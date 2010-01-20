@@ -2879,15 +2879,14 @@ public class DynamicExtensionBaseQueryBuilder
 			{
 				if (((List) value).size() > 0)
 				{
-					frmtedValue = "'"
-							+ DynamicExtensionsUtility
-									.getEscapedStringValue((String) ((List) value).get(0)) + "'";
+					frmtedValue = DynamicExtensionsUtility
+									.getEscapedStringValue((String) ((List) value).get(0));
 				}
 			}
 			else
 			{
-				frmtedValue = "'" + DynamicExtensionsUtility.getEscapedStringValue((String) value)
-						+ "'";
+				frmtedValue = DynamicExtensionsUtility.getEscapedStringValue((String) value);
+
 			}
 		}
 		else if (attrTypInfo instanceof DateAttributeTypeInformation)
@@ -2961,7 +2960,7 @@ public class DynamicExtensionBaseQueryBuilder
 			}
 			if (frmtedValue != null)
 			{
-				frmtedValue = "'" + frmtedValue + "'";
+				frmtedValue = frmtedValue;
 			}
 		}
 
