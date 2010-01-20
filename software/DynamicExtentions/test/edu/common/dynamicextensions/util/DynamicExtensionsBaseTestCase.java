@@ -63,6 +63,7 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 
 	protected final static String STRING_TYPE = "string";
 	protected final static String INT_TYPE = "int";
+	protected final String APPLICATIONURL = "http://10.88.199.44:28080/dynamicExtensions";
 
 	JDBCDAO dao;
 

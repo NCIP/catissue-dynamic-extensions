@@ -29,9 +29,7 @@ import edu.wustl.dao.exception.DAOException;
  */
 public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 {
-
 	private final String CATEGORY_FILE_DIR = "CPUML";
-	private final String APPLICATIONURL = "http://10.88.199.44:28080/dynamicExtensions";
 	private final String TEST_MODEL_DIR = "CPUML/TestModels/TestModel_withTags/edited";
 
 	public void testCreateCategory1()
