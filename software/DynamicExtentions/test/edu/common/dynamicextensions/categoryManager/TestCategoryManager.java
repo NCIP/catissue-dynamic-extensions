@@ -10,15 +10,32 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.common.dynamicextensions.category.CategoryCreator;
+import edu.common.dynamicextensions.domain.BooleanAttributeTypeInformation;
+import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
+import edu.common.dynamicextensions.domain.StringAttributeTypeInformation;
+import edu.common.dynamicextensions.domaininterface.AttributeInterface;
+import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryInterface;
+import edu.common.dynamicextensions.domaininterface.NumericTypeInformationInterface;
+import edu.common.dynamicextensions.entitymanager.CategoryManager;
+import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.CategoryGenerationUtil;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
 import edu.common.dynamicextensions.util.parser.CategoryFileParser;
+import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
 
@@ -29,6 +46,7 @@ import edu.wustl.dao.exception.DAOException;
  */
 public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 {
+
 	private final String CATEGORY_FILE_DIR = "CPUML";
 	private final String TEST_MODEL_DIR = "CPUML/TestModels/TestModel_withTags/edited";
 
@@ -188,5 +206,105 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			}
 		}
 		return categoryNameCollection;
+	}
+
+	public void testInsertDataForTestLabInfoCat()
+	{
+		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
+		try
+		{
+
+			CategoryInterface category = retriveCategoryByName();
+			/*(CategoryInterface) EntityManager.getInstance().getObjectByName(
+					Category.class.getName(), "Test Category_Lab Information");*/
+			Map<BaseAbstractAttributeInterface, Object> dataValue;
+			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
+			dataValue = createDataValueMap(rootCatEntity);
+			categoryManager.insertData(category, dataValue);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail();
+		}
+	}
+
+	private CategoryInterface retriveCategoryByName() throws DynamicExtensionsSystemException,
+			DAOException
+	{
+		HibernateDAO hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
+		List<CategoryInterface> categoryList = hibernateDAO.retrieve(CategoryInterface.class
+				.getName(), "name", "Test Category_Lab Information");
+		DynamicExtensionsUtility.closeDAO(hibernateDAO);
+		CategoryInterface category = categoryList.get(0);
+		return category;
+	}
+
+	private Map<BaseAbstractAttributeInterface, Object> createDataValueMap(
+			CategoryEntityInterface rootCatEntity)
+	{
+		Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
+		for (CategoryAttributeInterface catAtt : rootCatEntity.getAllCategoryAttributes())
+		{
+			// put the different value for diff attribute type
+			if (catAtt.getAbstractAttribute() instanceof AttributeInterface)
+			{
+				AttributeInterface attribute = (AttributeInterface) catAtt.getAbstractAttribute();
+				if (attribute.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
+				{
+					String format = ((DateAttributeTypeInformation) attribute
+							.getAttributeTypeInformation()).getFormat();
+					String value = "";
+					if (format.equals(ProcessorConstants.DATE_FORMAT_OPTION_DATEANDTIME))
+					{
+						value = "11" + ProcessorConstants.DATE_SEPARATOR + "20"
+								+ ProcessorConstants.DATE_SEPARATOR + "1998 10:50";
+					}
+					else if (format.equals(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY))
+					{
+						value = "11" + ProcessorConstants.DATE_SEPARATOR + "20"
+								+ ProcessorConstants.DATE_SEPARATOR + "1998";
+					}
+					else if (format.equals(ProcessorConstants.DATE_FORMAT_OPTION_MONTHANDYEAR))
+					{
+						value = "11" + ProcessorConstants.DATE_SEPARATOR + "1998";
+					}
+					else if (format.equals(ProcessorConstants.DATE_FORMAT_OPTION_YEARONLY))
+					{
+						value = "1998";
+					}
+					dataValue.put(catAtt, value);
+				}
+				else if (attribute.getAttributeTypeInformation() instanceof NumericTypeInformationInterface)
+				{
+					dataValue.put(catAtt, "10");
+				}
+				else if (attribute.getAttributeTypeInformation() instanceof BooleanAttributeTypeInformation)
+				{
+					dataValue.put(catAtt, "true");
+				}
+				else if (attribute.getAttributeTypeInformation() instanceof StringAttributeTypeInformation)
+				{
+					dataValue.put(catAtt, "test String");
+				}
+				else
+				{
+					dataValue.put(catAtt, "test String for other data type");
+				}
+			}
+		}
+		for (CategoryAssociationInterface catAssociation : rootCatEntity
+				.getCategoryAssociationCollection())
+		{
+			List dataList = new ArrayList();
+			CategoryEntityInterface targetCaEntity = catAssociation.getTargetCategoryEntity();
+			dataList.add(createDataValueMap(targetCaEntity));
+			if (targetCaEntity.getNumberOfEntries().equals(CategoryCSVConstants.MULTILINE))
+			{
+				dataList.add(createDataValueMap(targetCaEntity));
+			}
+			dataValue.put(catAssociation, dataList);
+		}
+		return dataValue;
 	}
 }
