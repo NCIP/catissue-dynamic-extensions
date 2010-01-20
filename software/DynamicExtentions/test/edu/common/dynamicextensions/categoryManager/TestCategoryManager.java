@@ -220,7 +220,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			Map<BaseAbstractAttributeInterface, Object> dataValue;
 			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 			dataValue = createDataValueMap(rootCatEntity);
-			categoryManager.insertData(category, dataValue);
+			Long recordId = categoryManager.insertData(category, dataValue);
+			dataValue = categoryManager.getRecordById(rootCatEntity, recordId);
+			categoryManager.editData(rootCatEntity, dataValue, recordId);
 		}
 		catch (Exception e)
 		{
