@@ -1216,7 +1216,7 @@
 			</copy >
 		</target>
 
-		<target name="create.clientFormCreator.zip" depends="create.clientFormCreator.jar,version_info">
+		<target name="build.formCreator.zip" depends="build.formCreator.jar,version_info">
 			<delete file="binaries/clientFormCreator.zip" />
 			<zip destfile="binaries/clientFormCreator.zip">
 				<fileset dir="${client.jar.dir}">
@@ -1234,7 +1234,7 @@
 			<delete dir="${client.jar.dir}" />
 		</target>
 
-		<target name="create.clientFormCreator.jar" depends="compile">
+		<target name="build.formCreator.jar" depends="compile">
 			<delete dir="${client.jar.dir}" />
 			<mkdir dir="${client.jar.dir}" />
 			<jar taskname="buildJar" jarfile="${client.jar.dir}/clientFormCreator.jar">
