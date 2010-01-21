@@ -16,7 +16,7 @@
 	<property name="build.dir" value="${base.dir}/build" />
 	<property name="applet.dir" value="${base.dir}/src/web/Applet" />
 	<property name="interface.dir" value="${base.dir}/binaries/DynamicExtensionsInterface" />
-	<property name="category.jar.dir" value="${base.dir}/binaries/CategoryCreator" />
+	<property name="client.jar.dir" value="${base.dir}/binaries/Client" />
 	<property name="interface.src.dir" value="${base.dir}/binaries/DynamicExtensionsInterfaceSource" />
 	<property name="javadoc.dir" value="../../tools/JavaDoc" />
 	<property name="javadoc.zip" value="DynamicExtensionsJavaDoc.zip" />
@@ -1216,11 +1216,11 @@
 			</copy >
 		</target>
 
-		<target name="create_category_creator_zip" depends="create_category_creator_jar,version_info">
-			<delete file="binaries/categoryCreator.zip" />
-			<zip destfile="binaries/categoryCreator.zip">
-				<fileset dir="${category.jar.dir}">
-					<include name="CategoryCreator.jar" />
+		<target name="create.clientFormCreator.zip" depends="create.clientFormCreator.jar,version_info">
+			<delete file="binaries/clientFormCreator.zip" />
+			<zip destfile="binaries/clientFormCreator.zip">
+				<fileset dir="${client.jar.dir}">
+					<include name="clientFormCreator.jar" />
 				</fileset>
 				<fileset dir="${base.dir}/lib/server">
 					<include name="washu-commons*.jar" />
@@ -1231,16 +1231,19 @@
 					<include name="log4j.properties.template" />
 				</fileset>
 			</zip>
+			<delete dir="${client.jar.dir}" />
 		</target>
 
-		<target name="create_category_creator_jar" depends="compile">
-			<delete dir="${category.jar.dir}" />
-			<mkdir dir="${category.jar.dir}" />
-			<jar taskname="buildJar" jarfile="${category.jar.dir}/CategoryCreator.jar">
+		<target name="create.clientFormCreator.jar" depends="compile">
+			<delete dir="${client.jar.dir}" />
+			<mkdir dir="${client.jar.dir}" />
+			<jar taskname="buildJar" jarfile="${client.jar.dir}/clientFormCreator.jar">
 				<fileset dir="${target.dir}">
 					<include name="**/edu/common/dynamicextensions/exception/**/*.class" />
 					<include name="**/dynamicextensions/util/ZipUtility.class" />
-					<include name="**/edu/common/dynamicextensions/category/**.class" />
+					<include name="**/dynamicextensions/utility/*.class" />
+					<include name="**/dynamicextensions/category/**.class" />
+					<include name="**/dynamicextensions/util/parser/DynamicallyImportPermissibleValues.class" />
 				</fileset>
 				<manifest>
 					<section name="${DynamicExtensions.jar.details}">
