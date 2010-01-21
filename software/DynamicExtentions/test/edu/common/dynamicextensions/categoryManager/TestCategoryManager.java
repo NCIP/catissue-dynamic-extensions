@@ -208,13 +208,13 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		return categoryNameCollection;
 	}
 
-	public void testInsertDataForTestLabInfoCat()
+	public void testEditDataForTestChemotheropyCat()
 	{
 		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
 		try
 		{
 
-			CategoryInterface category = retriveCategoryByName();
+			CategoryInterface category = retriveCategoryByName("Test Category_Chemotherapy");
 			/*(CategoryInterface) EntityManager.getInstance().getObjectByName(
 					Category.class.getName(), "Test Category_Lab Information");*/
 			Map<BaseAbstractAttributeInterface, Object> dataValue;
@@ -231,12 +231,33 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 	}
 
-	private CategoryInterface retriveCategoryByName() throws DynamicExtensionsSystemException,
-			DAOException
+	public void testInsertDataForTestLabInfoCat()
+	{
+		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
+		try
+		{
+
+			CategoryInterface category = retriveCategoryByName("Test Category_Lab Information");
+			/*(CategoryInterface) EntityManager.getInstance().getObjectByName(
+					Category.class.getName(), "Test Category_Lab Information");*/
+			Map<BaseAbstractAttributeInterface, Object> dataValue;
+			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
+			dataValue = createDataValueMap(rootCatEntity);
+			categoryManager.insertData(category, dataValue);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail();
+		}
+	}
+
+	private CategoryInterface retriveCategoryByName(String name)
+			throws DynamicExtensionsSystemException, DAOException
 	{
 		HibernateDAO hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
 		List<CategoryInterface> categoryList = hibernateDAO.retrieve(CategoryInterface.class
-				.getName(), "name", "Test Category_Lab Information");
+				.getName(), "name", name);
 		DynamicExtensionsUtility.closeDAO(hibernateDAO);
 		CategoryInterface category = categoryList.get(0);
 		return category;
