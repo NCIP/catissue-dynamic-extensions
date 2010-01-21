@@ -25,7 +25,7 @@ import edu.common.dynamicextensions.util.CategoryGenerationUtil;
 import edu.common.dynamicextensions.util.CategoryHelper;
 import edu.common.dynamicextensions.util.CategoryHelperInterface;
 import edu.common.dynamicextensions.util.DirOperationsUtility;
-import edu.common.dynamicextensions.util.ZipUtility;
+import edu.common.dynamicextensions.util.DownloadUtility;
 import edu.common.dynamicextensions.util.parser.CategoryGenerator;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.util.logger.Logger;
@@ -64,7 +64,7 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 				+ EntityCache.getInstance().getNextIdForCategoryFileGeneration();
 		try
 		{
-			ZipUtility.downloadZipFile(request, tempDirName , "categoryZip.zip");
+			DownloadUtility.downloadZipFile(request, tempDirName , "categoryZip.zip");
 			List<String> fileNamesList = getCategoryFileNames(request, tempDirName);
 
 			for (String name : fileNamesList)

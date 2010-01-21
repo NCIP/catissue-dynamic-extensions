@@ -23,7 +23,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.CategoryGenerationUtil;
 import edu.common.dynamicextensions.util.DirOperationsUtility;
-import edu.common.dynamicextensions.util.ZipUtility;
+import edu.common.dynamicextensions.util.DownloadUtility;
 import edu.common.dynamicextensions.util.parser.DynamicallyImportPermissibleValues;
 import edu.common.dynamicextensions.util.parser.ImportPermissibleValues;
 import edu.wustl.common.util.logger.Logger;
@@ -50,7 +50,7 @@ public class ImportPVAction extends BaseDynamicExtensionsAction
 		String folder = request.getParameter(DynamicallyImportPermissibleValues.startFolder);
 		try
 		{
-			ZipUtility.downloadZipFile(request, pvDir, "pv.zip");
+			DownloadUtility.downloadZipFile(request, pvDir, "pv.zip");
 			LOGGER.info("Artifacts Downloaded");
 
 			List<String> listOfFiles = getPVFileNames(request, pvDir + folder +"/");
