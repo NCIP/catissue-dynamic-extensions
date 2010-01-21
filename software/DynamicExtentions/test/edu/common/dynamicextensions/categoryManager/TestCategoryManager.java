@@ -26,10 +26,12 @@ import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.NumericTypeInformationInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.entitymanager.CategoryManager;
 import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
+import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.CategoryGenerationUtil;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
@@ -244,6 +246,44 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 			dataValue = createDataValueMap(rootCatEntity);
 			categoryManager.insertData(category, dataValue);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail();
+		}
+	}
+
+	public void testGenerateHtmlForContainerInEditMode()
+	{
+		try
+		{
+
+			CategoryInterface category = retriveCategoryByName("Test Category_Lab Information_suhas");
+			for (Object container : category.getRootCategoryElement().getContainerCollection())
+			{
+				((ContainerInterface) container).generateContainerHTML(
+						"Test Category_Lab Information", WebUIManagerConstants.EDIT_MODE);
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail();
+		}
+	}
+
+	public void testGenerateHtmlForContainerInViewMode()
+	{
+		try
+		{
+
+			CategoryInterface category = retriveCategoryByName("Test Category_Lab Information_suhas");
+			for (Object container : category.getRootCategoryElement().getContainerCollection())
+			{
+				((ContainerInterface) container).generateContainerHTML(
+						"Test Category_Lab Information", WebUIManagerConstants.VIEW_MODE);
+			}
 		}
 		catch (Exception e)
 		{
