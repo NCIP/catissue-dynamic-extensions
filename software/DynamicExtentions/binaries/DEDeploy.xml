@@ -484,7 +484,7 @@
 	<target name="create_category" description="Target used to create the Category">
 		<delete dir="${de.temp.dir}" failonerror="no" />
 		<mkdir dir="${de.temp.dir}" />
-		<unzip src="categoryCreator.zip" dest="${de.temp.dir}" overwrite="true" />
+		<unzip src="clientFormCreator.zip" dest="${de.temp.dir}" overwrite="true" />
 		<copy file="./${de.temp.dir}/log4j.properties.template" tofile="./log4j.properties" overwrite="true" />
 		<mkdir dir="./log" />
 		<replace file="./log4j.properties">
@@ -504,7 +504,6 @@
 				</fileset>
 			</classpath>
 		</java>
-
 	</target>
 
 	<!--This target executes create_all_categories command for all the  category-forms file specified within csv file-->
@@ -530,28 +529,30 @@
 	<!--end of  target create_all_categories -->
 	<property name="permissibleValuesFile" value=" " />
 	<target name="import_permissible_values" description="Import permissible values">
-		<antcall target="setupClassExecutionEnvironment" />
 
+		<delete dir="${de.temp.dir}" failonerror="no" />
+		<mkdir dir="${de.temp.dir}" />
+		<unzip src="clientFormCreator.zip" dest="${de.temp.dir}" overwrite="true" />
+		<copy file="./${de.temp.dir}/log4j.properties.template" tofile="./log4j.properties" overwrite="true" />
+		<mkdir dir="./log" />
+		<replace file="./log4j.properties">
+			<replacefilter token="@@jbosshome@@" value="." />
+		</replace>
+		<echo message="Importing Permissible Values" />
 		<java classname="edu.common.dynamicextensions.util.parser.DynamicallyImportPermissibleValues" fork="true" maxmemory="1024M">
 			<arg value="${permissibleValuesFile}" />
 			<arg value="${pv.dir}"/>
 			<arg value="${Application.url}" />
 			<classpath>
-				<pathelement location="${temp.dir.DE}" />
-				<fileset dir="${lib.dir.DE}">
+				<fileset dir="${de.temp.dir}">
 					<include name="*.jar" />
 					<exclude name="uml-1.3.jar" />
-				</fileset>
-				<fileset dir="${extra.lib.dir.DE}">
-					<include name="jboss-j2ee.jar" />
-					<include name="jta.jar" />
 				</fileset>
 			</classpath>
 		</java>
 
-		<!--delete dir="${base.dir}/tempPVDir" /-->
-		<!--delete file="${base.dir}/ImportPVDir.zip" /-->
-		<!--delete dir="${de.temp.dir}" /-->
+		<delete dir="${base.dir}/tempPVDir" />
+		<delete file="${base.dir}/ImportPVDir.zip" />
 
 	</target>
 
