@@ -259,7 +259,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 
-			CategoryInterface category = retriveCategoryByName("Test Category_Lab Information_suhas");
+			CategoryInterface category = retriveCategoryByName("Test Category_Lab Information");
 			for (Object container : category.getRootCategoryElement().getContainerCollection())
 			{
 				((ContainerInterface) container).generateContainerHTML(
@@ -278,7 +278,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 
-			CategoryInterface category = retriveCategoryByName("Test Category_Lab Information_suhas");
+			CategoryInterface category = retriveCategoryByName("Test Category_Lab Information");
 			for (Object container : category.getRootCategoryElement().getContainerCollection())
 			{
 				((ContainerInterface) container).generateContainerHTML(
