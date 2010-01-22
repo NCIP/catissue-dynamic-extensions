@@ -9,11 +9,13 @@ import javax.servlet.ServletContextListener;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.Variables;
 import edu.wustl.cab2b.server.cache.EntityCache;
+import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
+import edu.wustl.dao.exception.AuditException;
 
 /**
  *
@@ -28,6 +30,16 @@ public class DynamicExtensionsServletContextListener implements ServletContextLi
 	 */
 	public void contextInitialized(ServletContextEvent sce)
 	{
+
+		try
+		{
+			AuditManager.init("DynamicExtensionsAuditMetadata.xml");
+		}
+		catch (AuditException ex)
+		{
+			Logger.out.error(ex.getMessage(), ex);
+		}
+
 
 		String propDirPath=sce.getServletContext().getRealPath("WEB-INF")
 		+ System.getProperty("file.separator") + "classes";
