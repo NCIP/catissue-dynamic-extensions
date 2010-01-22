@@ -8,7 +8,7 @@
 <project name="DynamicExtensionsInstallation">
 
 	<property file="DynamicExtensionsInstall.properties" />
-	<property name="base.dir" value="${basedir}" />
+	<property name="base.dir" value="." />
 	<property name="de.temp.dir" value="${base.dir}/detemp" />
 	<property name="temp.dir.DE" value="${de.temp.dir}/temp" />
 	<property name="tempcacore.dir" value="${base.dir}/temp_deaudit_related_files" />
