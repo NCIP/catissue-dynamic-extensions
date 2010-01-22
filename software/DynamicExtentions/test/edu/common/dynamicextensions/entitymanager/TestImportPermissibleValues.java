@@ -1,3 +1,4 @@
+
 package edu.common.dynamicextensions.entitymanager;
 
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
@@ -10,6 +11,7 @@ import edu.common.dynamicextensions.util.parser.DynamicallyImportPermissibleValu
  */
 public class TestImportPermissibleValues extends DynamicExtensionsBaseTestCase
 {
+
 	/**
 	 *
 	 */
@@ -17,7 +19,7 @@ public class TestImportPermissibleValues extends DynamicExtensionsBaseTestCase
 	{
 		try
 		{
-			String[] parameters = {PV_FILE_PATH+"PermissibleValues.csv",PV_FILE_PATH,APPLICATIONURL};
+			String[] parameters = {"pvs/PermissibleValues.csv", PV_FILE_PATH, APPLICATIONURL};
 			DynamicallyImportPermissibleValues.main(parameters);
 		}
 		catch (Exception e)
