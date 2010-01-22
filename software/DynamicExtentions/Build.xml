@@ -1247,6 +1247,7 @@
 				<fileset dir="${target.dir}">
 					<include name="**/edu/common/dynamicextensions/exception/**/*.class" />
 					<include name="**/dynamicextensions/util/ZipUtility.class" />
+					<include name="**/dynamicextensions/util/DirOperationsUtility.class" />
 					<include name="**/dynamicextensions/utility/*.class" />
 					<include name="**/dynamicextensions/category/**.class" />
 					<include name="**/dynamicextensions/util/parser/DynamicallyImportPermissibleValues.class" />
