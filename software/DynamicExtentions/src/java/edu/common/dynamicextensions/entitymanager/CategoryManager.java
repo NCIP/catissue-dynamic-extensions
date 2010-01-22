@@ -1380,6 +1380,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			populateRootEntityRecordMap(rootCatEntity, rootCERecords, dataValue);
 
 			final CategoryEntityRecord entityRecord = new CategoryEntityRecord();
+			entityRecord.setName(rootCatEntity.getName());
+			entityRecord.setId(rootCatEntity.getId());
 			prevEntityId = (Long) dataValue.get(entityRecord);
 			// Roll back queries for category entity records.
 			final Stack<String> rlbkQryStack = new Stack<String>();
@@ -2819,6 +2821,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				dataValue.put(catAttribute, entityRecords.get(catAttribute.getAbstractAttribute()));
 			}
 			final CategoryEntityRecord catEntityRecord = new CategoryEntityRecord();
+			catEntityRecord.setName(catEntity.getName());
+			catEntityRecord.setId(catEntity.getId());
 			dataValue.put(catEntityRecord, recordId);
 		}
 
