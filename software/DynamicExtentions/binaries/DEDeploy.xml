@@ -8,7 +8,7 @@
 <project name="DynamicExtensionsInstallation">
 
 	<property file="DynamicExtensionsInstall.properties" />
-	<property name="base.dir" value="." />
+	<property name="base.dir" value="${basedir}" />
 	<property name="de.temp.dir" value="${base.dir}/detemp" />
 	<property name="temp.dir.DE" value="${de.temp.dir}/temp" />
 	<property name="tempcacore.dir" value="${base.dir}/temp_deaudit_related_files" />
@@ -865,7 +865,7 @@
          ================================= -->
 	<target name="merge.audit.xml" description="merges the metadata file generated for the
 		imported model with main audit metadata file">
-		<java classname="edu.wustl.metadata.util.XMLUtil" fork="true" maxmemory="1024M">
+		<java classname="edu.common.dynamicextensions.util.global.XMLUtil" fork="true" maxmemory="1024M">
 			<arg value="${cacore.deployable.dir}/${entity.name}/auditablemetadata.xml" />
 			<arg value="${de.zip.location}/conf/DynamicExtensionsAuditMetadata.xml" />
 			<arg value="${de.zip.location}/conf/auditablemetadataMerged.xml" />
@@ -883,7 +883,7 @@
 			tofile="${de.zip.location}/conf/DynamicExtensionsAuditMetadata.xml" overwrite="true"/>
 	</target>
 
-	<target name="generate.xml.for.audit" description="generate the audit metadata xml">
+	<target name="generate.xml.for.audit" description="generate the audit metadata xml">>
 		<property file="${export.dir}/Package.properties" />
 		<propertyregex property="package.name"
               input="${de.package.name}"
@@ -915,7 +915,6 @@
 		<echo message="Audit metadata xml generate for entity group
 		${entity.name} at :${cacore.deployable.dir}/${entity.name}/auditablemetadata.xml" />
 		<delete dir="${base.dir}/classes"></delete>
-
 	</target>
 	<!-- =================================
 	     Audit related targets end
@@ -1068,6 +1067,7 @@
 
 					<echo message="${ORM1CfgFile}" />
 					<echo message="${DEWebCfgFile}" />
+					<antcall target="merge.audit.xml"/>
 					<if>
 						<equals arg1="${cacore.present}" arg2="true" />
 						<then>
