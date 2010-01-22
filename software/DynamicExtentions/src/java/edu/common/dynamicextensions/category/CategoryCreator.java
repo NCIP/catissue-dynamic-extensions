@@ -10,6 +10,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.util.DirOperationsUtility;
 import edu.common.dynamicextensions.util.ZipUtility;
 import edu.common.dynamicextensions.utility.HTTPSConnection;
 import edu.wustl.common.util.logger.Logger;
@@ -91,8 +92,6 @@ public class CategoryCreator
 		}
 	}
 
-
-
 	/**
 	 * It will validate all the necessary parameters are provided & are valid.
 	 * If all are valid it will also intialize all the instance variables also
@@ -107,6 +106,8 @@ public class CategoryCreator
 		try
 		{
 			validate(args);
+			//validate size of the folder is less than 500MB
+			DirOperationsUtility.validateFolderSizeForUpload(args[0], 500000000L);
 			zipFile = ZipUtility.zipFolder(args[0], "tempCategoryDir.zip");
 			String url = args[1] + "/CreateCategoryAction.do?";
 			String catFilename = "";
@@ -120,8 +121,7 @@ public class CategoryCreator
 				isMetadataOnly = true;
 			}
 			serverUrl = new URL(url + CategoryCreatorConstants.METADATA_ONLY + "=" + isMetadataOnly
-					+ "&" + CategoryCreatorConstants.CATEGORY_NAMES_FILE + "="
-					+ catFilename);
+					+ "&" + CategoryCreatorConstants.CATEGORY_NAMES_FILE + "=" + catFilename);
 		}
 		catch (MalformedURLException e)
 		{

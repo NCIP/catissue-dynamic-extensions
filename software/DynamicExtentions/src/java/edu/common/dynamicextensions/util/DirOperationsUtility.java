@@ -48,7 +48,7 @@ public final class DirOperationsUtility
 	 */
 	public void createNewTempDirectory(String tempDirName) throws DynamicExtensionsSystemException
 	{
-		if ((tempDirName.length()!=0) && tempDirName != null)
+		if ((tempDirName.length() != 0) && tempDirName != null)
 		{
 			File tempDir = new File(tempDirName);
 			if (tempDir.exists())
@@ -91,4 +91,51 @@ public final class DirOperationsUtility
 		}
 		return path.delete();
 	}
+
+	/**
+	 * This will validate that the size of the folder specified in first parameter is less than the
+	 * given maxSize.If not will throw the exception.
+	 * @param srcFolder folder to be validated.
+	 * @param maxSize maximum size expected.
+	 * @throws DynamicExtensionsSystemException if the size of folder is greater than maxSize.
+	 */
+	public static void validateFolderSizeForUpload(String srcFolder, long maxSize)
+			throws DynamicExtensionsSystemException
+	{
+		File folder = new File(srcFolder);
+		if (!folder.exists() || !folder.isDirectory())
+		{
+			throw new DynamicExtensionsSystemException(srcFolder
+					+ "does not exist. Please specify correct path");
+		}
+		if (maxSize < getSize(folder))
+		{
+			throw new DynamicExtensionsSystemException(srcFolder
+					+ "Exceeds the maximum file size. The folder size should be less than 500MB");
+		}
+	}
+
+	/**
+	 * This will determine the size of the folder in bytes.
+	 * @param folder folderPath.
+	 * @return size of the folder in bytes.
+	 */
+	private static long getSize(File folder)
+	{
+		long folderSize = 0;
+		if (folder.isDirectory())
+		{
+			File[] filelist = folder.listFiles();
+			for (int i = 0; i < filelist.length; i++)
+			{
+				folderSize = folderSize + getSize(filelist[i]);
+			}
+		}
+		else
+		{
+			folderSize = folder.length();
+		}
+		return folderSize;
+	}
+
 }

@@ -205,7 +205,8 @@ public class XMIExporter
 	public void exportXMI() throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
-		if (XMIConstants.XMI_VERSION_1_1.equalsIgnoreCase(xmiVersion))
+		if (XMIConstants.XMI_VERSION_1_1.equalsIgnoreCase(xmiVersion)
+				&& !XMIConstants.NONE.equalsIgnoreCase(hookEntityName))
 		{
 			staticEntity = XMIExporterUtility.getHookEntityName(entityGroup);
 			XMIExporterUtility.addHookEntitiesToGroup(staticEntity, entityGroup);
@@ -2690,7 +2691,7 @@ public class XMIExporter
 		validate(args);
 		groupName = args[0];
 		filename = args[1];
-		hookEntityName = XMIConstants.NONE;
+		hookEntityName = "";
 		if ((args.length > 2) && !XMIConstants.XMI_VERSION_1_1.equalsIgnoreCase(args[2].trim()))
 		{
 			xmiVersion = XMIConstants.XMI_VERSION_1_2;

@@ -11,6 +11,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.util.DirOperationsUtility;
 import edu.common.dynamicextensions.util.ZipUtility;
 import edu.common.dynamicextensions.utility.HTTPSConnection;
 import edu.wustl.common.util.logger.Logger;
@@ -95,14 +96,15 @@ public class DynamicallyImportPermissibleValues
 	{
 		String pvFileName = args[0];
 		boolean fileNameNotPResent = false;
-		if (pvFileName == null || pvFileName.length()==0)
+		if (pvFileName == null || pvFileName.length() == 0)
 		{
 			fileNameNotPResent = true;
 		}
 		String pvDir = args[1];
 		LOGGER.info("PV Dir path:" + pvDir);
-
 		String folderName = pvDir.substring((pvDir.lastIndexOf('/') + 1), pvDir.length());
+		//validate size of the folder is less than 500MB
+		DirOperationsUtility.validateFolderSizeForUpload(pvDir, 500000000L);
 		pvZip = ZipUtility.zipFolder(pvDir, "ImportPVDir.zip");
 
 		StringBuffer url = new StringBuffer(args[2] + "/ImportPVAction.do?");
