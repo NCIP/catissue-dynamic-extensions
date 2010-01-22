@@ -883,7 +883,7 @@
 			tofile="${de.zip.location}/conf/DynamicExtensionsAuditMetadata.xml" overwrite="true"/>
 	</target>
 
-	<target name="generate.xml.for.audit" description="generate the audit metadata xml">>
+	<target name="generate.xml.for.audit" description="generate the audit metadata xml">
 		<property file="${export.dir}/Package.properties" />
 		<propertyregex property="package.name"
               input="${de.package.name}"
