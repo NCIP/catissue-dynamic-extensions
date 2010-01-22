@@ -113,6 +113,7 @@ public class DataValueMapUtility
 	}
 
 	/**
+	 * This method updates map for the attribute present within same display label for data storing
 	 * @param assocation
 	 * @param rootValueMap
 	 * @param containerInterface
@@ -135,21 +136,39 @@ public class DataValueMapUtility
 			}
 
 		}
+		updateRecordIdInMap(set, containerInterface, rootValueMap, map);
+
+		rootValueMap.put(assocation, list);
+	}
+
+	/**
+	 * This method updates recordId for the attribute present within same display label in Map
+	 * @param set
+	 * @param containerInterface
+	 * @param rootValueMap
+	 * @param map
+	 */
+	private static void updateRecordIdInMap(Set<BaseAbstractAttributeInterface> set,
+			ContainerInterface containerInterface,
+			Map<BaseAbstractAttributeInterface, Object> rootValueMap,
+			Map<BaseAbstractAttributeInterface, Object> map)
+	{
 		for (Iterator iterator = set.iterator(); iterator.hasNext();)
 		{
 			BaseAbstractAttributeInterface baseAbstractAttrIntf = (BaseAbstractAttributeInterface) iterator
 					.next();
-			if(baseAbstractAttrIntf.getName().equalsIgnoreCase(containerInterface.getAbstractEntity().getName()))
+			if (baseAbstractAttrIntf.getName().equalsIgnoreCase(
+					containerInterface.getAbstractEntity().getName()))
 			{
 				map.put(baseAbstractAttrIntf, rootValueMap.get(baseAbstractAttrIntf));
 				iterator.remove();
 			}
 
 		}
-		rootValueMap.put(assocation, list);
 	}
 
 	/**
+	 * This method updates map for the attribute present within same display label for data loading
 	 * @param assocation
 	 * @param rootValueMap
 	 */
