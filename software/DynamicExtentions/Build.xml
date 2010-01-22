@@ -287,6 +287,7 @@
 				<include name="DynamicExtensionsHibernate.cfg.xml" />
 				<include name="DynamicExtensionsHibernateWeb.cfg.xml" />
 				<include name="log4j.properties.template" />
+				<include name="DynamicExtensionsAuditMetadata.xml" />
 			</fileset>
 		</copy>
 
