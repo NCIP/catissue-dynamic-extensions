@@ -479,8 +479,8 @@
 	<property name="categoryXmlFileDir" value="E:/wash-u/clinportal/test/inputXML" />
 	<property name="categoryCsvFileDir" value="E:/wash-u/clinportal/test/outputCSV" />
 	<property name="categoryFileDir" value="${categoryCsvFileDir}" />
-	<!-- ================================= 
-          target: create_category_from_xml              
+	<!-- =================================
+          target: create_category_from_xml
          ================================= -->
 	<target name="create_category_from_xml" description="Creates category from XML">
 		<delete dir="${de.temp.dir}" failonerror="no" />
@@ -925,6 +925,7 @@
 		<java classname="edu.wustl.common.audit.util.AuditXMLGenerator" fork="true" maxmemory="1024M">
 			<arg value="${package.name}" />
 			<arg value="${cacore.deployable.dir}/${entity.name}/auditablemetadata.xml" />
+			<arg value="true" />
 			<classpath>
 				<pathelement location="${base.dir}/classes/" />
 				<fileset dir="${de.zip.location}/lib/server">
