@@ -35,6 +35,7 @@
 	<property name="db2.dir" value="${base.dir}/db/db-upgrade/db2" />
 	<property name="meta.dir" value="${base.dir}/binaries/META-INF" />
 	<property name="test.model.dir" value="${basedir}/CPUML/TestModels/TestModel_withTags/edited" />
+	<property name="test.pv.dir" value="CPUML/TestModels/TestModel_withTags/edited" />
 	<property name="temp.hdoclet.dir" value="${basedir}/temp" />
 	<property name="junit.report.dir" value="${base.dir}/reports/junit" />
 	<property name="de_release_dir" value="${basedir}/binaries/de_release" />
@@ -804,6 +805,11 @@
 			<antcall target="sleep">
 				<param name="sleep-time-seconds" value="300" />
 			</antcall>
+			<echo message="Now importing the Permissible values of test model for junits" />
+				<antcall target="import.pvs.testcases">
+					<param name="permissibleValuesFile" value="${test.pv.dir}/TestModel_pv.csv"/>
+					<param name="pv.dir" value="CPUML" />
+			</antcall>
 			<echo message="Junit started running" />
 			<junit printsummary="yes" haltonerror="no" haltonfailure="no" fork="yes" maxmemory="1024m" timeout="10800000">
 
@@ -874,15 +880,14 @@
 			</ant>
 
 			<echo message="Test Model loaded Successfully" />
-			<echo message="Now importing the Permissible values of test model for junits" />
-			<antcall target="import.pvs.testcases">
-				<param name="permissibleValuesFile" value="${test.model.dir}/TestModel_pv.csv" />
-			</antcall>
+
 
 		</target>
 		<target name="import.pvs.testcases" description="Import permissible values for testcases">
-			<java classname="edu.common.dynamicextensions.util.parser.ImportPermissibleValues" fork="true" maxmemory="1024M">
+			<java classname="edu.common.dynamicextensions.util.parser.DynamicallyImportPermissibleValues" fork="true" maxmemory="1024M">
 				<arg value="${permissibleValuesFile}" />
+				<arg value="${pv.dir}"/>
+				<arg value="${Application.url}" />
 				<classpath>
 					<pathelement location="${base.dir}/binaries/classes/" />
 					<fileset dir="${base.dir}/lib/server">
