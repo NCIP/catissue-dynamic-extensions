@@ -44,31 +44,31 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 	 * @throws DynamicExtensionsSystemException
 	 */
 	/*public static ResultSet executeQuery(String query,DAO dao)
-			throws DynamicExtensionsSystemException
-	{
-		Connection conn = null;
-		try
-		{
-			conn = dao.getCleanConnection();
-			conn.setAutoCommit(false);
-			Statement statement = null;
-			statement = conn.createStatement();
-			ResultSet resultSet = statement.executeQuery(query);
-			return resultSet;
-		}
-		catch (Exception e)
-		{
-			try
-			{
-				conn.rollback();
-			}
-			catch (SQLException e1)
-			{
-				throw new DynamicExtensionsSystemException(e.getMessage(), e);
-			}
-			throw new DynamicExtensionsSystemException(e.getMessage(), e);
-		}
-	}*/
+	 throws DynamicExtensionsSystemException
+	 {
+	 Connection conn = null;
+	 try
+	 {
+	 conn = dao.getCleanConnection();
+	 conn.setAutoCommit(false);
+	 Statement statement = null;
+	 statement = conn.createStatement();
+	 ResultSet resultSet = statement.executeQuery(query);
+	 return resultSet;
+	 }
+	 catch (Exception e)
+	 {
+	 try
+	 {
+	 conn.rollback();
+	 }
+	 catch (SQLException e1)
+	 {
+	 throw new DynamicExtensionsSystemException(e.getMessage(), e);
+	 }
+	 throw new DynamicExtensionsSystemException(e.getMessage(), e);
+	 }
+	 }*/
 
 	/**
 	 * @param inputs list which should be aappended to query
@@ -76,22 +76,22 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 	 * @return LinkedList of column value bean for executing this query using prepared statement
 	 */
 	/*public static LinkedList<ColumnValueBean> appendListToQueryInCluase(List inputs,StringBuffer query)
-	{
-		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
-		query.append(OPENING_BRACKET);
-	    int index = 0;
-		query.append(QUESTION_MARK);
-	    queryDataList.add(new ColumnValueBean(IDENTIFIER, inputs.get(index++)));
-	    for(;index<inputs.size();index++)
-	    {
-	    	query.append(COMMA);
-	    	queryDataList.add(new ColumnValueBean(IDENTIFIER, inputs.get(index++)));
-	    	query.append(QUESTION_MARK);
-	    }
-	    query.append(CLOSING_BRACKET);
+	 {
+	 LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+	 query.append(OPENING_BRACKET);
+	 int index = 0;
+	 query.append(QUESTION_MARK);
+	 queryDataList.add(new ColumnValueBean(IDENTIFIER, inputs.get(index++)));
+	 for(;index<inputs.size();index++)
+	 {
+	 query.append(COMMA);
+	 queryDataList.add(new ColumnValueBean(IDENTIFIER, inputs.get(index++)));
+	 query.append(QUESTION_MARK);
+	 }
+	 query.append(CLOSING_BRACKET);
 
-		return queryDataList;
-	}*/
+	 return queryDataList;
+	 }*/
 
 	/**
 	 * This will return the no of records returned by the Query.
@@ -239,6 +239,52 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 			{
 				jdbcDao.closeStatement(resultSet);
 				DynamicExtensionsUtility.closeDAO(jdbcDao);
+			}
+			catch (DAOException e)
+			{
+				Logger.out.debug(e.getMessage());
+				throw new DynamicExtensionsSystemException(e.getMessage(), e);
+			}
+		}
+
+		return results;
+	}
+
+	/**
+	 * @param query
+	 * @param queryDataList
+	 * @param dao
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 */
+	public List<Long> getResultInList(String query, List<ColumnValueBean> queryDataList, JDBCDAO dao)
+			throws DynamicExtensionsSystemException
+	{
+		List<Long> results = new ArrayList<Long>();
+
+		ResultSet resultSet = null;		
+		try
+		{			
+			resultSet = dao.getResultSet(query, queryDataList, null);
+			while (resultSet.next())
+			{
+				Long identifier = resultSet.getLong(1);
+				results.add(identifier);
+			}
+		}
+		catch (DAOException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
+		}
+		catch (SQLException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
+		}
+		finally
+		{
+			try
+			{
+				dao.closeStatement(resultSet);				
 			}
 			catch (DAOException e)
 			{
