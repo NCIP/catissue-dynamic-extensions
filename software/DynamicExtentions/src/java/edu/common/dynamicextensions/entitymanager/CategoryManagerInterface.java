@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.ehcache.CacheException;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
@@ -14,6 +15,7 @@ import edu.common.dynamicextensions.domaininterface.SemanticPropertyInterface;
 import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.wustl.dao.exception.DAOException;
 
 /**
  *
@@ -125,8 +127,8 @@ public interface CategoryManagerInterface
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	Collection<CategoryInterface> getAllCategories()
-		throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
+	Collection<CategoryInterface> getAllCategories() throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException;
 
 	/**
 	 * @param rootCatEntity
@@ -138,8 +140,9 @@ public interface CategoryManagerInterface
 	 */
 	Map<String, Map<String, Object>> getRelatedAttributeValues(
 			CategoryEntityInterface rootCatEntity, Long recordId)
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException, SQLException;
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
+			SQLException;
+
 	/**
 	 *
 	 * @return
@@ -157,7 +160,22 @@ public interface CategoryManagerInterface
 	 */
 	Collection<CategoryAttributeInterface> updateCategoryAttributes(
 			Collection<CategoryAttributeInterface> categoryAttributeCollection)
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException;
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
+
+	/**
+	 * @param formId
+	 * @param recordEntryIdList
+	 * @param recordEntryStaticId
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws CacheException
+	 * @throws DAOException
+	 * @throws SQLException
+	 */
+	public List<Map<BaseAbstractAttributeInterface, Object>> getRecordByRecordEntryId(Long formId,
+			List<Long> recordEntryIdList, Long recordEntryStaticId)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
+			CacheException, DAOException, SQLException;
 
 }
