@@ -940,6 +940,7 @@
 		${entity.name} at :${cacore.deployable.dir}/${entity.name}/auditablemetadata.xml" />
 		<delete dir="${base.dir}/classes">
 		</delete>
+		<antcall target="merge.audit.xml" />
 	</target>
 	<!-- =================================
 	     Audit related targets end
@@ -1092,7 +1093,7 @@
 
 					<echo message="${ORM1CfgFile}" />
 					<echo message="${DEWebCfgFile}" />
-					<antcall target="merge.audit.xml" />
+
 					<if>
 						<equals arg1="${cacore.present}" arg2="true" />
 						<then>
