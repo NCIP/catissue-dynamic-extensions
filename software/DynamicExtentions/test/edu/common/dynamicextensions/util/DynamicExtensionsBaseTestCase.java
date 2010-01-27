@@ -421,7 +421,8 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 		for (CategoryAttributeInterface catAtt : rootCatEntity.getAllCategoryAttributes())
 		{
 			// put the different value for diff attribute type
-			if (catAtt.getAbstractAttribute() instanceof AttributeInterface)
+			if (catAtt.getAbstractAttribute() instanceof AttributeInterface
+					&& !catAtt.getIsRelatedAttribute())
 			{
 				AttributeInterface attribute = (AttributeInterface) catAtt.getAbstractAttribute();
 				if (attribute.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
