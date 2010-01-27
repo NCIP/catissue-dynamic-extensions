@@ -390,8 +390,8 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	 */
 	private boolean isInvalidValue(String value)
 	{
-		List<NameValueBean> nameValueBeans = new ArrayList<NameValueBean>();
-		nameValueBeans = ControlsUtility.getListOfPermissibleValues(getAttibuteMetadataInterface());
+		List<NameValueBean> nameValueBeans = ControlsUtility
+				.getListOfPermissibleValues(getAttibuteMetadataInterface());
 		boolean isInavlidVaue = true;
 		for (NameValueBean bean : nameValueBeans)
 		{
