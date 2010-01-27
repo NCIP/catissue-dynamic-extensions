@@ -930,6 +930,7 @@
 				<copy todir="${test.model.dir}" file="${resource.dir}/catNames2.txt" />
 			<ant antfile="src/conf/cobertura.xml" target="instrument" />
 			<antcall target="import.static.and.test.model"/>
+			<antcall target="create_recordEntry_tbl"/>
 			<antcall target="deploy" />
 			<ant target="run_junit" />
 			<ant antfile="src/conf/cobertura.xml" target="coverage.report" >
@@ -937,6 +938,7 @@
 				</ant>
 			<ant antfile="src/conf/cobertura.xml" target="coverage.check" />
 		</target>
+
 
 		<!-- =================================
 	          target: start-appserver
@@ -1256,5 +1258,50 @@
 					</section>
 				</manifest>
 			</jar>
+		</target>
+
+		<!-- Create table for record entry -->
+		<target name="create_recordEntry_tbl">
+			<if>
+				<equals arg1="mysql" arg2="${hibernate.database.type}" casesensitive="false" />
+				<then>
+					<antcall target="create_recordEntry_tbl_for_mysql" />
+				</then>
+				<elseif>
+					<equals arg1="oracle" arg2="${hibernate.database.type}" casesensitive="false" />
+					<then>
+						<antcall target="create_recordEntry_tbl_for_oracle" />
+					</then>
+				</elseif>
+				<else>
+					<echo message="DATABASE INITIALIZATION FAILED PLEASE CHECK DATABASE.TYPE PROPERTY" level="error" />
+				</else>
+			</if>
+		</target>
+
+		<target name="create_recordEntry_tbl_for_mysql" description="create table for recordEntry class for mysql">
+			<echo message="upgrading the DB For DynamicExtensions" />
+			<sql driver="${mysql.driver.string.DE}" url="${hibernate.connection.url}" userid="${hibernate.connection.username}" password="${hibernate.connection.password}" onerror="continue">
+				<transaction>CREATE TABLE  DE_E_6(ACTIVITY_STATUS text, IDENTIFIER  bigint(38) NOT NULL, primary key( IDENTIFIER ));</transaction>
+				<transaction>commit;</transaction>
+				<classpath>
+					<fileset dir="${lib.dir}">
+						<include name="*.jar" />
+					</fileset>
+				</classpath>
+			</sql>
+		</target>
+
+		<target name="create_recordEntry_tbl_for_oracle" description="create table for recordEntry class for oracle">
+			<echo message="upgrading the DB For DynamicExtensions" />
+			<sql driver="${oracle.driver.string.DE}" url="${hibernate.connection.url}" userid="${hibernate.connection.username}" password="${hibernate.connection.password}" onerror="continue" rdbms="oracle">
+				<transaction> CREATE TABLE DE_E_6(ACTIVITY_STATUS varchar2(4000), IDENTIFIER  Number(38) NOT NULL, primary key( IDENTIFIER ));</transaction>
+				<transaction>commit;</transaction>
+				<classpath>
+					<fileset dir="${lib.dir}">
+						<include name="*.jar" />
+					</fileset>
+				</classpath>
+			</sql>
 		</target>
 	</project>
