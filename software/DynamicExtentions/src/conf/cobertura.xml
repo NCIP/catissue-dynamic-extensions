@@ -45,6 +45,7 @@
       		<exclude name="**/entitymanager/*Interface*.class"/>
     		<exclude name="**/util/DatabaseCleaner.class"/>
     	    <exclude name="**/util/DynamicExtensionsBaseTestCase.class"/>
+    	<exclude name="**/entitymanager/MockEntityManager.class"/>
 
        </fileset>
     </cobertura-instrument>
