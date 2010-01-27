@@ -12,7 +12,7 @@ import edu.wustl.common.querysuite.querableobjectinterface.QueryableAttributeInt
 import edu.wustl.common.querysuite.querableobjectinterface.QueryableObjectInterface;
 
 /**
- * It will represent the Attribute in the Query Module. This class is written to bring the 
+ * It will represent the Attribute in the Query Module. This class is written to bring the
  * Attribute & CategoryAttribute at the same level.
  * @author pavan_kalantri
  *
@@ -20,10 +20,10 @@ import edu.wustl.common.querysuite.querableobjectinterface.QueryableObjectInterf
 public class QueryableEntityAttribute extends AbstractQueryableAttribute
 {
 
-	AttributeInterface attribute;
+	protected AttributeInterface attribute;
 
 	/**
-	 * parameterized constructor to create QueryableAttribute from attribute. 
+	 * parameterized constructor to create QueryableAttribute from attribute.
 	 * @param attribute
 	 * @param queryObject
 	 */
@@ -139,7 +139,7 @@ public class QueryableEntityAttribute extends AbstractQueryableAttribute
 
 	/**
 	 * It will create a QueryableObject from the Entity of the Attribute from which this object is created.
-	 * e.g If attribute is Id of Facility & if we call this method on it It will return the MED as Id is actually 
+	 * e.g If attribute is Id of Facility & if we call this method on it It will return the MED as Id is actually
 	 * present in MED not facility.
 	 * @return QueryableObjectInterface
 	 */

@@ -1,8 +1,11 @@
+
 package edu.wustl.common.querysuite.metadata;
 
 // TODO cab2b Constants.
-public class Constants {
-    static final String CONNECTOR = "_";
+public class Constants
+{
 
-    static final String TYPE_CATEGORY = "Category";
+	public static final String CONNECTOR = "_";
+
+	public static final String TYPE_CATEGORY = "Category";
 }

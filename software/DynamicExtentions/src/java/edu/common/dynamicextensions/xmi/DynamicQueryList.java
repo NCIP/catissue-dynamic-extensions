@@ -1,12 +1,13 @@
+
 package edu.common.dynamicextensions.xmi;
 
 import java.util.List;
 
-
 public class DynamicQueryList
 {
-	List<String> queryList;
-	List<String> revQueryList;
+
+	private List<String> queryList;
+	private List<String> revQueryList;
 
 	public List<String> getQueryList()
 	{

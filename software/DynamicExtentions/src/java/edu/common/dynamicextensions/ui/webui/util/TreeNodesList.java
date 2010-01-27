@@ -7,7 +7,7 @@ import java.util.List;
 public class TreeNodesList
 {
 
-	List childNodeList = null;
+	private List childNodeList = null;
 	private int length = 0;
 
 	/**
@@ -19,7 +19,7 @@ public class TreeNodesList
 
 	/**
 	 * Add new sub-node to list
-	 * @param node Tree node 
+	 * @param node Tree node
 	 */
 	public void add(TreeNode node)
 	{
@@ -48,16 +48,16 @@ public class TreeNodesList
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Length of list
 	 */
 	public int getLength()
 	{
-		return this.length;
+		return length;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param length : Length of list
 	 */
 	public void setLength(int length)

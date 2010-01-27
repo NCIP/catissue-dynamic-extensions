@@ -1,3 +1,4 @@
+
 package edu.wustl.cab2b.server.path.pathgen;
 
 import java.util.HashMap;
@@ -15,165 +16,192 @@ import java.util.Map.Entry;
  * cache.
  * @author srinath_k
  */
-class MemoryCache extends GraphPathFinderCache {
-    private class PathsOnIgnoringNodes {
+class MemoryCache extends GraphPathFinderCache
+{
 
-        Map<Set<Node>, Set<Path>> ignoredNodesToPaths = new HashMap<Set<Node>, Set<Path>>();
+	private class PathsOnIgnoringNodes
+	{
 
-        /**
-         * Adds entry
-         * @param ignoredNodes
-         * @param paths
-         */
-        public void addEntry(Set<Node> ignoredNodes, Set<Path> paths) {
-            ignoredNodesToPaths.put(ignoredNodes, paths);
-        }
+		protected Map<Set<Node>, Set<Path>> ignoredNodesToPaths = new HashMap<Set<Node>, Set<Path>>();
 
-        /**
-         * Returns path on ignored nodes
-         * @param ignoredNodes
-         * @return
-         */
-        public Set<Path> getPathsOnIgnoringNodes(Set<Node> ignoredNodes) {
-            return ignoredNodesToPaths.get(ignoredNodes);
-        }
+		/**
+		 * Adds entry
+		 * @param ignoredNodes
+		 * @param paths
+		 */
+		public void addEntry(Set<Node> ignoredNodes, Set<Path> paths)
+		{
+			ignoredNodesToPaths.put(ignoredNodes, paths);
+		}
 
-        /**
-         * Checks whether path is on ignored nodes or not.
-         * @param ignoredNodes
-         * @return
-         */
-        public boolean containsPathOnIgnoringNodes(Set<Node> ignoredNodes) {
-            return ignoredNodesToPaths.containsKey(ignoredNodes);
-        }
+		/**
+		 * Returns path on ignored nodes
+		 * @param ignoredNodes
+		 * @return
+		 */
+		public Set<Path> getPathsOnIgnoringNodes(Set<Node> ignoredNodes)
+		{
+			return ignoredNodesToPaths.get(ignoredNodes);
+		}
 
-        /**
-         * Returns ignored nodes to paths.
-         * @return
-         */
-        public Map<Set<Node>, Set<Path>> getAllEntries() {
-            return ignoredNodesToPaths;
-        }
-    }
+		/**
+		 * Checks whether path is on ignored nodes or not.
+		 * @param ignoredNodes
+		 * @return
+		 */
+		public boolean containsPathOnIgnoringNodes(Set<Node> ignoredNodes)
+		{
+			return ignoredNodesToPaths.containsKey(ignoredNodes);
+		}
 
-    private Map<SourceDestinationPair, PathsOnIgnoringNodes> calculatedPaths;
+		/**
+		 * Returns ignored nodes to paths.
+		 * @return
+		 */
+		public Map<Set<Node>, Set<Path>> getAllEntries()
+		{
+			return ignoredNodesToPaths;
+		}
+	}
 
-    /**
-     * Default constructor for MemoryCache
-     */
-    public MemoryCache() {
-        super();
-        this.calculatedPaths = new HashMap<SourceDestinationPair, PathsOnIgnoringNodes>();
-    }
+	private Map<SourceDestinationPair, PathsOnIgnoringNodes> calculatedPaths;
 
-    /**
-     * Adds the specified entry to cache, and removes all entries from the cache
-     * whose ignoredNodesSet is a superset of the specified ignoredNodes. e.g
-     * Suppose that entries <code>P(i->j, Ni)</code> (for some i's) existed in
-     * the cache. If addEntry() is called with <code>P(i->j, M)</code>, then
-     * each entry <code>P(i->j, Ni)</code> where <code>Ni &sube; M</code> is
-     * removed from the cache; as mentioned in contract for
-     * {@link GraphPathFinderCache#addEntry(SourceDestinationPair, Set, Set)},
-     * <code>P(i->j, Ni)</code> can and will be computed from
-     * <code>P(i->j, M)</code> if needed.<br>
-     * This is to prevent memory usage from exploding. The corresponding adverse
-     * on performance is relatively minor.
-     * @see edu.wustl.cab2b.server.path.pathgen.GraphPathFinderCache#addEntry(edu.wustl.cab2b.server.path.pathgen.SourceDestinationPair,
-     *      java.util.Set, java.util.Set)
-     */
-    public void addEntry(SourceDestinationPair sdp, Set<Node> ignoredNodes,
-                         Set<Path> paths) {
-        checkAlive();
-        PathsOnIgnoringNodes pathsOnIgnoringNodes;
-        if (this.calculatedPaths.containsKey(sdp)) {
-            pathsOnIgnoringNodes = this.calculatedPaths.get(sdp);
-        } else {
-            pathsOnIgnoringNodes = new PathsOnIgnoringNodes();
-            this.calculatedPaths.put(sdp, pathsOnIgnoringNodes);
-        }
+	/**
+	 * Default constructor for MemoryCache
+	 */
+	public MemoryCache()
+	{
+		super();
+		calculatedPaths = new HashMap<SourceDestinationPair, PathsOnIgnoringNodes>();
+	}
 
-        Iterator<Set<Node>> keySetIter = pathsOnIgnoringNodes.getAllEntries().keySet().iterator();
-        while (keySetIter.hasNext()) {
-            Set<Node> key = keySetIter.next();
-            if (key.containsAll(ignoredNodes)) {
-                keySetIter.remove();
-            }
-        }
-        pathsOnIgnoringNodes.addEntry(ignoredNodes, paths);
-    }
+	/**
+	 * Adds the specified entry to cache, and removes all entries from the cache
+	 * whose ignoredNodesSet is a superset of the specified ignoredNodes. e.g
+	 * Suppose that entries <code>P(i->j, Ni)</code> (for some i's) existed in
+	 * the cache. If addEntry() is called with <code>P(i->j, M)</code>, then
+	 * each entry <code>P(i->j, Ni)</code> where <code>Ni &sube; M</code> is
+	 * removed from the cache; as mentioned in contract for
+	 * {@link GraphPathFinderCache#addEntry(SourceDestinationPair, Set, Set)},
+	 * <code>P(i->j, Ni)</code> can and will be computed from
+	 * <code>P(i->j, M)</code> if needed.<br>
+	 * This is to prevent memory usage from exploding. The corresponding adverse
+	 * on performance is relatively minor.
+	 * @see edu.wustl.cab2b.server.path.pathgen.GraphPathFinderCache#addEntry(edu.wustl.cab2b.server.path.pathgen.SourceDestinationPair,
+	 *      java.util.Set, java.util.Set)
+	 */
+	public void addEntry(SourceDestinationPair sdp, Set<Node> ignoredNodes, Set<Path> paths)
+	{
+		checkAlive();
+		PathsOnIgnoringNodes pathsOnIgnoringNodes;
+		if (calculatedPaths.containsKey(sdp))
+		{
+			pathsOnIgnoringNodes = calculatedPaths.get(sdp);
+		}
+		else
+		{
+			pathsOnIgnoringNodes = new PathsOnIgnoringNodes();
+			calculatedPaths.put(sdp, pathsOnIgnoringNodes);
+		}
 
-    /**
-     * returns path on ignoring nodes.
-     * @param sdp
-     * @param ignoredNodes
-     * @return
-     * @see edu.wustl.cab2b.server.path.pathgen.GraphPathFinderCache#getPathsOnIgnoringNodes(edu.wustl.cab2b.server.path.pathgen.SourceDestinationPair,
-     *      java.util.Set)
-     */
-    public Set<Path> getPathsOnIgnoringNodes(SourceDestinationPair sdp,
-                                             Set<Node> ignoredNodes) {
-        checkAlive();
-        if (haveWeSeenThisSDPBefore(sdp)) {
-            PathsOnIgnoringNodes pathsOnIgnoringNodes = getCalculatedPaths(sdp);
-            if (pathsOnIgnoringNodes.containsPathOnIgnoringNodes(ignoredNodes)) {
-                return pathsOnIgnoringNodes.getPathsOnIgnoringNodes(ignoredNodes);
-            }
-            Map<Set<Node>, Set<Path>> allEntries = pathsOnIgnoringNodes.getAllEntries();
-            boolean foundSubset = false;
-            Set<Node> subset = null;
-            for (Set<Node> key : allEntries.keySet()) {
-                if (ignoredNodes.containsAll(key)) {
-                    foundSubset = true;
-                    subset = key;
-                    break;
-                }
-            }
-            if (foundSubset) {
-                Set<Path> res = new HashSet<Path>();
-                for (Path path : allEntries.get(subset)) {
-                    Set<Node> pathNodes = new HashSet<Node>(
-                            path.getIntermediateNodes());
-                    pathNodes.retainAll(ignoredNodes);
-                    if (pathNodes.isEmpty()) {
-                        res.add(path);
-                    }
-                }
-                return res;
-            }
-        }
-        return null;
-    }
+		Iterator<Set<Node>> keySetIter = pathsOnIgnoringNodes.getAllEntries().keySet().iterator();
+		while (keySetIter.hasNext())
+		{
+			Set<Node> key = keySetIter.next();
+			if (key.containsAll(ignoredNodes))
+			{
+				keySetIter.remove();
+			}
+		}
+		pathsOnIgnoringNodes.addEntry(ignoredNodes, paths);
+	}
 
-    private boolean haveWeSeenThisSDPBefore(SourceDestinationPair sdp) {
-        return this.calculatedPaths.containsKey(sdp);
-    }
+	/**
+	 * returns path on ignoring nodes.
+	 * @param sdp
+	 * @param ignoredNodes
+	 * @return
+	 * @see edu.wustl.cab2b.server.path.pathgen.GraphPathFinderCache#getPathsOnIgnoringNodes(edu.wustl.cab2b.server.path.pathgen.SourceDestinationPair,
+	 *      java.util.Set)
+	 */
+	public Set<Path> getPathsOnIgnoringNodes(SourceDestinationPair sdp, Set<Node> ignoredNodes)
+	{
+		checkAlive();
+		if (haveWeSeenThisSDPBefore(sdp))
+		{
+			PathsOnIgnoringNodes pathsOnIgnoringNodes = getCalculatedPaths(sdp);
+			if (pathsOnIgnoringNodes.containsPathOnIgnoringNodes(ignoredNodes))
+			{
+				return pathsOnIgnoringNodes.getPathsOnIgnoringNodes(ignoredNodes);
+			}
+			Map<Set<Node>, Set<Path>> allEntries = pathsOnIgnoringNodes.getAllEntries();
+			boolean foundSubset = false;
+			Set<Node> subset = null;
+			for (Set<Node> key : allEntries.keySet())
+			{
+				if (ignoredNodes.containsAll(key))
+				{
+					foundSubset = true;
+					subset = key;
+					break;
+				}
+			}
+			if (foundSubset)
+			{
+				Set<Path> res = new HashSet<Path>();
+				for (Path path : allEntries.get(subset))
+				{
+					Set<Node> pathNodes = new HashSet<Node>(path.getIntermediateNodes());
+					pathNodes.retainAll(ignoredNodes);
+					if (pathNodes.isEmpty())
+					{
+						res.add(path);
+					}
+				}
+				return res;
+			}
+		}
+		return null;
+	}
 
-    private PathsOnIgnoringNodes getCalculatedPaths(SourceDestinationPair sdp) {
-        return this.calculatedPaths.get(sdp);
-    }
+	private boolean haveWeSeenThisSDPBefore(SourceDestinationPair sdp)
+	{
+		return calculatedPaths.containsKey(sdp);
+	}
 
-    /**
-     * Cleans up this cache, and marks it dead.
-     */
-    public void cleanup() {
-        checkAlive();
-        this.calculatedPaths = null;
-        super.cleanup();
-    }
+	private PathsOnIgnoringNodes getCalculatedPaths(SourceDestinationPair sdp)
+	{
+		return calculatedPaths.get(sdp);
+	}
 
-    /**
-     * Returns all the entries in the cache.
-     * @see edu.wustl.cab2b.server.path.pathgen.GraphPathFinderCache#getAllPaths()
-     */
-    Set<Path> getAllPaths() {
-        Set<Path> res = new HashSet<Path>();
-        Iterator<Entry<SourceDestinationPair, PathsOnIgnoringNodes>> calculatedPathsIter = this.calculatedPaths.entrySet().iterator();
-        while (calculatedPathsIter.hasNext()) {
-            Map.Entry<SourceDestinationPair, PathsOnIgnoringNodes> entry = calculatedPathsIter.next();
-            for (Set<Path> paths : entry.getValue().getAllEntries().values()) {
-                res.addAll(paths);
-            }
-        }
-        return res;
-    }
+	/**
+	 * Cleans up this cache, and marks it dead.
+	 */
+	public void cleanup()
+	{
+		checkAlive();
+		calculatedPaths = null;
+		super.cleanup();
+	}
+
+	/**
+	 * Returns all the entries in the cache.
+	 * @see edu.wustl.cab2b.server.path.pathgen.GraphPathFinderCache#getAllPaths()
+	 */
+	protected Set<Path> getAllPaths()
+	{
+		Set<Path> res = new HashSet<Path>();
+		Iterator<Entry<SourceDestinationPair, PathsOnIgnoringNodes>> calculatedPathsIter = calculatedPaths
+				.entrySet().iterator();
+		while (calculatedPathsIter.hasNext())
+		{
+			Map.Entry<SourceDestinationPair, PathsOnIgnoringNodes> entry = calculatedPathsIter
+					.next();
+			for (Set<Path> paths : entry.getValue().getAllEntries().values())
+			{
+				res.addAll(paths);
+			}
+		}
+		return res;
+	}
 }

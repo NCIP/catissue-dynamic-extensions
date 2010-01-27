@@ -24,19 +24,19 @@ import edu.wustl.common.util.logger.Logger;
 public class DatabaseCache extends GraphPathFinderCache
 {
 
-	static String connector = "_";
+	protected static String connector = "_";
 
-	int databaseCacheId;
+	protected int databaseCacheId;
 
-	Connection conn = null;
+	protected Connection conn = null;
 
-	PreparedStatement addPath;
+	protected PreparedStatement addPath;
 
-	PreparedStatement addIgnoredNodeSet;
+	protected PreparedStatement addIgnoredNodeSet;
 
-	PreparedStatement getPathsOnIgnoringNodes;
+	protected PreparedStatement getPathsOnIgnoringNodes;
 
-	PreparedStatement allPaths;
+	protected PreparedStatement allPaths;
 
 	/**
 	 * @param conn
@@ -49,10 +49,10 @@ public class DatabaseCache extends GraphPathFinderCache
 		super();
 		if (conn == null)
 		{
-			throw new IllegalArgumentException ("Connection cannot be null.");
+			throw new IllegalArgumentException("Connection cannot be null.");
 		}
 		this.conn = conn;
-		this.databaseCacheId = IdGenerator.getNextId();
+		databaseCacheId = IdGenerator.getNextId();
 		createPreparedStatments();
 	}
 
@@ -60,7 +60,7 @@ public class DatabaseCache extends GraphPathFinderCache
 	 * @see edu.wustl.cab2b.server.path.pathgen.GraphPathFinderCache#getAllPaths()
 	 */
 	@Override
-	Set<Path> getAllPaths()
+	protected Set<Path> getAllPaths()
 	{
 		checkAlive();
 		HashSet<Path> pathSet = new HashSet<Path>();
@@ -108,7 +108,7 @@ public class DatabaseCache extends GraphPathFinderCache
 	 * @see edu.wustl.cab2b.server.path.pathgen.GraphPathFinderCache#addEntry(edu.wustl.cab2b.server.path.pathgen.SourceDestinationPair,
 	 *      java.util.Set, java.util.Set)
 	 */
-	void addEntry(SourceDestinationPair sdp, Set<Node> ignoredNodes, Set<Path> paths)
+	protected void addEntry(SourceDestinationPair sdp, Set<Node> ignoredNodes, Set<Path> paths)
 	{
 		checkAlive();
 		int ignoredNodeSetId = IdGenerator.getNextId();
@@ -185,7 +185,7 @@ public class DatabaseCache extends GraphPathFinderCache
 	 * Cleans up this cache, and marks it dead.
 	 * @see edu.wustl.cab2b.server.path.pathgen.GraphPathFinderCache#cleanup()
 	 */
-	void cleanup()
+	protected void cleanup()
 	{
 		checkAlive();
 		super.cleanup();
@@ -277,7 +277,7 @@ public class DatabaseCache extends GraphPathFinderCache
 		return set;
 	}
 
-	List<Node> getNodeList(String nodeString)
+	protected List<Node> getNodeList(String nodeString)
 	{
 		ArrayList<Node> nodes = new ArrayList<Node>();
 		String[] arr = nodeString.split(connector);
@@ -308,7 +308,7 @@ public class DatabaseCache extends GraphPathFinderCache
 		}
 	}
 
-	String getPathString(Path path)
+	protected String getPathString(Path path)
 	{
 		List<Node> intermediateNodes = path.getIntermediateNodes();
 		List<Integer> list = new ArrayList<Integer>(intermediateNodes.size());
@@ -319,7 +319,7 @@ public class DatabaseCache extends GraphPathFinderCache
 		return getString(list);
 	}
 
-	String getString(Set<Node> ignoredNodes)
+	protected String getString(Set<Node> ignoredNodes)
 	{
 		ArrayList<Integer> list = new ArrayList<Integer>(ignoredNodes.size());
 		for (Node node : ignoredNodes)
@@ -330,7 +330,7 @@ public class DatabaseCache extends GraphPathFinderCache
 		return getString(list);
 	}
 
-	String getString(List<Integer> list)
+	protected String getString(List<Integer> list)
 	{
 		StringBuffer stringBuffer = new StringBuffer();
 		stringBuffer.append(connector);
@@ -356,9 +356,9 @@ public class DatabaseCache extends GraphPathFinderCache
 class IdGenerator
 {
 
-	static int identifier;
+	protected static int identifier;
 
-	static synchronized int getNextId()
+	protected static synchronized int getNextId()
 	{
 		return identifier++;
 	}

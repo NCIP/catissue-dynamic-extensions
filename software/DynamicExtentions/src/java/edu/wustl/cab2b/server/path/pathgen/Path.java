@@ -1,3 +1,4 @@
+
 package edu.wustl.cab2b.server.path.pathgen;
 
 import java.util.ArrayList;
@@ -31,158 +32,190 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * validation checks may hamper performance.
  * @author srinath_k
  */
-public class Path {
-    private SourceDestinationPair sdp;
+public class Path
+{
 
-    private List<Node> intermediateNodes;
+	private final SourceDestinationPair sdp;
 
-    private int hashCodeObj;
+	private List<Node> intermediateNodes;
 
-    Path(Node fromNode, Node toNode) {
-        this(fromNode, toNode, null);
-    }
+	private int hashCodeObj;
 
-    Path(Node fromNode, Node toNode, List<Node> intermediateNodes) {
-        this.sdp = new SourceDestinationPair(fromNode, toNode);
-        if (intermediateNodes == null) {
-            this.intermediateNodes = Collections.unmodifiableList(new ArrayList<Node>(0));
-        } else {
-            this.intermediateNodes = Collections.unmodifiableList(intermediateNodes);
-        }
-    }
+	Path(Node fromNode, Node toNode)
+	{
+		this(fromNode, toNode, null);
+	}
 
-    /**
-     * checks whether this path contains node or not
-     * @param node
-     * @return
-     */
-    public boolean containsNode(Node node) {
-        return fromNode().equals(node) || toNode().equals(node) || getIntermediateNodes().contains(node);
-    }
+	Path(Node fromNode, Node toNode, List<Node> intermediateNodes)
+	{
+		sdp = new SourceDestinationPair(fromNode, toNode);
+		if (intermediateNodes == null)
+		{
+			this.intermediateNodes = Collections.unmodifiableList(new ArrayList<Node>(0));
+		}
+		else
+		{
+			this.intermediateNodes = Collections.unmodifiableList(intermediateNodes);
+		}
+	}
 
-    /**
-     * checks whether cycle present in current path or not.
-     * @return
-     */
-    public boolean isCyclePresent() {
-        if (getIntermediateNodes().isEmpty()) {
-            return false;
-        }
-        Set<Node> nodesSet = new HashSet<Node>(getIntermediateNodes());
-        nodesSet.add(fromNode());
-        nodesSet.add(toNode());
-        return nodesSet.size() < getIntermediateNodes().size() + 2;
-    }
+	/**
+	 * checks whether this path contains node or not
+	 * @param node
+	 * @return
+	 */
+	public boolean containsNode(Node node)
+	{
+		return fromNode().equals(node) || toNode().equals(node)
+				|| getIntermediateNodes().contains(node);
+	}
 
-    /**
-     * checks whether this edge is self edge or not.
-     * @return
-     */
-    public boolean isSelfEdge() {
-        return getIntermediateNodes().isEmpty() && fromNode().equals(toNode());
-    }
+	/**
+	 * checks whether cycle present in current path or not.
+	 * @return
+	 */
+	public boolean isCyclePresent()
+	{
+		if (getIntermediateNodes().isEmpty())
+		{
+			return false;
+		}
+		Set<Node> nodesSet = new HashSet<Node>(getIntermediateNodes());
+		nodesSet.add(fromNode());
+		nodesSet.add(toNode());
+		return nodesSet.size() < getIntermediateNodes().size() + 2;
+	}
 
-    /**
-     * @param origVal
-     *            the node to be replaced.
-     * @param replacement
-     *            the new node which will replace origVal.
-     * @return a newly constructed path which has the <code>replacement</code>
-     *         node in place of the <code>origVal</code> node.
-     */
-    Path replace(Node origVal, Node replacement) {
-        if (isSelfEdge() && fromNode().equals(origVal)) {
-            return new Path(replacement, replacement);
-        }
-        if (fromNode().equals(origVal)) {
-            return new Path(replacement, toNode(), getIntermediateNodes());
-        }
-        if (toNode().equals(origVal)) {
-            return new Path(fromNode(), replacement, getIntermediateNodes());
-        }
-        List<Node> intermediateNodes = new ArrayList<Node>(getIntermediateNodes().size());
+	/**
+	 * checks whether this edge is self edge or not.
+	 * @return
+	 */
+	public boolean isSelfEdge()
+	{
+		return getIntermediateNodes().isEmpty() && fromNode().equals(toNode());
+	}
 
-        for (Node origNode : getIntermediateNodes()) {
-            if (origNode.equals(origVal)) {
-                intermediateNodes.add(replacement);
-            } else {
-                intermediateNodes.add(origNode);
-            }
-        }
-        return new Path(fromNode(), toNode(), intermediateNodes);
-    }
+	/**
+	 * @param origVal
+	 *            the node to be replaced.
+	 * @param replacement
+	 *            the new node which will replace origVal.
+	 * @return a newly constructed path which has the <code>replacement</code>
+	 *         node in place of the <code>origVal</code> node.
+	 */
+	protected Path replace(Node origVal, Node replacement)
+	{
+		if (isSelfEdge() && fromNode().equals(origVal))
+		{
+			return new Path(replacement, replacement);
+		}
+		if (fromNode().equals(origVal))
+		{
+			return new Path(replacement, toNode(), getIntermediateNodes());
+		}
+		if (toNode().equals(origVal))
+		{
+			return new Path(fromNode(), replacement, getIntermediateNodes());
+		}
+		List<Node> intermediateNodes = new ArrayList<Node>(getIntermediateNodes().size());
 
-    /**
-     * Returns intermediate nodes
-     * @return
-     */
-    public List<Node> getIntermediateNodes() {
-        return intermediateNodes;
-    }
+		for (Node origNode : getIntermediateNodes())
+		{
+			if (origNode.equals(origVal))
+			{
+				intermediateNodes.add(replacement);
+			}
+			else
+			{
+				intermediateNodes.add(origNode);
+			}
+		}
+		return new Path(fromNode(), toNode(), intermediateNodes);
+	}
 
-    /**
-     * Returns source node
-     * @return
-     */
-    public Node fromNode() {
-        return sdp.getSrcNode();
-    }
+	/**
+	 * Returns intermediate nodes
+	 * @return
+	 */
+	public List<Node> getIntermediateNodes()
+	{
+		return intermediateNodes;
+	}
 
-    /**
-     * Returns destination node
-     * @return
-     */
-    public Node toNode() {
-        return sdp.getDestNode();
-    }
+	/**
+	 * Returns source node
+	 * @return
+	 */
+	public Node fromNode()
+	{
+		return sdp.getSrcNode();
+	}
 
-    /**
-     * Returns no. of nodes
-     * @return
-     */
-    public int numNodes() {
-        return intermediateNodes.size() + 2;
-    }
+	/**
+	 * Returns destination node
+	 * @return
+	 */
+	public Node toNode()
+	{
+		return sdp.getDestNode();
+	}
 
-    /**
-     * Returns whether this object is equal to obj or not
-     * @param obj
-     * @return
-     */
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (!(obj instanceof Path)) {
-            return false;
-        }
-        Path otherPath = (Path) obj;
-        return otherPath.fromNode().equals(fromNode()) && otherPath.toNode().equals(toNode())
-                && otherPath.getIntermediateNodes().equals(getIntermediateNodes());
-    }
+	/**
+	 * Returns no. of nodes
+	 * @return
+	 */
+	public int numNodes()
+	{
+		return intermediateNodes.size() + 2;
+	}
 
-    /**
-     * Returns hashCode
-     * @return
-     */
-    public int hashCode() {
-        if (hashCodeObj == 0) {
-            hashCodeObj = new HashCodeBuilder().append(fromNode()).append(toNode()).append(getIntermediateNodes()).toHashCode();
-        }
-        return hashCodeObj;
-    }
+	/**
+	 * Returns whether this object is equal to obj or not
+	 * @param obj
+	 * @return
+	 */
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+		{
+			return true;
+		}
+		if (!(obj instanceof Path))
+		{
+			return false;
+		}
+		Path otherPath = (Path) obj;
+		return otherPath.fromNode().equals(fromNode()) && otherPath.toNode().equals(toNode())
+				&& otherPath.getIntermediateNodes().equals(getIntermediateNodes());
+	}
 
-    /**
-     * String form of object
-     * @return
-     */
-    public String toString() {
-        String delimiter = "#";
-        StringBuffer length = new StringBuffer(fromNode().toString());
-        for (Node intermediateNode : getIntermediateNodes()) {
-        	length.append(delimiter).append(intermediateNode);
-        }
-        length.append(delimiter).append(toNode());
-        return length.toString();
-    }
+	/**
+	 * Returns hashCode
+	 * @return
+	 */
+	public int hashCode()
+	{
+		if (hashCodeObj == 0)
+		{
+			hashCodeObj = new HashCodeBuilder().append(fromNode()).append(toNode()).append(
+					getIntermediateNodes()).toHashCode();
+		}
+		return hashCodeObj;
+	}
+
+	/**
+	 * String form of object
+	 * @return
+	 */
+	public String toString()
+	{
+		String delimiter = "#";
+		StringBuffer length = new StringBuffer(fromNode().toString());
+		for (Node intermediateNode : getIntermediateNodes())
+		{
+			length.append(delimiter).append(intermediateNode);
+		}
+		length.append(delimiter).append(toNode());
+		return length.toString();
+	}
 }

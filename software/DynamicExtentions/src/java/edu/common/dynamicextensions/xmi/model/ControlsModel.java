@@ -12,19 +12,21 @@ import edu.common.dynamicextensions.ui.webui.util.CommonControlModel;
  * @author ashish_gupta
  *
  */
-public class ControlsModel extends CommonControlModel implements ControlUIBeanInterface, AbstractAttributeUIBeanInterface
+public class ControlsModel extends CommonControlModel
+		implements
+			ControlUIBeanInterface,
+			AbstractAttributeUIBeanInterface
 {
 
 	/**
-	 * 
+	 *
 	 */
-	Boolean isPrimaryKey = false;
+	protected Boolean isPrimaryKey = false;
 
 	/**
-	 * 
+	 *
 	 */
-	Boolean isNullable = true;
-
+	protected Boolean isNullable = true;
 
 	/**
 	 *
@@ -32,7 +34,7 @@ public class ControlsModel extends CommonControlModel implements ControlUIBeanIn
 	protected String columnName;
 
 	/**
-	 * 
+	 *
 	 * @return boolean is primary key
 	 */
 	public Boolean getIsPrimaryKey()
@@ -50,7 +52,7 @@ public class ControlsModel extends CommonControlModel implements ControlUIBeanIn
 	}
 
 	/**
-	 * 
+	 *
 	 * @return boolean isNullable
 	 */
 	public Boolean getIsNullable()
@@ -68,7 +70,7 @@ public class ControlsModel extends CommonControlModel implements ControlUIBeanIn
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public String getColumnName()
 	{
@@ -76,13 +78,12 @@ public class ControlsModel extends CommonControlModel implements ControlUIBeanIn
 	}
 
 	/**
-	 * 
+	 *
 	 * @param columnName
 	 */
 	public void setColumnName(String columnName)
 	{
 		this.columnName = columnName;
 	}
-
 
 }

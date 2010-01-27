@@ -11,8 +11,8 @@ import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterfac
 /**
  * @version 1.0
  * @created 28-Sep-2006 12:20:06 PM
- * @hibernate.joined-subclass table="DYEXTN_FILE_TYPE_INFO" 
- * @hibernate.joined-subclass-key column="IDENTIFIER" 
+ * @hibernate.joined-subclass table="DYEXTN_FILE_TYPE_INFO"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  */
 public class FileAttributeTypeInformation extends AttributeTypeInformation
 		implements
@@ -27,14 +27,14 @@ public class FileAttributeTypeInformation extends AttributeTypeInformation
 	/**
 	 * allowed file types for this attribute
 	 */
-	Collection<FileExtension> fileExtensionCollection = new HashSet<FileExtension>();
+	private Collection<FileExtension> fileExtensionCollection = new HashSet<FileExtension>();
 
 	/**
 	 * @hibernate.set name="fileExtensionCollection" table="DYEXTN_FILE_EXTENSIONS"
 	 * cascade="all-delete-orphan" inverse="false" lazy="false"
 	 * @hibernate.collection-key column="ATTRIBUTE_ID"
 	 * @hibernate.cache  usage="read-write"
-	 * @hibernate.collection-one-to-many class="edu.common.dynamicextensions.domain.FileExtension" 
+	 * @hibernate.collection-one-to-many class="edu.common.dynamicextensions.domain.FileExtension"
 	 * @return Returns the fileExtensionCollection.
 	 */
 
@@ -74,11 +74,11 @@ public class FileAttributeTypeInformation extends AttributeTypeInformation
 	 */
 	public void addFileExtension(FileExtension fileExtension)
 	{
-		if (this.fileExtensionCollection == null)
+		if (fileExtensionCollection == null)
 		{
-			this.fileExtensionCollection = new HashSet<FileExtension>();
+			fileExtensionCollection = new HashSet<FileExtension>();
 		}
-		this.fileExtensionCollection.add(fileExtension);
+		fileExtensionCollection.add(fileExtension);
 	}
 
 	/**
@@ -86,9 +86,9 @@ public class FileAttributeTypeInformation extends AttributeTypeInformation
 	 */
 	public void removeFileExtension(FileExtension fileExtension)
 	{
-		if (this.fileExtensionCollection != null)
+		if (fileExtensionCollection != null)
 		{
-			this.fileExtensionCollection.remove(fileExtension);
+			fileExtensionCollection.remove(fileExtension);
 		}
 	}
 
@@ -97,13 +97,13 @@ public class FileAttributeTypeInformation extends AttributeTypeInformation
 	 */
 	public void removeAllFileExtensions()
 	{
-		if (this.fileExtensionCollection != null)
+		if (fileExtensionCollection != null)
 		{
-			this.fileExtensionCollection.clear();
+			fileExtensionCollection.clear();
 		}
 	}
 
-	/** 
+	/**
 	 * @see edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface#getDataType()
 	 */
 	public String getDataType()
@@ -112,7 +112,7 @@ public class FileAttributeTypeInformation extends AttributeTypeInformation
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public PermissibleValueInterface getPermissibleValueForString(String value)
 	{

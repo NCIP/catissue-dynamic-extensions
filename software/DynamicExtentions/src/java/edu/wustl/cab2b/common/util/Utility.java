@@ -436,7 +436,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 		return stringBuff.toString();
 	}
 
-	static String getHtmlRepresentation(IPath path)
+	private static String getHtmlRepresentation(IPath path)
 	{
 		StringBuffer text = new StringBuffer(40);
 		text.append("<HTML><B>Path</B>:");
@@ -734,7 +734,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 	 * Utility method to count upper case characters in the String
 	 */
 
-	static int countUpperCaseLetters(String str)
+	private static int countUpperCaseLetters(String str)
 	{
 		/*
 		 * This is the count of Capital letters in a string excluding first
@@ -771,7 +771,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 	/**
 	 * Utility method to capitalize first character in the String
 	 */
-	static String capitalizeFirstCharacter(String str)
+	private static String capitalizeFirstCharacter(String str)
 	{
 		char[] chars = str.toCharArray();
 		char firstChar = chars[0];
@@ -785,7 +785,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 	 * @param countOfUpperCaseLetter
 	 * @return
 	 */
-	static String[] splitCamelCaseString(String str, int countOfUpperCaseLetter)
+	public static String[] splitCamelCaseString(String str, int countOfUpperCaseLetter)
 	{
 		String[] splitStrings = new String[countOfUpperCaseLetter + 1];
 		char[] chars = str.toCharArray();

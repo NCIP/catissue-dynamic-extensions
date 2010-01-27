@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package edu.common.dynamicextensions.xmi;
@@ -16,16 +16,16 @@ public class PathObject implements Serializable
 {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	EntityInterface sourceEntity;
-	EntityInterface targetEntity;
+	private EntityInterface sourceEntity;
+	private EntityInterface targetEntity;
 
 	/**
 	 * This method overrides the equals method of the Object Class.
 	 * This method checks whether path has been added between the source entity and target entity.
-	 * @return boolean true if path has been added else false. 
+	 * @return boolean true if path has been added else false.
 	 */
 	public boolean equals(Object obj)
 	{

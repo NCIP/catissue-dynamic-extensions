@@ -14,11 +14,11 @@ public class PreviewForm extends AbstractActionForm
 
 	private static final long serialVersionUID = -7828307676065035418L;
 
-	String entitySaved;
+	private String entitySaved;
 	/**
-	 * 
+	 *
 	 */
-	ContainerInterface containerInterface;
+	private ContainerInterface containerInterface;
 
 	/**
 	 * @return The Form identifier
@@ -62,16 +62,16 @@ public class PreviewForm extends AbstractActionForm
 	}
 
 	/**
-	 * 
+	 *
 	 * @return entitySaved
 	 */
 	public String getEntitySaved()
 	{
-		return this.entitySaved;
+		return entitySaved;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entitySaved entitySaved
 	 */
 	public void setEntitySaved(String entitySaved)
@@ -89,6 +89,6 @@ public class PreviewForm extends AbstractActionForm
 	public void setAddNewObjectIdentifier(String addNewFor, Long addObjectIdentifier)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 }

@@ -17,10 +17,10 @@ import edu.common.dynamicextensions.util.global.DEConstants;
 public class CacheManager
 {
 
-	static Map cacheMap;
+	protected static Map cacheMap;
 
 	/**
-	 * Add object to cache 
+	 * Add object to cache
 	 * @param request : HTTP Request object
 	 * @param key : Key to be used while storing object in cache
 	 * @param formDetailsObject : Object to be stored in cache

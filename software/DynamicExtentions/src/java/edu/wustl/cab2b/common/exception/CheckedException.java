@@ -1,41 +1,50 @@
+
 package edu.wustl.cab2b.common.exception;
 
 /**
  * @author gautam_shetty
  */
-public class CheckedException extends Exception implements Cab2bExceptionInterface {
-    static final long serialVersionUID = 123456L;
+public class CheckedException extends Exception implements Cab2bExceptionInterface
+{
 
-    protected String errorCode;
+	private static final long serialVersionUID = 123456L;
 
-    public CheckedException() {
-        super();
-    }
+	protected String errorCode;
 
-    public CheckedException(String message) {
-        super(message);
-    }
+	public CheckedException()
+	{
+		super();
+	}
 
-    public CheckedException(Exception exp) {
-        super(exp);
-    }
+	public CheckedException(String message)
+	{
+		super(message);
+	}
 
-    public CheckedException(String message, Exception exp, String errorCode) {
-        super(message, exp);
-        this.errorCode = errorCode;
-    }
+	public CheckedException(Exception exp)
+	{
+		super(exp);
+	}
 
-    /**
-     * @return Returns the errorCode.
-     */
-    public String getErrorCode() {
-        return errorCode;
-    }
+	public CheckedException(String message, Exception exp, String errorCode)
+	{
+		super(message, exp);
+		this.errorCode = errorCode;
+	}
 
-    /**
-     * @param errorCode The errorCode to set.
-     */
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
-    }
+	/**
+	 * @return Returns the errorCode.
+	 */
+	public String getErrorCode()
+	{
+		return errorCode;
+	}
+
+	/**
+	 * @param errorCode The errorCode to set.
+	 */
+	public void setErrorCode(String errorCode)
+	{
+		this.errorCode = errorCode;
+	}
 }

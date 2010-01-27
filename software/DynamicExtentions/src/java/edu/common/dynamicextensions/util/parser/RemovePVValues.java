@@ -168,7 +168,7 @@ public class RemovePVValues
 	 * @param sqlList
 	 * @throws DAOException
 	 */
-	void executeSQL(ArrayList<String> sqlList) throws DynamicExtensionsSystemException
+	private void executeSQL(ArrayList<String> sqlList) throws DynamicExtensionsSystemException
 	{
 		JDBCDAO jdbcdao = null;
 		try

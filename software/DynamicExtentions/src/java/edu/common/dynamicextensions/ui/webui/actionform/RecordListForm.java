@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package edu.common.dynamicextensions.ui.webui.actionform;
@@ -18,24 +18,24 @@ public class RecordListForm extends AbstractActionForm
 {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 0L;
 
 	/**
-	 * 
+	 *
 	 */
-	String containerIdentifier = null;
+	private String containerIdentifier = null;
 
 	/**
-	 * 
+	 *
 	 */
-	List<EntityRecord> entityRecordList = null;
+	private List<EntityRecord> entityRecordList = null;
 
 	/**
-	 * 
+	 *
 	 */
-	String mode = null;
+	private String mode = null;
 
 	/**
 	 * @return the recordSnippetList
@@ -121,7 +121,7 @@ public class RecordListForm extends AbstractActionForm
 	public void setAddNewObjectIdentifier(String addNewFor, Long addObjectIdentifier)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

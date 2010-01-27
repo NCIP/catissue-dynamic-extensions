@@ -1,3 +1,4 @@
+
 package edu.common.dynamicextensions.ui.webui.util;
 
 import java.util.ArrayList;
@@ -12,13 +13,13 @@ import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.common.actionForm.AbstractActionForm;
 import edu.wustl.common.domain.AbstractDomainObject;
 
-
 public class CommonControlModel extends AbstractActionForm
 {
+
 	/**
 	 * Attribute Name
 	 */
-	AbstractAttributeInterface abstractAttribute;
+	protected AbstractAttributeInterface abstractAttribute;
 	/**
 	 *
 	 */
@@ -323,7 +324,7 @@ public class CommonControlModel extends AbstractActionForm
 	 */
 	public String getCurrentContainerName()
 	{
-		return this.currentContainerName;
+		return currentContainerName;
 	}
 
 	/**
@@ -339,7 +340,7 @@ public class CommonControlModel extends AbstractActionForm
 	 */
 	public List getGroupNames()
 	{
-		return this.groupNames;
+		return groupNames;
 	}
 
 	/**
@@ -356,7 +357,7 @@ public class CommonControlModel extends AbstractActionForm
 	 */
 	public List getMeasurementUnitsList()
 	{
-		return this.measurementUnitsList;
+		return measurementUnitsList;
 	}
 
 	/**
@@ -374,7 +375,7 @@ public class CommonControlModel extends AbstractActionForm
 	 */
 	public String getAttributeIdentified()
 	{
-		return this.attributeIdentified;
+		return attributeIdentified;
 	}
 
 	/**
@@ -392,7 +393,7 @@ public class CommonControlModel extends AbstractActionForm
 	 */
 	public String getSelectedControlCaption()
 	{
-		return this.selectedControlCaption;
+		return selectedControlCaption;
 	}
 
 	/**
@@ -808,7 +809,7 @@ public class CommonControlModel extends AbstractActionForm
 	 */
 	public Boolean getIsPassword()
 	{
-		return this.isPassword;
+		return isPassword;
 	}
 
 	/**
@@ -820,7 +821,7 @@ public class CommonControlModel extends AbstractActionForm
 		this.isPassword = isPassword;
 		if (isPassword != null)
 		{
-			this.attributeIsPassword = isPassword.toString();
+			attributeIsPassword = isPassword.toString();
 		}
 	}
 
@@ -938,7 +939,7 @@ public class CommonControlModel extends AbstractActionForm
 		this.columns = columns;
 		if (columns != null)
 		{
-			this.attributenoOfCols = columns.toString();
+			attributenoOfCols = columns.toString();
 		}
 
 	}
@@ -970,7 +971,7 @@ public class CommonControlModel extends AbstractActionForm
 		this.rows = rows;
 		if (rows != null)
 		{
-			this.attributeNoOfRows = rows.toString();
+			attributeNoOfRows = rows.toString();
 		}
 	}
 
@@ -999,7 +1000,7 @@ public class CommonControlModel extends AbstractActionForm
 		this.isMultiSelect = isMultiSelect;
 		if ((isMultiSelect != null) && isMultiSelect)
 		{
-			this.attributeMultiSelect = ProcessorConstants.LIST_TYPE_MULTI_SELECT;
+			attributeMultiSelect = ProcessorConstants.LIST_TYPE_MULTI_SELECT;
 		}
 	}
 
@@ -1027,7 +1028,7 @@ public class CommonControlModel extends AbstractActionForm
 	 */
 	public String getAttributeSequenceNumber()
 	{
-		return this.attributeSequenceNumber;
+		return attributeSequenceNumber;
 	}
 
 	/**
@@ -1045,7 +1046,7 @@ public class CommonControlModel extends AbstractActionForm
 	 */
 	public String getAttributeIsPassword()
 	{
-		return this.attributeIsPassword;
+		return attributeIsPassword;
 	}
 
 	/**
@@ -1161,7 +1162,7 @@ public class CommonControlModel extends AbstractActionForm
 	 */
 	public String getAttributeConceptCode()
 	{
-		return this.attributeConceptCode;
+		return attributeConceptCode;
 	}
 
 	/**
@@ -1177,7 +1178,7 @@ public class CommonControlModel extends AbstractActionForm
 	 */
 	public String getDateValueType()
 	{
-		return this.dateValueType;
+		return dateValueType;
 	}
 
 	/**
@@ -1267,7 +1268,7 @@ public class CommonControlModel extends AbstractActionForm
 	 */
 	public String getMeasurementUnitOther()
 	{
-		return this.measurementUnitOther;
+		return measurementUnitOther;
 	}
 
 	/**
@@ -1297,17 +1298,17 @@ public class CommonControlModel extends AbstractActionForm
 
 	public List<String> getSupportedFileFormatsList()
 	{
-		return this.supportedFileFormatsList;
+		return supportedFileFormatsList;
 	}
 
 	public void setSupportedFileFormatsList(List<String> fileFormatsList)
 	{
-		this.supportedFileFormatsList = fileFormatsList;
+		supportedFileFormatsList = fileFormatsList;
 	}
 
 	public String getAttributeMandatory()
 	{
-		return this.attributeMandatory;
+		return attributeMandatory;
 	}
 
 	public void setAttributeMandatory(String attributeMandatory)
@@ -1317,18 +1318,18 @@ public class CommonControlModel extends AbstractActionForm
 
 	public String getAttributeDisplayAsURL()
 	{
-		return this.attributeDisplayAsURL;
+		return attributeDisplayAsURL;
 	}
 
 	public void setAttributeDisplayAsURL(String attributeDisplayAsURL)
 	{
 		this.attributeDisplayAsURL = attributeDisplayAsURL;
-		this.isUrl = Boolean.valueOf(attributeDisplayAsURL);
+		isUrl = Boolean.valueOf(attributeDisplayAsURL);
 	}
 
 	public String[] getOptionConceptCodes()
 	{
-		return this.optionConceptCodes;
+		return optionConceptCodes;
 	}
 
 	public void setOptionConceptCodes(String[] optionConceptCodes)
@@ -1338,7 +1339,7 @@ public class CommonControlModel extends AbstractActionForm
 
 	public String[] getOptionDescriptions()
 	{
-		return this.optionDescriptions;
+		return optionDescriptions;
 	}
 
 	public void setOptionDescriptions(String[] optionDescriptions)
@@ -1348,7 +1349,7 @@ public class CommonControlModel extends AbstractActionForm
 
 	public String[] getOptionNames()
 	{
-		return this.optionNames;
+		return optionNames;
 	}
 
 	public void setOptionNames(String[] optionNames)
@@ -1358,7 +1359,7 @@ public class CommonControlModel extends AbstractActionForm
 
 	public List getOptionDetails()
 	{
-		return this.optionDetails;
+		return optionDetails;
 	}
 
 	public void setOptionDetails(List optionDetails)
@@ -1368,7 +1369,7 @@ public class CommonControlModel extends AbstractActionForm
 
 	public String[] getFileFormats()
 	{
-		return this.fileFormats;
+		return fileFormats;
 	}
 
 	public void setFileFormats(String[] fileFormats)
@@ -1378,7 +1379,7 @@ public class CommonControlModel extends AbstractActionForm
 
 	public String getFormTypeForLookup()
 	{
-		return this.formTypeForLookup;
+		return formTypeForLookup;
 	}
 
 	public void setFormTypeForLookup(String formTypeForLookup)
@@ -1388,7 +1389,7 @@ public class CommonControlModel extends AbstractActionForm
 
 	public String getPublicDomainId()
 	{
-		return this.publicDomainId;
+		return publicDomainId;
 	}
 
 	public void setPublicDomainId(String publicDomainId)
@@ -1398,7 +1399,7 @@ public class CommonControlModel extends AbstractActionForm
 
 	public String getGroupName()
 	{
-		return this.groupName;
+		return groupName;
 	}
 
 	public void setGroupName(String groupName)
@@ -1408,7 +1409,7 @@ public class CommonControlModel extends AbstractActionForm
 
 	public String getFormName()
 	{
-		return this.formName;
+		return formName;
 	}
 
 	public void setFormName(String formName)
@@ -1418,7 +1419,7 @@ public class CommonControlModel extends AbstractActionForm
 
 	public List getSeparatorList()
 	{
-		return this.separatorList;
+		return separatorList;
 	}
 
 	public void setSeparatorList(List separatorList)
@@ -1428,7 +1429,7 @@ public class CommonControlModel extends AbstractActionForm
 
 	public String getSeparator()
 	{
-		return this.separator;
+		return separator;
 	}
 
 	public void setSeparator(String separator)
@@ -1438,7 +1439,7 @@ public class CommonControlModel extends AbstractActionForm
 
 	public String[] getSelectedAttributeIds()
 	{
-		return this.selectedAttributeIds;
+		return selectedAttributeIds;
 	}
 
 	public void setSelectedAttributeIds(String[] selectedAttributeIds)
@@ -1448,7 +1449,7 @@ public class CommonControlModel extends AbstractActionForm
 
 	public List getSelectedAttributes()
 	{
-		return this.selectedAttributes;
+		return selectedAttributes;
 	}
 
 	public void setSelectedAttributes(List selectedAttributes)
@@ -1458,7 +1459,7 @@ public class CommonControlModel extends AbstractActionForm
 
 	public String getControlsSequenceNumbers()
 	{
-		return this.controlsSequenceNumbers;
+		return controlsSequenceNumbers;
 	}
 
 	public void setControlsSequenceNumbers(String controlsSequenceNumbers)
@@ -1530,7 +1531,7 @@ public class CommonControlModel extends AbstractActionForm
 		this.isUrl = isUrl;
 		if (isUrl != null)
 		{
-			this.attributeDisplayAsURL = isUrl.toString();
+			attributeDisplayAsURL = isUrl.toString();
 		}
 	}
 
@@ -1554,6 +1555,6 @@ public class CommonControlModel extends AbstractActionForm
 	public void setAddNewObjectIdentifier(String addNewFor, Long addObjectIdentifier)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 }

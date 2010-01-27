@@ -1,3 +1,4 @@
+
 package edu.wustl.cab2b.server.path.pathgen;
 
 import java.sql.Connection;
@@ -8,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+
 /**
  * Computes all possible paths present in a directed graph. No path returned
  * should contain a cycle. Suppose the graph is (V, E) where V is the set of
@@ -47,150 +49,175 @@ import org.apache.log4j.Logger;
  * </ol>
  * @author srinath_k
  */
-public class GraphPathFinder {
-    private static final Logger logger = edu.wustl.common.util.logger.Logger.getLogger(GraphPathFinder.class);
+public class GraphPathFinder
+{
 
-    /** Constant for memory cache */
-    public static boolean MEM_CACHE = true;
+	private static final Logger LOGGER = edu.wustl.common.util.logger.Logger
+			.getLogger(GraphPathFinder.class);
 
-    private Graph inputGraph;
+	/** Constant for memory cache */
+	public static boolean MEM_CACHE = true;
 
-    private GraphPathFinderCache cache;
+	private Graph inputGraph;
 
-    private void wrapup() {
-        this.inputGraph = null;
-        this.cache.cleanup();
-        this.cache = null;
-    }
+	private GraphPathFinderCache cache;
 
-    private GraphPathFinderCache getCache() {
-        return cache;
-    }
+	private void wrapup()
+	{
+		inputGraph = null;
+		cache.cleanup();
+		cache = null;
+	}
 
-    /**
-     * 
-     * @param adjacencyMatrix
-     * @param replicationNodes
-     * @param conn
-     * @return
-     */
-    public Set<Path> getAllPaths(boolean[][] adjacencyMatrix, Map<Integer, Set<Integer>> replicationNodes,
-                                 Connection conn) {
-        return getAllPaths(adjacencyMatrix, replicationNodes, conn, Integer.MAX_VALUE);
-    }
+	private GraphPathFinderCache getCache()
+	{
+		return cache;
+	}
 
+	/**
+	 *
+	 * @param adjacencyMatrix
+	 * @param replicationNodes
+	 * @param conn
+	 * @return
+	 */
+	public Set<Path> getAllPaths(boolean[][] adjacencyMatrix,
+			Map<Integer, Set<Integer>> replicationNodes, Connection conn)
+	{
+		return getAllPaths(adjacencyMatrix, replicationNodes, conn, Integer.MAX_VALUE);
+	}
 
-    /**
-     * Returns all paths
-     * @param adjacencyMatrix
-     * @param replicationNodes
-     * @param conn
-     * @param maxLength
-     * @return
-     * @throws IllegalArgumentException if <tt>maxLength < 2</tt>
-     */
-    public Set<Path> getAllPaths(boolean[][] adjacencyMatrix, Map<Integer, Set<Integer>> replicationNodes,
-                                 Connection conn, int maxLength) {
-        logger.info("Entered GraphPathFinder...");
-        if (maxLength < 2) {
-            throw new IllegalArgumentException("maxLength should be atleast 2.");
-        }
-        long startTime = System.currentTimeMillis();
-        // init
-        this.inputGraph = new Graph(adjacencyMatrix);
-        if (MEM_CACHE) {
-            this.cache = new MemoryCache();
-        } else {
-            this.cache = new DatabaseCache(conn);
-        }
-        // end init
-        Node[] allNodes = this.inputGraph.allNodes().toArray(new Node[0]);
-        int numPaths = 0;
-        for (Node srcNode : allNodes) {
-            logger.debug("Processing " + srcNode);
-            for (Node destNode : allNodes) {
-                if (srcNode.equals(destNode)) {
-                    // don't process self-edges now...
-                    continue;
-                }
-                SourceDestinationPair sdp = new SourceDestinationPair(srcNode, destNode);
-                //                logger.info("Processing " + srcNode + " to " + destNode);
+	/**
+	 * Returns all paths
+	 * @param adjacencyMatrix
+	 * @param replicationNodes
+	 * @param conn
+	 * @param maxLength
+	 * @return
+	 * @throws IllegalArgumentException if <tt>maxLength < 2</tt>
+	 */
+	public Set<Path> getAllPaths(boolean[][] adjacencyMatrix,
+			Map<Integer, Set<Integer>> replicationNodes, Connection conn, int maxLength)
+	{
+		LOGGER.info("Entered GraphPathFinder...");
+		if (maxLength < 2)
+		{
+			throw new IllegalArgumentException("maxLength should be atleast 2.");
+		}
+		long startTime = System.currentTimeMillis();
+		// init
+		inputGraph = new Graph(adjacencyMatrix);
+		if (MEM_CACHE)
+		{
+			cache = new MemoryCache();
+		}
+		else
+		{
+			cache = new DatabaseCache(conn);
+		}
+		// end init
+		Node[] allNodes = inputGraph.allNodes().toArray(new Node[0]);
+		int numPaths = 0;
+		for (Node srcNode : allNodes)
+		{
+			LOGGER.debug("Processing " + srcNode);
+			for (Node destNode : allNodes)
+			{
+				if (srcNode.equals(destNode))
+				{
+					// don't process self-edges now...
+					continue;
+				}
+				SourceDestinationPair sdp = new SourceDestinationPair(srcNode, destNode);
+				//                logger.info("Processing " + srcNode + " to " + destNode);
 
-                Set<Path> srcDestPaths = getPaths(sdp, new HashSet<Node>(), maxLength);
-                numPaths += srcDestPaths.size();
-                // if (KEEP_WRITING) {
-                // PathToFileWriter.APPEND = true;
-                // PathToFileWriter.writePathsToFile(srcDestPaths, null);
-                // }
-            }
-        }
-        Set<Path> result = new HashSet<Path>();
-        // process self edges
-        for (Node node : allNodes) {
-            if (isEdgePresent(node, node)) {
-                result.add(new Path(node, node));
-                ++numPaths;
-            }
-        }
-        // add other paths
-        result.addAll(getCache().getAllPaths());
-        wrapup();
-        result = PathReplicationUtil.replicatePaths(result, replicationNodes);
-        long endTime = System.currentTimeMillis();
-        logger.info("Time taken GraphPathFinder : " + (endTime - startTime));
-        logger.info("Exiting GraphPathFinder.");
-        return result;
-    }
+				Set<Path> srcDestPaths = getPaths(sdp, new HashSet<Node>(), maxLength);
+				numPaths += srcDestPaths.size();
+				// if (KEEP_WRITING) {
+				// PathToFileWriter.APPEND = true;
+				// PathToFileWriter.writePathsToFile(srcDestPaths, null);
+				// }
+			}
+		}
+		Set<Path> result = new HashSet<Path>();
+		// process self edges
+		for (Node node : allNodes)
+		{
+			if (isEdgePresent(node, node))
+			{
+				result.add(new Path(node, node));
+				++numPaths;
+			}
+		}
+		// add other paths
+		result.addAll(getCache().getAllPaths());
+		wrapup();
+		result = PathReplicationUtil.replicatePaths(result, replicationNodes);
+		long endTime = System.currentTimeMillis();
+		LOGGER.info("Time taken GraphPathFinder : " + (endTime - startTime));
+		LOGGER.info("Exiting GraphPathFinder.");
+		return result;
+	}
 
-    private Set<Path> getPaths(SourceDestinationPair sdp, Set<Node> nodesToIgnore, final int maxLength) {
-        Node srcNode = sdp.getSrcNode();
-        Node destNode = sdp.getDestNode();
-        Set<Path> res = new HashSet<Path>();
-        // see if there are paths calculated already...
-        Set<Path> cachedPaths = getCache().getPathsOnIgnoringNodes(sdp, nodesToIgnore);
-        if (cachedPaths != null) {
-            res.addAll(cachedPaths);
-            return res;
-        }
-        Set<Node> interNodes = new HashSet<Node>(this.inputGraph.allNodes());
-        interNodes.remove(srcNode);
-        interNodes.remove(destNode);
-        interNodes.removeAll(nodesToIgnore);
+	private Set<Path> getPaths(SourceDestinationPair sdp, Set<Node> nodesToIgnore,
+			final int maxLength)
+	{
+		Node srcNode = sdp.getSrcNode();
+		Node destNode = sdp.getDestNode();
+		Set<Path> res = new HashSet<Path>();
+		// see if there are paths calculated already...
+		Set<Path> cachedPaths = getCache().getPathsOnIgnoringNodes(sdp, nodesToIgnore);
+		if (cachedPaths != null)
+		{
+			res.addAll(cachedPaths);
+			return res;
+		}
+		Set<Node> interNodes = new HashSet<Node>(inputGraph.allNodes());
+		interNodes.remove(srcNode);
+		interNodes.remove(destNode);
+		interNodes.removeAll(nodesToIgnore);
 
-        if (isEdgePresent(srcNode, destNode)) {
-            res.add(new Path(srcNode, destNode));
-        }
-        Set<Node> nodesToIgnoreNext = new HashSet<Node>(nodesToIgnore);
-        nodesToIgnoreNext.add(srcNode);
-        for (Node interNode : interNodes) {
-            if (isEdgePresent(srcNode, interNode)) {
-                Set<Path> pathsFromInterToDest = getPaths(new SourceDestinationPair(interNode, destNode),
-                                                          nodesToIgnoreNext, maxLength);
+		if (isEdgePresent(srcNode, destNode))
+		{
+			res.add(new Path(srcNode, destNode));
+		}
+		Set<Node> nodesToIgnoreNext = new HashSet<Node>(nodesToIgnore);
+		nodesToIgnoreNext.add(srcNode);
+		for (Node interNode : interNodes)
+		{
+			if (isEdgePresent(srcNode, interNode))
+			{
+				Set<Path> pathsFromInterToDest = getPaths(new SourceDestinationPair(interNode,
+						destNode), nodesToIgnoreNext, maxLength);
 
-                for (Path pathFromInterToDest : pathsFromInterToDest) {
-                    if (pathFromInterToDest.numNodes() == maxLength) {
-                        continue;
-                    }
-                    List<Node> intermediateNodes = new ArrayList<Node>();
+				for (Path pathFromInterToDest : pathsFromInterToDest)
+				{
+					if (pathFromInterToDest.numNodes() == maxLength)
+					{
+						continue;
+					}
+					List<Node> intermediateNodes = new ArrayList<Node>();
 
-                    intermediateNodes.add(interNode);
-                    intermediateNodes.addAll(pathFromInterToDest.getIntermediateNodes());
-                    Path resPath = new Path(srcNode, destNode, intermediateNodes);
-                    res.add(resPath);
-                }
+					intermediateNodes.add(interNode);
+					intermediateNodes.addAll(pathFromInterToDest.getIntermediateNodes());
+					Path resPath = new Path(srcNode, destNode, intermediateNodes);
+					res.add(resPath);
+				}
 
-            }
-        }
-        addEntryToCache(sdp, nodesToIgnore, res);
-        //  
-        return res;
-    }
+			}
+		}
+		addEntryToCache(sdp, nodesToIgnore, res);
+		//
+		return res;
+	}
 
-    private void addEntryToCache(SourceDestinationPair sdp, Set<Node> nodesToIgnore, Set<Path> res) {
-        getCache().addEntry(sdp, nodesToIgnore, res);
-    }
+	private void addEntryToCache(SourceDestinationPair sdp, Set<Node> nodesToIgnore, Set<Path> res)
+	{
+		getCache().addEntry(sdp, nodesToIgnore, res);
+	}
 
-    private boolean isEdgePresent(Node srcNode, Node destNode) {
-        return this.inputGraph.isEdgePresent(srcNode, destNode);
-    }
+	private boolean isEdgePresent(Node srcNode, Node destNode)
+	{
+		return inputGraph.isEdgePresent(srcNode, destNode);
+	}
 }

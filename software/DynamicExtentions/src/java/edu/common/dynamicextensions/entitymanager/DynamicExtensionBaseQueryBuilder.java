@@ -86,7 +86,7 @@ public class DynamicExtensionBaseQueryBuilder
 			DynamicExtensionsQueryBuilderConstantsInterface
 {
 
-	EntityManagerUtil entityManagerUtil = new EntityManagerUtil();
+	protected EntityManagerUtil entityManagerUtil = new EntityManagerUtil();
 
 	/**
 	 * This method builds the list of all the queries that need to be executed in order to
@@ -2880,7 +2880,7 @@ public class DynamicExtensionBaseQueryBuilder
 				if (((List) value).size() > 0)
 				{
 					frmtedValue = DynamicExtensionsUtility
-									.getEscapedStringValue((String) ((List) value).get(0));
+							.getEscapedStringValue((String) ((List) value).get(0));
 				}
 			}
 			else

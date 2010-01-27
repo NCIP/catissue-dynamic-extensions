@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package edu.common.dynamicextensions.util;
@@ -11,7 +11,7 @@ package edu.common.dynamicextensions.util;
 public class UniqueIDGenerator
 {
 
-	static long identifier = 0;
+	private static long identifier = 0;
 
 	public static Long getId()
 	{
