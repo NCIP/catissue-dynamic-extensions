@@ -5,8 +5,8 @@ import edu.common.dynamicextensions.domaininterface.BooleanValueInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 
 /**
- * @hibernate.joined-subclass table="DYEXTN_BOOLEAN_CONCEPT_VALUE" 
- * @hibernate.joined-subclass-key column="IDENTIFIER"  
+ * @hibernate.joined-subclass table="DYEXTN_BOOLEAN_CONCEPT_VALUE"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  * @author sujay_narkar
  *
  */
@@ -25,7 +25,7 @@ public class BooleanValue extends PermissibleValue implements BooleanValueInterf
 
 	/**
 	 * This method returns the value of the BooleanValue.
-	 * @hibernate.property name="value" type="boolean" column="VALUE" 
+	 * @hibernate.property name="value" type="boolean" column="VALUE"
 	 * @return the value of the BooleanValue.
 	 */
 	public Boolean getValue()
@@ -52,13 +52,13 @@ public class BooleanValue extends PermissibleValue implements BooleanValueInterf
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	public PermissibleValueInterface clone()
+	public PermissibleValueInterface getObjectCopy()
 	{
 		BooleanValueInterface booleanValueInterface = DomainObjectFactory.getInstance()
 				.createBooleanValue();
-		booleanValueInterface.setValue(this.value);
+		booleanValueInterface.setValue(value);
 		return booleanValueInterface;
 	}
 
@@ -68,10 +68,11 @@ public class BooleanValue extends PermissibleValue implements BooleanValueInterf
 	public boolean equals(Object obj)
 	{
 		boolean isEqual = false;
-		if (obj instanceof BooleanValue && (value!= null && value.equals(((BooleanValue) obj).getValue())))
+		if (obj instanceof BooleanValue
+				&& (value != null && value.equals(((BooleanValue) obj).getValue())))
 		{
-				isEqual = true;
-		
+			isEqual = true;
+
 		}
 		return isEqual;
 	}

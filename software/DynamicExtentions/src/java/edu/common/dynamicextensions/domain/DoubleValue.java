@@ -6,8 +6,8 @@ import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 
 /**
  * @author sujay_narkar
- * @hibernate.joined-subclass table="DYEXTN_DOUBLE_CONCEPT_VALUE" 
- * @hibernate.joined-subclass-key column="IDENTIFIER" 
+ * @hibernate.joined-subclass table="DYEXTN_DOUBLE_CONCEPT_VALUE"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  */
 public class DoubleValue extends PermissibleValue implements DoubleValueInterface
 {
@@ -24,7 +24,7 @@ public class DoubleValue extends PermissibleValue implements DoubleValueInterfac
 
 	/**
 	 * This method returns the predefined value of DoubleValue.
-	 * @hibernate.property name="value" type="double" column="VALUE"   
+	 * @hibernate.property name="value" type="double" column="VALUE"
 	 * @return the predefined value of DoubleValue.
 	 */
 	public Double getValue()
@@ -51,16 +51,16 @@ public class DoubleValue extends PermissibleValue implements DoubleValueInterfac
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domain.PermissibleValue#clone()
 	 */
-	public PermissibleValueInterface clone()
+	public PermissibleValueInterface getObjectCopy()
 	{
 		DoubleValueInterface doubleValueInterface = DomainObjectFactory.getInstance()
 				.createDoubleValue();
-		doubleValueInterface.setValue(this.value);
+		doubleValueInterface.setValue(value);
 		return doubleValueInterface;
 	}
 
@@ -70,7 +70,8 @@ public class DoubleValue extends PermissibleValue implements DoubleValueInterfac
 	public boolean equals(Object obj)
 	{
 		boolean isEqual = false;
-		if (obj instanceof DoubleValue && (value!= null && value.equals(((DoubleValue) obj).getValue())))
+		if (obj instanceof DoubleValue
+				&& (value != null && value.equals(((DoubleValue) obj).getValue())))
 		{
 			isEqual = true;
 		}

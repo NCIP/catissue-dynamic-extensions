@@ -5,8 +5,8 @@ import edu.common.dynamicextensions.domaininterface.ByteArrayValueInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 
 /**
- * @hibernate.joined-subclass table="DYEXTN_BARR_CONCEPT_VALUE" 
- * @hibernate.joined-subclass-key column="IDENTIFIER"   
+ * @hibernate.joined-subclass table="DYEXTN_BARR_CONCEPT_VALUE"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  * @author sujay_narkar
  *
  */
@@ -28,9 +28,9 @@ public class ByteArrayValue extends PermissibleValue implements ByteArrayValueIn
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	public PermissibleValueInterface clone()
+	public PermissibleValueInterface getObjectCopy()
 	{
 		return null;
 	}

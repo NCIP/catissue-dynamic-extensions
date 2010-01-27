@@ -1646,7 +1646,7 @@ public class CategoryHelper implements CategoryHelperInterface
 		List<PermissibleValueInterface> permissibleValueList = new ArrayList<PermissibleValueInterface>();
 		for (PermissibleValueInterface permissibleValueInterface : permissibleValues)
 		{
-			permissibleValueList.add(permissibleValueInterface.clone());
+			permissibleValueList.add(permissibleValueInterface.getObjectCopy());
 		}
 		return permissibleValueList;
 	}

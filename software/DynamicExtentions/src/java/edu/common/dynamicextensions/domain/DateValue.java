@@ -34,7 +34,7 @@ public class DateValue extends PermissibleValue implements DateValueInterface
 	public Date getValue()
 	{
 		Date defaultDate = null;
-		if(value != null)
+		if (value != null)
 		{
 			defaultDate = new Timestamp(value.getTime());
 		}
@@ -57,7 +57,7 @@ public class DateValue extends PermissibleValue implements DateValueInterface
 	public Object getValueAsObject()
 	{
 		Date defaultDate = null;
-		if(value != null)
+		if (value != null)
 		{
 			defaultDate = new Timestamp(value.getTime());
 		}
@@ -67,7 +67,7 @@ public class DateValue extends PermissibleValue implements DateValueInterface
 	/**
 	 *
 	 */
-	public PermissibleValueInterface clone()
+	public PermissibleValueInterface getObjectCopy()
 	{
 		DateValueInterface dateValueInterface = DomainObjectFactory.getInstance().createDateValue();
 		dateValueInterface.setValue(value);
@@ -80,7 +80,8 @@ public class DateValue extends PermissibleValue implements DateValueInterface
 	public boolean equals(Object obj)
 	{
 		boolean isEqual = false;
-		if (obj instanceof DateValue && (value!= null && getValue().equals(((DateValue) obj).getValue())))
+		if (obj instanceof DateValue
+				&& (value != null && getValue().equals(((DateValue) obj).getValue())))
 		{
 			isEqual = true;
 		}

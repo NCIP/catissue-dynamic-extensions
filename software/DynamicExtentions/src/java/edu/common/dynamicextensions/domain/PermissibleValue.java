@@ -134,9 +134,9 @@ public abstract class PermissibleValue extends DynamicExtensionBaseDomainObject
 	{
 		List<SemanticPropertyInterface> semanticPropertyList = new ArrayList<SemanticPropertyInterface>();
 
-		if (this.semanticPropertyCollection != null && !this.semanticPropertyCollection.isEmpty())
+		if (semanticPropertyCollection != null && !semanticPropertyCollection.isEmpty())
 		{
-			semanticPropertyList.addAll(this.semanticPropertyCollection);
+			semanticPropertyList.addAll(semanticPropertyCollection);
 			Collections.sort(semanticPropertyList);
 		}
 		return semanticPropertyList;
@@ -209,5 +209,5 @@ public abstract class PermissibleValue extends DynamicExtensionBaseDomainObject
 	 * @param stringValue
 	 * @return
 	 */
-	public abstract PermissibleValueInterface clone();
+	public abstract PermissibleValueInterface getObjectCopy();
 }

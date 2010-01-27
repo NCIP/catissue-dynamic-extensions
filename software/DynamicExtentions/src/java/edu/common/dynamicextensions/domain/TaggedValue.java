@@ -2,7 +2,7 @@
  *<p>Title: </p>
  *<p>Description:  </p>
  *<p>Copyright:TODO</p>
- *@author 
+ *@author
  *@version 1.0
  */
 
@@ -17,7 +17,7 @@ import edu.common.dynamicextensions.domaininterface.TaggedValueInterface;
  * @created 28-Sep-2006 12:20:08 PM
  * @hibernate.class table="DYEXTN_TAGGED_VALUE"
  * @hibernate.cache  usage="read-write"
- * 
+ *
  */
 public class TaggedValue extends DynamicExtensionBaseDomainObject implements TaggedValueInterface
 {
@@ -46,7 +46,7 @@ public class TaggedValue extends DynamicExtensionBaseDomainObject implements Tag
 
 	/**
 	 * This method returns the key.
-	 * @hibernate.property name="key" type="string" column="T_KEY" 
+	 * @hibernate.property name="key" type="string" column="T_KEY"
 	 * @return the concept code.
 	 */
 	public String getKey()
@@ -61,7 +61,7 @@ public class TaggedValue extends DynamicExtensionBaseDomainObject implements Tag
 
 	/**
 	 * This method returns the concept code.
-	 * @hibernate.property name="value" type="string" column="T_VALUE" 
+	 * @hibernate.property name="value" type="string" column="T_VALUE"
 	 * @return the concept code.
 	 */
 	public String getValue()
@@ -77,14 +77,14 @@ public class TaggedValue extends DynamicExtensionBaseDomainObject implements Tag
 		this.value = value;
 	}
 
-	/** 
+	/**
 	 * @see java.lang.Object#clone()
 	 */
-	public TaggedValue clone()
+	public TaggedValue getObjectCopy()
 	{
 		TaggedValue taggedValue = new TaggedValue();
-		taggedValue.setKey(String.valueOf(this.key));
-		taggedValue.setValue(String.valueOf(this.value));
+		taggedValue.setKey(String.valueOf(key));
+		taggedValue.setValue(String.valueOf(value));
 		return taggedValue;
 	}
 }

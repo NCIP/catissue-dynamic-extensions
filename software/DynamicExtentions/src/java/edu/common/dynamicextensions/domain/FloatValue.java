@@ -6,8 +6,8 @@ import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 
 /**
  * @author sujay_narkar
- * @hibernate.joined-subclass table="DYEXTN_FLOAT_CONCEPT_VALUE" 
- * @hibernate.joined-subclass-key column="IDENTIFIER"  
+ * @hibernate.joined-subclass table="DYEXTN_FLOAT_CONCEPT_VALUE"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  *
  */
 public class FloatValue extends PermissibleValue implements FloatValueInterface
@@ -25,7 +25,7 @@ public class FloatValue extends PermissibleValue implements FloatValueInterface
 
 	/**
 	 * This method returns the predefined value of FloatValue.
-	 * @hibernate.property name="value" type="float" column="VALUE" 
+	 * @hibernate.property name="value" type="float" column="VALUE"
 	 * @return Returns the predefined value of FloatValue.
 	 */
 	public Float getValue()
@@ -52,13 +52,13 @@ public class FloatValue extends PermissibleValue implements FloatValueInterface
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	public PermissibleValueInterface clone()
+	public PermissibleValueInterface getObjectCopy()
 	{
 		FloatValueInterface floatValueInterface = DomainObjectFactory.getInstance()
 				.createFloatValue();
-		floatValueInterface.setValue(this.value);
+		floatValueInterface.setValue(value);
 		return floatValueInterface;
 	}
 
@@ -68,7 +68,8 @@ public class FloatValue extends PermissibleValue implements FloatValueInterface
 	public boolean equals(Object obj)
 	{
 		boolean isEqual = false;
-		if (obj instanceof FloatValue && (value!= null && value.equals(((FloatValue) obj).getValue())))
+		if (obj instanceof FloatValue
+				&& (value != null && value.equals(((FloatValue) obj).getValue())))
 		{
 			isEqual = true;
 		}

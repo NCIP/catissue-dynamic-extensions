@@ -6,8 +6,8 @@ import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 
 /**
  * @author sujay_narkar
- * @hibernate.joined-subclass table="DYEXTN_INTEGER_CONCEPT_VALUE" 
- * @hibernate.joined-subclass-key column="IDENTIFIER"  
+ * @hibernate.joined-subclass table="DYEXTN_INTEGER_CONCEPT_VALUE"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  */
 public class IntegerValue extends PermissibleValue implements IntegerValueInterface
 {
@@ -24,7 +24,7 @@ public class IntegerValue extends PermissibleValue implements IntegerValueInterf
 
 	/**
 	 * This method returns the predefined value of IntegerValue.
-	 * @hibernate.property name="value" type="integer" column="VALUE" 
+	 * @hibernate.property name="value" type="integer" column="VALUE"
 	 * @return the predefined value of IntegerValue.
 	 */
 	public Integer getValue()
@@ -51,13 +51,13 @@ public class IntegerValue extends PermissibleValue implements IntegerValueInterf
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	public PermissibleValueInterface clone()
+	public PermissibleValueInterface getObjectCopy()
 	{
 		IntegerValueInterface integerValueInterface = DomainObjectFactory.getInstance()
 				.createIntegerValue();
-		integerValueInterface.setValue(this.value);
+		integerValueInterface.setValue(value);
 		return integerValueInterface;
 	}
 
@@ -67,7 +67,8 @@ public class IntegerValue extends PermissibleValue implements IntegerValueInterf
 	public boolean equals(Object obj)
 	{
 		boolean isEqual = false;
-		if (obj instanceof IntegerValue && (value!= null && value.equals(((IntegerValue) obj).getValue())))
+		if (obj instanceof IntegerValue
+				&& (value != null && value.equals(((IntegerValue) obj).getValue())))
 		{
 			isEqual = true;
 		}

@@ -6,8 +6,8 @@ import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 
 /**
  * @author sujay_narkar
- * @hibernate.joined-subclass table="DYEXTN_LONG_CONCEPT_VALUE" 
- * @hibernate.joined-subclass-key column="IDENTIFIER"  
+ * @hibernate.joined-subclass table="DYEXTN_LONG_CONCEPT_VALUE"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  */
 public class LongValue extends PermissibleValue implements LongValueInterface
 {
@@ -24,7 +24,7 @@ public class LongValue extends PermissibleValue implements LongValueInterface
 
 	/**
 	 * This method returns the predefined value of LongValue.
-	 * @hibernate.property name="value" type="long" column="VALUE"  
+	 * @hibernate.property name="value" type="long" column="VALUE"
 	 * @return the predefined value of LongValue.
 	 */
 	public Long getValue()
@@ -51,22 +51,23 @@ public class LongValue extends PermissibleValue implements LongValueInterface
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	public PermissibleValueInterface clone()
+	public PermissibleValueInterface getObjectCopy()
 	{
 		LongValueInterface longValueInterface = DomainObjectFactory.getInstance().createLongValue();
-		longValueInterface.setValue(this.value);
+		longValueInterface.setValue(value);
 		return longValueInterface;
 	}
 
 	public boolean equals(Object obj)
 	{
 		boolean isEqual = false;
-		if (obj instanceof LongValue && (value!= null && value.equals(((LongValue) obj).getValue())))
+		if (obj instanceof LongValue
+				&& (value != null && value.equals(((LongValue) obj).getValue())))
 		{
 			isEqual = true;
-			
+
 		}
 		return isEqual;
 	}

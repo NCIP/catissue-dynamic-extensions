@@ -6,8 +6,8 @@ import edu.common.dynamicextensions.domaininterface.StringValueInterface;
 
 /**
  * @author sujay_narkar
- * @hibernate.joined-subclass table="DYEXTN_STRING_CONCEPT_VALUE" 
- * @hibernate.joined-subclass-key column="IDENTIFIER" 
+ * @hibernate.joined-subclass table="DYEXTN_STRING_CONCEPT_VALUE"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  */
 public class StringValue extends PermissibleValue implements StringValueInterface
 {
@@ -24,7 +24,7 @@ public class StringValue extends PermissibleValue implements StringValueInterfac
 
 	/**
 	 * This method returns the predefined value of StringValue.
-	 * @hibernate.property name="value" type="string" column="VALUE"  
+	 * @hibernate.property name="value" type="string" column="VALUE"
 	 * @return the predefined value of StringValue.
 	 */
 	public String getValue()
@@ -51,12 +51,12 @@ public class StringValue extends PermissibleValue implements StringValueInterfac
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	public PermissibleValueInterface clone()
+	public PermissibleValueInterface getObjectCopy()
 	{
 		StringValueInterface stringValue = DomainObjectFactory.getInstance().createStringValue();
-		stringValue.setValue(this.value);
+		stringValue.setValue(value);
 		return stringValue;
 	}
 
@@ -66,7 +66,8 @@ public class StringValue extends PermissibleValue implements StringValueInterfac
 	public boolean equals(Object obj)
 	{
 		boolean isEqual = false;
-		if (obj instanceof StringValue && (value!= null && value.equals(((StringValue) obj).getValue())))
+		if (obj instanceof StringValue
+				&& (value != null && value.equals(((StringValue) obj).getValue())))
 		{
 			isEqual = true;
 		}
