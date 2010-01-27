@@ -19,7 +19,8 @@ public class TestImportPermissibleValues extends DynamicExtensionsBaseTestCase
 	{
 		try
 		{
-			String[] parameters = {"pvs/PermissibleValues.csv", PV_FILE_PATH, APPLICATIONURL};
+			String[] parameters = {"CPUML/TestModels/TestModel_withTags/editedTestModel_pv.csv",
+					"CPUML", APPLICATIONURL};
 			DynamicallyImportPermissibleValues.main(parameters);
 		}
 		catch (Exception e)
