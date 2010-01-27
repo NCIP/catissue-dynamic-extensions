@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -579,7 +578,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 	public static Collection<?> executeHQL(String queryName, List<Object> values)
 			throws HibernateException, DynamicExtensionsSystemException
 	{
-		Collection objects = new HashSet();
+		Collection objects = null;
 		HibernateDAO hibernateDAO = null;
 		try
 		{

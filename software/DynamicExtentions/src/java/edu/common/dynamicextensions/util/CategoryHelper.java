@@ -522,7 +522,6 @@ public class CategoryHelper implements CategoryHelperInterface
 				control = createOrUpdateCheckBoxControl(container, categoryAttribute);
 				break;
 			case LABEL_CONTROL :
-				control = control;
 				break;
 			case MULTISELECT_CHECKBOX_CONTROL :
 				control = createOrUpdateSelectControl(container, categoryAttribute,
@@ -1807,7 +1806,6 @@ public class CategoryHelper implements CategoryHelperInterface
 					checkboxControl.setIsHidden(false);
 					break;
 				case LABEL_CONTROL :
-					control = control;
 					break;
 				case MULTISELECT_CHECKBOX_CONTROL :
 					MultiSelectCheckBoxInterface multiSelectControl = (MultiSelectCheckBoxInterface) control;

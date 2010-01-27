@@ -37,7 +37,7 @@ public final class ControlConfigurationsFactory
 	/**
 	 * private constructor for ControlConfigurationsFactory.
 	 * This will initialize maps for controls and their appropriate rules.
-	 * The call to parseXML will parse two configuration files in order to 
+	 * The call to parseXML will parse two configuration files in order to
 	 * fill the data in their objects.
 	 * @throws DynamicExtensionsSystemException  dynamicExtensionsSystemException
 	 */
@@ -51,7 +51,7 @@ public final class ControlConfigurationsFactory
 	}
 
 	/**
-	 * 
+	 *
 	 * @return ControlConfigurationsFactory instance of ControlConfigurationsFactory
 	 * @throws DynamicExtensionsSystemException dynamicExtensionsSystemException
 	 */
@@ -226,7 +226,7 @@ public final class ControlConfigurationsFactory
 				}
 			}
 		}
-		return (ArrayList) ruleParametersAttributes;
+		return ruleParametersAttributes;
 	}
 
 	/**
@@ -255,7 +255,6 @@ public final class ControlConfigurationsFactory
 					controlNode = controlsList.item(i);
 					if (controlNode != null)
 					{
-						List dataTypeValidationRulesList = new ArrayList(), dataTypeRuleObjectsList = new ArrayList();
 						List implicitRulesList = null, implicitExplicitRulesList = null;
 						NodeList dataTypeRulesList = null;
 
@@ -329,7 +328,7 @@ public final class ControlConfigurationsFactory
 							dataTypeNode = controlDataTypesNodesList.item(j);
 							dataTypeRulesList = ((Element) dataTypeNode)
 									.getElementsByTagName(Constants.VALIDATION_RULE);
-							dataTypeValidationRulesList = getChildNodesList(dataTypeRulesList,
+							List dataTypeValidationRulesList = getChildNodesList(dataTypeRulesList,
 									Constants.NAME);
 
 							implicitRulesList = getChildNodesList(dataTypeRulesList,
@@ -342,7 +341,7 @@ public final class ControlConfigurationsFactory
 							dataTypeExplicitRulesMap.put(dataTypesList.get(j),
 									implicitExplicitRulesList.get(1));
 
-							dataTypeRuleObjectsList = getRuleObjectsList(dataTypeValidationRulesList);
+							List dataTypeRuleObjectsList = getRuleObjectsList(dataTypeValidationRulesList);
 							dataTypeRulesMap.put(dataTypesList.get(j), dataTypeRuleObjectsList);
 						}
 						controlsConfigurationObject.setDataTypeValidationRules(dataTypeRulesMap);
@@ -380,7 +379,7 @@ public final class ControlConfigurationsFactory
 			}
 
 			List<String> commonImplicitRuleList = controlsConfiguration.getCommonImplicitRules();
-			if (commonImplicitRuleList != null || !commonImplicitRuleList.isEmpty())
+			if (commonImplicitRuleList != null && !commonImplicitRuleList.isEmpty())
 			{
 				allImplicitRules.addAll(commonImplicitRuleList);
 			}
@@ -389,7 +388,7 @@ public final class ControlConfigurationsFactory
 	}
 
 	/**
-	 * Gets all ImplicitExplicitRules 
+	 * Gets all ImplicitExplicitRules
 	 * @param rulesList list of rules
 	 * @param implicitRulesList list of the rules which will not be shown on ui
 	 * @return List of addition of the rules which will be shown on ui and which will not be shown on ui.
@@ -417,7 +416,7 @@ public final class ControlConfigurationsFactory
 	}
 
 	/**
-	 * 
+	 *
 	 * @param ruleValidationsList list of ruleNames
 	 * @return List of ruleObjects.
 	 */
@@ -429,7 +428,7 @@ public final class ControlConfigurationsFactory
 		while (rulesIterator.hasNext())
 		{
 			String ruleName = (String) rulesIterator.next();
-			ruleObject = (RuleConfigurationObject) rulesConfigurationMap.get(ruleName);
+			ruleObject = rulesConfigurationMap.get(ruleName);
 			ruleObjectsList.add(ruleObject);
 		}
 		return ruleObjectsList;
@@ -530,7 +529,7 @@ public final class ControlConfigurationsFactory
 	}
 
 	/**
-	 * 
+	 *
 	 * @param controlName name of the control selected by user
 	 * @return List dataTypes associated with the selected control
 	 */
@@ -590,7 +589,7 @@ public final class ControlConfigurationsFactory
 	}
 
 	/**
-	 * 
+	 *
 	 * @param controlName name of the control selected by user
 	 * @return ControlDisplayLabel DisplayLabel for the control selected by user
 	 */
@@ -681,7 +680,7 @@ public final class ControlConfigurationsFactory
 	/**
 	 * Returns the list in String format
 	 * @param rules list of rules
-	 * @return listOfRules 
+	 * @return listOfRules
 	 */
 	private List getListOfRules(List rules)
 	{
@@ -705,7 +704,7 @@ public final class ControlConfigurationsFactory
 		RuleConfigurationObject ruleConfigurationObject = null;
 		if (ruleName != null && rulesConfigurationMap != null)
 		{
-			ruleConfigurationObject = (RuleConfigurationObject) rulesConfigurationMap.get(ruleName);
+			ruleConfigurationObject = rulesConfigurationMap.get(ruleName);
 		}
 
 		return ruleConfigurationObject;
@@ -733,12 +732,12 @@ public final class ControlConfigurationsFactory
 	public List getRuleDisplayLabels(List ruleNamesList)
 	{
 		List<String> listOfDisplayLabels = new ArrayList<String>();
-		Iterator iter = (Iterator) ruleNamesList.iterator();
+		Iterator iter = ruleNamesList.iterator();
 		RuleConfigurationObject ruleConfigurationObject = null;
 		while (iter.hasNext())
 		{
 			String ruleName = iter.next().toString();
-			ruleConfigurationObject = (RuleConfigurationObject) rulesConfigurationMap.get(ruleName);
+			ruleConfigurationObject = rulesConfigurationMap.get(ruleName);
 			listOfDisplayLabels.add(ruleConfigurationObject.getDisplayLabel());
 		}
 		return listOfDisplayLabels;
@@ -753,8 +752,7 @@ public final class ControlConfigurationsFactory
 	public ValidatorRuleInterface getValidatorRule(String ruleName)
 			throws DynamicExtensionsSystemException
 	{
-		RuleConfigurationObject ruleConfiguration = (RuleConfigurationObject) rulesConfigurationMap
-				.get(ruleName);
+		RuleConfigurationObject ruleConfiguration = rulesConfigurationMap.get(ruleName);
 		ValidatorRuleInterface ruleInterface;
 
 		Class ruleClass;
@@ -772,7 +770,7 @@ public final class ControlConfigurationsFactory
 	}
 
 	/**
-	 * 
+	 *
 	 * @param controlName selected by user
 	 * @return Map of rules
 	 */
@@ -782,14 +780,13 @@ public final class ControlConfigurationsFactory
 		ControlsConfigurationObject ccf = (ControlsConfigurationObject) controlsConfigurationMap
 				.get(controlName);
 		List dataTypes = ccf.getDataTypesList();
-		List rules = new ArrayList();
 		String dataType = null;
 		Iterator iter1 = null;
 		Iterator iter = dataTypes.iterator();
 		while (iter.hasNext())
 		{
 			dataType = ((NameValueBean) iter.next()).getName();
-			rules = (ArrayList) getExplicitRules(controlName, dataType);
+			List rules = getExplicitRules(controlName, dataType);
 			iter1 = rules.iterator();
 			List<RuleConfigurationObject> ruleObjects = new ArrayList<RuleConfigurationObject>();
 			while (iter1.hasNext())
@@ -801,8 +798,8 @@ public final class ControlConfigurationsFactory
 			}
 			rulesMap.put(dataType, ruleObjects);
 		}
-		List commonRules = new ArrayList();
-		commonRules = (ArrayList) getCommonExplicitRules(controlName);
+
+		List commonRules = getCommonExplicitRules(controlName);
 		iter1 = commonRules.iterator();
 		List<RuleConfigurationObject> commonRuleObjects = new ArrayList<RuleConfigurationObject>();
 		while (iter1.hasNext())

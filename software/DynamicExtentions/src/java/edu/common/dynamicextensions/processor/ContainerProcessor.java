@@ -27,7 +27,7 @@ import edu.wustl.common.util.Utility;
  * 1. It creates a new container.
  * 2. Populates the containerInterface (Cache) object.
  * 3. Populates the information to UIBean taking form Cache.
- * This processor class is a POJO and not a framework specific class so it can be used by 
+ * This processor class is a POJO and not a framework specific class so it can be used by
  * all types of presentation layers.  </p>
  *@author Deepti Shelar
  *@version 1.0
@@ -36,7 +36,7 @@ public class ContainerProcessor extends BaseDynamicExtensionsProcessor
 {
 
 	/**
-	 * This is a singleton class so we have a protected constructor , We are providing getInstance method 
+	 * This is a singleton class so we have a protected constructor , We are providing getInstance method
 	 * to return the ContainerProcessor's instance.
 	 */
 	protected ContainerProcessor()
@@ -66,8 +66,8 @@ public class ContainerProcessor extends BaseDynamicExtensionsProcessor
 	 * This method populates the given ContainerInterface using the given ContainerUIBeanInterface.
 	 * @param containerInterface : Instance of containerInterface which is populated using the informationInterface.
 	 * @param containerUIBeanInterface : Instance of ContainerUIBeanInterface which is used to populate the containerInterface.
-	 * @throws DynamicExtensionsApplicationException 
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public void populateContainerInterface(ContainerInterface containerInterface,
 			ContainerUIBeanInterface containerUIBeanInterface)
@@ -125,8 +125,9 @@ public class ContainerProcessor extends BaseDynamicExtensionsProcessor
 							.getContainerCollection();
 					for (ContainerInterface currentContainer : containerCollection)
 					{
-						if (currentContainer.getId() != null && currentContainer.getId().toString().equals(
-								containerUIBean.getParentForm()))
+						if (currentContainer.getId() != null
+								&& currentContainer.getId().toString().equals(
+										containerUIBean.getParentForm()))
 						{
 							parentContainer = currentContainer;
 						}
@@ -144,20 +145,19 @@ public class ContainerProcessor extends BaseDynamicExtensionsProcessor
 
 	/**
 	 * /**
-	 * This method will populate the containerInformationInterface using the containerInterface so that the 
+	 * This method will populate the containerInformationInterface using the containerInterface so that the
 	 * information of the Container can be shown on the user page using the EntityUIBeanInterface.
 	 * @param containerInterface Instance of containerInterface from which to populate the informationInterface.
-	 * @param containerUIBeanInterface Instance of containerInformationInterface which will be populated using 
+	 * @param containerUIBeanInterface Instance of containerInformationInterface which will be populated using
 	 * the first parameter that is ContainerInterface.
-	 * @throws DynamicExtensionsApplicationException 
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
 	 */
 
 	public void populateContainerUIBeanInterface(ContainerInterface containerInterface,
 			ContainerUIBeanInterface containerUIBeanInterface, EntityGroupInterface entityGroup)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
-		List<NameValueBean> formList = new ArrayList<NameValueBean>();
 		NameValueBean formTobeRemoved = null;
 		if (containerInterface != null && containerUIBeanInterface != null)
 		{
@@ -178,7 +178,7 @@ public class ContainerProcessor extends BaseDynamicExtensionsProcessor
 			{
 				// Restrict Inherit call from same form.
 
-				formList = getFormsList(entityGroup.getId());
+				List<NameValueBean> formList = getFormsList(entityGroup.getId());
 
 				for (NameValueBean form : formList)
 				{
@@ -210,7 +210,7 @@ public class ContainerProcessor extends BaseDynamicExtensionsProcessor
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
@@ -219,7 +219,7 @@ public class ContainerProcessor extends BaseDynamicExtensionsProcessor
 			DynamicExtensionsApplicationException
 	{
 		EntityManagerInterface entityManager = EntityManager.getInstance();
-		List<NameValueBean> containerList = new ArrayList<NameValueBean>();
+		List<NameValueBean> containerList;
 		if (groupId != null)
 		{
 			containerList = entityManager.getAllContainerBeansByEntityGroupId(groupId);
@@ -241,8 +241,8 @@ public class ContainerProcessor extends BaseDynamicExtensionsProcessor
 	}
 
 	/**
-	 * 
-	 * @param containerInterface : Container object 
+	 *
+	 * @param containerInterface : Container object
 	 * @throws DynamicExtensionsApplicationException : Exception thrown by Entity Manager
 	 * @throws DynamicExtensionsSystemException :  Exception thrown by Entity Manager
 	 */

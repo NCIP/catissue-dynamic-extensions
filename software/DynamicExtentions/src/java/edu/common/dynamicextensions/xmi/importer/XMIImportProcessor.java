@@ -1089,9 +1089,9 @@ public class XMIImportProcessor
 						{
 							attsMap.put(att.getName(), att);
 							attribute = createAttribute(att, entity);
-							attributeNames.add(attribute.getName());
 							if (attribute != null)
 							{
+								attributeNames.add(attribute.getName());
 								DynamicExtensionsUtility.addInheritedTaggedValue(attribute);
 							}
 						}
@@ -1166,18 +1166,16 @@ public class XMIImportProcessor
 
 		entityVsPrimaryKeyNameList.put(targetEntity, new ArrayList<String>());
 
-		if ((targetEntity != null) && (association != null))
-		{
-			association.setTargetEntity(targetEntity);
-			association.setAssociationDirection(AssociationDirection.SRC_DESTINATION);
-			association.setName(umlAttribute.getName());
-			association.setSourceRole(EntityManagerUtil.getRole(AssociationType.ASSOCIATION,
-					DEConstants.COLLECTIONATTRIBUTEROLE + entity.getName(), Cardinality.ONE,
-					Cardinality.ONE));
-			association.setTargetRole(EntityManagerUtil.getRole(AssociationType.ASSOCIATION,
-					DEConstants.COLLECTIONATTRIBUTEROLE + targetEntity.getName(), Cardinality.ONE,
-					Cardinality.MANY));
-		}
+		association.setTargetEntity(targetEntity);
+		association.setAssociationDirection(AssociationDirection.SRC_DESTINATION);
+		association.setName(umlAttribute.getName());
+		association.setSourceRole(EntityManagerUtil.getRole(AssociationType.ASSOCIATION,
+				DEConstants.COLLECTIONATTRIBUTEROLE + entity.getName(), Cardinality.ONE,
+				Cardinality.ONE));
+		association.setTargetRole(EntityManagerUtil.getRole(AssociationType.ASSOCIATION,
+				DEConstants.COLLECTIONATTRIBUTEROLE + targetEntity.getName(), Cardinality.ONE,
+				Cardinality.MANY));
+
 		entity.addAbstractAttribute(association);
 		// Commented the line as it does not set constraint properties -- because the primarykey attribute
 		// collection is empty at this stage
@@ -2472,19 +2470,14 @@ public class XMIImportProcessor
 	private String[] getFileFormatsTagValue(final Map<String, String> taggedValueMap)
 	{
 		final String fileFormat = taggedValueMap.get(XMIConstants.TAGGED_VALUE_FILE_FORMATS);
+		String[] fileformats = null;
 		if (fileFormat != null)
 		{
 			final StringTokenizer stringTokenizer = new StringTokenizer(fileFormat, ",");
-			final int size = stringTokenizer.countTokens();
-
-			String[] fileformats = new String[size];
-
+			stringTokenizer.countTokens();
 			fileformats = fileFormat.split(",");
-
-			return fileformats;
-
 		}
-		return null;
+		return fileformats;
 	}
 
 	/**

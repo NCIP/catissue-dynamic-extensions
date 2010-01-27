@@ -145,7 +145,8 @@ public class Container extends DynamicExtensionBaseDomainObject
 		return childContainerCollection;
 	}
 
-	public void setChildContainerCollection(final Collection<ContainerInterface> childContainerCollection)
+	public void setChildContainerCollection(
+			final Collection<ContainerInterface> childContainerCollection)
 	{
 		this.childContainerCollection = childContainerCollection;
 	}
@@ -375,15 +376,15 @@ public class Container extends DynamicExtensionBaseDomainObject
 	 */
 	public List<ControlInterface> getAllControls()
 	{
-		final List<ControlInterface> controls = new ArrayList<ControlInterface>(getControlCollection());
+		final List<ControlInterface> controls = new ArrayList<ControlInterface>(
+				getControlCollection());
 		Collections.sort(controls);
-
-		List<ControlInterface> baseControls = new ArrayList<ControlInterface>();
 
 		ContainerInterface baseContainer = this.baseContainer;
 		while (baseContainer != null)
 		{
-			baseControls = new ArrayList(baseContainer.getControlCollection());
+			List<ControlInterface> baseControls = new ArrayList(baseContainer
+					.getControlCollection());
 			Collections.sort(baseControls);
 			Collections.reverse(baseControls);
 
@@ -403,19 +404,19 @@ public class Container extends DynamicExtensionBaseDomainObject
 	 */
 	public List<ControlInterface> getAllControlsUnderSameDisplayLabel()
 	{
-		final List<ControlInterface> controls = new ArrayList<ControlInterface>(getControlCollection());
+		final List<ControlInterface> controls = new ArrayList<ControlInterface>(
+				getControlCollection());
 
 		for (final ContainerInterface container : childContainerCollection)
 		{
 			controls.addAll(container.getAllControls());
 		}
 
-		List<ControlInterface> baseControls = new ArrayList<ControlInterface>();
-
 		ContainerInterface baseContainer = this.baseContainer;
 		while (baseContainer != null)
 		{
-			baseControls = new ArrayList(baseContainer.getControlCollection());
+			List<ControlInterface> baseControls = new ArrayList(baseContainer
+					.getControlCollection());
 			Collections.reverse(baseControls);
 
 			controls.addAll(baseControls);
@@ -442,8 +443,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 		containerHTML
 				.append("<table summary='' cellpadding='3' cellspacing='0' align='center' width='100%'>");
 
-		if ((getMode() != null)
-				&& getMode().equalsIgnoreCase(WebUIManagerConstants.EDIT_MODE)
+		if ((getMode() != null) && getMode().equalsIgnoreCase(WebUIManagerConstants.EDIT_MODE)
 				&& isShowRequiredFieldWarningMessage())
 		{
 			containerHTML.append("<tr><td class='formMessage' colspan='3'><span class='font_red'>");
@@ -504,10 +504,11 @@ public class Container extends DynamicExtensionBaseDomainObject
 
 		addCaption(controlHTML, caption, container, values);
 		Map<BaseAbstractAttributeInterface, Object> fullMap = null;
-		if((getPreviousValueMap()!=null) && (getPreviousValueMap().keySet().size() > 0))
+		if ((getPreviousValueMap() != null) && (getPreviousValueMap().keySet().size() > 0))
 		{
 			fullMap = getPreviousValueMap();
-		}else
+		}
+		else
 		{
 			fullMap = container.getContainerValueMap();
 		}
@@ -522,10 +523,9 @@ public class Container extends DynamicExtensionBaseDomainObject
 				Object value = null;
 				values.clear();
 
-
-				ControlsUtility.getAttributeValueForSkipLogicAttributesFromValueMap(fullMap, fullMap, control
-						.getSourceSkipControl().getBaseAbstractAttribute(), false, values, Integer
-						.valueOf(-1), Integer.valueOf(-1));
+				ControlsUtility.getAttributeValueForSkipLogicAttributesFromValueMap(fullMap,
+						fullMap, control.getSourceSkipControl().getBaseAbstractAttribute(), false,
+						values, Integer.valueOf(-1), Integer.valueOf(-1));
 
 				if (!values.isEmpty())
 				{
@@ -590,13 +590,15 @@ public class Container extends DynamicExtensionBaseDomainObject
 	 * @param caption in the format -- NewCaption:Main ContainerId
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void addCaption(final StringBuffer captionHTML, final String caption, final ContainerInterface container,
-			final List<Object> values) throws DynamicExtensionsSystemException
+	private void addCaption(final StringBuffer captionHTML, final String caption,
+			final ContainerInterface container, final List<Object> values)
+			throws DynamicExtensionsSystemException
 	{
 		// Check added for CSD project to ensure that HTML is generated for mock
 		// container with NULL id.
 		boolean isIdNull = false;
-		if (id == null) {
+		if (id == null)
+		{
 			isIdNull = true;
 			id = -1L;
 		}
@@ -625,7 +627,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 			captionHTML.append("<tr><td height='5'></td></tr>");
 		}
 
-		if(isIdNull)
+		if (isIdNull)
 		{
 			id = null;
 		}
@@ -638,8 +640,9 @@ public class Container extends DynamicExtensionBaseDomainObject
 	 * @param captionHTML
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void addDisplayOptionForRow(final ContainerInterface container, final List<Object> values,
-			final StringBuffer captionHTML, final String id) throws DynamicExtensionsSystemException
+	private void addDisplayOptionForRow(final ContainerInterface container,
+			final List<Object> values, final StringBuffer captionHTML, final String id)
+			throws DynamicExtensionsSystemException
 	{
 		if (isAllControlsSkipLogicTargetControlsForShowHide())
 		{
@@ -690,8 +693,9 @@ public class Container extends DynamicExtensionBaseDomainObject
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public String generateControlsHTMLAsGrid(
-			final List<Map<BaseAbstractAttributeInterface, Object>> valueMaps, final String dataEntryOperation,
-			final ContainerInterface container) throws DynamicExtensionsSystemException
+			final List<Map<BaseAbstractAttributeInterface, Object>> valueMaps,
+			final String dataEntryOperation, final ContainerInterface container)
+			throws DynamicExtensionsSystemException
 	{
 		return UserInterfaceiUtility.generateHTMLforGrid(this, valueMaps, dataEntryOperation,
 				container);
@@ -708,7 +712,8 @@ public class Container extends DynamicExtensionBaseDomainObject
 	/**
 	 * @param containerValueMap
 	 */
-	public void setContainerValueMap(final Map<BaseAbstractAttributeInterface, Object> containerValueMap)
+	public void setContainerValueMap(
+			final Map<BaseAbstractAttributeInterface, Object> containerValueMap)
 	{
 		this.containerValueMap = containerValueMap;
 	}
@@ -888,17 +893,17 @@ public class Container extends DynamicExtensionBaseDomainObject
 		this.showRequiredFieldWarningMessage = showRequiredFieldWarningMessage;
 	}
 
-
 	public Map<BaseAbstractAttributeInterface, Object> getPreviousValueMap()
 	{
 		return previousValueMap;
 	}
 
-
-	public void setPreviousValueMap(final Map<BaseAbstractAttributeInterface, Object> previousValueMap)
+	public void setPreviousValueMap(
+			final Map<BaseAbstractAttributeInterface, Object> previousValueMap)
 	{
 		this.previousValueMap = previousValueMap;
 	}
+
 	/**
 	 *
 	 * @return
@@ -906,17 +911,15 @@ public class Container extends DynamicExtensionBaseDomainObject
 	public boolean getIsSourceCalculatedAttributes()
 	{
 		boolean hasSourceCalculatedAttributes = false;
-		final AbstractEntityInterface abstractEntityInterface = this.getAbstractEntity();
+		final AbstractEntityInterface abstractEntityInterface = getAbstractEntity();
 		if (abstractEntityInterface instanceof CategoryEntityInterface)
 		{
 			final CategoryEntityInterface categoryEntityInterface = (CategoryEntityInterface) abstractEntityInterface;
 			for (final CategoryAttributeInterface categoryAttributeInterface : categoryEntityInterface
 					.getCategoryAttributeCollection())
 			{
-				if ((categoryAttributeInterface
-						.getIsSourceForCalculatedAttribute() != null)
-						&& categoryAttributeInterface
-								.getIsSourceForCalculatedAttribute())
+				if ((categoryAttributeInterface.getIsSourceForCalculatedAttribute() != null)
+						&& categoryAttributeInterface.getIsSourceForCalculatedAttribute())
 				{
 					hasSourceCalculatedAttributes = true;
 					break;

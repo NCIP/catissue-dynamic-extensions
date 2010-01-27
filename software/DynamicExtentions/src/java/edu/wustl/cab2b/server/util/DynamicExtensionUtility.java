@@ -12,7 +12,6 @@ import static edu.wustl.cab2b.server.path.PathConstants.METADATA_ENTITY_GROUP;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
@@ -536,8 +535,8 @@ public class DynamicExtensionUtility
 			HibernateDAO hibernateDAO) throws DAOException
 	{
 		List<EntityGroupInterface> entityGroups = new ArrayList<EntityGroupInterface>();
-		Collection<EntityGroupInterface> allEntityGroups = new HashSet<EntityGroupInterface>();
-		allEntityGroups = hibernateDAO.retrieve(EntityGroupInterface.class.getName());
+		Collection<EntityGroupInterface> allEntityGroups = hibernateDAO
+				.retrieve(EntityGroupInterface.class.getName());
 
 		for (EntityGroupInterface entityGroup : allEntityGroups)
 		{
@@ -549,7 +548,6 @@ public class DynamicExtensionUtility
 		return entityGroups;
 	}
 
-
 	/**
 	 * It will retrieve all the categories present in the dataBase.
 	 * @param hibernateDAO
@@ -560,8 +558,8 @@ public class DynamicExtensionUtility
 			throws DAOException
 	{
 		Logger.out.info("EntityCache in before GetAll Categories ");
-		List<CategoryInterface> categoryList = new ArrayList<CategoryInterface>();
-		categoryList = hibernateDAO.retrieve(CategoryInterface.class.getName());
+		List<CategoryInterface> categoryList = hibernateDAO.retrieve(CategoryInterface.class
+				.getName());
 		Logger.out.info("EntityCache in after getAllCategories ");
 		return categoryList;
 	}

@@ -94,11 +94,7 @@ public class DEIntegration implements IntegrationInterface
 			 * Checked for categoryContainerId in the entityMap if present then get the Category Table Name from the Map
 			 * else get it from DB.
 			 */
-			if (entityMap.containsKey(categoryContainerId.toString()))
-			{
-				catTableName = (String) entityMap.get(categoryContainerId.toString());
-			}
-			else
+			if (!entityMap.containsKey(categoryContainerId.toString()))
 			{
 				catTableName = EntityManager.getInstance().getDynamicTableName(categoryContainerId);
 				entityMap.put(categoryContainerId.toString(), catTableName);
@@ -179,11 +175,7 @@ public class DEIntegration implements IntegrationInterface
 			 * Checked for categoryContainerId in the entityMap if present then get the Category Table Name from the Map
 			 * else get it from DB.
 			 */
-			if (entityMap.containsKey(categoryContainerId.toString()))
-			{
-				catTableName = (String) entityMap.get(categoryContainerId.toString());
-			}
-			else
+			if (!entityMap.containsKey(categoryContainerId.toString()))
 			{
 				catTableName = EntityManager.getInstance().getDynamicTableName(categoryContainerId);
 				entityMap.put(categoryContainerId.toString(), catTableName);
@@ -241,9 +233,8 @@ public class DEIntegration implements IntegrationInterface
 		/**
 		 * get all associated de entities with static entity and get its container id
 		 */
-		Collection dynamicList = new HashSet();
-		dynamicList = EntityManager.getInstance().getDynamicEntitiesContainerIdFromHookEntity(
-				hookEntityId);
+		Collection dynamicList = EntityManager.getInstance()
+				.getDynamicEntitiesContainerIdFromHookEntity(hookEntityId);
 		return dynamicList;
 	}
 
@@ -284,7 +275,7 @@ public class DEIntegration implements IntegrationInterface
 			Long containerId, Long hookEntityId) throws DynamicExtensionsSystemException,
 			SQLException
 	{
-		Collection recIdList = new HashSet();
+		Collection recIdList;
 		String tableName = "";
 		String columnName = "";
 		if (entityMap.containsKey(containerId.toString()))
@@ -325,7 +316,6 @@ public class DEIntegration implements IntegrationInterface
 			Long containerId, Long hookEntityId, JDBCDAO dao)
 			throws DynamicExtensionsSystemException, SQLException
 	{
-		Collection recIdList = new HashSet();
 		String tableName = "";
 		String columnName = "";
 		if (entityMap.containsKey(containerId.toString()))
@@ -348,7 +338,7 @@ public class DEIntegration implements IntegrationInterface
 
 		List<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 		queryDataList.add(new ColumnValueBean(columnName, Long.valueOf(hookEntityRecId)));
-		recIdList = entityManagerUtil.getResultInList(entitySql, queryDataList, dao);
+		Collection recIdList = entityManagerUtil.getResultInList(entitySql, queryDataList, dao);
 
 		return recIdList;
 	}
@@ -372,9 +362,8 @@ public class DEIntegration implements IntegrationInterface
 	public Collection getCategoriesContainerIdFromHookEntity(Long hookEntityId)
 			throws DynamicExtensionsSystemException
 	{
-		Collection dynamicList = new HashSet();
-		dynamicList = EntityManager.getInstance().getCategoriesContainerIdFromHookEntity(
-				hookEntityId);
+		Collection dynamicList = EntityManager.getInstance()
+				.getCategoriesContainerIdFromHookEntity(hookEntityId);
 		return dynamicList;
 	}
 
@@ -394,7 +383,7 @@ public class DEIntegration implements IntegrationInterface
 			String hookEntityId) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException, CacheException, SQLException, DAOException
 	{
-		Collection recIdList = new HashSet();
+		Collection recIdList;
 		if (isCategory(containerId))
 		{
 			recIdList = getCategoryRecIdBasedOnHookEntityRecId(containerId, Long
@@ -424,7 +413,7 @@ public class DEIntegration implements IntegrationInterface
 			String hookEntityId, JDBCDAO dao) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException, CacheException, SQLException, DAOException
 	{
-		Collection recIdList = new HashSet();
+		Collection recIdList;
 		if (isCategory(containerId))
 		{
 			recIdList = getCategoryRecIdBasedOnHookEntityRecId(containerId, Long

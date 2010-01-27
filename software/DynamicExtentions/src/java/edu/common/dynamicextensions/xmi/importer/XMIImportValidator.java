@@ -3,7 +3,6 @@ package edu.common.dynamicextensions.xmi.importer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -215,8 +214,7 @@ public class XMIImportValidator
 			Map<String, EntityInterface> umlClassIdVsEntity)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
-		Set<String> attributeCollection = new HashSet<String>();
-		attributeCollection = entityNameVsAttributeNames.get(entityName);
+		Set<String> attributeCollection = entityNameVsAttributeNames.get(entityName);
 		validateAssociationName(attributeCollection, umlAssociationName, entityName);
 		validateAssociationNameInParent(entityNameVsAttributeNames, umlAssociationName, entityName,
 				parentIdVsChildrenIds, umlClassIdVsEntity);
@@ -236,7 +234,6 @@ public class XMIImportValidator
 			Map<String, EntityInterface> umlClassIdVsEntity)
 			throws DynamicExtensionsSystemException
 	{
-		Set<String> attributeCollection = new HashSet<String>();
 		for (Entry<String, List<String>> entry : parentIdVsChildrenIds.entrySet())
 		{
 			for (String childId : entry.getValue())
@@ -247,7 +244,8 @@ public class XMIImportValidator
 					String parentName = umlClassIdVsEntity.get(entry.getKey()).getName();
 					if ((parentName != null) && (parentName.trim().length() > 0))
 					{
-						attributeCollection = entityNameVsAttributeNames.get(parentName);
+						Set<String> attributeCollection = entityNameVsAttributeNames
+								.get(parentName);
 						validateAssociationName(attributeCollection, umlAssociationName, parentName);
 						validateAssociationNameInParent(entityNameVsAttributeNames,
 								umlAssociationName, parentName, parentIdVsChildrenIds,

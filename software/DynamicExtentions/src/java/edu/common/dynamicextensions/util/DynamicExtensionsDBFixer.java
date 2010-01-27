@@ -15,7 +15,7 @@ import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.common.util.logger.Logger;
 
 /**
- * This class is used for proving de upgrade fixes. 
+ * This class is used for proving de upgrade fixes.
  * @author kunal_kamble
  *
  */
@@ -49,16 +49,14 @@ public class DynamicExtensionsDBFixer
 			dbFixesSQL = new FileWriter(new File("deDBFixes.sql"));
 			for (EntityGroupInterface entityGroupInterface : collection)
 			{
-				String query = new String();
 				for (EntityInterface entityInterface : entityGroupInterface.getEntityCollection())
 				{
-
 					for (AssociationInterface associationInterface : entityInterface
 							.getAssociationCollection())
 					{
 						if (associationInterface.getIsCollection())
 						{
-							query = "update DYEXTN_ROLE set name='"
+							String query = "update DYEXTN_ROLE set name='"
 									+ DEConstants.COLLECTIONATTRIBUTEROLE
 									+ entityInterface.getName() + "' where identifier="
 									+ associationInterface.getSourceRole().getId() + ";\n";
@@ -85,8 +83,8 @@ public class DynamicExtensionsDBFixer
 	}
 
 	/**
-	 * These sqls are required for fixing the cacore issues. 
-	 * With the existing names we were not able to generate the cacore.  
+	 * These sqls are required for fixing the cacore issues.
+	 * With the existing names we were not able to generate the cacore.
 	 * @param dbFixesSQL
 	 * @throws IOException
 	 */

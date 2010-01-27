@@ -34,7 +34,7 @@ public abstract class SelectControl extends Control
 	 * @hibernate.set name="associationDisplayAttributeCollection" table="DYEXTN_ASSO_DISPLAY_ATTR"
 	 * cascade="all-delete-orphan" inverse="false" lazy="false"
 	 * @hibernate.collection-key column="SELECT_CONTROL_ID"
-	 * @hibernate.collection-one-to-many class="edu.common.dynamicextensions.domain.AssociationDisplayAttribute" 
+	 * @hibernate.collection-one-to-many class="edu.common.dynamicextensions.domain.AssociationDisplayAttribute"
 	 * @return Returns the associationDisplayAttributeCollection.
 	 */
 	public Collection<AssociationDisplayAttributeInterface> getAssociationDisplayAttributeCollection()
@@ -87,13 +87,13 @@ public abstract class SelectControl extends Control
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void removeAllAssociationDisplayAttributes()
 	{
 		associationDisplayAttributeCollection.clear();
 	}
-	
+
 	/**
 	 * getValueList
 	 * @param association
@@ -109,7 +109,7 @@ public abstract class SelectControl extends Control
 					.filterSystemAttributes(attributes);
 			List<AbstractAttributeInterface> attributesList = new ArrayList<AbstractAttributeInterface>(
 					filteredAttributes);
-			List<Map> values = (List<Map>) this.value;
+			List<Map> values = (List<Map>) value;
 			if (values != null)
 			{
 				for (Map valueMap : values)
@@ -121,24 +121,16 @@ public abstract class SelectControl extends Control
 		}
 		else
 		{
-			if (!(value instanceof List) && value != null)
+			if (value instanceof List && value != null)
 			{
-				List<String> temp = new ArrayList<String>();
-				temp.add((String) value);
-				valueList = temp;
-			}
-			else
-			{
-				if (this.value != null)
+				for (Long obj : (List<Long>) value)
 				{
-					for (Long obj : (List<Long>) this.value)
-					{
-						valueList.add(obj.toString());
-					}
+					valueList.add(obj.toString());
 				}
 			}
+
 		}
-		
+
 	}
-	
+
 }

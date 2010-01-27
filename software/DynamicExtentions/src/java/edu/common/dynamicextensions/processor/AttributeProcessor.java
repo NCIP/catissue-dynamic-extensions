@@ -1,6 +1,7 @@
 
 package edu.common.dynamicextensions.processor;
-import java.lang.reflect.Method;
+
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -76,7 +77,6 @@ import edu.common.dynamicextensions.xmi.model.ControlsModel;
 import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.logger.Logger;
-
 
 /**
  * @author preeti_munot
@@ -647,7 +647,8 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 		{
 			for (String validationRule : allValidationRules)
 			{
-				ValidatorUtil.checkForValidDateRangeRule(validationRule,attributeUIBeanInformationIntf,attributeName);
+				ValidatorUtil.checkForValidDateRangeRule(validationRule,
+						attributeUIBeanInformationIntf, attributeName);
 				RuleInterface rule = instantiateRule(validationRule,
 						attributeUIBeanInformationIntf, implicitRules);
 				abstractAttributeInterface.addRule(rule);
@@ -673,11 +674,10 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 		DomainObjectFactory domainObjectFactory = DomainObjectFactory.getInstance();
 		ControlConfigurationsFactory configurationsFactory = ControlConfigurationsFactory
 				.getInstance();
-		Collection<RuleParameterInterface> ruleParameterCollection = new HashSet<RuleParameterInterface>();
 
 		ruleConfigurationObject = configurationsFactory.getRuleObject(validationRule);
-		ruleParameterCollection = getRuleParameterCollection(ruleConfigurationObject,
-				attributeUIBeanInfo);
+		Collection<RuleParameterInterface> ruleParameterCollection = getRuleParameterCollection(
+				ruleConfigurationObject, attributeUIBeanInfo);
 
 		rule = domainObjectFactory.createRule();
 		rule.setName(ruleConfigurationObject.getRuleName());
@@ -935,8 +935,7 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 	 * @throws DynamicExtensionsApplicationException :Exception
 	 */
 	private PermissibleValueInterface getPermissibleValueInterfaceForNumber(
-			AbstractAttributeUIBeanInterface attributeUIBeanInformationIntf,
-			String permissibleValue)
+			AbstractAttributeUIBeanInterface attributeUIBeanInformationIntf, String permissibleValue)
 			throws DynamicExtensionsApplicationException
 	{
 
