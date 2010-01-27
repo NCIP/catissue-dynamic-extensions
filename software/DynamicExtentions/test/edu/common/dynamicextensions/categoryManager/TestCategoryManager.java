@@ -52,6 +52,10 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	private final String CATEGORY_FILE_DIR = "CPUML";
 	private final String TEST_MODEL_DIR = "CPUML/TestModels/TestModel_withTags/edited";
 
+	/**
+	 * This test case will create all the categories present in the CPUML Folder.
+	 * If one of the category creation is failed then this test case is also failed.
+	 */
 	public void testCreateCategory1()
 	{
 		try
@@ -68,6 +72,10 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 	}
 
+	/**
+	 * This test case will create the categories present in the CPUML Folder & specified in the catNames2.txt.
+	 * If one of the category creation is failed then this test case is also failed.
+	 */
 	public void testCreateCategory2()
 	{
 		try
@@ -84,6 +92,11 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 	}
 
+	/**
+	 * This method will find out the names of the categories present in the given catDir & will verify
+	 * wether that categories are saved in DB or not.
+	 * @param catDir category directory.
+	 */
 	private void assertAllCategoriesCreatedInDir(String catDir)
 	{
 		try
@@ -99,6 +112,12 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 	}
 
+	/**
+	 * This method will find out the names of the categories specified in the fileName & verify all these
+	 * categories are created.
+	 * @param fileName
+	 * @throws IOException
+	 */
 	private void assertAllCategoriesCreatedInFile(String fileName) throws IOException
 	{
 		File objFile = new File(fileName);
@@ -137,6 +156,16 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 
 	}
 
+	/**
+	 * This method will very that the category name given in the catFiles file is also present in the
+	 * Db. if not present then the test case is failed.
+	 * @param catFiles
+	 * @throws DynamicExtensionsSystemException
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws DAOException
+	 * @throws SQLException
+	 */
 	private void assertCategoriesFromFiles(Collection<String> catFiles)
 			throws DynamicExtensionsSystemException, FileNotFoundException, IOException,
 			DAOException, SQLException
@@ -182,6 +211,13 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 	}
 
+	/**
+	 * This method finds out the names of all the categories present in the db .
+	 * @return
+	 * @throws DAOException
+	 * @throws SQLException
+	 * @throws DynamicExtensionsSystemException
+	 */
 	private Collection<String> getSavedCategoryNames() throws DAOException, SQLException,
 			DynamicExtensionsSystemException
 	{
@@ -210,6 +246,11 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		return categoryNameCollection;
 	}
 
+	/**
+	 * step 1 : This method will first insert the data for Test Category_Chemotherapy Category .
+	 * step 2: retrieve the inserted record.
+	 * step 3: edit some data & then try to edit the data.
+	 */
 	public void testEditDataForTestChemotheropyCat()
 	{
 		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
@@ -217,8 +258,6 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 
 			CategoryInterface category = retriveCategoryByName("Test Category_Chemotherapy");
-			/*(CategoryInterface) EntityManager.getInstance().getObjectByName(
-					Category.class.getName(), "Test Category_Lab Information");*/
 			Map<BaseAbstractAttributeInterface, Object> dataValue;
 			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 			dataValue = createDataValueMap(rootCatEntity);
@@ -233,6 +272,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 	}
 
+	/**
+	 * This test case will try to insert the data for Test Category_Lab Information category.
+	 */
 	public void testInsertDataForTestLabInfoCat()
 	{
 		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
@@ -240,8 +282,6 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 
 			CategoryInterface category = retriveCategoryByName("Test Category_Lab Information");
-			/*(CategoryInterface) EntityManager.getInstance().getObjectByName(
-					Category.class.getName(), "Test Category_Lab Information");*/
 			Map<BaseAbstractAttributeInterface, Object> dataValue;
 			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 			dataValue = createDataValueMap(rootCatEntity);
@@ -254,16 +294,24 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 	}
 
+	/**
+	 * This test case will try to generate the html for each of the category in present in the DB in Edit mode.
+	 * Test case is failed if the exception is occured in generating the html for any of the Category.
+	 *
+	 */
 	public void testGenerateHtmlForContainerInEditMode()
 	{
 		try
 		{
 
-			CategoryInterface category = retriveCategoryByName("Test Category_Lab Information");
-			for (Object container : category.getRootCategoryElement().getContainerCollection())
+			List<CategoryInterface> categoryList = getAllCategories();
+			for (CategoryInterface category : categoryList)
 			{
-				((ContainerInterface) container).generateContainerHTML(
-						"Test Category_Lab Information", WebUIManagerConstants.EDIT_MODE);
+				for (Object container : category.getRootCategoryElement().getContainerCollection())
+				{
+					((ContainerInterface) container).generateContainerHTML(category.getName(),
+							WebUIManagerConstants.EDIT_MODE);
+				}
 			}
 		}
 		catch (Exception e)
@@ -273,16 +321,25 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 	}
 
+	/**
+	 * This test case will try to generate the html for each of the category in present in the DB in view mode.
+	 * Test case is failed if the exception is occured in generating the html for any of the Category.
+	 *
+	 */
 	public void testGenerateHtmlForContainerInViewMode()
 	{
 		try
 		{
 
-			CategoryInterface category = retriveCategoryByName("Test Category_Lab Information");
-			for (Object container : category.getRootCategoryElement().getContainerCollection())
+			List<CategoryInterface> categoryList = getAllCategories();
+			for (CategoryInterface category : categoryList)
 			{
-				((ContainerInterface) container).generateContainerHTML(
-						"Test Category_Lab Information", WebUIManagerConstants.VIEW_MODE);
+
+				for (Object container : category.getRootCategoryElement().getContainerCollection())
+				{
+					((ContainerInterface) container).generateContainerHTML(category.getName(),
+							WebUIManagerConstants.VIEW_MODE);
+				}
 			}
 		}
 		catch (Exception e)
@@ -292,17 +349,42 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 	}
 
+	/**
+	 * This method will retrieve the category with the given name from DB.
+	 * @param name name of the category
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DAOException
+	 */
 	private CategoryInterface retriveCategoryByName(String name)
 			throws DynamicExtensionsSystemException, DAOException
 	{
-		HibernateDAO hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
-		List<CategoryInterface> categoryList = hibernateDAO.retrieve(CategoryInterface.class
-				.getName(), "name", name);
-		DynamicExtensionsUtility.closeDAO(hibernateDAO);
+		List<CategoryInterface> categoryList = getAllCategories();
 		CategoryInterface category = categoryList.get(0);
 		return category;
 	}
 
+	/**
+	 * This method will retrieve all the categories in the DB.
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DAOException
+	 */
+	private List<CategoryInterface> getAllCategories() throws DynamicExtensionsSystemException,
+			DAOException
+	{
+		HibernateDAO hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
+		List<CategoryInterface> categoryList = hibernateDAO.retrieve(CategoryInterface.class
+				.getName());
+		DynamicExtensionsUtility.closeDAO(hibernateDAO);
+		return categoryList;
+	}
+
+	/**
+	 * This method will create the Data Value map for the Given Category Entity .
+	 * @param rootCatEntity
+	 * @return
+	 */
 	private Map<BaseAbstractAttributeInterface, Object> createDataValueMap(
 			CategoryEntityInterface rootCatEntity)
 	{
