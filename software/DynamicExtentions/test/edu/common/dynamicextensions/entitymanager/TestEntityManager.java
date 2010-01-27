@@ -9,6 +9,7 @@
 
 package edu.common.dynamicextensions.entitymanager;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -63,7 +64,9 @@ import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.common.dynamicextensions.util.global.DEConstants.ValueDomainType;
 import edu.common.dynamicextensions.validation.ValidatorRuleInterface;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
+import edu.wustl.dao.exception.DAOException;
 
 public class TestEntityManager extends DynamicExtensionsBaseTestCase
 {
@@ -955,6 +958,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			Long recordId = manager.insertData(clinicalAnnotations, dataValue, null);
 			Map map = manager.getRecordById(clinicalAnnotations, recordId);
 
+			//associate static entity with respective dynamicEntity
+			associateHookEntity(clinicalAnnotations, recordId);
+
 			Map recMap = (Map) ((List) map.get(pathAnnoChildAssocn)).get(0);
 			assertEquals("02-02-2009", recMap.get(pathAnnoChildAssocn.getTargetEntity()
 					.getAttributeByName("detectionDateChild")));
@@ -988,6 +994,88 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			fail("Exception occured");
 		}
 	}
+
+	/**
+	 * This method associates static entity with dynamic entity
+	 * @param clinicalAnnotations
+	 * @param recordId
+	 */
+	private void associateHookEntity(EntityInterface clinicalAnnotations, Long recordId)
+	{
+		try
+		{
+			EntityManagerInterface manager = EntityManager.getInstance();
+			//create hook object using reflection since we won't have preCreated concrete hook entity object
+			Object object = createObject("annotations.RecordEntry");
+			HibernateDAO hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
+			if(object != null)
+			{
+				//insert record for static entity
+				hibernateDAO.insert(object);
+				//get Id inserted for static entity
+				Method method = object.getClass().getMethod("getId");
+				Object obj = method.invoke(object);
+				Long staticEntityRecId = Long.valueOf(obj.toString());
+
+				//Get static entity from metadata id of recordEntry
+				EntityInterface staticEntity = manager.getEntityByIdentifier(
+						Long.valueOf("2"));
+				//search for association between static and dynamic entity
+				Collection<AssociationInterface> asntCollection = staticEntity
+						.getAssociationCollection();
+				AssociationInterface asntInterface = null;
+				for (AssociationInterface association : asntCollection)
+				{
+					if (association.getTargetEntity().equals(clinicalAnnotations))
+					{
+						asntInterface = association;
+						break;
+					}
+				}
+				if(asntInterface!=null)
+				{
+					manager.associateEntityRecords(asntInterface, staticEntityRecId,
+						recordId);
+				}
+			}
+			else
+			{
+				fail("Static Entity not present");
+			}
+
+			if (hibernateDAO != null)
+			{
+				hibernateDAO.commit();
+				DynamicExtensionsUtility.closeDAO(hibernateDAO);
+			}
+		}
+		catch (Exception e)
+		{
+			Logger.out.debug(e.getMessage());
+			e.printStackTrace();
+			fail("Exception occured");
+		}
+	}
+
+	/**
+	 * Creates Object using reflection
+	 * @param className
+	 * @return
+	 */
+	static Object createObject(String className) {
+      Object object = null;
+      try {
+          Class classDefinition = Class.forName(className);
+          object = classDefinition.newInstance();
+      } catch (InstantiationException e) {
+          Logger.out.error(e.getMessage());
+      } catch (IllegalAccessException e) {
+    	  Logger.out.error(e.getMessage());
+      } catch (ClassNotFoundException e) {
+    	  Logger.out.error(e.getMessage());
+      }
+      return object;
+   }
 
 	/**
 	 * This method test for updating data for a multiSelect attribute
@@ -3276,7 +3364,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	 *
 	 *
 	 *//*
-	
+
 		public void testDeleteRecordForObjectAttribute()
 		{
 			EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
@@ -3845,7 +3933,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 			//dataValue.put(commentsAttributes, "this is not default comment");
 			dataValue.put(pathAnnoChildAssocn, dataList);
-			EntityManagerInterface manager = new EntityManager();
+			EntityManagerInterface manager = EntityManager.getInstance();
 			Long recordId = manager.insertData(clinicalAnnotations, dataValue, null);
 			assertNotNull(recordId);
 			Map dataMapFirst1 = new HashMap();
