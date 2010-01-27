@@ -24,7 +24,7 @@ import edu.wustl.common.util.logger.Logger;
 public class DatabaseCache extends GraphPathFinderCache
 {
 
-	protected static String connector = "_";
+	private static final String CONNECTOR = "_";
 
 	protected int databaseCacheId;
 
@@ -280,7 +280,7 @@ public class DatabaseCache extends GraphPathFinderCache
 	protected List<Node> getNodeList(String nodeString)
 	{
 		ArrayList<Node> nodes = new ArrayList<Node>();
-		String[] arr = nodeString.split(connector);
+		String[] arr = nodeString.split(CONNECTOR);
 		for (int i = 1; i < arr.length; i++)
 		{
 			nodes.add(new Node(Integer.parseInt(arr[i])));
@@ -333,11 +333,11 @@ public class DatabaseCache extends GraphPathFinderCache
 	protected String getString(List<Integer> list)
 	{
 		StringBuffer stringBuffer = new StringBuffer();
-		stringBuffer.append(connector);
+		stringBuffer.append(CONNECTOR);
 		for (int oneInteger : list)
 		{
 			stringBuffer.append(oneInteger);
-			stringBuffer.append(connector);
+			stringBuffer.append(CONNECTOR);
 		}
 		return stringBuffer.toString();
 	}
