@@ -806,11 +806,6 @@
 			<antcall target="sleep">
 				<param name="sleep-time-seconds" value="300" />
 			</antcall>
-			<echo message="Now importing the Permissible values of test model for junits" />
-				<antcall target="import.pvs.testcases">
-					<param name="permissibleValuesFile" value="${test.pv.dir}/TestModel_pv.csv"/>
-					<param name="pv.dir" value="CPUML" />
-			</antcall>
 			<echo message="Junit started running" />
 			<junit printsummary="yes" haltonerror="no" haltonfailure="no" fork="yes" maxmemory="1024m" timeout="10800000">
 
