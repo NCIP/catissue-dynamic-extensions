@@ -350,8 +350,20 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			throws DynamicExtensionsSystemException, DAOException
 	{
 		List<CategoryInterface> categoryList = getAllCategories();
-		CategoryInterface category = categoryList.get(0);
-		return category;
+		CategoryInterface categoryByName = null;
+		for (CategoryInterface category : categoryList)
+		{
+			if (category.getName().equals(name))
+			{
+				categoryByName = category;
+				break;
+			}
+		}
+		if (categoryByName == null)
+		{
+			throw new DynamicExtensionsSystemException("Category with name " + name + " not found");
+		}
+		return categoryByName;
 	}
 
 	/**
