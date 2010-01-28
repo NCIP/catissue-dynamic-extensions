@@ -705,27 +705,12 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param name name of the entity group
 	 * @return entity group
 	 */
-	public EntityGroupInterface getEntityGroupByName(final String name)
-	{
-		EntityGroupInterface entityGroup = getEntityGroupFromCache(name);
-		if (entityGroup == null)
-		{
-			refreshCache();
-			entityGroup = getEntityGroupFromCache(name);
-		}
-		return entityGroup;
-	}
-
-	/**
-	 * @param name
-	 * @return
-	 */
-	private EntityGroupInterface getEntityGroupFromCache(final String name)
+	public EntityGroupInterface getEntityGroupByName(String name)
 	{
 		EntityGroupInterface entityGroup = null;
-		for (final EntityGroupInterface group : cab2bEntityGroups)
+		for (EntityGroupInterface group : cab2bEntityGroups)
 		{
-			if ((group.getName() != null) && group.getName().equals(name))
+			if (group.getName().equals(name))
 			{
 				entityGroup = group;
 			}
