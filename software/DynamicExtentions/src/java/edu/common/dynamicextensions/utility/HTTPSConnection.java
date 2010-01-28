@@ -116,7 +116,7 @@ public final class HTTPSConnection
 			servletConnection.setDefaultUseCaches(false);
 
 			// Specify the content type that we will send binary data
-			servletConnection.setRequestProperty("Content-Type", "application/octet-stream");
+			servletConnection.setRequestProperty("Content-Type", "multipart/form-data");
 		}
 		catch (IOException e)
 		{
