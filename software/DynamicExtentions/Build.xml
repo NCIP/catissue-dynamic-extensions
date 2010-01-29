@@ -21,6 +21,7 @@
 	<property name="javadoc.dir" value="../../tools/JavaDoc" />
 	<property name="javadoc.zip" value="DynamicExtensionsJavaDoc.zip" />
 	<property name="resource.dir" value="src/resources" />
+	<property name="testCases.hookEntity.dir" value="${base.dir}/test/edu/hostApp" />
 
 
 	<property name="hbm.dir" value="${src.dir}/edu/common/dynamicextensions/hbm" />
@@ -864,6 +865,8 @@
 				<property name="generate.cacore" value="false" />
 			</ant>
 
+			<antcall target="create.record.entry.table"/>
+
 			<echo message="Static Model loaded Successfully" />
 			<echo message="Now importing the test model for junits" />
 			<ant antfile="DEDeploy.xml" dir="./binaries/" target="import.xmi.to.generate.cacore">
@@ -930,7 +933,6 @@
 				<copy todir="${test.model.dir}" file="${resource.dir}/catNames2.txt" />
 			<ant antfile="src/conf/cobertura.xml" target="instrument" />
 			<antcall target="import.static.and.test.model"/>
-			<antcall target="create_recordEntry_tbl"/>
 			<antcall target="deploy" />
 			<ant target="run_junit" />
 			<ant antfile="src/conf/cobertura.xml" target="coverage.report" >
@@ -1260,17 +1262,17 @@
 			</jar>
 		</target>
 
-		<!-- Create table for record entry -->
-		<target name="create_recordEntry_tbl">
+		<!-- Create table for record entry for hooking static model to dynamic model -->
+		<target name="create.record.entry.table">
 			<if>
 				<equals arg1="mysql" arg2="${hibernate.database.type}" casesensitive="false" />
 				<then>
-					<antcall target="create_recordEntry_tbl_for_mysql" />
+					<antcall target="create.record.entry.table.for.mysql" />
 				</then>
 				<elseif>
 					<equals arg1="oracle" arg2="${hibernate.database.type}" casesensitive="false" />
 					<then>
-						<antcall target="create_recordEntry_tbl_for_oracle" />
+						<antcall target="create.record.entry.table.for.oracle" />
 					</then>
 				</elseif>
 				<else>
@@ -1279,10 +1281,11 @@
 			</if>
 		</target>
 
-		<target name="create_recordEntry_tbl_for_mysql" description="create table for recordEntry class for mysql">
+		<!-- Create table for record entry for mysql database -->
+		<target name="create.record.entry.table.for.mysql" description="create table for recordEntry class for mysql">
 			<echo message="upgrading the DB For DynamicExtensions" />
 			<sql driver="${mysql.driver.string.DE}" url="${hibernate.connection.url}" userid="${hibernate.connection.username}" password="${hibernate.connection.password}" onerror="continue">
-				<transaction>CREATE TABLE  DE_E_6(ACTIVITY_STATUS text, IDENTIFIER  bigint(38) NOT NULL, primary key( IDENTIFIER ));</transaction>
+				<transaction src="${testCases.hookEntity.dir}/db/mysql/create_hookEntity_mysql.sql"></transaction>
 				<transaction>commit;</transaction>
 				<classpath>
 					<fileset dir="${lib.dir}">
@@ -1292,10 +1295,11 @@
 			</sql>
 		</target>
 
-		<target name="create_recordEntry_tbl_for_oracle" description="create table for recordEntry class for oracle">
+		<!-- Create table for record entry for oracle database -->
+		<target name="create.record.entry.table.for.oracle" description="create table for recordEntry class for oracle">
 			<echo message="upgrading the DB For DynamicExtensions" />
 			<sql driver="${oracle.driver.string.DE}" url="${hibernate.connection.url}" userid="${hibernate.connection.username}" password="${hibernate.connection.password}" onerror="continue" rdbms="oracle">
-				<transaction> CREATE TABLE DE_E_6(ACTIVITY_STATUS varchar2(4000), IDENTIFIER  Number(38) NOT NULL, primary key( IDENTIFIER ));</transaction>
+				<transaction src="${testCases.hookEntity.dir}/db/oracle/create_hookEntity_oracle.sql"></transaction>
 				<transaction>commit;</transaction>
 				<classpath>
 					<fileset dir="${lib.dir}">
