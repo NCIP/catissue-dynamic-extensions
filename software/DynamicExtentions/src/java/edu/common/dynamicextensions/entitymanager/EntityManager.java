@@ -58,6 +58,7 @@ import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
 import edu.wustl.dao.query.generator.DBTypes;
 import edu.wustl.dao.util.NamedQueryParam;
+import edu.wustl.metadata.util.DyExtnObjectCloner;
 
 /**
  *
@@ -82,6 +83,11 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	 * Instance of entity manager util class
 	 */
 	private transient final EntityManagerUtil entityManagerUtil = new EntityManagerUtil();
+
+	/**
+	 * Used for cloning object
+	 */
+	private DyExtnObjectCloner cloner = new DyExtnObjectCloner();
 
 	/**
 	 * Empty Constructor.
@@ -666,9 +672,10 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 
 			Set<Map<String, Object>> auditableObjects = new HashSet<Map<String, Object>>();
 
+			Object clonedObject = cloner.clone(oldObject);
 			Object updatedObject = updateObject(entity, dataVal, oldObject, hibernateDAO,
 					auditableObjects);
-			hibernateDAO.update(updatedObject);
+			hibernateDAO.update(updatedObject, clonedObject);
 
 			isSuccess = true;
 

@@ -3,7 +3,6 @@ package edu.common.dynamicextensions.entitymanager;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -56,7 +55,6 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.ConstraintKeyPropertiesComparator;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
-import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.ErrorConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
@@ -64,7 +62,6 @@ import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.global.Status;
 import edu.wustl.common.util.logger.Logger;
-import edu.wustl.dao.HashedDataHandler;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
@@ -3183,29 +3180,4 @@ public class DynamicExtensionBaseQueryBuilder
 		return "";
 	}
 
-	/**
-	 * @param jdbcDao
-	 * @param query
-	 * @param userId
-	 * @throws DAOException
-	 * @throws DynamicExtensionsSystemException
-	 * @throws SQLException
-	 */
-	protected void auditQuery(JDBCDAO jdbcDao, String query, Long userId) throws DAOException,
-			DynamicExtensionsSystemException
-	{
-		List<String> columnName = new ArrayList<String>();
-		List<Object> columnValues = new ArrayList<Object>();
-		columnName.add(DEConstants.IDENTIFIER.toUpperCase());
-		columnValues.add(EntityManagerUtil.getNextIdentifier(DEConstants.AUDIT_TABLE_NAME));
-		columnName.add(DEConstants.AUDIT_DATE_COLUMN);
-		columnValues.add(new Timestamp(System.currentTimeMillis()));
-		columnName.add(DEConstants.AUDIT_QUERY_COLUMN);
-		columnValues.add(query);
-		columnName.add(DEConstants.AUDIT_USER_ID_COLUMN);
-		columnValues.add(userId);
-		HashedDataHandler hashedDataHandler = new HashedDataHandler();
-		hashedDataHandler.insertHashedValues(DEConstants.AUDIT_TABLE_NAME, columnValues,
-				columnName, jdbcDao);
-	}
 }

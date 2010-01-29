@@ -60,6 +60,7 @@ import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
+import edu.wustl.metadata.util.DyExtnObjectCloner;
 
 /**
  * @author rajesh_patil
@@ -83,6 +84,11 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	 * Instance of entity manager utility class
 	 */
 	private final EntityManagerUtil entityManagerUtil = new EntityManagerUtil();
+
+	/**
+	 * Used for cloning objects.
+	 */
+	private DyExtnObjectCloner cloner = new DyExtnObjectCloner();
 
 	/**
 	 * Empty Constructor.
@@ -624,12 +630,13 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 									+ rootCatEntity.getEntity().getName();
 							final Object object = hibernateDao.retrieveById(entityClassName,
 									identifer);
+							Object clonedObject = cloner.clone(object);
 							for (final BaseAbstractAttribute attr : attrVsValues.keySet())
 							{
 								final Object value = attrVsValues.get(attr);
 								setRelatedAttributeValues(entityClassName, attr, value, object);
 							}
-							hibernateDao.update(object);
+							hibernateDao.update(object, clonedObject);
 						}
 					}
 				}
@@ -879,7 +886,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 					final Object sourceObject = hibernateDao
 							.retrieveById(sourceObjectClassName, id);
-
+					Object clonedSourceObject = cloner.clone(sourceObject);
 					Object targetObject = null;
 
 					// Create a new instance.
@@ -916,7 +923,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 					invokeSetterMethod(sourceObject.getClass(), targetRoleName, Class
 							.forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS), sourceObject,
 							containedObjects);
-					hibernateDao.update(sourceObject);
+					hibernateDao.update(sourceObject, clonedSourceObject);
 					invokeSetterMethod(targetObject.getClass(), sourceRoleName, Class
 							.forName(sourceObjectClassName), targetObject, sourceObject);
 					hibernateDao.update(targetObject);
@@ -1079,12 +1086,13 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 							+ rootCatEntity.getEntity().getName();
 
 					final Object object = hibernateDao.retrieveById(entityClassName, identifer);
+					Object colnedObject = cloner.clone(object);
 					for (final BaseAbstractAttribute attr : attrVsValues.keySet())
 					{
 						final Object value = attrVsValues.get(attr);
 						setRelatedAttributeValues(entityClassName, attr, value, object);
 					}
-					hibernateDao.update(object);
+					hibernateDao.update(object, colnedObject);
 				}
 			}
 		}
@@ -1143,6 +1151,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 								+ catEntity.getEntity().getName();
 
 						final Object object = hibernateDao.retrieveById(entityClassName, id);
+						Object clonedObject = cloner.clone(object);
 
 						for (final BaseAbstractAttribute attr : attrVsValues.keySet())
 						{
@@ -1150,7 +1159,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 							setRelatedAttributeValues(entityClassName, attr, value, object);
 						}
 
-						hibernateDao.update(object);
+						hibernateDao.update(object, clonedObject);
+
 						final String selectQuery = SELECT_KEYWORD + IDENTIFIER + FROM_KEYWORD
 								+ catEntTblName + WHERE_KEYWORD + RECORD_ID + EQUAL + QUESTION_MARK;
 						final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
@@ -1202,6 +1212,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 									+ catEntity.getEntity().getName();
 							final Object sourceObject = hibernateDao.retrieveById(
 									sourceObjectClassName, sourceId);
+							Object clonedSourceObject = cloner.clone(sourceObject);
+
 							Object targetObject = null;
 							// Create a new instance.
 							final Class targetObjectClass = Class.forName(targetObjectClassName);
@@ -1246,7 +1258,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 							}
 
 							hibernateDao.insert(targetObject);
-							hibernateDao.update(sourceObject);
+							hibernateDao.update(sourceObject, clonedSourceObject);
 
 							final Method method = targetObject.getClass().getMethod(
 									DEConstants.GET_ID);
@@ -1286,6 +1298,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 								final Object sourceObject = hibernateDao.retrieveById(
 										sourceObjectClassName, sourceId);
+								Object clonedSourceObject = cloner.clone(sourceObject);
 								Object targetObject = null;
 								// Create a new instance.
 								final Class targetObjectClass = Class
@@ -1328,7 +1341,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 								}
 
 								hibernateDao.insert(targetObject);
-								hibernateDao.update(sourceObject);
+								hibernateDao.update(sourceObject, clonedSourceObject);
 								final Method method = targetObject.getClass().getMethod(
 										DEConstants.GET_ID);
 								final Object updatedObject = method.invoke(targetObject);
@@ -1381,7 +1394,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			final Map<AbstractAttributeInterface, Object> rootCERecords = new HashMap<AbstractAttributeInterface, Object>();
 			populateRootEntityRecordMap(rootCatEntity, rootCERecords, dataValue);
 
-			final CategoryEntityRecord entityRecord = new CategoryEntityRecord(rootCatEntity.getId(), rootCatEntity.getName());
+			final CategoryEntityRecord entityRecord = new CategoryEntityRecord(rootCatEntity
+					.getId(), rootCatEntity.getName());
 			prevEntityId = (Long) dataValue.get(entityRecord);
 			// Roll back queries for category entity records.
 			final Stack<String> rlbkQryStack = new Stack<String>();
@@ -1642,9 +1656,11 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 							final Object sourceObject = hibernateDao.retrieveById(
 									sourceObjectClassName.toString(), previousEntityId);
+							Object clonedSourceObject = cloner.clone(sourceObject);
 
 							final Object targetObject = hibernateDao.retrieveById(
 									targetObjectClassName.toString(), targetEntityId);
+							Object clonedTargetObject = cloner.clone(targetObject);
 
 							String sourceRoleName = asso.getSourceRole().getName();
 							sourceRoleName = sourceRoleName.substring(0, 1).toUpperCase()
@@ -1654,7 +1670,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 									.forName(sourceObjectClassName.toString()), targetObject,
 									sourceObject);
 
-							hibernateDao.update(targetObject);
+							hibernateDao.update(targetObject, clonedTargetObject);
 							// Get the associated object(s).
 
 							String targetRoleName = asso.getTargetRole().getName();
@@ -1689,7 +1705,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 										targetObject.getClass(), sourceObject, targetObject);
 							}
 
-							hibernateDao.update(sourceObject);
+							hibernateDao.update(sourceObject, clonedSourceObject);
 						}
 					}
 
@@ -1893,6 +1909,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 										final Object sourceObject = hibernateDao.retrieveById(
 												sourceObjectClassName, sourceObjId);
+										Object clonedSourceObject = cloner.clone(sourceObject);
 
 										Object targetObject = null;
 
@@ -1918,7 +1935,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 										targetObject = targetObjectConstructor.newInstance();
 
 										hibernateDao.insert(targetObject);
-
+										Object clonedTargetObject = cloner.clone(targetObject);
 										// Get the associated object(s).
 										final Object associatedObjects = invokeGetterMethod(
 												sourceObject.getClass(), targetRoleName,
@@ -1956,13 +1973,13 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 													sourceObject, targetObject);
 										}
 
-										hibernateDao.update(sourceObject);
+										hibernateDao.update(sourceObject, clonedSourceObject);
 
 										invokeSetterMethod(targetObject.getClass(), sourceRoleName,
 												Class.forName(sourceObjectClassName), targetObject,
 												sourceObject);
 
-										hibernateDao.update(targetObject);
+										hibernateDao.update(targetObject, clonedTargetObject);
 
 										final Method method = targetObject.getClass().getMethod(
 												DEConstants.GET_ID);
@@ -2892,9 +2909,10 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			{
 				dataValue.put(catAttribute, entityRecords.get(catAttribute.getAbstractAttribute()));
 			}
-			final CategoryEntityRecord catEntityRecord = new CategoryEntityRecord(catEntity.getId(),catEntity.getName());
+			final CategoryEntityRecord catEntityRecord = new CategoryEntityRecord(
+					catEntity.getId(), catEntity.getName());
 			dataValue.put(catEntityRecord, recordId);
-			
+
 		}
 
 		final Collection<CategoryAssociationInterface> catAssociations = new ArrayList<CategoryAssociationInterface>(
@@ -3441,8 +3459,6 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		{
 			final LinkedList<LinkedList<ColumnValueBean>> valueBeanList = new LinkedList<LinkedList<ColumnValueBean>>();
 			valueBeanList.add(colValBeanList);
-			queryBuilder.auditQuery(jdbcDao, query, userId);
-
 			jdbcDao.executeUpdate(query, valueBeanList);
 		}
 		catch (final DAOException e)
