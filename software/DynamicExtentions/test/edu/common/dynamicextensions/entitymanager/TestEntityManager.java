@@ -9,7 +9,6 @@
 
 package edu.common.dynamicextensions.entitymanager;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,10 +27,8 @@ import edu.common.dynamicextensions.domain.EntityGroup;
 import edu.common.dynamicextensions.domain.FileAttributeRecordValue;
 import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.FileExtension;
-import edu.common.dynamicextensions.domain.ObjectAttributeRecordValue;
 import edu.common.dynamicextensions.domain.StringAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.StringValue;
-import edu.common.dynamicextensions.domain.TaggedValue;
 import edu.common.dynamicextensions.domain.databaseproperties.TableProperties;
 import edu.common.dynamicextensions.domain.userinterface.Container;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
@@ -42,7 +39,6 @@ import edu.common.dynamicextensions.domaininterface.CaDSRValueDomainInfoInterfac
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.NumericTypeInformationInterface;
-import edu.common.dynamicextensions.domaininterface.ObjectAttributeRecordValueInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.SemanticPropertyInterface;
 import edu.common.dynamicextensions.domaininterface.TaggedValueInterface;
@@ -54,6 +50,7 @@ import edu.common.dynamicextensions.domaininterface.validationrules.RuleParamete
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsValidationException;
+import edu.hostApp.src.java.RecordEntry;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.ControlConfigurationsFactory;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
@@ -66,7 +63,6 @@ import edu.common.dynamicextensions.validation.ValidatorRuleInterface;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
-import edu.wustl.dao.exception.DAOException;
 
 public class TestEntityManager extends DynamicExtensionsBaseTestCase
 {
@@ -958,7 +954,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			Long recordId = manager.insertData(clinicalAnnotations, dataValue, null);
 			Map map = manager.getRecordById(clinicalAnnotations, recordId);
 
-			//associate static entity with respective dynamicEntity
+			//associate static entity record id with respective dynamic entity record id
 			associateHookEntity(clinicalAnnotations, recordId);
 
 			Map recMap = (Map) ((List) map.get(pathAnnoChildAssocn)).get(0);
@@ -996,7 +992,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	}
 
 	/**
-	 * This method associates static entity with dynamic entity
+	 * This method associates static entity record Id with dynamic entity record Id
 	 * @param clinicalAnnotations
 	 * @param recordId
 	 */
@@ -1005,42 +1001,39 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			EntityManagerInterface manager = EntityManager.getInstance();
-			//create hook object using reflection since we won't have preCreated concrete hook entity object
-			Object object = createObject("annotations.RecordEntry");
-			HibernateDAO hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
-			if(object != null)
-			{
-				//insert record for static entity
-				hibernateDAO.insert(object);
-				//get Id inserted for static entity
-				Method method = object.getClass().getMethod("getId");
-				Object obj = method.invoke(object);
-				Long staticEntityRecId = Long.valueOf(obj.toString());
 
-				//Get static entity from metadata id of recordEntry
-				EntityInterface staticEntity = manager.getEntityByIdentifier(
-						Long.valueOf("2"));
-				//search for association between static and dynamic entity
-				Collection<AssociationInterface> asntCollection = staticEntity
-						.getAssociationCollection();
-				AssociationInterface asntInterface = null;
-				for (AssociationInterface association : asntCollection)
+			//Create static entity record object
+			RecordEntry recordEntry = new RecordEntry();
+
+			HibernateDAO hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
+
+			//Insert record for static entity record object
+			hibernateDAO.insert(recordEntry);
+
+			//get Id for inserted record entry
+			Long staticEntityRecId = recordEntry.getId();
+
+			//Get static entity from metadata id of recordEntry
+			EntityInterface staticEntity = manager.getEntityByName("edu.wustl.catissuecore.domain.RecordEntry");
+
+			//search for association between static and dynamic entities for associating these two entities
+			Collection<AssociationInterface> asntCollection = staticEntity
+					.getAssociationCollection();
+
+			AssociationInterface asntInterface = null;
+			for (AssociationInterface association : asntCollection)
+			{
+				if (association.getTargetEntity().equals(clinicalAnnotations))
 				{
-					if (association.getTargetEntity().equals(clinicalAnnotations))
-					{
-						asntInterface = association;
-						break;
-					}
-				}
-				if(asntInterface!=null)
-				{
-					manager.associateEntityRecords(asntInterface, staticEntityRecId,
-						recordId);
+					asntInterface = association;
+					break;
 				}
 			}
-			else
+			if(asntInterface!=null)
 			{
-				fail("Static Entity not present");
+				//associate static entity record Id with dynamic entity record Id
+				manager.associateEntityRecords(asntInterface, staticEntityRecId,
+					recordId);
 			}
 
 			if (hibernateDAO != null)
@@ -3911,7 +3904,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	/**
 	 * This method test for Inserting record for an entity.
 	 */
-	public static void testEditRecordCacore()
+	public void testEditRecordCacore()
 	{
 		try
 		{
@@ -3936,6 +3929,10 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			EntityManagerInterface manager = EntityManager.getInstance();
 			Long recordId = manager.insertData(clinicalAnnotations, dataValue, null);
 			assertNotNull(recordId);
+
+			//associate static entity record id with respective dynamic entity record id
+			associateHookEntity(clinicalAnnotations, recordId);
+
 			Map dataMapFirst1 = new HashMap();
 			dataList = new ArrayList();
 			dataMapFirst1.put(pathAnnoChildAssocn.getTargetEntity().getAttributeByName(
