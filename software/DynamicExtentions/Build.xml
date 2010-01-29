@@ -104,7 +104,14 @@
 				<include name="**/*.hbm.xml" />
 				<include name="**/*.ser" />
 			</fileset>
+			<fileset dir="${test.dir}">
+				<include name="**/*.hbm.xml" />
+			</fileset>
 		</copy>
+		<javac destdir="${target.dir}" includes="**/*.*" includeAntRuntime="false" debug="true">
+			<src path="${testCases.hookEntity.dir}" />
+			<classpath refid="app.classpath" />
+		</javac>
 	</target>
 
 	<target name="compile_test_cases" depends="compile">
