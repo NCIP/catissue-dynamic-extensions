@@ -429,6 +429,7 @@ public class CategoryGenerator
 		}
 		catch (final Exception e)
 		{
+			categoryHelper.releaseLockOnCategory(category);
 			if (!(e instanceof DynamicExtensionsSystemException))
 			{
 				throw new DynamicExtensionsSystemException(ApplicationProperties
