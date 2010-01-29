@@ -1,0 +1,3 @@
+CREATE TABLE TEST_CASES_RECORD_ENTRY(IDENTIFIER  bigint(38) NOT NULL auto_increment, primary key( IDENTIFIER ));
+alter table TEST_CASES_RECORD_ENTRY add index FKA7A774E7D7777A77 (identifier), add constraint FKA7A774E7D7777A77 foreign key (identifier) references DYEXTN_ABSTRACT_RECORD_ENTRY (IDENTIFIER);
+update dyextn_database_properties set name ='TEST_CASES_RECORD_ENTRY' where identifier in( select identifier from dyextn_table_properties where abstract_entity_id in (select identifier from dyextn_abstract_metadata where name like 'edu.wustl.catissuecore.domain.RecordEntry'));
