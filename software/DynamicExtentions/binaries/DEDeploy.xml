@@ -940,7 +940,6 @@
 		${entity.name} at :${cacore.deployable.dir}/${entity.name}/auditablemetadata.xml" />
 		<delete dir="${base.dir}/classes">
 		</delete>
-		<antcall target="merge.audit.xml" />
 	</target>
 	<!-- =================================
 	     Audit related targets end
@@ -1113,6 +1112,7 @@
 								<param name="hookentity" value="${hook.entity.value}" />
 							</antcall>
 							<antcall target="generate.cacore" />
+							<antcall target="merge.audit.xml"/>
 						</else>
 					</if>
 					<java classname="edu.wustl.metadata.util.CacoreDEMetadataAppender" fork="true" maxmemory="1024M">
@@ -1130,7 +1130,7 @@
 							</fileset>
 						</classpath>
 					</java>
-
+					<antcall target="merge.audit.xml"/>
 					<copy todir="${entityGroup.jar.location}/" file="${cacore.deployable.dir}/${entitygroupname}/${entitygroupname}.jar" overwrite="true" />
 					<echo message="${ORM1CfgFile}" />
 					<echo message="${DEWebCfgFile}" />
