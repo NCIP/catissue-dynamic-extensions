@@ -1056,4 +1056,23 @@ public class CategoryGenerationUtil
 		return fileNameList;
 	}
 
+	/**
+	 * This method will return the Instance no of the entity used by this category Entity.
+	 * @param catEntity category Entity
+	 * @return Instance Id.
+	 */
+	public static long getInstanceIdOfCategoryEntity(CategoryEntityInterface catEntity)
+	{
+		long instanceId = 1;
+		if (catEntity.getPath() != null)
+		{
+			List<PathAssociationRelationInterface> pathAssociationColl = catEntity.getPath()
+					.getSortedPathAssociationRelationCollection();
+			PathAssociationRelationInterface pathAssociation = pathAssociationColl
+					.get(pathAssociationColl.size() - 1);
+			instanceId = pathAssociation.getTargetInstanceId();
+		}
+		return instanceId;
+	}
+
 }
