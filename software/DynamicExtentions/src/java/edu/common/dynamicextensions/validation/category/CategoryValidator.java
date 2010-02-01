@@ -23,7 +23,6 @@ import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInte
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
-import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ListBoxInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.MultiSelectInterface;
@@ -33,7 +32,6 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsValidationException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
-import edu.common.dynamicextensions.util.CategoryHelperInterface.ControlEnum;
 import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
 import edu.common.dynamicextensions.util.parser.CategoryCSVFileParser;
@@ -63,14 +61,6 @@ public class CategoryValidator
 	{
 		this.categoryFileParser = categoryFileParser;
 		ApplicationProperties.initBundle("ApplicationResources");
-	}
-
-	/**
-	 * @return
-	 */
-	public Long getEntityGroupId()
-	{
-		return entityGroupId;
 	}
 
 	/**
@@ -728,42 +718,4 @@ public class CategoryValidator
 			}
 		}
 	}
-
-	/**
-	 * @param controlType
-	 * @param controlXPosition
-	 * @param container
-	 * @throws DynamicExtensionsSystemException
-	 */
-	public void validateControlInSingleLine(String controlType, int controlXPosition,
-			ContainerInterface container) throws DynamicExtensionsSystemException
-	{
-		ControlEnum controlEnum = ControlEnum.get(controlType);
-		if (!isValidControlType(controlType)
-				|| !(controlEnum.equals(ControlEnum.LIST_BOX_CONTROL)
-						|| controlEnum.equals(ControlEnum.COMBO_BOX_CONTROL) || controlEnum
-						.equals(ControlEnum.TEXT_FIELD_CONTROL)))
-		{
-			throw new DynamicExtensionsSystemException(getErrorMessageStart()
-					+ ApplicationProperties
-							.getValue("dyExtn.category.validation.singleLineDisaply"));
-		}
-	}
-
-	/**
-	 * @param controlType
-	 * @return
-	 */
-	public static boolean isValidControlType(String controlType)
-	{
-		boolean isValid = true;
-
-		if (controlType == null)
-		{
-			isValid = false;
-		}
-
-		return isValid;
-	}
-
 }
