@@ -130,7 +130,8 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				if ((actionForward == null) && (errorList != null) && errorList.isEmpty())
 				{
 					String recordIdentifier = storeParentContainer(valueMapStack, containerStack,
-							request, dataEntryForm.getRecordIdentifier(),dataEntryForm.getIsShowTemplateRecord());
+							request, dataEntryForm.getRecordIdentifier(), dataEntryForm
+									.getIsShowTemplateRecord());
 					isCallbackURL = redirectCallbackURL(request, response, recordIdentifier,
 							WebUIManagerConstants.SUCCESS, dataEntryForm.getContainerId());
 				}
@@ -388,12 +389,16 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				processedContainersList);
 		Map<BaseAbstractAttributeInterface, Object> valueMap = valueMapStack.peek();
 
+		List<String> errorList = dataEntryForm.getErrorList();
+		if (errorList == null)
+		{
+			errorList = new ArrayList<String>();
+		}
+
 		valueMap = generateAttributeValueMap(containerInterface, request, dataEntryForm, "",
-				valueMap, true);
+				valueMap, true, errorList);
 
-		List<String> errorList = ValidatorUtil.validateEntity(valueMap, dataEntryForm
-				.getErrorList(), containerInterface);
-
+		errorList = ValidatorUtil.validateEntity(valueMap, errorList, containerInterface);
 		AbstractEntityInterface abstractEntityInterface = containerInterface.getAbstractEntity();
 		if (abstractEntityInterface instanceof CategoryEntityInterface)
 		{
@@ -434,10 +439,19 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 	private Map<BaseAbstractAttributeInterface, Object> generateAttributeValueMap(
 			ContainerInterface containerInterface, HttpServletRequest request,
 			DataEntryForm dataEntryForm, String rowId,
-			Map<BaseAbstractAttributeInterface, Object> attributeValueMap, Boolean processOneToMany)
-			throws FileNotFoundException, IOException, DynamicExtensionsSystemException
+			Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
+			Boolean processOneToMany, List<String> errorList) throws FileNotFoundException,
+			IOException, DynamicExtensionsSystemException
 	{
 
+		List<String> xssViolations = null;
+		if (request.getAttribute(DEConstants.VIOLATING_PROPERTY_NAMES) instanceof List
+				&& ((List<String>) request.getAttribute(DEConstants.VIOLATING_PROPERTY_NAMES))
+						.size() > 0)
+		{
+			xssViolations = (List<String>) request
+					.getAttribute(DEConstants.VIOLATING_PROPERTY_NAMES);
+		}
 		Collection<ControlInterface> controlCollection = containerInterface
 				.getAllControlsUnderSameDisplayLabel();
 		for (ControlInterface control : controlCollection)
@@ -453,6 +467,13 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 					{
 						controlName = controlName + "_" + rowId;
 					}
+					if (xssViolations != null && xssViolations.contains(controlName))
+					{
+						List<String> placeHolder = new ArrayList<String>();
+						placeHolder.add(control.getCaption());
+						errorList.add(ApplicationProperties.getValue(
+								DEConstants.INVALID_CONTROL_VALUE, placeHolder));
+					}
 					BaseAbstractAttributeInterface abstractAttribute = control
 							.getBaseAbstractAttribute();
 					if (abstractAttribute instanceof AttributeMetadataInterface)
@@ -463,7 +484,8 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 							if (categoryAttribute.getAbstractAttribute() instanceof AssociationMetadataInterface)
 							{
 								collectAssociationValues(request, dataEntryForm, controlName,
-										control, attributeValueMap, processOneToMany, rowId);
+										control, attributeValueMap, processOneToMany, rowId,
+										errorList);
 							}
 							else
 							{
@@ -480,7 +502,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 					else if (abstractAttribute instanceof AssociationMetadataInterface)
 					{
 						collectAssociationValues(request, dataEntryForm, controlName, control,
-								attributeValueMap, processOneToMany, rowId);
+								attributeValueMap, processOneToMany, rowId, errorList);
 					}
 				}
 			}
@@ -503,8 +525,8 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 	private void collectAssociationValues(HttpServletRequest request, DataEntryForm dataEntryForm,
 			String controlName, ControlInterface control,
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
-			Boolean processOneToMany, String rowId) throws DynamicExtensionsSystemException,
-			FileNotFoundException, IOException
+			Boolean processOneToMany, String rowId, List<String> errorList)
+			throws DynamicExtensionsSystemException, FileNotFoundException, IOException
 	{
 		BaseAbstractAttributeInterface abstractAttribute = control.getBaseAbstractAttribute();
 		List<Map<BaseAbstractAttributeInterface, Object>> associationValueMaps = (List<Map<BaseAbstractAttributeInterface, Object>>) attributeValueMap
@@ -523,7 +545,8 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 			if (associationControl.isCardinalityOneToMany())
 			{
 				associationValueMaps = collectOneToManyContainmentValues(request, dataEntryForm,
-						targetContainer.getId().toString(), control, associationValueMaps);
+						targetContainer.getId().toString(), control, associationValueMaps,
+						errorList);
 			}
 			else
 			{
@@ -540,7 +563,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				}
 
 				generateAttributeValueMap(targetContainer, request, dataEntryForm, "",
-						oneToOneValueMap, false);
+						oneToOneValueMap, false, errorList);
 			}
 
 			attributeValueMap.put(abstractAttribute, associationValueMaps);
@@ -623,8 +646,9 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 	private List<Map<BaseAbstractAttributeInterface, Object>> collectOneToManyContainmentValues(
 			HttpServletRequest request, DataEntryForm dataEntryForm, String containerId,
 			ControlInterface control,
-			List<Map<BaseAbstractAttributeInterface, Object>> oneToManyContainmentValueList)
-			throws FileNotFoundException, DynamicExtensionsSystemException, IOException
+			List<Map<BaseAbstractAttributeInterface, Object>> oneToManyContainmentValueList,
+			List<String> errorList) throws FileNotFoundException, DynamicExtensionsSystemException,
+			IOException
 	{
 		AbstractContainmentControl containmentAssociationControl = (AbstractContainmentControl) control;
 		int currentSize = oneToManyContainmentValueList.size();
@@ -648,7 +672,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				oneToManyContainmentValueList.add(attributeValueMapForSingleRow);
 			}
 			generateAttributeValueMap(containmentAssociationControl.getContainer(), request,
-					dataEntryForm, counterStr, attributeValueMapForSingleRow, false);
+					dataEntryForm, counterStr, attributeValueMapForSingleRow, false, errorList);
 		}
 
 		return oneToManyContainmentValueList;
@@ -768,7 +792,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 	private String storeParentContainer(
 			Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack,
 			Stack<ContainerInterface> containerStack, HttpServletRequest request,
-			String recordIdentifier,String isShowTemplateRecord) throws NumberFormatException,
+			String recordIdentifier, String isShowTemplateRecord) throws NumberFormatException,
 			DynamicExtensionsApplicationException, DynamicExtensionsSystemException, SQLException
 	{
 		String identifier = recordIdentifier;
