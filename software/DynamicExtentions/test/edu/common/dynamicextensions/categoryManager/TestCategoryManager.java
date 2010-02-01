@@ -241,19 +241,25 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	 * step 2: retrieve the inserted record.
 	 * step 3: edit some data & then try to edit the data.
 	 */
-	public void testEditDataForTestChemotheropyCat()
+	public void testEditDataForForAllCategories()
 	{
 		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
 		try
 		{
+			List<CategoryInterface> categoryList = getAllCategories();
+			for (CategoryInterface category : categoryList)
+			{
+				System.out.println("Inserting record for " + category.getName());
+				Map<BaseAbstractAttributeInterface, Object> dataValue;
+				CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
+				dataValue = createDataValueMapForCategory(rootCatEntity);
 
-			CategoryInterface category = retriveCategoryByName("Test Category_Chemotherapy");
-			Map<BaseAbstractAttributeInterface, Object> dataValue;
-			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
-			dataValue = createDataValueMapForCategory(rootCatEntity);
-			Long recordId = categoryManager.insertData(category, dataValue);
-			dataValue = categoryManager.getRecordById(rootCatEntity, recordId);
-			categoryManager.editData(rootCatEntity, dataValue, recordId);
+				Long recordId = categoryManager.insertData(category, dataValue);
+				System.out.println("Record inserted succesfully for " + category.getName());
+				dataValue = categoryManager.getRecordById(rootCatEntity, recordId);
+				categoryManager.editData(rootCatEntity, dataValue, recordId);
+				System.out.println("Record Edited succesfully for " + category.getName());
+			}
 		}
 		catch (Exception e)
 		{
@@ -265,17 +271,23 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	/**
 	 * This test case will try to insert the data for Test Category_Lab Information category.
 	 */
-	public void testInsertDataForTestLabInfoCat()
+	public void testInsertDataForAllCategories()
 	{
 		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
 		try
 		{
 
-			CategoryInterface category = retriveCategoryByName("Test Category_Lab Information");
-			Map<BaseAbstractAttributeInterface, Object> dataValue;
-			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
-			dataValue = createDataValueMapForCategory(rootCatEntity);
-			categoryManager.insertData(category, dataValue);
+			List<CategoryInterface> categoryList = getAllCategories();
+			for (CategoryInterface category : categoryList)
+			{
+				System.out.println("Inserting record for " + category.getName());
+				Map<BaseAbstractAttributeInterface, Object> dataValue;
+				CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
+				dataValue = createDataValueMapForCategory(rootCatEntity);
+				categoryManager.insertData(category, dataValue);
+				System.out.println("Record inserted succesfully for " + category.getName());
+			}
+
 		}
 		catch (Exception e)
 		{
