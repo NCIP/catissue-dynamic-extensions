@@ -250,15 +250,18 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			for (CategoryInterface category : categoryList)
 			{
 				System.out.println("Inserting record for " + category.getName());
-				Map<BaseAbstractAttributeInterface, Object> dataValue;
 				CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
-				dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity);
+				Map<BaseAbstractAttributeInterface, Object> dataValue = mapGenerator
+						.createDataValueMapForCategory(rootCatEntity);
 
 				Long recordId = categoryManager.insertData(category, dataValue);
-				System.out.println("Record inserted succesfully for " + category.getName());
-				dataValue = categoryManager.getRecordById(rootCatEntity, recordId);
-				categoryManager.editData(rootCatEntity, dataValue, recordId);
-				System.out.println("Record Edited succesfully for " + category.getName());
+				System.out.println("Record inserted succesfully for " + category.getName()
+						+ " RecordId " + recordId);
+				Map<BaseAbstractAttributeInterface, Object> editedDataValue = categoryManager
+						.getRecordById(rootCatEntity, recordId);
+				categoryManager.editData(rootCatEntity, editedDataValue, recordId);
+				System.out.println("Record Edited succesfully for " + category.getName()
+						+ " RecordId " + recordId);
 			}
 		}
 		catch (Exception e)
@@ -284,8 +287,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 				Map<BaseAbstractAttributeInterface, Object> dataValue;
 				CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 				dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity);
-				categoryManager.insertData(category, dataValue);
-				System.out.println("Record inserted succesfully for " + category.getName());
+				long recordId = categoryManager.insertData(category, dataValue);
+				System.out.println("Record inserted succesfully for " + category.getName()
+						+ " RecordId " + recordId);
 			}
 
 		}

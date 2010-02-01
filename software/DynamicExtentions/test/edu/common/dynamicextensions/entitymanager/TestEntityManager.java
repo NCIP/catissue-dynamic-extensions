@@ -3483,15 +3483,56 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			for (ContainerInterface container : testModel.getMainContainerCollection())
 			{
 				EntityInterface entity = (EntityInterface) container.getAbstractEntity();
+				System.out.println("Inserting record for " + entity);
 				Map<AbstractAttributeInterface, Object> dataValueMap = mapGenerator
 						.createDataValueMapForEntity(entity);
-				entityManager.insertData(entity, dataValueMap, null);
+				long recordId = entityManager.insertData(entity, dataValueMap, null);
+				System.out.println("Record inserted succesfully for " + entity + " recordId "
+						+ recordId);
 			}
 		}
 		catch (Exception e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			fail();
+		}
+
+	}
+
+	/**
+	 * This test case will try to insert the data for all the entities present
+	 * in the test model .
+	 *
+	 */
+	public void testEditDataForAllEntities()
+	{
+		try
+		{
+			EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
+					TEST_ENTITYGROUP_NAME);
+			EntityManagerInterface entityManager = EntityManager.getInstance();
+			for (ContainerInterface container : testModel.getMainContainerCollection())
+			{
+				EntityInterface entity = (EntityInterface) container.getAbstractEntity();
+				System.out.println("Inserting record for " + entity.getName());
+				Map<AbstractAttributeInterface, Object> dataValueMap = mapGenerator
+						.createDataValueMapForEntity(entity);
+				long recordId = entityManager.insertData(entity, dataValueMap, null);
+				System.out.println("Record inserted succesfully for " + entity + " recordId "
+						+ recordId);
+				Map<AbstractAttributeInterface, Object> editedDataValueMap = entityManager
+						.getRecordById(entity, recordId);
+				entityManager.editData(entity, editedDataValueMap, recordId, null);
+				System.out.println("Record Edited Successfully for " + entity + " recordId "
+						+ recordId);
+			}
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail();
 		}
 
 	}
