@@ -116,10 +116,10 @@ public class DummyMapGenerator
 	 * @return generated map.
 	 * @throws ParseException
 	 */
-	public Map<BaseAbstractAttributeInterface, Object> createDataValueMapForEntity(
+	public Map<AbstractAttributeInterface, Object> createDataValueMapForEntity(
 			EntityInterface rootEntity) throws ParseException
 	{
-		Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
+		Map<AbstractAttributeInterface, Object> dataValue = new HashMap<AbstractAttributeInterface, Object>();
 		for (AbstractAttributeInterface abstractAttribute : rootEntity.getAttributeCollection())
 		{
 			// put the different value for diff attribute type

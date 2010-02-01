@@ -50,7 +50,6 @@ import edu.common.dynamicextensions.domaininterface.validationrules.RuleParamete
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsValidationException;
-import edu.hostApp.src.java.RecordEntry;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.ControlConfigurationsFactory;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
@@ -60,6 +59,7 @@ import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.common.dynamicextensions.util.global.DEConstants.ValueDomainType;
 import edu.common.dynamicextensions.validation.ValidatorRuleInterface;
+import edu.hostApp.src.java.RecordEntry;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
@@ -678,190 +678,78 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	}
 
 	/**
-	 * Test case to check the behaviour when first entity is saved with a collection attribute and then the that
-	 * attribute is made non-collection. Expected behavior is that after editing the attribute in
-	 * such a way the column for that attribute should get added to the data table. This column was not present in
-	 * earlier scenario when the attribute was a collection attribute.
-	 */
-	public void testEditEntityWithCollectionAttribute()
-	{
-
-		//		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-		//		try
-		//		{
-		//			DomainObjectFactory factory = DomainObjectFactory.getInstance();
-		//
-		//			EntityGroup entityGroup = (EntityGroup) factory.createEntityGroup();
-		//			entityGroup.setName("testGroup" + new Double(Math.random()).toString());
-		//
-		//			EntityInterface user = createAndPopulateEntity();
-		//			EntityManagerUtil.addIdAttribute(user);
-		//
-		//			// Step 2
-		//			EntityInterface address = createAndPopulateEntity();
-		//			EntityManagerUtil.addIdAttribute(address);
-		//			address.setName("address");
-		//
-		//			AttributeInterface streetAttribute = factory.createStringAttribute();
-		//			streetAttribute.setName("street name");
-		//			address.addAbstractAttribute(streetAttribute);
-		//
-		//			// Step 3
-		//			AssociationInterface association = factory.createAssociation();
-		//			association.setTargetEntity(address);
-		//			association.setAssociationDirection(AssociationDirection.SRC_DESTINATION);
-		//			association.setName("UserAddress");
-		//			association.setSourceRole(getRole(AssociationType.ASSOCIATION, "User",
-		//					Cardinality.ZERO, Cardinality.ONE));
-		//			association.setTargetRole(getRole(AssociationType.ASSOCIATION, "address",
-		//					Cardinality.ZERO, Cardinality.MANY));
-		//			association.setIsCollection(new Boolean(true));
-		//
-		//			user.addAbstractAttribute(association);
-		//			DynamicExtensionsUtility.getConstraintPropertiesForAssociation(association);
-		//			entityGroup.addEntity(user);
-		//			user.setEntityGroup(entityGroup);
-		//			entityGroup.addEntity(address);
-		//			address.setEntityGroup(entityGroup);
-		//
-		//			user = EntityManagerInterface.persistEntity(user);
-		//
-		//			Entity savedEntity = (Entity) EntityManagerInterface.getEntityByIdentifier(user.getId()
-		//					.toString());
-		//			assertEquals(user.getName(), savedEntity.getName());
-		//
-		//			Map dataValue = new HashMap();
-		//			List dataList = new ArrayList();
-		//
-		//			Map dataMapFirst = new HashMap();
-		//			dataMapFirst.put(streetAttribute, "xyz");
-		//			dataList.add(dataMapFirst);
-		//
-		//			Map dataMapSecond = new HashMap();
-		//			dataMapSecond.put(streetAttribute, "abc");
-		//			dataList.add(dataMapSecond);
-		//
-		//			//dataValue.put(commentsAttributes, "this is not default comment");
-		//			dataValue.put(association, dataList);
-		//
-		//			Long recordId = EntityManagerInterface.insertData(savedEntity, dataValue, null);
-		//
-		//			Map map = EntityManagerInterface.getRecordById(savedEntity, recordId);
-		//
-		//			System.out.println(map);
-		//
-		//			dataMapFirst.put(streetAttribute, "rajesh");
-		//
-		//			EntityManagerInterface.editData(savedEntity, dataValue, recordId, null);
-		//
-		//			map = EntityManagerInterface.getRecordById(savedEntity, recordId);
-		//
-		//			System.out.println(map);
-
-		//			String tableName = newEntity.getTableProperties().getName();
-		//			System.out.println("===========table name " + tableName);
-		//			assertTrue(isTablePresent(tableName));
-		//			ResultSetMetaData metaData = executeQueryForMetadata("select * from " + tableName);
-		//			assertEquals(metaData.getColumnCount(), noOfDefaultColumns);
-		//
-		//			userNameAttribute = (AttributeInterface) newEntity.getAttributeByIdentifier(userNameAttribute.getId());
-		//			userNameAttribute.setIsCollection(false);
-		//
-		//			newEntity = (Entity) EntityManagerInterface.persistEntity(newEntity);
-		//
-		//			tableName = newEntity.getTableProperties().getName();
-		//			assertTrue(isTablePresent(tableName));
-		//			metaData = executeQueryForMetadata("select * from " + tableName);
-		//			assertEquals(metaData.getColumnCount(), noOfDefaultColumns + 1);
-		//
-		//			userNameAttribute = (AttributeInterface) newEntity.getAttributeByIdentifier(userNameAttribute.getId());
-		//			userNameAttribute.setIsCollection(true);
-		//
-		//			newEntity = (Entity) EntityManagerInterface.persistEntity(newEntity);
-		//
-		//			tableName = newEntity.getTableProperties().getName();
-		//			assertTrue(isTablePresent(tableName));
-		//			metaData = executeQueryForMetadata("select * from " + tableName);
-		//			assertEquals(metaData.getColumnCount(), noOfDefaultColumns);
-		//		}
-		//		catch (Exception e)
-		//		{
-		//			Logger.out.debug(e.getMessage());
-		//			fail("Exception occured");
-		//		}
-	}
-
-	/**
 	 * This method test for inserting data for a multi select attribute
 	 */
-	/*public void testInsertDataWithMultiSelectAttribute()
+	public void testInsertDataWithMultiSelectAttribute()
 	{
-	    EntityGroup entityGroup = (EntityGroup) DomainObjectFactory.getInstance().createEntityGroup();
-	    entityGroup.setName("testGroup"+ new Double(Math.random()).toString());
-	    Entity entity = (Entity) createAndPopulateEntity();
-	    entity.setName("Stock Quote");
-	    EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
+		EntityGroup entityGroup = (EntityGroup) DomainObjectFactory.getInstance()
+				.createEntityGroup();
+		entityGroup.setName("testGroup" + new Double(Math.random()).toString());
+		Entity entity = (Entity) createAndPopulateEntity();
+		entity.setName("Stock Quote");
+		EntityManager.getInstance();
 
-	    DomainObjectFactory factory = DomainObjectFactory.getInstance();
+		DomainObjectFactory.getInstance();
 
-	    try
-	    {
-	        //Edit entity
-	        AttributeInterface floatAtribute = factory.createFloatAttribute();
-	        floatAtribute.setName("Price");
+		/*try
+		{
+			//Edit entity
+			AttributeInterface floatAtribute = factory.createFloatAttribute();
+			floatAtribute.setName("Price");
 
-	        AttributeInterface commentsAttributes = factory.createStringAttribute();
-	        commentsAttributes.setName("comments");
-	        commentsAttributes.setIsCollection(true);
+			AttributeInterface commentsAttributes = factory.createStringAttribute();
+			commentsAttributes.setName("comments");
+			commentsAttributes.setIsCollection(true);
 
-	        entity.addAbstractAttribute(floatAtribute);
-	        entity.addAbstractAttribute(commentsAttributes);
-	        entityGroup.addEntity(entity);
-	        entity.setEntityGroup(entityGroup);
-	        EntityInterface savedEntity = EntityManagerInterface.persistEntity(entity);
+			entity.addAbstractAttribute(floatAtribute);
+			entity.addAbstractAttribute(commentsAttributes);
+			entityGroup.addEntity(entity);
+			entity.setEntityGroup(entityGroup);
+			EntityInterface savedEntity = EntityManagerInterface.persistEntity(entity);
 
-	        Map dataValue = new HashMap();
-	        dataValue.put(floatAtribute, "15.90");
-	        List<String> commentsValues = new ArrayList<String>();
-	        commentsValues.add("comments1");
-	        commentsValues.add("comments2");
-	        commentsValues.add("comments3");
-	        commentsValues.add("comments4");
+			Map dataValue = new HashMap();
+			dataValue.put(floatAtribute, "15.90");
+			List<String> commentsValues = new ArrayList<String>();
+			commentsValues.add("comments1");
+			commentsValues.add("comments2");
+			commentsValues.add("comments3");
+			commentsValues.add("comments4");
 
-	        dataValue.put(commentsAttributes, commentsValues);
+			dataValue.put(commentsAttributes, commentsValues);
 
-	        EntityManagerInterface.insertData(savedEntity, dataValue);
+			EntityManagerInterface.insertData(savedEntity, dataValue);
 
-	        ResultSet resultSet = executeQuery("select * from "
-	                + savedEntity.getTableProperties().getName());
-	        resultSet.next();
-	        assertEquals(1, resultSet.getInt(3));
-	        ResultSetMetaData metadata = resultSet.getMetaData();
-	        assertEquals(metadata.getColumnCount(), noOfDefaultColumns + 1);
+			ResultSet resultSet = executeQuery("select * from "
+					+ savedEntity.getTableProperties().getName());
+			resultSet.next();
+			assertEquals(1, resultSet.getInt(3));
+			ResultSetMetaData metadata = resultSet.getMetaData();
+			assertEquals(metadata.getColumnCount(), noOfDefaultColumns + 1);
 
-	        boolean isRecordDeleted = EntityManagerInterface.deleteRecord(savedEntity, new Long(1));
-	        assertTrue(isRecordDeleted);
+			boolean isRecordDeleted = EntityManagerInterface.deleteRecord(savedEntity, new Long(1));
+			assertTrue(isRecordDeleted);
 
-	        assertEquals(Status.ACTIVITY_STATUS_DISABLED.toString(), getActivityStatus(entity, 1L));
-	    }
-	    catch (DynamicExtensionsSystemException e)
-	    {
-	        fail();
-	        Logger.out.debug(e.getStackTrace());
-	    }
-	    catch (DynamicExtensionsApplicationException e)
-	    {
-	        fail();
-	        Logger.out.debug(e.getStackTrace());
-	    }
-	    catch (Exception e)
-	    {
-	        e.printStackTrace();
-	        fail();
+			assertEquals(Status.ACTIVITY_STATUS_DISABLED.toString(), getActivityStatus(entity, 1L));
+		}
+		catch (DynamicExtensionsSystemException e)
+		{
+			fail();
+			Logger.out.debug(e.getStackTrace());
+		}
+		catch (DynamicExtensionsApplicationException e)
+		{
+			fail();
+			Logger.out.debug(e.getStackTrace());
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail();
 
-	        Logger.out.debug(e.getStackTrace());
-	    }
-	}*/
+			Logger.out.debug(e.getStackTrace());
+		}*/
+		fail();
+	}
 
 	/**
 	 * This method test for updating record for an entity.
@@ -974,8 +862,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			//dataValue.put(commentsAttributes, "this is not default comment");
 			dataValue.put(pathAnnoChildAssocn, dataList);
 
-			boolean isEditData = manager.editData(clinicalAnnotations, dataValue, recordId, null,
-					null);
+			manager.editData(clinicalAnnotations, dataValue, recordId, null, null);
 			map = manager.getRecordById(clinicalAnnotations, recordId);
 
 			recMap = (Map) ((List) map.get(pathAnnoChildAssocn)).get(0);
@@ -1014,7 +901,8 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			Long staticEntityRecId = recordEntry.getId();
 
 			//Get static entity from metadata id of recordEntry
-			EntityInterface staticEntity = manager.getEntityByName("edu.wustl.catissuecore.domain.RecordEntry");
+			EntityInterface staticEntity = manager
+					.getEntityByName("edu.wustl.catissuecore.domain.RecordEntry");
 
 			//search for association between static and dynamic entities for associating these two entities
 			Collection<AssociationInterface> asntCollection = staticEntity
@@ -1029,11 +917,10 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 					break;
 				}
 			}
-			if(asntInterface!=null)
+			if (asntInterface != null)
 			{
 				//associate static entity record Id with dynamic entity record Id
-				manager.associateEntityRecords(asntInterface, staticEntityRecId,
-					recordId);
+				manager.associateEntityRecords(asntInterface, staticEntityRecId, recordId);
 			}
 
 			if (hibernateDAO != null)
@@ -1055,20 +942,28 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	 * @param className
 	 * @return
 	 */
-	static Object createObject(String className) {
-      Object object = null;
-      try {
-          Class classDefinition = Class.forName(className);
-          object = classDefinition.newInstance();
-      } catch (InstantiationException e) {
-          Logger.out.error(e.getMessage());
-      } catch (IllegalAccessException e) {
-    	  Logger.out.error(e.getMessage());
-      } catch (ClassNotFoundException e) {
-    	  Logger.out.error(e.getMessage());
-      }
-      return object;
-   }
+	static Object createObject(String className)
+	{
+		Object object = null;
+		try
+		{
+			Class classDefinition = Class.forName(className);
+			object = classDefinition.newInstance();
+		}
+		catch (InstantiationException e)
+		{
+			Logger.out.error(e.getMessage());
+		}
+		catch (IllegalAccessException e)
+		{
+			Logger.out.error(e.getMessage());
+		}
+		catch (ClassNotFoundException e)
+		{
+			Logger.out.error(e.getMessage());
+		}
+		return object;
+	}
 
 	/**
 	 * This method test for updating data for a multiSelect attribute
@@ -1266,8 +1161,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 		try
 		{
-			int beforeCount = (Integer) executeQuery("select count(*) from dyextn_file_extensions",
-					INT_TYPE, 1, null);
+			executeQuery("select count(*) from dyextn_file_extensions", INT_TYPE, 1, null);
 			user = EntityManagerInterface.persistEntity(user);
 			assertEquals(getColumnCount("select * from " + user.getTableProperties().getName()),
 					noOfDefaultColumnsForfile);
@@ -1440,7 +1334,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			entityGroup.setName("testGroup" + new Double(Math.random()).toString());
 			entity = (Entity) new MockEntityManager().initializeEntity(entityGroup);
 
-			Map map = EntityManagerInterface.getRecordById(entity, new Long(1));
+			EntityManagerInterface.getRecordById(entity, new Long(1));
 			fail("Exception should have be thrown since entity is not saved");
 		}
 		catch (DynamicExtensionsSystemException e)
@@ -1455,7 +1349,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 		try
 		{
-			Map map = EntityManagerInterface.getRecordById(null, new Long(1));
+			EntityManagerInterface.getRecordById(null, new Long(1));
 			fail("Exception should have be thrown since entity is not saved");
 		}
 		catch (DynamicExtensionsSystemException e)
@@ -1471,7 +1365,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		{
 			entity = (Entity) EntityManagerInterface.persistEntity(entity);
 
-			Map map = EntityManagerInterface.getRecordById(entity, null);
+			EntityManagerInterface.getRecordById(entity, null);
 			fail("Exception should have be thrown since entity is not saved");
 		}
 		catch (DynamicExtensionsSystemException e)
@@ -1579,8 +1473,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			entity.addAbstractAttribute(attr);
 			entity = (Entity) EntityManagerInterface.persistEntity(entity);
 
-			//Checking whether metadata information is saved properly or not.
-			String tableName = entity.getTableProperties().getName();
+			entity.getTableProperties().getName();
 		}
 		catch (Exception e)
 		{
@@ -1611,8 +1504,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			entity = (Entity) EntityManagerInterface.persistEntity(entity);
 			Attribute savedAttribute = (Attribute) entity.getAttributeByIdentifier(attr.getId());
 			assertFalse(savedAttribute.getIsNullable());
-			//Checking whether metadata information is saved properly or not.
-			String tableName = entity.getTableProperties().getName();
+			entity.getTableProperties().getName();
 		}
 		catch (Exception e)
 		{
@@ -1677,8 +1569,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(resume, fileRecord);
 
 			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
-			FileAttributeRecordValue attributeRecordValue = EntityManagerInterface
-					.getFileAttributeRecordValueByRecordId(resume, recordId);
+			EntityManagerInterface.getFileAttributeRecordValueByRecordId(resume, recordId);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
 					+ user.getTableProperties().getName(), INT_TYPE, 1, null);
@@ -1747,7 +1638,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(age, "45");
 			dataValue.put(resume, fileRecord);
 
-			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
+			EntityManagerInterface.insertData(user, dataValue, null);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
 					+ user.getTableProperties().getName(), INT_TYPE, 1, null);
@@ -3015,7 +2906,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(barcode, "123'456");
 
 			EntityManagerInterface.persistEntity(specimen);
-			Long recordId = EntityManagerInterface.insertData(specimen, dataValue, null);
+			EntityManagerInterface.insertData(specimen, dataValue, null);
 
 			assertTrue(true);
 		}
@@ -3089,386 +2980,6 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			fail();
 		}
 	}
-
-	/**
-	 *
-	 *
-	 *//*
-	public void testInsertObjectAttribute()
-	{
-		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-		DomainObjectFactory factory = DomainObjectFactory.getInstance();
-		EntityGroup entityGroup = (EntityGroup) factory.createEntityGroup();
-		entityGroup.setName("testGroup" + new Double(Math.random()).toString());
-
-		// create user
-		EntityInterface user = createAndPopulateEntity();
-		user.setEntityGroup(entityGroup);
-		entityGroup.addEntity(user);
-
-		user.setName("User");
-
-		AttributeInterface age = factory.createIntegerAttribute();
-		age.setName("Age");
-		user.addAbstractAttribute(age);
-
-		AttributeInterface info = factory.createObjectAttribute();
-		info.setName("Resume");
-		user.addAbstractAttribute(info);
-		user.addAttribute(info);
-
-		try
-		{
-			user = EntityManagerInterface.persistEntity(user);
-
-			ObjectAttributeRecordValueInterface objectRecord = factory
-					.createObjectAttributeRecordValue();
-			objectRecord.setObject(new TaggedValue());
-			objectRecord.setClassName(TaggedValue.class.getName());
-
-			Map dataValue = new HashMap();
-			dataValue.put(age, "45");
-			dataValue.put(info, objectRecord);
-
-			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
-
-			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ user.getTableProperties().getName(), INT_TYPE, 1, null);
-			assertEquals(1, rowCount);
-		}
-		catch (Throwable e)
-		{
-			e.printStackTrace();
-			fail();
-		}
-	}
-
-	public void testGerRecordForObjectAttribute()
-	{
-		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-		DomainObjectFactory factory = DomainObjectFactory.getInstance();
-		EntityGroupInterface entityGroup = factory.createEntityGroup();
-		entityGroup.setName("test_" + new Double(Math.random()).toString());
-
-		// create user
-		EntityInterface user = createAndPopulateEntity();
-		user.setName("User");
-
-		AttributeInterface age = factory.createIntegerAttribute();
-		age.setName("Age");
-		user.addAbstractAttribute(age);
-
-		AttributeInterface info = factory.createObjectAttribute();
-		info.setName("Resume");
-		user.addAbstractAttribute(info);
-		user.addAttribute(info);
-		entityGroup.addEntity(user);
-		user.setEntityGroup(entityGroup);
-		try
-		{
-			TaggedValue taggedValue = new TaggedValue();
-			taggedValue.setKey("rahul");
-			taggedValue.setValue("ner");
-
-			user = EntityManagerInterface.persistEntity(user);
-
-			ObjectAttributeRecordValueInterface objectRecord = factory
-					.createObjectAttributeRecordValue();
-			objectRecord.setObject(taggedValue);
-			objectRecord.setClassName(TaggedValue.class.getName());
-
-			Map dataValue = new HashMap();
-			dataValue.put(age, "45");
-			dataValue.put(info, objectRecord);
-
-			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
-
-			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ user.getTableProperties().getName(), INT_TYPE, 1, null);
-			assertEquals(1, rowCount);
-
-			dataValue = EntityManagerInterface.getRecordById(user, recordId);
-
-			assertEquals("45", dataValue.get(age).toString());
-			ObjectAttributeRecordValue attributeRecordValue = (ObjectAttributeRecordValue) dataValue
-					.get((info));
-			TaggedValue taggedValue1 = (TaggedValue) attributeRecordValue.getObject();
-
-			assertTrue(taggedValue1.getKey().equals("rahul"));
-			assertTrue(taggedValue1.getValue().equals("ner"));
-		}
-		catch (Throwable e)
-		{
-			e.printStackTrace();
-			fail();
-		}
-	}
-
-	public void testGerEntityRecordResultForObjectAttribute()
-	{
-		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-		DomainObjectFactory factory = DomainObjectFactory.getInstance();
-		EntityGroupInterface entityGroup = factory.createEntityGroup();
-		entityGroup.setName("test_" + new Double(Math.random()).toString());
-
-		// create user
-		EntityInterface user = createAndPopulateEntity();
-		user.setName("User");
-
-		AttributeInterface age = factory.createIntegerAttribute();
-		age.setName("Age");
-		user.addAbstractAttribute(age);
-
-		AttributeInterface info = factory.createObjectAttribute();
-		info.setName("Resume");
-		user.addAbstractAttribute(info);
-		user.addAttribute(info);
-		entityGroup.addEntity(user);
-		user.setEntityGroup(entityGroup);
-		try
-		{
-			TaggedValue taggedValue = new TaggedValue();
-			taggedValue.setKey("rahul");
-			taggedValue.setValue("ner");
-
-			user = EntityManagerInterface.persistEntity(user);
-
-			ObjectAttributeRecordValueInterface objectRecord = factory
-					.createObjectAttributeRecordValue();
-			objectRecord.setObject(taggedValue);
-			objectRecord.setClassName(TaggedValue.class.getName());
-
-			Map dataValue = new HashMap();
-			dataValue.put(age, "45");
-			dataValue.put(info, objectRecord);
-
-			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
-
-			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ user.getTableProperties().getName(), INT_TYPE, 1, null);
-			assertEquals(1, rowCount);
-
-			List userAttribute = new ArrayList();
-			userAttribute.add(age);
-			userAttribute.add(info);
-
-			Map<AbstractAttributeInterface, Object> record = EntityManagerInterface
-					.getEntityRecordById(user, recordId, null);
-
-			assertEquals("45", record.get(age).toString());
-
-			ObjectAttributeRecordValue attributeRecordValue = (ObjectAttributeRecordValue) dataValue
-					.get((info));
-			TaggedValue taggedValue1 = (TaggedValue) attributeRecordValue.getObject();
-			assertTrue(taggedValue1.getKey().equals("rahul"));
-			assertTrue(taggedValue1.getValue().equals("ner"));
-		}
-		catch (Throwable e)
-		{
-			e.printStackTrace();
-			fail();
-		}
-	}
-
-	public void testEditRecordForObjectAttribute()
-	{
-		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-		DomainObjectFactory factory = DomainObjectFactory.getInstance();
-		EntityGroupInterface entityGroup = factory.createEntityGroup();
-		entityGroup.setName("test_" + new Double(Math.random()).toString());
-
-		// create user
-		EntityInterface user = createAndPopulateEntity();
-		user.setName("User");
-
-		AttributeInterface age = factory.createIntegerAttribute();
-		age.setName("Age");
-		user.addAbstractAttribute(age);
-
-		AttributeInterface info = factory.createObjectAttribute();
-		info.setName("Resume");
-		user.addAbstractAttribute(info);
-		user.addAttribute(info);
-		entityGroup.addEntity(user);
-		user.setEntityGroup(entityGroup);
-		try
-		{
-			TaggedValue taggedValue = new TaggedValue();
-			taggedValue.setKey("rahul");
-			taggedValue.setValue("ner");
-
-			user = EntityManagerInterface.persistEntity(user);
-
-			ObjectAttributeRecordValueInterface objectRecord = factory
-					.createObjectAttributeRecordValue();
-			objectRecord.setObject(taggedValue);
-			objectRecord.setClassName(TaggedValue.class.getName());
-
-			Map dataValue = new HashMap();
-			dataValue.put(age, "45");
-			dataValue.put(info, objectRecord);
-
-			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
-
-			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ user.getTableProperties().getName(), INT_TYPE, 1, null);
-			assertEquals(1, rowCount);
-
-			dataValue = EntityManagerInterface.getRecordById(user, recordId);
-
-			assertEquals("45", dataValue.get(age).toString());
-			ObjectAttributeRecordValue attributeRecordValue = (ObjectAttributeRecordValue) dataValue
-					.get((info));
-			TaggedValue taggedValue1 = (TaggedValue) attributeRecordValue.getObject();
-
-			assertTrue(taggedValue1.getKey().equals("rahul"));
-			assertTrue(taggedValue1.getValue().equals("ner"));
-
-			taggedValue1.setValue("ner1");
-
-			objectRecord.setClassName("new class name");
-			objectRecord.setObject(taggedValue1);
-
-			dataValue.clear();
-			dataValue.put(age, "54");
-			dataValue.put(info, objectRecord);
-
-			EntityManagerInterface.editData(user, dataValue, recordId, null);
-
-			dataValue = EntityManagerInterface.getRecordById(user, recordId);
-
-			assertEquals("54", dataValue.get(age).toString());
-			TaggedValue taggedValue2 = (TaggedValue) ((ObjectAttributeRecordValueInterface) dataValue
-					.get(info)).getObject();
-			assertTrue(taggedValue2.getKey().equals("rahul"));
-			assertTrue(taggedValue2.getValue().equals("ner1"));
-
-			assertEquals("new class name", ((ObjectAttributeRecordValueInterface) dataValue
-					.get(info)).getClassName());
-		}
-		catch (Throwable e)
-		{
-			e.printStackTrace();
-			fail();
-		}
-	}
-
-	*//**
-	 *
-	 *
-	 *//*
-
-		public void testDeleteRecordForObjectAttribute()
-		{
-			EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-			DomainObjectFactory factory = DomainObjectFactory.getInstance();
-			EntityGroupInterface entityGroup = factory.createEntityGroup();
-			entityGroup.setName("test_" + new Double(Math.random()).toString());
-
-			// create user
-			EntityInterface user = createAndPopulateEntity();
-			user.setName("User");
-
-			AttributeInterface age = factory.createIntegerAttribute();
-			age.setName("Age");
-			user.addAbstractAttribute(age);
-
-			AttributeInterface info = factory.createObjectAttribute();
-			info.setName("Resume");
-			user.addAbstractAttribute(info);
-			user.addAttribute(info);
-			entityGroup.addEntity(user);
-			user.setEntityGroup(entityGroup);
-			try
-			{
-				TaggedValue taggedValue = new TaggedValue();
-				taggedValue.setKey("rahul");
-				taggedValue.setValue("ner");
-
-				user = EntityManagerInterface.persistEntity(user);
-
-				ObjectAttributeRecordValueInterface objectRecord = factory.createObjectAttributeRecordValue();
-				objectRecord.setObject(taggedValue);
-				objectRecord.setClassName(TaggedValue.class.getName());
-
-				Map dataValue = new HashMap();
-				dataValue.put(age, "45");
-				dataValue.put(info, objectRecord);
-
-				Long recordId = EntityManagerInterface.insertData(user, dataValue);
-
-				ResultSet resultSet = executeQuery("select count(*) from dyextn_attribute_record");
-				resultSet.next();
-				int beforeCnt = resultSet.getInt(1);
-				resultSet.close();
-
-				EntityManagerInterface.deleteRecord(user, recordId);
-
-				resultSet = executeQuery("select count(*) from dyextn_attribute_record");
-				resultSet.next();
-				int afterCnt = resultSet.getInt(1);
-
-				assertEquals(1, beforeCnt - afterCnt);
-			}
-			catch (Throwable e)
-			{
-				e.printStackTrace();
-				fail();
-			}
-		}
-
-	*//**
-	 *
-	 *
-	 *//*
-	public void testEditEntityToAddObjectAttribute()
-	{
-		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-		DomainObjectFactory factory = DomainObjectFactory.getInstance();
-		EntityGroupInterface entityGroup = factory.createEntityGroup();
-		entityGroup.setName("test_" + new Double(Math.random()).toString());
-
-		// create user
-		EntityInterface user = createAndPopulateEntity();
-		user.setName("User");
-
-		AttributeInterface age = factory.createIntegerAttribute();
-		age.setName("Age");
-		user.addAbstractAttribute(age);
-		entityGroup.addEntity(user);
-		user.setEntityGroup(entityGroup);
-		try
-		{
-			user = EntityManagerInterface.persistEntity(user);
-
-			AttributeInterface info = factory.createObjectAttribute();
-			info.setName("Resume");
-			user.addAbstractAttribute(info);
-			user.addAttribute(info);
-
-			user = EntityManagerInterface.persistEntity(user);
-
-			ObjectAttributeRecordValueInterface objectRecord = factory
-					.createObjectAttributeRecordValue();
-			objectRecord.setObject(new TaggedValue());
-			objectRecord.setClassName(TaggedValue.class.getName());
-
-			Map dataValue = new HashMap();
-			dataValue.put(age, "45");
-			dataValue.put(info, objectRecord);
-
-			Long recordId = EntityManagerInterface.insertData(user, dataValue, null);
-
-			int rowCOunt = (Integer) executeQuery("select count(*) from "
-					+ user.getTableProperties().getName(), INT_TYPE, 1, null);
-			assertEquals(1, rowCOunt);
-		}
-		catch (Throwable e)
-		{
-			e.printStackTrace();
-			fail();
-		}
-	}*/
 
 	/**
 	 *
@@ -3891,7 +3402,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(pathAnnoChildAssocn, dataList);
 
 			EntityManagerInterface manager = new EntityManager();
-			Long recordId = manager.insertData(clinicalAnnotations, dataValue, null);
+			manager.insertData(clinicalAnnotations, dataValue, null);
 		}
 		catch (Exception e)
 		{
@@ -3953,6 +3464,34 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		{
 			e.printStackTrace();
 			fail();
+		}
+
+	}
+
+	/**
+	 * This test case will try to insert the data for all the entities present
+	 * in the test model .
+	 *
+	 */
+	public void testInsertDataForAllEntities()
+	{
+		try
+		{
+			EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
+					TEST_ENTITYGROUP_NAME);
+			EntityManagerInterface entityManager = EntityManager.getInstance();
+			for (ContainerInterface container : testModel.getMainContainerCollection())
+			{
+				EntityInterface entity = (EntityInterface) container.getAbstractEntity();
+				Map<AbstractAttributeInterface, Object> dataValueMap = mapGenerator
+						.createDataValueMapForEntity(entity);
+				entityManager.insertData(entity, dataValueMap, null);
+			}
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
