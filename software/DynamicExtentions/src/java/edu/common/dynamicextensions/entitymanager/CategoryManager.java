@@ -1416,7 +1416,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				final String catEntityName = DynamicExtensionsUtility
 						.getCategoryEntityName(rootCatEntity.getName());
 				putRecordIdsInMap(rootCatEntity, entityRecId, fullKeyMap, keyMap, recordsMap);
-				
+
 
 				for (final CategoryAttributeInterface catAttribute : rootCatEntity
 						.getAllCategoryAttributes())
@@ -1678,7 +1678,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 					CategoryEntityInterface catEntity = categoryEnt;
 					putRecordIdsInMap(catEntity, entityId, fullKeyMap, keyMap, records);
-				
+
 					isCatEntRecIns = true;
 				}
 				else if (attribute instanceof CategoryAssociationInterface)
@@ -2237,7 +2237,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 					CategoryEntityInterface catEntity = categoryEnt;
 					putRecordIdsInMap(catEntity, entityId, fullKeyMap, keyMap, records);
-					
+
 
 					isCatEntRecIns = true;
 				}
@@ -2524,18 +2524,15 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
 
-			for (Long recordEntryId : recordEntryIdList)
+			Collection recIdList = deIntegration.getDynamicRecordForCategoryFromStaticId(
+					recordEntryIdList, formId, recordEntryStaticId.toString(), jdbcDao);
+			for (Object recordEntryIdCollection : recIdList.toArray())
 			{
-				Collection recIdList = deIntegration.getDynamicRecordForCategoryFromStaticId(
-						recordEntryId.toString(), formId, recordEntryStaticId.toString(), jdbcDao);
-				Long dynamicRecId = 0L;
-				if (recIdList != null && !recIdList.isEmpty())
-				{
-					dynamicRecId = (Long) recIdList.iterator().next();
-				}
-				Map<BaseAbstractAttributeInterface, Object> recordMap = getRecordById(
-						rootCatEntity, dynamicRecId, jdbcDao);
-				recordMapList.add(recordMap);
+				recordEntryIdCollection = ((List<Long>) recordEntryIdCollection).get(0);
+				Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
+				retrieveRecords(rootCatEntity, dataValue, Long.valueOf(recordEntryIdCollection
+						.toString()), jdbcDao);
+				recordMapList.add(dataValue);
 			}
 		}
 		finally
