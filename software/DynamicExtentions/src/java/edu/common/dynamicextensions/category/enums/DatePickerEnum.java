@@ -6,10 +6,10 @@ import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
 
 public enum DatePickerEnum {
-	RANGEMIN("RANGEMIN") {
+	RANGEMIN("range-min") {
 
 		/**
-		 * Returns String representation of Range min rule. 
+		 * Returns String representation of Range min rule.
 		 */
 		public String getControlProperty(DatePicker control)
 		{
@@ -30,7 +30,7 @@ public enum DatePickerEnum {
 			ControlsUtility.defineRule(CategoryCSVConstants.MIN, control);
 		}
 	},
-	RANGEMAX("RANGEMAX") {
+	RANGEMAX("range-max") {
 
 		/**
 		 * Returns String representation of Range max Rule. 
@@ -54,7 +54,7 @@ public enum DatePickerEnum {
 			ControlsUtility.defineRule(CategoryCSVConstants.MAX, control);
 		}
 	},
-	ALLOWFUTUREDATE("ALLOWFUTUREDATE") {
+	ALLOWFUTUREDATE("allowfuturedate") {
 
 		/**
 		 * Returns String representation of rule Allow future date. 

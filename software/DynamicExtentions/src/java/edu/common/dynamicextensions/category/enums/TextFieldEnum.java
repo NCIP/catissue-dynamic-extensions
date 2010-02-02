@@ -12,7 +12,7 @@ import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
 
 public enum TextFieldEnum {
-	MAXLENGTH("MAXLENGTH") {
+	MAXLENGTH("width") {
 
 		/**
 		 * Returns String representation of max-length value for a control.
@@ -168,7 +168,7 @@ public enum TextFieldEnum {
 			control.setIsUrl(Boolean.valueOf(propertyToBeSet));
 		}
 	},
-	COLUMNS("COLUMNS") {
+	COLUMNS("Columns") {
 
 		/**
 		 * Returns String representation of columns value for a control.

@@ -7,6 +7,7 @@ package edu.common.dynamicextensions;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import edu.common.dynamicextensions.category.TestXMLToCSVConverter;
 import edu.common.dynamicextensions.categoryManager.TestCategoryManager;
 import edu.common.dynamicextensions.entitymanager.TestEntityManager;
 import edu.common.dynamicextensions.entitymanager.TestEntityManagerForAssociations;
@@ -43,6 +44,7 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 		suite.addTestSuite(TestEntityMangerForXMIImportExport.class);
 		suite.addTestSuite(TestImportPermissibleValues.class);
 		suite.addTestSuite(TestCategoryManager.class);
+		suite.addTestSuite(TestXMLToCSVConverter.class);
 		return suite;
 	}
 }

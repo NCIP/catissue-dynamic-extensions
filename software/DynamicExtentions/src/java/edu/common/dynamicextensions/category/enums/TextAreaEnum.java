@@ -7,15 +7,15 @@ import edu.common.dynamicextensions.domain.userinterface.TextArea;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 
 public enum TextAreaEnum {
-	WIDTH("WIDTH") {
+	WIDTH("Width") {
 
 		/**
 		 * Returns String representation of width value for a control.
 		 */
 		public String getControlProperty(TextArea control)
 		{
-			Integer rows2 = control.getRows();
-			return String.valueOf(rows2);
+			Integer columns2 = control.getColumns();
+			return String.valueOf(columns2);
 		}
 
 		/**
@@ -26,15 +26,15 @@ public enum TextAreaEnum {
 			control.setRows(Integer.valueOf(propertyToBeSet));
 		}
 	},
-	HEIGHT("HEIGHT") {
+	HEIGHT("Rows") {
 
 		/**
 		 * Returns String representation of height value for a control.
 		 */
 		public String getControlProperty(TextArea control)
 		{
-			Integer columns2 = control.getColumns();
-			return String.valueOf(columns2);
+			Integer rows2 = control.getRows();
+			return String.valueOf(rows2);
 		}
 
 		/**
@@ -45,7 +45,7 @@ public enum TextAreaEnum {
 			control.setColumns(Integer.valueOf(propertyToBeSet));
 		}
 	},
-	MAXLENGTH("MAXLENGTH") {
+	MAXLENGTH("Maxlength") {
 
 		/**
 		 * Returns String representation of max-length value for a control.

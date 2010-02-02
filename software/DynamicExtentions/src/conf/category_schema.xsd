@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="FormDefinition" type="FormDefinition"/>
+
+  <xs:complexType name="FormDefinition">
+    <xs:sequence>
+      <xs:element name="Form" type="formBean" minOccurs="0"/>
+      <xs:element name="RelatedAttribute" type="relatedAttributeBean" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element name="SkipLogic" type="skipLogicBean" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="entityGroup" type="xs:string"/>
+    <xs:attribute name="name" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="formBean">
+    <xs:sequence>
+      <xs:element name="Instances" type="instances" minOccurs="0"/>
+      <xs:element name="SingleLineDisplay" type="singleLineDisplayBean" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element name="Attribute" type="attributeBean" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element name="subform" type="formBean" nillable="true" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="show" type="xs:boolean" use="required"/>
+    <xs:attribute name="name" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="instances">
+    <xs:sequence>
+      <xs:element name="Instance" type="pathBean" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="pathBean">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+
+  <xs:complexType name="singleLineDisplayBean">
+    <xs:sequence>
+      <xs:element name="Attribute" type="attributeBean" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="attributeBean">
+    <xs:sequence>
+      <xs:element name="Property" type="uiProperty" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="attributeName" type="xs:string"/>
+    <xs:attribute name="caption" type="xs:string"/>
+    <xs:attribute name="className" type="xs:string"/>
+    <xs:attribute name="uiControl" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="uiProperty">
+    <xs:sequence>
+      <xs:element name="uiProperty" type="uiProperty" nillable="true" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="key" type="xs:string"/>
+    <xs:attribute name="value" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="relatedAttributeBean">
+    <xs:sequence>
+      <xs:element name="instance" type="xs:long"/>
+    </xs:sequence>
+    <xs:attribute name="attributeName" type="xs:string"/>
+    <xs:attribute name="className" type="xs:string"/>
+    <xs:attribute name="value" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="skipLogicBean">
+    <xs:sequence>
+      <xs:element name="ControllingAttribute" type="skipLogicControllingAttribute" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="skipLogicControllingAttribute">
+    <xs:sequence>
+      <xs:element name="Instance" type="pathBean" minOccurs="0"/>
+      <xs:element name="Attribute" type="skipLogicAttributeBean" minOccurs="0"/>
+      <xs:element name="DependentAttribute" type="skipLogicDependentAttributeBean" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="skipLogicAttributeBean">
+    <xs:sequence>
+      <xs:element name="subset" type="subset" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="attributeName" type="xs:string"/>
+    <xs:attribute name="value" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="subset">
+    <xs:sequence/>
+    <xs:attribute name="permissibleValueFile" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="skipLogicDependentAttributeBean">
+    <xs:sequence>
+      <xs:element name="Instance" type="pathBean" minOccurs="0"/>
+      <xs:element name="SkipLogicAttribute" type="skipLogicAttributeBean" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

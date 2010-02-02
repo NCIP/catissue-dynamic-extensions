@@ -1,11 +1,7 @@
 
 package edu.common.dynamicextensions.category.enums;
 
-import edu.common.dynamicextensions.domain.CategoryAttribute;
 import edu.common.dynamicextensions.domain.userinterface.Control;
-import edu.common.dynamicextensions.domaininterface.AttributeInterface;
-import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
-import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
 
@@ -15,70 +11,8 @@ import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
  *
  */
 public enum ControlEnum {
-	DEFAULTVALUE("DEFAULTVALUE") {
 
-		/**
-		 * Returns String representation of Default value for a control.
-		 */
-		public String getControlProperty(Control control)
-		{
-			CategoryAttribute categoryAttribute = (CategoryAttribute) control
-					.getBaseAbstractAttribute();
-			AttributeInterface attribute = categoryAttribute.getAttribute();
-			AttributeTypeInformationInterface attributeTypeInformation = attribute
-					.getAttributeTypeInformation();
-			PermissibleValueInterface defaultValue2 = attributeTypeInformation.getDefaultValue();
-			String defaultValue = null;
-			if (defaultValue2 != null && defaultValue2.getValueAsObject() != null)
-			{
-				Object valueAsObject = defaultValue2.getValueAsObject();
-				defaultValue = valueAsObject.toString();
-			}
-			return defaultValue;
-		}
-
-		/**
-		 * Sets Control default value.
-		 */
-		public void setControlProperty(Control control, String propertyToBeSet)
-		{
-			CategoryAttribute categoryAttribute = (CategoryAttribute) control
-					.getBaseAbstractAttribute();
-			AttributeInterface attribute = categoryAttribute.getAttribute();
-			attribute.getAttributeTypeInformation();
-		}
-	},
-	PHI("PHI") {
-
-		/**
-		 * Returns String representation for PHI value. 
-		 */
-		public String getControlProperty(Control control)
-		{
-			CategoryAttribute categoryAttribute = (CategoryAttribute) control
-					.getBaseAbstractAttribute();
-			AttributeInterface attribute = categoryAttribute.getAttribute();
-			Boolean isIdentified = attribute.getIsIdentified();
-			String isPHIString = null;
-			if (isIdentified != null)
-			{
-				isPHIString = String.valueOf(isIdentified);
-			}
-			return isPHIString;
-		}
-
-		/**
-		 * Sets value for PHI.   
-		 */
-		public void setControlProperty(Control control, String propertyToBeSet)
-		{
-			CategoryAttribute categoryAttribute = (CategoryAttribute) control
-					.getBaseAbstractAttribute();
-			AttributeInterface attribute = categoryAttribute.getAttribute();
-			attribute.setIsIdentified(Boolean.valueOf(propertyToBeSet));
-		}
-	},
-	REQUIRED("REQUIRED") {
+	REQUIRED("required") {
 
 		/**
 		 * Returns string represenation for Required rule of Control. 

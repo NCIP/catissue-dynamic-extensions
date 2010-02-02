@@ -4,18 +4,13 @@ package edu.common.dynamicextensions.category.beans;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.xml.bind.annotation.AccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
-@XmlAccessorType(AccessType.FIELD)
 public class UIProperty
 {
 
-	@XmlAttribute
 	private String value;
 
-	@XmlAttribute
 	private String key;
 
 	private Collection<UIProperty> uiProperty;
@@ -81,6 +76,7 @@ public class UIProperty
 	 * Returns key for this UIProperty.
 	 * @return
 	 */
+	@XmlAttribute
 	public String getKey()
 	{
 		return key;
@@ -99,6 +95,7 @@ public class UIProperty
 	 * Returns Value of this UIProperty.
 	 * @return
 	 */
+	@XmlAttribute
 	public String getValue()
 	{
 		return value;

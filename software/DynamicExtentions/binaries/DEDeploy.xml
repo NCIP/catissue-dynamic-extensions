@@ -476,9 +476,9 @@
 		</java>
 	</target>
 
-	<property name="categoryXmlFileDir" value="E:/wash-u/clinportal/test/inputXML" />
-	<property name="categoryCsvFileDir" value="E:/wash-u/clinportal/test/outputCSV" />
-	<property name="categoryFileDir" value="${categoryCsvFileDir}" />
+	<property name="Category.XmlFile.Dir" value=" " />
+	<property name="Category.Csv.FileDir" value=" " />
+	<property name="categorySchemaFile" value="./${de.temp.dir}/conf/category_schema.xsd" />
 	<!-- =================================
           target: create_category_from_xml
          ================================= -->
@@ -492,9 +492,10 @@
 			<replacefilter token="@@jbosshome@@" value="." />
 		</replace>
 		<echo message="Creating Categories" />
-		<java classname="edu.common.dynamicextensions.category.XMLToCSVConverter" fork="true" maxmemory="1024M">
-			<arg value="${categoryXmlFileDir}" />
-			<arg value="${categoryCsvFileDir}" />
+		<java classname="edu.common.dynamicextensions.category.XMLToCSV" fork="true" maxmemory="1024M">
+			<arg value="${Category.XmlFile.Dir}" />
+			<arg value="${Category.Csv.FileDir}" />
+			<arg value="${categorySchemaFile}" />
 			<classpath>
 				<fileset dir="${de.temp.dir}">
 					<include name="*.jar" />
@@ -509,7 +510,7 @@
 	<!-- Target used to create the Category -->
 	<property name="categoryFormNamesFile" value=" " />
 	<property name="isPersistMetadataOnly" value=" " />
-	<property name="categoryFileDir" value=" " />
+	<property name="categoryFileDir" value="${Category.Csv.FileDir}" />
 	<target name="create_category" description="Target used to create the Category">
 		<delete dir="${de.temp.dir}" failonerror="no" />
 		<mkdir dir="${de.temp.dir}" />
@@ -1092,7 +1093,6 @@
 
 					<echo message="${ORM1CfgFile}" />
 					<echo message="${DEWebCfgFile}" />
-
 					<if>
 						<equals arg1="${cacore.present}" arg2="true" />
 						<then>
@@ -1112,7 +1112,7 @@
 								<param name="hookentity" value="${hook.entity.value}" />
 							</antcall>
 							<antcall target="generate.cacore" />
-							<antcall target="merge.audit.xml"/>
+							<antcall target="merge.audit.xml" />
 						</else>
 					</if>
 					<java classname="edu.wustl.metadata.util.CacoreDEMetadataAppender" fork="true" maxmemory="1024M">
@@ -1131,6 +1131,7 @@
 						</classpath>
 					</java>
 					<antcall target="merge.audit.xml"/>
+
 					<copy todir="${entityGroup.jar.location}/" file="${cacore.deployable.dir}/${entitygroupname}/${entitygroupname}.jar" overwrite="true" />
 					<echo message="${ORM1CfgFile}" />
 					<echo message="${DEWebCfgFile}" />
