@@ -161,6 +161,8 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				return getExceptionActionForward(exception, mapping, request);
 			}
 		}
+		/* resets parameter map from the wrapper request object */
+		UserInterfaceiUtility.resetRequestParameterMap(request);
 
 		if (isCallbackURL)
 		{

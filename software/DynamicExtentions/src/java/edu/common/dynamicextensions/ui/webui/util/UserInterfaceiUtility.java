@@ -14,6 +14,8 @@ import java.util.Stack;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.struts.upload.MultipartRequestWrapper;
+
 import edu.common.dynamicextensions.domain.AbstractEntity;
 import edu.common.dynamicextensions.domain.BaseAbstractAttribute;
 import edu.common.dynamicextensions.domain.FileAttributeRecordValue;
@@ -545,4 +547,21 @@ public class UserInterfaceiUtility
 		return isDataPresent;
 	}
 
+	/**
+	 * This method resets request parameter map
+	 * @param request
+	 */
+	public static void resetRequestParameterMap(HttpServletRequest request)
+	{
+		if ((request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME) != null)
+				&& (request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME).trim()
+						.length() > 0)
+				&& (DEConstants.CANCEL.equalsIgnoreCase(request
+						.getParameter(WebUIManagerConstants.MODE_PARAM_NAME)))
+						&& request instanceof MultipartRequestWrapper)
+		{
+			MultipartRequestWrapper wrapper = (MultipartRequestWrapper) request;
+			wrapper.getRequest().getParameterMap().clear();
+		}
+	}
 }
