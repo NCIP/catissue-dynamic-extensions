@@ -561,7 +561,10 @@ public class UserInterfaceiUtility
 						&& request instanceof MultipartRequestWrapper)
 		{
 			MultipartRequestWrapper wrapper = (MultipartRequestWrapper) request;
-			wrapper.getRequest().getParameterMap().clear();
+			if(wrapper.getRequest()!= null && wrapper.getRequest().getParameterMap()!=null)
+			{
+				wrapper.getRequest().getParameterMap().clear();
+			}
 		}
 	}
 }
