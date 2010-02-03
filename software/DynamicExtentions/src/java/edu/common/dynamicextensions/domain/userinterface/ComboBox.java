@@ -116,6 +116,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		 * combo box to default value.
 		 */
 		String textComponent = "combo" + htmlComponentName;
+		String attributeName = ((Control) this).getCaption();
 		if ((!getParentContainer().isAjaxRequest())
 				&& (!getIsSkipLogicTargetControl() && !"skipLogicAttributes"
 						.equals(getDataEntryOperation())))
@@ -127,6 +128,8 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					+ parentContainerId
 					+ "~sourceControlValues="
 					+ sourceHtmlComponentValues.toString()
+					+ "~attributeName="
+					+ attributeName
 					+ "\";"
 					+ "var ds = new Ext.data.Store({"
 					+ "proxy: new Ext.data.HttpProxy({url: myUrl}),"
@@ -184,6 +187,8 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				+ parentContainerId
 				+ "~sourceControlValues="
 				+ sourceHtmlComponentValues.toString()
+				+ "~attributeName="
+				+ attributeName
 				+ "\";var ds = new Ext.data.Store({"
 				+ "proxy: new Ext.data.HttpProxy({url: myUrl}),"
 				+ "reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, "

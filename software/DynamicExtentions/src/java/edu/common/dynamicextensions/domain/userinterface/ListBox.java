@@ -220,6 +220,8 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		}
 		htmlString.append("</SELECT>");
 
+		String attributeName = ((Control) this).getCaption();
+
 		// generate this type of html if multiselect is to be implemented
 		// using an auto complete drop down and list box together.
 		if (IsUsingAutoCompleteDropdown != null && IsUsingAutoCompleteDropdown)
@@ -240,6 +242,8 @@ public class ListBox extends SelectControl implements ListBoxInterface
 							+ parentContainerId
 							+ "~sourceControlValues="
 							+ sourceHtmlComponentValues.toString()
+							+ "~attributeName="
+							+ attributeName
 							+ "\";var ds = new Ext.data.Store({proxy: new Ext.data.HttpProxy({url: myUrl}),reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, [{name: 'id', mapping: 'id'},{name: 'excerpt', mapping: 'field'}])});var combo = new Ext.form.ComboBox({store: ds,hiddenName: 'CB_coord_"
 							+ getHTMLComponentName()
 							+ "',displayField:'excerpt',valueField: 'id',typeAhead: 'false',pageSize:15,forceSelection: 'true',queryParam : 'query',mode: 'remote',triggerAction: 'all',minChars : 3,queryDelay:500,lazyInit:true,emptyText:'--Select--',valueNotFoundText:'',selectOnFocus:'true',applyTo: '"
