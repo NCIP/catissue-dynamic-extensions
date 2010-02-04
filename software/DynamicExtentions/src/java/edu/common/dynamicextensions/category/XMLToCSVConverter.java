@@ -363,9 +363,10 @@ public class XMLToCSVConverter
 		{
 			String readLine = bufferedReader.readLine();
 			permissibleValues.append(readLine);
-			while ((readLine = bufferedReader.readLine()) != null)
+			while (readLine != null)
 			{
 				permissibleValues.append(":" + readLine);
+				readLine = bufferedReader.readLine();
 			}
 		}
 		finally

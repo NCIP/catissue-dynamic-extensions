@@ -33,12 +33,7 @@ public class XMLToCSV
 			xmlToCSV.validateArguments(args);
 			final File input = new File(args[0]);
 			final File outputDir = new File(args[1]);
-			File schemaFile = null;
-			if (args.length > 2)
-			{
-				schemaFile = new File(args[2]);
-			}
-			xmlToCSV.convertXMLs(input, outputDir, schemaFile);
+			xmlToCSV.convertXMLs(input, outputDir, args.length > 2 ? new File(args[2]) : null);
 		}
 		catch (final DynamicExtensionsSystemException e)
 		{
@@ -130,10 +125,9 @@ public class XMLToCSV
 		final String csvFileName = getCSVFileName(inputXML);
 		final XMLToCSVConverter xmlToCSVConverter = new XMLToCSVConverter(inputXML, new File(
 				outputDir, csvFileName));
-		final SchemaValidator schemaValidator = new SchemaValidator();
 		if (schemaFile != null && schemaFile.isFile())
 		{
-			schemaValidator.validateAgainstSchema(schemaFile, inputXML);
+			new SchemaValidator().validateAgainstSchema(schemaFile, inputXML);
 		}
 		xmlToCSVConverter.txXML();
 	}
