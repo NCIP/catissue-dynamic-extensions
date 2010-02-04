@@ -27,6 +27,7 @@ import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.NumericTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleParameterInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
@@ -95,7 +96,7 @@ public class DummyMapGenerator
 			List dataList = new ArrayList();
 			CategoryEntityInterface targetCaEntity = catAssociation.getTargetCategoryEntity();
 			dataList.add(createDataValueMapForCategory(targetCaEntity));
-			if (targetCaEntity.getNumberOfEntries().equals(CategoryCSVConstants.MULTILINE))
+			if (targetCaEntity.getNumberOfEntries().equals(-1))
 			{
 				dataList.add(createDataValueMapForCategory(targetCaEntity));
 			}
@@ -271,4 +272,56 @@ public class DummyMapGenerator
 		return value;
 	}
 
+	public void validateRetrievedDataValueMap(
+			Map<BaseAbstractAttributeInterface, Object> retrievedDataValue,
+			Map<BaseAbstractAttributeInterface, Object> dataValuemap)
+			throws DynamicExtensionsSystemException
+	{
+		for (Map.Entry<BaseAbstractAttributeInterface, Object> entryObject : dataValuemap
+				.entrySet())
+		{
+			BaseAbstractAttributeInterface attribute = entryObject.getKey();
+
+			if (attribute instanceof CategoryAttributeInterface)
+			{
+				if ((entryObject.getValue() instanceof List))
+				{
+					// multiselect case.
+				}
+				else
+				{
+					//normal attribute.
+					Object object = retrievedDataValue.get(attribute);
+					if (!entryObject.getValue().toString().equals(object.toString()))
+					{
+						throw new DynamicExtensionsSystemException("Data values for "
+								+ attribute.getName() + " does not match. Retrieve value : "
+								+ object.toString() + " Inserted value : "
+								+ entryObject.getValue().toString());
+					}
+				}
+
+			}
+			else if (attribute instanceof CategoryAssociationInterface)
+			{
+				List dataValueList = (List) entryObject.getValue();
+				List retrievedList = (List) retrievedDataValue.get(attribute);
+				if (dataValueList.size() != retrievedList.size())
+				{
+					throw new DynamicExtensionsSystemException("Data values for "
+							+ attribute.getName() + " does not match.");
+				}
+				for (int i = 0; i < dataValueList.size(); i++)
+				{
+					Map<BaseAbstractAttributeInterface, Object> catAssocDataValuemap = (Map<BaseAbstractAttributeInterface, Object>) dataValueList
+							.get(i);
+					Map<BaseAbstractAttributeInterface, Object> retrievedCatAssocDataValuemap = (Map<BaseAbstractAttributeInterface, Object>) retrievedList
+							.get(i);
+					validateRetrievedDataValueMap(retrievedCatAssocDataValuemap,
+							catAssocDataValuemap);
+				}
+			}
+		}
+
+	}
 }
