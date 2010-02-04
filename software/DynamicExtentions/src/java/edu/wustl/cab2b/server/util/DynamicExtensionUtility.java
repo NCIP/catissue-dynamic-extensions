@@ -12,6 +12,7 @@ import static edu.wustl.cab2b.server.path.PathConstants.METADATA_ENTITY_GROUP;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
@@ -20,6 +21,7 @@ import edu.common.dynamicextensions.domaininterface.AbstractMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.BooleanValueInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.DataElementInterface;
 import edu.common.dynamicextensions.domaininterface.DateValueInterface;
@@ -53,6 +55,8 @@ import edu.wustl.cab2b.server.path.PathConstants;
 import edu.wustl.common.querysuite.queryobject.DataType;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.HibernateDAO;
+import edu.wustl.dao.QueryWhereClause;
+import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.exception.DAOException;
 import gov.nih.nci.cagrid.metadata.common.SemanticMetadata;
 
@@ -531,12 +535,13 @@ public class DynamicExtensionUtility
 	 * @return Cab2b Entity Groups
 	 * @throws DAOException
 	 */
+	@SuppressWarnings("unchecked")
 	public static Collection<EntityGroupInterface> getSystemGeneratedEntityGroups(
 			HibernateDAO hibernateDAO) throws DAOException
 	{
 		List<EntityGroupInterface> entityGroups = new ArrayList<EntityGroupInterface>();
-		Collection<EntityGroupInterface> allEntityGroups = hibernateDAO
-				.retrieve(EntityGroupInterface.class.getName());
+		Collection<EntityGroupInterface> allEntityGroups = new HashSet<EntityGroupInterface>();
+		allEntityGroups = hibernateDAO.retrieve(EntityGroupInterface.class.getName(),"isSystemGenerated",Boolean.TRUE);
 
 		for (EntityGroupInterface entityGroup : allEntityGroups)
 		{
@@ -548,6 +553,7 @@ public class DynamicExtensionUtility
 		return entityGroups;
 	}
 
+
 	/**
 	 * It will retrieve all the categories present in the dataBase.
 	 * @param hibernateDAO
@@ -558,9 +564,77 @@ public class DynamicExtensionUtility
 			throws DAOException
 	{
 		Logger.out.info("EntityCache in before GetAll Categories ");
-		List<CategoryInterface> categoryList = hibernateDAO.retrieve(CategoryInterface.class
-				.getName());
+		List<CategoryInterface> categoryList = new ArrayList<CategoryInterface>();
+		categoryList = hibernateDAO.retrieve(CategoryInterface.class.getName());
 		Logger.out.info("EntityCache in after getAllCategories ");
+		return categoryList;
+	}
+
+	/**
+	 * It will retrieve Identifier of all the categories present in the dataBase.
+	 * @param hibernateDAO
+	 * @return List Of the categories present in the DB.
+	 * @throws DAOException
+	 */
+	@SuppressWarnings({"unchecked"})
+	public static List<Long> getAllCategoryIds(HibernateDAO hibernateDAO)
+			throws DAOException
+	{
+		List<Long> categoryList = new ArrayList<Long>();
+		String[] columnName = {"id"};
+		categoryList = hibernateDAO.retrieve(CategoryInterface.class.getName(), columnName);
+		return categoryList;
+	}
+
+	/**
+	 * It will retrieve Identifier of all the categories present in the dataBase.
+	 * @param hibernateDAO
+	 * @return List Of the categories present in the DB.
+	 * @throws DAOException
+	 */
+	@SuppressWarnings({"unchecked"})
+	public static List<Long> getAllEntityGroupIds(HibernateDAO hibernateDAO)
+			throws DAOException
+	{
+		List<Long> entityGroupList = new ArrayList<Long>();
+		String[] columnName = {"id"};
+		entityGroupList = hibernateDAO.retrieve(EntityGroupInterface.class.getName(), columnName);
+		return entityGroupList;
+	}
+
+	/**
+	 * It will retrieve Identifier of all the categories present in the dataBase.
+	 * @param hibernateDAO
+	 * @return List Of the categories present in the DB.
+	 * @throws DAOException
+	 */
+	@SuppressWarnings({"unchecked", "deprecation"})
+	public static List<Long> getAllCategoryIdsForEntityGroupId(HibernateDAO hibernateDAO, Long entityGroupID)
+			throws DAOException
+	{
+		List<Long> entityList = new ArrayList<Long>();
+		List<Long> catEntList = new ArrayList<Long>();
+		List<Long> categoryList = new ArrayList<Long>();
+
+		String[] columnName = {"id"};
+		QueryWhereClause queryWhereClause;
+		queryWhereClause = new QueryWhereClause(EntityInterface.class.getName());
+		queryWhereClause.addCondition(new EqualClause("entityGroup", entityGroupID));
+		entityList = hibernateDAO.retrieve(EntityInterface.class.getName(), columnName,queryWhereClause);
+
+		for(Long entityID : entityList){
+			queryWhereClause = new QueryWhereClause(CategoryEntityInterface.class.getName());
+			queryWhereClause.addCondition(new EqualClause("entity", entityID));
+			catEntList.addAll(hibernateDAO.retrieve(CategoryEntityInterface.class.getName(), columnName,queryWhereClause));
+		}
+
+		for (Long catEntityId : catEntList)
+		{
+			queryWhereClause = new QueryWhereClause(CategoryInterface.class.getName());
+			queryWhereClause.addCondition(new EqualClause("rootCategoryElement", catEntityId));
+			categoryList.addAll(hibernateDAO.retrieve(CategoryInterface.class.getName(), columnName,queryWhereClause));
+		}
+
 		return categoryList;
 	}
 

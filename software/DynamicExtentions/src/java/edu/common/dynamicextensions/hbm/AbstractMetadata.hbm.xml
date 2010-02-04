@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!DOCTYPE hibernate-mapping PUBLIC
-    "-//Hibernate/Hibernate Mapping DTD 2.0//EN" 
+    "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-lazy="false">
@@ -66,8 +66,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -86,8 +86,8 @@
             cascade="save-update"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -131,8 +131,8 @@
             cascade="save-update"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -176,8 +176,8 @@
             cascade="save-update"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -234,8 +234,8 @@
             cascade="all"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -307,8 +307,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -348,8 +348,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -385,8 +385,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -414,8 +414,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -460,6 +460,7 @@
             outer-join="auto"
             update="true"
             insert="true"
+            lazy="false"
             column="TARGET_ENTITY_ID"
         />
 
@@ -470,6 +471,7 @@
             outer-join="auto"
             update="true"
             insert="true"
+            lazy="false"
             column="SOURCE_ROLE_ID"
         />
 
@@ -491,8 +493,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -533,8 +535,8 @@
             cascade="all"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -554,8 +556,8 @@
             cascade="save-update"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -575,8 +577,8 @@
             cascade="save-update"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -616,8 +618,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -637,8 +639,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -658,8 +660,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -679,8 +681,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -700,8 +702,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -721,8 +723,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -782,8 +784,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -834,8 +836,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -855,8 +857,8 @@
             cascade="save-update"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -897,8 +899,8 @@
             cascade="none"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -918,8 +920,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -952,8 +954,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -973,8 +975,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -994,8 +996,8 @@
             cascade="save-update"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -1031,8 +1033,8 @@
             inverse="false"
             cascade="save-update"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -1070,8 +1072,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -1151,8 +1153,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -1172,8 +1174,8 @@
             cascade="none"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -1203,8 +1205,8 @@
             cascade="save-update"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -1224,8 +1226,8 @@
             cascade="none"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key
@@ -1245,8 +1247,8 @@
             cascade="all-delete-orphan"
             sort="unsorted"
         >
-            <cache 
-                usage="read-write" 
+            <cache
+                usage="read-write"
              />
 
               <key

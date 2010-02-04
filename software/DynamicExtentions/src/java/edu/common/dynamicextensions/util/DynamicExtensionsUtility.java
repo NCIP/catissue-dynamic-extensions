@@ -169,7 +169,7 @@ public class DynamicExtensionsUtility
 	 * @throws DynamicExtensionsApplicationException on Application exception
 	 */
 	public static ContainerInterface getContainerByIdentifier(String containerIdentifier)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			throws DynamicExtensionsSystemException
 	{
 		ContainerInterface containerInterface = null;
 		if (containerIdentifier != null && !"".equals(containerIdentifier))

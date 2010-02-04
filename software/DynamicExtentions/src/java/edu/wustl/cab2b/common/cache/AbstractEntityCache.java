@@ -2,17 +2,22 @@
 package edu.wustl.cab2b.common.cache;
 
 import java.io.Serializable;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
+import edu.common.dynamicextensions.domain.EntityGroup;
 import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
@@ -143,6 +148,16 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 */
 	protected long catFileNameCounter = 1L;
 
+	private CacheInitilizer cacheInitilizer;
+
+	private Collection<EntityGroupInterface> entityGroups = new HashSet<EntityGroupInterface>();
+
+	private List<Long> categoryIDs;
+
+	private List<Long> entityGroupIDs;
+
+	private Set<Long> unFetchedCategoryIDs = new HashSet<Long>();
+
 	/**
 	 * This method gives the singleton cache object. If cache is not present then it
 	 * throws {@link UnsupportedOperationException}
@@ -171,45 +186,207 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 */
 	public final synchronized void refreshCache()
 	{
-		LOGGER.info("Initializing cache, this may take few minutes...");
-		clearCache();
-
-		HibernateDAO hibernateDAO = null;
-		Collection<EntityGroupInterface> entityGroups = null;
-		List<CategoryInterface> categoryList = null;
 		try
 		{
-			hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
-			entityGroups = DynamicExtensionUtility.getSystemGeneratedEntityGroups(hibernateDAO);
-			categoryList = DynamicExtensionUtility.getAllCategories(hibernateDAO);
-			createCache(categoryList, entityGroups);
+			LOGGER.info("Initializing cache, this may take few minutes...");
+			clearCache();
+			final HibernateDAO hibDAO = DynamicExtensionsUtility.getHibernateDAO();
+
+			entityGroupIDs = DynamicExtensionUtility.getAllEntityGroupIds(hibDAO);
+			LOGGER.info("Number of Entity Grops in database :" + entityGroupIDs.size());
+
+			Collections.sort(entityGroupIDs);
+			Collections.reverse(entityGroupIDs);
+
+			categoryIDs = DynamicExtensionUtility.getAllCategoryIds(hibDAO);
+			LOGGER.info("Number of Entity Grops in database :" + categoryIDs.size());
+
+			LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>();
+			cacheInitilizer = new CacheInitilizer(entityGroupIDs.size(), entityGroupIDs.size(), 1,
+					TimeUnit.SECONDS, queue);
+
+			for (Long entGrpId : entityGroupIDs)
+			{
+				List<Long> catIdList = new ArrayList<Long>();
+				final HibernateDAO hibernateDao = DynamicExtensionsUtility.getHibernateDAO();
+
+				catIdList.addAll(DynamicExtensionUtility.getAllCategoryIdsForEntityGroupId(
+						hibernateDao, entGrpId));
+				Collections.sort(catIdList);
+				Collections.reverse(catIdList);
+
+				if (catIdList.size() == 0)
+				{
+					Thread entityGroupFetcher = new Thread(new EntityGroupFetcher(hibernateDao,
+							entGrpId));
+					cacheInitilizer.execute(entityGroupFetcher);
+				}
+				else
+				{
+					Thread categoryFetcher = new Thread(
+							new CategoryFetcher(hibernateDao, catIdList));
+					cacheInitilizer.execute(categoryFetcher);
+				}
+			}
 		}
-		catch (final DAOException e)
+		catch (DAOException e)
 		{
-			LOGGER.error("Error while Creating EntityCache. Error: " + e.getMessage());
+			LOGGER.error("Error while fetching categories from database. Error: " + e.getMessage());
 			throw new RuntimeException("Exception encountered while creating EntityCache!!", e);
 		}
 		catch (DynamicExtensionsSystemException e)
 		{
-			LOGGER.error("Error while Creating EntityCache. Error: " + e.getMessage());
-			throw new RuntimeException("Exception encountered while creating EntityCache!!", e);
+			LOGGER.error("Error while Creating Cache. Error: " + e.getMessage());
+			throw new RuntimeException("Exception encountered while creating Cache!!", e);
 		}
-		finally
+	}
+
+	private class EntityGroupFetcher implements Runnable, UncaughtExceptionHandler
+	{
+
+		private HibernateDAO hibernateDao;
+
+		private Long entityGroupIds;
+
+		private EntityGroupFetcher(HibernateDAO hibernateDAO, Long entityGroupID)
+		{
+			hibernateDao = hibernateDAO;
+			entityGroupIds = entityGroupID;
+		}
+
+		public void run()
+		{
+			Long startTime = System.currentTimeMillis();
+			LOGGER.info("Initializing process to fetch Entity Group, this may take few minutes...");
+			try
+			{
+				EntityGroupInterface entityGroup = (EntityGroupInterface) hibernateDao
+						.retrieveById(EntityGroup.class.getName(), entityGroupIds);
+				createEntityGroupCache(entityGroup);
+				Long endTime = System.currentTimeMillis();
+				Long totalTime = (endTime -startTime)/1000;
+				LOGGER.info("Entity Group " + entityGroup.getName() + " fetched in " +totalTime+ " seconds...");
+			}
+			catch (DAOException e)
+			{
+				LOGGER.error("Error while fetching Entity Groups from database. Error: "
+						+ e.getMessage());
+				throw new RuntimeException("Exception encountered while creating EntityCache!!", e);
+			}
+			catch (Exception e)
+			{
+				LOGGER.error("Error while fetching Entity Groups from database. Error: "
+						+ e.getMessage());
+				throw new RuntimeException("Exception encountered while creating EntityCache!!", e);
+			}
+			finally
+			{
+				try
+				{
+					DynamicExtensionsUtility.closeDAO(hibernateDao);
+				}
+				catch (DynamicExtensionsSystemException e)
+				{
+					LOGGER.info("Exception occured while closing Hibernate DAO object");
+					throw new RuntimeException(
+							"Exception occured while closing Hibernate DAO object!!", e);
+				}
+			}
+		}
+
+		public void uncaughtException(Thread thread, Throwable exception)
+		{
+			LOGGER.error("Error while fetching Entity Groups from database. Error: "
+					+ exception.getMessage());
+		}
+
+	}
+
+	private class CategoryFetcher implements Runnable, UncaughtExceptionHandler
+	{
+
+		private HibernateDAO hibernateDao;
+
+		private List<Long> categoryIDList;
+
+		private CategoryFetcher(HibernateDAO hibernateDAO, List<Long> catIDs)
+		{
+			hibernateDao = hibernateDAO;
+			categoryIDList = catIDs;
+		}
+
+		public void run()
 		{
 			try
 			{
-				DynamicExtensionsUtility.closeDAO(hibernateDAO);
-			}
-			catch (final DynamicExtensionsSystemException e)
-			{
-				LOGGER.error("Exception encountered while closing session In EntityCache."
-						+ e.getMessage());
-				throw new RuntimeException(
-						"Exception encountered while closing session In EntityCache.", e);
-			}
+				Long startTime = System.currentTimeMillis();
+				LOGGER.info("Initializing process to fetch " +categoryIDList.size()+ " categories, this may take few minutes...");
+				EntityGroupInterface entityGroup = null;
+				for (Long categoryID : categoryIDList)
+				{
+					CategoryInterface cat = (CategoryInterface) hibernateDao.retrieveById(
+							edu.common.dynamicextensions.domain.Category.class.getName(),
+							categoryID);
 
+					CategoryEntityInterface rootCategory = cat.getRootCategoryElement();
+					entityGroup = rootCategory.getEntity().getEntityGroup();
+
+					createCategoryCache(cat);
+					if (!entityGroups.contains(entityGroup) && entityGroup != null)
+					{
+						entityGroups.add(entityGroup);
+						createEntityGroupCache(entityGroup);
+					}
+					/*LOGGER.info("Category " + cat.getId()
+							+ "fetched from database and added to cache");*/
+				}
+				Long endTime = System.currentTimeMillis();
+				Long totalTime = (endTime - startTime)/1000;
+				LOGGER.info(categoryIDList.size() + " Categories for Entity Group " + entityGroup.getName() + " loaded in " +totalTime+ " seconds...");
+			}
+			catch (DAOException e)
+			{
+				LOGGER.error("Error while fetching categories from database. Error: "
+						+ e.getMessage());
+				throw new RuntimeException("Exception encountered while creating category cache!!",
+						e);
+			}
+			catch (AssertionError ae)
+			{
+				LOGGER.info("Hibernate Error .." + ae.getMessage());
+				throw new RuntimeException("Exception encountered while creating category cache!!",
+						ae);
+			}
+			catch (Exception e)
+			{
+				LOGGER.error("Error while fetching categories from database. Error: "
+						+ e.getMessage());
+				throw new RuntimeException("Exception encountered while creating category cache!!",
+						e);
+			}
+			finally
+			{
+				try
+				{
+					DynamicExtensionsUtility.closeDAO(hibernateDao);
+					if(cacheInitilizer.allProcessCompleted()){
+						LOGGER.info("Cache Initialization complete");
+					}
+				}
+				catch (DynamicExtensionsSystemException e)
+				{
+					LOGGER.info("Exception occured while closing Hibernate DAO object");
+					throw new RuntimeException(
+							"Exception occured while closing Hibernate DAO object!!", e);
+				}
+			}
 		}
-		LOGGER.info("Initializing cache DONE");
+
+		public void uncaughtException(Thread t, Throwable e)
+		{
+			LOGGER.error("Error while fetching categories from database. Error: " + e.getMessage());
+			throw new RuntimeException("Exception encountered while creating category cache!!", e);
+		}
 	}
 
 	/**
@@ -230,27 +407,43 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	}
 
 	/**
-	 * Initializes the data structures by processing container & entity group one by one at a time.
-	 * @param categoryList list of containers to be cached.
-	 * @param entityGroups list of system generated entity groups to be cached.
+	 * @param categoryList
 	 */
-	private void createCache(final List<CategoryInterface> categoryList,
-			final Collection<EntityGroupInterface> entityGroups)
+	private synchronized void createCategoryCache(final CategoryInterface category)
 	{
-		for (final EntityGroupInterface entityGroup : entityGroups)
+		deCategories.add(category);
+		CategoryEntityInterface rootCategory = category.getRootCategoryElement();
+		if (rootCategory != null)
 		{
-			cab2bEntityGroups.add(entityGroup);
+			createCategoryEntityCach(rootCategory);
+			for (final CategoryAssociationInterface categoryAssociation : rootCategory
+					.getCategoryAssociationCollection())
+			{
+				final CategoryEntityInterface targetCategoryEntity = categoryAssociation
+						.getTargetCategoryEntity();
+				createCategoryEntityCach(targetCategoryEntity);
+
+			}
+		}
+	}
+
+	/**
+	 * @param entityGroups
+	 */
+	private synchronized void createEntityGroupCache(final EntityGroupInterface entityGroup)
+	{
+		cab2bEntityGroups.add(entityGroup);
+		if (entityGroup.getEntityCollection() != null)
+		{
 			for (final EntityInterface entity : entityGroup.getEntityCollection())
 			{
 				addEntityToCache(entity);
 			}
 		}
-		for (final CategoryInterface category : categoryList)
+		else
 		{
-			deCategories.add(category);
-			createCategoryEntityCach(category.getRootCategoryElement());
+			LOGGER.info("Entity Group " + entityGroup.getName() + " does not have Entities");
 		}
-
 	}
 
 	/**
@@ -260,18 +453,14 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 */
 	private void createCategoryEntityCach(final CategoryEntityInterface categoryEntity)
 	{
-		for (final Object container : categoryEntity.getContainerCollection())
+		if (categoryEntity.getContainerCollection() != null
+				&& !categoryEntity.getContainerCollection().isEmpty())
 		{
-			final ContainerInterface containerInterface = (ContainerInterface) container;
-			addContainerToCache(containerInterface);
-		}
-		for (final CategoryAssociationInterface categoryAssociation : categoryEntity
-				.getCategoryAssociationCollection())
-		{
-			final CategoryEntityInterface targetCategoryEntity = categoryAssociation
-					.getTargetCategoryEntity();
-			createCategoryEntityCach(targetCategoryEntity);
-
+			for (final Object container : categoryEntity.getContainerCollection())
+			{
+				final ContainerInterface containerInterface = (ContainerInterface) container;
+				addContainerToCache(containerInterface);
+			}
 		}
 	}
 
@@ -353,9 +542,16 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 */
 	private void createControlCache(final Collection<ControlInterface> controlCollection)
 	{
-		for (final ControlInterface control : controlCollection)
+		if (controlCollection != null)
 		{
-			idVsControl.put(control.getId(), control);
+			for (final ControlInterface control : controlCollection)
+			{
+				idVsControl.put(control.getId(), control);
+			}
+		}
+		else
+		{
+			LOGGER.info("Container collection was null");
 		}
 	}
 
@@ -397,12 +593,15 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 */
 	private void createCategoryAssociationCache(final CategoryEntityInterface categoryEntity)
 	{
-		for (final CategoryAssociationInterface assocition : categoryEntity
-				.getCategoryAssociationCollection())
+		if (categoryEntity.getCategoryAttributeCollection() != null)
 		{
-			idVsCaegoryAssociation.put(assocition.getId(), assocition);
-		}
 
+			for (final CategoryAssociationInterface assocition : categoryEntity
+					.getCategoryAssociationCollection())
+			{
+				idVsCaegoryAssociation.put(assocition.getId(), assocition);
+			}
+		}
 	}
 
 	/**
@@ -411,12 +610,14 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 */
 	private void createCategoryAttributeCache(final CategoryEntityInterface categoryEntity)
 	{
-		for (final CategoryAttributeInterface categoryAttribute : categoryEntity
-				.getCategoryAttributeCollection())
+		if (categoryEntity.getCategoryAttributeCollection() != null)
 		{
-			idVsCategoryAttribute.put(categoryAttribute.getId(), categoryAttribute);
+			for (final CategoryAttributeInterface categoryAttribute : categoryEntity
+					.getCategoryAttributeCollection())
+			{
+				idVsCategoryAttribute.put(categoryAttribute.getId(), categoryAttribute);
+			}
 		}
-
 	}
 
 	/**
@@ -705,12 +906,27 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @param name name of the entity group
 	 * @return entity group
 	 */
-	public EntityGroupInterface getEntityGroupByName(String name)
+	public EntityGroupInterface getEntityGroupByName(final String name)
+	{
+		EntityGroupInterface entityGroup = getEntityGroupFromCache(name);
+		if (entityGroup == null)
+		{
+			refreshCache();
+			entityGroup = getEntityGroupFromCache(name);
+		}
+		return entityGroup;
+	}
+
+	/**
+	 * @param name
+	 * @return
+	 */
+	private EntityGroupInterface getEntityGroupFromCache(final String name)
 	{
 		EntityGroupInterface entityGroup = null;
-		for (EntityGroupInterface group : cab2bEntityGroups)
+		for (final EntityGroupInterface group : cab2bEntityGroups)
 		{
-			if (group.getName().equals(name))
+			if ((group.getName() != null) && group.getName().equals(name))
 			{
 				entityGroup = group;
 			}

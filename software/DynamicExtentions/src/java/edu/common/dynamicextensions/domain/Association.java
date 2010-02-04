@@ -135,7 +135,7 @@ public class Association extends AbstractAttribute
 	/**
 	 * This method returns the source Role of the Association.
 	 * @return the source Role of the Association.
-	 * @hibernate.many-to-one  cascade="save-update" column="SOURCE_ROLE_ID" class="edu.common.dynamicextensions.domain.Role" constrained="true"
+	 * @hibernate.many-to-one  cascade="save-update" column="SOURCE_ROLE_ID" lazy="false" class="edu.common.dynamicextensions.domain.Role" constrained="true"
 	 */
 	public RoleInterface getSourceRole()
 	{
@@ -154,7 +154,7 @@ public class Association extends AbstractAttribute
 	/**
 	 * This method returns the targetRole of the Association.
 	 * @return the targetRole of the Association.
-	 * @hibernate.many-to-one cascade="save-update" column="TARGET_ROLE_ID" class="edu.common.dynamicextensions.domain.Role" constrained="true"
+	 * @hibernate.many-to-one cascade="save-update" column="TARGET_ROLE_ID" lazy="false" class="edu.common.dynamicextensions.domain.Role" constrained="true"
 	 */
 
 	public RoleInterface getTargetRole()

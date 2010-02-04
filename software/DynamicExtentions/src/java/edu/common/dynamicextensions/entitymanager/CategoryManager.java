@@ -88,7 +88,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	/**
 	 * Used for cloning objects.
 	 */
-	private DyExtnObjectCloner cloner = new DyExtnObjectCloner();
+	private final DyExtnObjectCloner cloner = new DyExtnObjectCloner();
 
 	/**
 	 * Empty Constructor.
@@ -1417,7 +1417,6 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 						.getCategoryEntityName(rootCatEntity.getName());
 				putRecordIdsInMap(rootCatEntity, entityRecId, fullKeyMap, keyMap, recordsMap);
 
-
 				for (final CategoryAttributeInterface catAttribute : rootCatEntity
 						.getAllCategoryAttributes())
 				{
@@ -2238,7 +2237,6 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 					CategoryEntityInterface catEntity = categoryEnt;
 					putRecordIdsInMap(catEntity, entityId, fullKeyMap, keyMap, records);
 
-
 					isCatEntRecIns = true;
 				}
 				else if (attribute instanceof CategoryAssociationInterface)
@@ -2513,7 +2511,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	public List<Map<BaseAbstractAttributeInterface, Object>> getRecordByRecordEntryId(Long formId,
 			List<Long> recordEntryIdList, Long recordEntryStaticId)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
-			CacheException, DAOException, SQLException
+			DAOException, SQLException
 	{
 		List<Map<BaseAbstractAttributeInterface, Object>> recordMapList = new ArrayList<Map<BaseAbstractAttributeInterface, Object>>();
 		DEIntegration deIntegration = new DEIntegration();
@@ -2523,15 +2521,19 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		try
 		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-
-			Collection recIdList = deIntegration.getDynamicRecordForCategoryFromStaticId(
-					recordEntryIdList, formId, recordEntryStaticId.toString(), jdbcDao);
-			for (Object recordEntryIdCollection : recIdList.toArray())
+			for (Long recordEntryId : recordEntryIdList)
 			{
-				recordEntryIdCollection = ((List<Long>) recordEntryIdCollection).get(0);
+				Collection recIdList = deIntegration.getCategoryRecIdBasedOnHookEntityRecId(formId,
+						recordEntryId, recordEntryStaticId);
+				Long dynamicRecId = 0L;
+				if (recIdList != null && !recIdList.isEmpty())
+				{
+					dynamicRecId = (Long) recIdList.iterator().next();
+				}
 				Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
-				retrieveRecords(rootCatEntity, dataValue, Long.valueOf(recordEntryIdCollection
-						.toString()), jdbcDao);
+				Long recordId = getRootCategoryEntityRecordIdByEntityRecordId(dynamicRecId,
+						rootCatEntity.getTableProperties().getName());
+				retrieveRecords(rootCatEntity, dataValue, recordId, jdbcDao);
 				recordMapList.add(dataValue);
 			}
 		}
