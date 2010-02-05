@@ -150,13 +150,13 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 
 	private CacheInitilizer cacheInitilizer;
 
-	private Collection<EntityGroupInterface> entityGroups = new HashSet<EntityGroupInterface>();
+	private final Collection<EntityGroupInterface> entityGroups = new HashSet<EntityGroupInterface>();
 
 	private List<Long> categoryIDs;
 
 	private List<Long> entityGroupIDs;
 
-	private Set<Long> unFetchedCategoryIDs = new HashSet<Long>();
+	private final Set<Long> unFetchedCategoryIDs = new HashSet<Long>();
 
 	/**
 	 * This method gives the singleton cache object. If cache is not present then it
@@ -244,9 +244,9 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	private class EntityGroupFetcher implements Runnable, UncaughtExceptionHandler
 	{
 
-		private HibernateDAO hibernateDao;
+		private final HibernateDAO hibernateDao;
 
-		private Long entityGroupIds;
+		private final Long entityGroupIds;
 
 		private EntityGroupFetcher(HibernateDAO hibernateDAO, Long entityGroupID)
 		{
@@ -264,8 +264,9 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 						.retrieveById(EntityGroup.class.getName(), entityGroupIds);
 				createEntityGroupCache(entityGroup);
 				Long endTime = System.currentTimeMillis();
-				Long totalTime = (endTime -startTime)/1000;
-				LOGGER.info("Entity Group " + entityGroup.getName() + " fetched in " +totalTime+ " seconds...");
+				Long totalTime = (endTime - startTime) / 1000;
+				LOGGER.info("Entity Group " + entityGroup.getName() + " fetched in " + totalTime
+						+ " seconds...");
 			}
 			catch (DAOException e)
 			{
@@ -305,9 +306,9 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	private class CategoryFetcher implements Runnable, UncaughtExceptionHandler
 	{
 
-		private HibernateDAO hibernateDao;
+		private final HibernateDAO hibernateDao;
 
-		private List<Long> categoryIDList;
+		private final List<Long> categoryIDList;
 
 		private CategoryFetcher(HibernateDAO hibernateDAO, List<Long> catIDs)
 		{
@@ -320,7 +321,8 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 			try
 			{
 				Long startTime = System.currentTimeMillis();
-				LOGGER.info("Initializing process to fetch " +categoryIDList.size()+ " categories, this may take few minutes...");
+				LOGGER.info("Initializing process to fetch " + categoryIDList.size()
+						+ " categories, this may take few minutes...");
 				EntityGroupInterface entityGroup = null;
 				for (Long categoryID : categoryIDList)
 				{
@@ -341,8 +343,9 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 							+ "fetched from database and added to cache");*/
 				}
 				Long endTime = System.currentTimeMillis();
-				Long totalTime = (endTime - startTime)/1000;
-				LOGGER.info(categoryIDList.size() + " Categories for Entity Group " + entityGroup.getName() + " loaded in " +totalTime+ " seconds...");
+				Long totalTime = (endTime - startTime) / 1000;
+				LOGGER.info(categoryIDList.size() + " Categories for Entity Group "
+						+ entityGroup.getName() + " loaded in " + totalTime + " seconds...");
 			}
 			catch (DAOException e)
 			{
@@ -369,7 +372,8 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 				try
 				{
 					DynamicExtensionsUtility.closeDAO(hibernateDao);
-					if(cacheInitilizer.allProcessCompleted()){
+					if (cacheInitilizer.allProcessCompleted())
+					{
 						LOGGER.info("Cache Initialization complete");
 					}
 				}
@@ -907,21 +911,6 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * @return entity group
 	 */
 	public EntityGroupInterface getEntityGroupByName(final String name)
-	{
-		EntityGroupInterface entityGroup = getEntityGroupFromCache(name);
-		if (entityGroup == null)
-		{
-			refreshCache();
-			entityGroup = getEntityGroupFromCache(name);
-		}
-		return entityGroup;
-	}
-
-	/**
-	 * @param name
-	 * @return
-	 */
-	private EntityGroupInterface getEntityGroupFromCache(final String name)
 	{
 		EntityGroupInterface entityGroup = null;
 		for (final EntityGroupInterface group : cab2bEntityGroups)
