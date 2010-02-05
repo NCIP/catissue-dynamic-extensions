@@ -106,6 +106,7 @@ import edu.wustl.common.util.logger.LoggerConfig;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.metadata.util.PackageName;
 
 /**
  * @author falguni_sachde
@@ -236,8 +237,7 @@ public class XMIExporter
 			throw new DynamicExtensionsApplicationException(
 					"Specified group does not exist. Could not export to XMI");
 		}
-		EntityGroupInterface entityGroup = ((EntityGroupInterface) entityGroupList.get(0));
-		return entityGroup;
+		return ((EntityGroupInterface) entityGroupList.get(0));
 	}
 
 	/**
@@ -264,7 +264,11 @@ public class XMIExporter
 				generateUMLModel(entityGroup, modelpackageName);
 
 				//Data Model creation
-				generateDataModel(entityGroup);
+				if (XMIConstants.XMI_VERSION_1_1.equalsIgnoreCase(xmiVersion))
+				{
+					generateDataModel(entityGroup);
+				}
+
 				writeXMIFile(umlPackage);
 			}
 		}
@@ -1158,7 +1162,9 @@ public class XMIExporter
 							final String tagValue = XMIConstants.PACKAGE_NAME_LOGICAL_VIEW
 									+ XMIConstants.DOT_SEPARATOR
 									+ XMIConstants.PACKAGE_NAME_LOGICAL_MODEL
-									+ XMIConstants.DOT_SEPARATOR + packageName
+									+ XMIConstants.DOT_SEPARATOR
+									+ PackageName.getLogicalPackageName(packageName,
+											XMIConstants.DOT_SEPARATOR)
 									+ XMIConstants.DOT_SEPARATOR + attribute.getEntity().getName()
 									+ XMIConstants.DOT_SEPARATOR + attribute.getName();
 							umlAttribute.getTaggedValue().add(
@@ -2161,18 +2167,7 @@ public class XMIExporter
 				final org.omg.uml.modelmanagement.UmlPackage datatypesPackage = getOrCreatePackage(
 						packageName, logicalModel);
 				//Create Datatype
-				if (datatypesPackage != null)
-				{
-					datatype = XMIUtilities.find(datatypesPackage, typeName);
-					//Create Datatype Class
-					if (datatype == null)
-					{
-						datatype = umlPackage.getCore().getUmlClass().createUmlClass(typeName,
-								VisibilityKindEnum.VK_PUBLIC, false, false, false, false, false);
-						datatypesPackage.getOwnedElement().add(datatype);
-					}
-				}
-				else
+				if (datatypesPackage == null)
 				{
 					datatype = XMIUtilities.find(umlModel, typeName);
 					//Create Datatype Class
@@ -2181,6 +2176,17 @@ public class XMIExporter
 						datatype = umlPackage.getCore().getDataType().createDataType(typeName,
 								VisibilityKindEnum.VK_PUBLIC, false, false, false, false);
 						umlModel.getOwnedElement().add(datatype);
+					}
+				}
+				else
+				{
+					datatype = XMIUtilities.find(datatypesPackage, typeName);
+					//Create Datatype Class
+					if (datatype == null)
+					{
+						datatype = umlPackage.getCore().getUmlClass().createUmlClass(typeName,
+								VisibilityKindEnum.VK_PUBLIC, false, false, false, false, false);
+						datatypesPackage.getOwnedElement().add(datatype);
 					}
 				}
 			}
@@ -2297,6 +2303,7 @@ public class XMIExporter
 	private static org.omg.uml.modelmanagement.UmlPackage getOrCreatePackage(String packageName,
 			org.omg.uml.modelmanagement.UmlPackage parentPackage)
 	{
+		packageName = PackageName.getLogicalPackageName(packageName, XMIConstants.DOT_SEPARATOR);
 		final ModelManagementPackage modelManagement = umlPackage.getModelManagement();
 
 		Object newPackage = null;
@@ -2351,7 +2358,10 @@ public class XMIExporter
 		final org.omg.uml.modelmanagement.UmlPackage logicalView = getOrCreatePackage(
 				XMIConstants.PACKAGE_NAME_LOGICAL_VIEW, umlModel);
 		logicalModel = getOrCreatePackage(XMIConstants.PACKAGE_NAME_LOGICAL_MODEL, logicalView);
-		dataModel = getOrCreatePackage(XMIConstants.PACKAGE_NAME_DATA_MODEL, logicalView);
+		if (XMIConstants.XMI_VERSION_1_1.equalsIgnoreCase(xmiVersion))
+		{
+			dataModel = getOrCreatePackage(XMIConstants.PACKAGE_NAME_DATA_MODEL, logicalView);
+		}
 	}
 
 	/**

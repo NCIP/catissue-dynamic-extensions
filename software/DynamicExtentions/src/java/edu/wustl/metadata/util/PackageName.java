@@ -19,6 +19,8 @@ import edu.wustl.cab2b.common.exception.RuntimeException;
 public class PackageName {
 
     private static EntityGroupManagerInterface entityManager = EntityGroupManager.getInstance();
+    private static final String LOGICAL_VIEW = "Logical View";
+    private static final String LOGICAL_MODEL = "Logical Model";
 
     public static void main(final String[] args) {
         final PackageName packageName = new PackageName();
@@ -77,7 +79,7 @@ public class PackageName {
             final BufferedWriter writer = new BufferedWriter(new FileWriter(newFile));
             writer.write("entity.name=" + entityName);
             writer.newLine();
-            writer.write("de.package.name=" + packageName);
+            writer.write("de.package.name=" + getLogicalPackageName(packageName, "/"));
             writer.newLine();
             writer.write("cacore.package.name=" + packageEntityName);
             writer.close();
@@ -86,4 +88,30 @@ public class PackageName {
             throw new RuntimeException("Error while writing Entity Groups Name to file", e);
         }
     }
+
+    /**
+	 * This method avoids duplicate logical package names added during the export XMI
+	 * for e.g suppose we are importing a XMI having package as edu.annotations
+	 * Then during exporting, the exporting task will append Logical View.Logical Model
+	 * to edu.annotation package.
+	 * After re importing and exporting it will append  Logical View.Logical Model package again
+	 * to previously added package.
+	 * So this method will remove this duplication.
+	 *
+	 * @param packageName
+	 * @return
+	 */
+	public static String getLogicalPackageName(String packageName, String delimiter)
+	{
+		String logicalPackageName = LOGICAL_VIEW + delimiter + LOGICAL_MODEL;
+		if(packageName!=null && packageName.contains(logicalPackageName) && packageName.length()>(logicalPackageName).length())
+		{
+			packageName = packageName.substring((logicalPackageName).length()+1);
+		}
+		else if(packageName!=null && packageName.contains(logicalPackageName) && packageName.length()==(logicalPackageName).length())
+		{
+			packageName = "";
+		}
+		return packageName;
+	}
 }
