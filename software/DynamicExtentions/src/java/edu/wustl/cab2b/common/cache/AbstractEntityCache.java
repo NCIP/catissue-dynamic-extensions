@@ -200,32 +200,34 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 
 			categoryIDs = DynamicExtensionUtility.getAllCategoryIds(hibDAO);
 			LOGGER.info("Number of Entity Grops in database :" + categoryIDs.size());
-
-			LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>();
-			cacheInitilizer = new CacheInitilizer(entityGroupIDs.size(), entityGroupIDs.size(), 1,
-					TimeUnit.SECONDS, queue);
-
-			for (Long entGrpId : entityGroupIDs)
+			if (entityGroupIDs.size() != 0)
 			{
-				List<Long> catIdList = new ArrayList<Long>();
-				final HibernateDAO hibernateDao = DynamicExtensionsUtility.getHibernateDAO();
+				LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>();
+				cacheInitilizer = new CacheInitilizer(entityGroupIDs.size(), entityGroupIDs.size(),
+						1, TimeUnit.SECONDS, queue);
 
-				catIdList.addAll(DynamicExtensionUtility.getAllCategoryIdsForEntityGroupId(
-						hibernateDao, entGrpId));
-				Collections.sort(catIdList);
-				Collections.reverse(catIdList);
+				for (Long entGrpId : entityGroupIDs)
+				{
+					List<Long> catIdList = new ArrayList<Long>();
+					final HibernateDAO hibernateDao = DynamicExtensionsUtility.getHibernateDAO();
 
-				if (catIdList.size() == 0)
-				{
-					Thread entityGroupFetcher = new Thread(new EntityGroupFetcher(hibernateDao,
-							entGrpId));
-					cacheInitilizer.execute(entityGroupFetcher);
-				}
-				else
-				{
-					Thread categoryFetcher = new Thread(
-							new CategoryFetcher(hibernateDao, catIdList));
-					cacheInitilizer.execute(categoryFetcher);
+					catIdList.addAll(DynamicExtensionUtility.getAllCategoryIdsForEntityGroupId(
+							hibernateDao, entGrpId));
+					Collections.sort(catIdList);
+					Collections.reverse(catIdList);
+
+					if (catIdList.size() == 0)
+					{
+						Thread entityGroupFetcher = new Thread(new EntityGroupFetcher(hibernateDao,
+								entGrpId));
+						cacheInitilizer.execute(entityGroupFetcher);
+					}
+					else
+					{
+						Thread categoryFetcher = new Thread(new CategoryFetcher(hibernateDao,
+								catIdList));
+						cacheInitilizer.execute(categoryFetcher);
+					}
 				}
 			}
 		}
