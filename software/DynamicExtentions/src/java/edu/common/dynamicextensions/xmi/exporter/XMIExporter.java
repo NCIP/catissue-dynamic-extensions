@@ -2612,14 +2612,13 @@ public class XMIExporter
 				{
 					multiSelectentityCollection.add(association.getTargetEntity());
 				}
+				entityMap.put(entity.getId(), entity);
 				//Add entity only if its association is not of multiselect type ,and both target and src entity's group is same
 				if (!association.getIsCollection()
 						&& (association.getEntity().getEntityGroup().getName()
 								.equalsIgnoreCase(association.getTargetEntity().getEntityGroup()
 										.getName())))
 				{
-
-					entityMap.put(entity.getId(), entity);
 					entityMap.put(association.getTargetEntity().getId(), association
 							.getTargetEntity());
 				}
