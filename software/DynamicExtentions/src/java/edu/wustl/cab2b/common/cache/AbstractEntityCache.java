@@ -58,6 +58,8 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 
 	private static final long serialVersionUID = 1234567890L;
 
+	public static boolean isCacheReady = false;
+
 	private static final Logger LOGGER = edu.wustl.common.util.logger.Logger
 			.getLogger(AbstractEntityCache.class);
 
