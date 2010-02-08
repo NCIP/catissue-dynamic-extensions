@@ -44,6 +44,8 @@ public class PathFinder
 	private static final Logger LOGGER = edu.wustl.common.util.logger.Logger
 			.getLogger(PathFinder.class);
 
+	public static boolean isCacheReady = false;
+
 	private static PathFinder pathFinderObj;
 
 	private Set<InterModelConnection> interModelConnections;
