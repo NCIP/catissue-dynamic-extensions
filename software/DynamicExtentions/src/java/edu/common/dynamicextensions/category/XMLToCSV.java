@@ -33,7 +33,12 @@ public class XMLToCSV
 			xmlToCSV.validateArguments(args);
 			final File input = new File(args[0]);
 			final File outputDir = new File(args[1]);
-			xmlToCSV.convertXMLs(input, outputDir, args.length > 2 ? new File(args[2]) : null);
+			File schemaFile = null;
+			if (args.length > 2)
+			{
+				schemaFile = new File(args[2]);
+			}
+			xmlToCSV.convertXMLs(input, outputDir, schemaFile);
 		}
 		catch (final DynamicExtensionsSystemException e)
 		{
@@ -114,20 +119,21 @@ public class XMLToCSV
 	}
 
 	/**
-	 * @param input
+	 * @param inputXML
 	 * @param outputDir
 	 * @throws IOException
 	 * @throws SAXException
 	 */
-	private void writeXML(final File schemaFile, final File inputXML, final File outputDir)
+	private void writeXML(final File inputXML, final File outputDir, final File schemaFile)
 			throws IOException, SAXException
 	{
 		final String csvFileName = getCSVFileName(inputXML);
 		final XMLToCSVConverter xmlToCSVConverter = new XMLToCSVConverter(inputXML, new File(
 				outputDir, csvFileName));
+		final SchemaValidator schemaValidator = new SchemaValidator();
 		if (schemaFile != null && schemaFile.isFile())
 		{
-			new SchemaValidator().validateAgainstSchema(schemaFile, inputXML);
+			schemaValidator.validateAgainstSchema(schemaFile, inputXML);
 		}
 		xmlToCSVConverter.txXML();
 	}
@@ -145,7 +151,7 @@ public class XMLToCSV
 		for (int i = 0; i < listFiles.length; i++)
 		{
 			final File xmlFile = listFiles[i];
-			writeXML(schemaFile, xmlFile, outputDir);
+			writeXML(xmlFile, outputDir, schemaFile);
 		}
 	}
 
