@@ -1,0 +1,20 @@
+Form_Definition
+
+Patient
+
+CSD_EntityGroup
+Patient_Entity~Patient_Entity
+
+Display_Label:Patient, show=false
+instance:Patient_Entity[1]
+Patient_Entity:Name,textField,Name,options~width=50:Columns=25,Rules~required
+Patient_Entity:Drink,radioButton,Drink
+
+SkipLogic:
+
+instance:NeuroOncAnnotations[1]
+NeuroOncAnnotations[1]:agent:Penicillin,dependentAttribute~NeuroOncAnnotations[1]:height
+instance:NeuroOncAnnotations[1]
+NeuroOncAnnotations[1]:agent:Ciplox,dependentAttribute~NeuroOncAnnotations[1]:all
+instance:NeuroOncAnnotations[1]
+NeuroOncAnnotations[1]:agent:Ciplox,dependentAttribute~NeuroOncAnnotations[1]:frequency,Permissible_Values~Cocaine:Heroin:Asbestos
