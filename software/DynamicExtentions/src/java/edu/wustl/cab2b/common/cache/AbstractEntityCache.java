@@ -424,14 +424,6 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 		if (rootCategory != null)
 		{
 			createCategoryEntityCach(rootCategory);
-			for (final CategoryAssociationInterface categoryAssociation : rootCategory
-					.getCategoryAssociationCollection())
-			{
-				final CategoryEntityInterface targetCategoryEntity = categoryAssociation
-						.getTargetCategoryEntity();
-				createCategoryEntityCach(targetCategoryEntity);
-
-			}
 		}
 	}
 
@@ -468,6 +460,14 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 			{
 				final ContainerInterface containerInterface = (ContainerInterface) container;
 				addContainerToCache(containerInterface);
+			}
+			for (final CategoryAssociationInterface categoryAssociation : categoryEntity
+					.getCategoryAssociationCollection())
+			{
+				final CategoryEntityInterface targetCategoryEntity = categoryAssociation
+						.getTargetCategoryEntity();
+				createCategoryEntityCach(targetCategoryEntity);
+
 			}
 		}
 	}
