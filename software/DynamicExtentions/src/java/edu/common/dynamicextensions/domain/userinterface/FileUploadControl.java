@@ -46,7 +46,7 @@ public class FileUploadControl extends Control implements FileUploadInterface
 				+ baseAbstractAttribute.getId() + "'>" + value + "</A>";
 
 		}
-		htmlString = htmlString + "&nbsp;&nbsp;<input onchange='isDataChanged();' type=\"file\" " + "name=\"value("
+		htmlString = htmlString + "<input onchange='isDataChanged();' type=\"file\" " + "name=\"value("
 				+ getHTMLComponentName() + ")\" " + "id=\"" + getHTMLComponentName() + "\"/>";
 		if (getIsSkipLogicTargetControl())
 		{
