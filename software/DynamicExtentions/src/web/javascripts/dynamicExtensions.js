@@ -2005,6 +2005,7 @@ function groupSelectedResponse(groupXML)
 
 function showChildContainerInsertDataPage(containerId,ths)
 {
+    getValues();
     document.getElementById('childContainerId').value = containerId;
     document.getElementById('dataEntryOperation').value  = "insertChildData";
     document.getElementById('childRowId').value = ths.parentNode.parentNode.rowIndex;
