@@ -33,12 +33,12 @@ public class TestXMLToCSVConverter extends TestCase
 		XMLToCSV xmlToCSV = new XMLToCSV();
 		try
 		{
-			File inputXMLFile = new File("software/DynamicExtentions/src/resources/xml/Patient.xml");
+			File inputXMLFile = new File("src/resources/xml/Patient.xml");
 			System.out.println("Input file: " + inputXMLFile.getAbsolutePath());
 			File outputDir = new File(System.getProperty("java.io.tmpdir"));
 			System.out.println(outputDir);
 			xmlToCSV.convertXMLs(inputXMLFile, outputDir, null);
-			File cSVFile = new File("software/DynamicExtentions/src/resources/csv/test_Patient.csv");
+			File cSVFile = new File("src/resources/csv/test_Patient.csv");
 			String expected = readXML(cSVFile);
 			String actual = readXML(new File(outputDir, "Patient.csv"));
 
