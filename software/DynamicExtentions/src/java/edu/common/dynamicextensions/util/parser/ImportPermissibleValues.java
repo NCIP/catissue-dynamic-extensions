@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.owasp.stinger.Stinger;
+
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
@@ -50,13 +52,14 @@ public class ImportPermissibleValues
 	/**
 	 *
 	 * @param filePath
+	 * @param stinger the stinger validator object which is used to validate the pv strings.
 	 * @throws DynamicExtensionsSystemException
 	 * @throws FileNotFoundException
 	 */
-	public ImportPermissibleValues(String filePath) throws DynamicExtensionsSystemException,
-			FileNotFoundException
+	public ImportPermissibleValues(String filePath, Stinger stinger)
+			throws DynamicExtensionsSystemException, FileNotFoundException
 	{
-		catCSVFileParser = new CategoryCSVFileParser(filePath, "");
+		catCSVFileParser = new CategoryCSVFileParser(filePath, "", stinger);
 	}
 
 	/**
@@ -187,7 +190,8 @@ public class ImportPermissibleValues
 
 		catch (Exception e)
 		{
-			throw new DynamicExtensionsSystemException("Error encountered while importing Permissible Values", e);
+			throw new DynamicExtensionsSystemException(
+					"Error encountered while importing Permissible Values", e);
 
 		}
 		finally
@@ -214,7 +218,7 @@ public class ImportPermissibleValues
 			String filePath = args[0];
 			Logger.out.info("The .csv file path is:" + filePath);
 
-			ImportPermissibleValues importPVs = new ImportPermissibleValues(filePath);
+			ImportPermissibleValues importPVs = new ImportPermissibleValues(filePath, null);
 			importPVs.importValues();
 
 			Logger.out.info(" ");

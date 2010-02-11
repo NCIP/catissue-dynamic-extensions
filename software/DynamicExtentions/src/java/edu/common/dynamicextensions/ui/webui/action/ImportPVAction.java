@@ -12,12 +12,15 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.owasp.stinger.Stinger;
+import org.owasp.stinger.rules.RuleSet;
 
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
@@ -53,7 +56,7 @@ public class ImportPVAction extends BaseDynamicExtensionsAction
 			DownloadUtility.downloadZipFile(request, pvDir, "pv.zip");
 			LOGGER.info("Artifacts Downloaded");
 
-			List<String> listOfFiles = getPVFileNames(request, pvDir + folder +"/");
+			List<String> listOfFiles = getPVFileNames(request, pvDir + folder + "/");
 
 			for (String file : listOfFiles)
 			{
@@ -69,8 +72,7 @@ public class ImportPVAction extends BaseDynamicExtensionsAction
 		}
 		finally
 		{
-			DirOperationsUtility.getInstance().deleteDirectory(
-					new File(folder));
+			DirOperationsUtility.getInstance().deleteDirectory(new File(folder));
 		}
 		return null;
 	}
@@ -83,11 +85,13 @@ public class ImportPVAction extends BaseDynamicExtensionsAction
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws ParseException
 	 */
-	private void importPVs(String file)
-			throws DynamicExtensionsSystemException, FileNotFoundException,
-			DynamicExtensionsApplicationException, ParseException
+	private void importPVs(String file) throws DynamicExtensionsSystemException,
+			FileNotFoundException, DynamicExtensionsApplicationException, ParseException
 	{
-		ImportPermissibleValues importPVs = new ImportPermissibleValues(file);
+		ServletContext servletContext = servlet.getServletContext();
+		String config = servletContext.getRealPath("WEB-INF") + "/stinger.xml";
+		Stinger stinger = new Stinger(new RuleSet(config, servletContext), servletContext);
+		ImportPermissibleValues importPVs = new ImportPermissibleValues(file, stinger);
 		importPVs.importValues();
 	}
 
@@ -128,7 +132,7 @@ public class ImportPVAction extends BaseDynamicExtensionsAction
 		if (fileName == null || "".equals(fileName.trim()))
 		{
 			fileNameList = CategoryGenerationUtil.getPVFileListInDirectory(new File(tempDirName),
-					folder +"/");
+					folder + "/");
 			//throw new DynamicExtensionsSystemException("Please provide names of the Category Files To be created");
 		}
 		else

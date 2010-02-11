@@ -13,6 +13,8 @@ import java.io.FileNotFoundException;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import org.owasp.stinger.Stinger;
+
 import edu.common.dynamicextensions.domain.databaseproperties.ColumnProperties;
 import edu.common.dynamicextensions.domain.databaseproperties.ConstraintKeyProperties;
 import edu.common.dynamicextensions.domain.databaseproperties.ConstraintProperties;
@@ -874,6 +876,7 @@ public class DomainObjectFactory
 	{
 		return new SkipLogicAttribute();
 	}
+
 	/**
 	 *
 	 * @return
@@ -883,6 +886,7 @@ public class DomainObjectFactory
 		CalculatedAttribute calculatedAttribute = new CalculatedAttribute();
 		return calculatedAttribute;
 	}
+
 	/**
 	 * @return IdGeneratorInterface
 	 */
@@ -956,16 +960,18 @@ public class DomainObjectFactory
 	 * If file specified is of not in supported formats it will return null.
 	 * @param filePath file to use for category creation.
 	 * @param baseDir base directory.
+	 * @param stinger the stinger validator object which is used to validate the pv strings.
 	 * @return category File Parser according to file Type.
 	 * @throws DynamicExtensionsSystemException Exception.
 	 * @throws FileNotFoundException if file is not found at proper place.
 	 */
-	public CategoryFileParser createCategoryFileParser(String filePath,String baseDir) throws DynamicExtensionsSystemException, FileNotFoundException
+	public CategoryFileParser createCategoryFileParser(String filePath, String baseDir,
+			Stinger stinger) throws DynamicExtensionsSystemException, FileNotFoundException
 	{
-		CategoryFileParser categoryFileParser =null;
-		if(filePath.endsWith(".csv") || filePath.endsWith(".CSV"))
+		CategoryFileParser categoryFileParser = null;
+		if (filePath.endsWith(".csv") || filePath.endsWith(".CSV"))
 		{
-			categoryFileParser = new CategoryCSVFileParser(filePath,baseDir);
+			categoryFileParser = new CategoryCSVFileParser(filePath, baseDir, stinger);
 		}
 		return categoryFileParser;
 	}

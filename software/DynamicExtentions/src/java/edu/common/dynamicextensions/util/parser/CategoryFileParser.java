@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.owasp.stinger.Stinger;
+
 import edu.common.dynamicextensions.domaininterface.FormControlNotesInterface;
 import edu.common.dynamicextensions.domaininterface.SemanticPropertyInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
@@ -24,14 +26,19 @@ public abstract class CategoryFileParser extends FileReader
 
 	protected boolean inSignleLineDisplay;
 
+	protected Stinger stingerValidator;
+
 	/**
-	 * @param filePath file path
-	 * @param base directory
+	 * @param filePath path  of the csv file
+	 * @param baseDir base directory from which the filepath is mentioned.
+	 * @param stinger the stinger validator object which is used to validate the pv strings.
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public CategoryFileParser(String filePath,String baseDirectory) throws DynamicExtensionsSystemException
+	public CategoryFileParser(String filePath, String baseDirectory, Stinger stinger)
+			throws DynamicExtensionsSystemException
 	{
-		super(filePath,baseDirectory);
+		super(filePath, baseDirectory);
+		stingerValidator = stinger;
 	}
 
 	/**
@@ -175,6 +182,7 @@ public abstract class CategoryFileParser extends FileReader
 	 * @return
 	 */
 	public abstract boolean hasRelatedAttributes();
+
 	/**
 	 * @return
 	 */
@@ -194,22 +202,27 @@ public abstract class CategoryFileParser extends FileReader
 	 * @return
 	 */
 	public abstract String getRelatedAttributeName();
+
 	/**
 	 * @return
 	 */
 	public abstract String getSkipLogicSourceAttributeName();
+
 	/**
 	 * @return
 	 */
 	public abstract String getSkipLogicSourceAttributeClassName();
+
 	/**
 	 * @return
 	 */
 	public abstract String getSkipLogicTargetAttributeName();
+
 	/**
 	 * @return
 	 */
 	public abstract String getSkipLogicTargetAttributeClassName();
+
 	/**
 	 * @return
 	 */

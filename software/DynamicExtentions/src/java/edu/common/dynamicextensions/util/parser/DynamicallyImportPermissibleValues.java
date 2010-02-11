@@ -79,13 +79,13 @@ public class DynamicallyImportPermissibleValues
 		catch (DynamicExtensionsSystemException e)
 		{
 			LOGGER.error("Exception : " + e.getLocalizedMessage());
-			LOGGER.info("For more information please check :/log/dynamicExtentions.log");
+			LOGGER.info("For more information please check :/log/dynamicExtentionsError.log");
 			LOGGER.debug("Exception occured is as follows : ", e);
 		}
 		catch (IOException e)
 		{
 			LOGGER.error("Exception : " + e.getLocalizedMessage());
-			LOGGER.info("For more information please check :/log/dynamicExtentions.log");
+			LOGGER.info("For more information please check :/log/dynamicExtentionsError.log");
 			LOGGER.debug("Exception occured is as follows : ", e);
 		}
 

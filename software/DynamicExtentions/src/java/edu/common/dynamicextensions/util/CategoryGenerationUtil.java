@@ -990,7 +990,7 @@ public class CategoryGenerationUtil
 				else
 				{
 					CategoryFileParser categoryFileParser = DomainObjectFactory.getInstance()
-							.createCategoryFileParser(file.getAbsolutePath(), "");
+							.createCategoryFileParser(file.getAbsolutePath(), "", null);
 					if (categoryFileParser != null)
 					{
 						if (categoryFileParser.isCategoryFile())
@@ -1035,7 +1035,7 @@ public class CategoryGenerationUtil
 				else
 				{
 					CategoryFileParser categoryFileParser = DomainObjectFactory.getInstance()
-							.createCategoryFileParser(file.getAbsolutePath(), "");
+							.createCategoryFileParser(file.getAbsolutePath(), "", null);
 					if (categoryFileParser != null && categoryFileParser.isPVFile())
 					{
 						fileNameList.add(relativePath + file.getName());

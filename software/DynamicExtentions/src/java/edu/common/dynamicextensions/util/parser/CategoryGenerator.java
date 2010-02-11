@@ -12,6 +12,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.owasp.stinger.Stinger;
+
 import edu.common.dynamicextensions.domain.CategoryEntity;
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
@@ -81,15 +83,17 @@ public class CategoryGenerator
 	}
 
 	/**
-	 * @param filePath
+	 * @param filePath the path of the category finle
+	 * @param baseDir base directory from which the filepath is mentioned.
+	 * @param stinger the stinger validator object which is used to validate the pv strings.
 	 * @throws DynamicExtensionsSystemException
 	 * @throws FileNotFoundException
 	 */
-	public CategoryGenerator(final String filePath, final String baseDir)
+	public CategoryGenerator(final String filePath, final String baseDir, Stinger stinger)
 			throws DynamicExtensionsSystemException, FileNotFoundException
 	{
 		categoryFileParser = DomainObjectFactory.getInstance().createCategoryFileParser(filePath,
-				baseDir);
+				baseDir, stinger);
 		categoryValidator = new CategoryValidator((CategoryCSVFileParser) categoryFileParser);
 		categoryHelper = new CategoryHelper(categoryFileParser);
 	}
@@ -100,8 +104,7 @@ public class CategoryGenerator
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws ParseException
 	 */
-	public CategoryInterface generateCategory() throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException, ParseException
+	public CategoryInterface generateCategory() throws DynamicExtensionsSystemException
 	{
 		final CategoryHelperInterface categoryHelper = new CategoryHelper(categoryFileParser);
 		ApplicationProperties.initBundle("ApplicationResources");

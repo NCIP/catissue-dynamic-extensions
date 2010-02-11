@@ -10,12 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.owasp.stinger.Stinger;
+import org.owasp.stinger.rules.RuleSet;
 
 import edu.common.dynamicextensions.category.CategoryCreatorConstants;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
@@ -64,7 +67,7 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 				+ EntityCache.getInstance().getNextIdForCategoryFileGeneration();
 		try
 		{
-			DownloadUtility.downloadZipFile(request, tempDirName , "categoryZip.zip");
+			DownloadUtility.downloadZipFile(request, tempDirName, "categoryZip.zip");
 			List<String> fileNamesList = getCategoryFileNames(request, tempDirName);
 
 			for (String name : fileNamesList)
@@ -110,13 +113,15 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 		String fileNameString = request.getParameter(CategoryCreatorConstants.CATEGORY_NAMES_FILE);
 		if (fileNameString == null || "".equals(fileNameString.trim()))
 		{
-			fileNameList = CategoryGenerationUtil.getCategoryFileListInDirectory(new File(tempDirName),"");
+			fileNameList = CategoryGenerationUtil.getCategoryFileListInDirectory(new File(
+					tempDirName), "");
 			//throw new DynamicExtensionsSystemException("Please provide names of the Category Files To be created");
 		}
 		else
 		{
 			fileNameList = new ArrayList<String>();
-			StringTokenizer tokenizer = new StringTokenizer(fileNameString, CategoryCreatorConstants.CAT_FILE_NAME_SEPARATOR);
+			StringTokenizer tokenizer = new StringTokenizer(fileNameString,
+					CategoryCreatorConstants.CAT_FILE_NAME_SEPARATOR);
 			while (tokenizer.hasMoreTokens())
 			{
 				String token = tokenizer.nextToken();
@@ -167,7 +172,11 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 		try
 		{
 			LOGGER.info("The .csv file path is:" + filePath);
-			CategoryGenerator categoryGenerator = new CategoryGenerator(filePath, baseDirectory);
+			ServletContext servletContext = servlet.getServletContext();
+			String config = servletContext.getRealPath("WEB-INF") + "/stinger.xml";
+			Stinger stinger = new Stinger(new RuleSet(config, servletContext), servletContext);
+			CategoryGenerator categoryGenerator = new CategoryGenerator(filePath, baseDirectory,
+					stinger);
 
 			boolean isEdited = true;
 

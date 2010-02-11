@@ -254,7 +254,7 @@ public final class HTTPSConnection
 			{
 				LOGGER.error("This operation failed for file : " + entry.getKey());
 				LOGGER.error("Exception : " + entry.getValue().getCause().getLocalizedMessage());
-				LOGGER.error("For more details please check ./log/dynamicExtentions.log");
+				LOGGER.error("For more details please check ./log/dynamicExtentionsError.log");
 				LOGGER.debug("Exception : ", entry.getValue());
 			}
 		}

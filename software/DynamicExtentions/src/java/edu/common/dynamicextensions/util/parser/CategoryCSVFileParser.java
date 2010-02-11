@@ -17,6 +17,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.owasp.stinger.Stinger;
+
 import au.com.bytecode.opencsv.CSVReader;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.FormControlNotes;
@@ -45,14 +47,16 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	protected long lineNumber = 0;
 
 	/**
-	 * @param filePath
+	 * @param filePath path  of the csv file
+	 * @param baseDir base directory from which the filepath is mentioned.
+	 * @param stinger the stinger validator object which is used to validate the pv strings.
 	 * @throws DynamicExtensionsSystemException
 	 * @throws FileNotFoundException
 	 */
-	public CategoryCSVFileParser(String filePath, String baseDirectory)
+	public CategoryCSVFileParser(String filePath, String baseDirectory, Stinger stinger)
 			throws DynamicExtensionsSystemException, FileNotFoundException
 	{
-		super(filePath, baseDirectory);
+		super(filePath, baseDirectory, stinger);
 		reader = new CSVReader(new FileReader(getSystemIndependantFilePath(filePath)));
 		categoryValidator = new CategoryValidator(this);
 	}
@@ -313,6 +317,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 				}
 				pvVsSemanticPropertyCollection.put(DynamicExtensionsUtility
 						.getEscapedStringValue(permiValue), semanticPropertyCollection);
+				validateStringForStinger(permiValue);
 				pvString = originalPVString.substring(pvStringLength - 1);
 			}
 		}
@@ -363,6 +368,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 						{
 							permissibleVale = pvString;
 						}
+						validateStringForStinger(permissibleVale);
 						pvVsSemanticPropertyCollection
 								.put(DynamicExtensionsUtility
 										.getEscapedStringValue(permissibleVale),
@@ -384,6 +390,31 @@ public class CategoryCSVFileParser extends CategoryFileParser
 		}
 
 		return pvVsSemanticPropertyCollection;
+	}
+
+	/**
+	 * This method will verify the string value provided with the Stringer object
+	 * provided at the time of instantiation. If stinger object was null it will
+	 * not validate the string.
+	 * If stinger is provided will validate that and if that value contains some unsafe
+	 * characters will throw a exception.
+	 * @param value string to be validated.
+	 * @throws DynamicExtensionsSystemException if string is invalid
+	 */
+	protected void validateStringForStinger(String value) throws DynamicExtensionsSystemException
+	{
+		if (stingerValidator != null && !stingerValidator.validate(value))
+		{
+			throw new DynamicExtensionsSystemException(ApplicationProperties
+					.getValue(CategoryConstants.LINE_NUMBER)
+					+ " "
+					+ getLineNumber()
+					+ " "
+					+ ApplicationProperties.getValue("readingFile")
+					+ getFilePath()
+					+ ". "
+					+ ApplicationProperties.getValue("dynExtn.validation.unsafe.character", value));
+		}
 	}
 
 	/**
