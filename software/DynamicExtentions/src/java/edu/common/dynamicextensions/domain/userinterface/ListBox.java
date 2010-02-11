@@ -9,7 +9,6 @@ import edu.common.dynamicextensions.category.beans.UIProperty;
 import edu.common.dynamicextensions.category.enums.ListBoxEnum;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
-import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
@@ -429,12 +428,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 				{
 					if (attributeMetadata instanceof CategoryAttributeInterface)
 					{
-						AbstractAttributeInterface abstractAttribute = ((CategoryAttributeInterface) attributeMetadata)
-								.getAbstractAttribute();
-						if (abstractAttribute instanceof AttributeInterface)
-						{
-							defaultValue = attributeMetadata.getDefaultValue();
-						}
+						defaultValue = attributeMetadata.getDefaultValue();
 					}
 					else
 					{
