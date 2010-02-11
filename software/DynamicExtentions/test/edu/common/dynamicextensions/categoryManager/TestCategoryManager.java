@@ -165,7 +165,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			String catName;
 			CategoryFileParser categoryFileParser = DomainObjectFactory.getInstance()
-					.createCategoryFileParser(line, "");
+					.createCategoryFileParser(line, "", null);
 			categoryFileParser.readNext();
 			if (categoryFileParser.hasFormDefination())
 			{
@@ -262,6 +262,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 				categoryManager.editData(rootCatEntity, editedDataValue, recordId);
 				System.out.println("Record Edited succesfully for " + category.getName()
 						+ " RecordId " + recordId);
+				mapGenerator.validateRetrievedDataValueMap(editedDataValue, dataValue);
 			}
 		}
 		catch (Exception e)
@@ -393,7 +394,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	{
 		HibernateDAO hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
 		List<CategoryInterface> categoryList = hibernateDAO.retrieve(CategoryInterface.class
-				.getName());
+				.getName(), "name", "Test Category_Chemotherapy");
 		DynamicExtensionsUtility.closeDAO(hibernateDAO);
 		return categoryList;
 	}
