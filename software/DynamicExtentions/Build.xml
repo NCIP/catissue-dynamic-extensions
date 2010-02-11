@@ -460,6 +460,7 @@
 		</copy>
 		<copy todir="${temp.dir}/WEB-INF" file="src/conf/dynamicextensions-struts-config.xml">
 		</copy>
+		<copy todir="${temp.dir}/WEB-INF" file="src/conf/stinger.xml"/>
 		<copy todir="${temp.dir}" file="src/conf/error.jsp">
 		</copy>
 		<copy todir="${temp.dir}" file="src/resources/ApplicationVersionInfo.txt">
