@@ -283,7 +283,7 @@ public abstract class AbstractBaseMetadataManager
 	 * @throws DynamicExtensionsSystemException
 	 *             the dynamic extensions system exception.
 	 */
-	protected Collection executeHQL(String queryName, Map<String, NamedQueryParam> substParams)
+	public static Collection executeHQL(String queryName, Map<String, NamedQueryParam> substParams)
 			throws DynamicExtensionsSystemException
 	{
 		Collection objects = null;

@@ -12,8 +12,10 @@ import static edu.wustl.cab2b.server.path.PathConstants.METADATA_ENTITY_GROUP;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.SemanticAnnotatableInterface;
@@ -21,7 +23,6 @@ import edu.common.dynamicextensions.domaininterface.AbstractMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.BooleanValueInterface;
-import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.DataElementInterface;
 import edu.common.dynamicextensions.domaininterface.DateValueInterface;
@@ -37,6 +38,7 @@ import edu.common.dynamicextensions.domaininterface.SemanticPropertyInterface;
 import edu.common.dynamicextensions.domaininterface.StringValueInterface;
 import edu.common.dynamicextensions.domaininterface.TaggedValueInterface;
 import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
+import edu.common.dynamicextensions.entitymanager.AbstractMetadataManager;
 import edu.common.dynamicextensions.entitymanager.EntityGroupManager;
 import edu.common.dynamicextensions.entitymanager.EntityGroupManagerInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
@@ -55,9 +57,9 @@ import edu.wustl.cab2b.server.path.PathConstants;
 import edu.wustl.common.querysuite.queryobject.DataType;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.HibernateDAO;
-import edu.wustl.dao.QueryWhereClause;
-import edu.wustl.dao.condition.EqualClause;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.DBTypes;
+import edu.wustl.dao.util.NamedQueryParam;
 import gov.nih.nci.cagrid.metadata.common.SemanticMetadata;
 
 /**
@@ -607,33 +609,20 @@ public class DynamicExtensionUtility
 	 * @param hibernateDAO
 	 * @return List Of the categories present in the DB.
 	 * @throws DAOException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	@SuppressWarnings({"unchecked", "deprecation"})
-	public static List<Long> getAllCategoryIdsForEntityGroupId(HibernateDAO hibernateDAO, Long entityGroupID)
-			throws DAOException
+	public static List<Long> getAllCategoryIdsForEntityGroupId(HibernateDAO hibernateDAO,
+			Long entityGroupID) throws DAOException, DynamicExtensionsSystemException
 	{
-		List<Long> entityList = new ArrayList<Long>();
-		List<Long> catEntList = new ArrayList<Long>();
-		List<Long> categoryList = new ArrayList<Long>();
+		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
+		substParams.put("0", new NamedQueryParam(DBTypes.LONG, entityGroupID));
 
-		String[] columnName = {"id"};
-		QueryWhereClause queryWhereClause;
-		queryWhereClause = new QueryWhereClause(EntityInterface.class.getName());
-		queryWhereClause.addCondition(new EqualClause("entityGroup", entityGroupID));
-		entityList = hibernateDAO.retrieve(EntityInterface.class.getName(), columnName,queryWhereClause);
-
-		for(Long entityID : entityList){
-			queryWhereClause = new QueryWhereClause(CategoryEntityInterface.class.getName());
-			queryWhereClause.addCondition(new EqualClause("entity", entityID));
-			catEntList.addAll(hibernateDAO.retrieve(CategoryEntityInterface.class.getName(), columnName,queryWhereClause));
-		}
-
-		for (Long catEntityId : catEntList)
-		{
-			queryWhereClause = new QueryWhereClause(CategoryInterface.class.getName());
-			queryWhereClause.addCondition(new EqualClause("rootCategoryElement", catEntityId));
-			categoryList.addAll(hibernateDAO.retrieve(CategoryInterface.class.getName(), columnName,queryWhereClause));
-		}
+		// Following method is called to execute the stored HQL, the name of which is given as
+		// the first parameter. The second parameter is the map which contains the actual values
+		// that are replaced for the place holders.
+		List<Long> categoryList = (List<Long>) AbstractMetadataManager.executeHQL(
+				"getAllCategoryIdsForEntityGroupId", substParams);
 
 		return categoryList;
 	}

@@ -357,4 +357,11 @@
         from  edu.common.dynamicextensions.domain.CategoryAttribute catAttribute
         where catAttribute.isCalculated = true
 	</query>
+
+	<query name="getAllCategoryIdsForEntityGroupId">
+		select cat.id
+        from  edu.common.dynamicextensions.domain.Category cat
+        where cat.rootCategoryElement.entity.entityGroup.id=?
+	</query>
+
 </hibernate-mapping>
