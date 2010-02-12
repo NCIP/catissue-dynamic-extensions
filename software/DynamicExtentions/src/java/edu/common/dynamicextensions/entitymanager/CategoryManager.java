@@ -2555,8 +2555,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	 */
 	public Map<BaseAbstractAttributeInterface, Object> getRecordById(
 			final CategoryEntityInterface rootCatEntity, final Long recordId)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
-			SQLException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
 
@@ -2752,7 +2751,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	 */
 	private void retrieveRecords(final CategoryEntityInterface catEntity,
 			final Map<BaseAbstractAttributeInterface, Object> dataValue, long rootCatEntRecId,
-			final JDBCDAO jdbcDAO) throws SQLException, DynamicExtensionsSystemException,
+			final JDBCDAO jdbcDAO) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
 		Long recordId = null;

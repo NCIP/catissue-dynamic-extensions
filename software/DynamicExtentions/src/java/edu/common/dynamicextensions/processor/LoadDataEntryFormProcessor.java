@@ -110,8 +110,7 @@ public class LoadDataEntryFormProcessor
 	 */
 	public Map<BaseAbstractAttributeInterface, Object> getValueMapFromRecordId(
 			AbstractEntityInterface entityInterface, String recordIdentifier)
-			throws NumberFormatException, DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException, SQLException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		Map<BaseAbstractAttributeInterface, Object> recordMap = new HashMap<BaseAbstractAttributeInterface, Object>();
 		if (recordIdentifier != null && !recordIdentifier.equals(""))

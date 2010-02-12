@@ -57,9 +57,10 @@ public class CacheInitilizer extends ThreadPoolExecutor implements UncaughtExcep
 
 	public boolean allProcessCompleted()
 	{
-		if (threadCount == 0)
+		if (threadCount == 1)
 		{
 			executionOver = true;
+			AbstractEntityCache.isCacheReady = true;
 		}
 		return executionOver;
 	}

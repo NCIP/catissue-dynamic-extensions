@@ -33,6 +33,7 @@ import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.cab2b.common.beans.MatchedClass;
@@ -201,7 +202,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 			Collections.reverse(entityGroupIDs);
 
 			categoryIDs = DynamicExtensionUtility.getAllCategoryIds(hibDAO);
-			LOGGER.info("Number of Entity Grops in database :" + categoryIDs.size());
+			LOGGER.info("Number of Categories in database :" + categoryIDs.size());
 			if (entityGroupIDs.size() != 0)
 			{
 				LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>();
@@ -289,6 +290,10 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 				try
 				{
 					DynamicExtensionsUtility.closeDAO(hibernateDao);
+					if (cacheInitilizer.allProcessCompleted())
+					{
+						LOGGER.info("Cache Initialization complete");
+					}
 				}
 				catch (DynamicExtensionsSystemException e)
 				{
@@ -1040,16 +1045,28 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * It will return the Container with the id as given identifier in the parameter.
 	 * @param identifier
 	 * @return Container with given identifier
+	 * @throws DynamicExceptionsCacheException
 	 */
 	public ContainerInterface getContainerById(final Long identifier)
+			throws DynamicExtensionsCacheException
 	{
 		ContainerInterface container = null;
 		container = idVscontainers.get(identifier);
+
 		if (container == null)
 		{
-			throw new RuntimeException("container with given id is not present in cache : "
+			if (AbstractEntityCache.isCacheReady)
+			{
+				throw new RuntimeException("container with given id is not present in cache : "
 					+ identifier);
+			}
+			else
+			{
+				throw new DynamicExtensionsCacheException(
+						"Your forms are being loaded. Please try after some time.");
+			}
 		}
+
 		return container;
 
 	}

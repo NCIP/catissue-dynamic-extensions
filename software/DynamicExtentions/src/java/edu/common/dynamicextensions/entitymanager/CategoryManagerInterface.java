@@ -81,8 +81,7 @@ public interface CategoryManagerInterface
 	 */
 	Map<BaseAbstractAttributeInterface, Object> getRecordById(
 			CategoryEntityInterface rootCatEntity, Long recordId)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
-			SQLException;
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
 
 	/**
 	 * @param catEntity

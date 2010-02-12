@@ -173,6 +173,7 @@ PUBLIC
 			input="/LoadDataEntryFormAction.do"
 			scope="request">
 			<forward name="Success" path="/pages/de/dataEntry/dataEntry.jsp" />
+			<forward name="cacheError" path="/pages/de/error.jsp" />
 			<forward name="LoadFormControls" path="/LoadFormControlsAction.do" />
 		</action>
 		<action path="/ApplyDataEntryFormAction"

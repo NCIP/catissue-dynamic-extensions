@@ -90,6 +90,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.TextFieldInter
 import edu.common.dynamicextensions.entitymanager.EntityManagerExceptionConstantsInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
+import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
@@ -166,10 +167,10 @@ public class DynamicExtensionsUtility
 	 * @param containerIdentifier The Identifier of the Container.
 	 * @return the ContainerInterface
 	 * @throws DynamicExtensionsSystemException on System exception
-	 * @throws DynamicExtensionsApplicationException on Application exception
+	 * @throws DynamicExtensionsCacheException
 	 */
 	public static ContainerInterface getContainerByIdentifier(String containerIdentifier)
-			throws DynamicExtensionsSystemException
+			throws DynamicExtensionsSystemException, DynamicExtensionsCacheException
 	{
 		ContainerInterface containerInterface = null;
 		if (containerIdentifier != null && !"".equals(containerIdentifier))

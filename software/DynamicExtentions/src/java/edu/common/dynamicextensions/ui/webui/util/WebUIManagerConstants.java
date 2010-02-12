@@ -92,4 +92,6 @@ public interface WebUIManagerConstants
 	 *
 	 */
 	String DELETED_ASSOCIATION_IDS = "deletedAssociationIds";
+
+	String CACHE_ERROR = "cacheError";
 }
