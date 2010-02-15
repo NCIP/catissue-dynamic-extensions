@@ -88,7 +88,8 @@ public class DatePicker extends Control implements DatePickerInterface
 
 			if (defaultValue != null && defaultValue.length() > 0
 					&& getAttibuteMetadataInterface() != null
-					&& getAttibuteMetadataInterface() instanceof CategoryAttribute)
+					&& getAttibuteMetadataInterface() instanceof CategoryAttribute
+					&& defaultValue.indexOf('-') == 4)
 			{
 				CategoryAttributeInterface categoryAttribute = (CategoryAttributeInterface) getAttibuteMetadataInterface();
 				DateTypeInformationInterface dateTypeInformation = (DateTypeInformationInterface) ((AttributeInterface) categoryAttribute
