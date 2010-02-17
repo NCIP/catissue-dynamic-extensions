@@ -1,7 +1,11 @@
 
 package edu.common.dynamicextensions.category.enums;
 
+import edu.common.dynamicextensions.domain.CategoryAttribute;
 import edu.common.dynamicextensions.domain.userinterface.Control;
+import edu.common.dynamicextensions.domaininterface.AttributeInterface;
+import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
+import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
 
@@ -11,11 +15,54 @@ import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
  *
  */
 public enum ControlEnum {
+	DEFAULTVALUE("defaultValue") {
 
+		/**
+		 * Returns String representation of Default value for a control.
+		 * @param control
+		 * @return String
+		 */
+		public String getControlProperty(Control control)
+		{
+			String defaultValue = null;
+			CategoryAttribute categoryAttribute = (CategoryAttribute) control
+					.getBaseAbstractAttribute();
+			if (categoryAttribute.getAbstractAttribute() instanceof AttributeInterface)
+			{
+				AttributeInterface attribute = categoryAttribute.getAttribute();
+				AttributeTypeInformationInterface attributeTypeInformation = attribute
+						.getAttributeTypeInformation();
+				PermissibleValueInterface defaultValue2 = attributeTypeInformation
+						.getDefaultValue();
+				if (defaultValue2 != null && defaultValue2.getValueAsObject() != null
+						&& defaultValue2.getValueAsObject().toString().trim().length() != 0)
+				{
+					Object valueAsObject = defaultValue2.getValueAsObject();
+					defaultValue = valueAsObject.toString();
+				}
+			}
+			return defaultValue;
+		}
+
+		/**
+		 * Sets Control default value.
+		 * @param control
+		 * @param propertyToBeSet
+		 */
+		public void setControlProperty(Control control, String propertyToBeSet)
+		{
+			CategoryAttribute categoryAttribute = (CategoryAttribute) control
+					.getBaseAbstractAttribute();
+			AttributeInterface attribute = categoryAttribute.getAttribute();
+			attribute.getAttributeTypeInformation();
+		}
+	},
 	REQUIRED("required") {
 
 		/**
 		 * Returns string represenation for Required rule of Control. 
+		 * @param control
+		 * @return String
 		 */
 		public String getControlProperty(Control control)
 		{
@@ -31,6 +78,8 @@ public enum ControlEnum {
 
 		/**
 		 * Sets required Rule.
+		 * @param control
+		 * @param propertyToBeSet
 		 */
 		public void setControlProperty(Control control, String propertyToBeSet)
 		{
