@@ -39,7 +39,7 @@ public class XMLToCSVConverter
 	private static final String PERMISSIBLE_VALUE_FILE = "permissibleValueFile";
 
 	/** The Constant SKIP_LOGIC_ATTRIBUTE. */
-	private static final String SKIP_LOGIC_ATTRIBUTE = "SkipLogicAttribute";
+	//private static final String SKIP_LOGIC_ATTRIBUTE = "SkipLogicAttribute";
 
 	/** The Constant DEPENDENT_ATTRIBUTE. */
 	private static final String DEPENDENT_ATTRIBUTE = "DependentAttribute";
@@ -102,34 +102,34 @@ public class XMLToCSVConverter
 	private static final String FORM_DEFINITION = "FormDefinition";
 
 	/** The document. */
-	private Document document;
+	private transient Document document;
 
 	/** The writer. */
-	private final Writer writer;
+	private transient final Writer writer;
 
 	/** The input source. */
-	private final InputSource inputSource;
+	private transient final InputSource inputSource;
 
 	/** The new line. */
-	private final String newLine = System.getProperty("line.separator");
+	private transient final String newLine = System.getProperty("line.separator");
 
 	/** The string builder. */
-	private final StringBuilder stringBuilder;
+	private transient final StringBuilder stringBuilder;
 
 	/** The rules required string. */
-	private String rulesRequiredString;
+	private transient String rulesRequiredString;
 
 	/** The rules required string. */
-	private String defaultValueString;
+	private transient String defaultValueString;
 
 	/** The main container. */
-	private String mainContainer;
+	private transient String mainContainer;
 
 	/** The entity group name. */
-	private String entityGroupName;
+	private transient String entityGroupName;
 
 	/** The permissible value options string. */
-	private String permValueOptionsString;
+	private transient String permValueOptionsString;
 
 	/**
 	 * Instantiates a new xML to csv converter.
@@ -555,7 +555,7 @@ public class XMLToCSVConverter
 	{
 		if (mainContainer == null)
 		{
-			mainContainer = instance.substring(0, instance.lastIndexOf("["));
+			mainContainer = instance.substring(0, instance.lastIndexOf('['));
 			int lastIndexOfentityGroupName = stringBuilder.lastIndexOf(newLine + entityGroupName
 					+ newLine)
 					+ entityGroupName.length() + 2;
@@ -648,9 +648,8 @@ public class XMLToCSVConverter
 				stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length());
 			}
 			String localRequiredString = rulesRequiredString;
-			rulesRequiredString = null;
-			appendToStringBuilder(localRequiredString);
 
+			appendToStringBuilder(localRequiredString);
 			appendPermValueString();
 			appendDefaultValueString();
 		}
@@ -664,7 +663,6 @@ public class XMLToCSVConverter
 		if (defaultValueString != null)
 		{
 			String localDefaultValueString = defaultValueString;
-			defaultValueString = null;
 			appendToStringBuilder(localDefaultValueString);
 		}
 	}
@@ -677,7 +675,6 @@ public class XMLToCSVConverter
 		if (permValueOptionsString != null)
 		{
 			String localPermValueOptionsString = permValueOptionsString;
-			permValueOptionsString = null;
 			appendToStringBuilder(localPermValueOptionsString);
 		}
 	}
@@ -698,15 +695,15 @@ public class XMLToCSVConverter
 		final Node keyNode = controlProperties.getNamedItem(KEY);
 		String nodeValue = keyNode.getNodeValue();
 
-		if (nodeValue.equals("required"))
+		if ("required".equals(nodeValue))
 		{
 			rulesRequiredString = ",Rules~required";
 		}
-		else if (nodeValue.equals("IsOrdered"))
+		else if ("IsOrdered".equals(nodeValue))
 		{
 			permValueOptionsString = ",PermVal_Options~IsOrdered=true";
 		}
-		else if (nodeValue.equals("defaultValue"))
+		else if ("defaultValue".equals(nodeValue))
 		{
 			final Node valueNode = controlProperties.getNamedItem(VALUE);
 			permValueOptionsString = ",defaultValue=" + valueNode.getNodeValue();
