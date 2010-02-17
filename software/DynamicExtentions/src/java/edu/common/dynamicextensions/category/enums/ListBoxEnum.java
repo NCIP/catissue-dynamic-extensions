@@ -2,12 +2,50 @@
 package edu.common.dynamicextensions.category.enums;
 
 import edu.common.dynamicextensions.domain.userinterface.ListBox;
+import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
+import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
 
 public enum ListBoxEnum {
+
+	ISORDERED("IsOrdered") {
+
+		/**
+		 * Returns String representation of Default value for a control.
+		 * @param control
+		 * @return String
+		 */
+		public String getControlProperty(ListBox control)
+		{
+			String isOrderedString = null;
+			UserDefinedDEInterface userDefinedDEInterface = (UserDefinedDEInterface) (((AttributeMetadataInterface) control
+					.getBaseAbstractAttribute()).getDataElement());
+			Boolean isOrdered2 = userDefinedDEInterface.getIsOrdered();
+			if (isOrdered2 != null)
+			{
+				isOrderedString = String.valueOf(isOrdered2);
+			}
+			return isOrderedString;
+		}
+
+		/**
+		 * Sets Control default value.
+		 * @param control
+		 * @param propertyToBeSet
+		 */
+		public void setControlProperty(ListBox control, String propertyToBeSet)
+		{
+			UserDefinedDEInterface userDefinedDEInterface = (UserDefinedDEInterface) (((AttributeMetadataInterface) control
+					.getBaseAbstractAttribute()).getDataElement());
+			userDefinedDEInterface.setIsOrdered(Boolean.valueOf(propertyToBeSet));
+		}
+	},
+
 	ISMULTILINE("ISMULTILINE") {
 
 		/**
 		 * Returns String representation of multiline value for a control.
+		 * @param control
+		 * @return String
 		 */
 		public String getControlProperty(ListBox control)
 		{
@@ -21,6 +59,8 @@ public enum ListBoxEnum {
 
 		/**
 		 * Sets String representation of multiline value for a control.
+		 * @param control
+		 * @param propertyToBeSet
 		 */
 		public void setControlProperty(ListBox control, String propertyToBeSet)
 		{
@@ -31,6 +71,8 @@ public enum ListBoxEnum {
 
 		/**
 		 * Returns String representation of Number of rows value for a control.
+		 * @param control
+		 * @return String
 		 */
 		public String getControlProperty(ListBox control)
 		{
@@ -44,21 +86,25 @@ public enum ListBoxEnum {
 
 		/**
 		 * Sets String representation of number of rows value for a control.
+		 * @param control
+		 * @param propertyToBeSet
 		 */
 		public void setControlProperty(ListBox control, String propertyToBeSet)
 		{
 			control.setNoOfRows(Integer.valueOf(propertyToBeSet));
 		}
 	},
-	ISAUTOCOMPLETE("ISAUTOCOMPLETE") {
+	ISAUTOCOMPLETE("IsUsingAutoCompleteDropdown") {
 
 		/**
 		 * Returns String representation of Autocomplete value for a control.
+		 * @param control
+		 * @return String
 		 */
 		public String getControlProperty(ListBox control)
 		{
 			String autoSelectString = null;
-			if (control.getIsUsingAutoCompleteDropdown() == null)
+			if (control.getIsUsingAutoCompleteDropdown() != null)
 			{
 				autoSelectString = String.valueOf(control.getIsUsingAutoCompleteDropdown());
 			}
@@ -67,6 +113,8 @@ public enum ListBoxEnum {
 
 		/**
 		 * Sets String representation of Autocomplete value for a control.
+		 * @param control
+		 * @param propertyToBeSet
 		 */
 		public void setControlProperty(ListBox control, String propertyToBeSet)
 		{
