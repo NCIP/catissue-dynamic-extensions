@@ -965,9 +965,9 @@ public class CategoryHelper implements CategoryHelperInterface
 			}
 		}
 
-		checkForRemovedPermissibleValues(categoryAttribute, permissibleValues);
 		if ((categoryAttribute.getId() != null)
-				&& isDataEntered(categoryAttribute.getCategoryEntity()))
+				&& isDataEntered(categoryAttribute.getCategoryEntity())
+				&& checkForRemovedPermissibleValues(categoryAttribute, permissibleValues))
 		{
 			throw new DynamicExtensionsSystemException(ApplicationProperties
 					.getValue(CategoryConstants.CREATE_CAT_FAILS)
@@ -1031,7 +1031,7 @@ public class CategoryHelper implements CategoryHelperInterface
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void checkForRemovedPermissibleValues(CategoryAttribute categoryAttribute,
+	private boolean checkForRemovedPermissibleValues(CategoryAttribute categoryAttribute,
 			List<PermissibleValueInterface> permissibleValues)
 			throws DynamicExtensionsSystemException
 	{
@@ -1062,6 +1062,7 @@ public class CategoryHelper implements CategoryHelperInterface
 					+ categoryAttribute.getName()
 					+ ":" + existingPv);
 		}
+		return isPermissibleValueRemoved;
 	}
 
 	/**
@@ -1338,10 +1339,10 @@ public class CategoryHelper implements CategoryHelperInterface
 			radioButton = DomainObjectFactory.getInstance().createRadioButton();
 		}
 
-		checkForRemovedPermissibleValues(((CategoryAttribute) baseAbstractAttribute),
-				permissibleValues);
 		if ((baseAbstractAttribute.getId() != null)
-				&& isDataEntered(((CategoryAttribute) baseAbstractAttribute).getCategoryEntity()))
+				&& isDataEntered(((CategoryAttribute) baseAbstractAttribute).getCategoryEntity())
+				&& checkForRemovedPermissibleValues(((CategoryAttribute) baseAbstractAttribute),
+						permissibleValues))
 		{
 			throw new DynamicExtensionsSystemException(ApplicationProperties
 					.getValue(CategoryConstants.CREATE_CAT_FAILS)
