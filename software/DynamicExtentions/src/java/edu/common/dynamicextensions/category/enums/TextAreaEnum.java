@@ -1,13 +1,10 @@
 
 package edu.common.dynamicextensions.category.enums;
 
-import edu.common.dynamicextensions.domain.CategoryAttribute;
-import edu.common.dynamicextensions.domain.StringAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.userinterface.TextArea;
-import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 
 public enum TextAreaEnum {
-	WIDTH("Width") {
+	WIDTH("Columns") {
 
 		/**
 		 * Returns String representation of width value for a control.
@@ -43,35 +40,6 @@ public enum TextAreaEnum {
 		public void setControlProperty(TextArea control, String propertyToBeSet)
 		{
 			control.setColumns(Integer.valueOf(propertyToBeSet));
-		}
-	},
-	MAXLENGTH("Maxlength") {
-
-		/**
-		 * Returns String representation of max-length value for a control.
-		 */
-		public String getControlProperty(TextArea control)
-		{
-			CategoryAttribute baseAbstractAttribute2 = (CategoryAttribute) control
-					.getBaseAbstractAttribute();
-			AttributeInterface attribute = baseAbstractAttribute2.getAttribute();
-			StringAttributeTypeInformation attributeTypeInformation = (StringAttributeTypeInformation) attribute
-					.getAttributeTypeInformation();
-			Integer maxLength = attributeTypeInformation.getSize();
-			return String.valueOf(maxLength);
-		}
-
-		/**
-		 * Sets String representation of max-length value for a control.
-		 */
-		public void setControlProperty(TextArea control, String propertyToBeSet)
-		{
-			CategoryAttribute baseAbstractAttribute2 = (CategoryAttribute) control
-					.getBaseAbstractAttribute();
-			AttributeInterface attribute = baseAbstractAttribute2.getAttribute();
-			StringAttributeTypeInformation attributeTypeInformation = (StringAttributeTypeInformation) attribute
-					.getAttributeTypeInformation();
-			attributeTypeInformation.setSize(Integer.valueOf(propertyToBeSet));
 		}
 	};
 
