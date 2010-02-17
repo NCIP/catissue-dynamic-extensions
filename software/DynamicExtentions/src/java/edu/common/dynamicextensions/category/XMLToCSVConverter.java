@@ -119,11 +119,17 @@ public class XMLToCSVConverter
 	/** The rules required string. */
 	private String rulesRequiredString;
 
+	/** The rules required string. */
+	private String defaultValueString;
+
 	/** The main container. */
 	private String mainContainer;
 
 	/** The entity group name. */
 	private String entityGroupName;
+
+	/** The permissible value options string. */
+	private String permValueOptionsString;
 
 	/**
 	 * Instantiates a new xML to csv converter.
@@ -135,6 +141,8 @@ public class XMLToCSVConverter
 	 */
 	public XMLToCSVConverter(final File xmlFile, final File csvFile) throws IOException
 	{
+		LOGGER.debug("XML file:" + xmlFile.getAbsolutePath());
+		LOGGER.debug("CSV file:" + csvFile.getAbsolutePath());
 		writer = new BufferedWriter(new FileWriter(csvFile));
 		inputSource = new InputSource(new FileReader(xmlFile));
 		stringBuilder = new StringBuilder();
@@ -155,7 +163,6 @@ public class XMLToCSVConverter
 			document = domParser.getDocument();
 			txFormDefinition();
 			writer.write(stringBuilder.toString());
-
 		}
 		finally
 		{
@@ -170,6 +177,7 @@ public class XMLToCSVConverter
 	 */
 	private void appendToStringBuilder(String stringToBeAppend)
 	{
+		LOGGER.debug("Appending: " + stringToBeAppend);
 		stringBuilder.append(stringToBeAppend);
 	}
 
@@ -217,7 +225,6 @@ public class XMLToCSVConverter
 
 		for (int j = 0; j < length2; j++)
 		{
-
 			final Node item2 = childNodes.item(j);
 			final String nodeName = item2.getNodeName();
 
@@ -549,8 +556,9 @@ public class XMLToCSVConverter
 		if (mainContainer == null)
 		{
 			mainContainer = instance.substring(0, instance.lastIndexOf("["));
-			int lastIndexOfentityGroupName = stringBuilder.lastIndexOf(entityGroupName)
-					+ entityGroupName.length();
+			int lastIndexOfentityGroupName = stringBuilder.lastIndexOf(newLine + entityGroupName
+					+ newLine)
+					+ entityGroupName.length() + 2;
 			stringBuilder.insert(lastIndexOfentityGroupName, newLine + mainContainer + "~"
 					+ mainContainer);
 		}
@@ -591,7 +599,7 @@ public class XMLToCSVConverter
 			final Node item2 = childNodes.item(j);
 			final String nodeName = item2.getNodeName();
 
-			isFirstUIProperty = appendUIProperty(isFirstUIProperty, item2, nodeName);
+			isFirstUIProperty = appendUIProperty(item2, nodeName);
 		}
 		appendSeparators(isFirstUIProperty);
 		appendToStringBuilder(newLine);
@@ -609,17 +617,17 @@ public class XMLToCSVConverter
 	 * @throws DOMException the DOM exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private boolean appendUIProperty(boolean isFirstUIProperty, final Node item2,
-			final String nodeName) throws DOMException, IOException
+	private boolean appendUIProperty(final Node item2, final String nodeName) throws DOMException,
+			IOException
 	{
+		boolean isFirstUIProperty = false;
 		if (nodeName.equals(UI_PROPERTY))
 		{
 			if (!isFirstUIProperty)
 			{
-				appendToStringBuilder(",options~");
 				isFirstUIProperty = true;
 			}
-			txUIProperties(item2);
+			txUIProperties(item2, isFirstUIProperty);
 		}
 		return isFirstUIProperty;
 	}
@@ -634,10 +642,43 @@ public class XMLToCSVConverter
 		if (isFirstUIProperty)
 		{
 			//remove last ":"
-			stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length());
+			char charAt = stringBuilder.charAt(stringBuilder.length() - 1);
+			if (charAt == ':')
+			{
+				stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length());
+			}
 			String localRequiredString = rulesRequiredString;
 			rulesRequiredString = null;
 			appendToStringBuilder(localRequiredString);
+
+			appendPermValueString();
+			appendDefaultValueString();
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void appendDefaultValueString()
+	{
+		if (defaultValueString != null)
+		{
+			String localDefaultValueString = defaultValueString;
+			defaultValueString = null;
+			appendToStringBuilder(localDefaultValueString);
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void appendPermValueString()
+	{
+		if (permValueOptionsString != null)
+		{
+			String localPermValueOptionsString = permValueOptionsString;
+			permValueOptionsString = null;
+			appendToStringBuilder(localPermValueOptionsString);
 		}
 	}
 
@@ -649,7 +690,8 @@ public class XMLToCSVConverter
 	 * @throws DOMException the DOM exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void txUIProperties(final Node item) throws DOMException, IOException
+	private void txUIProperties(final Node item, boolean isFirstUIProperty) throws DOMException,
+			IOException
 	{
 		final NamedNodeMap controlProperties = item.getAttributes();
 
@@ -660,10 +702,22 @@ public class XMLToCSVConverter
 		{
 			rulesRequiredString = ",Rules~required";
 		}
+		else if (nodeValue.equals("IsOrdered"))
+		{
+			permValueOptionsString = ",PermVal_Options~IsOrdered=true";
+		}
+		else if (nodeValue.equals("defaultValue"))
+		{
+			final Node valueNode = controlProperties.getNamedItem(VALUE);
+			permValueOptionsString = ",defaultValue=" + valueNode.getNodeValue();
+		}
 		else
 		{
+			if (isFirstUIProperty)
+			{
+				appendToStringBuilder(",options~");
+			}
 			appendToStringBuilder(nodeValue + "=");
-
 			final Node valueNode = controlProperties.getNamedItem(VALUE);
 			appendToStringBuilder(valueNode.getNodeValue());
 			appendToStringBuilder(":");
@@ -679,7 +733,6 @@ public class XMLToCSVConverter
 	 */
 	private void txRelatedAttributes(final Node item) throws IOException
 	{
-
 		Node instanceNode = null;
 		Node uiPropertyNode = null;
 		appendToStringBuilder("RelatedAttribute:" + newLine);
@@ -737,7 +790,7 @@ public class XMLToCSVConverter
 		if (uiPropertyNode != null)
 		{
 			appendToStringBuilder(",options~");
-			txUIProperties(uiPropertyNode);
+			txUIProperties(uiPropertyNode, false);
 		}
 	}
 }
