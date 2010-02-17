@@ -2,8 +2,11 @@
 package edu.common.dynamicextensions.domain.userinterface;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import edu.common.dynamicextensions.category.beans.UIProperty;
+import edu.common.dynamicextensions.category.enums.RadioButtonEnum;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.DoubleTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.FloatTypeInformationInterface;
@@ -35,7 +38,8 @@ public class RadioButton extends Control implements RadioButtonInterface
 	 * @return HTML code for RadioButton
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
+	public String generateEditModeHTML(ContainerInterface container)
+			throws DynamicExtensionsSystemException
 	{
 		List<NameValueBean> nameValueBeanList = null;
 		String htmlString = "";
@@ -47,7 +51,8 @@ public class RadioButton extends Control implements RadioButtonInterface
 		String defaultValue = getDefaultValueForControl();
 		String disabled = "";
 		//If control is defined as readonly through category CSV file,make it Disabled
-		if ((this.isReadOnly != null && getIsReadOnly()) || (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly))
+		if ((this.isReadOnly != null && getIsReadOnly())
+				|| (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly))
 		{
 			disabled = ProcessorConstants.DISABLED;
 		}
@@ -66,65 +71,37 @@ public class RadioButton extends Control implements RadioButtonInterface
 		{
 			sourceControlValues = this.getSourceSkipControl().getValueAsStrings();
 		}
-		nameValueBeanList = ControlsUtility.populateListOfValues(this,sourceControlValues);
+		nameValueBeanList = ControlsUtility.populateListOfValues(this, sourceControlValues);
 
 		String htmlComponentName = getHTMLComponentName();
 		if (nameValueBeanList != null)
 		{
 			for (NameValueBean nameValueBean : nameValueBeanList)
 			{
-				String optionName = DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean.getName());
+				String optionName = DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean
+						.getName());
 				String optionValue = nameValueBean.getValue();
 				if (optionValue.equals(defaultValue))
 				{
 					htmlString += "<input type='radio' onclick=\""
-							+ (this.isSkipLogic ? "getSkipLogicControl('"
-									+ htmlComponentName + "','" + identifier
-									+ "','" + parentContainerId + "');" : "")
-							+ "isDataChanged();\" "
-							+ "class='font_bl_nor' "
-							+ "name='"
-							+ htmlComponentName
-							+ "' "
-							+ "value='"
-							+ optionValue
-							+ "' "
-							+ "id='"
-							+ optionName
-							+ "' checked "
-							+ disabled
-							+ "  "
-							+ ">"
-							+ "<label for=\""
-							+ htmlComponentName
-							+ "\">"
-							+ optionName
+							+ (this.isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
+									+ "','" + identifier + "','" + parentContainerId + "');" : "")
+							+ "isDataChanged();\" " + "class='font_bl_nor' " + "name='"
+							+ htmlComponentName + "' " + "value='" + optionValue + "' " + "id='"
+							+ optionName + "' checked " + disabled + "  " + ">" + "<label for=\""
+							+ htmlComponentName + "\">" + optionName
 							+ "</label> <img src='images/de/spacer.gif' width='2' height='2'>";
 				}
 				else
 				{
 					htmlString += "<input type='radio' onclick=\""
-							+ (this.isSkipLogic ? "getSkipLogicControl('"
-									+ htmlComponentName + "','" + identifier
-									+ "','" + parentContainerId + "');" : "")
-							+ "isDataChanged();\" "
-							+ "class='font_bl_nor' "
-							+ "name='"
-							+ htmlComponentName
-							+ "' "
-							+ "value='"
-							+ optionValue
-							+ "' "
-							+ "id='"
-							+ optionName
-							+ "' "
-							+ disabled
+							+ (this.isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
+									+ "','" + identifier + "','" + parentContainerId + "');" : "")
+							+ "isDataChanged();\" " + "class='font_bl_nor' " + "name='"
+							+ htmlComponentName + "' " + "value='" + optionValue + "' " + "id='"
+							+ optionName + "' " + disabled
 
-							+ " >"
-							+ "<label for=\""
-							+ htmlComponentName
-							+ "\">"
-							+ optionName
+							+ " >" + "<label for=\"" + htmlComponentName + "\">" + optionName
 							+ "</label> <img src='images/de/spacer.gif' width='2' height='2'>";
 				}
 			}
@@ -137,6 +114,7 @@ public class RadioButton extends Control implements RadioButtonInterface
 		}
 		return htmlString;
 	}
+
 	/**
 	 *
 	 * @return
@@ -165,23 +143,20 @@ public class RadioButton extends Control implements RadioButtonInterface
 		if (defaultValue != null)
 		{
 			if (defaultValue.length() > 0
-					&& this.getAttibuteMetadataInterface()
-							.getAttributeTypeInformation() instanceof DoubleTypeInformationInterface)
+					&& this.getAttibuteMetadataInterface().getAttributeTypeInformation() instanceof DoubleTypeInformationInterface)
 			{
 				double doubleValue = Double.parseDouble(defaultValue);
 				defaultValue = Double.toString(doubleValue);
 			}
 			else if (defaultValue.length() > 0
-					&& this.getAttibuteMetadataInterface()
-							.getAttributeTypeInformation() instanceof LongTypeInformationInterface)
+					&& this.getAttibuteMetadataInterface().getAttributeTypeInformation() instanceof LongTypeInformationInterface)
 			{
 				long longValue = Long.parseLong(defaultValue);
 				defaultValue = Long.toString(longValue);
 
 			}
 			else if (defaultValue.length() > 0
-					&& this.getAttibuteMetadataInterface()
-							.getAttributeTypeInformation() instanceof FloatTypeInformationInterface)
+					&& this.getAttibuteMetadataInterface().getAttributeTypeInformation() instanceof FloatTypeInformationInterface)
 			{
 				float floatValue = Float.parseFloat(defaultValue);
 				defaultValue = Float.toString(floatValue);
@@ -190,6 +165,7 @@ public class RadioButton extends Control implements RadioButtonInterface
 		}
 		return defaultValue;
 	}
+
 	/**
 	 * This method sets the corresponding Attribute of this control.
 	 * @param abstractAttribute the AbstractAttribute to be set.
@@ -199,7 +175,8 @@ public class RadioButton extends Control implements RadioButtonInterface
 		// TODO Auto-generated constructor stub
 	}
 
-	public String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
+	public String generateViewModeHTML(ContainerInterface container)
+			throws DynamicExtensionsSystemException
 	{
 		String htmlString = "&nbsp;";
 		if (value != null)
@@ -218,6 +195,7 @@ public class RadioButton extends Control implements RadioButtonInterface
 		values.add(getDefaultValueForControl());
 		return values;
 	}
+
 	/**
 	 *
 	 */
@@ -228,11 +206,47 @@ public class RadioButton extends Control implements RadioButtonInterface
 			setValue(listOfValues.get(0));
 		}
 	}
+
 	/**
 	 *
 	 */
 	public boolean getIsEnumeratedControl()
 	{
 		return true;
+	}
+
+	/**
+	 * Returns collection of key-value pairs.
+	 */
+	public Collection<UIProperty> getControlTypeValues()
+	{
+		Collection<UIProperty> controlTypeValues = super.getControlTypeValues();
+		RadioButtonEnum[] uiPropertyValues = RadioButtonEnum.values();
+
+		for (RadioButtonEnum propertyType : uiPropertyValues)
+		{
+			String controlProperty = propertyType.getControlProperty(this);
+			//LOGGER.debug("Control property value is: " + controlProperty);
+			if (controlProperty != null)
+			{
+				controlTypeValues.add(new UIProperty(propertyType.getValue(), controlProperty));
+			}
+		}
+
+		return controlTypeValues;
+	}
+
+	/**
+	 * Set collection of key-value pairs for a control.
+	 */
+	public void setControlTypeValues(Collection<UIProperty> uiProperties)
+	{
+		super.setControlTypeValues(uiProperties);
+
+		for (UIProperty uiProperty : uiProperties)
+		{
+			RadioButtonEnum propertyType = RadioButtonEnum.getValue(uiProperty.getKey());
+			propertyType.setControlProperty(this, uiProperty.getValue());
+		}
 	}
 }
