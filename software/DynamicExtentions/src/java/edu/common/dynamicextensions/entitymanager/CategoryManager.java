@@ -1761,6 +1761,14 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 										intermediateEntityId = ids.get(0);
 									}
 
+									fullKeyMap.put(association.getTargetEntity().getName() + "["
+											+ par.getTargetInstanceId() + "]",
+											currentEntityId);
+
+									keyMap.put(association.getTargetEntity().getName() + "["
+											+ par.getTargetInstanceId() + "]",
+											currentEntityId);
+
 									fullKeyMap
 											.put(association.getEntity().getName() + "["
 													+ par.getSourceInstanceId() + "]",
