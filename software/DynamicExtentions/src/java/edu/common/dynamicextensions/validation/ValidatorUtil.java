@@ -458,10 +458,10 @@ public class ValidatorUtil
 				Utility.parseDate(attributeUIBeanInformationIntf.getMin(),
 						ProcessorConstants.SQL_DATE_ONLY_FORMAT);
 			}
-			catch (ParseException ParseException)
+			catch (ParseException exception)
 			{
 				throw new DynamicExtensionsSystemException("Date Range Specified For Attribute "
-						+ attributeName + " is not in proper format");
+						+ attributeName + " is not in proper format", exception);
 
 			}
 		}
