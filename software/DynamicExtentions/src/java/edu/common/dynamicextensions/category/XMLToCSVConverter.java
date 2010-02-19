@@ -141,8 +141,8 @@ public class XMLToCSVConverter
 	 */
 	public XMLToCSVConverter(final File xmlFile, final File csvFile) throws IOException
 	{
-		LOGGER.debug("XML file:" + xmlFile.getAbsolutePath());
-		LOGGER.debug("CSV file:" + csvFile.getAbsolutePath());
+		LOGGER.info("XML file:" + xmlFile.getAbsolutePath());
+		LOGGER.info("CSV file:" + csvFile.getAbsolutePath());
 		writer = new BufferedWriter(new FileWriter(csvFile));
 		inputSource = new InputSource(new FileReader(xmlFile));
 		stringBuilder = new StringBuilder();
