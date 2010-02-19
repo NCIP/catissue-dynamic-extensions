@@ -554,7 +554,7 @@ public abstract class AbstractBaseMetadataManager
 		}
 		catch (DAOException e)
 		{
-			throw new DynamicExtensionsSystemException(excMessage);
+			throw new DynamicExtensionsSystemException(excMessage, e);
 		}
 
 	}
