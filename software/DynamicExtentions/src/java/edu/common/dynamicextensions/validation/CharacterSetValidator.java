@@ -87,7 +87,7 @@ public class CharacterSetValidator implements ValidatorRuleInterface
 		}
 		catch (IOException e)
 		{
-			throw new DynamicExtensionsValidationException("Validation failed");
+			throw new DynamicExtensionsValidationException("Validation failed", e);
 		}
 		return true;
 	}
