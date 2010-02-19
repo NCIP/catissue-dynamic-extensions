@@ -6,24 +6,25 @@ import javax.servlet.jsp.tagext.TagSupport;
 import edu.wustl.common.util.logger.Logger;
 
 /**
- * 
+ *
  * @author mandar_shidhore
  *
  */
 public class MultiselectUsingComboAndListTag extends TagSupport
 {
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4L;
-	
+
 	private String addNewUserActionName;
 
 	public String getAddNewUserActionName()
 	{
 		return addNewUserActionName;
 	}
-	
+
 	public void setAddNewUserActionName(String addNewUserActionName)
 	{
 		this.addNewUserActionName = addNewUserActionName;
@@ -35,10 +36,10 @@ public class MultiselectUsingComboAndListTag extends TagSupport
 		Logger.out.debug("Now rendering multiselect using MultiselectUsingComboAndListTag....");
 		return SKIP_BODY;
 	}
-	
+
 	@Override
 	public int doEndTag() throws JspException
-	{	
+	{
 		try
 		{
 			pageContext.getRequest().setAttribute("addNewUserActionName", addNewUserActionName);
@@ -47,9 +48,11 @@ public class MultiselectUsingComboAndListTag extends TagSupport
 		catch (Exception e)
 		{
 			Logger.out.debug("Exception!! No response generated.");
-			throw new JspException("Exception encountered while rendering custom tag MultiselectUsingComboAndListTag");
+			throw new JspException(
+					"Exception encountered while rendering custom tag MultiselectUsingComboAndListTag",
+					e);
 		}
-		
+
 		return EVAL_PAGE;
 	}
 
