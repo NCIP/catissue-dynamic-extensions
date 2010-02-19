@@ -717,7 +717,7 @@ public class CategoryGenerationUtil
 								+ names
 								+ ApplicationProperties
 										.getValue("incorrectFormulaSyntaxCalculatedAttribute")
-								+ categoryAttribute.getFormula().getExpression());
+								+ categoryAttribute.getFormula().getExpression(), e);
 
 					}
 					CategoryGenerationUtil.getCategoryAttribute(names[0], Long.valueOf(names[1]),
