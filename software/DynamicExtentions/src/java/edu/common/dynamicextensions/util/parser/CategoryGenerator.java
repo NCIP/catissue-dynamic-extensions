@@ -105,6 +105,7 @@ public class CategoryGenerator
 	 * @throws ParseException
 	 */
 	public CategoryInterface generateCategory() throws DynamicExtensionsSystemException
+
 	{
 		final CategoryHelperInterface categoryHelper = new CategoryHelper(categoryFileParser);
 		ApplicationProperties.initBundle("ApplicationResources");
@@ -875,26 +876,51 @@ public class CategoryGenerator
 				{
 					// Validation-If category attribute is of type Read-only its default
 					// value must be specified
-					if (((targetControl.getIsReadOnly() != null) && targetControl.getIsReadOnly())
-							|| ((targetControl.getIsCalculated() != null) && targetControl
-									.getIsCalculated()))
+					CategoryAttributeInterface attribute = (CategoryAttributeInterface) targetControl
+							.getAttibuteMetadataInterface();
+					if (((targetControl.getIsReadOnly() != null) && targetControl.getIsReadOnly()))
 					{
-						throw new DynamicExtensionsSystemException(ApplicationProperties
-								.getValue(CategoryConstants.CREATE_CAT_FAILS)
-								+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-								+ categoryFileParser.getLineNumber()
-								+ " "
-								+ ApplicationProperties.getValue("mandatoryDValueForRO")
-								+ targetAttributeName);
+						if (attribute.getDefaultValue() == null)
+						{
+							throw new DynamicExtensionsSystemException(ApplicationProperties
+									.getValue(CategoryConstants.CREATE_CAT_FAILS)
+									+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
+									+ categoryFileParser.getLineNumber()
+									+ " "
+									+ ApplicationProperties.getValue("mandatoryDValueForRO")
+									+ targetAttributeName);
+						}
+					}
+					if ((targetControl.getIsCalculated() != null)
+							&& targetControl.getIsCalculated())
+					{
+						if (attribute.getFormula() == null)
+						{
+							throw new DynamicExtensionsSystemException(ApplicationProperties
+									.getValue(CategoryConstants.CREATE_CAT_FAILS)
+									+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
+									+ categoryFileParser.getLineNumber()
+									+ " "
+									+ ApplicationProperties.getValue("mandatoryDValueForRO")
+									+ targetAttributeName);
+						}
 					}
 				}
 				else
 				{
-					skipLogicAttributeInterface
+					if ((targetControl.getIsCalculated() != null)
+							&& targetControl.getIsCalculated())
+					{
+						setDefaultValue(targetControl);
+					}
+					else
+					{
+						skipLogicAttributeInterface
 							.setDefaultValue(((AttributeMetadataInterface) targetCategoryAttribute)
 									.getAttributeTypeInformation().getPermissibleValueForString(
 											DynamicExtensionsUtility
 													.getEscapedStringValue(defaultValue)));
+					}
 				}
 				//Setting control options
 				final Map<String, String> controlOptions = categoryFileParser.getControlOptions();
