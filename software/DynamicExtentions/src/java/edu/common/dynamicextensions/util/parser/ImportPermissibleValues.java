@@ -56,10 +56,10 @@ public class ImportPermissibleValues
 	 * @throws DynamicExtensionsSystemException
 	 * @throws FileNotFoundException
 	 */
-	public ImportPermissibleValues(String filePath, Stinger stinger)
+	public ImportPermissibleValues(String filePath,String baseDir, Stinger stinger)
 			throws DynamicExtensionsSystemException, FileNotFoundException
 	{
-		catCSVFileParser = new CategoryCSVFileParser(filePath, "", stinger);
+		catCSVFileParser = new CategoryCSVFileParser(filePath, baseDir, stinger);
 	}
 
 	/**
@@ -218,7 +218,7 @@ public class ImportPermissibleValues
 			String filePath = args[0];
 			Logger.out.info("The .csv file path is:" + filePath);
 
-			ImportPermissibleValues importPVs = new ImportPermissibleValues(filePath, null);
+			ImportPermissibleValues importPVs = new ImportPermissibleValues(filePath,"", null);
 			importPVs.importValues();
 
 			Logger.out.info(" ");

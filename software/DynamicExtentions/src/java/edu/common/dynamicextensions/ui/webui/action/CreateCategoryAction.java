@@ -31,6 +31,7 @@ import edu.common.dynamicextensions.util.DirOperationsUtility;
 import edu.common.dynamicextensions.util.DownloadUtility;
 import edu.common.dynamicextensions.util.parser.CategoryGenerator;
 import edu.wustl.cab2b.server.cache.EntityCache;
+import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 
@@ -63,8 +64,8 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 	{
 		LOGGER.info("In create category action");
 		Map<String, Exception> catNameVsExcep = new HashMap<String, Exception>();
-		String tempDirName = CAT_DIR_PREFIX
-				+ EntityCache.getInstance().getNextIdForCategoryFileGeneration();
+		String tempDirName = CommonServiceLocator.getInstance().getAppHome() + File.separator
+				+ CAT_DIR_PREFIX + EntityCache.getInstance().getNextIdForCategoryFileGeneration();
 		try
 		{
 			DownloadUtility.downloadZipFile(request, tempDirName, "categoryZip.zip");

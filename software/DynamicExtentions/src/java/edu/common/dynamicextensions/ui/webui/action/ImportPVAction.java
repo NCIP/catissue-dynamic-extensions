@@ -29,6 +29,8 @@ import edu.common.dynamicextensions.util.DirOperationsUtility;
 import edu.common.dynamicextensions.util.DownloadUtility;
 import edu.common.dynamicextensions.util.parser.DynamicallyImportPermissibleValues;
 import edu.common.dynamicextensions.util.parser.ImportPermissibleValues;
+import edu.wustl.cab2b.server.cache.EntityCache;
+import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 
@@ -45,22 +47,21 @@ public class ImportPVAction extends BaseDynamicExtensionsAction
 	}
 	private static final Logger LOGGER = Logger.getCommonLogger(ImportPVAction.class);
 
-	private static String pvDir = "";
-
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 	{
-		String folder = request.getParameter(DynamicallyImportPermissibleValues.startFolder);
+		String pvDir = CommonServiceLocator.getInstance().getAppHome() + File.separator + "pvDir"
+				+ EntityCache.getInstance().getNextIdForCategoryFileGeneration();
 		try
 		{
 			DownloadUtility.downloadZipFile(request, pvDir, "pv.zip");
 			LOGGER.info("Artifacts Downloaded");
 
-			List<String> listOfFiles = getPVFileNames(request, pvDir + folder + "/");
+			List<String> listOfFiles = getPVFileNames(request, pvDir);
 
 			for (String file : listOfFiles)
 			{
-				importPVs(pvDir + file);
+				importPVs(file, pvDir);
 			}
 			sendResponse(response, "PV Uploaded Successfully");
 			LOGGER.info("Permissible Values uploaded successfully");
@@ -72,7 +73,7 @@ public class ImportPVAction extends BaseDynamicExtensionsAction
 		}
 		finally
 		{
-			DirOperationsUtility.getInstance().deleteDirectory(new File(folder));
+			DirOperationsUtility.getInstance().deleteDirectory(new File(pvDir));
 		}
 		return null;
 	}
@@ -80,18 +81,19 @@ public class ImportPVAction extends BaseDynamicExtensionsAction
 	/**
 	 * @param relativeFileName
 	 * @param file
+	 * @param pvDir
 	 * @throws DynamicExtensionsSystemException
 	 * @throws FileNotFoundException
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws ParseException
 	 */
-	private void importPVs(String file) throws DynamicExtensionsSystemException,
+	private void importPVs(String file, String pvDir) throws DynamicExtensionsSystemException,
 			FileNotFoundException, DynamicExtensionsApplicationException, ParseException
 	{
 		ServletContext servletContext = servlet.getServletContext();
 		String config = servletContext.getRealPath("WEB-INF") + "/stinger.xml";
 		Stinger stinger = new Stinger(new RuleSet(config, servletContext), servletContext);
-		ImportPermissibleValues importPVs = new ImportPermissibleValues(file, stinger);
+		ImportPermissibleValues importPVs = new ImportPermissibleValues(file, pvDir, stinger);
 		importPVs.importValues();
 	}
 
@@ -128,18 +130,23 @@ public class ImportPVAction extends BaseDynamicExtensionsAction
 	{
 		List<String> fileNameList;
 		String fileName = request.getParameter(DynamicallyImportPermissibleValues.pvFileName);
-		String folder = request.getParameter(DynamicallyImportPermissibleValues.startFolder);
+
 		if (fileName == null || "".equals(fileName.trim()))
 		{
 			fileNameList = CategoryGenerationUtil.getPVFileListInDirectory(new File(tempDirName),
-					folder + "/");
+					"");
 			//throw new DynamicExtensionsSystemException("Please provide names of the Category Files To be created");
 		}
 		else
 		{
+			File pvFile = new File(tempDirName + File.separator + fileName);
+			if (!pvFile.exists())
+			{
+				throw new DynamicExtensionsSystemException("PV file " + fileName
+						+ " does not exists");
+			}
 			fileNameList = new ArrayList<String>();
-			int startPoint = fileName.indexOf(folder);
-			fileNameList.add(fileName.substring(startPoint, fileName.length()));
+			fileNameList.add(fileName);
 		}
 		return fileNameList;
 	}
