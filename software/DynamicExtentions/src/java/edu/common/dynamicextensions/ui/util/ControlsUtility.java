@@ -340,16 +340,16 @@ public class ControlsUtility
 						control.getSourceSkipControl().setSkipLogicControls(sourceControlValue);
 					}
 					attributeMetadataInterface = (AttributeMetadataInterface) attribute;
-					if (!control.getIsSkipLogicLoadPermValues())
-					{
-						nameValueBeanList = getListOfPermissibleValues(attributeMetadataInterface);
-					}
-					else
+					if (control.getIsSkipLogicLoadPermValues())
 					{
 						List<PermissibleValueInterface> permissibleValueList = getSkipLogicPermissibleValues(
 								control.getSourceSkipControl(), control, sourceControlValue);
 						nameValueBeanList = getPermissibleValues(permissibleValueList,
 								attributeMetadataInterface);
+					}
+					else
+					{
+						nameValueBeanList = getListOfPermissibleValues(attributeMetadataInterface);
 					}
 				}
 				else if (attribute instanceof AssociationInterface)
@@ -370,16 +370,16 @@ public class ControlsUtility
 						{
 							control.getSourceSkipControl().setSkipLogicControls(sourceControlValue);
 						}
-						if (!control.getIsSkipLogicLoadPermValues())
-						{
-							nameValueBeanList = getListOfPermissibleValues(attributeMetadataInterface);
-						}
-						else
+						if (control.getIsSkipLogicLoadPermValues())
 						{
 							List<PermissibleValueInterface> permissibleValueList = getSkipLogicPermissibleValues(
 									control.getSourceSkipControl(), control, sourceControlValue);
 							nameValueBeanList = getPermissibleValues(permissibleValueList,
 									attributeMetadataInterface);
+						}
+						else
+						{
+							nameValueBeanList = getListOfPermissibleValues(attributeMetadataInterface);
 						}
 					}
 					else
@@ -428,16 +428,16 @@ public class ControlsUtility
 	 */
 	public static SkipLogicAttributeInterface getSkipLogicAttributeForAttribute(
 			List<PermissibleValueInterface> selectedPermissibleValues,
-			AttributeMetadataInterface sourceAttributeMetadataInterface,
-			AttributeMetadataInterface targetAttributeMetadataInterface)
+			AttributeMetadataInterface srcAttrMetadataInterface,
+			AttributeMetadataInterface tgtAttrMetadataInterface)
 	{
 		SkipLogicAttributeInterface skipLogicAttributeInterface = null;
-		if (sourceAttributeMetadataInterface.getAttributeTypeInformation() instanceof BooleanAttributeTypeInformation)
+		if (srcAttrMetadataInterface.getAttributeTypeInformation() instanceof BooleanAttributeTypeInformation)
 		{
 			CategoryAttributeInterface categoryAttributeInterface = null;
-			if (sourceAttributeMetadataInterface instanceof CategoryAttributeInterface)
+			if (srcAttrMetadataInterface instanceof CategoryAttributeInterface)
 			{
-				categoryAttributeInterface = (CategoryAttributeInterface) sourceAttributeMetadataInterface;
+				categoryAttributeInterface = (CategoryAttributeInterface) srcAttrMetadataInterface;
 			}
 			if (categoryAttributeInterface != null)
 			{
@@ -445,9 +445,9 @@ public class ControlsUtility
 						.getDependentSkipLogicAttributes())
 				{
 					if (skipLogicAttribute.getSourceSkipLogicAttribute().equals(
-							sourceAttributeMetadataInterface)
+							srcAttrMetadataInterface)
 							&& skipLogicAttribute.getTargetSkipLogicAttribute().equals(
-									targetAttributeMetadataInterface))
+									tgtAttrMetadataInterface))
 					{
 						skipLogicAttributeInterface = skipLogicAttribute;
 						break;
@@ -459,7 +459,7 @@ public class ControlsUtility
 		{
 			for (PermissibleValueInterface selectedPermissibleValue : selectedPermissibleValues)
 			{
-				Collection<PermissibleValueInterface> skipLogicPermissibleValues = sourceAttributeMetadataInterface
+				Collection<PermissibleValueInterface> skipLogicPermissibleValues = srcAttrMetadataInterface
 						.getSkipLogicPermissibleValues();
 				if (skipLogicPermissibleValues != null)
 				{
@@ -470,9 +470,9 @@ public class ControlsUtility
 						{
 							if (skipLogicValue.equals(selectedPermissibleValue)
 									&& skipLogicAttribute.getSourceSkipLogicAttribute().equals(
-											sourceAttributeMetadataInterface)
+											srcAttrMetadataInterface)
 									&& skipLogicAttribute.getTargetSkipLogicAttribute().equals(
-											targetAttributeMetadataInterface))
+											tgtAttrMetadataInterface))
 							{
 								skipLogicAttributeInterface = skipLogicAttribute;
 								break;
@@ -544,7 +544,7 @@ public class ControlsUtility
 			}
 			if (sourceControl.getIsSkipLogic())
 			{
-				AttributeMetadataInterface targetAttributeMetadataInterface = ControlsUtility
+				AttributeMetadataInterface tgtAttrMetadataInterface = ControlsUtility
 						.getAttributeMetadataInterface(targetControl.getBaseAbstractAttribute());
 				for (PermissibleValueInterface selectedPermissibleValue : permissibleValueList)
 				{
@@ -559,7 +559,7 @@ public class ControlsUtility
 						for (SkipLogicAttributeInterface skipLogicAttributeInterface : skipLogicAttributes)
 						{
 							if (skipLogicAttributeInterface.getTargetSkipLogicAttribute().equals(
-									targetAttributeMetadataInterface))
+									tgtAttrMetadataInterface))
 							{
 								DataElementInterface dataElementInterface = skipLogicAttributeInterface
 										.getDataElement();
@@ -734,7 +734,7 @@ public class ControlsUtility
 			StringBuffer value = new StringBuffer();
 			for (String attributeValue : attributeList)
 			{
-				value.append(attributeValue + separator);
+				value.append(attributeValue).append(separator);
 			}
 			value.delete(value.lastIndexOf(separator), value.length());
 

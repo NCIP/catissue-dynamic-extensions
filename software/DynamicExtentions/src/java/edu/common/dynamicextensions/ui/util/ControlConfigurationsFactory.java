@@ -84,7 +84,11 @@ public final class ControlConfigurationsFactory
 				{
 					InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(
 							configurationFileName);
-					if (inputStream != null)
+					if (inputStream == null)
+					{
+						Logger.out.info("InputStream null...Please check");
+					}
+					else
 					{
 						document = docBuilder.parse(inputStream);
 
@@ -100,10 +104,6 @@ public final class ControlConfigurationsFactory
 								loadControlConfigurations(document);
 							}
 						}
-					}
-					else
-					{
-						Logger.out.info("InputStream null...Please check");
 					}
 				}
 			}

@@ -5,7 +5,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.URL;
@@ -150,11 +149,6 @@ public final class HTTPSConnection
 			}
 			servletWriter.flush();
 		}
-		catch (FileNotFoundException e)
-		{
-			throw new DynamicExtensionsSystemException(
-					"File not found, please specify correct file path.", e);
-		}
 		catch (IOException e)
 		{
 			throw new DynamicExtensionsSystemException("Exception occured while uploading file", e);
@@ -210,17 +204,7 @@ public final class HTTPSConnection
 		try
 		{
 			Object exceptionOccured = inputFromServlet.readObject();
-			if (exceptionOccured instanceof Exception)
-			{
-				LOGGER.info("exception occured");
-				Exception serverException = (Exception) exceptionOccured;
-				throw new DynamicExtensionsSystemException(serverException.getLocalizedMessage(),
-						serverException);
-			}
-			else if (exceptionOccured instanceof Map)
-			{
-				printReport((Map<String, Exception>) exceptionOccured);
-			}
+			printExceptionLog(exceptionOccured);
 		}
 		catch (IOException e)
 		{
@@ -239,6 +223,26 @@ public final class HTTPSConnection
 			{
 				inputFromServlet.close();
 			}
+		}
+	}
+
+	/**
+	 * It will display the cause of exception on the console.
+	 * @param exceptionOccured exception to be displayed.
+	 * @throws DynamicExtensionsSystemException exception.
+	 */
+	private void printExceptionLog(Object exceptionOccured) throws DynamicExtensionsSystemException
+	{
+		if (exceptionOccured instanceof Exception)
+		{
+			LOGGER.info("exception occured");
+			Exception serverException = (Exception) exceptionOccured;
+			throw new DynamicExtensionsSystemException(serverException.getLocalizedMessage(),
+					serverException);
+		}
+		else if (exceptionOccured instanceof Map)
+		{
+			printReport((Map<String, Exception>) exceptionOccured);
 		}
 	}
 
