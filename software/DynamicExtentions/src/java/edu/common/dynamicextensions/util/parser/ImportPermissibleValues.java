@@ -56,7 +56,7 @@ public class ImportPermissibleValues
 	 * @throws DynamicExtensionsSystemException
 	 * @throws FileNotFoundException
 	 */
-	public ImportPermissibleValues(String filePath,String baseDir, Stinger stinger)
+	public ImportPermissibleValues(String filePath, String baseDir, Stinger stinger)
 			throws DynamicExtensionsSystemException, FileNotFoundException
 	{
 		catCSVFileParser = new CategoryCSVFileParser(filePath, baseDir, stinger);
@@ -118,6 +118,9 @@ public class ImportPermissibleValues
 							.getPermissibleValues();
 
 					Long attributeId = entityManager.getAttributeId(attributeName, entityId);
+					CategoryValidator.checkForNullRefernce(attributeId, " ERROR AT LINE:"
+							+ catCSVFileParser.getLineNumber() + " ATTRIBUTE WITH NAME "
+							+ attributeName + " DOES NOT EXIST");
 					// Bug # 10432,10382
 					// If this attribute is of type association (as in case of multi select),
 					// it is required to fetch association's target entity's attribute id.
@@ -126,10 +129,6 @@ public class ImportPermissibleValues
 					{
 						attributeId = assoAttrId;
 					}
-
-					CategoryValidator.checkForNullRefernce(attributeId, " ERROR AT LINE:"
-							+ catCSVFileParser.getLineNumber() + " ATTRIBUTE WITH NAME "
-							+ attributeName + " DOES NOT EXIST");
 
 					AttributeTypeInformationInterface attrTypeInfo = entityManager
 							.getAttributeTypeInformation(attributeId);
@@ -218,7 +217,7 @@ public class ImportPermissibleValues
 			String filePath = args[0];
 			Logger.out.info("The .csv file path is:" + filePath);
 
-			ImportPermissibleValues importPVs = new ImportPermissibleValues(filePath,"", null);
+			ImportPermissibleValues importPVs = new ImportPermissibleValues(filePath, "", null);
 			importPVs.importValues();
 
 			Logger.out.info(" ");
