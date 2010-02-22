@@ -444,10 +444,10 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			Map dataValue = new HashMap();
 
 			dataValue.put(studyNameAttribute, "study");
-			entityManagerInterface.insertData(study, dataValue, null);
+			entityManagerInterface.insertData(study, dataValue, null, null);
 			dataValue.clear();
 			dataValue.put(studyNameAttribute, "study1");
-			entityManagerInterface.insertData(study, dataValue, null);
+			entityManagerInterface.insertData(study, dataValue, null, null);
 
 			dataValue.clear();
 			List<Long> targetIdList = new ArrayList<Long>();
@@ -457,12 +457,12 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			dataValue.put(userNameAttribute, "rahul");
 			dataValue.put(association, targetIdList);
 
-			Long recordId = entityManagerInterface.insertData(savedEntity, dataValue, null);
+			Long recordId = entityManagerInterface.insertData(savedEntity, dataValue, null, null);
 
 			dataValue.clear();
 			dataValue.put(userNameAttribute, "vishvesh");
 			dataValue.put(association, targetIdList);
-			entityManagerInterface.insertData(savedEntity, dataValue, null);
+			entityManagerInterface.insertData(savedEntity, dataValue, null, null);
 
 			dataValue.clear();
 			dataValue = entityManagerInterface.getRecordById(savedEntity, recordId);
@@ -546,11 +546,11 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			Map dataValue = new HashMap();
 
 			dataValue.put(studyNameAttribute, "study");
-			entityManagerInterface.insertData(study, dataValue, null);
+			entityManagerInterface.insertData(study, dataValue, null, null);
 
 			dataValue.clear();
 			dataValue.put(studyNameAttribute, "study1");
-			entityManagerInterface.insertData(study, dataValue, null);
+			entityManagerInterface.insertData(study, dataValue, null, null);
 
 			dataValue.clear();
 			dataValue.put(userNameAttribute, "rahul");
@@ -558,7 +558,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			targetIdList.add(1L);
 			dataValue.put(association, targetIdList);
 
-			Long recordId = entityManagerInterface.insertData(savedEntity, dataValue, null);
+			Long recordId = entityManagerInterface.insertData(savedEntity, dataValue, null, null);
 			dataValue.clear();
 
 			dataValue = entityManagerInterface.getRecordById(savedEntity, recordId);
@@ -1738,7 +1738,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			dataValue.put(association, addressDataValueMapList);
 
 			// Step 5
-			Long recordId = entityManagerInterface.insertData(savedEntity, dataValue, null);
+			Long recordId = entityManagerInterface.insertData(savedEntity, dataValue, null, null);
 
 			// Step 6
 			int rowCount = (Integer) executeQuery("select count(*) from "
@@ -1755,7 +1755,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			addressDataValue1.put(cityAttribute, "Pune 37");
 
 			// Step 8
-			entityManagerInterface.editData(savedEntity, dataValue, recordId, null);
+			entityManagerInterface.editData(savedEntity, dataValue, recordId, null, null);
 
 			// Step 9
 			rowCount = (Integer) executeQuery("select count(*) from "
@@ -1875,7 +1875,7 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			addressDataValueMapList.add(addressDataValue1);
 
 			// Step 8
-			entityManagerInterface.editData(savedEntity, dataValue, recordId, null);
+			entityManagerInterface.editData(savedEntity, dataValue, recordId, null, null);
 
 			// Step 9
 			rowCount = (Integer) executeQuery("select count(*) from "
@@ -2196,11 +2196,11 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 			dataValue.put(userNameAttribute, "Rahul");
 			dataValue.put(userInstitute, institutionList);
 
-			Long recordId = entityManager.insertData(user, dataValue, null);
+			Long recordId = entityManager.insertData(user, dataValue, null, null);
 
 			//Step 7
 			institutionValueMap.put(institutionName, "PSPL");
-			entityManager.editData(user, dataValue, recordId, null);
+			entityManager.editData(user, dataValue, recordId, null, null);
 
 			//step 8
 			int rowCount = (Integer) executeQuery("select count(*) from "

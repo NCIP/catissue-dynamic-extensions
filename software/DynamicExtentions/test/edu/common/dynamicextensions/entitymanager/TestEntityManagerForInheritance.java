@@ -16,6 +16,7 @@ import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.util.logger.Logger;
+
 /**
  * @author Rahul Ner
  * @author Vishvesh Mulay
@@ -336,16 +337,17 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			dataValue.put(barcode, "123456");
 			dataValue.put(label, "specimen parent label");
 			dataValue.put(quantityInCellCount, "45");
-			dataValue.put(arivalDate, "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982");
+			dataValue.put(arivalDate, "11" + ProcessorConstants.DATE_SEPARATOR + "12"
+					+ ProcessorConstants.DATE_SEPARATOR + "1982");
 
-			Long recordId = entityManagerInterface.insertData(tissueSpecimen, dataValue, null);
+			entityManagerInterface.insertData(tissueSpecimen, dataValue, null, null);
 
 			int columnValue = (Integer) executeQuery("select * from "
-					+ specimen.getTableProperties().getName(), INT_TYPE, 2,null);
+					+ specimen.getTableProperties().getName(), INT_TYPE, 2, null);
 			assertEquals(1, columnValue);
 
 			columnValue = (Integer) executeQuery("select * from "
-					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 2,null);
+					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 2, null);
 			assertEquals(1, columnValue);
 
 			EntityInterface advanceTissueSpecimenA = createAndPopulateEntity();
@@ -379,21 +381,22 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			dataValue.put(barcode, "869");
 			dataValue.put(label, "specimen parent label");
 			dataValue.put(quantityInCellCount, "45");
-			dataValue.put(arivalDate, "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982");
+			dataValue.put(arivalDate, "11" + ProcessorConstants.DATE_SEPARATOR + "12"
+					+ ProcessorConstants.DATE_SEPARATOR + "1982");
 			dataValue.put(newAttribute, "12");
 
-			recordId = entityManagerInterface.insertData(advanceTissueSpecimenA, dataValue, null);
+			entityManagerInterface.insertData(advanceTissueSpecimenA, dataValue, null, null);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ specimen.getTableProperties().getName(), INT_TYPE, 1,null);
+					+ specimen.getTableProperties().getName(), INT_TYPE, 1, null);
 			assertEquals(2, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1,null);
+					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1, null);
 			assertEquals(2, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ advanceTissueSpecimenA.getTableProperties().getName(), INT_TYPE, 1,null);
+					+ advanceTissueSpecimenA.getTableProperties().getName(), INT_TYPE, 1, null);
 			assertEquals(1, rowCount);
 
 		}
@@ -477,18 +480,18 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			//dataValue.put(barcode, "123456");
 			//dataValue.put(label, "specimen parent label");
 			dataValue.put(quantityInCellCount, "45");
-			dataValue.put(arivalDate, "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982");
+			dataValue.put(arivalDate, "11" + ProcessorConstants.DATE_SEPARATOR + "12"
+					+ ProcessorConstants.DATE_SEPARATOR + "1982");
 
-			//step 3
-			Long recordId = entityManagerInterface.insertData(tissueSpecimen, dataValue, null);
+			entityManagerInterface.insertData(tissueSpecimen, dataValue, null, null);
 
 			//step 4
 			int columnValue = (Integer) executeQuery("select * from "
-					+ specimen.getTableProperties().getName(), INT_TYPE, 2,null);
+					+ specimen.getTableProperties().getName(), INT_TYPE, 2, null);
 			assertEquals(1, columnValue);
 
 			columnValue = (Integer) executeQuery("select * from "
-					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 2,null);
+					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 2, null);
 
 			assertEquals(1, columnValue);
 		}
@@ -618,9 +621,11 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			dataValue.put(barcode, "123456");
 			dataValue.put(label, "specimen parent label");
 			dataValue.put(quantityInCellCount, "45");
-			dataValue.put(arivalDate, "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982");
+			dataValue.put(arivalDate, "11" + ProcessorConstants.DATE_SEPARATOR + "12"
+					+ ProcessorConstants.DATE_SEPARATOR + "1982");
 
-			Long recordId = entityManagerInterface.insertData(tissueSpecimen, dataValue, null);
+			Long recordId = entityManagerInterface
+					.insertData(tissueSpecimen, dataValue, null, null);
 
 			Map outputMap = entityManagerInterface.getRecordById(tissueSpecimen, recordId);
 
@@ -629,17 +634,20 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			assertEquals("123456", outputMap.get(barcode));
 			assertEquals("specimen parent label", outputMap.get(label));
 			assertEquals("45", outputMap.get(quantityInCellCount));
-			assertEquals("11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982", outputMap.get(arivalDate));
+			assertEquals("11" + ProcessorConstants.DATE_SEPARATOR + "12"
+					+ ProcessorConstants.DATE_SEPARATOR + "1982", outputMap.get(arivalDate));
 
 			//step 5
 			dataValue.clear();
 			dataValue.put(barcode, "869");
 			dataValue.put(label, "specimen parent label");
 			dataValue.put(quantityInCellCount, "46");
-			dataValue.put(arivalDate, "11"+ProcessorConstants.DATE_SEPARATOR+"11"+ProcessorConstants.DATE_SEPARATOR+"1982");
+			dataValue.put(arivalDate, "11" + ProcessorConstants.DATE_SEPARATOR + "11"
+					+ ProcessorConstants.DATE_SEPARATOR + "1982");
 			dataValue.put(newAttribute, "12");
 
-			recordId = entityManagerInterface.insertData(advanceTissueSpecimenA, dataValue, null);
+			recordId = entityManagerInterface.insertData(advanceTissueSpecimenA, dataValue, null,
+					null);
 
 			outputMap = entityManagerInterface.getRecordById(advanceTissueSpecimenA, recordId);
 			//step 6
@@ -647,25 +655,29 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			assertEquals("869", outputMap.get(barcode));
 			assertEquals("specimen parent label", outputMap.get(label));
 			assertEquals("46", outputMap.get(quantityInCellCount));
-			assertEquals("11"+ProcessorConstants.DATE_SEPARATOR+"11"+ProcessorConstants.DATE_SEPARATOR+"1982", outputMap.get(arivalDate));
+			assertEquals("11" + ProcessorConstants.DATE_SEPARATOR + "11"
+					+ ProcessorConstants.DATE_SEPARATOR + "1982", outputMap.get(arivalDate));
 
 			//step 7
 			dataValue.clear();
 			dataValue.put(barcode, "1001");
 			dataValue.put(label, "specimen parent label new");
 			dataValue.put(quantityInCellCount, "411");
-			dataValue.put(arivalDate, "01"+ProcessorConstants.DATE_SEPARATOR+"11"+ProcessorConstants.DATE_SEPARATOR+"1982");
+			dataValue.put(arivalDate, "01" + ProcessorConstants.DATE_SEPARATOR + "11"
+					+ ProcessorConstants.DATE_SEPARATOR + "1982");
 			dataValue.put(newAttributeB, "40");
 			dataValue.put(newAttributeB2, "41");
 
-			recordId = entityManagerInterface.insertData(advanceTissueSpecimenB, dataValue, null);
+			recordId = entityManagerInterface.insertData(advanceTissueSpecimenB, dataValue, null,
+					null);
 			outputMap = entityManagerInterface.getRecordById(advanceTissueSpecimenB, recordId);
 			//step 8
 			assertEquals(6, outputMap.size());
 			assertEquals("1001", outputMap.get(barcode));
 			assertEquals("specimen parent label new", outputMap.get(label));
 			assertEquals("411", outputMap.get(quantityInCellCount));
-			assertEquals("01"+ProcessorConstants.DATE_SEPARATOR+"11"+ProcessorConstants.DATE_SEPARATOR+"1982", outputMap.get(arivalDate));
+			assertEquals("01" + ProcessorConstants.DATE_SEPARATOR + "11"
+					+ ProcessorConstants.DATE_SEPARATOR + "1982", outputMap.get(arivalDate));
 			assertEquals("40", outputMap.get(newAttributeB));
 			assertEquals("41", outputMap.get(newAttributeB2));
 		}
@@ -1026,22 +1038,20 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			DynamicExtensionsUtility
 					.getConstraintKeyPropertiesForInheritance(tissueSpecimen, false);
 
-			//step 4
-			EntityInterface savedTissueSpecimen = entityManagerInterface
-					.persistEntity(tissueSpecimen);
+			entityManagerInterface.persistEntity(tissueSpecimen);
 
 			//step 5
 			Map dataValue = new HashMap();
 			dataValue.put(barcode, "123456");
 			dataValue.put(quantityInCellCount, "45");
 
-			entityManagerInterface.insertData(tissueSpecimen, dataValue, null);
+			entityManagerInterface.insertData(tissueSpecimen, dataValue, null, null);
 
 			//step 6
 			tissueSpecimen.setParentEntity(null);
 			DynamicExtensionsUtility
 					.getConstraintKeyPropertiesForInheritance(tissueSpecimen, false);
-			savedTissueSpecimen = entityManagerInterface.persistEntity(tissueSpecimen);
+			entityManagerInterface.persistEntity(tissueSpecimen);
 
 			//step 7
 			fail();
@@ -1133,14 +1143,14 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			Map dataValue = new HashMap();
 			dataValue.put(quantityInCellCount, "45");
 
-			entityManagerInterface.insertData(tissueSpecimen, dataValue, null);
+			entityManagerInterface.insertData(tissueSpecimen, dataValue, null, null);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ specimen.getTableProperties().getName(), INT_TYPE, 1,null);
+					+ specimen.getTableProperties().getName(), INT_TYPE, 1, null);
 			assertEquals(0, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1,null);
+					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1, null);
 			assertEquals(1, rowCount);
 		}
 		catch (Exception e)
@@ -1233,18 +1243,18 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			dataValue.put(barcodeOfNewSpecimen, "123456");
 			dataValue.put(quantityInCellCount, "45");
 
-			entityManagerInterface.insertData(tissueSpecimen, dataValue, null);
+			entityManagerInterface.insertData(tissueSpecimen, dataValue, null, null);
 
 			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1,null);
+					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1, null);
 			assertEquals(1, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ specimen.getTableProperties().getName(), INT_TYPE, 1,null);
+					+ specimen.getTableProperties().getName(), INT_TYPE, 1, null);
 			assertEquals(0, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ newSpecimen.getTableProperties().getName(), INT_TYPE, 1,null);
+					+ newSpecimen.getTableProperties().getName(), INT_TYPE, 1, null);
 			assertEquals(1, rowCount);
 
 		}
@@ -1363,33 +1373,36 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			dataValue.put(barcode, "123456");
 			dataValue.put(label, "specimen parent label");
 			dataValue.put(quantityInCellCount, "45");
-			dataValue.put(arivalDate, "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982");
+			dataValue.put(arivalDate, "11" + ProcessorConstants.DATE_SEPARATOR + "12"
+					+ ProcessorConstants.DATE_SEPARATOR + "1982");
 
-			Long recordId = entityManagerInterface.insertData(tissueSpecimen, dataValue, null);
+			Long recordId = entityManagerInterface
+					.insertData(tissueSpecimen, dataValue, null, null);
 
 			int rowCount = (Integer) executeQuery("select count(*)  from "
-					+ specimen.getTableProperties().getName(), INT_TYPE, 1,null);
+					+ specimen.getTableProperties().getName(), INT_TYPE, 1, null);
 			assertEquals(1, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*)  from "
-					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1,null);
+					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1, null);
 			assertEquals(1, rowCount);
 
 			// Step 3
 			dataValue.put(barcode, "870");
 			dataValue.put(label, "specimen parent label123");
 			dataValue.put(quantityInCellCount, "4546");
-			dataValue.put(arivalDate, "11"+ProcessorConstants.DATE_SEPARATOR+"11"+ProcessorConstants.DATE_SEPARATOR+"1982");
+			dataValue.put(arivalDate, "11" + ProcessorConstants.DATE_SEPARATOR + "11"
+					+ ProcessorConstants.DATE_SEPARATOR + "1982");
 
-			entityManagerInterface.editData(tissueSpecimen, dataValue, recordId, null);
+			entityManagerInterface.editData(tissueSpecimen, dataValue, recordId, null, null);
 
 			// step 4
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ specimen.getTableProperties().getName(), INT_TYPE, 1,null);
+					+ specimen.getTableProperties().getName(), INT_TYPE, 1, null);
 			assertEquals(1, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*)  from "
-					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1,null);
+					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1, null);
 			assertEquals(1, rowCount);
 
 			dataValue.clear();
@@ -1404,21 +1417,23 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			dataValue.put(barcode, "869");
 			dataValue.put(label, "specimen parent label");
 			dataValue.put(quantityInCellCount, "45");
-			dataValue.put(arivalDate, "11"+ProcessorConstants.DATE_SEPARATOR+"12"+ProcessorConstants.DATE_SEPARATOR+"1982");
+			dataValue.put(arivalDate, "11" + ProcessorConstants.DATE_SEPARATOR + "12"
+					+ ProcessorConstants.DATE_SEPARATOR + "1982");
 			dataValue.put(newAttribute, "12");
 
-			recordId = entityManagerInterface.insertData(advanceTissueSpecimenA, dataValue, null);
+			recordId = entityManagerInterface.insertData(advanceTissueSpecimenA, dataValue, null,
+					null);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ specimen.getTableProperties().getName(), INT_TYPE, 1,null);
+					+ specimen.getTableProperties().getName(), INT_TYPE, 1, null);
 			assertEquals(2, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1,null);
+					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1, null);
 			assertEquals(2, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ advanceTissueSpecimenA.getTableProperties().getName(), INT_TYPE, 1,null);
+					+ advanceTissueSpecimenA.getTableProperties().getName(), INT_TYPE, 1, null);
 			assertEquals(1, rowCount);
 
 			//Step 6
@@ -1426,10 +1441,12 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			dataValue.put(barcode, "875");
 			dataValue.put(label, "New Label");
 			dataValue.put(quantityInCellCount, "454647");
-			dataValue.put(arivalDate, "11"+ProcessorConstants.DATE_SEPARATOR+"11"+ProcessorConstants.DATE_SEPARATOR+"1982");
+			dataValue.put(arivalDate, "11" + ProcessorConstants.DATE_SEPARATOR + "11"
+					+ ProcessorConstants.DATE_SEPARATOR + "1982");
 			dataValue.put(newAttribute, "1223");
 
-			entityManagerInterface.editData(advanceTissueSpecimenA, dataValue, recordId, null);
+			entityManagerInterface
+					.editData(advanceTissueSpecimenA, dataValue, recordId, null, null);
 
 			//Step 7
 			dataValue.clear();
@@ -1440,15 +1457,15 @@ public class TestEntityManagerForInheritance extends DynamicExtensionsBaseTestCa
 			assertEquals("454647", dataValue.get(quantityInCellCount));
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ specimen.getTableProperties().getName(), INT_TYPE, 1,null);
+					+ specimen.getTableProperties().getName(), INT_TYPE, 1, null);
 			assertEquals(2, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1,null);
+					+ tissueSpecimen.getTableProperties().getName(), INT_TYPE, 1, null);
 			assertEquals(2, rowCount);
 
 			rowCount = (Integer) executeQuery("select count(*) from "
-					+ advanceTissueSpecimenA.getTableProperties().getName(), INT_TYPE, 1,null);
+					+ advanceTissueSpecimenA.getTableProperties().getName(), INT_TYPE, 1, null);
 			assertEquals(1, rowCount);
 		}
 		catch (Exception e)
