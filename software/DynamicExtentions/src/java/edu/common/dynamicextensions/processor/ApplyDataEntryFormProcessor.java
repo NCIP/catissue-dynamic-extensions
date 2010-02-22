@@ -2,6 +2,7 @@
 package edu.common.dynamicextensions.processor;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import edu.common.dynamicextensions.entitymanager.CategoryManager;
 import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.entitymanager.EntityManagerInterface;
+import edu.common.dynamicextensions.entitymanager.FileQueryBean;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 
@@ -43,7 +45,7 @@ public class ApplyDataEntryFormProcessor extends BaseDynamicExtensionsProcessor
 	}
 
 	/**
-	 * 
+	 *
 	 * @param attributeValueMap
 	 * @return
 	 */
@@ -102,7 +104,7 @@ public class ApplyDataEntryFormProcessor extends BaseDynamicExtensionsProcessor
 			Map map = attributeValueMap;
 			EntityManagerInterface entityManagerInterface = EntityManager.getInstance();
 			recordIdentifier = entityManagerInterface.insertData((EntityInterface) container
-					.getAbstractEntity(), map, null, userId);
+					.getAbstractEntity(), map, null, new ArrayList<FileQueryBean>(), userId);
 		}
 
 		return recordIdentifier.toString();
@@ -130,7 +132,8 @@ public class ApplyDataEntryFormProcessor extends BaseDynamicExtensionsProcessor
 			EntityInterface entity = (Entity) container.getAbstractEntity();
 			//Correct this:
 			Map map = attributeValueMap;
-			return entityManager.editData(entity, map, recordIdentifier, null, userId);
+			return entityManager.editData(entity, map, recordIdentifier, null,
+					new ArrayList<FileQueryBean>(), userId);
 		}
 		else
 		{

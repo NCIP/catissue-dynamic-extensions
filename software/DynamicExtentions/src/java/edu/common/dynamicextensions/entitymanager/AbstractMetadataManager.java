@@ -34,6 +34,7 @@ import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.QueryWhereClause;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 import edu.wustl.dao.util.NamedQueryParam;
 
 /**
@@ -137,8 +138,7 @@ public abstract class AbstractMetadataManager extends AbstractBaseMetadataManage
 	{
 		try
 		{
-			Collection deObjects = hibernateDAO.executeNamedQuery(queryName, substParams);
-			return deObjects;
+			return hibernateDAO.executeNamedQuery(queryName, substParams);
 		}
 		catch (DAOException e)
 		{
@@ -557,4 +557,35 @@ public abstract class AbstractMetadataManager extends AbstractBaseMetadataManage
 		return tmpPackageName;
 	}
 
+	/**
+	 * This method will execute all the queries present in the queryListForFile list.
+	 * @param queryListForFile list of queries to be executed.
+	 * @throws DynamicExtensionsSystemException exception.
+	 */
+	protected void executeFileRecordQueryList(List<FileQueryBean> queryListForFile)
+			throws DynamicExtensionsSystemException
+	{
+		JDBCDAO dao = null;
+		try
+		{
+			dao = DynamicExtensionsUtility.getJDBCDAO();
+
+			for (FileQueryBean queryBean : queryListForFile)
+			{
+				final LinkedList<LinkedList<ColumnValueBean>> valueBeanList = new LinkedList<LinkedList<ColumnValueBean>>();
+				valueBeanList.add(new LinkedList<ColumnValueBean>(queryBean.getColValBeanList()));
+				dao.executeUpdate(queryBean.getQuery(), valueBeanList);
+			}
+			dao.commit();
+		}
+		catch (DAOException e)
+		{
+			throw new DynamicExtensionsSystemException("Error occured while inserting records.", e);
+		}
+		finally
+		{
+			DynamicExtensionsUtility.closeDAO(dao);
+		}
+
+	}
 }

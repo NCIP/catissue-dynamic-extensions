@@ -486,25 +486,24 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 							if (categoryAttribute.getAbstractAttribute() instanceof AssociationMetadataInterface)
 							{
 								collectAssociationValues(request, dataEntryForm, controlName,
-										control, attributeValueMap, processOneToMany, rowId,
-										errorList);
+										control, attributeValueMap, processOneToMany, errorList);
 							}
 							else
 							{
 								collectAttributeValues(request, dataEntryForm, controlName,
-										control, attributeValueMap, rowId);
+										control, attributeValueMap, errorList);
 							}
 						}
 						else
 						{
 							collectAttributeValues(request, dataEntryForm, controlName, control,
-									attributeValueMap, rowId);
+									attributeValueMap, errorList);
 						}
 					}
 					else if (abstractAttribute instanceof AssociationMetadataInterface)
 					{
 						collectAssociationValues(request, dataEntryForm, controlName, control,
-								attributeValueMap, processOneToMany, rowId, errorList);
+								attributeValueMap, processOneToMany, errorList);
 					}
 				}
 			}
@@ -527,7 +526,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 	private void collectAssociationValues(HttpServletRequest request, DataEntryForm dataEntryForm,
 			String controlName, ControlInterface control,
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
-			Boolean processOneToMany, String rowId, List<String> errorList)
+			Boolean processOneToMany, List<String> errorList)
 			throws DynamicExtensionsSystemException, FileNotFoundException, IOException
 	{
 		BaseAbstractAttributeInterface abstractAttribute = control.getBaseAbstractAttribute();
@@ -687,13 +686,14 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 	 * @param controlName
 	 * @param control
 	 * @param attributeValueMap
+	 * @param errorList
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 * @throws DynamicExtensionsSystemException
 	 */
 	private void collectAttributeValues(HttpServletRequest request, DataEntryForm dataEntryForm,
 			String controlName, ControlInterface control,
-			Map<BaseAbstractAttributeInterface, Object> attributeValueMap, String rowId)
+			Map<BaseAbstractAttributeInterface, Object> attributeValueMap, List<String> errorList)
 			throws FileNotFoundException, IOException, DynamicExtensionsSystemException
 	{
 		BaseAbstractAttributeInterface abstractAttribute = control.getBaseAbstractAttribute();
@@ -716,8 +716,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 			}
 			else
 			{
-				isValidExtension = checkValidFormat(dataEntryForm, control, formFile.getFileName(),
-						formFile.getFileSize());
+				isValidExtension = checkValidFormat(control, formFile.getFileName(), errorList);
 			}
 			if (isValidExtension
 					&& ((formFile.getFileName() != null) && !formFile.getFileName().equals("")))
@@ -840,17 +839,17 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 	 * @param control
 	 * @param selectedFile
 	 * @param selectedFileSize
+	 * @param errorList
 	 * @return true if valid file format, false otherwise
 	 */
-	private boolean checkValidFormat(DataEntryForm dataEntryForm, ControlInterface control,
-			String selectedFile, int selectedFileSize)
+	private boolean checkValidFormat(ControlInterface control, String selectedFile,
+			List<String> errorList)
 	{
 		String validFileExtension = "";
 		String selectedfileExt = "";
 		String allFileExtension = "";
 
 		boolean isValidExtension = false;
-		List<String> errorList = dataEntryForm.getErrorList();
 		if (errorList == null)
 		{
 			errorList = new ArrayList<String>();
@@ -900,8 +899,6 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 			}
 
 		}
-
-		dataEntryForm.setErrorList(errorList);
 		return isValidExtension;
 	}
 

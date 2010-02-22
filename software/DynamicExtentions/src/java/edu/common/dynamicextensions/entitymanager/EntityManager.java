@@ -3,6 +3,7 @@ package edu.common.dynamicextensions.entitymanager;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Blob;
 import java.sql.ResultSet;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
+import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.domain.AbstractAttribute;
 import edu.common.dynamicextensions.domain.Attribute;
@@ -87,7 +89,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	/**
 	 * Used for cloning object
 	 */
-	private DyExtnObjectCloner cloner = new DyExtnObjectCloner();
+	private final DyExtnObjectCloner cloner = new DyExtnObjectCloner();
 
 	/**
 	 * Empty Constructor.
@@ -571,13 +573,11 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	 */
 	public Long insertData(EntityInterface entity,
 			Map<AbstractAttributeInterface, Object> dataValue, HibernateDAO hibernateDao,
-			Long... userId) throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException
+			List<FileQueryBean> fileRecordQueryList, Long... userId)
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
 		List<Map<AbstractAttributeInterface, Object>> dataValMaps = new ArrayList<Map<AbstractAttributeInterface, Object>>();
 		dataValMaps.add(dataValue);
-
-		//        Long usrId = ((userId != null && userId.length != 0) ? userId[0] : null);
 
 		Set<Object> auditableDEObjects = new HashSet<Object>();
 
@@ -594,24 +594,16 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			Method method = newObject.getClass().getMethod("getId");
 			Object object = method.invoke(newObject);
 			identifier = Long.valueOf(object.toString());
-
-			/*// Get audit manager from DefaultBizLogic.
-			DefaultBizLogic defaultBizLogic = new DefaultBizLogic();
-			SessionDataBean sessionDataBean = new SessionDataBean();
-			AuditManager auditManager = defaultBizLogic.getAuditManager(sessionDataBean);
-
-			// Audit the objects being inserted.
-			for (Object obj : auditableDEObjects)
-			{
-			    System.out.println(obj);
-			    sessionDataBean.setUserId(usrId);
-
-			    auditManager.insertAudit(hibernateDAO, obj);
-			}*/
-
+			List<FileQueryBean> queryListForFile = getQueryListForFileAttributes(dataValue, entity,
+					newObject);
 			if (hibernateDao == null)
 			{
 				hibernateDAO.commit();
+				executeFileRecordQueryList(queryListForFile);
+			}
+			else
+			{
+				fileRecordQueryList.addAll(queryListForFile);
 			}
 		}
 		catch (Exception e)
@@ -621,21 +613,145 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		}
 		finally
 		{
-			if ((hibernateDao == null) && (hibernateDAO != null))
+			if (hibernateDao == null)
 			{
 				DynamicExtensionsUtility.closeDAO(hibernateDAO);
 			}
 		}
-
 		return identifier;
+	}
+
+	/**
+	 * This method will create the querys for inserting the file attributes in the
+	 * data base. these queries will be executed after the complete record is inserted in
+	 * the database. In case of Entity it will fire these queries from Entitymanager
+	 * & in case of category it will fire these queries after the complete category record is inserted
+	 * succesfully.
+	 * @param dataValue data value map
+	 * @param entity entity for which the data value map corrosponds
+	 * @param object insrted object
+	 * @return list of queries
+	 * @throws SecurityException exception
+	 * @throws NoSuchMethodException exception
+	 * @throws IllegalAccessException exception
+	 * @throws InvocationTargetException exception
+	 * @throws DAOException exception
+	 * @throws DynamicExtensionsSystemException exception
+	 */
+	private List<FileQueryBean> getQueryListForFileAttributes(
+			Map<AbstractAttributeInterface, Object> dataValue, EntityInterface entity, Object object)
+			throws SecurityException, NoSuchMethodException, IllegalAccessException,
+			InvocationTargetException, DAOException, DynamicExtensionsSystemException
+	{
+		List<FileQueryBean> fileQueryList = new ArrayList<FileQueryBean>();
+		LinkedList<ColumnValueBean> columnValueBeanList = new LinkedList<ColumnValueBean>();
+		for (Entry<AbstractAttributeInterface, Object> entryRecord : dataValue.entrySet())
+		{
+			AbstractAttribute attribute = (AbstractAttribute) entryRecord.getKey();
+
+			if (attribute instanceof AttributeInterface)
+			{
+				populateColumnValueBeanForFileAttribute(columnValueBeanList,
+						entryRecord.getValue(), (AttributeInterface) attribute);
+			}
+			else if (attribute instanceof AssociationInterface)
+			{
+				List<Map> listOfMapsForContainedEntity = (List) entryRecord.getValue();
+				AssociationInterface association = (AssociationInterface) attribute;
+				for (Map valueMapForContainedEntity : listOfMapsForContainedEntity)
+				{
+					String targetRoleName = association.getTargetRole().getName();
+					targetRoleName = targetRoleName.substring(0, 1).toUpperCase()
+							+ targetRoleName.substring(1, targetRoleName.length());
+					final Object associatedObject = invokeGetterMethod(object.getClass(),
+							targetRoleName, object);
+					fileQueryList.addAll(getQueryListForFileAttributes(valueMapForContainedEntity,
+							association.getTargetEntity(), associatedObject));
+				}
+			}
+		}
+		Method method = object.getClass().getMethod("getId");
+		Object idObject = method.invoke(object);
+		Long identifier = Long.valueOf(idObject.toString());
+		FileQueryBean fileQueryBean = createQueryForFileAttribute(identifier, entity,
+				columnValueBeanList);
+		if (fileQueryBean != null)
+		{
+			fileQueryList.add(fileQueryBean);
+		}
+		return fileQueryList;
+	}
+
+	/**
+	 * @param identifier
+	 * @param entity
+	 * @param columnValueBeanList
+	 * @return
+	 * @throws DAOException
+	 * @throws DynamicExtensionsSystemException
+	 */
+	private FileQueryBean createQueryForFileAttribute(Long identifier, EntityInterface entity,
+			LinkedList<ColumnValueBean> columnValueBeanList) throws DAOException,
+			DynamicExtensionsSystemException
+	{
+		FileQueryBean queryBean = null;
+		if (!columnValueBeanList.isEmpty())
+		{
+			StringBuffer query = new StringBuffer(UPDATE_KEYWORD);
+			query.append(WHITESPACE).append(entity.getTableProperties().getName()).append(
+					WHITESPACE).append(SET_KEYWORD);
+			ColumnValueBean bean = columnValueBeanList.get(0);
+			query.append(WHITESPACE).append(bean.getColumnName()).append(EQUAL).append(
+					QUESTION_MARK).append(WHITESPACE);
+			for (int i = 1; i < columnValueBeanList.size(); i++)
+			{
+				bean = columnValueBeanList.get(i);
+				query.append(COMMA).append(WHITESPACE).append(bean.getColumnName()).append(EQUAL)
+						.append(QUESTION_MARK).append(WHITESPACE);
+			}
+
+			query.append(WHITESPACE).append(WHERE_KEYWORD).append(IDENTIFIER).append(EQUAL).append(
+					QUESTION_MARK);
+			columnValueBeanList.add(new ColumnValueBean(IDENTIFIER, identifier));
+			queryBean = new FileQueryBean();
+			queryBean.setColValBeanList(columnValueBeanList);
+			queryBean.setQuery(query.toString());
+		}
+		return queryBean;
+	}
+
+	/**
+	 * This method adds the extra columns information
+	 * that needs to be maintained while adding the file data
+	 * @param columnValueList list of column names & its values
+	 * @param value the record value.
+	 * @param primitiveAttr the attribute for which to create the queries.
+	 */
+	private void populateColumnValueBeanForFileAttribute(
+			LinkedList<ColumnValueBean> columnValueList, Object value,
+			AttributeInterface primitiveAttr)
+	{
+		if (primitiveAttr.getAttributeTypeInformation() instanceof FileAttributeTypeInformation
+				&& value instanceof FileAttributeRecordValue)
+		{
+			FileAttributeRecordValue recordValue = (FileAttributeRecordValue) value;
+			columnValueList.add(new ColumnValueBean(primitiveAttr.getColumnProperties().getName()
+					+ UNDERSCORE + FILE_NAME, recordValue.getFileName()));
+			columnValueList.add(new ColumnValueBean(primitiveAttr.getColumnProperties().getName()
+					+ UNDERSCORE + CONTENT_TYPE, recordValue.getContentType()));
+			columnValueList.add(new ColumnValueBean(primitiveAttr.getColumnProperties().getName(),
+					recordValue.getFileContent()));
+		}
+
 	}
 
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.entitymanager.EntityManagerInterface#editData(edu.common.dynamicextensions.domaininterface.EntityInterface, java.util.Map, java.lang.Long, java.lang.Long[])
 	 */
 	public boolean editData(EntityInterface entity, Map<AbstractAttributeInterface, ?> dataValue,
-			Long recordId, HibernateDAO hibernateDao, Long... userId)
-			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+			Long recordId, HibernateDAO hibernateDao, List<FileQueryBean> fileRecordQueryList,
+			Long... userId) throws DynamicExtensionsApplicationException,
+			DynamicExtensionsSystemException
 	{
 		boolean isSuccess = false;
 		//        Long usrId = ((userId != null && userId.length != 0) ? userId[0] : null);
@@ -676,7 +792,6 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			Object updatedObject = updateObject(entity, dataVal, oldObject, hibernateDAO,
 					auditableObjects);
 			hibernateDAO.update(updatedObject, clonedObject);
-
 			isSuccess = true;
 
 			/*// Get audit manager from DefaultBizLogic.
@@ -694,10 +809,16 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 
 			    auditManager.updateAudit(hibernateDAO, updatedObj, oldObj);
 			}*/
-
+			List<FileQueryBean> queryListForFile = getQueryListForFileAttributes(dataVal, entity,
+					updatedObject);
 			if (hibernateDao == null)
 			{
 				hibernateDAO.commit();
+				executeFileRecordQueryList(queryListForFile);
+			}
+			else
+			{
+				fileRecordQueryList.addAll(queryListForFile);
 			}
 		}
 		catch (DynamicExtensionsApplicationException e)
@@ -705,7 +826,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			handleRollback(DATA_INSERTION_ERROR_MESSAGE, hibernateDAO);
 			throw new DynamicExtensionsSystemException(DATA_INSERTION_ERROR_MESSAGE, e);
 		}
-		catch (DAOException e)
+		catch (Exception e)
 		{
 			throw new DynamicExtensionsSystemException("Error while updating records!", e);
 		}
@@ -1941,20 +2062,23 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		String NAME = "NAME";
 
 		StringBuffer query = new StringBuffer(80);
-		query.append(SELECT_KEYWORD + WHITESPACE + NAME);
-		query.append(WHITESPACE + FROM_KEYWORD + WHITESPACE + tableName + WHITESPACE);
-		query.append(WHERE_KEYWORD + WHITESPACE + IDENTIFIER + WHITESPACE + EQUAL);
+		query.append(SELECT_KEYWORD).append(WHITESPACE).append(NAME);
+		query.append(WHITESPACE).append(FROM_KEYWORD).append(WHITESPACE).append(tableName).append(
+				WHITESPACE);
+		query.append(WHERE_KEYWORD).append(WHITESPACE).append(IDENTIFIER).append(WHITESPACE)
+				.append(EQUAL);
 		query.append(OPENING_BRACKET);
-		query.append(SELECT_KEYWORD + WHITESPACE + IDENTIFIER);
-		query.append(WHITESPACE + FROM_KEYWORD + WHITESPACE + "dyextn_table_properties"
-				+ WHITESPACE);
-		query.append(WHERE_KEYWORD + WHITESPACE + "ABSTRACT_ENTITY_ID" + WHITESPACE + EQUAL);
+		query.append(SELECT_KEYWORD).append(WHITESPACE).append(IDENTIFIER);
+		query.append(WHITESPACE).append(FROM_KEYWORD).append(WHITESPACE).append(
+				"dyextn_table_properties").append(WHITESPACE);
+		query.append(WHERE_KEYWORD).append(WHITESPACE).append("ABSTRACT_ENTITY_ID").append(
+				WHITESPACE).append(EQUAL);
 		query.append(OPENING_BRACKET);
-		query.append(SELECT_KEYWORD + WHITESPACE + IDENTIFIER);
-		query.append(WHITESPACE + FROM_KEYWORD + WHITESPACE + "dyextn_abstract_metadata"
-				+ WHITESPACE);
-		query.append(WHERE_KEYWORD + WHITESPACE + "NAME" + WHITESPACE + EQUAL + "'" + entityName
-				+ "'");
+		query.append(SELECT_KEYWORD).append(WHITESPACE).append(IDENTIFIER);
+		query.append(WHITESPACE).append(FROM_KEYWORD).append(WHITESPACE).append(
+				"dyextn_abstract_metadata").append(WHITESPACE);
+		query.append(WHERE_KEYWORD).append(WHITESPACE).append("NAME").append(WHITESPACE).append(
+				EQUAL).append("'").append(entityName).append("'");
 		query.append(CLOSING_BRACKET);
 		query.append(CLOSING_BRACKET);
 		Logger.out.info("Query = " + query.toString());

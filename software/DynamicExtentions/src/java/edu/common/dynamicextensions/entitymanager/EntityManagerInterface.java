@@ -207,9 +207,8 @@ public interface EntityManagerInterface
 	 * This method inserts one record for the entity.
 	 */
 	Long insertData(EntityInterface entity, Map<AbstractAttributeInterface, Object> dataValue,
-			HibernateDAO hibernateDao, Long... userId)
+			HibernateDAO hibernateDao, List<FileQueryBean> fileRecordQueryList, Long... userId)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException;
-
 
 	/**
 	 * This method updates the existing record for the given entity.
@@ -224,12 +223,10 @@ public interface EntityManagerInterface
 	 * @throws DynamicExtensionsSystemException
 	 */
 	boolean editData(EntityInterface entity, Map<AbstractAttributeInterface, ?> dataValue,
-			Long recordId, HibernateDAO hibernateDao, Long... userId)
-			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException;
+			Long recordId, HibernateDAO hibernateDao, List<FileQueryBean> fileRecordQueryList,
+			Long... userId) throws DynamicExtensionsApplicationException,
+			DynamicExtensionsSystemException;
 
-
-	
-	
 	/**
 	 * Returns a particular record for the given recordId of the given entityId
 	 * @param entityId
@@ -562,7 +559,6 @@ public interface EntityManagerInterface
 	Map<AbstractAttributeInterface, Object> getEntityRecordById(EntityInterface entity,
 			Long recordId, JDBCDAO... dao) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException;
-
 
 	/**
 	 * This method updates attribute type info object

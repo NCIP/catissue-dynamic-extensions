@@ -428,7 +428,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		Long identifier = (((userId != null) && (userId.length > 0)) ? userId[0] : null);
 
 		HibernateDAO hibernateDao = null;
-
+		List<FileQueryBean> fileAttrQueryList = new ArrayList<FileQueryBean>();
 		try
 		{
 			hibernateDao = DynamicExtensionsUtility.getHibernateDAO();
@@ -452,7 +452,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				//Long entityId = entityManager.insertDataForHeirarchy(catEntity.getEntity(), attributes,
 				//jdbcDao, identifier);
 				final Long entityId = entityManager.insertData(rootEntity, attributes,
-						hibernateDao, identifier);
+						hibernateDao,fileAttrQueryList, identifier);
 
 				final Long catEntId = entityManagerUtil.getNextIdentifier(rootCatEntity
 						.getTableProperties().getName());
@@ -465,7 +465,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				//creating the column value beans according to DAO1.1.5
 				final LinkedList<ColumnValueBean> colValBeanList = createColumnValueBeanListForDataEntry(
 						catEntId, entityId);
-				executeUpdateQuery(insertQuery, identifier, jdbcDao, colValBeanList);
+				DynamicExtensionsUtility.executeUpdateQuery(insertQuery, identifier, jdbcDao, colValBeanList);
 				logDebug("insertData", "categoryEntityTableInsertQuery is : " + insertQuery);
 			}
 			String rootCatEntName = DynamicExtensionsUtility.getCategoryEntityName(catEntity
@@ -502,13 +502,13 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			insertRecordsForCategoryEntityTree(entityFKColName, catEntFKColName, srcCatEntityId,
 					srcEntityId, catEntity, catAttributes, keyMap, fullKeyMap, records,
 					areMultplRecrds, isNoCatAttrPrsnt, jdbcDao, hibernateDao, false, null,
-					identifier);
+					identifier, fileAttrQueryList);
 
 			// Insert records for category associations.
 			insertRecordsForCategoryEntityTree(entityFKColName, catEntFKColName, srcCatEntityId,
 					srcEntityId, catEntity, catAssociations, keyMap, fullKeyMap, records,
 					areMultplRecrds, isNoCatAttrPrsnt, jdbcDao, hibernateDao, false, null,
-					identifier);
+					identifier, fileAttrQueryList);
 
 			final Long rootCERecId = getRootCategoryEntityRecordId(category
 					.getRootCategoryElement(), fullKeyMap.get(rootCatEntName), jdbcDao);
@@ -516,7 +516,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			insertRecordsForRelatedAttributes(fullDataValue, rootCERecId, category
 					.getRootCategoryElement(), records, jdbcDao, hibernateDao, identifier);
 			hibernateDao.commit();
-
+			executeFileRecordQueryList(fileAttrQueryList);
 			if (parentRecId == null)
 			{
 				identifier = keyMap.get(rootCatEntName);
@@ -1181,7 +1181,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 									catEntId, id);
 							final ColumnValueBean bean4 = new ColumnValueBean(catEntFK, rootRecId);
 							colValBeanList.add(bean4);
-							executeUpdateQuery(insertQuery, userId, jdbcDao, colValBeanList);
+							DynamicExtensionsUtility.executeUpdateQuery(insertQuery, userId,
+									jdbcDao, colValBeanList);
 						}
 					}
 				}
@@ -1276,7 +1277,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 									catEntId, entityId);
 							final ColumnValueBean bean4 = new ColumnValueBean(catEntFK, rootRecId);
 							colValBeanList.add(bean4);
-							executeUpdateQuery(insQryForCatEnt, userId, jdbcDao, colValBeanList);
+							DynamicExtensionsUtility.executeUpdateQuery(insQryForCatEnt, userId,
+									jdbcDao, colValBeanList);
 						}
 
 					}
@@ -1382,6 +1384,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		Boolean isEdited = false;
 		HibernateDAO hibernateDao = null;
 		Long prevEntityId = null;
+		List<FileQueryBean> fileAttrQueryList = new ArrayList<FileQueryBean>();
 		try
 		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
@@ -1403,7 +1406,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			// Clear all records from entity table.
 			final EntityManagerInterface entityManager = EntityManager.getInstance();
 			isEdited = entityManager.editData(rootCatEntity.getEntity(), rootCERecords,
-					entityRecId, hibernateDao, userId);
+					entityRecId, hibernateDao, fileAttrQueryList, userId);
 
 			// Clear all records from category entity table.
 			clearCategoryEntityData(rootCatEntity, recordId, rlbkQryStack, identifier, jdbcDao);
@@ -1435,7 +1438,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				editRecordsForCategoryEntityTree(catEntFKColName, srcCatEntityId, srcEntityId,
 						prevEntityId, rootCatEntity, dataValue, keyMap, fullKeyMap, recordsMap,
 						areMultplRecrds, isNoCatAttrPrsnt, jdbcDao, hibernateDao, isEdited, null,
-						identifier);
+						identifier, fileAttrQueryList);
 
 				final Long rootCatEntId = getRootCategoryEntityRecordId(category
 						.getRootCategoryElement(), fullKeyMap.get(catEntityName), jdbcDao);
@@ -1444,6 +1447,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 						.getRootCategoryElement(), recordsMap, jdbcDao, hibernateDao, identifier);
 				jdbcDao.commit();
 				hibernateDao.commit();
+				executeFileRecordQueryList(fileAttrQueryList);
 			}
 		}
 		catch (final Exception e)
@@ -1487,8 +1491,9 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			final Map<String, Long> keyMap, final Map<String, Long> fullKeyMap,
 			final Map<String, List<Long>> records, boolean areMultplRecrds,
 			boolean isNoCatAttrPrsnt, final JDBCDAO jdbcDao, final HibernateDAO hibernateDao,
-			final Boolean isNewRecord, final AssociationInterface lastAsso, final Long userId)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			final Boolean isNewRecord, final AssociationInterface lastAsso, final Long userId,
+			List<FileQueryBean> fileAttrQueryList) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
 		try
 		{
@@ -1533,7 +1538,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 					{
 						// Insert data for entity.
 						entityId = entityManager.insertData(categoryEnt.getEntity(), attributes,
-								hibernateDao, userId);
+								hibernateDao, fileAttrQueryList, userId);
 
 						srcEntityId = entityId;
 
@@ -1544,7 +1549,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 						// Edit data for entity.
 						entityManager.editData(categoryEnt.getEntity(), attributes, entityId,
-								hibernateDao, userId);
+								hibernateDao, fileAttrQueryList, userId);
 					}
 
 					Long catEntId = null;
@@ -1561,7 +1566,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 								+ ") VALUES (?,?,?)";
 						final LinkedList<ColumnValueBean> colValBeanList = createColumnValueBeanListForDataEntry(
 								catEntId, entityId);
-						executeUpdateQuery(insertQuery, userId, jdbcDao, colValBeanList);
+						DynamicExtensionsUtility.executeUpdateQuery(insertQuery, userId, jdbcDao,
+								colValBeanList);
 					}
 
 					if (catEntFKColName != null)
@@ -1578,7 +1584,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 							final LinkedList<ColumnValueBean> colValBeanList = new LinkedList<ColumnValueBean>();
 							colValBeanList.add(bean1);
 							colValBeanList.add(bean2);
-							executeUpdateQuery(updateQuery, userId, jdbcDao, colValBeanList);
+							DynamicExtensionsUtility.executeUpdateQuery(updateQuery, userId,
+									jdbcDao, colValBeanList);
 						}
 
 						final PathInterface paths = categoryEnt.getPath();
@@ -2031,7 +2038,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 										catAssociation.getTargetCategoryEntity(), catAttributes,
 										keyMap, fullKeyMap, records, areMultplRecrds,
 										isNoCatAttrPrsnt, jdbcDao, hibernateDao, isNewRecord,
-										lastAssociation, userId);
+										lastAssociation, userId, fileAttrQueryList);
 							}
 							else
 							{
@@ -2040,7 +2047,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 										catAssociation.getTargetCategoryEntity(), catAttributes,
 										keyMap, fullKeyMap, records, areMultplRecrds,
 										isNoCatAttrPrsnt, jdbcDao, hibernateDao, isNewRecord,
-										lastAssociation, userId);
+										lastAssociation, userId, fileAttrQueryList);
 							}
 
 							isNoCatAttrPrsnt = false;
@@ -2054,7 +2061,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 										catAssociation.getTargetCategoryEntity(), catAttributes,
 										keyMap, fullKeyMap, records, areMultplRecrds,
 										isNoCatAttrPrsnt, jdbcDao, hibernateDao, isNewRecord,
-										lastAssociation, userId);
+										lastAssociation, userId, fileAttrQueryList);
 							}
 							else
 							{
@@ -2063,7 +2070,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 										catAssociation.getTargetCategoryEntity(), catAttributes,
 										keyMap, fullKeyMap, records, areMultplRecrds,
 										isNoCatAttrPrsnt, jdbcDao, hibernateDao, isNewRecord,
-										lastAssociation, userId);
+										lastAssociation, userId, fileAttrQueryList);
 							}
 						}
 
@@ -2084,7 +2091,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 								currentEntityId, currentEntityId, catAssociation
 										.getTargetCategoryEntity(), catAssociations, keyMap,
 								fullKeyMap, records, areMultplRecrds, isNoCatAttrPrsnt, jdbcDao,
-								hibernateDao, isNewRecord, lastAssociation, userId);
+								hibernateDao, isNewRecord, lastAssociation, userId,
+								fileAttrQueryList);
 						catAssociations.clear();
 
 						fullKeyMap.putAll(keyMap);
@@ -2126,8 +2134,9 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			final Map<String, Long> keyMap, final Map<String, Long> fullKeyMap,
 			final Map<String, List<Long>> records, boolean areMultplRecrds,
 			boolean isNoCatAttrPrsnt, final JDBCDAO jdbcDao, final HibernateDAO hibernateDao,
-			final boolean isEditMode, final AssociationInterface lastAsso, final Long userId)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			final boolean isEditMode, final AssociationInterface lastAsso, final Long userId,
+			List<FileQueryBean> fileAttrQueryList) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
 		try
 		{
@@ -2175,12 +2184,12 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 						// Edit data for entity hierarchy.
 						entityManager.editData(categoryEnt.getEntity(), attributes, entityId,
-								hibernateDao, userId);
+								hibernateDao, fileAttrQueryList, userId);
 					}
 					else
 					{
 						entityId = entityManager.insertData(categoryEnt.getEntity(), attributes,
-								hibernateDao, userId);
+								hibernateDao, fileAttrQueryList, userId);
 					}
 
 					Long catEntId = null;
@@ -2198,7 +2207,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 						final LinkedList<ColumnValueBean> colValBeanList = createColumnValueBeanListForDataEntry(
 								catEntId, entityId);
-						executeUpdateQuery(insertQuery, userId, jdbcDao, colValBeanList);
+						DynamicExtensionsUtility.executeUpdateQuery(insertQuery, userId, jdbcDao,
+								colValBeanList);
 					}
 
 					if ((catEntFKColName != null) && (entityFKColName != null))
@@ -2215,7 +2225,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 							final LinkedList<ColumnValueBean> colValBeanList = new LinkedList<ColumnValueBean>();
 							colValBeanList.add(bean1);
 							colValBeanList.add(bean2);
-							executeUpdateQuery(updateQuery, userId, jdbcDao, colValBeanList);
+							DynamicExtensionsUtility.executeUpdateQuery(updateQuery, userId,
+									jdbcDao, colValBeanList);
 						}
 
 						String packageName = null;
@@ -2469,7 +2480,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 									srcCategoryEntId, sourceEntityId, catAssociation
 											.getTargetCategoryEntity(), catAttributes, keyMap,
 									fullKeyMap, records, areMultplRecrds, isNoCatAttrPrsnt,
-									jdbcDao, hibernateDao, isEditMode, lastAssociation, userId);
+									jdbcDao, hibernateDao, isEditMode, lastAssociation, userId,
+									fileAttrQueryList);
 
 							isNoCatAttrPrsnt = false;
 						}
@@ -2479,7 +2491,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 									srcCategoryEntId, sourceEntityId, catAssociation
 											.getTargetCategoryEntity(), catAttributes, keyMap,
 									fullKeyMap, records, areMultplRecrds, isNoCatAttrPrsnt,
-									jdbcDao, hibernateDao, isEditMode, lastAssociation, userId);
+									jdbcDao, hibernateDao, isEditMode, lastAssociation, userId,
+									fileAttrQueryList);
 						}
 						catAttributes.clear();
 
@@ -2488,7 +2501,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 								srcCategoryEntId, sourceEntityId, catAssociation
 										.getTargetCategoryEntity(), catAssociations, keyMap,
 								fullKeyMap, records, areMultplRecrds, isNoCatAttrPrsnt, jdbcDao,
-								hibernateDao, isEditMode, lastAssociation, userId);
+								hibernateDao, isEditMode, lastAssociation, userId,
+								fileAttrQueryList);
 						catAssociations.clear();
 
 						fullKeyMap.putAll(keyMap);
@@ -3056,7 +3070,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 					final ColumnValueBean bean1 = new ColumnValueBean(IDENTIFIER, recId);
 					final LinkedList<ColumnValueBean> colValBeanList = new LinkedList<ColumnValueBean>();
 					colValBeanList.add(bean1);
-					executeUpdateQuery(deleteQuery, userId, jdbcDao, colValBeanList);
+					DynamicExtensionsUtility.executeUpdateQuery(deleteQuery, userId, jdbcDao,
+							colValBeanList);
 					rlbkQryStack.push(deleteQuery);
 				}
 			}
@@ -3068,7 +3083,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				final ColumnValueBean bean1 = new ColumnValueBean(colName, recordId);
 				final LinkedList<ColumnValueBean> colValBeanList = new LinkedList<ColumnValueBean>();
 				colValBeanList.add(bean1);
-				executeUpdateQuery(deleteQuery, userId, jdbcDao, colValBeanList);
+				DynamicExtensionsUtility.executeUpdateQuery(deleteQuery, userId, jdbcDao,
+						colValBeanList);
 				rlbkQryStack.push(deleteQuery);
 			}
 		}
@@ -3354,29 +3370,6 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		colValBeanList.add(bean2);
 		colValBeanList.add(bean3);
 		return colValBeanList;
-	}
-
-	/**
-	 * This method executes a SQL query.
-	 * @param query
-	 * @param colValBeanList
-	 * @throws SQLException
-	 * @throws DynamicExtensionsSystemException
-	 */
-	private void executeUpdateQuery(final String query, final Long userId, final JDBCDAO jdbcDao,
-			final LinkedList<ColumnValueBean> colValBeanList)
-			throws DynamicExtensionsSystemException
-	{
-		try
-		{
-			final LinkedList<LinkedList<ColumnValueBean>> valueBeanList = new LinkedList<LinkedList<ColumnValueBean>>();
-			valueBeanList.add(colValBeanList);
-			jdbcDao.executeUpdate(query, valueBeanList);
-		}
-		catch (final DAOException e)
-		{
-			throw new DynamicExtensionsSystemException(e.getMessage(), e);
-		}
 	}
 
 	/**

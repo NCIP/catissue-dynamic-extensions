@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -90,7 +91,6 @@ import edu.common.dynamicextensions.domaininterface.userinterface.TextFieldInter
 import edu.common.dynamicextensions.entitymanager.EntityManagerExceptionConstantsInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
-import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
@@ -167,10 +167,10 @@ public class DynamicExtensionsUtility
 	 * @param containerIdentifier The Identifier of the Container.
 	 * @return the ContainerInterface
 	 * @throws DynamicExtensionsSystemException on System exception
-	 * @throws DynamicExtensionsCacheException
+	 * @throws DynamicExtensionsApplicationException on Application exception
 	 */
 	public static ContainerInterface getContainerByIdentifier(String containerIdentifier)
-			throws DynamicExtensionsSystemException, DynamicExtensionsCacheException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		ContainerInterface containerInterface = null;
 		if (containerIdentifier != null && !"".equals(containerIdentifier))
@@ -2143,6 +2143,41 @@ public class DynamicExtensionsUtility
 		List list = dao.executeQuery(hql);
 		DynamicExtensionsUtility.closeDAO(dao);
 		return list;
+	}
+
+	/**
+	 * This method executes a SQL query.
+	 * @param query
+	 * @param colValBeanList
+	 * @throws SQLException
+	 * @throws DynamicExtensionsSystemException
+	 */
+	public static void executeUpdateQuery(final String query, final Long userId,
+			final JDBCDAO jdbcDao, final LinkedList<ColumnValueBean> colValBeanList)
+			throws DynamicExtensionsSystemException
+	{
+		JDBCDAO dao = jdbcDao;
+		try
+		{
+			if (dao == null)
+			{
+				dao = getJDBCDAO();
+			}
+			final LinkedList<LinkedList<ColumnValueBean>> valueBeanList = new LinkedList<LinkedList<ColumnValueBean>>();
+			valueBeanList.add(colValBeanList);
+			dao.executeUpdate(query, valueBeanList);
+		}
+		catch (final DAOException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
+		}
+		finally
+		{
+			if (jdbcDao == null)
+			{
+				closeDAO(dao);
+			}
+		}
 	}
 
 	/**

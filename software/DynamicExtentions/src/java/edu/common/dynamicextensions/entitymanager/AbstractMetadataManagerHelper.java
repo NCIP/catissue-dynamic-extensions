@@ -157,8 +157,11 @@ public final class AbstractMetadataManagerHelper
 			}
 			dataTypeClassName = String.class.getName();
 		}
-		invokeSetterMethod(klass, attrName, Class.forName(dataTypeClassName), returnedObj,
-				dataValue);
+		if (!("ByteArray".equals(dataType) || "File".equals(dataType)))
+		{
+			invokeSetterMethod(klass, attrName, Class.forName(dataTypeClassName), returnedObj,
+					dataValue);
+		}
 	}
 
 	/**
