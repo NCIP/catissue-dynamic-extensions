@@ -2,22 +2,17 @@
 package edu.wustl.cab2b.common.cache;
 
 import java.io.Serializable;
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
-import edu.common.dynamicextensions.domain.EntityGroup;
 import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
@@ -34,16 +29,11 @@ import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
-import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.cab2b.common.beans.MatchedClass;
 import edu.wustl.cab2b.common.beans.MatchedClassEntry;
 import edu.wustl.cab2b.common.exception.RuntimeException;
 import edu.wustl.cab2b.common.util.Utility;
-import edu.wustl.cab2b.server.util.DynamicExtensionUtility;
 import edu.wustl.common.querysuite.metadata.category.Category;
-import edu.wustl.dao.HibernateDAO;
-import edu.wustl.dao.exception.DAOException;
 
 /**
  * This is an abstract class for caching metadata.
@@ -72,7 +62,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	/**
 	 * Set of all the entity groups loaded as metadata in caB2B.
 	 */
-	private final Set<EntityGroupInterface> cab2bEntityGroups = new HashSet<EntityGroupInterface>();
+	private final transient Set<EntityGroupInterface> cab2bEntityGroups = new HashSet<EntityGroupInterface>();
 
 	/**
 	 * The EntityCache object. Needed for singleton
@@ -82,17 +72,17 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	/**
 	 * Map with KEY as dynamic extension Entity's identifier and Value as Entity object
 	 */
-	protected Map<Long, EntityInterface> idVsEntity = new HashMap<Long, EntityInterface>();
+	protected transient Map<Long, EntityInterface> idVsEntity = new HashMap<Long, EntityInterface>();
 
 	/**
 	 * Map with KEY as dynamic extension Association's identifier and Value as Association object
 	 */
-	protected Map<Long, AssociationInterface> idVsAssociation = new HashMap<Long, AssociationInterface>();
+	protected transient Map<Long, AssociationInterface> idVsAssociation = new HashMap<Long, AssociationInterface>();
 
 	/**
 	 * Map with KEY as dynamic extension Attribute's identifier and Value as Attribute object
 	 */
-	protected Map<Long, AttributeInterface> idVsAttribute = new HashMap<Long, AttributeInterface>();
+	protected transient Map<Long, AttributeInterface> idVsAttribute = new HashMap<Long, AttributeInterface>();
 
 	/**
 	 * This map holds all the original association. Associations which are
@@ -101,65 +91,55 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * {InheritanceUtil#generateUniqueId(AssociationInterface)} Value : Original
 	 * association for given string identifier
 	 */
-	protected Map<String, AssociationInterface> originalAssociations = new HashMap<String, AssociationInterface>();
+	protected transient Map<String, AssociationInterface> originalAssociations = new HashMap<String, AssociationInterface>();
 
 	/**
 	 * Map with KEY as a permissible value (PV) and VALUE as its Entity. This is
 	 * needed because there is no back pointer from PV to Entity
 	 */
-	protected Map<PermissibleValueInterface, EntityInterface> permissibleValueVsEntity = new HashMap<PermissibleValueInterface, EntityInterface>();
+	protected transient Map<PermissibleValueInterface, EntityInterface> permissibleValueVsEntity = new HashMap<PermissibleValueInterface, EntityInterface>();
 
 	/**
 	 * Set of all the DyanamicExtensions categories loaded in the database.
 	 */
-	protected Set<CategoryInterface> deCategories = new HashSet<CategoryInterface>();
+	protected transient Set<CategoryInterface> deCategories = new HashSet<CategoryInterface>();
 
 	/**
 	 *  Map with KEY as dynamic extension Containers identifier and Value as Container object.
 	 */
-	protected Map<Long, ContainerInterface> idVscontainers = new HashMap<Long, ContainerInterface>();
+	protected transient Map<Long, ContainerInterface> idVscontainers = new HashMap<Long, ContainerInterface>();
 
 	/**
 	 * Map with KEY as dynamic extension CategoryAttribute's identifier and Value as CategoryAttribute object
 	 */
-	protected Map<Long, CategoryAttributeInterface> idVsCategoryAttribute = new HashMap<Long, CategoryAttributeInterface>();
+	protected transient Map<Long, CategoryAttributeInterface> idVsCategoryAttribute = new HashMap<Long, CategoryAttributeInterface>();
 
 	/**
 	 * Map with KEY as dynamic extension CategoryEntity's's identifier and Value as CategoryEntity object
 	 */
-	protected Map<Long, CategoryEntityInterface> idVsCaegoryEntity = new HashMap<Long, CategoryEntityInterface>();
+	protected transient Map<Long, CategoryEntityInterface> idVsCaegoryEntity = new HashMap<Long, CategoryEntityInterface>();
 
 	/**
 	 * Map with KEY as dynamic extension CategoryAssociations's identifier and Value as CategoryAssociations object
 	 */
-	protected Map<Long, CategoryAssociationInterface> idVsCaegoryAssociation = new HashMap<Long, CategoryAssociationInterface>();
+	protected transient Map<Long, CategoryAssociationInterface> idVsCaegoryAssociation = new HashMap<Long, CategoryAssociationInterface>();
 
 	/**
 	 * Map with KEY as dynamic extension Controls's identifier and Value as Control object
 	 */
-	protected Map<Long, ControlInterface> idVsControl = new HashMap<Long, ControlInterface>();
+	protected transient Map<Long, ControlInterface> idVsControl = new HashMap<Long, ControlInterface>();
 
 	/**
 	 * This set contains all the categories which are in opened at this instance in Edit
 	 * mode by any user.
 	 */
-	protected Set<CategoryInterface> categoriesInUse = new HashSet<CategoryInterface>();
+	protected transient Set<CategoryInterface> categoriesInUse = new HashSet<CategoryInterface>();
 
 	/**
 	 *  This counter is used for creating the temporary directories in case of create
 	 *  category task by more than one user at a time.
 	 */
-	protected long catFileNameCounter = 1L;
-
-	private CacheInitilizer cacheInitilizer;
-
-	private final Collection<EntityGroupInterface> entityGroups = new HashSet<EntityGroupInterface>();
-
-	private List<Long> categoryIDs;
-
-	private List<Long> entityGroupIDs;
-
-	private final Set<Long> unFetchedCategoryIDs = new HashSet<Long>();
+	protected transient long catFileNameCounter = 1L;
 
 	/**
 	 * This method gives the singleton cache object. If cache is not present then it
@@ -189,217 +169,11 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 */
 	public final synchronized void refreshCache()
 	{
-		try
-		{
-			LOGGER.info("Initializing cache, this may take few minutes...");
-			clearCache();
-			final HibernateDAO hibDAO = DynamicExtensionsUtility.getHibernateDAO();
 
-			entityGroupIDs = DynamicExtensionUtility.getAllEntityGroupIds(hibDAO);
-			LOGGER.info("Number of Entity Grops in database :" + entityGroupIDs.size());
-
-			Collections.sort(entityGroupIDs);
-			Collections.reverse(entityGroupIDs);
-
-			categoryIDs = DynamicExtensionUtility.getAllCategoryIds(hibDAO);
-			LOGGER.info("Number of Categories in database :" + categoryIDs.size());
-			if (entityGroupIDs.size() != 0)
-			{
-				LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<Runnable>();
-				cacheInitilizer = new CacheInitilizer(entityGroupIDs.size(), entityGroupIDs.size(),
-						1, TimeUnit.SECONDS, queue);
-
-				for (Long entGrpId : entityGroupIDs)
-				{
-					List<Long> catIdList = new ArrayList<Long>();
-					final HibernateDAO hibernateDao = DynamicExtensionsUtility.getHibernateDAO();
-
-					catIdList.addAll(DynamicExtensionUtility.getAllCategoryIdsForEntityGroupId(
-							hibernateDao, entGrpId));
-					Collections.sort(catIdList);
-					Collections.reverse(catIdList);
-
-					if (catIdList.size() == 0)
-					{
-						Thread entityGroupFetcher = new Thread(new EntityGroupFetcher(hibernateDao,
-								entGrpId));
-						cacheInitilizer.execute(entityGroupFetcher);
-					}
-					else
-					{
-						Thread categoryFetcher = new Thread(new CategoryFetcher(hibernateDao,
-								catIdList));
-						cacheInitilizer.execute(categoryFetcher);
-					}
-				}
-			}
-		}
-		catch (DAOException e)
-		{
-			LOGGER.error("Error while fetching categories from database. Error: " + e.getMessage());
-			throw new RuntimeException("Exception encountered while creating EntityCache!!", e);
-		}
-		catch (DynamicExtensionsSystemException e)
-		{
-			LOGGER.error("Error while Creating Cache. Error: " + e.getMessage());
-			throw new RuntimeException("Exception encountered while creating Cache!!", e);
-		}
-	}
-
-	private class EntityGroupFetcher implements Runnable, UncaughtExceptionHandler
-	{
-
-		private final HibernateDAO hibernateDao;
-
-		private final Long entityGroupIds;
-
-		private EntityGroupFetcher(HibernateDAO hibernateDAO, Long entityGroupID)
-		{
-			hibernateDao = hibernateDAO;
-			entityGroupIds = entityGroupID;
-		}
-
-		public void run()
-		{
-			Long startTime = System.currentTimeMillis();
-			LOGGER.info("Initializing process to fetch Entity Group, this may take few minutes...");
-			try
-			{
-				EntityGroupInterface entityGroup = (EntityGroupInterface) hibernateDao
-						.retrieveById(EntityGroup.class.getName(), entityGroupIds);
-				createEntityGroupCache(entityGroup);
-				Long endTime = System.currentTimeMillis();
-				Long totalTime = (endTime - startTime) / 1000;
-				LOGGER.info("Entity Group " + entityGroup.getName() + " fetched in " + totalTime
-						+ " seconds...");
-			}
-			catch (DAOException e)
-			{
-				LOGGER.error("Error while fetching Entity Groups from database. Error: "
-						+ e.getMessage());
-				throw new RuntimeException("Exception encountered while creating EntityCache!!", e);
-			}
-			catch (Exception e)
-			{
-				LOGGER.error("Error while fetching Entity Groups from database. Error: "
-						+ e.getMessage());
-				throw new RuntimeException("Exception encountered while creating EntityCache!!", e);
-			}
-			finally
-			{
-				try
-				{
-					DynamicExtensionsUtility.closeDAO(hibernateDao);
-					if (cacheInitilizer.allProcessCompleted())
-					{
-						LOGGER.info("Cache Initialization complete");
-					}
-				}
-				catch (DynamicExtensionsSystemException e)
-				{
-					LOGGER.info("Exception occured while closing Hibernate DAO object");
-					throw new RuntimeException(
-							"Exception occured while closing Hibernate DAO object!!", e);
-				}
-			}
-		}
-
-		public void uncaughtException(Thread thread, Throwable exception)
-		{
-			LOGGER.error("Error while fetching Entity Groups from database. Error: "
-					+ exception.getMessage());
-		}
-
-	}
-
-	private class CategoryFetcher implements Runnable, UncaughtExceptionHandler
-	{
-
-		private final HibernateDAO hibernateDao;
-
-		private final List<Long> categoryIDList;
-
-		private CategoryFetcher(HibernateDAO hibernateDAO, List<Long> catIDs)
-		{
-			hibernateDao = hibernateDAO;
-			categoryIDList = catIDs;
-		}
-
-		public void run()
-		{
-			try
-			{
-				Long startTime = System.currentTimeMillis();
-				LOGGER.info("Initializing process to fetch " + categoryIDList.size()
-						+ " categories, this may take few minutes...");
-				EntityGroupInterface entityGroup = null;
-				for (Long categoryID : categoryIDList)
-				{
-					CategoryInterface cat = (CategoryInterface) hibernateDao.retrieveById(
-							edu.common.dynamicextensions.domain.Category.class.getName(),
-							categoryID);
-
-					CategoryEntityInterface rootCategory = cat.getRootCategoryElement();
-					entityGroup = rootCategory.getEntity().getEntityGroup();
-
-					createCategoryCache(cat);
-					if (!entityGroups.contains(entityGroup) && entityGroup != null)
-					{
-						entityGroups.add(entityGroup);
-						createEntityGroupCache(entityGroup);
-					}
-					/*LOGGER.info("Category " + cat.getId()
-							+ "fetched from database and added to cache");*/
-				}
-				Long endTime = System.currentTimeMillis();
-				Long totalTime = (endTime - startTime) / 1000;
-				LOGGER.info(categoryIDList.size() + " Categories for Entity Group "
-						+ entityGroup.getName() + " loaded in " + totalTime + " seconds...");
-			}
-			catch (DAOException e)
-			{
-				LOGGER.error("Error while fetching categories from database. Error: "
-						+ e.getMessage());
-				throw new RuntimeException("Exception encountered while creating category cache!!",
-						e);
-			}
-			catch (AssertionError ae)
-			{
-				LOGGER.info("Hibernate Error .." + ae.getMessage());
-				throw new RuntimeException("Exception encountered while creating category cache!!",
-						ae);
-			}
-			catch (Exception e)
-			{
-				LOGGER.error("Error while fetching categories from database. Error: "
-						+ e.getMessage());
-				throw new RuntimeException("Exception encountered while creating category cache!!",
-						e);
-			}
-			finally
-			{
-				try
-				{
-					DynamicExtensionsUtility.closeDAO(hibernateDao);
-					if (cacheInitilizer.allProcessCompleted())
-					{
-						LOGGER.info("Cache Initialization complete");
-					}
-				}
-				catch (DynamicExtensionsSystemException e)
-				{
-					LOGGER.info("Exception occured while closing Hibernate DAO object");
-					throw new RuntimeException(
-							"Exception occured while closing Hibernate DAO object!!", e);
-				}
-			}
-		}
-
-		public void uncaughtException(Thread t, Throwable e)
-		{
-			LOGGER.error("Error while fetching categories from database. Error: " + e.getMessage());
-			throw new RuntimeException("Exception encountered while creating category cache!!", e);
-		}
+		LOGGER.info("Initializing cache, this may take few minutes...");
+		clearCache();
+		Thread cacheRefresh = new Thread(new RefreshCacheInitializer());
+		cacheRefresh.start();
 	}
 
 	/**
@@ -422,7 +196,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	/**
 	 * @param categoryList
 	 */
-	private synchronized void createCategoryCache(final CategoryInterface category)
+	public synchronized void createCategoryCache(final CategoryInterface category)
 	{
 		deCategories.add(category);
 		CategoryEntityInterface rootCategory = category.getRootCategoryElement();
@@ -435,7 +209,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	/**
 	 * @param entityGroups
 	 */
-	private synchronized void createEntityGroupCache(final EntityGroupInterface entityGroup)
+	public synchronized void createEntityGroupCache(final EntityGroupInterface entityGroup)
 	{
 		cab2bEntityGroups.add(entityGroup);
 		if (entityGroup.getEntityCollection() != null)
@@ -444,10 +218,6 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 			{
 				addEntityToCache(entity);
 			}
-		}
-		else
-		{
-			LOGGER.info("Entity Group " + entityGroup.getName() + " does not have Entities");
 		}
 	}
 
@@ -561,10 +331,6 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 			{
 				idVsControl.put(control.getId(), control);
 			}
-		}
-		else
-		{
-			LOGGER.info("Container collection was null");
 		}
 	}
 
