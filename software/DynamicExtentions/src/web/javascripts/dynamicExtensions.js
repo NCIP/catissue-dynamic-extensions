@@ -2364,7 +2364,6 @@ function appendRecordId(ths)
     {
     	str = str.replace(/dynamicExtensions/, contextParam);
     }
-    str = str+"&recordIdentifier="+recordIdentifier.value;
     ths.href = str;
 }
 

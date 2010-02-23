@@ -73,7 +73,7 @@ public class DownloadFileAction extends HttpServlet
 			String filename = fileAttributeRecordValue.getFileName();
 
 			//      set the header information in the response.
-			res.setHeader("Content-Disposition", "attachment; filename=" + filename + ";");
+			res.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\";");
 			res.setContentType("application/x-unknown");
 			ByteArrayInputStream byteStream = new ByteArrayInputStream(filedata);
 			BufferedInputStream bufStream = new BufferedInputStream(byteStream);

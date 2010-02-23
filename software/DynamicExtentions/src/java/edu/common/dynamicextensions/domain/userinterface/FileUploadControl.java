@@ -8,6 +8,7 @@ package edu.common.dynamicextensions.domain.userinterface;
 
 import java.util.List;
 
+import edu.common.dynamicextensions.domain.CategoryEntityRecord;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.FileUploadInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
@@ -31,7 +32,8 @@ public class FileUploadControl extends Control implements FileUploadInterface
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 */
-	protected String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateEditModeHTML(ContainerInterface container)
+			throws DynamicExtensionsSystemException
 	{
 		String htmlString = "";
 		if (getIsSkipLogicTargetControl())
@@ -40,14 +42,22 @@ public class FileUploadControl extends Control implements FileUploadInterface
 					+ getHTMLComponentName() + "_div'>";
 		}
 		ApplicationProperties.initBundle("ApplicationResources");
+		final CategoryEntityRecord entityRecord = new CategoryEntityRecord(parentContainer
+				.getAbstractEntity().getId(), parentContainer.getAbstractEntity().getName());
 		if (value != null)
 		{
+			Long recordId = (Long) parentContainer.getContainerValueMap().get(entityRecord);
 			htmlString = "<A onclick='appendRecordId(this);' href='/dynamicExtensions/DownloadFileAction?attributeIdentifier="
-				+ baseAbstractAttribute.getId() + "'>" + value + "</A>";
+					+ baseAbstractAttribute.getId()
+					+ "&recordIdentifier="
+					+ recordId
+					+ "'>"
+					+ value + "</A>";
 
 		}
-		htmlString = htmlString + "<input onchange='isDataChanged();' type=\"file\" " + "name=\"value("
-				+ getHTMLComponentName() + ")\" " + "id=\"" + getHTMLComponentName() + "\"/>";
+		htmlString = htmlString + "<input onchange='isDataChanged();' type=\"file\" "
+				+ "name=\"value(" + getHTMLComponentName() + ")\" " + "id=\""
+				+ getHTMLComponentName() + "\"/>";
 		if (getIsSkipLogicTargetControl())
 		{
 			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
@@ -74,9 +84,10 @@ public class FileUploadControl extends Control implements FileUploadInterface
 		this.columns = columns;
 	}
 
-	protected String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(ContainerInterface container)
+			throws DynamicExtensionsSystemException
 	{
-//		FileAttributeRecordValue fileAttributeRecordValue = (FileAttributeRecordValue) this.value;
+		//		FileAttributeRecordValue fileAttributeRecordValue = (FileAttributeRecordValue) this.value;
 		String htmlString = "&nbsp;";
 
 		if (value != null)
@@ -103,6 +114,7 @@ public class FileUploadControl extends Control implements FileUploadInterface
 		// TODO Auto-generated method stub
 
 	}
+
 	/**
 	 *
 	 */
