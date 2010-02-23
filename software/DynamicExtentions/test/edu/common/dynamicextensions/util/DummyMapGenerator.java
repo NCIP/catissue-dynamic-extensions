@@ -1,6 +1,10 @@
 
 package edu.common.dynamicextensions.util;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +19,8 @@ import java.util.Set;
 
 import edu.common.dynamicextensions.domain.BooleanAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
+import edu.common.dynamicextensions.domain.FileAttributeRecordValue;
+import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.StringAttributeTypeInformation;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
@@ -53,9 +59,11 @@ public class DummyMapGenerator
 	 * @param rootCatEntity the root category entity for which to generate the map
 	 * @return generated map.
 	 * @throws ParseException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public Map<BaseAbstractAttributeInterface, Object> createDataValueMapForCategory(
-			CategoryEntityInterface rootCatEntity) throws ParseException
+			CategoryEntityInterface rootCatEntity) throws ParseException,
+			DynamicExtensionsSystemException
 	{
 		Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
 		for (CategoryAttributeInterface catAtt : rootCatEntity.getAllCategoryAttributes())
@@ -94,7 +102,7 @@ public class DummyMapGenerator
 	}
 
 	private void updateDataMap(Map dataValue, BaseAbstractAttributeInterface catAtt,
-			AttributeInterface attribute) throws ParseException
+			AttributeInterface attribute) throws ParseException, DynamicExtensionsSystemException
 	{
 		if (attribute.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
 		{
@@ -115,10 +123,43 @@ public class DummyMapGenerator
 		{
 			dataValue.put(catAtt, "test String");
 		}
+		else if (attribute.getAttributeTypeInformation() instanceof FileAttributeTypeInformation)
+		{
+			dataValue.put(catAtt, getFileRecordValueForAttribute());
+		}
 		else
 		{
 			dataValue.put(catAtt, "test String for other data type");
 		}
+	}
+
+	private FileAttributeRecordValue getFileRecordValueForAttribute()
+			throws DynamicExtensionsSystemException
+	{
+		File formFile = new File("/src/java/ApplicationDAOProperties.xml");
+		FileAttributeRecordValue fileAttributeRecordValue = new FileAttributeRecordValue();
+		fileAttributeRecordValue.setFileContent(getFileContents(formFile));
+		fileAttributeRecordValue.setFileName(formFile.getName());
+		fileAttributeRecordValue.setContentType("application/x-unknown");
+		return fileAttributeRecordValue;
+	}
+
+	private byte[] getFileContents(File formFile) throws DynamicExtensionsSystemException
+	{
+		int length = (int) formFile.length();
+		byte[] buffer = new byte[length];
+		try
+		{
+
+			BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(formFile));
+			inputStream.read(buffer);
+		}
+		catch (IOException e)
+		{
+			throw new DynamicExtensionsSystemException(
+					"Exception occured while creating the file record", e);
+		}
+		return buffer;
 	}
 
 	/**
@@ -132,9 +173,10 @@ public class DummyMapGenerator
 	 * @param rootCatEntity the main entity for which to generate the map
 	 * @return generated map.
 	 * @throws ParseException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public Map<AbstractAttributeInterface, Object> createDataValueMapForEntity(
-			EntityInterface rootEntity) throws ParseException
+			EntityInterface rootEntity) throws ParseException, DynamicExtensionsSystemException
 	{
 		Map<AbstractAttributeInterface, Object> dataValue = new HashMap<AbstractAttributeInterface, Object>();
 		for (AbstractAttributeInterface abstractAttribute : rootEntity.getAttributeCollection())
