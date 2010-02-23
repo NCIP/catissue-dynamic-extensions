@@ -65,28 +65,16 @@ public class DummyMapGenerator
 					&& !catAtt.getIsRelatedAttribute())
 			{
 				AttributeInterface attribute = (AttributeInterface) catAtt.getAbstractAttribute();
-				if (attribute.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
+				updateDataMap(dataValue, catAtt, attribute);
+			}
+			else
+			{
+				AssociationInterface association = (AssociationInterface) catAtt
+						.getAbstractAttribute();
+				for (AbstractAttributeInterface attributeInterface : association.getTargetEntity()
+						.getAllAttributes())
 				{
-
-					String value = getDateValueForAttribute(catAtt);
-					dataValue.put(catAtt, value);
-				}
-				else if (attribute.getAttributeTypeInformation() instanceof NumericTypeInformationInterface)
-				{
-					String value = getNumericValueForAttribute(attribute);
-					dataValue.put(catAtt, value);
-				}
-				else if (attribute.getAttributeTypeInformation() instanceof BooleanAttributeTypeInformation)
-				{
-					dataValue.put(catAtt, "true");
-				}
-				else if (attribute.getAttributeTypeInformation() instanceof StringAttributeTypeInformation)
-				{
-					dataValue.put(catAtt, "test String");
-				}
-				else
-				{
-					dataValue.put(catAtt, "test String for other data type");
+					updateDataMap(dataValue, catAtt, (AttributeInterface) attributeInterface);
 				}
 			}
 		}
@@ -103,6 +91,34 @@ public class DummyMapGenerator
 			dataValue.put(catAssociation, dataList);
 		}
 		return dataValue;
+	}
+
+	private void updateDataMap(Map dataValue, BaseAbstractAttributeInterface catAtt,
+			AttributeInterface attribute) throws ParseException
+	{
+		if (attribute.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
+		{
+
+			String value = getDateValueForAttribute(catAtt);
+			dataValue.put(catAtt, value);
+		}
+		else if (attribute.getAttributeTypeInformation() instanceof NumericTypeInformationInterface)
+		{
+			String value = getNumericValueForAttribute(attribute);
+			dataValue.put(catAtt, value);
+		}
+		else if (attribute.getAttributeTypeInformation() instanceof BooleanAttributeTypeInformation)
+		{
+			dataValue.put(catAtt, "true");
+		}
+		else if (attribute.getAttributeTypeInformation() instanceof StringAttributeTypeInformation)
+		{
+			dataValue.put(catAtt, "test String");
+		}
+		else
+		{
+			dataValue.put(catAtt, "test String for other data type");
+		}
 	}
 
 	/**
@@ -127,28 +143,8 @@ public class DummyMapGenerator
 			if (abstractAttribute instanceof AttributeInterface)
 			{
 				AttributeInterface attribute = (AttributeInterface) abstractAttribute;
-				if (attribute.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
-				{
-					String value = getDateValueForAttribute(attribute);
-					dataValue.put(abstractAttribute, value);
-				}
-				else if (attribute.getAttributeTypeInformation() instanceof NumericTypeInformationInterface)
-				{
-					String value = getNumericValueForAttribute(attribute);
-					dataValue.put(abstractAttribute, value);
-				}
-				else if (attribute.getAttributeTypeInformation() instanceof BooleanAttributeTypeInformation)
-				{
-					dataValue.put(abstractAttribute, "true");
-				}
-				else if (attribute.getAttributeTypeInformation() instanceof StringAttributeTypeInformation)
-				{
-					dataValue.put(abstractAttribute, "test String");
-				}
-				else
-				{
-					dataValue.put(abstractAttribute, "test String for other data type");
-				}
+				updateDataMap(dataValue, attribute, attribute);
+
 			}
 		}
 		for (AssociationInterface association : rootEntity.getAssociationCollection())
