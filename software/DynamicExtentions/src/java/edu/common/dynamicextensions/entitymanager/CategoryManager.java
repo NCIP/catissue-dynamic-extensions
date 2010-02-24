@@ -1,14 +1,11 @@
 
 package edu.common.dynamicextensions.entitymanager;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,7 +50,6 @@ import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.FormulaCalculator;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.ErrorConstants;
-import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
@@ -452,7 +448,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				//Long entityId = entityManager.insertDataForHeirarchy(catEntity.getEntity(), attributes,
 				//jdbcDao, identifier);
 				final Long entityId = entityManager.insertData(rootEntity, attributes,
-						hibernateDao,fileAttrQueryList, identifier);
+						hibernateDao, fileAttrQueryList, identifier);
 
 				final Long catEntId = entityManagerUtil.getNextIdentifier(rootCatEntity
 						.getTableProperties().getName());
@@ -465,7 +461,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				//creating the column value beans according to DAO1.1.5
 				final LinkedList<ColumnValueBean> colValBeanList = createColumnValueBeanListForDataEntry(
 						catEntId, entityId);
-				DynamicExtensionsUtility.executeUpdateQuery(insertQuery, identifier, jdbcDao, colValBeanList);
+				DynamicExtensionsUtility.executeUpdateQuery(insertQuery, identifier, jdbcDao,
+						colValBeanList);
 				logDebug("insertData", "categoryEntityTableInsertQuery is : " + insertQuery);
 			}
 			String rootCatEntName = DynamicExtensionsUtility.getCategoryEntityName(catEntity
@@ -890,42 +887,20 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 					Object targetObject = null;
 
 					// Create a new instance.
-					final Class targetObjectClass = Class.forName(packageName + "."
-							+ targetEntity.getName());
-					final Constructor targetObjectConstructor = targetObjectClass.getConstructor();
-					targetObject = targetObjectConstructor.newInstance();
+					targetObject = createObjectForClass(packageName + "." + targetEntity.getName());
 
 					final Object defaultvalue = catAttribute.getDefaultValue();
 					setRelatedAttributeValues(targetObjectClassName,
 							(BaseAbstractAttribute) attribute, defaultvalue, targetObject);
 
-					String targetRoleName = association.getTargetRole().getName();
-					targetRoleName = targetRoleName.substring(0, 1).toUpperCase()
-							+ targetRoleName.substring(1, targetRoleName.length());
-
-					String sourceRoleName = association.getSourceRole().getName();
-					sourceRoleName = sourceRoleName.substring(0, 1).toUpperCase()
-							+ sourceRoleName.substring(1, sourceRoleName.length());
-
 					hibernateDao.insert(targetObject);
-					final Object associatedObjects = invokeGetterMethod(sourceObject.getClass(),
-							targetRoleName, sourceObject);
-					Collection<Object> containedObjects = null;
-					if (associatedObjects == null)
-					{
-						containedObjects = new HashSet<Object>();
-					}
-					else
-					{
-						containedObjects = (Collection) associatedObjects;
-					}
-					containedObjects.add(targetObject);
-					invokeSetterMethod(sourceObject.getClass(), targetRoleName, Class
-							.forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS), sourceObject,
-							containedObjects);
+
+					addTargetObject(sourceObject, targetObject,
+							targetObjectClassName, association);
+					addSourceObject(sourceObject, targetObject,
+							sourceObjectClassName, association);
 					hibernateDao.update(sourceObject, clonedSourceObject);
-					invokeSetterMethod(targetObject.getClass(), sourceRoleName, Class
-							.forName(sourceObjectClassName), targetObject, sourceObject);
+
 					hibernateDao.update(targetObject);
 				}
 			}
@@ -1214,13 +1189,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 							final Object sourceObject = hibernateDao.retrieveById(
 									sourceObjectClassName, sourceId);
 							Object clonedSourceObject = cloner.clone(sourceObject);
-
-							Object targetObject = null;
 							// Create a new instance.
-							final Class targetObjectClass = Class.forName(targetObjectClassName);
-							final Constructor targetObjectConstructor = targetObjectClass
-									.getConstructor();
-							targetObject = targetObjectConstructor.newInstance();
+							Object targetObject = createObjectForClass(targetObjectClassName);
 
 							for (final BaseAbstractAttribute attr : attrVsValues.keySet())
 							{
@@ -1229,43 +1199,15 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 										targetObject);
 							}
 
-							String targetRoleName = association.getTargetRole().getName();
-							targetRoleName = targetRoleName.substring(0, 1).toUpperCase()
-									+ targetRoleName.substring(1, targetRoleName.length());
-
 							// Put the target object in a collection and
 							// save it as a collection of the source object.
-							/*final Set<Object> containedObjects = new HashSet<Object>();
-							 containedObjects.add(targetObject);
 
-							 invokeSetterMethod(sourceObject.getClass(), targetRoleName, Class
-							 .forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS), sourceObject,
-							 containedObjects);*/
-
-							Cardinality targetMaxCardinality = association.getTargetRole()
-									.getMaximumCardinality();
-							if (targetMaxCardinality != Cardinality.ONE)
-							{
-								Set<Object> containedObjects = new HashSet<Object>();
-								containedObjects.add(targetObject);
-								invokeSetterMethod(sourceObject.getClass(), targetRoleName, Class
-										.forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS),
-										sourceObject, containedObjects);
-							}
-							else
-							{
-								invokeSetterMethod(sourceObject.getClass(), targetRoleName,
-										targetObject.getClass(), sourceObject, targetObject);
-							}
+							addTargetObject(sourceObject, targetObject,
+									targetObjectClassName, association);
 
 							hibernateDao.insert(targetObject);
 							hibernateDao.update(sourceObject, clonedSourceObject);
-
-							final Method method = targetObject.getClass().getMethod(
-									DEConstants.GET_ID);
-							final Object updatedObject = method.invoke(targetObject);
-							final Long entityId = Long.valueOf(updatedObject.toString());
-
+							final Long entityId = getObjectId(targetObject);
 							final Long catEntId = entityManagerUtil
 									.getNextIdentifier(catEntTblName);
 
@@ -1303,11 +1245,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 								Object clonedSourceObject = cloner.clone(sourceObject);
 								Object targetObject = null;
 								// Create a new instance.
-								final Class targetObjectClass = Class
-										.forName(targetObjectClassName);
-								final Constructor targetObjectConstructor = targetObjectClass
-										.getConstructor();
-								targetObject = targetObjectConstructor.newInstance();
+								targetObject = createObjectForClass(targetObjectClassName);
 
 								for (final BaseAbstractAttribute attr : attrVsValues.keySet())
 								{
@@ -1315,40 +1253,16 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 									setRelatedAttributeValues(targetObjectClassName, attr, value,
 											targetObject);
 								}
-								String targetRoleName = association.getTargetRole().getName();
-								targetRoleName = targetRoleName.substring(0, 1).toUpperCase()
-										+ targetRoleName.substring(1, targetRoleName.length());
 
 								// Put the target object in a collection and
 								// save it as a collection of the source object.
-								/*final Set<Object> containedObjects = new HashSet<Object>();
-								 containedObjects.add(targetObject);
-								 invokeSetterMethod(sourceObject.getClass(), targetRoleName, Class
-								 .forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS),
-								 sourceObject, containedObjects);*/
-								Cardinality targetMaxCardinality = association.getTargetRole()
-										.getMaximumCardinality();
-								if (targetMaxCardinality != Cardinality.ONE)
-								{
-									Set<Object> containedObjects = new HashSet<Object>();
-									containedObjects.add(targetObject);
-									invokeSetterMethod(sourceObject.getClass(), targetRoleName,
-											Class.forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS),
-											sourceObject, containedObjects);
-								}
-								else
-								{
-									invokeSetterMethod(sourceObject.getClass(), targetRoleName,
-											targetObject.getClass(), sourceObject, targetObject);
-								}
+
+								addTargetObject(sourceObject, targetObject,
+										targetObjectClassName, association);
 
 								hibernateDao.insert(targetObject);
 								hibernateDao.update(sourceObject, clonedSourceObject);
-								final Method method = targetObject.getClass().getMethod(
-										DEConstants.GET_ID);
-								final Object updatedObject = method.invoke(targetObject);
-								final Long entityId = Long.valueOf(updatedObject.toString());
-
+								final Long entityId = getObjectId(targetObject);
 								srcEntityId.add(entityId);
 							}
 
@@ -1635,49 +1549,13 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 									targetObjectClassName.toString(), targetEntityId);
 							Object clonedTargetObject = cloner.clone(targetObject);
 
-							String sourceRoleName = asso.getSourceRole().getName();
-							sourceRoleName = sourceRoleName.substring(0, 1).toUpperCase()
-									+ sourceRoleName.substring(1, sourceRoleName.length());
-
-							invokeSetterMethod(targetObject.getClass(), sourceRoleName, Class
-									.forName(sourceObjectClassName.toString()), targetObject,
-									sourceObject);
+							addSourceObject(sourceObject, targetObject,
+									sourceObjectClassName.toString(), asso);
 
 							hibernateDao.update(targetObject, clonedTargetObject);
 							// Get the associated object(s).
-
-							String targetRoleName = asso.getTargetRole().getName();
-							targetRoleName = targetRoleName.substring(0, 1).toUpperCase()
-									+ targetRoleName.substring(1, targetRoleName.length());
-							final Object associatedObject = invokeGetterMethod(sourceObject
-									.getClass(), targetRoleName, sourceObject);
-
-							final Cardinality targetMaxCardinality = asso.getTargetRole()
-									.getMaximumCardinality();
-							if (targetMaxCardinality != Cardinality.ONE)
-							{
-								Collection<Object> containedObjectColl = null;
-								if (associatedObject == null)
-								{
-									containedObjectColl = new HashSet<Object>();
-								}
-								else
-								{
-									containedObjectColl = (Collection) associatedObject;
-								}
-
-								containedObjectColl.add(targetObject);
-
-								invokeSetterMethod(sourceObject.getClass(), targetRoleName, Class
-										.forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS),
-										sourceObject, containedObjectColl);
-							}
-							else
-							{
-								invokeSetterMethod(sourceObject.getClass(), targetRoleName,
-										targetObject.getClass(), sourceObject, targetObject);
-							}
-
+							addTargetObject(sourceObject, targetObject,
+									targetObjectClassName.toString(), asso);
 							hibernateDao.update(sourceObject, clonedSourceObject);
 						}
 					}
@@ -1769,12 +1647,10 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 									}
 
 									fullKeyMap.put(association.getTargetEntity().getName() + "["
-											+ par.getTargetInstanceId() + "]",
-											currentEntityId);
+											+ par.getTargetInstanceId() + "]", currentEntityId);
 
 									keyMap.put(association.getTargetEntity().getName() + "["
-											+ par.getTargetInstanceId() + "]",
-											currentEntityId);
+											+ par.getTargetInstanceId() + "]", currentEntityId);
 
 									fullKeyMap
 											.put(association.getEntity().getName() + "["
@@ -1878,64 +1754,19 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 														.length());
 
 										// Create a new instance.
-										final Class targetObjectClass = Class
-												.forName(targetObjectClassName);
-										final Constructor targetObjectConstructor = targetObjectClass
-												.getConstructor();
-										targetObject = targetObjectConstructor.newInstance();
-
+										targetObject = createObjectForClass(targetObjectClassName);
 										hibernateDao.insert(targetObject);
 										Object clonedTargetObject = cloner.clone(targetObject);
-										// Get the associated object(s).
-										final Object associatedObjects = invokeGetterMethod(
-												sourceObject.getClass(), targetRoleName,
-												sourceObject);
 
-										final Cardinality targetMaxCardinality = association
-												.getTargetRole().getMaximumCardinality();
-
-										if (targetMaxCardinality != Cardinality.ONE)
-										{
-											Collection<Object> containedObjects = null;
-
-											if (associatedObjects == null)
-											{
-												containedObjects = new HashSet<Object>();
-											}
-											else
-											{
-												containedObjects = (Collection) associatedObjects;
-											}
-
-											containedObjects.add(targetObject);
-
-											invokeSetterMethod(
-													sourceObject.getClass(),
-													targetRoleName,
-													Class
-															.forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS),
-													sourceObject, containedObjects);
-										}
-										else
-										{
-											invokeSetterMethod(sourceObject.getClass(),
-													targetRoleName, targetObject.getClass(),
-													sourceObject, targetObject);
-										}
+										addTargetObject(sourceObject, targetObject,
+												targetObjectClassName, association);
 
 										hibernateDao.update(sourceObject, clonedSourceObject);
-
-										invokeSetterMethod(targetObject.getClass(), sourceRoleName,
-												Class.forName(sourceObjectClassName), targetObject,
-												sourceObject);
+										addSourceObject(sourceObject, targetObject,
+												sourceObjectClassName, association);
 
 										hibernateDao.update(targetObject, clonedTargetObject);
-
-										final Method method = targetObject.getClass().getMethod(
-												DEConstants.GET_ID);
-										final Object objectId = method.invoke(targetObject);
-										final Long insertedObjectId = Long.valueOf(objectId
-												.toString());
+										final Long insertedObjectId = getObjectId(targetObject);
 
 										intermediateEntityId = insertedObjectId;
 
@@ -2239,18 +2070,12 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 								sourceObjectClassName, srcEntityId);
 						final Object targetObject = hibernateDao.retrieveById(
 								targetObjectClassName, entityId);
-						String sourceRoleName = lastAsso.getSourceRole().getName();
-						sourceRoleName = sourceRoleName.substring(0, 1).toUpperCase()
-								+ sourceRoleName.substring(1, sourceRoleName.length());
-						invokeSetterMethod(targetObject.getClass(), sourceRoleName, Class
-								.forName(sourceObjectClassName), targetObject, sourceObject);
+
+						addSourceObject(sourceObject, targetObject,
+								sourceObjectClassName, lastAsso);
+
 						hibernateDao.update(targetObject);
-						// Update query for entity table.
-						/*String updateEntQuery = "UPDATE "
-						 + ((CategoryAttribute) attribute).getCategoryEntity().getEntity()
-						 .getTableProperties().getName() + " SET " + entityFKColName
-						 + " = " + srcEntityId + " WHERE IDENTIFIER = " + entityId;
-						 executeUpdateQuery(updateEntQuery, userId, jdbcDao);*/
+
 					}
 
 					CategoryEntityInterface catEntity = categoryEnt;
@@ -2320,62 +2145,19 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 										+ "[" + par.getSourceInstanceId() + "]");
 								final Object sourceObject = hibernateDao.retrieveById(
 										sourceObjectClassName, Identifier);
-								Object targetObject = null;
-								final Class targetObjectClass = Class
-										.forName(targetObjectClassName);
-								final Constructor targetObjectConstructor = targetObjectClass
-										.getConstructor();
-								targetObject = targetObjectConstructor.newInstance();
-								String sourceRoleName = association.getSourceRole().getName();
-								sourceRoleName = sourceRoleName.substring(0, 1).toUpperCase()
-										+ sourceRoleName.substring(1, sourceRoleName.length());
-								String targetRoleName = association.getTargetRole().getName();
-								targetRoleName = targetRoleName.substring(0, 1).toUpperCase()
-										+ targetRoleName.substring(1, targetRoleName.length());
+								Object targetObject = createObjectForClass(targetObjectClassName);
+
 								hibernateDao.insert(targetObject);
-
-								// Get the associated object(s).
-								final Object associatedObjects = invokeGetterMethod(sourceObject
-										.getClass(), targetRoleName, sourceObject);
-
-								final Cardinality targetMaxCardinality = association
-										.getTargetRole().getMaximumCardinality();
-								if (targetMaxCardinality != Cardinality.ONE)
-								{
-									Collection<Object> containedObjects = null;
-									if (associatedObjects != null)
-									{
-										containedObjects = (Collection) associatedObjects;
-									}
-									else
-									{
-										containedObjects = new HashSet<Object>();
-									}
-
-									containedObjects.add(targetObject);
-
-									invokeSetterMethod(sourceObject.getClass(), targetRoleName,
-											Class.forName(DEConstants.JAVA_UTIL_COLLECTION_CLASS),
-											sourceObject, containedObjects);
-								}
-								else
-								{
-									invokeSetterMethod(sourceObject.getClass(), targetRoleName,
-											targetObject.getClass(), sourceObject, targetObject);
-								}
+								addTargetObject(sourceObject, targetObject,
+										targetObjectClassName, association);
 
 								hibernateDao.update(sourceObject);
-
-								invokeSetterMethod(targetObject.getClass(), sourceRoleName, Class
-										.forName(sourceObjectClassName), targetObject, sourceObject);
+								addSourceObject(sourceObject, targetObject,
+										sourceObjectClassName, association);
 
 								hibernateDao.update(targetObject);
 
-								final Method method = targetObject.getClass().getMethod(
-										DEConstants.GET_ID);
-								final Object updatedObject = method.invoke(targetObject);
-								final Long entityId = Long.valueOf(updatedObject.toString());
-
+								final Long entityId = getObjectId(targetObject);
 								sourceEntityId = entityId;
 
 								fullKeyMap.put(association.getTargetEntity().getName() + "["

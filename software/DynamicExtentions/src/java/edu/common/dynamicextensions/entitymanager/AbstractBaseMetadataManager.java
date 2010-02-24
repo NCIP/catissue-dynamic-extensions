@@ -4,6 +4,7 @@
 
 package edu.common.dynamicextensions.entitymanager;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -21,11 +22,13 @@ import edu.common.dynamicextensions.domain.AbstractAttribute;
 import edu.common.dynamicextensions.domain.DynamicExtensionBaseDomainObject;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AbstractMetadataInterface;
+import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.DynamicExtensionBaseDomainObjectInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.wustl.common.bizlogic.AbstractBizLogic;
 import edu.wustl.common.bizlogic.DefaultBizLogic;
 import edu.wustl.common.exception.BizLogicException;
@@ -556,6 +559,156 @@ public abstract class AbstractBaseMetadataManager
 		{
 			throw new DynamicExtensionsSystemException(excMessage, e);
 		}
+
+	}
+
+	/**
+	 * This method will return the name of the TargetRole for the given association
+	 * with its first letter capitalized.
+	 * @param association association whose target role is needed.
+	 * @return target role name with first letter capital
+	 */
+	protected String getTargetRoleNameForMethodInvocation(AssociationInterface association)
+	{
+		String targetRole = association.getTargetRole().getName();
+		targetRole = targetRole.substring(0, 1).toUpperCase()
+				+ targetRole.substring(1, targetRole.length());
+		return targetRole;
+	}
+
+	/**
+	 * This method will return the name of the Source for the given association
+	 * with its first letter capitalized.
+	 * @param association association whose Source role is needed.
+	 * @return source role name with first letter capital
+	 */
+	protected String getSourceRoleNameForMethodInvocation(AssociationInterface association)
+	{
+		String source = association.getSourceRole().getName();
+		source = source.substring(0, 1).toUpperCase() + source.substring(1, source.length());
+		return source;
+	}
+
+	/**
+	 * This method will find out the identifier of the given object
+	 * by calling the getId() method on it.
+	 * @param newObject object whose id is required.
+	 * @return identifier.
+	 * @throws NoSuchMethodException exception.
+	 * @throws IllegalAccessException exception.
+	 * @throws InvocationTargetException exception.
+	 */
+	protected Long getObjectId(Object newObject) throws NoSuchMethodException,
+			IllegalAccessException, InvocationTargetException
+	{
+		Long identifier = null;
+		Method method = newObject.getClass().getMethod("getId");
+		Object object = method.invoke(newObject);
+		if (object != null)
+		{
+			identifier = Long.valueOf(object.toString());
+		}
+		return identifier;
+	}
+
+	/**
+	 * This method will create the object of the given class name.
+	 * @param className class whose instance is to be created.
+	 * @return created object of given class name
+	 * @throws ClassNotFoundException exception.
+	 * @throws SecurityException exception.
+	 * @throws NoSuchMethodException exception.
+	 * @throws IllegalArgumentException exception.
+	 * @throws InstantiationException exception.
+	 * @throws IllegalAccessException exception.
+	 * @throws InvocationTargetException exception.
+	 */
+	protected Object createObjectForClass(String className) throws ClassNotFoundException,
+			SecurityException, NoSuchMethodException, IllegalArgumentException,
+			InstantiationException, IllegalAccessException, InvocationTargetException
+	{
+		Class newObjectClass = Class.forName(className);
+		Constructor constructor = newObjectClass.getConstructor();
+		return constructor.newInstance();
+	}
+
+	/**
+	 * This method will add the TargetObject in the SourceObject where these two objects are
+	 * associated by the given association parameter.
+	 * It will search the method in the sourceObject having the name of target role of association
+	 * & having the targetClassName as its argument type. If association is 1--* then in
+	 * that case it will create the new object & will add it to the collection of these
+	 * object in the Source object.
+	 * @param sourceObject source object in which to add the target object.
+	 * @param targetObject object to be added.
+	 * @param targetClassName target objects class name.
+	 * @param association association between the source & target object.
+	 * @throws NoSuchMethodException targetClassName
+	 * @throws IllegalAccessException targetClassName
+	 * @throws InvocationTargetException targetClassName
+	 * @throws ClassNotFoundException targetClassName
+	 */
+	protected void addTargetObject(Object sourceObject, Object targetObject,
+			String targetClassName, AssociationInterface association) throws NoSuchMethodException,
+			IllegalAccessException, InvocationTargetException, ClassNotFoundException
+	{
+
+		Class srcObjectClass = sourceObject.getClass();
+		String targetRoleName = getTargetRoleNameForMethodInvocation(association);
+		Cardinality targetMaxCardinality = association.getTargetRole().getMaximumCardinality();
+		if (targetMaxCardinality != Cardinality.ONE)
+		{
+			Collection<Object> containedObjects = null;
+			Object associatedObjects = invokeGetterMethod(srcObjectClass, targetRoleName,
+					sourceObject);
+			if (associatedObjects == null)
+			{
+				containedObjects = new HashSet<Object>();
+			}
+			else
+			{
+				containedObjects = (Collection) associatedObjects;
+			}
+			if (!containedObjects.contains(targetObject))
+			{
+				containedObjects.add(targetObject);
+			}
+			invokeSetterMethod(srcObjectClass, targetRoleName, Class
+					.forName("java.util.Collection"), sourceObject, containedObjects);
+		}
+		else
+		{
+			Class tgtObjectClass = Class.forName(targetClassName);
+			invokeSetterMethod(srcObjectClass, targetRoleName, tgtObjectClass, sourceObject,
+					targetObject);
+		}
+
+	}
+
+	/**
+	 * This method will add the SourceObject in the TargetObject where these two objects are
+	 * associated by the given association parameter.
+	 * It will search the method in the targetObject having the name of source role of association
+	 * & having the sourceClassName as its argument type.
+	 * @param sourceObject source object which is to be added in targetObject
+	 * @param targetObject target object in which to add
+	 * @param sourceClassName class name of the source object
+	 * @param association association
+	 * @throws NoSuchMethodException exception.
+	 * @throws IllegalAccessException exception.
+	 * @throws InvocationTargetException exception.
+	 * @throws ClassNotFoundException exception.
+	 */
+	protected void addSourceObject(Object sourceObject, Object targetObject,
+			String sourceClassName, AssociationInterface association) throws NoSuchMethodException,
+			IllegalAccessException, InvocationTargetException, ClassNotFoundException
+	{
+
+		Class srcObjectClass = Class.forName(sourceClassName);
+		String sourceRoleName = getSourceRoleNameForMethodInvocation(association);
+		Class tgtObjectClass = targetObject.getClass();
+		invokeSetterMethod(tgtObjectClass, sourceRoleName, srcObjectClass, targetObject,
+				sourceObject);
 
 	}
 

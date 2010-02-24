@@ -2,9 +2,7 @@
 package edu.common.dynamicextensions.entitymanager;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -578,9 +576,6 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	{
 		List<Map<AbstractAttributeInterface, Object>> dataValMaps = new ArrayList<Map<AbstractAttributeInterface, Object>>();
 		dataValMaps.add(dataValue);
-
-		Set<Object> auditableDEObjects = new HashSet<Object>();
-
 		Long identifier = null;
 		HibernateDAO hibernateDAO = hibernateDao;
 		try
@@ -589,11 +584,8 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			{
 				hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
 			}
-			Object newObject = createObject(entity, dataValue, auditableDEObjects);
-			hibernateDAO.insert(newObject);
-			Method method = newObject.getClass().getMethod("getId");
-			Object object = method.invoke(newObject);
-			identifier = Long.valueOf(object.toString());
+			Object newObject = createObject(entity, dataValue, hibernateDAO);
+			identifier = getObjectId(newObject);
 			List<FileQueryBean> queryListForFile = getQueryListForFileAttributes(dataValue, entity,
 					newObject);
 			if (hibernateDao == null)
@@ -658,28 +650,63 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			{
 				List<Map> listOfMapsForContainedEntity = (List) entryRecord.getValue();
 				AssociationInterface association = (AssociationInterface) attribute;
+				String targetRoleName = getTargetRoleNameForMethodInvocation(association);
+				final Object associatedObjects = invokeGetterMethod(object.getClass(),
+						targetRoleName, object);
 				for (Map valueMapForContainedEntity : listOfMapsForContainedEntity)
 				{
-					String targetRoleName = association.getTargetRole().getName();
-					targetRoleName = targetRoleName.substring(0, 1).toUpperCase()
-							+ targetRoleName.substring(1, targetRoleName.length());
-					final Object associatedObject = invokeGetterMethod(object.getClass(),
-							targetRoleName, object);
+					Object tgtObject = getAssociatedObject(valueMapForContainedEntity,
+							associatedObjects);
+					//fileQueryList.addAll(getQueryListForFileAssociations(object,));
 					fileQueryList.addAll(getQueryListForFileAttributes(valueMapForContainedEntity,
-							association.getTargetEntity(), associatedObject));
+							association.getTargetEntity(), tgtObject));
 				}
 			}
 		}
-		Method method = object.getClass().getMethod("getId");
-		Object idObject = method.invoke(object);
-		Long identifier = Long.valueOf(idObject.toString());
-		FileQueryBean fileQueryBean = createQueryForFileAttribute(identifier, entity,
-				columnValueBeanList);
-		if (fileQueryBean != null)
+		if (!columnValueBeanList.isEmpty())
 		{
+			Long identifier = getObjectId(object);
+			FileQueryBean fileQueryBean = createQueryForFileAttribute(identifier, entity,
+					columnValueBeanList);
 			fileQueryList.add(fileQueryBean);
 		}
 		return fileQueryList;
+	}
+
+	/**
+	 * This method will search for the EntityRecord in the valueMapForContainedEntity &
+	 * will return the object with the EntityRecordId found before in the associatedObjects.
+	 * @param valueMapForContainedEntity data value map which contains EntityRecord.
+	 * @param associatedObjects objects in which to search for the object.
+	 * @return object with the id found.
+	 * @throws NoSuchMethodException exception.
+	 * @throws IllegalAccessException exception.
+	 * @throws InvocationTargetException exception.
+	 */
+	private Object getAssociatedObject(Map valueMapForContainedEntity, Object associatedObjects)
+			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
+	{
+		edu.common.dynamicextensions.domain.EntityRecord entityRecord = new edu.common.dynamicextensions.domain.EntityRecord();
+		Long recordId = (Long) valueMapForContainedEntity.get(entityRecord);
+		Object tgtObject = null;
+		if (associatedObjects instanceof Set)
+		{
+			Set objectSet = (Set) associatedObjects;
+			for (Object object : objectSet)
+			{
+				if (getObjectId(object).equals(recordId))
+				{
+					tgtObject = object;
+					break;
+				}
+			}
+		}
+		else if (getObjectId(associatedObjects).equals(recordId))
+		{
+			tgtObject = associatedObjects;
+		}
+
+		return tgtObject;
 	}
 
 	/**
@@ -784,31 +811,10 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 				oldObject = obj;
 			}
 
-			//Object originalTopLevelObject = copyOriginalObjectState(oldObject);
+			Object updatedObject = updateObject(entity, dataVal, oldObject, hibernateDAO);
 
-			Set<Map<String, Object>> auditableObjects = new HashSet<Map<String, Object>>();
-
-			Object clonedObject = cloner.clone(oldObject);
-			Object updatedObject = updateObject(entity, dataVal, oldObject, hibernateDAO,
-					auditableObjects);
-			hibernateDAO.update(updatedObject, clonedObject);
 			isSuccess = true;
 
-			/*// Get audit manager from DefaultBizLogic.
-			DefaultBizLogic defaultBizLogic = new DefaultBizLogic();
-			SessionDataBean sessionDataBean = new SessionDataBean();
-
-			AuditManager auditManager = defaultBizLogic.getAuditManager(sessionDataBean);
-
-			for (Map<String, Object> mapofAuditableObjects : auditableObjects)
-			{
-			    Object oldObj = mapofAuditableObjects
-			            .get(edu.common.dynamicextensions.ui.util.Constants.OLD_OBJECT);
-			    Object updatedObj = mapofAuditableObjects
-			            .get(edu.common.dynamicextensions.ui.util.Constants.UPDATED_OBJECT);
-
-			    auditManager.updateAudit(hibernateDAO, updatedObj, oldObj);
-			}*/
 			List<FileQueryBean> queryListForFile = getQueryListForFileAttributes(dataVal, entity,
 					updatedObject);
 			if (hibernateDao == null)
@@ -830,10 +836,6 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		{
 			throw new DynamicExtensionsSystemException("Error while updating records!", e);
 		}
-		/*catch (AuditException e)
-		{
-		    throw new DynamicExtensionsSystemException("Error while updating records!", e);
-		}*/
 		finally
 		{
 			if ((hibernateDao == null) && (hibernateDAO != null))
@@ -847,14 +849,14 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 
 	/**
 	 * This constructs a new object from the data in the map.
-	 * @param entity
-	 * @param dataValue
-	 * @param auditableDEObjects
-	 * @return
-	 * @throws DynamicExtensionsApplicationException
+	 * @param entity entity
+	 * @param dataValue data value map.
+	 * @param hibernateDAO hibernate dos
+	 * @return object created.
+	 * @throws DynamicExtensionsApplicationException exception.
 	 */
 	private Object createObject(EntityInterface entity,
-			Map<AbstractAttributeInterface, Object> dataValue, Set<Object> auditableDEObjects)
+			Map<AbstractAttributeInterface, Object> dataValue, HibernateDAO hibernateDAO)
 			throws DynamicExtensionsApplicationException
 	{
 		String packageName = null;
@@ -865,9 +867,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		try
 		{
 			// Create a new instance.
-			Class newObjectClass = Class.forName(packageName + "." + entity.getName());
-			Constructor constructor = newObjectClass.getConstructor();
-			newObject = constructor.newInstance();
+			String className = packageName + "." + entity.getName();
+			Class newObjectClass = Class.forName(className);
+			newObject = createObjectForClass(className);
 
 			// If empty, insert row with only identifier column value.
 			if (dataValue == null)
@@ -889,49 +891,17 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 					String baseEntClassName = packageName + "." + baseEntity.getName();
 					EntityInterface targetEntity = association.getTargetEntity();
 
-					Cardinality targetMaxCardinality = association.getTargetRole()
-							.getMaximumCardinality();
-					String targetRole = association.getTargetRole().getName();
-					targetRole = targetRole.substring(0, 1).toUpperCase()
-							+ targetRole.substring(1, targetRole.length());
-
-					Set<Object> containedObjects = new HashSet<Object>();
-
 					Object value = dataValue.get(attribute);
 
 					List<Map> listOfMapsForContainedEntity = (List) value;
 					for (Map valueMapForContainedEntity : listOfMapsForContainedEntity)
 					{
 						Object associatedObject = createObject(targetEntity,
-								valueMapForContainedEntity, auditableDEObjects);
+								valueMapForContainedEntity, hibernateDAO);
+						addSourceObject(newObject, associatedObject, baseEntClassName, association);
+						addTargetObject(newObject, associatedObject, associatedObject.getClass()
+								.getName(), association);
 
-						Class assoObjectClass = associatedObject.getClass();
-
-						String source = association.getSourceRole().getName();
-						source = source.substring(0, 1).toUpperCase()
-								+ source.substring(1, source.length());
-
-						invokeSetterMethod(assoObjectClass, source,
-								Class.forName(baseEntClassName), associatedObject, newObject);
-
-						if (targetMaxCardinality == Cardinality.ONE)
-						{
-							// Add the object.
-							invokeSetterMethod(newObjectClass, targetRole, associatedObject
-									.getClass(), newObject, associatedObject);
-							break;
-						}
-						else
-						{
-							containedObjects.add(associatedObject);
-						}
-					}
-
-					if (targetMaxCardinality == Cardinality.MANY)
-					{
-						// Add the collection.
-						invokeSetterMethod(newObjectClass, targetRole, Class
-								.forName("java.util.Collection"), newObject, containedObjects);
 					}
 				}
 				else
@@ -943,6 +913,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 							newObject);
 				}
 			}
+			hibernateDAO.insert(newObject);
+			Long identifier = getObjectId(newObject);
+			dataValue.put(new edu.common.dynamicextensions.domain.EntityRecord(), identifier);
 		}
 		catch (ClassNotFoundException exception)
 		{
@@ -963,23 +936,20 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 
 	/**
 	 * This updates the existing object with data in the map.
-	 * @param entity
-	 * @param dataValue
-	 * @param oldObject
-	 * @param hibernateDAO
-	 * @param auditableObjects
-	 * @param auditableDEObjects
-	 * @return
-	 * @throws DynamicExtensionsApplicationException
+	 * @param entity entity
+	 * @param dataValue data value map
+	 * @param oldObject old object which is to be updated.
+	 * @param hibernateDAO hibernate dao.
+	 * @return updated object
+	 * @throws DynamicExtensionsApplicationException exception.
 	 */
 	private Object updateObject(EntityInterface entity,
 			Map<AbstractAttributeInterface, Object> dataValue, Object oldObject,
-			HibernateDAO hibernateDAO, Set<Map<String, Object>> auditableObjects)
-			throws DynamicExtensionsApplicationException
+			HibernateDAO hibernateDAO) throws DynamicExtensionsApplicationException
 	{
 		String packageName = null;
 		packageName = getPackageName(entity, packageName);
-
+		Object clonedObject = cloner.clone(oldObject);
 		try
 		{
 			Class oldObjectClass = oldObject.getClass();
@@ -1006,9 +976,8 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 					EntityInterface targetEntity = association.getTargetEntity();
 					Cardinality targetMaxCardinality = association.getTargetRole()
 							.getMaximumCardinality();
-					String targetRole = association.getTargetRole().getName();
-					targetRole = targetRole.substring(0, 1).toUpperCase()
-							+ targetRole.substring(1, targetRole.length());
+
+					String targetRole = getTargetRoleNameForMethodInvocation(association);
 
 					Collection<Object> containedObjects = null;
 
@@ -1051,10 +1020,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 							{
 								for (Object obj : containedObjects)
 								{
-									Method method = obj.getClass().getMethod("getId");
-									Object object = method.invoke(obj);
-									Long identifier = Long.valueOf(object.toString());
-
+									Long identifier = getObjectId(obj);
 									if (identifier.intValue() == recordId.intValue())
 									{
 										objForUpdate = obj;
@@ -1070,28 +1036,14 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 						{
 							String targetEntityClassName = packageName + "."
 									+ targetEntity.getName();
-							Class associatedClass = Class.forName(targetEntityClassName);
-
-							Constructor constructor = associatedClass.getConstructor();
-							objForUpdate = constructor.newInstance();
+							objForUpdate = createObjectForClass(targetEntityClassName);
 							isNew = true;
 						}
 
-						//Map<String, Object> audtblObjects = new HashMap<String, Object>();
-						//audtblObjects.put(edu.common.dynamicextensions.ui.util.Constants.OLD_OBJECT, objForUpdate);
-
 						objForUpdate = updateObject(targetEntity, valueMapForContainedEntity,
-								objForUpdate, hibernateDAO, auditableObjects);
-
-						//audtblObjects.put(edu.common.dynamicextensions.ui.util.Constants.UPDATED_OBJECT, objForUpdate);
-						//auditableObjects.add(audtblObjects);
-
+								objForUpdate, hibernateDAO);
 						Class assoObjectClass = objForUpdate.getClass();
-
-						String source = association.getSourceRole().getName();
-						source = source.substring(0, 1).toUpperCase()
-								+ source.substring(1, source.length());
-
+						String source = getSourceRoleNameForMethodInvocation(association);
 						invokeSetterMethod(assoObjectClass, source, Class
 								.forName(baseEntityClassName), objForUpdate, oldObject);
 
@@ -1138,6 +1090,17 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 							oldObject);
 				}
 			}
+			Long identifier = getObjectId(oldObject);
+			if (identifier == null)
+			{
+				hibernateDAO.insert(oldObject);
+			}
+			else
+			{
+				hibernateDAO.update(oldObject, clonedObject);
+			}
+			identifier = getObjectId(oldObject);
+			dataValue.put(new edu.common.dynamicextensions.domain.EntityRecord(), identifier);
 		}
 		catch (Exception exception)
 		{
