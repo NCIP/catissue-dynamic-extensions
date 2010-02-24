@@ -115,7 +115,7 @@ public class RefreshCacheInitializer implements ThreadPoolFactory
 				fetchCategory(cacheInitilizer, hibernateDao, catIdList);
 			}
 		}
-		while (!cacheInitilizer.allProcessCompleted())
+		while (!CacheThreadPool.allProcessCompleted())
 		{
 			Thread.sleep(30000L);
 		}
@@ -179,7 +179,7 @@ public class RefreshCacheInitializer implements ThreadPoolFactory
 	private void fetchCategory(CacheThreadPool cacheInitilizer, HibernateDAO hibernateDao,
 			List<Long> catIdList)
 	{
-		Thread categoryFetcher = new Thread(new CategoryFetcher(hibernateDao, catIdList));
+		CategoryFetcher categoryFetcher = new CategoryFetcher(hibernateDao, catIdList);
 		cacheInitilizer.execute(categoryFetcher);
 	}
 
@@ -193,7 +193,7 @@ public class RefreshCacheInitializer implements ThreadPoolFactory
 	private void fetchEntityGroup(CacheThreadPool cacheInitilizer, Long entGrpId,
 			HibernateDAO hibernateDao)
 	{
-		Thread entityGroupFetcher = new Thread(new EntityGroupFetcher(hibernateDao, entGrpId));
+		EntityGroupFetcher entityGroupFetcher = new EntityGroupFetcher(hibernateDao, entGrpId);
 		cacheInitilizer.execute(entityGroupFetcher);
 	}
 }

@@ -1,7 +1,6 @@
 
 package edu.wustl.cab2b.common.cache;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -44,7 +43,7 @@ import edu.wustl.common.querysuite.metadata.category.Category;
  * @author Rahul Ner
  * @author pavan_kalantri
  */
-public abstract class AbstractEntityCache implements IEntityCache, Serializable
+public abstract class AbstractEntityCache implements IEntityCache
 {
 
 	private static final long serialVersionUID = 1234567890L;
@@ -62,7 +61,7 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	/**
 	 * Set of all the entity groups loaded as metadata in caB2B.
 	 */
-	private final transient Set<EntityGroupInterface> cab2bEntityGroups = new HashSet<EntityGroupInterface>();
+	private final Set<EntityGroupInterface> cab2bEntityGroups = new HashSet<EntityGroupInterface>();
 
 	/**
 	 * The EntityCache object. Needed for singleton
@@ -72,17 +71,17 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	/**
 	 * Map with KEY as dynamic extension Entity's identifier and Value as Entity object
 	 */
-	protected transient Map<Long, EntityInterface> idVsEntity = new HashMap<Long, EntityInterface>();
+	protected Map<Long, EntityInterface> idVsEntity = new HashMap<Long, EntityInterface>();
 
 	/**
 	 * Map with KEY as dynamic extension Association's identifier and Value as Association object
 	 */
-	protected transient Map<Long, AssociationInterface> idVsAssociation = new HashMap<Long, AssociationInterface>();
+	protected Map<Long, AssociationInterface> idVsAssociation = new HashMap<Long, AssociationInterface>();
 
 	/**
 	 * Map with KEY as dynamic extension Attribute's identifier and Value as Attribute object
 	 */
-	protected transient Map<Long, AttributeInterface> idVsAttribute = new HashMap<Long, AttributeInterface>();
+	protected Map<Long, AttributeInterface> idVsAttribute = new HashMap<Long, AttributeInterface>();
 
 	/**
 	 * This map holds all the original association. Associations which are
@@ -91,55 +90,55 @@ public abstract class AbstractEntityCache implements IEntityCache, Serializable
 	 * {InheritanceUtil#generateUniqueId(AssociationInterface)} Value : Original
 	 * association for given string identifier
 	 */
-	protected transient Map<String, AssociationInterface> originalAssociations = new HashMap<String, AssociationInterface>();
+	protected Map<String, AssociationInterface> originalAssociations = new HashMap<String, AssociationInterface>();
 
 	/**
 	 * Map with KEY as a permissible value (PV) and VALUE as its Entity. This is
 	 * needed because there is no back pointer from PV to Entity
 	 */
-	protected transient Map<PermissibleValueInterface, EntityInterface> permissibleValueVsEntity = new HashMap<PermissibleValueInterface, EntityInterface>();
+	protected Map<PermissibleValueInterface, EntityInterface> permissibleValueVsEntity = new HashMap<PermissibleValueInterface, EntityInterface>();
 
 	/**
 	 * Set of all the DyanamicExtensions categories loaded in the database.
 	 */
-	protected transient Set<CategoryInterface> deCategories = new HashSet<CategoryInterface>();
+	protected Set<CategoryInterface> deCategories = new HashSet<CategoryInterface>();
 
 	/**
 	 *  Map with KEY as dynamic extension Containers identifier and Value as Container object.
 	 */
-	protected transient Map<Long, ContainerInterface> idVscontainers = new HashMap<Long, ContainerInterface>();
+	protected Map<Long, ContainerInterface> idVscontainers = new HashMap<Long, ContainerInterface>();
 
 	/**
 	 * Map with KEY as dynamic extension CategoryAttribute's identifier and Value as CategoryAttribute object
 	 */
-	protected transient Map<Long, CategoryAttributeInterface> idVsCategoryAttribute = new HashMap<Long, CategoryAttributeInterface>();
+	protected Map<Long, CategoryAttributeInterface> idVsCategoryAttribute = new HashMap<Long, CategoryAttributeInterface>();
 
 	/**
 	 * Map with KEY as dynamic extension CategoryEntity's's identifier and Value as CategoryEntity object
 	 */
-	protected transient Map<Long, CategoryEntityInterface> idVsCaegoryEntity = new HashMap<Long, CategoryEntityInterface>();
+	protected Map<Long, CategoryEntityInterface> idVsCaegoryEntity = new HashMap<Long, CategoryEntityInterface>();
 
 	/**
 	 * Map with KEY as dynamic extension CategoryAssociations's identifier and Value as CategoryAssociations object
 	 */
-	protected transient Map<Long, CategoryAssociationInterface> idVsCaegoryAssociation = new HashMap<Long, CategoryAssociationInterface>();
+	protected Map<Long, CategoryAssociationInterface> idVsCaegoryAssociation = new HashMap<Long, CategoryAssociationInterface>();
 
 	/**
 	 * Map with KEY as dynamic extension Controls's identifier and Value as Control object
 	 */
-	protected transient Map<Long, ControlInterface> idVsControl = new HashMap<Long, ControlInterface>();
+	protected Map<Long, ControlInterface> idVsControl = new HashMap<Long, ControlInterface>();
 
 	/**
 	 * This set contains all the categories which are in opened at this instance in Edit
 	 * mode by any user.
 	 */
-	protected transient Set<CategoryInterface> categoriesInUse = new HashSet<CategoryInterface>();
+	protected Set<CategoryInterface> categoriesInUse = new HashSet<CategoryInterface>();
 
 	/**
 	 *  This counter is used for creating the temporary directories in case of create
 	 *  category task by more than one user at a time.
 	 */
-	protected transient long catFileNameCounter = 1L;
+	protected long catFileNameCounter = 1L;
 
 	/**
 	 * This method gives the singleton cache object. If cache is not present then it

@@ -33,16 +33,13 @@ public final class JbossPropertyLoader
 	{
 	}
 
-	public static JbossPropertyLoader getInstance()
+	public synchronized static JbossPropertyLoader getInstance()
 	{
-		synchronized (propertyLoader)
+		if (propertyLoader == null)
 		{
-			if (propertyLoader == null)
-			{
-				propertyLoader = new JbossPropertyLoader();
-			}
-			return propertyLoader;
+			propertyLoader = new JbossPropertyLoader();
 		}
+		return propertyLoader;
 	}
 
 	/**

@@ -1,7 +1,6 @@
 
 package edu.wustl.cab2b.common.cache;
 
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +33,7 @@ public class CacheThreadPool extends ThreadPoolExecutor
 		super.beforeExecute(thread, runnable);
 	}
 
-	public boolean allProcessCompleted()
+	public static boolean allProcessCompleted()
 	{
 		if (threadCount == 0)
 		{
@@ -42,12 +41,5 @@ public class CacheThreadPool extends ThreadPoolExecutor
 			AbstractEntityCache.isCacheReady = true;
 		}
 		return executionOver;
-	}
-
-	@Override
-	public List<Runnable> shutdownNow()
-	{
-		threadCount = 0;
-		return super.shutdownNow();
 	}
 }

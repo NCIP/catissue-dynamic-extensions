@@ -50,8 +50,9 @@ public class EntityGroupFetcher implements ThreadPoolFactory
 		}
 		catch (DAOException e)
 		{
-			LOGGER.error("Error while fetching Entity Groups from database. Error: "
+			LOGGER.error("Error while fetching Entity Group Id " +entityGroupId+ " from database. Error: "
 					+ e.getMessage());
+
 			throw new RuntimeException("Exception encountered while creating EntityCache!!", e);
 		}
 		finally
