@@ -578,11 +578,6 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		dataValMaps.add(dataValue);
 		Long identifier = null;
 		HibernateDAO hibernateDAO = hibernateDao;
-		if (dataValue == null)
-		{
-			dataValue = new HashMap();
-		}
-
 		try
 		{
 			if (hibernateDAO == null)
@@ -642,6 +637,11 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	{
 		List<FileQueryBean> fileQueryList = new ArrayList<FileQueryBean>();
 		LinkedList<ColumnValueBean> columnValueBeanList = new LinkedList<ColumnValueBean>();
+		// If empty, insert row with only identifier column value.
+		if (dataValue == null)
+		{
+			dataValue = new HashMap();
+		}
 		for (Entry<AbstractAttributeInterface, Object> entryRecord : dataValue.entrySet())
 		{
 			AbstractAttribute attribute = (AbstractAttribute) entryRecord.getKey();
@@ -789,10 +789,6 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		//        Long usrId = ((userId != null && userId.length != 0) ? userId[0] : null);
 
 		HibernateDAO hibernateDAO = hibernateDao;
-		if (dataValue == null)
-		{
-			dataValue = new HashMap();
-		}
 		try
 		{
 			if (hibernateDAO == null)
@@ -874,6 +870,12 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 
 		try
 		{
+			// If empty, insert row with only identifier column value.
+			if (dataValue == null)
+			{
+				dataValue = new HashMap();
+			}
+
 			// Create a new instance.
 			String className = packageName + "." + entity.getName();
 			Class newObjectClass = Class.forName(className);
@@ -956,8 +958,12 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		try
 		{
 			Class oldObjectClass = oldObject.getClass();
-
 			// If empty, insert row with only identifier column value.
+			if (dataValue == null)
+			{
+				dataValue = new HashMap();
+			}
+
 			Set uiColumnSet = dataValue.keySet();
 			Iterator uiColumnSetIter = uiColumnSet.iterator();
 			while (uiColumnSetIter.hasNext())
