@@ -681,10 +681,21 @@ public class DynamicExtensionBaseQueryBuilder
 						.getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties()
 						.getName();
 				// For many to many, get values from the middle table.
-				query.append(SELECT_KEYWORD + WHITESPACE + targetKey);
-				query.append(WHITESPACE + FROM_KEYWORD + WHITESPACE + tableName + WHITESPACE);
-				query.append(WHITESPACE + WHERE_KEYWORD + WHITESPACE + sourceKey + EQUAL
-						+ WHITESPACE + QUESTION_MARK);
+				query.append(SELECT_KEYWORD);
+				query.append(WHITESPACE);
+				query.append(targetKey);
+				query.append(WHITESPACE);
+				query.append(FROM_KEYWORD);
+				query.append(WHITESPACE);
+				query.append(tableName);
+				query.append(WHITESPACE);
+				query.append(WHITESPACE);
+				query.append(WHERE_KEYWORD);
+				query.append(WHITESPACE);
+				query.append(sourceKey);
+				query.append(EQUAL);
+				query.append(WHITESPACE);
+				query.append(QUESTION_MARK);
 				LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 				queryDataList.add(new ColumnValueBean(sourceKey, recordId));
 				if (dao != null && dao.length > 0)
@@ -709,7 +720,9 @@ public class DynamicExtensionBaseQueryBuilder
 				{
 					mnyToOneAssQry.append(COMMA);
 				}
-				mnyToOneAssQry.append(WHITESPACE + sourceKey + WHITESPACE);
+				mnyToOneAssQry.append(WHITESPACE);
+				mnyToOneAssQry.append(sourceKey);
+				mnyToOneAssQry.append(WHITESPACE);
 				manyToOneAssocns.add(association);
 			}
 			else
@@ -719,10 +732,21 @@ public class DynamicExtensionBaseQueryBuilder
 				targetKey = association.getConstraintProperties()
 						.getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties()
 						.getName();
-				query.append(SELECT_KEYWORD + WHITESPACE + IDENTIFIER);
-				query.append(WHITESPACE + FROM_KEYWORD + WHITESPACE + tableName + WHITESPACE);
-				query.append(WHITESPACE + WHERE_KEYWORD + WHITESPACE + targetKey + EQUAL
-						+ WHITESPACE + QUESTION_MARK);
+				query.append(SELECT_KEYWORD);
+				query.append(WHITESPACE);
+				query.append(IDENTIFIER);
+				query.append(WHITESPACE);
+				query.append(FROM_KEYWORD);
+				query.append(WHITESPACE);
+				query.append(tableName);
+				query.append(WHITESPACE);
+				query.append(WHITESPACE);
+				query.append(WHERE_KEYWORD);
+				query.append(WHITESPACE);
+				query.append(targetKey);
+				query.append(EQUAL);
+				query.append(WHITESPACE);
+				query.append(QUESTION_MARK);
 				LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 				queryDataList.add(new ColumnValueBean(targetKey, recordId));
 				List<Long> recordIds = null;
@@ -759,10 +783,17 @@ public class DynamicExtensionBaseQueryBuilder
 			}
 		}
 
-		mnyToOneAssQry.append(WHITESPACE + FROM_KEYWORD + WHITESPACE
-				+ entity.getTableProperties().getName() + WHITESPACE);
-		mnyToOneAssQry.append(WHITESPACE + WHERE_KEYWORD + WHITESPACE + IDENTIFIER + EQUAL
-				+ QUESTION_MARK);
+		mnyToOneAssQry.append(WHITESPACE);
+		mnyToOneAssQry.append(FROM_KEYWORD);
+		mnyToOneAssQry.append(WHITESPACE);
+		mnyToOneAssQry.append(entity.getTableProperties().getName());
+		mnyToOneAssQry.append(WHITESPACE);
+		mnyToOneAssQry.append(WHITESPACE );
+		mnyToOneAssQry.append(WHERE_KEYWORD );
+		mnyToOneAssQry.append(WHITESPACE );
+		mnyToOneAssQry.append(IDENTIFIER );
+		mnyToOneAssQry.append(EQUAL);
+		mnyToOneAssQry.append(QUESTION_MARK);
 
 		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 		queryDataList.add(new ColumnValueBean(IDENTIFIER, recordId));
@@ -852,18 +883,35 @@ public class DynamicExtensionBaseQueryBuilder
 		if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.MANY)
 		{
 			// For many to many, delete all the records referred to by this recordId.
-			query.append(DELETE_KEYWORD + WHITESPACE + tableName + WHITESPACE + WHERE_KEYWORD
-					+ WHITESPACE + sourceKey);
-			query.append(WHITESPACE + EQUAL);
+			query.append(DELETE_KEYWORD);
+			query.append(WHITESPACE);
+			query.append(tableName);
+			query.append(WHITESPACE);
+			query.append(WHERE_KEYWORD);
+			query.append(WHITESPACE);
+			query.append(sourceKey);
+			query.append(WHITESPACE);
+			query.append(EQUAL);
 			query.append(recId.toString());
 		}
 		else if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.ONE)
 		{
 			query.append(UPDATE_KEYWORD);
-			query.append(WHITESPACE + tableName);
-			query.append(WHITESPACE + SET_KEYWORD + WHITESPACE + sourceKey + EQUAL + WHITESPACE
-					+ "null" + WHITESPACE);
-			query.append(WHERE_KEYWORD + WHITESPACE + sourceKey + EQUAL + recId);
+			query.append(WHITESPACE);
+			query.append(tableName);
+			query.append(WHITESPACE);
+			query.append(SET_KEYWORD);
+			query.append(WHITESPACE);
+			query.append(sourceKey);
+			query.append(EQUAL);
+			query.append(WHITESPACE);
+			query.append("null");
+			query.append(WHITESPACE);
+			query.append(WHERE_KEYWORD);
+			query.append(WHITESPACE);
+			query.append(sourceKey);
+			query.append(EQUAL);
+			query.append(recId);
 		}
 		else
 		{
@@ -871,10 +919,21 @@ public class DynamicExtensionBaseQueryBuilder
 			// (set value in target column key = null) that are referring to
 			// this record by setting it to null.
 			query.append(UPDATE_KEYWORD);
-			query.append(WHITESPACE + tableName);
-			query.append(WHITESPACE + SET_KEYWORD + WHITESPACE + targetKey + EQUAL + WHITESPACE
-					+ "null" + WHITESPACE);
-			query.append(WHERE_KEYWORD + WHITESPACE + targetKey + EQUAL + recId);
+			query.append(WHITESPACE);
+			query.append(tableName);
+			query.append(WHITESPACE);
+			query.append(SET_KEYWORD);
+			query.append(WHITESPACE);
+			query.append(targetKey);
+			query.append(EQUAL);
+			query.append(WHITESPACE);
+			query.append("null");
+			query.append(WHITESPACE);
+			query.append(WHERE_KEYWORD);
+			query.append(WHITESPACE );
+			query.append(targetKey );
+			query.append(EQUAL );
+			query.append(recId);
 		}
 
 		return query.toString();
@@ -1499,22 +1558,33 @@ public class DynamicExtensionBaseQueryBuilder
 			{
 				// For many to many, a middle table is created.
 				tableName = cnstrnPrprties.getName();
-				query.append(CREATE_TABLE + WHITESPACE + tableName + WHITESPACE + OPENING_BRACKET
-						+ WHITESPACE + IDENTIFIER + WHITESPACE + dataType + WHITESPACE
-						+ NOT_KEYWORD + WHITESPACE + NULL_KEYWORD + COMMA);
+				query.append(CREATE_TABLE);
+				query.append( WHITESPACE );
+				query.append(tableName );
+				query.append(WHITESPACE );
+				query.append(OPENING_BRACKET);
+				query.append(WHITESPACE );
+				query.append(IDENTIFIER );
+				query.append(WHITESPACE );
+				query.append(dataType );
+				query.append(WHITESPACE);
+				query.append( NOT_KEYWORD );
+				query.append(WHITESPACE );
+				query.append(NULL_KEYWORD );
+				query.append(COMMA);
 				for (ConstraintKeyPropertiesInterface cnstrKeyProp : srcCnstrKeyProps)
 				{
-					query.append(cnstrKeyProp.getTgtForiegnKeyColumnProperties().getName()
-							+ WHITESPACE
-							+ getDatabaseTypeAndSize(cnstrKeyProp.getSrcPrimaryKeyAttribute())
-							+ COMMA);
+					query.append(cnstrKeyProp.getTgtForiegnKeyColumnProperties().getName());
+					query.append(WHITESPACE);
+					query.append(getDatabaseTypeAndSize(cnstrKeyProp.getSrcPrimaryKeyAttribute()));
+					query.append(COMMA);
 				}
 				for (ConstraintKeyPropertiesInterface cnstrKeyProp : tgtCnstrKeyProps)
 				{
-					query.append(cnstrKeyProp.getTgtForiegnKeyColumnProperties().getName()
-							+ WHITESPACE
-							+ getDatabaseTypeAndSize(cnstrKeyProp.getSrcPrimaryKeyAttribute())
-							+ COMMA);
+					query.append(cnstrKeyProp.getTgtForiegnKeyColumnProperties().getName());
+					query.append(WHITESPACE);
+					query.append(getDatabaseTypeAndSize(cnstrKeyProp.getSrcPrimaryKeyAttribute()));
+					query.append(COMMA);
 				}
 				query.append(PRIMARY_KEY_CONSTRAINT);
 				query.append(CLOSING_BRACKET);
@@ -1884,9 +1954,11 @@ public class DynamicExtensionBaseQueryBuilder
 						StringBuffer remAttrRlbkQry = new StringBuffer(ALTER_TABLE);
 						remAttrRlbkQry.append(WHITESPACE);
 						remAttrRlbkQry.append(tableName);
-						remAttrRlbkQry.append(WHITESPACE + ADD_KEYWORD + WHITESPACE
-								+ OPENING_BRACKET
-								+ getQueryPartForAttribute(savedAttribute, type, true));
+						remAttrRlbkQry.append(WHITESPACE);
+						remAttrRlbkQry.append(ADD_KEYWORD);
+						remAttrRlbkQry.append(WHITESPACE);
+						remAttrRlbkQry.append(OPENING_BRACKET);
+						remAttrRlbkQry.append(getQueryPartForAttribute(savedAttribute, type, true));
 
 						if (savedAttribute.getAttributeTypeInformation() instanceof FileAttributeTypeInformation)
 						{
@@ -1894,8 +1966,9 @@ public class DynamicExtensionBaseQueryBuilder
 									+ UNDERSCORE + FILE_NAME);
 							columnName.add(savedAttribute.getColumnProperties().getName()
 									+ UNDERSCORE + CONTENT_TYPE);
-							remAttrRlbkQry.append(COMMA
-									+ extraColumnQueryStringForFileAttribute(savedAttribute));
+							remAttrRlbkQry.append(COMMA);
+							remAttrRlbkQry
+									.append(extraColumnQueryStringForFileAttribute(savedAttribute));
 						}
 
 						remAttrRlbkQry.append(CLOSING_BRACKET);
@@ -2625,7 +2698,7 @@ public class DynamicExtensionBaseQueryBuilder
 	 * @throws DynamicExtensionsSystemException
 	 */
 	protected List<Long> getAssociationRecordValues(String query,
-			LinkedList<ColumnValueBean> queryDataList) throws DynamicExtensionsSystemException
+			List<ColumnValueBean> queryDataList) throws DynamicExtensionsSystemException
 	{
 		List<Long> assoRecords = new ArrayList<Long>();
 		ResultSet resultSet = null;
@@ -2673,7 +2746,7 @@ public class DynamicExtensionBaseQueryBuilder
 	 * @throws DynamicExtensionsSystemException
 	 */
 	protected List<Long> getAssociationRecordValues(String query, JDBCDAO jdbcDAO,
-			LinkedList<ColumnValueBean> queryDataList) throws DynamicExtensionsSystemException
+			List<ColumnValueBean> queryDataList) throws DynamicExtensionsSystemException
 	{
 		List<Long> assoRecords = new ArrayList<Long>();
 		ResultSet resultSet = null;
