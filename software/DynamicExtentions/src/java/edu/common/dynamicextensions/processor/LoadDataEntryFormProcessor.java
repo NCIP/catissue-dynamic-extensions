@@ -1,7 +1,6 @@
 
 package edu.common.dynamicextensions.processor;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,13 +86,13 @@ public class LoadDataEntryFormProcessor
 		{
 			dataEntryForm.setShowFormPreview("");
 		}
-		if (recordIdentifier != null)
+		if (recordIdentifier == null)
 		{
-			dataEntryForm.setRecordIdentifier(recordIdentifier);
+			dataEntryForm.setRecordIdentifier("");
 		}
 		else
 		{
-			dataEntryForm.setRecordIdentifier("");
+			dataEntryForm.setRecordIdentifier(recordIdentifier);
 		}
 		return containerInterface;
 	}
@@ -106,7 +105,6 @@ public class LoadDataEntryFormProcessor
 	 * @throws NumberFormatException
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
-	 * @throws SQLException
 	 */
 	public Map<BaseAbstractAttributeInterface, Object> getValueMapFromRecordId(
 			AbstractEntityInterface entityInterface, String recordIdentifier)
