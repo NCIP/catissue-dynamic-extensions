@@ -382,10 +382,19 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		final CategoryInterface category = catEntity.getCategory();
 		final CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 
-		final StringBuffer query = new StringBuffer();
-		query.append(SELECT_KEYWORD + WHITESPACE + IDENTIFIER + WHITESPACE + FROM_KEYWORD
-				+ WHITESPACE + rootCatEntity.getTableProperties().getName() + WHITESPACE
-				+ WHERE_KEYWORD + WHITESPACE + RECORD_ID + EQUAL + QUESTION_MARK);
+		final StringBuffer query = new StringBuffer(SELECT_KEYWORD);
+		query.append(WHITESPACE);
+		query.append(IDENTIFIER);
+		query.append(WHITESPACE);
+		query.append(FROM_KEYWORD);
+		query.append(WHITESPACE);
+		query.append(rootCatEntity.getTableProperties().getName());
+		query.append(WHITESPACE);
+		query.append(WHERE_KEYWORD);
+		query.append(WHITESPACE);
+		query.append(RECORD_ID);
+		query.append(EQUAL);
+		query.append(QUESTION_MARK);
 		final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 		queryDataList.add(new ColumnValueBean(RECORD_ID, parentRecId));
 		Long rootCERecId = null;
@@ -718,28 +727,30 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	private boolean isAllRelatedInvisibleCategoryAttributesCollection(
 			final CategoryEntityInterface catEntity)
 	{
+		boolean returnValue = true;
 		final Collection<CategoryAttributeInterface> catAttributes = catEntity
 				.getAllCategoryAttributes();
 		if ((catAttributes == null) || catAttributes.isEmpty())
 		{
-			return false;
+			returnValue = false;
 		}
-
-		for (final CategoryAttributeInterface catAttribute : catAttributes)
+		else
 		{
-			if ((catAttribute.getIsRelatedAttribute() == null)
-					|| !catAttribute.getIsRelatedAttribute())
+			for (final CategoryAttributeInterface catAttribute : catAttributes)
 			{
-				return false;
-			}
-			else if (catAttribute.getIsRelatedAttribute()
-					&& ((catAttribute.getIsVisible() != null) && catAttribute.getIsVisible()))
-			{
-				return false;
+				if ((catAttribute.getIsRelatedAttribute() == null)
+						|| !catAttribute.getIsRelatedAttribute())
+				{
+					returnValue = false;
+				}
+				else if (catAttribute.getIsRelatedAttribute()
+						&& ((catAttribute.getIsVisible() != null) && catAttribute.getIsVisible()))
+				{
+					returnValue = false;
+				}
 			}
 		}
-
-		return true;
+		return returnValue;
 	}
 
 	/**
@@ -992,7 +1003,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				columnValues.append("'" + defaultValue + "'");
 				colNamesValues.append(columnName);
 				colNamesValues.append(" = '");
-				colNamesValues.append(defaultValue + "'");
+				colNamesValues.append(defaultValue);
+				colNamesValues.append("'");
 			}
 		}
 		attrVsValues.put((BaseAbstractAttribute) attribute, defaultValue);
@@ -2892,10 +2904,19 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			final Long recordId, final JDBCDAO jdbcDao) throws SQLException,
 			DynamicExtensionsSystemException
 	{
-		final StringBuffer query = new StringBuffer();
-		query.append(SELECT_KEYWORD + WHITESPACE + RECORD_ID + WHITESPACE + FROM_KEYWORD
-				+ WHITESPACE + rootCatEntity.getTableProperties().getName() + WHITESPACE
-				+ WHERE_KEYWORD + WHITESPACE + IDENTIFIER + EQUAL + QUESTION_MARK);
+		final StringBuffer query = new StringBuffer(SELECT_KEYWORD);
+		query.append(WHITESPACE);
+		query.append(RECORD_ID);
+		query.append(WHITESPACE);
+		query.append(FROM_KEYWORD);
+		query.append(WHITESPACE);
+		query.append(rootCatEntity.getTableProperties().getName());
+		query.append(WHITESPACE);
+		query.append(WHERE_KEYWORD);
+		query.append(WHITESPACE);
+		query.append(IDENTIFIER);
+		query.append(EQUAL);
+		query.append(QUESTION_MARK);
 
 		Long rootCatEntRecId = null;
 		final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
@@ -3025,7 +3046,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	 * @throws SQLException
 	 */
 	private List<Long> getResultIDList(final String query, final String columnName,
-			final JDBCDAO jdbcDao, final LinkedList<ColumnValueBean> queryDataList)
+			final JDBCDAO jdbcDao, final List<ColumnValueBean> queryDataList)
 			throws DynamicExtensionsSystemException
 	{
 		final List<Long> recordIds = new ArrayList<Long>();
@@ -3104,8 +3125,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private Long getEntityRecordId(final String query,
-			final LinkedList<ColumnValueBean> queryDataList)
+	private Long getEntityRecordId(final String query, final List<ColumnValueBean> queryDataList)
 			throws DynamicExtensionsSystemException
 	{
 		ResultSet resultSet = null;
