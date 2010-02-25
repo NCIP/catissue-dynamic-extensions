@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FormDefinition name="Fullform_3_EntityGroup_Form_WO_MS"
+	entityGroup="Fullform_3_EntityGroup">
+	<Form name="Fullform_3_EntityGroup_Form_WO_MS" show="false">
+		<Instances>
+			<Instance>Fullform_3_EntityGroup_Form_WO_MS[1]</Instance>
+		</Instances>
+		<Attribute uiControl="textArea" className="Fullform_3_EntityGroup_Form_WO_MS"
+			caption="TA" attributeName="ta">
+			<Property value="asdfasdf" key="defaultValue">
+			</Property>
+			<Property value="yes" key="required">
+			</Property>
+			<Property value="25" key="Columns">
+			</Property>
+			<Property value="5" key="Rows">
+			</Property>
+		</Attribute>
+		<Attribute uiControl="checkBox" className="Fullform_3_EntityGroup_Form_WO_MS"
+			caption="CB" attributeName="cb">
+			<Property value="true" key="defaultValue">
+			</Property>
+			<Property value="yes" key="required">
+			</Property>
+		</Attribute>
+		<Attribute uiControl="datePicker" className="Fullform_3_EntityGroup_Form_WO_MS"
+			caption="Date" attributeName="date">
+			<Property value="2010-02-11 00:00:00.0" key="defaultValue">
+			</Property>
+			<Property value="yes" key="required">
+			</Property>
+		</Attribute>
+		<Attribute uiControl="fileUpload" className="Fullform_3_EntityGroup_Form_WO_MS"
+			caption="FU" attributeName="fu">
+			<Property value="yes" key="required">
+			</Property>
+			<Property value="4.0" key="MaxFileSize">
+			</Property>
+		</Attribute>
+		<Attribute uiControl="radioButton" className="Fullform_3_EntityGroup_Form_WO_MS"
+			caption="RB" attributeName="rb">
+			<Property value="yes" key="required">
+			</Property>
+			<Property value="true" key="IsOrdered">
+			</Property>
+		</Attribute>
+		<Attribute uiControl="comboBox" className="Fullform_3_EntityGroup_Form_WO_MS"
+			caption="DD" attributeName="dd">
+			<Property value="yes" key="required">
+			</Property>
+			<Property value="true" key="IsOrdered">
+			</Property>
+		</Attribute>
+		<Attribute uiControl="textField" className="Fullform_3_EntityGroup_Form_WO_MS"
+			caption="TI" attributeName="ti">
+			<Property value="3" key="defaultValue">
+			</Property>
+			<Property value="yes" key="required">
+			</Property>
+			<Property value="10" key="Columns">
+			</Property>
+		</Attribute>
+		<Attribute uiControl="textField" className="Fullform_3_EntityGroup_Form_WO_MS"
+			caption="TW" attributeName="tw">
+			<Property value="3.1" key="defaultValue">
+			</Property>
+			<Property value="yes" key="required">
+			</Property>
+			<Property value="10" key="Columns">
+			</Property>
+		</Attribute>
+		<Attribute uiControl="textField" className="Fullform_3_EntityGroup_Form_WO_MS"
+			caption="TS" attributeName="ts">
+			<Property value="Abc" key="defaultValue">
+			</Property>
+			<Property value="yes" key="required">
+			</Property>
+			<Property value="25" key="Columns">
+			</Property>
+		</Attribute>
+	</Form>
+	<SkipLogic>
+		<ControllingAttribute>
+			<Instance>NeuroOncAnnotations[1]</Instance>
+			<Attribute attributeName="agent" value="Penicillin"></Attribute>
+			<DependentAttribute>
+				<Instance>NeuroOncAnnotations[1]</Instance>
+				<SkipLogicAttribute attributeName="height" value="Disable"></SkipLogicAttribute>
+			</DependentAttribute>
+		</ControllingAttribute>
+		<ControllingAttribute>
+			<Instance>NeuroOncAnnotations[1]</Instance>
+			<Attribute attributeName="agent" value="Ciplox"></Attribute>
+			<DependentAttribute>
+				<Instance>NeuroOncAnnotations[1]</Instance>
+				<SkipLogicAttribute attributeName="all" value="hide"></SkipLogicAttribute>
+			</DependentAttribute>
+		</ControllingAttribute>
+		<ControllingAttribute>
+			<Instance>NeuroOncAnnotations[1]</Instance>
+			<Attribute attributeName="agent" value="Ciplox"></Attribute>
+			<DependentAttribute>
+				<Instance>NeuroOncAnnotations[1]</Instance>
+				<SkipLogicAttribute attributeName="frequency">
+					<subset permissibleValueFile="/usr/local/ciplox_frequncy.txt" />
+				</SkipLogicAttribute>
+			</DependentAttribute>
+		</ControllingAttribute>
+	</SkipLogic>
+</FormDefinition>
