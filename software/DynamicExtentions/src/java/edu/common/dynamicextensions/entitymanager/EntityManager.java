@@ -578,6 +578,11 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		dataValMaps.add(dataValue);
 		Long identifier = null;
 		HibernateDAO hibernateDAO = hibernateDao;
+		if (dataValue == null)
+		{
+			dataValue = new HashMap();
+		}
+
 		try
 		{
 			if (hibernateDAO == null)
@@ -784,7 +789,10 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		//        Long usrId = ((userId != null && userId.length != 0) ? userId[0] : null);
 
 		HibernateDAO hibernateDAO = hibernateDao;
-
+		if (dataValue == null)
+		{
+			dataValue = new HashMap();
+		}
 		try
 		{
 			if (hibernateDAO == null)
@@ -872,11 +880,6 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			newObject = createObjectForClass(className);
 
 			// If empty, insert row with only identifier column value.
-			if (dataValue == null)
-			{
-				dataValue = new HashMap();
-			}
-
 			Set uiColumnSet = dataValue.keySet();
 			Iterator uiColumnSetIter = uiColumnSet.iterator();
 			while (uiColumnSetIter.hasNext())
@@ -955,11 +958,6 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			Class oldObjectClass = oldObject.getClass();
 
 			// If empty, insert row with only identifier column value.
-			if (dataValue == null)
-			{
-				dataValue = new HashMap();
-			}
-
 			Set uiColumnSet = dataValue.keySet();
 			Iterator uiColumnSetIter = uiColumnSet.iterator();
 			while (uiColumnSetIter.hasNext())
