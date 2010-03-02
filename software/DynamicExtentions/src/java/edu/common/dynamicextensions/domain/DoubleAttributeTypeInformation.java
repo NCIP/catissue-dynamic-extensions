@@ -10,8 +10,8 @@ import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterface;
 
 /**
- * @hibernate.joined-subclass table="DYEXTN_DOUBLE_TYPE_INFO" 
- * @hibernate.joined-subclass-key column="IDENTIFIER"  
+ * @hibernate.joined-subclass table="DYEXTN_DOUBLE_TYPE_INFO"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  * @author sujay_narkar
  *
  */
@@ -25,7 +25,7 @@ public class DoubleAttributeTypeInformation extends NumericAttributeTypeInformat
 	 */
 	private static final long serialVersionUID = 7901101750879429344L;
 
-	/** 
+	/**
 	 * @see edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface#getDataType()
 	 */
 	public String getDataType()
@@ -35,7 +35,7 @@ public class DoubleAttributeTypeInformation extends NumericAttributeTypeInformat
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public PermissibleValueInterface getPermissibleValueForString(String value)
 	{
@@ -45,8 +45,9 @@ public class DoubleAttributeTypeInformation extends NumericAttributeTypeInformat
 
 		return doubleValue;
 	}
+
 	/**
-	 * 
+	 *
 	 */
 	public String getFormattedValue(Double value)
 	{
@@ -58,6 +59,7 @@ public class DoubleAttributeTypeInformation extends NumericAttributeTypeInformat
 					DecimalFormat formatDecimal = (DecimalFormat) NumberFormat
 							.getNumberInstance();
 					formatDecimal.setParseBigDecimal(true);
+				formatDecimal.setGroupingUsed(false);
 					formatDecimal.setMaximumFractionDigits(this.decimalPlaces
 							.intValue());
 					formattedValue = formatDecimal.format(value);
@@ -65,7 +67,7 @@ public class DoubleAttributeTypeInformation extends NumericAttributeTypeInformat
 			else
 			{
 				formattedValue = value.toString();
-			} 
+			}
 		}
 		return formattedValue;
 	}
