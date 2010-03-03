@@ -1,3 +1,4 @@
+
 package edu.common.dynamicextensions.domain;
 
 import edu.common.dynamicextensions.domaininterface.FormulaInterface;
@@ -9,29 +10,31 @@ import edu.common.dynamicextensions.domaininterface.FormulaInterface;
  */
 public class Formula extends DynamicExtensionBaseDomainObject implements FormulaInterface
 {
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4L;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	protected String expression;
-	
+
 	/**
-	 * @hibernate.property name="expression" type="string" column="EXPRESSION" length="255"
+	 * @hibernate.property name="expression" type="string" column="EXPRESSION" length="4000"
 	 * @return Returns the note.
 	 */
-	public String getExpression() 
+	public String getExpression()
 	{
 		return expression;
 	}
+
 	/**
-	 * 
+	 *
 	 * @param expression
 	 */
-	public void setExpression(String expression) 
+	public void setExpression(String expression)
 	{
 		this.expression = expression;
 	}

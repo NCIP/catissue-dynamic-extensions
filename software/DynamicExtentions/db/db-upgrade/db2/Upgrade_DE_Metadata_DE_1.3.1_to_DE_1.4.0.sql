@@ -1,0 +1,1 @@
+ALTER TABLE DYEXTN_FORMULA ALTER column expression SET DATA TYPE varchar(4000);
