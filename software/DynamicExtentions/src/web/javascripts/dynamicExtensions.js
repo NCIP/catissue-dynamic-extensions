@@ -1451,7 +1451,7 @@ function addRow(containerId)
     {
         var newCell = newRow.insertCell(i);
         newCell.className = cells[i].className;
-
+        newCell.style.whiteSpace = "nowrap";
         newCell.innerHTML = cells[i].innerHTML;
         newCell = setDefaultValues(tableId, newCell, containerId);
     }
