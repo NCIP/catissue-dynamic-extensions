@@ -97,6 +97,7 @@ public class RefreshCacheInitializer implements ThreadPoolFactory
 		CacheThreadPool cacheInitilizer = new CacheThreadPool(numberOfThreads, numberOfThreads, 1,
 				TimeUnit.SECONDS, queue);
 
+		cacheInitilizer.setNumberOfEntityGroup(entityGroupIDs.size());
 		for (Long entGrpId : entityGroupIDs)
 		{
 			while ((cacheInitilizer.getActiveCount() >= numberOfThreads))
@@ -115,7 +116,7 @@ public class RefreshCacheInitializer implements ThreadPoolFactory
 				fetchCategory(cacheInitilizer, hibernateDao, catIdList);
 			}
 		}
-		while (!CacheThreadPool.allProcessCompleted())
+		while (!cacheInitilizer.allProcessCompleted())
 		{
 			Thread.sleep(30000L);
 		}
