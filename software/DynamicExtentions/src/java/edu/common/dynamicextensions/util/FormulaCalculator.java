@@ -164,7 +164,7 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 					newAttribute.append(mapEntry.getKey());
 					if (count < size)
 					{
-						newAttribute.append(",");
+						newAttribute.append(',');
 					}
 				}
 				formula = formula.replaceAll(attributeName, newAttribute.toString());

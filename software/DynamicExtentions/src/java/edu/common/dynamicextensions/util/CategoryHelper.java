@@ -81,7 +81,6 @@ import edu.wustl.metadata.util.DyExtnObjectCloner;
 public class CategoryHelper implements CategoryHelperInterface
 {
 
-	private final CategoryManagerInterface categoryManager = CategoryManager.getInstance();
 	private CategoryFileParser categoryFileParser;
 	private static final String CAT_ATTRIBUTE_NAME_POSTFIX = "Category Attribute";
 

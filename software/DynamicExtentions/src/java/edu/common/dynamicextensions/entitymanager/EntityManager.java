@@ -2045,7 +2045,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		query.append(WHITESPACE).append(FROM_KEYWORD).append(WHITESPACE).append(
 				"dyextn_abstract_metadata").append(WHITESPACE);
 		query.append(WHERE_KEYWORD).append(WHITESPACE).append("NAME").append(WHITESPACE).append(
-				EQUAL).append("'").append(entityName).append("'");
+				EQUAL).append('\'').append(entityName).append('\'');
 		query.append(CLOSING_BRACKET);
 		query.append(CLOSING_BRACKET);
 		Logger.out.info("Query = " + query.toString());

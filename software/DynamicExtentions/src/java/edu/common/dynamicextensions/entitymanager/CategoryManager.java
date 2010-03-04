@@ -1004,7 +1004,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				colNamesValues.append(columnName);
 				colNamesValues.append(" = '");
 				colNamesValues.append(defaultValue);
-				colNamesValues.append("'");
+				colNamesValues.append('\'');
 			}
 		}
 		attrVsValues.put((BaseAbstractAttribute) attribute, defaultValue);

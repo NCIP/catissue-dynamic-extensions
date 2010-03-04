@@ -566,7 +566,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 				{
 					controlHTML.append(" style='display:row'");
 				}
-				controlHTML.append(">");
+				controlHTML.append('>');
 				if (control.getIsSkipLogicTargetControl())
 				{
 					controlHTML
