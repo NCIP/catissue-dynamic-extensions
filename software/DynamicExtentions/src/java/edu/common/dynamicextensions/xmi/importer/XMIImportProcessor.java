@@ -221,10 +221,8 @@ public class XMIImportProcessor
 		}
 
 		// process for uml model
-		processModel(umlPackage, umlClassColl, umlAssociationColl, umlGeneralisationColl, null,
-				packageName, false);
-
-		validate();
+		processUmlPackage(umlPackage, packageName, umlClassColl, umlAssociationColl,
+				umlGeneralisationColl);
 
 		final List<EntityGroupInterface> entityGroupColl = retrieveEntityGroup(entityGroupName);
 
@@ -302,14 +300,13 @@ public class XMIImportProcessor
 			//By default this flag will be true.
 
 			//			For static models
-			if (xmiConfigurationObject.isEntityGroupSystemGenerated())
+			if (xmiConfigurationObject.isEntityGroupSystemGenerated()
+					&& (!entity.getName().startsWith(
+							xmiConfigurationObject.getDefaultPackagePrefix()) && xmiConfigurationObject
+							.isDefaultPackage()))
 			{
-				if (!entity.getName().startsWith(xmiConfigurationObject.getDefaultPackagePrefix())
-						&& xmiConfigurationObject.isDefaultPackage())
-				{
-					entity.setName(xmiConfigurationObject.getDefaultPackagePrefix()
-							+ entity.getName());
-				}
+				entity.setName(xmiConfigurationObject.getDefaultPackagePrefix() + entity.getName());
+
 			}
 			umlClassIdVsEntity.put(umlClass.refMofId(), entity);
 		}
@@ -400,6 +397,43 @@ public class XMIImportProcessor
 	}
 
 	/**
+	 * This method will check if the model contains the given package& will collect
+	 * all the model elements in the corrosponding collections.
+	 * @param umlPackage uml package.
+	 * @param packageName package to be searched in the model.
+	 * @param umlClassColl collection which collects all classes.
+	 * @param umlAssociationColl collection which collects all associations.
+	 * @param umlGeneralisationColl collection which collects all generalisations.
+	 * @throws DynamicExtensionsSystemException exception if package is not present
+	 */
+	private void processUmlPackage(final UmlPackage umlPackage, final String packageName,
+			final List<UmlClass> umlClassColl, final List<UmlAssociation> umlAssociationColl,
+			final List<Generalization> umlGeneralisationColl)
+			throws DynamicExtensionsSystemException
+	{
+		processModel(umlPackage, umlClassColl, umlAssociationColl, umlGeneralisationColl, null,
+				packageName, false);
+		if (!isPackagePresent)
+		{
+			// if package not present then if package name is not starting with logical view.logical model
+			//then append the same & then try again.
+			String newPackage = XMIConstants.PACKAGE_NAME_LOGICAL_VIEW + XMIConstants.DOT_SEPARATOR
+					+ XMIConstants.PACKAGE_NAME_LOGICAL_MODEL + XMIConstants.DOT_SEPARATOR;
+			if (!packageName.startsWith(newPackage))
+			{
+				String updatedPackageName = newPackage + packageName;
+				processModel(umlPackage, umlClassColl, umlAssociationColl, umlGeneralisationColl,
+						null, updatedPackageName, false);
+			}
+			if (!isPackagePresent)
+			{
+				throw new DynamicExtensionsSystemException(
+						"Specified package is not present in the XMI.");
+			}
+		}
+	}
+
+	/**
 	 * @param umlAssociationColl
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
@@ -445,7 +479,11 @@ public class XMIImportProcessor
 						XMIConstants.DOT_SEPARATOR);
 				final String entityName = getNextToken(tokenizer);
 				final EntityInterface targetEntity = entityGroup.getEntityByName(entityName);
-				if (targetEntity != null)
+				if (targetEntity == null)
+				{
+					throw new DynamicExtensionsSystemException("Given entity not found");
+				}
+				else
 				{
 					final String attributeName = getNextToken(tokenizer);
 					final AttributeInterface attribute = targetEntity
@@ -454,10 +492,6 @@ public class XMIImportProcessor
 					{
 						entity.addPrimaryKeyAttribute(attribute);
 					}
-				}
-				else
-				{
-					throw new DynamicExtensionsSystemException("Given entity not found");
 				}
 			}
 		}
@@ -605,17 +639,6 @@ public class XMIImportProcessor
 	}
 
 	/**
-	 * @throws Exception
-	 */
-	private void validate() throws Exception
-	{
-		if (!isPackagePresent)
-		{
-			throw new Exception("Specified package is not present in the XMI.");
-		}
-	}
-
-	/**
 	 * @param entityGroupName
 	 * @return
 	 * @throws BizLogicException
@@ -630,7 +653,7 @@ public class XMIImportProcessor
 		Logger.out.info(" ");
 		Logger.out.info(" ");
 		Logger.out.info("#################################");
-		Logger.out.info("##   EntityGroup present = " + (entityGroupColl.size() > 0 ? "Y" : "N")
+		Logger.out.info("##   EntityGroup present = " + (entityGroupColl.isEmpty() ? "N" : "Y")
 				+ "   ##");
 		Logger.out.info("#################################");
 		Logger.out.info(" ");
@@ -658,6 +681,13 @@ public class XMIImportProcessor
 	private void addTaggedValue(final String packageName)
 	{
 		Collection<TaggedValueInterface> tvColl = entityGroup.getTaggedValueCollection();
+		//package name should not contain the space as per the Cacore &
+		// logical view.logical model is not actually a package it is only a model
+		//so removed this from the package name string.
+		String logicalPackString = XMIConstants.PACKAGE_NAME_LOGICAL_VIEW
+				+ XMIConstants.DOT_SEPARATOR + XMIConstants.PACKAGE_NAME_LOGICAL_MODEL
+				+ XMIConstants.DOT_SEPARATOR;
+		String updatedPackageName = packageName.replaceFirst(logicalPackString, "");
 		if (tvColl == null)
 		{
 			tvColl = new HashSet<TaggedValueInterface>();
@@ -670,12 +700,12 @@ public class XMIImportProcessor
 		{
 			taggedValue = DomainObjectFactory.getInstance().createTaggedValue();
 			taggedValue.setKey(XMIConstants.TAGGED_NAME_PACKAGE_NAME);
-			taggedValue.setValue(packageName);
+			taggedValue.setValue(updatedPackageName);
 			tvColl.add(taggedValue);
 		}
 		else
 		{
-			taggedValue.setValue(packageName);
+			taggedValue.setValue(updatedPackageName);
 		}
 	}
 
@@ -867,7 +897,7 @@ public class XMIImportProcessor
 					}
 					final Collection<Generalization> generalizationColl = umlClass
 							.getGeneralization();
-					if ((generalizationColl != null) && (generalizationColl.size() > 0))
+					if (generalizationColl != null)
 					{
 						generalizations.addAll(generalizationColl);
 					}
@@ -932,7 +962,7 @@ public class XMIImportProcessor
 
 					final Collection<Generalization> generalizationColl = umlClass
 							.getGeneralization();
-					if ((generalizationColl != null) && (generalizationColl.size() > 0))
+					if (generalizationColl != null)
 					{
 						generalizations.addAll(generalizationColl);
 					}
@@ -1435,7 +1465,11 @@ public class XMIImportProcessor
 			final List<Generalization> umlGeneralisationColl)
 	{
 		HashMap<String, List<String>> parentIdVsChildrenIds = null;
-		if (umlGeneralisationColl != null)
+		if (umlGeneralisationColl == null)
+		{
+			parentIdVsChildrenIds = new HashMap<String, List<String>>(0);
+		}
+		else
 		{
 			parentIdVsChildrenIds = new HashMap<String, List<String>>(umlGeneralisationColl.size());
 			for (final Generalization umlGeneralization : umlGeneralisationColl)
@@ -1450,10 +1484,6 @@ public class XMIImportProcessor
 				}
 				children.add(childClass);
 			}
-		}
-		else
-		{
-			parentIdVsChildrenIds = new HashMap<String, List<String>>(0);
 		}
 
 		return parentIdVsChildrenIds;
@@ -1623,13 +1653,15 @@ public class XMIImportProcessor
 			final String srcEntityName, final String tgtEntityName, final String direction,
 			final RoleInterface sourceRole, final RoleInterface targetRole)
 	{
+		AssociationInterface existingAssociation = null;
 		for (final AssociationInterface existingAsso : existingAssociationColl)
 		{
 			if ((umlAssociationName != null)
 					&& umlAssociationName.equalsIgnoreCase(existingAsso.getName())
 					&& existingAsso.getTargetEntity().getName().equalsIgnoreCase(tgtEntityName))
 			{//Since name is present, & its between the same two entities so edit this association.
-				return existingAsso;
+				existingAssociation = existingAsso;
+				break;
 			}
 			//If even 1 condition does not match, goto next association
 			if (!existingAsso.getEntity().getName().equalsIgnoreCase(srcEntityName))
@@ -1791,9 +1823,10 @@ public class XMIImportProcessor
 				}
 			}
 			//All parameters match. Hence this Association has not been edited.
-			return existingAsso;
+			existingAssociation = existingAsso;
+			break;
 		}
-		return null;
+		return existingAssociation;
 	}
 
 	/**
@@ -1907,15 +1940,16 @@ public class XMIImportProcessor
 	 */
 	private DEConstants.Cardinality getCardinality(final int cardinality)
 	{
+		DEConstants.Cardinality miltiplicity = DEConstants.Cardinality.MANY;
 		if (cardinality == 0)
 		{
-			return DEConstants.Cardinality.ZERO;
+			miltiplicity = DEConstants.Cardinality.ZERO;
 		}
 		if (cardinality == 1)
 		{
-			return DEConstants.Cardinality.ONE;
+			miltiplicity = DEConstants.Cardinality.ONE;
 		}
-		return DEConstants.Cardinality.MANY;
+		return miltiplicity;
 	}
 
 	/**
@@ -1961,17 +1995,19 @@ public class XMIImportProcessor
 	 */
 	private ContainerInterface getContainer(final String entityName)
 	{
+		ContainerInterface entityContainer = null;
 		if ((retrievedContainerList != null) && !retrievedContainerList.isEmpty())
 		{
 			for (final ContainerInterface container : retrievedContainerList)
 			{
 				if (container.getCaption().equals(entityName))
 				{
-					return container;
+					entityContainer = container;
+					break;
 				}
 			}
 		}
-		return null;
+		return entityContainer;
 	}
 
 	/**
@@ -1980,25 +2016,29 @@ public class XMIImportProcessor
 	 */
 	private EntityInterface getEntity(final String entityName)
 	{
+		EntityInterface entity = null;
 		if ((retrievedContainerList != null) && !retrievedContainerList.isEmpty())
 		{
 			for (final ContainerInterface container : retrievedContainerList)
 			{
 				if (container.getAbstractEntity().getName().equals(entityName))
 				{
-					return (EntityInterface) container.getAbstractEntity();
+					entity = (EntityInterface) container.getAbstractEntity();
+					break;
 				}
 			}
 		}
-		return null;
+		return entity;
 	}
 
 	/**
 	 * This method creates a container object.
 	 * @param entityInterface
-	 * @throws Exception fails to create container
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
 	 */
-	protected void createContainer(final EntityInterface entityInterface) throws Exception
+	protected void createContainer(final EntityInterface entityInterface)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		ContainerInterface containerInterface = getContainer(entityInterface.getName());
 
@@ -2438,10 +2478,10 @@ public class XMIImportProcessor
 	 */
 	private String getSeparatorTagValue(final Map<String, String> taggedValueMap)
 	{
-		final String separator = taggedValueMap.get(XMIConstants.TAGGED_VALUE_SEPARATOR);
+		String separator = taggedValueMap.get(XMIConstants.TAGGED_VALUE_SEPARATOR);
 		if ((separator == null) || separator.trim().equals(""))
 		{
-			return null;
+			separator = null;
 		}
 		return separator;
 	}
@@ -2486,12 +2526,13 @@ public class XMIImportProcessor
 	 */
 	private boolean isMultiselectTagValue(final Map<String, String> taggedValueMap)
 	{
+		boolean isMultiselect = false;
 		if ((taggedValueMap != null)
 				&& taggedValueMap.containsKey(XMIConstants.TAGGED_VALUE_MULTISELECT))
 		{
-			return true;
+			isMultiselect = true;
 		}
-		return false;
+		return isMultiselect;
 	}
 
 	/**
@@ -2500,12 +2541,13 @@ public class XMIImportProcessor
 	 */
 	private String getMultiselectTagValue(final Map<String, String> taggedValueMap)
 	{
+		String tagValue = null;
 		if ((taggedValueMap != null)
 				&& taggedValueMap.containsKey(XMIConstants.TAGGED_VALUE_MULTISELECT))
 		{
-			return taggedValueMap.get(XMIConstants.TAGGED_VALUE_MULTISELECT);
+			tagValue = taggedValueMap.get(XMIConstants.TAGGED_VALUE_MULTISELECT);
 		}
-		return null;
+		return tagValue;
 	}
 
 	/**
@@ -2515,10 +2557,10 @@ public class XMIImportProcessor
 	 */
 	private String getPHIAttributeTagValue(final Map<String, String> taggedValueMap)
 	{
-		final String PHIAttribute = taggedValueMap.get(XMIConstants.TAGGED_VALUE_PHI_ATTRIBUTE);
+		String PHIAttribute = taggedValueMap.get(XMIConstants.TAGGED_VALUE_PHI_ATTRIBUTE);
 		if ((PHIAttribute == null) || PHIAttribute.trim().equals(""))
 		{
-			return "false";
+			PHIAttribute = "false";
 		}
 		return PHIAttribute;
 	}
@@ -2599,10 +2641,10 @@ public class XMIImportProcessor
 	 */
 	private String getDefaultValueTagValue(final Map<String, String> taggedValueMap)
 	{
-		final String defaultValue = taggedValueMap.get(XMIConstants.TAGGED_VALUE_DEFAULT_VALUE);
+		String defaultValue = taggedValueMap.get(XMIConstants.TAGGED_VALUE_DEFAULT_VALUE);
 		if ((defaultValue == null) || defaultValue.trim().equals(""))
 		{
-			return "";
+			defaultValue = "";
 		}
 		return defaultValue;
 	}
@@ -2638,10 +2680,10 @@ public class XMIImportProcessor
 	 */
 	private String getPasswordTagValue(final Map<String, String> taggedValueMap)
 	{
-		final String password = taggedValueMap.get(XMIConstants.TAGGED_VALUE_PASSWORD);
+		String password = taggedValueMap.get(XMIConstants.TAGGED_VALUE_PASSWORD);
 		if ((password == null) || password.trim().equals(""))
 		{
-			return "false";
+			password = "false";
 		}
 		return password;
 	}
@@ -2653,10 +2695,10 @@ public class XMIImportProcessor
 	 */
 	private String getUrlTagValue(final Map<String, String> taggedValueMap)
 	{
-		final String url = taggedValueMap.get(XMIConstants.TAGGED_VALUE_URL);
+		String url = taggedValueMap.get(XMIConstants.TAGGED_VALUE_URL);
 		if ((url == null) || url.trim().equals(""))
 		{
-			return "false";
+			url = "false";
 		}
 		return url;
 	}
@@ -2743,14 +2785,16 @@ public class XMIImportProcessor
 			final Collection<AbstractAttributeInterface> originalAttributeColl,
 			final AbstractAttributeInterface editedAttribute)
 	{
+		boolean isPresent = false;
 		for (final AbstractAttributeInterface originalAttribute : originalAttributeColl)
 		{
 			if (editedAttribute.getName().equalsIgnoreCase(originalAttribute.getName()))
 			{
-				return true;
+				isPresent = true;
+				break;
 			}
 		}
-		return false;
+		return isPresent;
 	}
 
 	/**
@@ -2812,10 +2856,8 @@ public class XMIImportProcessor
 	/**
 	 * This method add the parent container to the child container for Generalization.
 	 * @param parentIdVsChildrenIds
-	 * @throws Exception
 	 */
 	protected void postProcessInheritence(final Map<String, List<String>> parentIdVsChildrenIds)
-			throws Exception
 	{
 		for (final Entry<String, List<String>> entry : parentIdVsChildrenIds.entrySet())
 		{
@@ -2853,9 +2895,8 @@ public class XMIImportProcessor
 
 	/**
 	 * This method adds the target container to the containment association control
-	 * @throws Exception
 	 */
-	protected void addControlsForAssociation() throws Exception
+	protected void addControlsForAssociation()
 	{
 		final Set<String> entityIdKeySet = entityNameVsContainers.keySet();
 		for (final String entityId : entityIdKeySet)
@@ -3260,12 +3301,12 @@ public class XMIImportProcessor
 		final Collection<AttributeInterface> targetEntityAttrColl = targetEntity
 				.getAttributeCollection();
 		int seqNo = 1;
-		final String attributesInAssociationDropDownTagValue = taggedValueMap
+		final String attrInAssocDropDownTagValue = taggedValueMap
 				.get(XMIConstants.TAGGED_VALUE_ATTRIBUTES_IN_ASSOCIATION_DROP_DOWN);
-		if (attributesInAssociationDropDownTagValue != null)
+		if (attrInAssocDropDownTagValue != null)
 		{
 			final StringTokenizer stringTokenizer = new StringTokenizer(
-					attributesInAssociationDropDownTagValue, ",");
+					attrInAssocDropDownTagValue, ",");
 			while (stringTokenizer.hasMoreTokens())
 			{
 				final String attributeName = stringTokenizer.nextToken();
@@ -3300,13 +3341,14 @@ public class XMIImportProcessor
 		final Map<String, String> taggedValueRuleMap = new HashMap<String, String>();
 		if (taggedValueMap != null)
 		{
-			final Set<String> keySetForTaggedValue = taggedValueMap.keySet();
+			Set<Entry<String, String>> keySetForTaggedValue = taggedValueMap.entrySet();
 			//Grouping Rule Tagged Values
-			for (final String key : keySetForTaggedValue)
+			for (Entry<String, String> entryKey : keySetForTaggedValue)
 			{
-				if (key.startsWith(XMIConstants.TAGGED_VALUE_RULE + XMIConstants.SEPARATOR))
+				if (entryKey.getKey()
+						.startsWith(XMIConstants.TAGGED_VALUE_RULE + XMIConstants.SEPARATOR))
 				{
-					taggedValueRuleMap.put(key, taggedValueMap.get(key));
+					taggedValueRuleMap.put(entryKey.getKey(), entryKey.getValue());
 				}
 			}
 			//Seting Rule Tagged Values to ControlsModel
@@ -3331,10 +3373,12 @@ public class XMIImportProcessor
 		String ruleName = "";
 		int counter = 0;
 
-		final Set<String> keySetForRuleTaggedValueMap = taggedValueRuleMap.keySet();
-		for (final String key : keySetForRuleTaggedValueMap)
+		final Set<Entry<String, String>> keySetForRuleTaggedValueMap = taggedValueRuleMap
+				.entrySet();
+		for (final Entry<String, String> entryKey : keySetForRuleTaggedValueMap)
 		{
-			final StringTokenizer stringTokenizer = new StringTokenizer(key, XMIConstants.SEPARATOR);
+			final StringTokenizer stringTokenizer = new StringTokenizer(entryKey.getKey(),
+					XMIConstants.SEPARATOR);
 			int tokenNumber = 0;
 			final int count = stringTokenizer.countTokens();
 
@@ -3355,13 +3399,13 @@ public class XMIImportProcessor
 					{
 						if (tokenName.equalsIgnoreCase("min"))
 						{
-							controlModel.setMin(taggedValueRuleMap.get(key));
-							controlModel.setMinTemp(taggedValueRuleMap.get(key));
+							controlModel.setMin(entryKey.getValue());
+							controlModel.setMinTemp(entryKey.getValue());
 						}
 						else if (tokenName.equalsIgnoreCase("max"))
 						{
-							controlModel.setMax(taggedValueRuleMap.get(key));
-							controlModel.setMaxTemp(taggedValueRuleMap.get(key));
+							controlModel.setMax(entryKey.getValue());
+							controlModel.setMaxTemp(entryKey.getValue());
 						}
 					}
 					if (!(ruleNames.contains(ruleName)))
@@ -3405,12 +3449,14 @@ public class XMIImportProcessor
 	 * @param defaultPackagePrefix
 	 * @param hibernatedao
 	 * @param hibernatedao
-	 * @throws Exception
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
 	 */
 	protected DynamicQueryList processPersistence(final List<String> containerNames,
 			final boolean isEntityGroupSystemGenerated, final boolean isCreateTable,
 			final boolean isDefaultPackage, final String defaultPackagePrefix,
-			final HibernateDAO... hibernatedao) throws Exception
+			final HibernateDAO... hibernatedao) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
 		//Collection<ContainerInterface> containerColl = new HashSet<ContainerInterface>();
 
@@ -3491,9 +3537,8 @@ public class XMIImportProcessor
 	}
 
 	/**
-	 * @throws Exception
 	 */
-	protected void postProcessAssociation() throws Exception
+	protected void postProcessAssociation()
 	{
 		addControlsForAssociation();
 	}
@@ -3530,10 +3575,11 @@ public class XMIImportProcessor
 	 * @param umlPackage
 	 * @param packageName
 	 * @param skipEntityNames
-	 * @throws Exception
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private void processDataModel(final UmlPackage umlPackage, final String packageName,
-			final List<String> skipEntityNames, final String defaultPackagePrefix) throws Exception
+			final List<String> skipEntityNames, final String defaultPackagePrefix)
+			throws DynamicExtensionsSystemException
 	{
 
 		final List<Dependency> sqlDependencyColl = new ArrayList<Dependency>();
