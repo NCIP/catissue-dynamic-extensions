@@ -27,7 +27,10 @@ import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.entitymanager.EntityManager;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.cab2b.common.beans.MatchedClass;
 import edu.wustl.cab2b.common.beans.MatchedClassEntry;
 import edu.wustl.cab2b.common.exception.RuntimeException;
@@ -563,11 +566,29 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 */
 	public EntityInterface getEntityById(final Long identifier)
 	{
-		final EntityInterface entity = idVsEntity.get(identifier);
+		EntityInterface entity = idVsEntity.get(identifier);
 		if (entity == null)
 		{
-			throw new RuntimeException("Entity with given id is not present in cache : "
-					+ identifier);
+			try
+			{
+				entity = EntityManager.getInstance().getEntityByIdentifier(identifier);
+				if (entity == null)
+				{
+					throw new RuntimeException("Entity with given id is not present in cache : "
+							+ identifier);
+				}
+			}
+			catch (DynamicExtensionsSystemException e)
+			{
+				throw new RuntimeException("Entity with given id is not present in cache : "
+						+ identifier, e);
+			}
+			catch (DynamicExtensionsApplicationException e)
+			{
+				throw new RuntimeException("Entity with given id is not present in cache : "
+						+ identifier, e);
+			}
+
 		}
 		return entity;
 	}
