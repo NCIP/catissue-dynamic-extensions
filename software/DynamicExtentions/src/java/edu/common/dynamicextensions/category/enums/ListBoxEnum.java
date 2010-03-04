@@ -40,7 +40,7 @@ public enum ListBoxEnum {
 		}
 	},
 
-	ISMULTILINE("ISMULTILINE") {
+	ISMULTISELECT("IsMultiSelect") {
 
 		/**
 		 * Returns String representation of multiline value for a control.
