@@ -510,7 +510,7 @@ public abstract class AbstractXMIImporter
 			LOGGER.info(" ");
 			LOGGER.info("Now associating with hook entity -> " + hookEntityName + "....");
 			LOGGER.info(" ");
-			DynamicQueryList queryList = associateHookEntity(mainContainerList, hookEntityName,
+			DynamicQueryList queryList = associateHookEntity(mainContainerList,
 					isEditedXmi, hibernatedao);
 			if (queryList != null)
 			{
@@ -753,7 +753,7 @@ public abstract class AbstractXMIImporter
 	 * @throws DynamicExtensionsApplicationException exception.
 	 */
 	private DynamicQueryList associateHookEntity(List<ContainerInterface> mainContainerList,
-			String hookentity, boolean isEditedXmi, HibernateDAO hibernatedao) throws DAOException,
+			boolean isEditedXmi, HibernateDAO hibernatedao) throws DAOException,
 			DynamicExtensionsSystemException, BizLogicException,
 			DynamicExtensionsApplicationException
 	{

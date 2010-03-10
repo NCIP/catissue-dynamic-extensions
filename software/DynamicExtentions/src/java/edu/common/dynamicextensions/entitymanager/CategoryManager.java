@@ -1363,7 +1363,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 				editRecordsForCategoryEntityTree(catEntFKColName, srcCatEntityId, srcEntityId,
 						prevEntityId, rootCatEntity, dataValue, keyMap, fullKeyMap, recordsMap,
-						areMultplRecrds, isNoCatAttrPrsnt, jdbcDao, hibernateDao, isEdited, null,
+						areMultplRecrds, isNoCatAttrPrsnt, jdbcDao, hibernateDao, isEdited,
 						identifier, fileAttrQueryList);
 
 				final Long rootCatEntId = getRootCategoryEntityRecordId(category
@@ -1417,7 +1417,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			final Map<String, Long> keyMap, final Map<String, Long> fullKeyMap,
 			final Map<String, List<Long>> records, boolean areMultplRecrds,
 			boolean isNoCatAttrPrsnt, final JDBCDAO jdbcDao, final HibernateDAO hibernateDao,
-			final Boolean isNewRecord, final AssociationInterface lastAsso, final Long userId,
+			final Boolean isNewRecord, final Long userId,
 			List<FileQueryBean> fileAttrQueryList) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
@@ -1881,7 +1881,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 										catAssociation.getTargetCategoryEntity(), catAttributes,
 										keyMap, fullKeyMap, records, areMultplRecrds,
 										isNoCatAttrPrsnt, jdbcDao, hibernateDao, isNewRecord,
-										lastAssociation, userId, fileAttrQueryList);
+										userId, fileAttrQueryList);
 							}
 							else
 							{
@@ -1890,7 +1890,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 										catAssociation.getTargetCategoryEntity(), catAttributes,
 										keyMap, fullKeyMap, records, areMultplRecrds,
 										isNoCatAttrPrsnt, jdbcDao, hibernateDao, isNewRecord,
-										lastAssociation, userId, fileAttrQueryList);
+										userId, fileAttrQueryList);
 							}
 
 							isNoCatAttrPrsnt = false;
@@ -1904,7 +1904,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 										catAssociation.getTargetCategoryEntity(), catAttributes,
 										keyMap, fullKeyMap, records, areMultplRecrds,
 										isNoCatAttrPrsnt, jdbcDao, hibernateDao, isNewRecord,
-										lastAssociation, userId, fileAttrQueryList);
+										userId, fileAttrQueryList);
 							}
 							else
 							{
@@ -1913,7 +1913,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 										catAssociation.getTargetCategoryEntity(), catAttributes,
 										keyMap, fullKeyMap, records, areMultplRecrds,
 										isNoCatAttrPrsnt, jdbcDao, hibernateDao, isNewRecord,
-										lastAssociation, userId, fileAttrQueryList);
+										userId, fileAttrQueryList);
 							}
 						}
 
@@ -1934,7 +1934,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 								currentEntityId, currentEntityId, catAssociation
 										.getTargetCategoryEntity(), catAssociations, keyMap,
 								fullKeyMap, records, areMultplRecrds, isNoCatAttrPrsnt, jdbcDao,
-								hibernateDao, isNewRecord, lastAssociation, userId,
+								hibernateDao, isNewRecord, userId,
 								fileAttrQueryList);
 						catAssociations.clear();
 

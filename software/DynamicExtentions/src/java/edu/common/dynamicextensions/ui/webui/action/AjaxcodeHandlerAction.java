@@ -148,7 +148,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 				}
 				else if (operation.trim().equals("pasteData"))
 				{
-					returnXML = pasteData(containerId, request);
+					returnXML = pasteData(request);
 				}
 
 			}
@@ -766,11 +766,10 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	}
 
 	/**
-	 * @param containerId container identifier
 	 * @param request request object
 	 * @return HTML output for clipBoard data
 	 */
-	private String pasteData(final String containerId, final HttpServletRequest request)
+	private String pasteData(final HttpServletRequest request)
 	{
 		final StringBuffer returnString = new StringBuffer();
 		String clipboardData = request.getParameter(DEConstants.CLIP_BOARD_DATA);

@@ -74,7 +74,7 @@ public class DEIntegration implements IntegrationInterface
 		Collection recIdList = getCategoryRecIdBasedOnHookEntityRecId(categoryContainerId,
 				staticRecIdList, hookEntityId);
 		Collection catRecIds = new HashSet();
-		updateHashSet(hookEntityId, catRecIds, recIdList);
+		updateHashSet(catRecIds, recIdList);
 		return catRecIds;
 	}
 
@@ -259,7 +259,7 @@ public class DEIntegration implements IntegrationInterface
 		Collection recIdList = getDynamicEntityRecordIdFromHookEntityRecordId(hookEntityRecIdList,
 				containerId, hookEntityId, dao);
 		Collection dynRecIds = new HashSet();
-		updateHashSet(hookEntityId, dynRecIds, recIdList);
+		updateHashSet(dynRecIds, recIdList);
 		return dynRecIds;
 	}
 
@@ -421,7 +421,7 @@ public class DEIntegration implements IntegrationInterface
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DAOException
 	 */
-	private void updateHashSet(Long hookEntityId, Collection catRecIds, Collection recIdList)
+	private void updateHashSet(Collection catRecIds, Collection recIdList)
 			throws DynamicExtensionsSystemException, DAOException
 	{
 		if (recIdList != null && recIdList.toArray().length > 0)
@@ -465,7 +465,6 @@ public class DEIntegration implements IntegrationInterface
 			List<Long> hookEntityRecIdList, Long containerId, Long hookEntityId, JDBCDAO dao)
 			throws DynamicExtensionsSystemException, DAOException
 	{
-		Collection recIdList = new HashSet();
 		String tableName = "";
 		String columnName = "";
 		if (entityMap.containsKey(containerId.toString()))
