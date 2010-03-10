@@ -94,7 +94,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				.getObjectFromCache(request, DEConstants.VALUE_MAP_STACK);
 		String containerSize = request.getParameter(DEConstants.BREAD_CRUMB_POSITION);
 		if (((containerStack != null) && !containerStack.isEmpty())
-				&& ((valueMapStack != null) || !valueMapStack.isEmpty()))
+				&& ((valueMapStack != null) && !valueMapStack.isEmpty()))
 		{
 			//removeExtraAttribtes(containerStack.peek(), valueMapStack);
 			try

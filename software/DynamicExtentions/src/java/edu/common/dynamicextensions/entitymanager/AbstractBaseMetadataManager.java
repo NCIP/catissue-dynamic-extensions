@@ -656,7 +656,13 @@ public abstract class AbstractBaseMetadataManager
 		Class srcObjectClass = sourceObject.getClass();
 		String targetRoleName = getTargetRoleNameForMethodInvocation(association);
 		Cardinality targetMaxCardinality = association.getTargetRole().getMaximumCardinality();
-		if (targetMaxCardinality != Cardinality.ONE)
+		if (targetMaxCardinality == Cardinality.ONE)
+		{
+			Class tgtObjectClass = Class.forName(targetClassName);
+			invokeSetterMethod(srcObjectClass, targetRoleName, tgtObjectClass, sourceObject,
+					targetObject);
+		}
+		else
 		{
 			Collection<Object> containedObjects = null;
 			Object associatedObjects = invokeGetterMethod(srcObjectClass, targetRoleName,
@@ -675,12 +681,7 @@ public abstract class AbstractBaseMetadataManager
 			}
 			invokeSetterMethod(srcObjectClass, targetRoleName, Class
 					.forName("java.util.Collection"), sourceObject, containedObjects);
-		}
-		else
-		{
-			Class tgtObjectClass = Class.forName(targetClassName);
-			invokeSetterMethod(srcObjectClass, targetRoleName, tgtObjectClass, sourceObject,
-					targetObject);
+
 		}
 
 	}
