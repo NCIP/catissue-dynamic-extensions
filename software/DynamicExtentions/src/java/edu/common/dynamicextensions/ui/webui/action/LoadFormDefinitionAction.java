@@ -4,8 +4,8 @@ package edu.common.dynamicextensions.ui.webui.action;
 /**
  * This Action class Loads the Primary Information needed for CreateForm.jsp.
  * This will first check if the form object is already present in cache , If yes, it will update
- * the actionForm and If No, It will populate the actionForm with fresh data.  
- * The exception thrown can be of 'Application' type ,in this case the same Screen will be displayed  
+ * the actionForm and If No, It will populate the actionForm with fresh data.
+ * The exception thrown can be of 'Application' type ,in this case the same Screen will be displayed
  * added with error messages .
  * And The exception thrown can be of 'System' type, in this case user will be directed to Error Page.
  * @author deepti_shelar
@@ -45,15 +45,15 @@ public class LoadFormDefinitionAction extends BaseDynamicExtensionsAction
 
 	/**
 	 * This method will call LoadFormDefinitionProcessor to load all the information needed for the form.
-	 * It will then forward the action to CreateForm.jsp. 
-	 * 
+	 * It will then forward the action to CreateForm.jsp.
+	 *
 	 * @param mapping ActionMapping mapping
 	 * @param form ActionForm form
 	 * @param  request HttpServletRequest request
 	 * @param response HttpServletResponse response
 	 * @return ActionForward forward to next action
-	 * @throws DynamicExtensionsApplicationException 
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -80,8 +80,8 @@ public class LoadFormDefinitionAction extends BaseDynamicExtensionsAction
 
 	/**
 	 * @param request
-	 * @throws DynamicExtensionsApplicationException 
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private void populateContainerInformation(HttpServletRequest request,
 			FormDefinitionForm formDefinitionForm) throws DynamicExtensionsSystemException,
@@ -150,11 +150,13 @@ public class LoadFormDefinitionAction extends BaseDynamicExtensionsAction
 					populateAssociationInformation(parentContainer, container, formDefinitionForm);
 				}
 			}
-			boolean isDataEntered =false;
-			if ((operationMode != null) && (operationMode.equals(DEConstants.EDIT_FORM)) && container.getId()!=null)
+			boolean isDataEntered = false;
+			if ((operationMode != null) && (operationMode.equals(DEConstants.EDIT_FORM))
+					&& container.getId() != null)
 			{
-				AbstractEntityInterface abstractEntityInterface =entityGroup.getEntityByName(container.getAbstractEntity().getName());
-				isDataEntered=CategoryHelper.isDataEntered(abstractEntityInterface);
+				AbstractEntityInterface abstractEntityInterface = entityGroup
+						.getEntityByName(container.getAbstractEntity().getName());
+				isDataEntered = CategoryHelper.isDataEntered(abstractEntityInterface);
 			}
 			formDefinitionForm.setDataEntered(isDataEntered);
 		}
@@ -238,7 +240,7 @@ public class LoadFormDefinitionAction extends BaseDynamicExtensionsAction
 
 			Collection<ControlInterface> controlsCollection = parentContainer
 					.getControlCollection();
-			if ((controlsCollection != null) || (!controlsCollection.isEmpty()))
+			if ((controlsCollection != null) && (!controlsCollection.isEmpty()))
 			{
 				for (ControlInterface control : controlsCollection)
 				{

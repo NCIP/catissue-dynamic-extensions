@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -82,19 +81,14 @@ public class DEIntegration implements IntegrationInterface
 			Long staticRecId, Long hookEntityId, JDBCDAO jdbcDao)
 			throws DynamicExtensionsSystemException, DAOException
 	{
-
-		Collection catRecIds = new HashSet();
-
 		String entityTableName;
 		String columnName;
 		String catTableName;
 		Long entityContainerId;
-
 		if (categoryEntityMap.containsKey(categoryContainerId.toString()))
 		{
 			entityContainerId = (Long) categoryEntityMap.get(categoryContainerId.toString());
 		}
-
 		else
 		{
 			entityContainerId = EntityManager.getInstance().getCategoryRootContainerId(
@@ -129,35 +123,20 @@ public class DEIntegration implements IntegrationInterface
 			entityMap.put(categoryContainerId.toString(), catTableName);
 
 		}
-		ResultSet resultSet = null;
 
+		String entitySql = "select identifier from " + entityTableName + " where " + columnName
+				+ " = ?";
+		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+		queryDataList.add(new ColumnValueBean(columnName, staticRecId));
+		Collection catRecIds;
 		try
 		{
-			String entitySql = "select identifier from " + entityTableName + " where " + columnName
-					+ " = ?";
-			LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
-			queryDataList.add(new ColumnValueBean(columnName, staticRecId));
-			resultSet = jdbcDao.getResultSet(entitySql, queryDataList, null); //util.executeQuery(entitySql);
-			List recIdList = new ArrayList();
-			while (resultSet.next())
-			{
-				recIdList.add(resultSet.getLong(1));
-			}
-			Iterator recIt = recIdList.iterator();
-			while (recIt.hasNext())
-			{
-				catRecIds.add(recIt.next());
-			}
+			catRecIds = getResultCollection(entitySql, queryDataList, jdbcDao);
 		}
-		catch (SQLException e)
+		catch (DAOException e)
 		{
 			throw new DynamicExtensionsSystemException("Error while fetching dynamic record id", e);
 		}
-		finally
-		{
-			jdbcDao.closeStatement(resultSet);
-		}
-
 		return catRecIds;
 	}
 
@@ -357,7 +336,6 @@ public class DEIntegration implements IntegrationInterface
 			Long dynamicEntityRecordId) throws DynamicExtensionsSystemException
 	{
 
-		Collection recIdList = new HashSet();
 		String catTableName = "";
 
 		/*
@@ -373,42 +351,51 @@ public class DEIntegration implements IntegrationInterface
 			catTableName = EntityManager.getInstance().getDynamicTableName(categoryContainerId);
 			entityMap.put(categoryContainerId.toString(), catTableName);
 		}
-
-		ResultSet resultSet = null;
-		JDBCDAO jdbcDao = null;
+		String catSql = "select RECORD_ID from " + catTableName + " where identifier= ?";
+		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+		queryDataList.add(new ColumnValueBean(DEConstants.IDENTIFIER, dynamicEntityRecordId));
+		Collection recIdList;
 		try
 		{
-			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			String catSql = "select RECORD_ID from " + catTableName + " where identifier= ?";
+			recIdList = getResultCollection(catSql, queryDataList, null);
+		}
+		catch (DAOException e)
+		{
+			throw new DynamicExtensionsSystemException("Error occured in DAO operations", e);
+		}
+		return recIdList;
+	}
 
-			LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
-			queryDataList.add(new ColumnValueBean(DEConstants.IDENTIFIER, dynamicEntityRecordId));
+	private Collection getResultCollection(String catSql,
+			LinkedList<ColumnValueBean> queryDataList, JDBCDAO dao)
+			throws DynamicExtensionsSystemException, DAOException
+	{
+		ResultSet resultSet = null;
+		Collection recIdList = new HashSet();
+		JDBCDAO jdbcDao = dao;
+		try
+		{
+			if (dao == null)
+			{
+				jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
+			}
 			resultSet = jdbcDao.getResultSet(catSql, queryDataList, null); //util.executeQuery(entitySql);
-
 			while (resultSet.next())
 			{
 				recIdList.add(resultSet.getLong(1));
 			}
-
 		}
 		catch (SQLException e)
 		{
 			throw new DynamicExtensionsSystemException("Error while opening session", e);
 		}
-		catch (DAOException e)
-		{
-			throw new DynamicExtensionsSystemException("Error while opening session", e);
-		}
 		finally
 		{
-			try
+
+			jdbcDao.closeStatement(resultSet);
+			if (dao == null)
 			{
-				jdbcDao.closeStatement(resultSet);
 				DynamicExtensionsUtility.closeDAO(jdbcDao);
-			}
-			catch (DAOException e)
-			{
-				throw new DynamicExtensionsSystemException("Error while closing session", e);
 			}
 		}
 		return recIdList;
@@ -424,12 +411,11 @@ public class DEIntegration implements IntegrationInterface
 	private void updateHashSet(Collection catRecIds, Collection recIdList)
 			throws DynamicExtensionsSystemException, DAOException
 	{
-		if (recIdList != null && recIdList.toArray().length > 0)
+		if (recIdList != null && recIdList.toArray().length > 0
+				&& ((List) recIdList.toArray()[0]).size() > 0)
 		{
-			if (((List) recIdList.toArray()[0]).size() > 0)
-			{
-				catRecIds.add(Long.valueOf(((List) recIdList.toArray()[0]).get(0).toString()));
-			}
+			catRecIds.add(Long.valueOf(((List) recIdList.toArray()[0]).get(0).toString()));
+
 		}
 	}
 
@@ -500,7 +486,7 @@ public class DEIntegration implements IntegrationInterface
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
 			CacheException, DAOException
 	{
-		Collection<Long> recIdList = new HashSet<Long>();
+		Collection<Long> recIdList;
 		if (isCategory(containerId))
 		{
 			recIdList = getCategoryRecIdBasedOnHookEntityRecId(containerId, recEntryId, Long
@@ -528,9 +514,7 @@ public class DEIntegration implements IntegrationInterface
 			List<Long> staticRecId, Long hookEntityId) throws DynamicExtensionsSystemException,
 			DAOException
 	{
-
-		Collection<Long> catRecIds = new HashSet<Long>();
-
+		Collection<Long> catRecIds;
 		String entityTableName;
 		String columnName;
 		String catTableName;
@@ -540,14 +524,12 @@ public class DEIntegration implements IntegrationInterface
 		{
 			entityContainerId = (Long) categoryEntityMap.get(categoryContainerId.toString());
 		}
-
 		else
 		{
 			entityContainerId = EntityManager.getInstance().getCategoryRootContainerId(
 					categoryContainerId);
 			categoryEntityMap.put(categoryContainerId.toString(), entityContainerId);
 		}
-
 		if (entityMap.containsKey(entityContainerId.toString()))
 		{
 			entityTableName = (String) entityMap.get(entityContainerId.toString());
@@ -556,11 +538,7 @@ public class DEIntegration implements IntegrationInterface
 			 * Checked for categoryContainerId in the entityMap if present then get the Category Table Name from the Map
 			 * else get it from DB.
 			 */
-			if (entityMap.containsKey(categoryContainerId.toString()))
-			{
-				catTableName = (String) entityMap.get(categoryContainerId.toString());
-			}
-			else
+			if (!entityMap.containsKey(categoryContainerId.toString()))
 			{
 				catTableName = EntityManager.getInstance().getDynamicTableName(categoryContainerId);
 				entityMap.put(categoryContainerId.toString(), catTableName);
@@ -573,7 +551,6 @@ public class DEIntegration implements IntegrationInterface
 			columnName = EntityManager.getInstance().getColumnNameForAssociation(hookEntityId,
 					entityContainerId);
 			catTableName = EntityManager.getInstance().getDynamicTableName(categoryContainerId);
-
 			entityMap.put(entityContainerId.toString(), entityTableName);
 			entityMap.put(hookEntityId + "_" + entityContainerId, columnName);
 			entityMap.put(categoryContainerId.toString(), catTableName);
@@ -589,7 +566,6 @@ public class DEIntegration implements IntegrationInterface
 		{
 			DynamicExtensionsUtility.closeDAO(jdbcDao);
 		}
-
 		return catRecIds;
 	}
 }

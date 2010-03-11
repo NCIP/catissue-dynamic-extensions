@@ -606,8 +606,7 @@ public class AnnotationUtil
 					maxPathId = maxPathId + 1;
 					Map<String, LinkedList<ColumnValueBean>> pathQueryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
 					LinkedList<ColumnValueBean> pathQueryColValBeanList = getcolumnvalueBeanListForPathQuery(
-							maxPathId, staticChildEntity.getId(), intraModAssonId.toString(),
-							dynChldEntityId);
+							maxPathId, staticChildEntity.getId(), intraModAssonId, dynChldEntityId);
 					pathQueryVsDataList.put(pathInsertStatement, pathQueryColValBeanList);
 					queryList.add(pathQueryVsDataList);
 				}
@@ -648,8 +647,7 @@ public class AnnotationUtil
 						maxPathId = maxPathId + 1;
 						Map<String, LinkedList<ColumnValueBean>> pathQueryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
 						LinkedList<ColumnValueBean> pathQueryColValBeanList = getcolumnvalueBeanListForPathQuery(
-								maxPathId, staticEntityId, intraModlAssonId.toString(), childEntity
-										.getId());
+								maxPathId, staticEntityId, intraModlAssonId, childEntity.getId());
 						pathQueryVsDataList.put(pathInsertStatement, pathQueryColValBeanList);
 						queryList.add(pathQueryVsDataList);
 					}
@@ -767,8 +765,7 @@ public class AnnotationUtil
 							{
 								Map<String, LinkedList<ColumnValueBean>> queryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
 								LinkedList<ColumnValueBean> pathQueryColValBeanList = getcolumnvalueBeanListForPathQuery(
-										maxPathId, entity.getId(), intermediatePath.toString(),
-										last_entity_id);
+										maxPathId, entity.getId(), intermediatePath, last_entity_id);
 								String uniquepathStr = entity.getId() + "_" + intermediatePath
 										+ "_" + last_entity_id;
 								if (!mapQuery.containsKey(uniquepathStr))
@@ -815,8 +812,8 @@ public class AnnotationUtil
 							{
 								Map<String, LinkedList<ColumnValueBean>> queryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
 								LinkedList<ColumnValueBean> pathQueryColValBeanList = getcolumnvalueBeanListForPathQuery(
-										maxPathId, first_entity_id, intermediatePath.toString(),
-										entity.getId());
+										maxPathId, first_entity_id, intermediatePath, entity
+												.getId());
 								String uniquepathStr = first_entity_id + "_" + intermediatePath
 										+ "_" + entity.getId();
 
@@ -889,7 +886,7 @@ public class AnnotationUtil
 					path = path.concat("_").concat(intrModAssonId.toString());
 
 					LinkedList<ColumnValueBean> pathQueryColValBeanList = getcolumnvalueBeanListForPathQuery(
-							maxPathId, firstEntityId, path.toString(), dynamicEntityId);
+							maxPathId, firstEntityId, path, dynamicEntityId);
 					Map<String, LinkedList<ColumnValueBean>> queryVsDataList = new HashMap<String, LinkedList<ColumnValueBean>>();
 					queryVsDataList.put(pathInsertStatement, pathQueryColValBeanList);
 					queryList.add(queryVsDataList);

@@ -60,7 +60,7 @@ public class ValidatorUtil
 		}
 		Set<Map.Entry<BaseAbstractAttributeInterface, Object>> attributeSet = attributeValueMap
 				.entrySet();
-		if ((attributeSet != null) || !attributeSet.isEmpty())
+		if ((attributeSet != null) && !attributeSet.isEmpty())
 		{
 			for (Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode : attributeSet)
 			{
@@ -74,9 +74,8 @@ public class ValidatorUtil
 					if (control != null)
 					{
 						errorList.addAll(validateAttributes(attributeValueNode,
-								DynamicExtensionsUtility
-										.replaceHTMLSpecialCharacters(control
-												.getCaption())));
+								DynamicExtensionsUtility.replaceHTMLSpecialCharacters(control
+										.getCaption())));
 						if (control instanceof ComboBoxInterface)
 						{
 							boolean isValuePresent = false;
@@ -196,9 +195,8 @@ public class ValidatorUtil
 				if ((control != null) && (control.getBaseAbstractAttribute() != null))
 				{
 					errorList.addAll(validateAttributes(attributeValueNode,
-							DynamicExtensionsUtility
-									.replaceHTMLSpecialCharacters(control
-											.getCaption())));
+							DynamicExtensionsUtility.replaceHTMLSpecialCharacters(control
+									.getCaption())));
 				}
 			}
 		}
@@ -225,7 +223,7 @@ public class ValidatorUtil
 		//Bug: 9778 : modified to get explicit and implicit rules also in case of CategoryAttribute.
 		//Reviewer: Rajesh Patil
 		Collection<RuleInterface> attributeRuleCollection = getRuleCollection(abstractAttribute);
-		if ((attributeRuleCollection != null) || !attributeRuleCollection.isEmpty())
+		if ((attributeRuleCollection != null) && !attributeRuleCollection.isEmpty())
 		{
 			Long recordId = attribute.getId();
 			String errorMessage = null;
@@ -303,7 +301,7 @@ public class ValidatorUtil
 	{
 		Collection<RuleInterface> attributeRuleCollection = attribute.getRuleCollection();
 
-		if ((attributeRuleCollection != null) || !attributeRuleCollection.isEmpty())
+		if ((attributeRuleCollection != null) && !attributeRuleCollection.isEmpty())
 		{
 			for (RuleInterface rule : attributeRuleCollection)
 			{

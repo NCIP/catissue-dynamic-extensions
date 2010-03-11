@@ -239,7 +239,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	public Boolean getIsSourceForCalculatedAttribute()
 	{
 		Boolean isSourceControl = false;
-		BaseAbstractAttributeInterface baseAbstractAttributeInterface = this.baseAbstractAttribute;
+		BaseAbstractAttributeInterface baseAbstractAttributeInterface = baseAbstractAttribute;
 		if (baseAbstractAttributeInterface instanceof CategoryAttributeInterface)
 		{
 			CategoryAttributeInterface categoryAttributeInterface = (CategoryAttributeInterface) baseAbstractAttributeInterface;
@@ -367,15 +367,15 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		}
 		else
 		{
-			if (baseAbstractAttribute != null)
-			{
-				htmlString = getControlHTML(innerHTML);
-			}
-			else
+			if (baseAbstractAttribute == null)
 			{
 				htmlString = htmlString.concat("<td class='formRequiredLabel_withoutBorder'>");
 				htmlString = htmlString.concat(innerHTML);
 				htmlString = htmlString.concat("</td>");
+			}
+			else
+			{
+				htmlString = getControlHTML(innerHTML);
 			}
 		}
 
@@ -437,11 +437,11 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		}
 
 		controlHTML.append("<td class='formRequiredLabel_withoutBorder'>");
-		if ((this.showLabel != null) && this.showLabel)
+		if ((showLabel != null) && showLabel)
 		{
-			controlHTML.append(((BaseAbstractAttribute) this.getBaseAbstractAttribute())
-					.getCapitalizedName(DynamicExtensionsUtility.replaceHTMLSpecialCharacters(this
-							.getCaption())));
+			controlHTML.append(((BaseAbstractAttribute) getBaseAbstractAttribute())
+					.getCapitalizedName(DynamicExtensionsUtility
+							.replaceHTMLSpecialCharacters(getCaption())));
 		}
 		controlHTML.append("</td><td class='formField_withoutBorder' valign='center'>");
 
@@ -511,7 +511,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 					+ "_" + parentContainer.getId() + "_" + getSequenceNumber());
 			if (yPosition != null)
 			{
-				htmlComponentName.append("_" + getYPosition());
+				htmlComponentName.append("_").append(getYPosition());
 			}
 		}
 
@@ -543,13 +543,14 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		Control control = (Control) object;
 		Integer thisSequenceNumber = sequenceNumber;
 		Integer otherSequenceNumber = control.getSequenceNumber();
+		int result = otherSequenceNumber.compareTo(thisSequenceNumber);
 		if (thisSequenceNumber.equals(otherSequenceNumber) && (yPosition != null)
 				&& (control.yPosition != null))
 		{
-			return control.yPosition.compareTo(yPosition);
+			result = control.yPosition.compareTo(yPosition);
 		}
 
-		return otherSequenceNumber.compareTo(thisSequenceNumber);
+		return result;
 	}
 
 	/**
@@ -763,7 +764,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 						{
 							selectedPermissibleValue = attributeMetadataInterface
 									.getAttributeTypeInformation().getPermissibleValueForString(
-											controlValue.toString());
+											controlValue);
 						}
 						permissibleValueList.add(selectedPermissibleValue);
 					}
@@ -954,17 +955,17 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 			for (String controlValue : values)
 			{
 				PermissibleValueInterface selectedPermissibleValue = null;
-				AttributeMetadataInterface sourceAttributeMetadataInterface = ControlsUtility
+				AttributeMetadataInterface srcAttrMetadataInterface = ControlsUtility
 						.getAttributeMetadataInterface(sourceSkipControl.getBaseAbstractAttribute());
-				if (sourceAttributeMetadataInterface != null)
+				if (srcAttrMetadataInterface != null)
 				{
 					if ((controlValue != null) && (controlValue.length() > 0))
 					{
 						try
 						{
-							selectedPermissibleValue = sourceAttributeMetadataInterface
+							selectedPermissibleValue = srcAttrMetadataInterface
 									.getAttributeTypeInformation().getPermissibleValueForString(
-											controlValue.toString());
+											controlValue);
 						}
 						catch (ParseException e)
 						{
@@ -1133,7 +1134,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public Collection<UIProperty> getControlTypeValues()
 	{
@@ -1154,7 +1155,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void setControlTypeValues(Collection<UIProperty> uiProperties)
 	{

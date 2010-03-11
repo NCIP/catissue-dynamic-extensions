@@ -79,7 +79,7 @@ public class ControlsUtility
 		String defaultValue = null;
 		AttributeTypeInformationInterface abstractAttributeType = null;
 
-		if (abstractAttribute != null && abstractAttribute instanceof AttributeInterface)
+		if (abstractAttribute instanceof AttributeInterface)
 		{
 			abstractAttributeType = ((AttributeInterface) abstractAttribute)
 					.getAttributeTypeInformation();
@@ -537,7 +537,7 @@ public class ControlsUtility
 					{
 						selectedPermissibleValue = attributeMetadataInterface
 								.getAttributeTypeInformation().getPermissibleValueForString(
-										controlValue.toString());
+										controlValue);
 					}
 					permissibleValueList.add(selectedPermissibleValue);
 				}
@@ -948,15 +948,16 @@ public class ControlsUtility
 	 */
 	public static String getControlCaption(String captionKey)
 	{
+		String caption = null;
 		if (captionKey != null)
 		{
 			ResourceBundle resourceBundle = ResourceBundle.getBundle("ApplicationResources");
 			if (resourceBundle != null)
 			{
-				return resourceBundle.getString(captionKey);
+				caption = resourceBundle.getString(captionKey);
 			}
 		}
-		return null;
+		return caption;
 	}
 
 	/**
