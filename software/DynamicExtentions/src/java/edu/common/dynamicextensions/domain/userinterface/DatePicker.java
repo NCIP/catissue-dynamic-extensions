@@ -582,18 +582,5 @@ public class DatePicker extends Control implements DatePickerInterface
 		return uiProperties;
 	}
 
-	/**
-	 * Set collection of key-value pairs for a control.
-	 */
-	public void setControlTypeValues(Collection<UIProperty> uiProperties)
-	{
-		super.setControlTypeValues(uiProperties);
-
-		for (UIProperty uiProperty : uiProperties)
-		{
-			DatePickerEnum propertyType = DatePickerEnum.getValue(uiProperty.getKey());
-			propertyType.setControlProperty(this, uiProperty.getValue());
-		}
-	}
 
 }
