@@ -1,15 +1,12 @@
 
 package edu.common.dynamicextensions.xmi.importer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.SemanticAnnotatableInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
-import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.SemanticPropertyInterface;
-import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.xmi.XMIConfiguration;
@@ -46,15 +43,16 @@ public class XMIImporterUtil
 	/**
 	 * @return container list
 	 */
+	/*
 	public static List<ArrayList> getProcessedContainerList()
 	{
-		List<ArrayList> processedContainerListEntityList = new ArrayList<ArrayList>();
-		ArrayList<ContainerInterface> processedContainerList = new ArrayList<ContainerInterface>();
-		ArrayList<EntityInterface> processedEntityList = new ArrayList<EntityInterface>();
-		processedContainerListEntityList.add(0, processedContainerList);
-		processedContainerListEntityList.add(1, processedEntityList);
-		return processedContainerListEntityList;
-	}
+	List<ArrayList> processedContainerListEntityList = new ArrayList<ArrayList>();
+	ArrayList<ContainerInterface> processedContainerList = new ArrayList<ContainerInterface>();
+	ArrayList<EntityInterface> processedEntityList = new ArrayList<EntityInterface>();
+	processedContainerListEntityList.add(0, processedContainerList);
+	processedContainerListEntityList.add(1, processedEntityList);
+	return processedContainerListEntityList;
+	}*/
 
 	/**
 	 * @param entityGroup
