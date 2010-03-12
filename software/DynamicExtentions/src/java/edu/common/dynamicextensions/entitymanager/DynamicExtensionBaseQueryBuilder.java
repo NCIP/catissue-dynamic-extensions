@@ -207,13 +207,10 @@ public class DynamicExtensionBaseQueryBuilder
 			DynamicExtensionsApplicationException
 	{
 		List<String> queries = new ArrayList<String>();
-		StringBuffer query = new StringBuffer();
-		query.append(SELECT_KEYWORD).append(WHITESPACE).append(COUNT_KEYWORD).append(
-				OPENING_BRACKET).append(ASTERIX).append(CLOSING_BRACKET).append(WHITESPACE).append(
-				FROM_KEYWORD).append(entity.getTableProperties().getName());
 		if (EntityManagerUtil.isPrimaryKeyChanged(entity, dbaseCopy))
 		{
-			int noOfRecords = EntityManagerUtil.getNoOfRecord(query.toString(), null);
+			int noOfRecords = EntityManagerUtil.getNoOfRecordInTable(entity.getTableProperties()
+					.getName());
 			if (noOfRecords != 0)
 			{
 				throw new DynamicExtensionsApplicationException(
@@ -788,10 +785,10 @@ public class DynamicExtensionBaseQueryBuilder
 		mnyToOneAssQry.append(WHITESPACE);
 		mnyToOneAssQry.append(entity.getTableProperties().getName());
 		mnyToOneAssQry.append(WHITESPACE);
-		mnyToOneAssQry.append(WHITESPACE );
-		mnyToOneAssQry.append(WHERE_KEYWORD );
-		mnyToOneAssQry.append(WHITESPACE );
-		mnyToOneAssQry.append(IDENTIFIER );
+		mnyToOneAssQry.append(WHITESPACE);
+		mnyToOneAssQry.append(WHERE_KEYWORD);
+		mnyToOneAssQry.append(WHITESPACE);
+		mnyToOneAssQry.append(IDENTIFIER);
 		mnyToOneAssQry.append(EQUAL);
 		mnyToOneAssQry.append(QUESTION_MARK);
 
@@ -930,9 +927,9 @@ public class DynamicExtensionBaseQueryBuilder
 			query.append("null");
 			query.append(WHITESPACE);
 			query.append(WHERE_KEYWORD);
-			query.append(WHITESPACE );
-			query.append(targetKey );
-			query.append(EQUAL );
+			query.append(WHITESPACE);
+			query.append(targetKey);
+			query.append(EQUAL);
 			query.append(recId);
 		}
 
@@ -1559,18 +1556,18 @@ public class DynamicExtensionBaseQueryBuilder
 				// For many to many, a middle table is created.
 				tableName = cnstrnPrprties.getName();
 				query.append(CREATE_TABLE);
-				query.append( WHITESPACE );
-				query.append(tableName );
-				query.append(WHITESPACE );
-				query.append(OPENING_BRACKET);
-				query.append(WHITESPACE );
-				query.append(IDENTIFIER );
-				query.append(WHITESPACE );
-				query.append(dataType );
 				query.append(WHITESPACE);
-				query.append( NOT_KEYWORD );
-				query.append(WHITESPACE );
-				query.append(NULL_KEYWORD );
+				query.append(tableName);
+				query.append(WHITESPACE);
+				query.append(OPENING_BRACKET);
+				query.append(WHITESPACE);
+				query.append(IDENTIFIER);
+				query.append(WHITESPACE);
+				query.append(dataType);
+				query.append(WHITESPACE);
+				query.append(NOT_KEYWORD);
+				query.append(WHITESPACE);
+				query.append(NULL_KEYWORD);
 				query.append(COMMA);
 				for (ConstraintKeyPropertiesInterface cnstrKeyProp : srcCnstrKeyProps)
 				{
@@ -2499,14 +2496,16 @@ public class DynamicExtensionBaseQueryBuilder
 	{
 		String tableName = attribute.getEntity().getTableProperties().getName();
 		String type = "";
-		String mdfyAttrRlbkQry = "";
 
-		String mdfyAttrQuery = getQueryPartForAttribute(attribute, type, false);
-		mdfyAttrQuery = ALTER_TABLE + tableName + ADD_KEYWORD + OPENING_BRACKET + mdfyAttrQuery;
+		StringBuffer mdfyAttrQuery = new StringBuffer();
+		mdfyAttrQuery.append(ALTER_TABLE).append(tableName).append(ADD_KEYWORD).append(
+				OPENING_BRACKET);
+		mdfyAttrQuery.append(getQueryPartForAttribute(attribute, type, false));
 
-		mdfyAttrRlbkQry = getQueryPartForAttribute(savedAttr, type, false);
-		mdfyAttrRlbkQry = ALTER_TABLE + WHITESPACE + tableName + WHITESPACE + MODIFY_KEYWORD
-				+ WHITESPACE + mdfyAttrRlbkQry;
+		StringBuffer mdfyAttrRlbkQry = new StringBuffer();
+		mdfyAttrRlbkQry.append(ALTER_TABLE).append(WHITESPACE).append(tableName).append(WHITESPACE)
+				.append(MODIFY_KEYWORD);
+		mdfyAttrRlbkQry.append(WHITESPACE).append(getQueryPartForAttribute(savedAttr, type, false));
 
 		String nullQueryKeyword = "";
 		String nullQueryRlbkKeyword = "";
@@ -2531,18 +2530,17 @@ public class DynamicExtensionBaseQueryBuilder
 		// need to be added to the table.
 		if (attribute.getAttributeTypeInformation() instanceof FileAttributeTypeInformation)
 		{
-			mdfyAttrQuery = mdfyAttrQuery + COMMA
-					+ extraColumnQueryStringForFileAttribute(attribute);
-			mdfyAttrRlbkQry = mdfyAttrRlbkQry + COMMA
-					+ dropExtraColumnQueryStringForFileAttribute(attribute);
+			mdfyAttrQuery.append(COMMA).append(extraColumnQueryStringForFileAttribute(attribute));
+			mdfyAttrRlbkQry.append(COMMA).append(
+					dropExtraColumnQueryStringForFileAttribute(attribute));
 		}
 
-		mdfyAttrQuery = mdfyAttrQuery + nullQueryKeyword;
-		mdfyAttrRlbkQry = mdfyAttrRlbkQry + nullQueryRlbkKeyword;
-		mdfyAttrRlbkQries.add(mdfyAttrRlbkQry);
+		mdfyAttrQuery.append(nullQueryKeyword);
+		mdfyAttrRlbkQry.append(nullQueryRlbkKeyword);
+		mdfyAttrRlbkQries.add(mdfyAttrRlbkQry.toString());
 
-		mdfyAttrQuery += CLOSING_BRACKET;
-		mdfyAttrQries.add(mdfyAttrQuery);
+		mdfyAttrQuery.append(CLOSING_BRACKET);
+		mdfyAttrQries.add(mdfyAttrQuery.toString());
 
 		return mdfyAttrQries;
 	}
@@ -2561,22 +2559,27 @@ public class DynamicExtensionBaseQueryBuilder
 		String columnName = attribute.getColumnProperties().getName();
 		String tableName = attribute.getEntity().getTableProperties().getName();
 		String type = "";
-		String newAttrQuery = ALTER_TABLE + WHITESPACE + tableName + WHITESPACE + ADD_KEYWORD
-				+ WHITESPACE + OPENING_BRACKET + getQueryPartForAttribute(attribute, type, true);
+		StringBuffer newAttrQuery = new StringBuffer();
+		newAttrQuery.append(ALTER_TABLE).append(WHITESPACE).append(tableName).append(WHITESPACE);
+		newAttrQuery.append(ADD_KEYWORD).append(WHITESPACE).append(OPENING_BRACKET);
+		newAttrQuery.append(getQueryPartForAttribute(attribute, type, true));
 
-		String newAttrRlbkQry = ALTER_TABLE + WHITESPACE + tableName + WHITESPACE + DROP_KEYWORD
-				+ WHITESPACE + COLUMN_KEYWORD + WHITESPACE + OPENING_BRACKET + columnName;
+		StringBuffer newAttrRlbkQry = new StringBuffer();
+		newAttrRlbkQry.append(ALTER_TABLE).append(WHITESPACE).append(tableName).append(WHITESPACE);
+		newAttrRlbkQry.append(DROP_KEYWORD).append(WHITESPACE).append(COLUMN_KEYWORD);
+		newAttrRlbkQry.append(WHITESPACE).append(OPENING_BRACKET).append(columnName);
 		if (attribute.getAttributeTypeInformation() instanceof FileAttributeTypeInformation)
 		{
-			newAttrQuery += COMMA + extraColumnQueryStringForFileAttribute(attribute);
-			newAttrRlbkQry += COMMA + dropExtraColumnQueryStringForFileAttribute(attribute);
+			newAttrQuery.append(COMMA).append(extraColumnQueryStringForFileAttribute(attribute));
+			newAttrRlbkQry.append(COMMA).append(
+					dropExtraColumnQueryStringForFileAttribute(attribute));
 		}
 
-		newAttrQuery += CLOSING_BRACKET;
-		newAttrRlbkQry += CLOSING_BRACKET;
-		attrRlbkQries.add(newAttrRlbkQry);
+		newAttrQuery.append(CLOSING_BRACKET);
+		newAttrRlbkQry.append(CLOSING_BRACKET);
+		attrRlbkQries.add(newAttrRlbkQry.toString());
 
-		return newAttrQuery;
+		return newAttrQuery.toString();
 	}
 
 	/**
@@ -3027,10 +3030,6 @@ public class DynamicExtensionBaseQueryBuilder
 			if (attrTypInfo instanceof BooleanAttributeTypeInformation)
 			{
 				dbUtility.getValueForCheckBox(Boolean.parseBoolean(frmtedValue));
-			}
-			if (frmtedValue != null)
-			{
-				frmtedValue = frmtedValue;
 			}
 		}
 

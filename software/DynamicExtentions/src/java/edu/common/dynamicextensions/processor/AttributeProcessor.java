@@ -218,7 +218,13 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 			EntityGroupInterface... entityGroup) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
-		if ((attributeUIBeanInformationIntf != null) && (attributeInterface != null))
+		if ((attributeUIBeanInformationIntf == null) || (attributeInterface == null))
+		{
+			Logger.out
+					.error("Either Attribute interface or attribute information interface is null ["
+							+ attributeInterface + "] / [" + attributeUIBeanInformationIntf + "]");
+		}
+		else
 		{
 			if (attributeInterface instanceof AssociationInterface)
 			{
@@ -247,12 +253,6 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 			//populate rules
 			populateRules(userSelectedControlName, attributeInterface,
 					attributeUIBeanInformationIntf);
-		}
-		else
-		{
-			Logger.out
-					.error("Either Attribute interface or attribute information interface is null ["
-							+ attributeInterface + "] / [" + attributeUIBeanInformationIntf + "]");
 		}
 
 	}
@@ -851,13 +851,13 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 			int counter = 2;
 			while (counter < columnValues.length)
 			{
-				if (columnValues[counter] != null)
+				if (columnValues[counter] == null)
 				{
-					csvValues[counter - 2][i] = columnValues[counter++];
+					csvValues[counter - 2][i] = "";
 				}
 				else
 				{
-					csvValues[counter - 2][i] = "";
+					csvValues[counter - 2][i] = columnValues[counter++];
 				}
 			}
 		}
@@ -1132,14 +1132,14 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 		Integer size = null;
 		try
 		{
-			if ((attributeUIBeanInformationIntf.getAttributeSize() != null)
-					&& (!attributeUIBeanInformationIntf.getAttributeSize().trim().equals("")))
+			if ((attributeUIBeanInformationIntf.getAttributeSize() == null)
+					|| (attributeUIBeanInformationIntf.getAttributeSize().trim().equals("")))
 			{
-				size = Integer.valueOf(attributeUIBeanInformationIntf.getAttributeSize());
+				size = Integer.valueOf(0);
 			}
 			else
 			{
-				size = Integer.valueOf(0);
+				size = Integer.valueOf(attributeUIBeanInformationIntf.getAttributeSize());
 			}
 			stringAttributeIntf.setSize(size);
 		}
@@ -1722,22 +1722,22 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 			AbstractAttributeUIBeanInterface attributeUIBeanInformationIntf)
 	{
 		attributeUIBeanInformationIntf.setDataType(ProcessorConstants.DATATYPE_NUMBER);
-		if (doubleAttributeInformation.getDefaultValue() != null)
+		if (doubleAttributeInformation.getDefaultValue() == null)
+		{
+			attributeUIBeanInformationIntf.setAttributeDefaultValue("");
+		}
+		else
 		{
 			DoubleValue doubleValue = (DoubleValue) doubleAttributeInformation.getDefaultValue();
-			if (doubleValue.getValue() != 0)
+			if (doubleValue.getValue() == 0)
+			{
+				attributeUIBeanInformationIntf.setAttributeDefaultValue("");
+			}
+			else
 			{
 				attributeUIBeanInformationIntf.setAttributeDefaultValue(doubleValue.getValue()
 						.toString());
 			}
-			else
-			{
-				attributeUIBeanInformationIntf.setAttributeDefaultValue("");
-			}
-		}
-		else
-		{
-			attributeUIBeanInformationIntf.setAttributeDefaultValue("");
 		}
 		attributeUIBeanInformationIntf.setAttributeMeasurementUnits(doubleAttributeInformation
 				.getMeasurementUnits());
@@ -1862,14 +1862,14 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 		{
 			IntegerValue integerDefaultValue = (IntegerValue) integerAttributeInformation
 					.getDefaultValue();
-			if (integerDefaultValue.getValue() != 0)
+			if (integerDefaultValue.getValue() == 0)
 			{
-				attributeUIBeanInformationIntf.setAttributeDefaultValue(integerDefaultValue
-						.getValue().toString());
+				attributeUIBeanInformationIntf.setAttributeDefaultValue("");
 			}
 			else
 			{
-				attributeUIBeanInformationIntf.setAttributeDefaultValue("");
+				attributeUIBeanInformationIntf.setAttributeDefaultValue(integerDefaultValue
+						.getValue().toString());
 			}
 		}
 		attributeUIBeanInformationIntf.setAttributeMeasurementUnits(integerAttributeInformation
@@ -2086,21 +2086,22 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 	private String getFormName(EntityInterface entity) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
+		String formName = null;
 		if (entity != null)
 		{
 			EntityManagerInterface entityManager = EntityManager.getInstance();
 			ContainerInterface containerInterface = entityManager
 					.getContainerByEntityIdentifier(entity.getId());
-			if ((containerInterface != null) && (containerInterface.getId() != null))
+			if ((containerInterface == null) || (containerInterface.getId() == null))
 			{
-				return containerInterface.getId().toString();
+				formName = entity.getId().toString();
 			}
 			else
 			{
-				return entity.getId().toString();
+				formName = containerInterface.getId().toString();
 			}
 		}
-		return null;
+		return formName;
 	}
 
 	/**
@@ -2109,6 +2110,7 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 	 */
 	private String getGroupName(EntityInterface targetEntity)
 	{
+		String groupName = null;
 		//Initialize group name
 		EntityGroupInterface entityGroup = targetEntity.getEntityGroup();
 		//Assumed that the collection will contain just one entity. So fetching first elt of collection
@@ -2122,9 +2124,9 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 			//					return entityGroup.getId().toString();
 			//				}
 			//			}
-			return entityGroup.getId().toString();
+			groupName = entityGroup.getId().toString();
 		}
-		return null;
+		return groupName;
 	}
 
 	/**
@@ -2165,6 +2167,7 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 	 */
 	private OptionValueObject getOptionDetails(PermissibleValueInterface permissibleValueIntf)
 	{
+		OptionValueObject valueObject = null;
 		if (permissibleValueIntf != null)
 		{
 			Object permissibleValueObjectValue = permissibleValueIntf.getValueAsObject();
@@ -2178,10 +2181,10 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 				{
 					populateOptionDetails(optionDetail, ((PermissibleValue) permissibleValueIntf));
 				}
-				return optionDetail;
+				valueObject = optionDetail;
 			}
 		}
-		return null;
+		return valueObject;
 	}
 
 	/**

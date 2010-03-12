@@ -193,7 +193,7 @@ public class ApplyFormDefinitionProcessor extends BaseDynamicExtensionsProcessor
 	 * @param targetEntity
 	 * @param sourceCardinality
 	 * @param targetCardinality
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private AssociationInterface associateEntity(AssociationInterface associationObject,
 			AssociationType associationType, EntityInterface sourceEntity,
@@ -360,11 +360,9 @@ public class ApplyFormDefinitionProcessor extends BaseDynamicExtensionsProcessor
 				ContainerInterface tempContainer = containmentAssociationControl.getContainer();
 				if (childContainerList.contains(tempContainer))
 				{
-					ContainerInterface actualContainer = (ContainerInterface) childContainerList
-							.get(childContainerList.indexOf(containmentAssociationControl
-									.getContainer()));
-					tempContainer.setAbstractEntity((EntityInterface) actualContainer
-							.getAbstractEntity());
+					ContainerInterface actualContainer = childContainerList.get(childContainerList
+							.indexOf(containmentAssociationControl.getContainer()));
+					tempContainer.setAbstractEntity(actualContainer.getAbstractEntity());
 					//actualContainer.getEntity().setContainer((Container) tempContainer);
 					((AssociationInterface) containmentAssociationControl
 							.getBaseAbstractAttribute())
@@ -398,7 +396,7 @@ public class ApplyFormDefinitionProcessor extends BaseDynamicExtensionsProcessor
 	private ContainerInterface getSelectedContainer(ContainerInterface container, Long containerId)
 	{
 		Collection<ControlInterface> controlCollection = container.getControlCollection();
-
+		ContainerInterface selectedContainer = null;
 		for (ControlInterface controlInterface : controlCollection)
 		{
 			if (controlInterface instanceof ContainmentAssociationControlInterface)
@@ -408,15 +406,17 @@ public class ApplyFormDefinitionProcessor extends BaseDynamicExtensionsProcessor
 
 				if (tempContainer.getId().equals(containerId))
 				{
-					return tempContainer;
+					selectedContainer = tempContainer;
+					break;
 				}
 				else
 				{
-					return getSelectedContainer(tempContainer, containerId);
+					selectedContainer = getSelectedContainer(tempContainer, containerId);
+					break;
 				}
 			}
 		}
-		return null;
+		return selectedContainer;
 	}
 
 	/**

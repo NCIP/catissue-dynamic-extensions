@@ -111,7 +111,7 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 					if (((List) value).size() > 0)
 					{
 						formattedvalue = DynamicExtensionsUtility
-										.getEscapedStringValue((String) ((List) value).get(0));
+								.getEscapedStringValue((String) ((List) value).get(0));
 					}
 				}
 				else
@@ -333,14 +333,15 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 	{
 		String tableName = attribute.getEntity().getTableProperties().getName();
 		String type = "";
-		String mdfyAttrRlbkQry = "";
+		StringBuffer mdfyAttrRlbkQry = new StringBuffer();
 
-		String mdfAttrQry = getQueryPartForAttribute(attribute, type, false);
-		mdfAttrQry = ALTER_TABLE + tableName + ADD_KEYWORD + mdfAttrQry;
+		StringBuffer mdfAttrQry = new StringBuffer();
+		mdfAttrQry.append(ALTER_TABLE).append(tableName).append(ADD_KEYWORD);
+		mdfAttrQry.append(getQueryPartForAttribute(attribute, type, false));
 
-		mdfyAttrRlbkQry = getQueryPartForAttribute(savedAttribute, type, false);
-		mdfyAttrRlbkQry = ALTER_TABLE + WHITESPACE + tableName + WHITESPACE + MODIFY_KEYWORD
-				+ WHITESPACE + mdfyAttrRlbkQry;
+		mdfyAttrRlbkQry.append(ALTER_TABLE).append(WHITESPACE).append(tableName).append(WHITESPACE);
+		mdfyAttrRlbkQry.append(MODIFY_KEYWORD).append(WHITESPACE);
+		mdfyAttrRlbkQry.append(getQueryPartForAttribute(savedAttribute, type, false));
 
 		String nullQueryKeyword = "";
 		String nullQueryRollbackKeyword = "";
@@ -363,16 +364,16 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 		if (attribute.getAttributeTypeInformation() instanceof FileAttributeTypeInformation)
 		{
 
-			mdfAttrQry = mdfAttrQry + extraColumnQueryStringForFileAttributeInEditCase(attribute);
-			mdfyAttrRlbkQry = mdfyAttrRlbkQry
-					+ dropExtraColumnQueryStringForFileAttributeInEditCase(savedAttribute);
+			mdfAttrQry.append(extraColumnQueryStringForFileAttributeInEditCase(attribute));
+			mdfyAttrRlbkQry
+					.append(dropExtraColumnQueryStringForFileAttributeInEditCase(savedAttribute));
 
 		}
-		mdfAttrQry = mdfAttrQry + nullQueryKeyword;
-		mdfyAttrRlbkQry = mdfyAttrRlbkQry + nullQueryRollbackKeyword;
-		mdfyAttRbkQryLst.add(mdfyAttrRlbkQry);
+		mdfAttrQry.append(nullQueryKeyword);
+		mdfyAttrRlbkQry.append(nullQueryRollbackKeyword);
+		mdfyAttRbkQryLst.add(mdfyAttrRlbkQry.toString());
 
-		mdfyAttrQryLst.add(mdfAttrQry);
+		mdfyAttrQryLst.add(mdfAttrQry.toString());
 
 		return mdfyAttrQryLst;
 	}
@@ -428,21 +429,26 @@ public class DynamicExtensionDb2QueryBuilder extends DynamicExtensionBaseQueryBu
 		String tableName = attribute.getEntity().getTableProperties().getName();
 		String type = "";
 
-		String newAttributeQuery = ALTER_TABLE + WHITESPACE + tableName + WHITESPACE + ADD_KEYWORD
-				+ WHITESPACE + getQueryPartForAttribute(attribute, type, true);
+		StringBuffer newAttributeQuery = new StringBuffer();
+		newAttributeQuery.append(ALTER_TABLE).append(WHITESPACE).append(tableName);
+		newAttributeQuery.append(WHITESPACE).append(ADD_KEYWORD).append(WHITESPACE);
+		newAttributeQuery.append(getQueryPartForAttribute(attribute, type, true));
 
-		String newAttributeRollbackQuery = ALTER_TABLE + WHITESPACE + tableName + WHITESPACE
-				+ DROP_KEYWORD + WHITESPACE + COLUMN_KEYWORD + WHITESPACE + columnName;
+		StringBuffer newAttributeRollbackQuery = new StringBuffer();
+		newAttributeRollbackQuery.append(ALTER_TABLE).append(WHITESPACE).append(tableName);
+		newAttributeRollbackQuery.append(WHITESPACE).append(DROP_KEYWORD).append(WHITESPACE);
+		newAttributeRollbackQuery.append(COLUMN_KEYWORD).append(WHITESPACE).append(columnName);
 		if (attribute.getAttributeTypeInformation() instanceof FileAttributeTypeInformation)
 		{
 
-			newAttributeQuery += extraColumnQueryStringForFileAttributeInEditCase(attribute);
-			newAttributeRollbackQuery += dropExtraColumnQueryStringForFileAttributeInEditCase(attribute);
+			newAttributeQuery.append(extraColumnQueryStringForFileAttributeInEditCase(attribute));
+			newAttributeRollbackQuery
+					.append(dropExtraColumnQueryStringForFileAttributeInEditCase(attribute));
 
 		}
 
-		attributeRollbackQueryList.add(newAttributeRollbackQuery);
-		return newAttributeQuery;
+		attributeRollbackQueryList.add(newAttributeRollbackQuery.toString());
+		return newAttributeQuery.toString();
 	}
 
 	/**

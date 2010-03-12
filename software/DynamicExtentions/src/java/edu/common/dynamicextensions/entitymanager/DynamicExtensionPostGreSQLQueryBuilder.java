@@ -8,8 +8,8 @@ import edu.common.dynamicextensions.domain.Attribute;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 
 /**
- * This class provides the methods that builds the queries that are specific to ORACLE database 
- * 
+ * This class provides the methods that builds the queries that are specific to ORACLE database
+ *
  * @author Rahul Ner
  */
 public class DynamicExtensionPostGreSQLQueryBuilder extends DynamicExtensionBaseQueryBuilder
@@ -31,14 +31,17 @@ public class DynamicExtensionPostGreSQLQueryBuilder extends DynamicExtensionBase
 		String columnName = attribute.getColumnProperties().getName();
 
 		String type = "TYPE";
-		String modifyAttributeRollbackQuery = "";
-		String modifyAttributeQuery = getQueryPartForAttribute(attribute, type, false);
-		modifyAttributeQuery = ALTER_TABLE + WHITESPACE + tableName + WHITESPACE + ALTER_KEYWORD
-				+ WHITESPACE + modifyAttributeQuery;
 
-		modifyAttributeRollbackQuery = getQueryPartForAttribute(savedAttribute, type, false);
-		modifyAttributeRollbackQuery = ALTER_TABLE + WHITESPACE + tableName + WHITESPACE
-				+ ALTER_KEYWORD + WHITESPACE + modifyAttributeRollbackQuery;
+		StringBuffer modifyAttributeQuery = new StringBuffer();
+		modifyAttributeQuery.append(ALTER_TABLE).append(WHITESPACE).append(tableName);
+		modifyAttributeQuery.append(WHITESPACE).append(ALTER_KEYWORD).append(WHITESPACE);
+		modifyAttributeQuery.append(getQueryPartForAttribute(attribute, type, false));
+
+		StringBuffer modifyAttributeRollbackQuery = new StringBuffer();
+		modifyAttributeRollbackQuery.append(ALTER_TABLE).append(WHITESPACE).append(tableName)
+				.append(WHITESPACE);
+		modifyAttributeRollbackQuery.append(ALTER_KEYWORD).append(WHITESPACE);
+		modifyAttributeRollbackQuery.append(getQueryPartForAttribute(savedAttribute, type, false));
 
 		String nullPartQuery = "";
 		String nullPartRollbackQuery = "";
@@ -63,10 +66,10 @@ public class DynamicExtensionPostGreSQLQueryBuilder extends DynamicExtensionBase
 		}
 
 		List modifyAttributeQueryList = new ArrayList();
-		modifyAttributeQueryList.add(modifyAttributeQuery);
+		modifyAttributeQueryList.add(modifyAttributeQuery.toString());
 		modifyAttributeQueryList.add(nullPartQuery);
 
-		modifyAttrRollbackQueryList.add(modifyAttributeRollbackQuery);
+		modifyAttrRollbackQueryList.add(modifyAttributeRollbackQuery.toString());
 		modifyAttrRollbackQueryList.add(nullPartRollbackQuery);
 
 		return modifyAttributeQueryList;
