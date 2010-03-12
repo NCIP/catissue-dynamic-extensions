@@ -102,34 +102,33 @@ public class XMLToCSVConverter
 	private static final String FORM_DEFINITION = "FormDefinition";
 
 	/** The document. */
-	private transient Document document;
+	private Document document;
 
 	/** The writer. */
-	private transient final Writer writer;
+	private final Writer writer;
 
 	/** The input source. */
-	private transient final InputSource inputSource;
+	private final InputSource inputSource;
 
 	/** The new line. */
-	private transient final String newLine = System.getProperty("line.separator");
+	private final String newLine = System.getProperty("line.separator");
 
 	/** The string builder. */
-	private transient final StringBuilder stringBuilder;
+	private final StringBuilder stringBuilder;
 
 	/** The rules required string. */
-	private transient String rulesRequiredString;
+	private String rulesRequiredString;
 
 	/** The rules required string. */
-	private transient String defaultValueString;
+	private String defaultValueString;
 
 	/** The main container. */
-	private transient String mainContainer;
+	private String mainContainer;
 
 	/** The entity group name. */
-	private transient String entityGroupName;
+	private String entityGroupName;
 
-	/** The permissible value options string. */
-	private transient String permValueOptionsString;
+	private String permValueOptionsString;
 
 	/**
 	 * Instantiates a new xML to csv converter.
@@ -141,8 +140,6 @@ public class XMLToCSVConverter
 	 */
 	public XMLToCSVConverter(final File xmlFile, final File csvFile) throws IOException
 	{
-		LOGGER.info("XML file:" + xmlFile.getAbsolutePath());
-		LOGGER.info("CSV file:" + csvFile.getAbsolutePath());
 		writer = new BufferedWriter(new FileWriter(csvFile));
 		inputSource = new InputSource(new FileReader(xmlFile));
 		stringBuilder = new StringBuilder();
@@ -163,6 +160,7 @@ public class XMLToCSVConverter
 			document = domParser.getDocument();
 			txFormDefinition();
 			writer.write(stringBuilder.toString());
+
 		}
 		finally
 		{
@@ -177,7 +175,6 @@ public class XMLToCSVConverter
 	 */
 	private void appendToStringBuilder(String stringToBeAppend)
 	{
-		LOGGER.debug("Appending: " + stringToBeAppend);
 		stringBuilder.append(stringToBeAppend);
 	}
 
@@ -621,16 +618,15 @@ public class XMLToCSVConverter
 	private boolean appendUIProperty(boolean isFirstUIProperty, final Node item2,
 			final String nodeName) throws DOMException, IOException
 	{
-		boolean newIsFirstUIProperty = false;
 		if (nodeName.equals(UI_PROPERTY))
 		{
 			if (!isFirstUIProperty)
 			{
-				newIsFirstUIProperty = isFirstUIProperty;
+				isFirstUIProperty = true;
 			}
-			txUIProperties(item2, newIsFirstUIProperty);
+			txUIProperties(item2, isFirstUIProperty);
 		}
-		return newIsFirstUIProperty;
+		return isFirstUIProperty;
 	}
 
 	/**
@@ -660,10 +656,10 @@ public class XMLToCSVConverter
 	 */
 	private void appendRequiredString()
 	{
-		if (rulesRequiredString != null && rulesRequiredString.length() != 0)
+		if (rulesRequiredString != null)
 		{
 			String localRequiredString = rulesRequiredString;
-			rulesRequiredString = "";
+			rulesRequiredString = null;
 			appendToStringBuilder(localRequiredString);
 		}
 	}
@@ -673,10 +669,10 @@ public class XMLToCSVConverter
 	 */
 	private void appendDefaultValueString()
 	{
-		if (defaultValueString != null && defaultValueString.length() != 0)
+		if (defaultValueString != null)
 		{
 			String localDefaultValueString = defaultValueString;
-			defaultValueString = "";
+			defaultValueString = null;
 			appendToStringBuilder(localDefaultValueString);
 		}
 	}
@@ -686,10 +682,10 @@ public class XMLToCSVConverter
 	 */
 	private void appendPermValueString()
 	{
-		if (permValueOptionsString != null && permValueOptionsString.length() != 0)
+		if (permValueOptionsString != null)
 		{
 			String localPermValueOptionsString = permValueOptionsString;
-			permValueOptionsString = "";
+			permValueOptionsString = null;
 			appendToStringBuilder(localPermValueOptionsString);
 		}
 	}
@@ -710,15 +706,15 @@ public class XMLToCSVConverter
 		final Node keyNode = controlProperties.getNamedItem(KEY);
 		String nodeValue = keyNode.getNodeValue();
 
-		if ("required".equals(nodeValue))
+		if (nodeValue.equals("required"))
 		{
 			rulesRequiredString = ",Rules~required";
 		}
-		else if ("IsOrdered".equals(nodeValue))
+		else if (nodeValue.equals("IsOrdered"))
 		{
 			permValueOptionsString = ",PermVal_Options~IsOrdered=true";
 		}
-		else if ("defaultValue".equals(nodeValue))
+		else if (nodeValue.equals("defaultValue"))
 		{
 			final Node valueNode = controlProperties.getNamedItem(VALUE);
 			permValueOptionsString = ",defaultValue=" + valueNode.getNodeValue();
