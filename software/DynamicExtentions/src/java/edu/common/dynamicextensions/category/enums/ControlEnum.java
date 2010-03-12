@@ -2,6 +2,7 @@
 package edu.common.dynamicextensions.category.enums;
 
 import edu.common.dynamicextensions.domain.CategoryAttribute;
+import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.userinterface.Control;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
@@ -24,6 +25,7 @@ public enum ControlEnum {
 		 */
 		public String getControlProperty(Control control)
 		{
+
 			String defaultValue = null;
 			CategoryAttribute categoryAttribute = (CategoryAttribute) control
 					.getBaseAbstractAttribute();
@@ -39,6 +41,10 @@ public enum ControlEnum {
 				{
 					Object valueAsObject = defaultValue2.getValueAsObject();
 					defaultValue = valueAsObject.toString();
+					if(attributeTypeInformation instanceof DateAttributeTypeInformation)
+					{
+						defaultValue = defaultValue.replace('-', '/');
+					}
 				}
 			}
 			return defaultValue;
