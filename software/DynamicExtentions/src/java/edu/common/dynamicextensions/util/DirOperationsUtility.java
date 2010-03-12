@@ -48,7 +48,7 @@ public final class DirOperationsUtility
 	 */
 	public void createNewTempDirectory(String tempDirName) throws DynamicExtensionsSystemException
 	{
-		if ((tempDirName.length() != 0) && tempDirName != null)
+		if (tempDirName != null && (tempDirName.length() != 0))
 		{
 			File tempDir = new File(tempDirName);
 			if (tempDir.exists())
