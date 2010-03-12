@@ -2639,7 +2639,7 @@ public class DynamicExtensionsUtility
 		}
 		catch (DocumentException documentException)
 		{
-
+			throw new RuntimeException(documentException.getMessage());
 		}
 		return validDatePatternList;
 	}
