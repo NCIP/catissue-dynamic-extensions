@@ -71,6 +71,8 @@ import edu.wustl.dao.exception.DAOException;
 public abstract class AbstractXMIImporter
 {
 
+
+
 	static
 	{
 		LoggerConfig.configureLogger(System.getProperty("user.dir"));
@@ -106,6 +108,7 @@ public abstract class AbstractXMIImporter
 	private HibernateDAO hibernatedao = null;
 	private JDBCDAO jdbcdao = null;
 	private String domainModelName = "";
+	private static final String TIME_TAKEN = "  Time taken  = ";
 
 	/**
 	 * Step 1  : initialize all resources
@@ -234,7 +237,7 @@ public abstract class AbstractXMIImporter
 		LOGGER.info("#############################################");
 		LOGGER.info("  IMPORT_XMI --> TASK : EXPORT_XMI_FOR_CACORE");
 		LOGGER.info("  -----------------------------------------");
-		LOGGER.info("  Time taken  = " + ((totalTime / 1000) / 60) + " minutes "
+		LOGGER.info(TIME_TAKEN + ((totalTime / 1000) / 60) + " minutes "
 				+ ((totalTime / 1000) % 60) + " seconds");
 		LOGGER.info("#############################################");
 	}
@@ -254,7 +257,7 @@ public abstract class AbstractXMIImporter
 		LOGGER.info("#############################################");
 		LOGGER.info("  IMPORT_XMI --> TASK : ADD QUERY PATHS");
 		LOGGER.info("  -----------------------------------------");
-		LOGGER.info("  Time taken  = " + ((totalTime / 1000) / 60) + " minutes "
+		LOGGER.info(TIME_TAKEN + ((totalTime / 1000) / 60) + " minutes "
 				+ ((totalTime / 1000) % 60) + " seconds");
 		LOGGER.info("#############################################");
 		LOGGER.info(" ");
@@ -273,7 +276,7 @@ public abstract class AbstractXMIImporter
 		LOGGER.info("#############################################");
 		LOGGER.info("  IMPORT_XMI -->TOTAL TIME");
 		LOGGER.info("  -----------------------------------------");
-		LOGGER.info("  Time taken  = " + ((totalTime / 1000) / 60) + " minutes "
+		LOGGER.info(TIME_TAKEN + ((totalTime / 1000) / 60) + " minutes "
 				+ ((totalTime / 1000) % 60) + " seconds");
 		LOGGER.info("#############################################");
 		LOGGER.info(" ");
@@ -293,7 +296,7 @@ public abstract class AbstractXMIImporter
 		LOGGER.info("######################################################################");
 		LOGGER.info("  IMPORT_XMI --> TASK : ASSOCIATE WITH HOOK ENTITY & CREATE DE TABLES");
 		LOGGER.info("  ------------------------------------------------------------------");
-		LOGGER.info("  Time taken  = " + ((assoWithHEtotalTime / 1000) / 60) + " minutes "
+		LOGGER.info(TIME_TAKEN + ((assoWithHEtotalTime / 1000) / 60) + " minutes "
 				+ ((assoWithHEtotalTime / 1000) % 60) + " seconds");
 		LOGGER.info("######################################################################");
 		LOGGER.info(" ");
