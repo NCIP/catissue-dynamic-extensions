@@ -102,33 +102,37 @@ public class XMLToCSVConverter
 	private static final String FORM_DEFINITION = "FormDefinition";
 
 	/** The document. */
-	private Document document;
+	private transient Document document;
 
 	/** The writer. */
-	private final Writer writer;
+	private transient final Writer writer;
 
 	/** The input source. */
-	private final InputSource inputSource;
+	private transient final InputSource inputSource;
 
 	/** The new line. */
-	private final String newLine = System.getProperty("line.separator");
+	private transient final String newLine = System.getProperty("line.separator");
 
 	/** The string builder. */
-	private final StringBuilder stringBuilder;
+	private transient final StringBuilder stringBuilder;
 
 	/** The rules required string. */
-	private String rulesRequiredString;
+	private transient String rulesRequiredString;
 
 	/** The rules required string. */
-	private String defaultValueString;
+	private transient String defaultValueString;
 
 	/** The main container. */
-	private String mainContainer;
+	private transient String mainContainer;
 
 	/** The entity group name. */
-	private String entityGroupName;
+	private transient String entityGroupName;
 
-	private String permValueOptionsString;
+	private transient String permValueOptionsString;
+	
+	private transient boolean isFirstUIProperty;
+
+	private transient boolean isSecondUIProperty;
 
 	/**
 	 * Instantiates a new xML to csv converter.
@@ -140,6 +144,8 @@ public class XMLToCSVConverter
 	 */
 	public XMLToCSVConverter(final File xmlFile, final File csvFile) throws IOException
 	{
+		LOGGER.info("XML file:" + xmlFile.getAbsolutePath());
+		LOGGER.info("CSV file:" + csvFile.getAbsolutePath());
 		writer = new BufferedWriter(new FileWriter(csvFile));
 		inputSource = new InputSource(new FileReader(xmlFile));
 		stringBuilder = new StringBuilder();
@@ -160,7 +166,6 @@ public class XMLToCSVConverter
 			document = domParser.getDocument();
 			txFormDefinition();
 			writer.write(stringBuilder.toString());
-
 		}
 		finally
 		{
@@ -175,6 +180,7 @@ public class XMLToCSVConverter
 	 */
 	private void appendToStringBuilder(String stringToBeAppend)
 	{
+		LOGGER.debug("Appending: " + stringToBeAppend);
 		stringBuilder.append(stringToBeAppend);
 	}
 
@@ -597,9 +603,11 @@ public class XMLToCSVConverter
 			final Node item2 = childNodes.item(j);
 			final String nodeName = item2.getNodeName();
 
-			isFirstUIProperty = appendUIProperty(isFirstUIProperty, item2, nodeName);
+			appendUIProperty(item2, nodeName);
 		}
-		appendSeparators(isFirstUIProperty);
+		isFirstUIProperty = false;
+		isSecondUIProperty = false;
+		appendSeparators();
 		appendToStringBuilder(newLine);
 	}
 
@@ -615,18 +623,13 @@ public class XMLToCSVConverter
 	 * @throws DOMException the DOM exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private boolean appendUIProperty(boolean isFirstUIProperty, final Node item2,
+	private void appendUIProperty(final Node item2,
 			final String nodeName) throws DOMException, IOException
 	{
 		if (nodeName.equals(UI_PROPERTY))
 		{
-			if (!isFirstUIProperty)
-			{
-				isFirstUIProperty = true;
-			}
-			txUIProperties(item2, isFirstUIProperty);
+			txUIProperties(item2);
 		}
-		return isFirstUIProperty;
 	}
 
 	/**
@@ -634,10 +637,8 @@ public class XMLToCSVConverter
 	 *
 	 * @param isFirstUIProperty the is first ui property
 	 */
-	private void appendSeparators(boolean isFirstUIProperty)
+	private void appendSeparators()
 	{
-		if (isFirstUIProperty)
-		{
 			//remove last ":"
 			char charAt = stringBuilder.charAt(stringBuilder.length() - 1);
 			if (charAt == ':')
@@ -645,10 +646,8 @@ public class XMLToCSVConverter
 				stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length());
 			}
 			appendRequiredString();
-
 			appendPermValueString();
 			appendDefaultValueString();
-		}
 	}
 
 	/**
@@ -698,9 +697,13 @@ public class XMLToCSVConverter
 	 * @throws DOMException the DOM exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void txUIProperties(final Node item, boolean isFirstUIProperty) throws DOMException,
+	private void txUIProperties(final Node item) throws DOMException,
 			IOException
 	{
+		if (!isFirstUIProperty)
+		{
+			isFirstUIProperty = true;
+		}
 		final NamedNodeMap controlProperties = item.getAttributes();
 
 		final Node keyNode = controlProperties.getNamedItem(KEY);
@@ -721,9 +724,10 @@ public class XMLToCSVConverter
 		}
 		else
 		{
-			if (isFirstUIProperty)
+			if (isFirstUIProperty && !isSecondUIProperty)
 			{
 				appendToStringBuilder(",options~");
+				isSecondUIProperty = true;
 			}
 			appendToStringBuilder(nodeValue + "=");
 			final Node valueNode = controlProperties.getNamedItem(VALUE);
@@ -798,7 +802,8 @@ public class XMLToCSVConverter
 		if (uiPropertyNode != null)
 		{
 			appendToStringBuilder(",options~");
-			txUIProperties(uiPropertyNode, false);
+			isFirstUIProperty = false;
+			txUIProperties(uiPropertyNode);
 		}
 	}
 }
