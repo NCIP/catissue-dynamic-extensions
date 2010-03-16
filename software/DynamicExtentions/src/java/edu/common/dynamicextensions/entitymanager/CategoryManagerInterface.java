@@ -8,6 +8,7 @@ import java.util.Map;
 
 import net.sf.ehcache.CacheException;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
@@ -44,6 +45,46 @@ public interface CategoryManagerInterface
 	 */
 	CategoryInterface persistCategoryMetadata(CategoryInterface category)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
+
+	/**
+	* It will return the Category with the id as given identifier in the parameter.
+	* @param identifier.
+	* @return category with given identifier.
+	* @throws DynamicExtensionsSystemException
+	*/
+
+	public CategoryInterface getCategoryById(final Long identifier)
+			throws DynamicExtensionsSystemException;
+
+	/**
+	* It will return the CategoryAttribute with the id as given identifier in the parameter.
+	* @param identifier.
+	* @return category with given identifier.
+	* @throws DynamicExtensionsSystemException
+	*/
+
+	public CategoryAttributeInterface getCategoryAttributeById(final Long identifier)
+			throws DynamicExtensionsSystemException;
+
+	/**
+	* It will return the Category Association with the id as given identifier in the parameter.
+	* @param identifier.
+	* @return category with given identifier.
+	* @throws DynamicExtensionsSystemException
+	*/
+
+	public CategoryAssociationInterface getCategoryAssociationById(final Long identifier)
+			throws DynamicExtensionsSystemException;
+
+	/**
+	* It will return the Category with the name as given name in the parameter.
+	* @param identifier.
+	* @return category with given identifier.
+	* @throws DynamicExtensionsSystemException
+	*/
+
+	public CategoryInterface getCategoryByName(final String name)
+			throws DynamicExtensionsSystemException;
 
 	/**
 	 *

@@ -52,7 +52,7 @@ public abstract class AbstractBaseMetadataManager
 	/**
 	 * The abstract metadata manager helper.
 	 */
-	protected final transient AbstractMetadataManagerHelper abstractMetadataManagerHelper = AbstractMetadataManagerHelper
+	protected final static AbstractMetadataManagerHelper abstractMetadataManagerHelper = AbstractMetadataManagerHelper
 			.getInstance();
 
 	/**
@@ -240,9 +240,8 @@ public abstract class AbstractBaseMetadataManager
 	 * @throws DynamicExtensionsApplicationException
 	 *             the dynamic extensions application exception
 	 */
-	public DynamicExtensionBaseDomainObject getObjectByIdentifier(String objectName,
-			String identifier) throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException
+	public static DynamicExtensionBaseDomainObject getObjectByIdentifier(String objectName,
+			String identifier) throws DynamicExtensionsSystemException
 	{
 		AbstractBizLogic bizLogic = BizLogicFactory.getDefaultBizLogic();
 		DynamicExtensionBaseDomainObject dyExtBsDmnObj;
@@ -256,7 +255,7 @@ public abstract class AbstractBaseMetadataManager
 			{
 				Logger.out.debug("Required Obejct not found: Object Name*" + objectName
 						+ "*   identifier  *" + identifier + "*");
-				throw new DynamicExtensionsApplicationException("OBJECT_NOT_FOUND");
+				throw new DynamicExtensionsSystemException("OBJECT_NOT_FOUND");
 			}
 
 			dyExtBsDmnObj = (DynamicExtensionBaseDomainObject) objects.get(0);
@@ -472,7 +471,7 @@ public abstract class AbstractBaseMetadataManager
 	 * @throws DynamicExtensionsSystemException
 	 *             the dynamic extensions system exception
 	 */
-	public DynamicExtensionBaseDomainObjectInterface getObjectByName(String className,
+	public static DynamicExtensionBaseDomainObjectInterface getObjectByName(String className,
 			String objectName) throws DynamicExtensionsSystemException
 	{
 		DynamicExtensionBaseDomainObjectInterface dyExtBsDmnObj = null;
@@ -515,7 +514,7 @@ public abstract class AbstractBaseMetadataManager
 	 * @throws DynamicExtensionsSystemException
 	 *             the dynamic extensions system exception.
 	 */
-	public DynamicExtensionBaseDomainObjectInterface getObjectByName(String className,
+	public static DynamicExtensionBaseDomainObjectInterface getObjectByName(String className,
 			String objectName, HibernateDAO hibernateDao) throws DynamicExtensionsSystemException
 	{
 		DynamicExtensionBaseDomainObjectInterface dyExtBsDmnObj = null;

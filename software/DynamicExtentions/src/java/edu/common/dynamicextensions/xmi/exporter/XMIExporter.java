@@ -118,6 +118,7 @@ public class XMIExporter
 
 	//Repository
 	private static MDRepository repository = XMIUtilities.getRepository();
+
 	static
 	{
 		LoggerConfig.configureLogger(System.getProperty("user.dir"));
@@ -2082,11 +2083,13 @@ public class XMIExporter
 			{
 				final AttributeInterface attribute = (AttributeInterface) entityAttributesIter
 						.next();
-				if (attribute.getDataType() != EntityManagerConstantsInterface.FILE_ATTRIBUTE_TYPE)
+				if (attribute.getDataType() != EntityManagerConstantsInterface.FILE_ATTRIBUTE_TYPE
+						|| XMIConstants.XMI_VERSION_1_2.equals(xmiVersion))
 				{
 					final Attribute umlAttribute = createUMLAttribute(attribute);
 					umlAttributes.add(umlAttribute);
 				}
+
 			}
 		}
 		return umlAttributes;
@@ -2660,6 +2663,7 @@ public class XMIExporter
 		}
 	}
 
+	
 	/**
 	 * This method will retrive Entity group & static entity required for exporting the xmi.
 	 * it will initialize the global variables foe it.

@@ -52,7 +52,7 @@ public class CategoryFetcher implements ThreadPoolFactory
 
 				CategoryEntityInterface rootCategory = cat.getRootCategoryElement();
 				entityGroup = rootCategory.getEntity().getEntityGroup();
-				abstractEntityCache.createCategoryCache(cat);
+				//abstractEntityCache.createCategoryCache(cat);
 			}
 			abstractEntityCache.createEntityGroupCache(entityGroup);
 			Long endTime = System.currentTimeMillis();

@@ -113,7 +113,7 @@ public class CategoryHelper implements CategoryHelperInterface
 	 */
 	public CategoryInterface getCategory(String name) throws DynamicExtensionsSystemException
 	{
-		CategoryInterface category = getCategoryFromCache(name);
+		CategoryInterface category = CategoryManager.getInstance().getCategoryByName(name);
 		if (category == null)
 		{
 			category = DomainObjectFactory.getInstance().createCategory();
@@ -138,26 +138,6 @@ public class CategoryHelper implements CategoryHelperInterface
 			}
 		}
 
-		return category;
-	}
-
-	/**
-	 * This method will search for the categort with given name in Cache.
-	 * @param name name of the category
-	 * @return category with given name if found else will return null.
-	 */
-	private CategoryInterface getCategoryFromCache(String name)
-	{
-		CategoryInterface category = null;
-		for (CategoryInterface cat : EntityCache.getInstance().getAllCategories())
-		{
-			if (name.equals(cat.getName()))
-			{
-				category = cat;
-				break;
-			}
-
-		}
 		return category;
 	}
 

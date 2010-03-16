@@ -17,9 +17,7 @@ import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
-import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
-import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
@@ -27,6 +25,7 @@ import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.entitymanager.AbstractBaseMetadataManager;
 import edu.common.dynamicextensions.entitymanager.AbstractMetadataManager;
 import edu.common.dynamicextensions.entitymanager.CategoryManager;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
@@ -108,29 +107,9 @@ public abstract class AbstractEntityCache implements IEntityCache
 	protected Map<PermissibleValueInterface, EntityInterface> permissibleValueVsEntity = new HashMap<PermissibleValueInterface, EntityInterface>();
 
 	/**
-	 * Set of all the DyanamicExtensions categories loaded in the database.
-	 */
-	protected Set<CategoryInterface> deCategories = new HashSet<CategoryInterface>();
-
-	/**
 	 *  Map with KEY as dynamic extension Containers identifier and Value as Container object.
 	 */
 	protected Map<Long, ContainerInterface> idVscontainers = new HashMap<Long, ContainerInterface>();
-
-	/**
-	 * Map with KEY as dynamic extension CategoryAttribute's identifier and Value as CategoryAttribute object
-	 */
-	protected Map<Long, CategoryAttributeInterface> idVsCategoryAttribute = new HashMap<Long, CategoryAttributeInterface>();
-
-	/**
-	 * Map with KEY as dynamic extension CategoryEntity's's identifier and Value as CategoryEntity object
-	 */
-	protected Map<Long, CategoryEntityInterface> idVsCaegoryEntity = new HashMap<Long, CategoryEntityInterface>();
-
-	/**
-	 * Map with KEY as dynamic extension CategoryAssociations's identifier and Value as CategoryAssociations object
-	 */
-	protected Map<Long, CategoryAssociationInterface> idVsCaegoryAssociation = new HashMap<Long, CategoryAssociationInterface>();
 
 	/**
 	 * Map with KEY as dynamic extension Controls's identifier and Value as Control object
@@ -183,12 +162,11 @@ public abstract class AbstractEntityCache implements IEntityCache
 
 		HibernateDAO hibernateDAO = null;
 		Collection<EntityGroupInterface> entityGroups = null;
-		List<CategoryInterface> categoryList = new ArrayList<CategoryInterface>();
 		try
 		{
 			hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
 			entityGroups = DynamicExtensionUtility.getSystemGeneratedEntityGroups(hibernateDAO);
-			createCache(categoryList, entityGroups);
+			createCache(entityGroups);
 		}
 		catch (final DAOException e)
 		{
@@ -223,8 +201,7 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 * @param categoryList list of containers to be cached.
 	 * @param entityGroups list of system generated entity groups to be cached.
 	 */
-	private void createCache(final List<CategoryInterface> categoryList,
-			final Collection<EntityGroupInterface> entityGroups)
+	private void createCache(final Collection<EntityGroupInterface> entityGroups)
 	{
 		for (final EntityGroupInterface entityGroup : entityGroups)
 		{
@@ -234,12 +211,6 @@ public abstract class AbstractEntityCache implements IEntityCache
 				addEntityToCache(entity);
 			}
 		}
-		for (final CategoryInterface category : categoryList)
-		{
-			deCategories.add(category);
-			createCategoryEntityCach(category.getRootCategoryElement());
-		}
-
 	}
 
 	/**
@@ -248,28 +219,11 @@ public abstract class AbstractEntityCache implements IEntityCache
 	private void clearCache()
 	{
 		cab2bEntityGroups.clear();
-		deCategories.clear();
 		idVscontainers.clear();
 		idVsAssociation.clear();
 		idVsAttribute.clear();
-		idVsCaegoryEntity.clear();
-		idVsCategoryAttribute.clear();
-		idVsCaegoryAssociation.clear();
 		idVsControl.clear();
 		idVsEntity.clear();
-	}
-
-	/**
-	 * @param categoryList
-	 */
-	public synchronized void createCategoryCache(final CategoryInterface category)
-	{
-		deCategories.add(category);
-		CategoryEntityInterface rootCategory = category.getRootCategoryElement();
-		if (rootCategory != null)
-		{
-			createCategoryEntityCach(rootCategory);
-		}
 	}
 
 	/**
@@ -283,32 +237,6 @@ public abstract class AbstractEntityCache implements IEntityCache
 			for (final EntityInterface entity : entityGroup.getEntityCollection())
 			{
 				addEntityToCache(entity);
-			}
-		}
-	}
-
-	/**
-	 * It will add the categoryEntity & there containers to the cache.
-	 * It will then recursively call the same method for the child category Entities.
-	 * @param categoryEntity
-	 */
-	private void createCategoryEntityCach(final CategoryEntityInterface categoryEntity)
-	{
-		if (categoryEntity.getContainerCollection() != null
-				&& !categoryEntity.getContainerCollection().isEmpty())
-		{
-			for (final Object container : categoryEntity.getContainerCollection())
-			{
-				final ContainerInterface containerInterface = (ContainerInterface) container;
-				addContainerToCache(containerInterface);
-			}
-			for (final CategoryAssociationInterface categoryAssociation : categoryEntity
-					.getCategoryAssociationCollection())
-			{
-				final CategoryEntityInterface targetCategoryEntity = categoryAssociation
-						.getTargetCategoryEntity();
-				createCategoryEntityCach(targetCategoryEntity);
-
 			}
 		}
 	}
@@ -360,20 +288,6 @@ public abstract class AbstractEntityCache implements IEntityCache
 	}
 
 	/**
-	 * This method will add the given category to cache.
-	 * @param category category to be added.
-	 */
-	public synchronized void addCategoryToCache(final CategoryInterface category)
-	{
-		LOGGER.info("adding category to cache" + category);
-		deCategories.remove(category);
-		deCategories.add(category);
-		createCategoryEntityCach(category.getRootCategoryElement());
-		LOGGER.info("adding category to cache done");
-
-	}
-
-	/**
 	 * It will add the given container to the cache & also update the cache
 	 * for its controls and AbstractEntity
 	 * @param container
@@ -408,60 +322,11 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 */
 	private void addAbstractEntityToCache(final AbstractEntityInterface abstractEntity)
 	{
-		if (abstractEntity instanceof CategoryEntityInterface)
-		{
-			final CategoryEntityInterface categoryEntity = (CategoryEntityInterface) abstractEntity;
-			addCategoryEntityToCache(categoryEntity);
-		}
-		else
+		if (abstractEntity instanceof EntityInterface)
 		{
 			final EntityInterface entity = (EntityInterface) abstractEntity;
 			createEntityCache(entity);
 
-		}
-	}
-
-	/**
-	 * Adds CategoryEnity into cache.
-	 * @param categoryEntity which should be cached.
-	 */
-	private void addCategoryEntityToCache(final CategoryEntityInterface categoryEntity)
-	{
-		idVsCaegoryEntity.put(categoryEntity.getId(), categoryEntity);
-		createCategoryAttributeCache(categoryEntity);
-		createCategoryAssociationCache(categoryEntity);
-	}
-
-	/**
-	 * It will add all the categoryAssociations of the categoryEntity in the cache.
-	 * @param categoryEntity whose all categoryAssociations should be cached.
-	 */
-	private void createCategoryAssociationCache(final CategoryEntityInterface categoryEntity)
-	{
-		if (categoryEntity.getCategoryAttributeCollection() != null)
-		{
-
-			for (final CategoryAssociationInterface assocition : categoryEntity
-					.getCategoryAssociationCollection())
-			{
-				idVsCaegoryAssociation.put(assocition.getId(), assocition);
-			}
-		}
-	}
-
-	/**
-	 * It will add all the categoryAttributes of the categoryEntity in the cache.
-	 * @param categoryEntity whose all categoryAttributes should be cached.
-	 */
-	private void createCategoryAttributeCache(final CategoryEntityInterface categoryEntity)
-	{
-		if (categoryEntity.getCategoryAttributeCollection() != null)
-		{
-			for (final CategoryAttributeInterface categoryAttribute : categoryEntity
-					.getCategoryAttributeCollection())
-			{
-				idVsCategoryAttribute.put(categoryAttribute.getId(), categoryAttribute);
-			}
 		}
 	}
 
@@ -783,50 +648,6 @@ public abstract class AbstractEntityCache implements IEntityCache
 	}
 
 	/**
-	 * It will return all the categories present in the Database .
-	 * @return Collection of the CategoryInterface in the database.
-	 */
-	public Collection<CategoryInterface> getAllCategories()
-	{
-		return deCategories;
-	}
-
-	/**
-
-	* It will return the Category with the id as given identifier in the parameter.
-	* @param identifier.
-	* @return category with given identifier.
-	* @throws DynamicExtensionsApplicationException
-	* @throws DynamicExtensionsSystemException
-	*/
-
-	public CategoryInterface getCategoryById(final Long identifier)
-	throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
-	{
-		CategoryInterface category = (CategoryInterface) ((AbstractMetadataManager) CategoryManager
-				.getInstance()).getObjectByIdentifier(Category.class.getName(), identifier
-				.toString());
-		return category;
-	}
-
-
-	/**
-	 * It will return the CategoryAttribute with the id as given identifier in the parameter.
-	 * @param identifier
-	 * @return categoryAttribute with given identifier
-	 */
-	public CategoryAttributeInterface getCategoryAttributeById(final Long identifier)
-	{
-		final CategoryAttributeInterface categoryAttribute = idVsCategoryAttribute.get(identifier);
-		if (categoryAttribute == null)
-		{
-			throw new RuntimeException(
-					"Category Attribute with given id is not present in cache : " + identifier);
-		}
-		return categoryAttribute;
-	}
-
-	/**
 	 * It will return BaseAbstractAttribute with the id as given identifier in the parameter.
 	 * @param identifier
 	 * @return categoryAttribute with given identifier
@@ -834,15 +655,16 @@ public abstract class AbstractEntityCache implements IEntityCache
 	public BaseAbstractAttributeInterface getBaseAbstractAttributeById(final Long identifier)
 	{
 		BaseAbstractAttributeInterface baseAbstractAttribute = null;
-		baseAbstractAttribute = idVsCategoryAttribute.get(identifier);
-		if (baseAbstractAttribute == null)
-		{
-			baseAbstractAttribute = idVsAttribute.get(identifier);
-		}
+		baseAbstractAttribute = idVsAttribute.get(identifier);
 		if (baseAbstractAttribute == null)
 		{
 			baseAbstractAttribute = idVsAssociation.get(identifier);
 		}
+		if (baseAbstractAttribute == null)
+		{
+			baseAbstractAttribute = getCategoryAttributeById(identifier);
+		}
+
 		if (baseAbstractAttribute == null)
 		{
 			throw new RuntimeException(
@@ -851,39 +673,21 @@ public abstract class AbstractEntityCache implements IEntityCache
 		return baseAbstractAttribute;
 	}
 
-	/**
-	 * It will return the CategoryAssociation with the id as given identifier in the parameter.
-	 * @param identifier
-	 * @return CategoryAssociation with given identifier
-	 */
-	public CategoryAssociationInterface getCategoryAssociationById(final Long identifier)
+	private CategoryAttributeInterface getCategoryAttributeById(Long identifier)
 	{
-		final CategoryAssociationInterface categoryAssociation = idVsCaegoryAssociation
-				.get(identifier);
-		if (categoryAssociation == null)
+		CategoryAttributeInterface catAttribute = null;
+		try
 		{
-			throw new RuntimeException(
-					"Category Association with given id is not present in cache : " + identifier);
+			catAttribute = (CategoryAttributeInterface) AbstractBaseMetadataManager
+					.getObjectByIdentifier(CategoryAttributeInterface.class.getName(), identifier
+							.toString());
 		}
-		return categoryAssociation;
-
-	}
-
-	/**
-	 * It will return the CategoryEntity with the id as given identifier in the parameter.
-	 * @param identifier
-	 * @return categoryEntity with given identifier
-	 */
-	public CategoryEntityInterface getCategoryEntityById(final Long identifier)
-	{
-		final CategoryEntityInterface categoryEntity = idVsCaegoryEntity.get(identifier);
-		if (categoryEntity == null)
+		catch (DynamicExtensionsSystemException e)
 		{
-			throw new RuntimeException("Category Entity with given id is not present in cache : "
-					+ identifier);
+			LOGGER.error("Exception encountered while fetching the category attribute with id "
+					+ identifier, e);
 		}
-		return categoryEntity;
-
+		return catAttribute;
 	}
 
 	/**
@@ -911,11 +715,6 @@ public abstract class AbstractEntityCache implements IEntityCache
 			throw new DynamicExtensionsCacheException(
 					"Exception encounter while fetching the category" + identifier, e);
 		}
-		catch (DynamicExtensionsApplicationException e)
-		{
-			throw new DynamicExtensionsCacheException(
-					"Exception encounter while fetching the category" + identifier, e);
-		}
 		if (container == null)
 		{
 			throw new DynamicExtensionsCacheException(
@@ -931,10 +730,24 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 */
 	public ControlInterface getControlById(final Long identifier)
 	{
-		final ControlInterface control = idVsControl.get(identifier);
+		ControlInterface control = idVsControl.get(identifier);
+		try
+		{
+			if (control == null)
+			{
+				control = (ControlInterface) ((AbstractMetadataManager) CategoryManager
+						.getInstance()).getObjectByIdentifier(ControlInterface.class.getName(),
+						identifier.toString());
+			}
+		}
+		catch (DynamicExtensionsSystemException e)
+		{
+			throw new RuntimeException("Exception encounter while fetching the Control with id +"
+					+ identifier, e);
+		}
 		if (control == null)
 		{
-			throw new RuntimeException("Control with given id is not present in cache : "
+			throw new RuntimeException("control with given id is not present in cache : "
 					+ identifier);
 		}
 		return control;

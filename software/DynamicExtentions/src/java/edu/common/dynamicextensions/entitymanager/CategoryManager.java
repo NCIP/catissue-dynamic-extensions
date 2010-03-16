@@ -49,7 +49,7 @@ import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.FormulaCalculator;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.ErrorConstants;
-import edu.wustl.cab2b.server.cache.EntityCache;
+import edu.wustl.common.querysuite.metadata.category.Category;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
@@ -110,6 +110,66 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	}
 
 	/**
+	* It will return the Category with the id as given identifier in the parameter.
+	* @param identifier.
+	* @return category with given identifier.
+	* @throws DynamicExtensionsSystemException
+	*/
+
+	public CategoryInterface getCategoryById(final Long identifier)
+			throws DynamicExtensionsSystemException
+	{
+		CategoryInterface category = (CategoryInterface) getObjectByIdentifier(Category.class
+				.getName(), identifier.toString());
+		return category;
+	}
+
+	/**
+	* It will return the CategoryAttribute with the id as given identifier in the parameter.
+	* @param identifier.
+	* @return category with given identifier.
+	* @throws DynamicExtensionsSystemException
+	*/
+
+	public CategoryAttributeInterface getCategoryAttributeById(final Long identifier)
+			throws DynamicExtensionsSystemException
+	{
+		CategoryAttributeInterface categoryAttribute = (CategoryAttributeInterface) getObjectByIdentifier(
+				CategoryAttributeInterface.class.getName(), identifier.toString());
+		return categoryAttribute;
+	}
+
+	/**
+	* It will return the Category with the name as given name in the parameter.
+	* @param identifier.
+	* @return category with given identifier.
+	* @throws DynamicExtensionsSystemException
+	*/
+
+	public CategoryInterface getCategoryByName(final String name)
+			throws DynamicExtensionsSystemException
+	{
+		CategoryInterface category = (CategoryInterface) getObjectByName(CategoryInterface.class
+				.getName(), name.toString());
+		return category;
+	}
+
+	/**
+	* It will return the Category Association with the id as given identifier in the parameter.
+	* @param identifier.
+	* @return category with given identifier.
+	* @throws DynamicExtensionsSystemException
+	*/
+
+	public CategoryAssociationInterface getCategoryAssociationById(final Long identifier)
+			throws DynamicExtensionsSystemException
+	{
+		CategoryAssociationInterface categoryAssociation = (CategoryAssociationInterface) getObjectByIdentifier(
+				CategoryAssociationInterface.class.getName(), identifier.toString());
+		return categoryAssociation;
+	}
+
+	/**
 	 * LogFatalError.
 	 */
 	@Override
@@ -128,7 +188,6 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		persistDynamicExtensionObject(categry);
-		EntityCache.getInstance().addCategoryToCache(categry);
 		return categry;
 	}
 
@@ -141,7 +200,6 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		final CategoryInterface savedCategory = (CategoryInterface) persistDynamicExtensionObjectMetdata(category);
-		EntityCache.getInstance().addCategoryToCache(category);
 		return savedCategory;
 	}
 

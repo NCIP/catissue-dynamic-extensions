@@ -4,17 +4,11 @@ package edu.wustl.cab2b.common.cache;
 import java.util.Collection;
 
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
-import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
-import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
-import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
-import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
-import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
-import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.cab2b.common.beans.MatchedClass;
 
 /**
@@ -44,8 +38,7 @@ public interface IEntityCache
 	 * @return the Entity objects whose Attribute fields match with the respective not null
 	 * fields in the passed Attribute object.
 	 */
-	MatchedClass getEntityOnAttributeParameters(
-			Collection<AttributeInterface> attributeCollection);
+	MatchedClass getEntityOnAttributeParameters(Collection<AttributeInterface> attributeCollection);
 
 	/**
 	 * Returns the Entity objects whose Permissible Value fields match with the respective not null
@@ -83,36 +76,6 @@ public interface IEntityCache
 	void addEntityToCache(EntityInterface entity);
 
 	/**
-	 * It will return all the categories present in the Database .
-	 * @return Collection of the CategoryInterface in the database.
-	 */
-	Collection<CategoryInterface> getAllCategories();
-
-	/**
-	 * It will return the Category with the id as given identifier in the parameter.
-	 * @param identifier.
-	 * @return category with given identifier.
-	 * @throws DynamicExtensionsApplicationException
-	 * @throws DynamicExtensionsSystemException
-	 */
-	CategoryInterface getCategoryById(Long identifier) throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException;
-
-    /**
-     * It will return the CategoryAttribute with the id as given identifier in the parameter.
-     * @param identifier
-     * @return categoryAttribute with given identifier
-     */
-    CategoryAttributeInterface getCategoryAttributeById(Long identifier);
-
-    /**
-     * It will return the CategoryEntity with the id as given identifier in the parameter.
-     * @param identifier
-     * @return categoryEntity with given identifier
-     */
-    CategoryEntityInterface getCategoryEntityById(Long identifier);
-
-    /**
 	 * It will return the Container with the id as given identifier in the parameter.
 	 * @param identifier
 	 * @return Container with given identifier
@@ -120,18 +83,11 @@ public interface IEntityCache
 	 */
 	ContainerInterface getContainerById(Long identifier) throws DynamicExtensionsCacheException;
 
-    /**
-     * It will return the CategoryAssociation with the id as given identifier in the parameter.
-     * @param identifier
-     * @return CategoryAssociation with given identifier
-     */
-    CategoryAssociationInterface getCategoryAssociationById(Long identifier);
-
-    /**
-     * It will return the Control with the id as given identifier in the parameter.
-     * @param identifier
-     * @return Control with given identifier
-     */
-    ControlInterface getControlById(Long identifier);
+	/**
+	 * It will return the Control with the id as given identifier in the parameter.
+	 * @param identifier
+	 * @return Control with given identifier
+	 */
+	ControlInterface getControlById(Long identifier);
 
 }

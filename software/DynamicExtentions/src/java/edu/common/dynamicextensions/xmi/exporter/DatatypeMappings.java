@@ -76,7 +76,16 @@ public enum DatatypeMappings {
 		{
 			return "java.lang.Double";
 		}
-	};
+	},
+	FILE(EntityManagerConstantsInterface.FILE_ATTRIBUTE_TYPE) {
+
+		public String getJavaClassMapping()
+		{
+			return "ByteArray";
+		}
+	}
+
+	;
 
 	String value;
 
@@ -136,7 +145,7 @@ public enum DatatypeMappings {
 	public static void main(String[] args) throws DataTypeFactoryInitializationException
 	{
 		DomainObjectFactory.getInstance().createFloatAttribute();
-//		Variables.databasenames = "MYSQL";
+		//		Variables.databasenames = "MYSQL";
 		//System.out.println(d.getJavaClassMapping());
 		//System.out.println(d.getSQLClassMapping());
 	}

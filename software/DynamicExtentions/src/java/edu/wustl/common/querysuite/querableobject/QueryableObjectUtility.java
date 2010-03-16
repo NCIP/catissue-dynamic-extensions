@@ -18,9 +18,11 @@ import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.TaggedValueInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.entitymanager.CategoryManager;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.wustl.cab2b.common.exception.RuntimeException;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.querysuite.querableobjectinterface.QueryableAttributeInterface;
 import edu.wustl.common.querysuite.querableobjectinterface.QueryableObjectInterface;
@@ -304,14 +306,9 @@ public class QueryableObjectUtility
 		CategoryInterface category;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryById(identifier);
+			category = CategoryManager.getInstance().getCategoryById(identifier);
 		}
 		catch (DynamicExtensionsSystemException e)
-		{
-			throw new RuntimeException("QueryableObject with given id is not present in cache : "
-					+ identifier, e);
-		}
-		catch (DynamicExtensionsApplicationException e)
 		{
 			throw new RuntimeException("QueryableObject with given id is not present in cache : "
 					+ identifier, e);
@@ -319,7 +316,6 @@ public class QueryableObjectUtility
 		queryableObject = QueryableObjectUtility.createQueryableObject(category);
 		return queryableObject;
 	}
-
 
 	/**
 	 * It will return the QueryableAtribute of the Attribute or categoryAttribute with the Identifier as given
@@ -338,14 +334,28 @@ public class QueryableObjectUtility
 		catch (Exception e)
 		{
 			// TODO: handle exception
-			CategoryAttributeInterface categoryAttribute = EntityCache.getInstance()
-					.getCategoryAttributeById(identifier);
+			CategoryAttributeInterface categoryAttribute = getCategoryAttribtueById(identifier);
 			CategoryInterface category = QueryableObjectUtility
 					.getCategoryFromCategoryAttribute(categoryAttribute);
 			queryableAttribute = QueryableObjectUtility.createQueryableAttribute(categoryAttribute,
 					category);
 		}
 		return queryableAttribute;
+	}
+
+	private static CategoryAttributeInterface getCategoryAttribtueById(Long identifier)
+	{
+		CategoryAttributeInterface catAttr = null;
+		try
+		{
+			catAttr = CategoryManager.getInstance().getCategoryAttributeById(identifier);
+		}
+		catch (DynamicExtensionsSystemException e)
+		{
+			throw new RuntimeException("Error while fetching Category Attribute With id"
+					+ identifier);
+		}
+		return catAttr;
 	}
 
 	/**
