@@ -83,7 +83,6 @@ public class DEIntegration implements IntegrationInterface
 	{
 		String entityTableName;
 		String columnName;
-		String catTableName;
 		Long entityContainerId;
 		if (categoryEntityMap.containsKey(categoryContainerId.toString()))
 		{
@@ -95,18 +94,13 @@ public class DEIntegration implements IntegrationInterface
 					categoryContainerId);
 			categoryEntityMap.put(categoryContainerId.toString(), entityContainerId);
 		}
-
+		String catTableName = EntityManager.getInstance().getDynamicTableName(categoryContainerId);
 		if (entityMap.containsKey(entityContainerId.toString()))
 		{
 			entityTableName = (String) entityMap.get(entityContainerId.toString());
 			columnName = (String) entityMap.get(hookEntityId + "_" + entityContainerId);
-			/*
-			 * Checked for categoryContainerId in the entityMap if present then get the Category Table Name from the Map
-			 * else get it from DB.
-			 */
 			if (!entityMap.containsKey(categoryContainerId.toString()))
 			{
-				catTableName = EntityManager.getInstance().getDynamicTableName(categoryContainerId);
 				entityMap.put(categoryContainerId.toString(), catTableName);
 			}
 		}
@@ -116,8 +110,6 @@ public class DEIntegration implements IntegrationInterface
 			entityTableName = EntityManager.getInstance().getDynamicTableName(entityContainerId);
 			columnName = EntityManager.getInstance().getColumnNameForAssociation(hookEntityId,
 					entityContainerId);
-			catTableName = EntityManager.getInstance().getDynamicTableName(categoryContainerId);
-
 			entityMap.put(entityContainerId.toString(), entityTableName);
 			entityMap.put(hookEntityId + "_" + entityContainerId, columnName);
 			entityMap.put(categoryContainerId.toString(), catTableName);
@@ -126,7 +118,7 @@ public class DEIntegration implements IntegrationInterface
 
 		String entitySql = "select identifier from " + entityTableName + " where " + columnName
 				+ " = ?";
-		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+		List<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 		queryDataList.add(new ColumnValueBean(columnName, staticRecId));
 		Collection catRecIds;
 		try
@@ -164,7 +156,7 @@ public class DEIntegration implements IntegrationInterface
 	public boolean isCategory(Long containerId) throws DynamicExtensionsSystemException
 	{
 		boolean isCategory = false;
-		Long contId = null;
+		Long contId;
 		if (categoryEntityMap.containsKey((containerId + DEConstants.ISCATEGORY)))
 		{
 			contId = (Long) categoryEntityMap.get(containerId + DEConstants.ISCATEGORY);
@@ -193,8 +185,8 @@ public class DEIntegration implements IntegrationInterface
 			Long containerId, Long hookEntityId) throws DynamicExtensionsSystemException
 	{
 		Collection recIdList;
-		String tableName = "";
-		String columnName = "";
+		String tableName;
+		String columnName;
 		if (entityMap.containsKey(containerId.toString()))
 		{
 			tableName = (String) entityMap.get(containerId.toString());
@@ -336,7 +328,7 @@ public class DEIntegration implements IntegrationInterface
 			Long dynamicEntityRecordId) throws DynamicExtensionsSystemException
 	{
 
-		String catTableName = "";
+		String catTableName;
 
 		/*
 		 * Checked for categoryContainerId in the entityMap if present then get the Category Table Name from the Map
@@ -352,7 +344,7 @@ public class DEIntegration implements IntegrationInterface
 			entityMap.put(categoryContainerId.toString(), catTableName);
 		}
 		String catSql = "select RECORD_ID from " + catTableName + " where identifier= ?";
-		LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+		List<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 		queryDataList.add(new ColumnValueBean(DEConstants.IDENTIFIER, dynamicEntityRecordId));
 		Collection recIdList;
 		try
@@ -366,9 +358,8 @@ public class DEIntegration implements IntegrationInterface
 		return recIdList;
 	}
 
-	private Collection getResultCollection(String catSql,
-			LinkedList<ColumnValueBean> queryDataList, JDBCDAO dao)
-			throws DynamicExtensionsSystemException, DAOException
+	private Collection getResultCollection(String catSql, List<ColumnValueBean> queryDataList,
+			JDBCDAO dao) throws DynamicExtensionsSystemException, DAOException
 	{
 		ResultSet resultSet = null;
 		Collection recIdList = new HashSet();
@@ -451,8 +442,8 @@ public class DEIntegration implements IntegrationInterface
 			List<Long> hookEntityRecIdList, Long containerId, Long hookEntityId, JDBCDAO dao)
 			throws DynamicExtensionsSystemException, DAOException
 	{
-		String tableName = "";
-		String columnName = "";
+		String tableName;
+		String columnName;
 		if (entityMap.containsKey(containerId.toString()))
 		{
 			tableName = (String) entityMap.get(containerId.toString());
@@ -517,7 +508,6 @@ public class DEIntegration implements IntegrationInterface
 		Collection<Long> catRecIds;
 		String entityTableName;
 		String columnName;
-		String catTableName;
 		Long entityContainerId;
 
 		if (categoryEntityMap.containsKey(categoryContainerId.toString()))
@@ -530,17 +520,13 @@ public class DEIntegration implements IntegrationInterface
 					categoryContainerId);
 			categoryEntityMap.put(categoryContainerId.toString(), entityContainerId);
 		}
+		String catTableName = EntityManager.getInstance().getDynamicTableName(categoryContainerId);
 		if (entityMap.containsKey(entityContainerId.toString()))
 		{
 			entityTableName = (String) entityMap.get(entityContainerId.toString());
 			columnName = (String) entityMap.get(hookEntityId + "_" + entityContainerId);
-			/*
-			 * Checked for categoryContainerId in the entityMap if present then get the Category Table Name from the Map
-			 * else get it from DB.
-			 */
 			if (!entityMap.containsKey(categoryContainerId.toString()))
 			{
-				catTableName = EntityManager.getInstance().getDynamicTableName(categoryContainerId);
 				entityMap.put(categoryContainerId.toString(), catTableName);
 			}
 		}
@@ -550,7 +536,6 @@ public class DEIntegration implements IntegrationInterface
 			entityTableName = EntityManager.getInstance().getDynamicTableName(entityContainerId);
 			columnName = EntityManager.getInstance().getColumnNameForAssociation(hookEntityId,
 					entityContainerId);
-			catTableName = EntityManager.getInstance().getDynamicTableName(categoryContainerId);
 			entityMap.put(entityContainerId.toString(), entityTableName);
 			entityMap.put(hookEntityId + "_" + entityContainerId, columnName);
 			entityMap.put(categoryContainerId.toString(), catTableName);
