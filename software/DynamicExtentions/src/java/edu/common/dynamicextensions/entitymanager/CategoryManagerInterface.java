@@ -53,7 +53,7 @@ public interface CategoryManagerInterface
 	* @throws DynamicExtensionsSystemException
 	*/
 
-	public CategoryInterface getCategoryById(final Long identifier)
+	CategoryInterface getCategoryById(final Long identifier)
 			throws DynamicExtensionsSystemException;
 
 	/**
@@ -63,7 +63,7 @@ public interface CategoryManagerInterface
 	* @throws DynamicExtensionsSystemException
 	*/
 
-	public CategoryAttributeInterface getCategoryAttributeById(final Long identifier)
+	CategoryAttributeInterface getCategoryAttributeById(final Long identifier)
 			throws DynamicExtensionsSystemException;
 
 	/**
@@ -73,7 +73,7 @@ public interface CategoryManagerInterface
 	* @throws DynamicExtensionsSystemException
 	*/
 
-	public CategoryAssociationInterface getCategoryAssociationById(final Long identifier)
+	CategoryAssociationInterface getCategoryAssociationById(final Long identifier)
 			throws DynamicExtensionsSystemException;
 
 	/**
@@ -83,8 +83,7 @@ public interface CategoryManagerInterface
 	* @throws DynamicExtensionsSystemException
 	*/
 
-	public CategoryInterface getCategoryByName(final String name)
-			throws DynamicExtensionsSystemException;
+	CategoryInterface getCategoryByName(final String name) throws DynamicExtensionsSystemException;
 
 	/**
 	 *
@@ -213,7 +212,7 @@ public interface CategoryManagerInterface
 	 * @throws DAOException
 	 * @throws SQLException
 	 */
-	public List<Map<BaseAbstractAttributeInterface, Object>> getRecordByRecordEntryId(Long formId,
+	List<Map<BaseAbstractAttributeInterface, Object>> getRecordByRecordEntryId(Long formId,
 			List<Long> recordEntryIdList, Long recordEntryStaticId)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
 			CacheException, DAOException, SQLException;
