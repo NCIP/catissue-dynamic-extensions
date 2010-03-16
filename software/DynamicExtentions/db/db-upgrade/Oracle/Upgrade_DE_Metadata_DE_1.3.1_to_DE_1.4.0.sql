@@ -23,3 +23,17 @@ alter table DYEXTN_ABSTRACT_RECORD_ENTRY add constraint FKA74A5FE4DDFB1974 forei
 alter table DYEXTN_CATEGORY add USER_ID number(19,0);
 alter table DYEXTN_CATEGORY_ATTRIBUTE ADD(IS_SRC_FOR_CAL_ATTR number(1,0) default 0);
 alter table DYEXTN_FORMULA modify expression varchar2(4000);
+
+update dyextn_constraintkey_prop set PRIMARY_ATTRIBUTE_ID = null where SRC_CONSTRAINT_KEY_ID in
+(
+select identifier from dyextn_constraint_properties where CATEGORY_ASSOCIATION_ID in
+(select identifier from dyextn_category_association)
+) and PRIMARY_ATTRIBUTE_ID is not null;
+
+update dyextn_constraintkey_prop set PRIMARY_ATTRIBUTE_ID = null where TGT_CONSTRAINT_KEY_ID in
+(
+select identifier from dyextn_constraint_properties where CATEGORY_ASSOCIATION_ID in
+(select identifier from dyextn_category_association)
+) and PRIMARY_ATTRIBUTE_ID is not null;
+
+commit;

@@ -5,3 +5,17 @@ alter table DYEXTN_ABSTRACT_RECORD_ENTRY add index FKA74A5FE4DDFB1974 (ABSTRACT_
 alter table DYEXTN_CATEGORY add USER_ID bigint;
 ALTER TABLE DYEXTN_CATEGORY_ATTRIBUTE ADD IS_SRC_FOR_CAL_ATTR bit default 0;
 alter table DYEXTN_FORMULA modify expression varchar(4000);
+
+update dyextn_constraintkey_prop set PRIMARY_ATTRIBUTE_ID = null where SRC_CONSTRAINT_KEY_ID in
+(
+select identifier from dyextn_constraint_properties where CATEGORY_ASSOCIATION_ID in
+(select identifier from dyextn_category_association)
+) and PRIMARY_ATTRIBUTE_ID is not null;
+
+update dyextn_constraintkey_prop set PRIMARY_ATTRIBUTE_ID = null where TGT_CONSTRAINT_KEY_ID in
+(
+select identifier from dyextn_constraint_properties where CATEGORY_ASSOCIATION_ID in
+(select identifier from dyextn_category_association)
+) and PRIMARY_ATTRIBUTE_ID is not null;
+
+commit;
