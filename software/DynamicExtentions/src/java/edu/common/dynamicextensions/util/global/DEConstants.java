@@ -43,6 +43,9 @@ public class DEConstants
 	public static final String CONTAINER_INTERFACE = "containerInterface";
 	public static final String CONTAINER_STACK = "containerStack";
 	public static final String VALUE_MAP_STACK = "valueMapStack";
+	public static final String SCROLL_TOP_STACK = "scrollTopStack";
+	public static final String SCROLL_TOP = "scrollTop";
+	public static final String SCROLL_POSITION = "scrollPostion";
 
 	public static final String ENTITYGROUP_INTERFACE = "entityGroupInterface";
 	public static final String CURRENT_CONTAINER_NAME = "currentContainerName";
