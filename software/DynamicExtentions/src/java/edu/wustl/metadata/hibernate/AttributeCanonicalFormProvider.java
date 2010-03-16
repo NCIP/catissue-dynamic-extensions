@@ -1,16 +1,30 @@
 package edu.wustl.metadata.hibernate;
 
-import edu.common.dynamicextensions.domaininterface.AttributeInterface;
+import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.wustl.cab2b.server.cache.EntityCache;
 
-public class AttributeCanonicalFormProvider extends AbstractMetadataCanonicalFormProvider<AttributeInterface> {
+public class AttributeCanonicalFormProvider
+		extends
+			AbstractMetadataCanonicalFormProvider<AbstractAttributeInterface>
+{
 
-    public Class<AttributeInterface> objectClass() {
-        return AttributeInterface.class;
+    public Class<AbstractAttributeInterface> objectClass()
+	{
+		return AbstractAttributeInterface.class;
     }
 
     @Override
-    protected AttributeInterface getObjectFromEntityCache(Long identifier) {
-        return EntityCache.getInstance().getAttributeById(identifier);
+	protected AbstractAttributeInterface getObjectFromEntityCache(Long identifier)
+	{
+		AbstractAttributeInterface abstractAttributeInterface = null;
+		try
+		{
+			abstractAttributeInterface = EntityCache.getInstance().getAttributeById(identifier);
+		}
+		catch (Exception exception)
+		{
+			abstractAttributeInterface = EntityCache.getInstance().getAssociationById(identifier);
+		}
+		return abstractAttributeInterface;
     }
 }

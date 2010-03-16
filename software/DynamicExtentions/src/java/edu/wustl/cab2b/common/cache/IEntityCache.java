@@ -12,7 +12,9 @@ import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.cab2b.common.beans.MatchedClass;
 
 /**
@@ -86,12 +88,15 @@ public interface IEntityCache
 	 */
 	Collection<CategoryInterface> getAllCategories();
 
-    /**
-     * It will return the Category with the id as given identifier in the parameter.
-     * @param identifier.
-     * @return category with given identifier.
-     */
-	CategoryInterface getCategoryById(Long identifier);
+	/**
+	 * It will return the Category with the id as given identifier in the parameter.
+	 * @param identifier.
+	 * @return category with given identifier.
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
+	 */
+	CategoryInterface getCategoryById(Long identifier) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException;
 
     /**
      * It will return the CategoryAttribute with the id as given identifier in the parameter.

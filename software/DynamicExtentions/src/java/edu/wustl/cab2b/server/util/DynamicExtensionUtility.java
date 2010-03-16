@@ -59,7 +59,6 @@ import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.DBTypes;
 import edu.wustl.dao.util.NamedQueryParam;
-
 import gov.nih.nci.cagrid.metadata.common.SemanticMetadata;
 
 /**
@@ -752,8 +751,7 @@ public final class DynamicExtensionUtility
 	{
 		List<EntityGroupInterface> entityGroups = new ArrayList<EntityGroupInterface>();
         Collection<EntityGroupInterface> allEntityGroups = hibernateDAO
-                .retrieve(EntityGroupInterface.class.getName(),
-                        "isSystemGenerated", Boolean.TRUE);
+				.retrieve(EntityGroupInterface.class.getName());
 		for (EntityGroupInterface entityGroup : allEntityGroups)
 		{
 			if (isEntityGroupMetadata(entityGroup))

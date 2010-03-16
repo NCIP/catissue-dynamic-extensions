@@ -49,6 +49,7 @@ import edu.common.dynamicextensions.util.AssociationTreeObject;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
+import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
@@ -2387,19 +2388,44 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.common.dynamicextensions.entitymanager.EntityManagerInterface#getCategoriesContainerIdFromHookEntity(java.lang.Long)
-	 */
-	public Collection<ContainerInterface> getCategoriesContainerIdFromHookEntity(Long hookEntityId)
+	* @see edu.common.dynamicextensions.entitymanager.EntityManagerInterface#getCategoriesContainerIdFromHookEntity(java.lang.Long)
+	*/
+	public Collection<NameValueBean> getCategoriesContainerIdFromHookEntity(Long hookEntityId)
 			throws DynamicExtensionsSystemException
 	{
 		// Create a map of substitution parameters.
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
-		substParams.put("0", new NamedQueryParam(DBTypes.LONG, hookEntityId));
+		Collection containerBeans = executeHQL("getAllCategoryContainerIdName", substParams);
+		Object[] contBeans;
+		List<NameValueBean> nameValueBeans = new ArrayList<NameValueBean>();
+		Set<EntityInterface> associatedEntities = getAssociatedEntities(hookEntityId);
+		Iterator contBeansIter = containerBeans.iterator();
+		while (contBeansIter.hasNext())
+		{
+			contBeans = (Object[]) contBeansIter.next();
+			String catName = (String) contBeans[0];
+			Long containerId = (Long) contBeans[1];
+			EntityInterface entity = (EntityInterface) contBeans[2];
+			if (associatedEntities.contains(entity))
+			{
+				nameValueBeans.add(new NameValueBean(catName, containerId));
+			}
+		}
+		return nameValueBeans;
 
-		Collection containers = executeHQL("getCategoryContainerIdFromHookEntiy", substParams);
-
-		return containers;
 	}
+
+	private Set<EntityInterface> getAssociatedEntities(Long hookEntityId)
+	{
+		Set<EntityInterface> associatedEntities = new HashSet<EntityInterface>();
+		for (AssociationInterface association : EntityCache.getInstance().getEntityById(
+				hookEntityId).getAssociationCollection())
+		{
+			associatedEntities.add(association.getTargetEntity());
+		}
+		return associatedEntities;
+	}
+
 
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.entitymanager.EntityManagerInterface#getDynamicTableName(java.lang.Long)
@@ -2463,17 +2489,17 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			throws DynamicExtensionsSystemException
 	{
 		Long contIdentifier = null;
-
 		// Create a map of substitution parameters.
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
 		substParams.put("0", new NamedQueryParam(DBTypes.LONG, containerId));
-
-		Collection containers = executeHQL("getCategoryRootContainerId", substParams);
+		Collection<EntityInterface> containers = executeHQL("getCategoryRootEntityByContainerId",
+				substParams);
 		if ((containers != null) && !containers.isEmpty())
 		{
-			contIdentifier = (Long) containers.iterator().next();
+			Collection<ContainerInterface> container = containers.iterator().next()
+					.getContainerCollection();
+			contIdentifier = container.iterator().next().getId();
 		}
-
 		return contIdentifier;
 	}
 
@@ -2842,15 +2868,13 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		Long containerId = null;
 		Map<String, NamedQueryParam> substitutionParameterMap = new HashMap<String, NamedQueryParam>();
 		substitutionParameterMap.put("0", new NamedQueryParam(DBTypes.LONG, categoryEntityId));
-		Collection<Long> containerIdCollection = executeHQL("getEntityIdByCategoryEntityId",
+		Collection<EntityInterface> entityCollection = executeHQL("getEntityByCategoryEntityId",
 				substitutionParameterMap);
-		if ((containerIdCollection != null) && !containerIdCollection.isEmpty())
+		if ((entityCollection != null) && !entityCollection.isEmpty())
 		{
-			containerId = containerIdCollection.iterator().next();
+			containerId = entityCollection.iterator().next().getId();
 		}
-
 		return containerId;
-
 	}
 
 	/**

@@ -240,7 +240,7 @@ public abstract class AbstractBaseMetadataManager
 	 * @throws DynamicExtensionsApplicationException
 	 *             the dynamic extensions application exception
 	 */
-	protected DynamicExtensionBaseDomainObject getObjectByIdentifier(String objectName,
+	public DynamicExtensionBaseDomainObject getObjectByIdentifier(String objectName,
 			String identifier) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{

@@ -462,7 +462,7 @@ public interface EntityManagerInterface
 	 * @return  the container Id of the DE entities/categories that are associated with given static hook entity
 	 * @throws DynamicExtensionsSystemException
 	 */
-	Collection<ContainerInterface> getCategoriesContainerIdFromHookEntity(Long hookEntityId)
+	Collection<NameValueBean> getCategoriesContainerIdFromHookEntity(Long hookEntityId)
 			throws DynamicExtensionsSystemException;
 
 	/**

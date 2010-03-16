@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!DOCTYPE hibernate-mapping PUBLIC
-    "-//Hibernate/Hibernate Mapping DTD 2.0//EN" 
+    "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-lazy="false">
@@ -33,16 +33,16 @@
             insert="true"
             column="PATH_ID"
         />
-
-        <many-to-one
+		<property
             name="association"
-            class="edu.common.dynamicextensions.domain.Association"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="ASSOCIATION_ID"
-        />
+            column="ASSOCIATION_ID">
+	       <type name="edu.wustl.common.hibernate.CanonicalFormType">
+				<param name="canonical-form-provider">
+					edu.wustl.metadata.hibernate.AssociationCanonicalFormProvider
+				</param>
+			</type>
+		</property>
+
 
         <property
             name="pathSequenceNumber"

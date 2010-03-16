@@ -192,24 +192,10 @@
 		   )
     </query>
 
-	<query name="getCategoryContainerIdFromHookEntiy">
-	  select new edu.wustl.common.beans.NameValueBean(catColl.name , container.id)
-	   from edu.common.dynamicextensions.domain.userinterface.Container container  ,
-         edu.common.dynamicextensions.domain.CategoryEntity catEntity
-		 join catEntity.categoryCollection as catColl
-
-		   where container.abstractEntity.id in
-		   (
-		      select category.rootCategoryElement.id
-				from  edu.common.dynamicextensions.domain.Category category
-					where category.rootCategoryElement.entity.id in
-						(
-							select association.targetEntity.id
-						       from Association association
-							       	where association.entity.id = ?
-						)
-			)
-			and catEntity.containerCollection.id=container.id order by catColl.name asc
+	<query name="getAllCategoryContainerIdName">
+	select category.name , category.rootCategoryElement.containerCollection.id ,
+	category.rootCategoryElement.entity from
+	edu.common.dynamicextensions.domain.Category category order by category.name asc
 	</query>
 
 	<query name="getDynamicTableName">
@@ -230,17 +216,12 @@
 				and contColl.id = ?
 	</query>
 
-	<query name="getCategoryRootContainerId">
-	 select  container.id
-		from edu.common.dynamicextensions.domain.userinterface.Container container
-		   where container.abstractEntity.id in
-		   (
-			select category.rootCategoryElement.entity.id
-				from  edu.common.dynamicextensions.domain.Category category
-					join category.rootCategoryElement.containerCollection contColl
-						where contColl.id= ?
-			)
-   </query>
+	<query name="getCategoryRootEntityByContainerId">
+		select category.rootCategoryElement.entity from
+			edu.common.dynamicextensions.domain.Category category
+		   	join
+		    category.rootCategoryElement.containerCollection contColl where contColl.id= ?
+	</query>
    <query name="getEntityGroupId">
    		select entityGroup.id from EntityGroup entityGroup where entityGroup.name = ?
    </query>
@@ -270,8 +251,8 @@
 		from edu.common.dynamicextensions.domain.Category category
 		where category.rootCategoryElement.id =?
 	</query>
-	<query name="getEntityIdByCategoryEntityId">
-		select categoryEntity.entity.id
+	<query name="getEntityByCategoryEntityId">
+		select categoryEntity.entity
 		from edu.common.dynamicextensions.domain.CategoryEntity categoryEntity
 		where categoryEntity.id=?
 	</query>
@@ -357,11 +338,4 @@
         from  edu.common.dynamicextensions.domain.CategoryAttribute catAttribute
         where catAttribute.isCalculated = true
 	</query>
-
-	<query name="getAllCategoryIdsForEntityGroupId">
-		select cat.id
-        from  edu.common.dynamicextensions.domain.Category cat
-        where cat.rootCategoryElement.entity.entityGroup.id=?
-	</query>
-
 </hibernate-mapping>

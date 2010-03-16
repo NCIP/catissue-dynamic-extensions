@@ -19,6 +19,8 @@ import edu.common.dynamicextensions.domaininterface.TaggedValueInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.querysuite.querableobjectinterface.QueryableAttributeInterface;
 import edu.wustl.common.querysuite.querableobjectinterface.QueryableObjectInterface;
@@ -45,8 +47,8 @@ public class QueryableObjectUtility
 	}
 
 	/**
-	 * It will add the childCategory (CateegoryEntity ) in the list & will call itself 
-	 * for the childCategory also to populate the list with all the child category Entities. 
+	 * It will add the childCategory (CateegoryEntity ) in the list & will call itself
+	 * for the childCategory also to populate the list with all the child category Entities.
 	 * @param list in which all the child Category Entities are added.
 	 * @param categoryEntity
 	 */
@@ -68,7 +70,7 @@ public class QueryableObjectUtility
 	 * It will return the collection of the Entities which are present in all the category entities
 	 * of the Category.
 	 * @param category
-	 * @return collection of the Entity present in the category. 
+	 * @return collection of the Entity present in the category.
 	 */
 	public static Collection<EntityInterface> getAllEntityFromCategory(CategoryInterface category)
 	{
@@ -122,7 +124,7 @@ public class QueryableObjectUtility
 	}
 
 	/**
-	 * It will return the collection of the Attributes which are added as a CategoryAttribute in the given 
+	 * It will return the collection of the Attributes which are added as a CategoryAttribute in the given
 	 * parameter category
 	 * @param category
 	 * @return collection of the Attributes present in the category.
@@ -234,7 +236,7 @@ public class QueryableObjectUtility
 	}
 
 	/**
-	 * It will create the QueryableAttribute from the Attrbute.	
+	 * It will create the QueryableAttribute from the Attrbute.
 	 * @param attribute
 	 * @param entity
 	 * @return
@@ -275,10 +277,12 @@ public class QueryableObjectUtility
 	}
 
 	/**
-	 * It will return the QueryableObject of the Entity or category with the Identifier as given
-	 * present in cache.
-	 * @return QueryableObjectInterface
-	 */
+	* It will return the QueryableObject of the Entity or category with the Identifier as given
+	* present in cache.
+	* @return QueryableObjectInterface
+	* @throws DynamicExtensionsApplicationException
+	* @throws DynamicExtensionsSystemException
+	*/
 	public static QueryableObjectInterface getQueryableObjectFromCache(Long identifier)
 	{
 		QueryableObjectInterface queryableObject = null;
@@ -289,12 +293,33 @@ public class QueryableObjectUtility
 		}
 		catch (Exception e)
 		{
-			// TODO: handle exception
-			CategoryInterface category = EntityCache.getInstance().getCategoryById(identifier);
-			queryableObject = QueryableObjectUtility.createQueryableObject(category);
+			queryableObject = getQueryableCategory(identifier);
 		}
 		return queryableObject;
 	}
+
+	private static QueryableObjectInterface getQueryableCategory(Long identifier)
+	{
+		QueryableObjectInterface queryableObject;
+		CategoryInterface category;
+		try
+		{
+			category = EntityCache.getInstance().getCategoryById(identifier);
+		}
+		catch (DynamicExtensionsSystemException e)
+		{
+			throw new RuntimeException("QueryableObject with given id is not present in cache : "
+					+ identifier, e);
+		}
+		catch (DynamicExtensionsApplicationException e)
+		{
+			throw new RuntimeException("QueryableObject with given id is not present in cache : "
+					+ identifier, e);
+		}
+		queryableObject = QueryableObjectUtility.createQueryableObject(category);
+		return queryableObject;
+	}
+
 
 	/**
 	 * It will return the QueryableAtribute of the Attribute or categoryAttribute with the Identifier as given
@@ -325,7 +350,7 @@ public class QueryableObjectUtility
 
 	/**
 	* This method trims out package name form the entity name
-	* 
+	*
 	* @param entity
 	* @return
 	*/
@@ -337,7 +362,7 @@ public class QueryableObjectUtility
 
 	/**
 	 * It will search the control associated with the baseAbstractAttribute in the containers
-	 * controlCollection & will return the caption of that control if found else 
+	 * controlCollection & will return the caption of that control if found else
 	 * will return the empty string.
 	 * @param container
 	 * @param baseAbstractAttribute
