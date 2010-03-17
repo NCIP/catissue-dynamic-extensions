@@ -1709,8 +1709,9 @@ public class CategoryHelper implements CategoryHelperInterface
 		{
 			if (controlInterface instanceof AbstractContainmentControlInterface)
 			{
-				if (((AbstractContainmentControlInterface) controlInterface).getContainer().getId()
-						.equals(associationContainerId))
+				if (associationContainerId
+						.equals(((AbstractContainmentControlInterface) controlInterface)
+								.getContainer().getId()))
 				{
 					associationControl = (AbstractContainmentControlInterface) controlInterface;
 					return associationControl;
