@@ -82,7 +82,7 @@ public abstract class AbstractXMIImporter
 	// name of a MOF extent that will contain definition of UML metamodel
 	private static final String UML_MM = "UML";
 
-	private final String storageFileName = "importer";
+	private final static String storageFileName = "importer";
 	// repository
 	private MDRepository rep;
 	// UML extent
