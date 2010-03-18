@@ -30,8 +30,8 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
-import org.netbeans.api.mdr.MDRManager;
 import org.netbeans.api.mdr.MDRepository;
+import org.netbeans.mdr.NBMDRepositoryImpl;
 import org.omg.uml.foundation.core.Attribute;
 import org.omg.uml.foundation.core.Generalization;
 import org.omg.uml.foundation.core.ModelElement;
@@ -58,19 +58,23 @@ import edu.wustl.dao.exception.DAOException;
  */
 public class XMIUtilities
 {/*
- //Common Utility functions
- */
-
+//Common Utility functions
+*/
 
 	/**
 	 * @return MDRepository object
 	 */
-	public static MDRepository getRepository()
+	public static MDRepository getRepository(String storageFileName)
 	{
-		return MDRManager.getDefault().getDefaultRepository();
+		Map repositoryConfigMap = new HashMap();
+		repositoryConfigMap.put("storage",
+				"org.netbeans.mdr.persistence.btreeimpl.btreestorage.BtreeFactory");
+		repositoryConfigMap.put("org.netbeans.mdr.persistence.btreeimpl.filename", storageFileName);
+		System.setProperty("org.netbeans.lib.jmi.Logger.fileName", storageFileName + ".log");
+		MDRepository repository = new NBMDRepositoryImpl(repositoryConfigMap);
+		return repository;
+
 	}
-
-
 
 	/**
 	 * Get MOF Package
@@ -82,7 +86,6 @@ public class XMIUtilities
 	{
 		return null;
 	}
-
 
 	/**
 	 * Return a UML Class object for given Entity Domain Object
@@ -138,7 +141,7 @@ public class XMIUtilities
 		String name = null;
 		if (attribute != null)
 		{
-			name= attribute.getName();
+			name = attribute.getName();
 		}
 		return name;
 	}
@@ -254,15 +257,19 @@ public class XMIUtilities
 	/**
 	 * This method deletes unwanted repository files
 	 */
-	public static void cleanUpRepository()
+	/**
+	 * This method deletes unwanted repository files
+	 * @param storageFileName
+	 */
+	public static void cleanUpRepository(String storageFileName)
 	{
-		if (new File("mdr.btd").exists())
+		if (new File(storageFileName + ".btd").exists())
 		{
-			(new File("mdr.btd")).delete();
+			(new File(storageFileName + ".btd")).delete();
 		}
-		if (new File("mdr.btx").exists())
+		if (new File(storageFileName + ".btx").exists())
 		{
-			(new File("mdr.btx")).delete();
+			(new File(storageFileName + ".btx")).delete();
 		}
 	}
 
@@ -352,6 +359,5 @@ public class XMIUtilities
 		}
 		return entity;
 	}
-
 
 }

@@ -291,10 +291,11 @@ public class Association extends AbstractAttribute
 			Association systemGeneratedAssociation = getSystemGeneratedAssociation(association);
 			if (association.getAssociationDirection() == AssociationDirection.BI_DIRECTIONAL)
 			{
-				ConstraintPropertiesInterface constraintPropertiesSysGen = new ConstraintProperties();
+				ConstraintPropertiesInterface constraintPropertiesSysGen;
 				if (systemGeneratedAssociation == null)
 				{
 					systemGeneratedAssociation = new Association();
+					constraintPropertiesSysGen = new ConstraintProperties();
 				}
 				else
 				{

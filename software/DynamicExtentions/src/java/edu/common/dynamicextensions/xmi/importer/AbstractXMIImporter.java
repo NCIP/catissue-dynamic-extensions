@@ -21,7 +21,6 @@ import javax.jmi.model.MofPackage;
 import javax.jmi.xmi.XmiReader;
 
 import org.netbeans.api.mdr.CreationFailedException;
-import org.netbeans.api.mdr.MDRManager;
 import org.netbeans.api.mdr.MDRepository;
 import org.omg.uml.UmlPackage;
 import org.openide.util.Lookup;
@@ -71,8 +70,6 @@ import edu.wustl.dao.exception.DAOException;
 public abstract class AbstractXMIImporter
 {
 
-
-
 	static
 	{
 		LoggerConfig.configureLogger(System.getProperty("user.dir"));
@@ -85,15 +82,16 @@ public abstract class AbstractXMIImporter
 	// name of a MOF extent that will contain definition of UML metamodel
 	private static final String UML_MM = "UML";
 
+	private final String storageFileName = "importer";
 	// repository
-	private static MDRepository rep;
+	private MDRepository rep;
 	// UML extent
-	private static UmlPackage uml;
+	private UmlPackage uml;
 
 	// XMI reader
-	private static XmiReader reader;
+	private XmiReader reader;
 
-	private static XMIConfiguration xmiConfiguration = null;
+	private XMIConfiguration xmiConfiguration = null;
 
 	private String fileName = "";
 	private String packageName = "";
@@ -368,7 +366,7 @@ public abstract class AbstractXMIImporter
 			isEntGrpSysGented = true;
 		}
 		// get the default repository
-		rep = XMIUtilities.getRepository();
+		rep = XMIUtilities.getRepository(storageFileName);
 		// create an XMIReader
 		reader = (XmiReader) Lookup.getDefault().lookup(XmiReader.class);
 		init();
@@ -472,7 +470,8 @@ public abstract class AbstractXMIImporter
 			JDBCDAO jdbcdao)
 	{
 		rep.endTrans();
-		MDRManager.getDefault().shutdownAll();
+		rep.shutdown();
+		//MDRManager.getDefault().shutdownAll();
 		try
 		{
 			DynamicExtensionsUtility.closeDAO(hibernatedao);
@@ -487,7 +486,7 @@ public abstract class AbstractXMIImporter
 		{
 			LOGGER.fatal("Fatal error reading XMI!!", e);
 		}
-		XMIUtilities.cleanUpRepository();
+		XMIUtilities.cleanUpRepository(storageFileName);
 	}
 
 	/**
@@ -513,8 +512,8 @@ public abstract class AbstractXMIImporter
 			LOGGER.info(" ");
 			LOGGER.info("Now associating with hook entity -> " + hookEntityName + "....");
 			LOGGER.info(" ");
-			DynamicQueryList queryList = associateHookEntity(mainContainerList,
-					isEditedXmi, hibernatedao);
+			DynamicQueryList queryList = associateHookEntity(mainContainerList, isEditedXmi,
+					hibernatedao);
 			if (queryList != null)
 			{
 				dynamicQueryList.getQueryList().addAll(queryList.getQueryList());
@@ -984,7 +983,7 @@ public abstract class AbstractXMIImporter
 	 * Initializes the MOF repository.
 	 * @throws Exception exception.
 	 */
-	private static void init() throws DynamicExtensionsSystemException, CreationFailedException
+	private void init() throws DynamicExtensionsSystemException, CreationFailedException
 	{
 		uml = (UmlPackage) rep.getExtent(UML_INSTANCE);
 
@@ -1010,7 +1009,7 @@ public abstract class AbstractXMIImporter
 	 * @throws DynamicExtensionsSystemException
 	 * @throws Exception exception
 	 */
-	public static MofPackage getUmlPackage() throws DynamicExtensionsSystemException
+	public MofPackage getUmlPackage() throws DynamicExtensionsSystemException
 	{
 		// get the MOF extent containing definition of UML metamodel
 		ModelPackage umlMM = (ModelPackage) rep.getExtent(UML_MM);

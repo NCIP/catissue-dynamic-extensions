@@ -27,7 +27,6 @@ import javax.xml.transform.TransformerException;
 
 import org.apache.commons.lang.StringUtils;
 import org.netbeans.api.mdr.CreationFailedException;
-import org.netbeans.api.mdr.MDRManager;
 import org.netbeans.api.mdr.MDRepository;
 import org.omg.uml.UmlPackage;
 import org.omg.uml.foundation.core.AssociationEnd;
@@ -117,7 +116,7 @@ public class XMIExporter
 {
 
 	//Repository
-	private static MDRepository repository = XMIUtilities.getRepository();
+	private MDRepository repository;
 
 	static
 	{
@@ -126,18 +125,18 @@ public class XMIExporter
 	private static final Logger LOGGER = Logger.getCommonLogger(XMIExporter.class);
 	private static final String UML_MM = "UML";
 	// UML extent
-	private static UmlPackage umlPackage;
+	private UmlPackage umlPackage;
 
 	//Model
-	private static Model umlModel = null;
+	private Model umlModel = null;
 	//Leaf package
-	private static org.omg.uml.modelmanagement.UmlPackage logicalModel = null;
-	private static org.omg.uml.modelmanagement.UmlPackage dataModel = null;
-	private static Map<String, UmlClass> entityUMLClassMappings = null;
-	private static Map<String, UmlClass> entityDataClassMappings = null;
-	private static Map<EntityInterface, List<String>> entityForeignKeyAttributes = null;
-	private static Map<String, String> foreignKeyOperationNameMapping = null;
-	private static String packageName = null;
+	private org.omg.uml.modelmanagement.UmlPackage logicalModel = null;
+	private org.omg.uml.modelmanagement.UmlPackage dataModel = null;
+	private Map<String, UmlClass> entityUMLClassMappings = null;
+	private Map<String, UmlClass> entityDataClassMappings = null;
+	private Map<EntityInterface, List<String>> entityForeignKeyAttributes = null;
+	private Map<String, String> foreignKeyOperationNameMapping = null;
+	private String packageName = null;
 	private String xmiVersion;
 	private String groupName;
 	private String filename;
@@ -175,9 +174,10 @@ public class XMIExporter
 		finally
 		{
 			repository.endTrans(true);
+			repository.shutdown();
 			// shutdown the repository to make sure all caches are flushed to disk
-			MDRManager.getDefault().shutdownAll();
-			XMIUtilities.cleanUpRepository();
+			//MDRManager.getDefault().shutdownAll();
+			XMIUtilities.cleanUpRepository(filename);
 			outputStream.close();
 			if (new File(XMIConstants.TEMPORARY_XMI1_1_FILENAME).exists())
 			{
@@ -2154,7 +2154,7 @@ public class XMIExporter
 	 */
 
 	@SuppressWarnings("unchecked")
-	private static Classifier getOrCreateDataType(final String type)
+	private Classifier getOrCreateDataType(final String type)
 	{
 
 		Object datatype = XMIUtilities.find(umlModel, type);
@@ -2238,7 +2238,7 @@ public class XMIExporter
 	}
 
 	@SuppressWarnings("unchecked")
-	protected static Collection getOrCreateStereotypes(final String names, final String baseClass)
+	protected Collection getOrCreateStereotypes(final String names, final String baseClass)
 	{
 		final Collection<Stereotype> stereotypes = new HashSet<Stereotype>();
 		String[] stereotypeNames = null;
@@ -2303,7 +2303,7 @@ public class XMIExporter
 	 * @param string
 	 * @return
 	 */
-	private static org.omg.uml.modelmanagement.UmlPackage getOrCreatePackage(String packageName,
+	private org.omg.uml.modelmanagement.UmlPackage getOrCreatePackage(String packageName,
 			org.omg.uml.modelmanagement.UmlPackage parentPackage)
 	{
 		packageName = PackageName.getLogicalPackageName(packageName, XMIConstants.DOT_SEPARATOR);
@@ -2343,7 +2343,7 @@ public class XMIExporter
 	public void init() throws CreationFailedException, DynamicExtensionsSystemException
 	{
 		//		Cleanup repository files
-		XMIUtilities.cleanUpRepository();
+		XMIUtilities.cleanUpRepository(filename);
 		initializeUMLPackage();
 		initializeModel();
 		initializePackageHierarchy();
@@ -2663,7 +2663,6 @@ public class XMIExporter
 		}
 	}
 
-	
 	/**
 	 * This method will retrive Entity group & static entity required for exporting the xmi.
 	 * it will initialize the global variables foe it.
@@ -2723,6 +2722,7 @@ public class XMIExporter
 			throw new DynamicExtensionsApplicationException("To export xmi in 1.1 Version you have to specify the Hook Entity. else export in xmi version 1.2");
 		}*/
 		generateLogForVariables();
+		repository = XMIUtilities.getRepository(filename);
 	}
 
 	/**
