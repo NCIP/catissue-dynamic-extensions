@@ -1870,13 +1870,12 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			throws DynamicExtensionsSystemException
 	{
 		List<String> revQueries = new ArrayList<String>();
-		Stack<String> rlbkQryStack = null;
-
+		Stack<String> rlbkQryStack = new Stack<String>();
 		try
 		{
 			List<String> queries = new ArrayList<String>();
 			queries.addAll(queryBuilder.getQueryPartForAssociation(association, revQueries, true));
-			rlbkQryStack = queryBuilder.executeQueries(queries, revQueries, rlbkQryStack);
+			queryBuilder.executeQueries(queries, revQueries, rlbkQryStack);
 		}
 		catch (DynamicExtensionsSystemException e)
 		{
@@ -2425,7 +2424,6 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		}
 		return associatedEntities;
 	}
-
 
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.entitymanager.EntityManagerInterface#getDynamicTableName(java.lang.Long)

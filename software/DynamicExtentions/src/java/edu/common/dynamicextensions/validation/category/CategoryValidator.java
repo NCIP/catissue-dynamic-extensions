@@ -158,12 +158,6 @@ public class CategoryValidator
 			if (rules.containsKey(CategoryCSVConstants.DATE_RANGE))
 			{
 				catMinMaxValues = (Map<String, Object>) rules.get(CategoryCSVConstants.DATE_RANGE);
-				if (attribute == null)
-				{
-					throw new DynamicExtensionsSystemException(ApplicationProperties
-							.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties.getValue(CategoryConstants.NULL_ATTR));
-				}
 			}
 			else if (rules.containsKey(CategoryCSVConstants.RANGE.toLowerCase(locale)))
 			{

@@ -1159,8 +1159,7 @@ public class XMIExporter
 					}
 					else
 					{
-						if ((umlAttribute != null)
-								&& XMIConstants.XMI_VERSION_1_2.equals(xmiVersion))
+						if (XMIConstants.XMI_VERSION_1_2.equals(xmiVersion))
 						{
 							final String tagValue = XMIConstants.PACKAGE_NAME_LOGICAL_VIEW
 									+ XMIConstants.DOT_SEPARATOR
@@ -1174,8 +1173,7 @@ public class XMIExporter
 									createTaggedValue(XMIConstants.TAGGED_VALUE_MAPPED_ATTRIBUTES,
 											tagValue));
 						}
-						else if ((umlAttribute != null)
-								&& XMIConstants.XMI_VERSION_1_1.equals(xmiVersion))
+						else if (XMIConstants.XMI_VERSION_1_1.equals(xmiVersion))
 						{
 							umlAttribute.getTaggedValue().add(
 									createTaggedValue(XMIConstants.TAGGED_VALUE_MAPPED_ATTRIBUTES,
@@ -2256,19 +2254,14 @@ public class XMIExporter
 			{
 				final String name = StringUtils.trimToEmpty(stereotypeName);
 
-				// see if we can find the stereotype first
-				Stereotype stereotype = null;//ModelElementFinder.find(this.umlPackage, name);
-				if ((stereotype == null)
-						|| !Stereotype.class.isAssignableFrom(stereotype.getClass()))
-				{
-					final Collection<String> baseClasses = new ArrayList<String>();
-					baseClasses.add(baseClass);
-					stereotype = umlPackage.getCore().getStereotype().createStereotype(name,
-							VisibilityKindEnum.VK_PUBLIC, false, false, false, false, null,
-							baseClasses);
+				final Collection<String> baseClasses = new ArrayList<String>();
+				baseClasses.add(baseClass);
+				Stereotype stereotype = umlPackage.getCore().getStereotype()
+						.createStereotype(name, VisibilityKindEnum.VK_PUBLIC, false, false, false,
+								false, null, baseClasses);
 
-					umlModel.getOwnedElement().add(stereotype);
-				}
+				umlModel.getOwnedElement().add(stereotype);
+
 				stereotypes.add(stereotype);
 			}
 		}

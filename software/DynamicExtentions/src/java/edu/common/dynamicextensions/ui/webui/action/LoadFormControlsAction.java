@@ -29,8 +29,8 @@ import edu.wustl.common.util.logger.Logger;
 /**
  * This Action class Loads the Primary Information needed for BuildForm.jsp.
  * This will first check if the object is already present in cache , If yes, it will update
- * the actionForm and If No, It will populate the actionForm with fresh data.  
- * The exception thrown can be of 'Application' type ,in this case the same Screen will be displayed  
+ * the actionForm and If No, It will populate the actionForm with fresh data.
+ * The exception thrown can be of 'Application' type ,in this case the same Screen will be displayed
  * added with error messages .
  * And The exception thrown can be of 'System' type, in this case user will be directed to Error Page.
  * @author deepti_shelar
@@ -56,11 +56,11 @@ public class LoadFormControlsAction extends BaseDynamicExtensionsAction
 			String controlOperation = controlsForm.getControlOperation();
 			if (controlOperation != null
 					&& controlOperation.equalsIgnoreCase(ProcessorConstants.OPERATION_EDIT)
-					&& containerInterface != null && controlsForm != null)
+					&& containerInterface != null)
 			{
-			
-					ControlsUtility.reinitializeSequenceNumbers(containerInterface
-							.getControlCollection(), controlsForm.getControlsSequenceNumbers());
+
+				ControlsUtility.reinitializeSequenceNumbers(containerInterface
+						.getControlCollection(), controlsForm.getControlsSequenceNumbers());
 			}
 			Logger.out.debug("Loading form controls for [" + containerInterface.getCaption() + "]");
 			LoadFormControlsProcessor loadFormControlsProcessor = LoadFormControlsProcessor

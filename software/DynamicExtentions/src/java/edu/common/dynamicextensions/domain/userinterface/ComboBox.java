@@ -74,17 +74,17 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		}
 		String isDisabled = "";
 		String htmlString = "";
-		if ((this.isReadOnly != null && this.isReadOnly)
-				|| (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly))
+		if ((isReadOnly != null && isReadOnly)
+				|| (isSkipLogicReadOnly != null && isSkipLogicReadOnly))
 		{
 			isDisabled = ",disabled:'" + ProcessorConstants.TRUE + "'";
 		}
 		String htmlComponentName = getHTMLComponentName();
 		StringBuffer sourceHtmlComponentValues = null;
-		if (this.getSourceSkipControl() != null)
+		if (getSourceSkipControl() != null)
 		{
 			sourceHtmlComponentValues = new StringBuffer();
-			List<String> sourceControlValues = this.getSourceSkipControl().getValueAsStrings();
+			List<String> sourceControlValues = getSourceSkipControl().getValueAsStrings();
 			if (sourceControlValues != null)
 			{
 				for (String value : sourceControlValues)
@@ -99,16 +99,16 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 			sourceHtmlComponentValues = new StringBuffer('~');
 		}
 		String parentContainerId = "";
-		if (this.getParentContainer() != null && this.getParentContainer().getId() != null)
+		if (getParentContainer() != null && getParentContainer().getId() != null)
 		{
-			parentContainerId = this.getParentContainer().getId().toString();
+			parentContainerId = getParentContainer().getId().toString();
 		}
 		String identifier = "";
-		if (this.getId() != null)
+		if (getId() != null)
 		{
-			identifier = this.getId().toString();
+			identifier = getId().toString();
 		}
-		if (getIsSkipLogicTargetControl() || this.getParentContainer().isAjaxRequest())
+		if (getIsSkipLogicTargetControl() || getParentContainer().isAjaxRequest())
 		{
 			htmlString += "<div id='" + getHTMLComponentName() + "_div' name='"
 					+ getHTMLComponentName() + "_div'>";
@@ -120,7 +120,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		 */
 		String textComponent = "combo" + htmlComponentName;
 		String attributeName = ((Control) this).getCaption();
-		if ((!this.getParentContainer().isAjaxRequest())
+		if ((!getParentContainer().isAjaxRequest())
 				&& (!getIsSkipLogicTargetControl() && !"skipLogicAttributes"
 						.equals(getDataEntryOperation())))
 		{
@@ -151,7 +151,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					+ "selectOnFocus:'true',applyTo: '"
 					+ htmlComponentName
 					+ "'});combo.on(\"select\", function() {"
-					+ (this.isSkipLogic
+					+ (isSkipLogic
 							? "getSkipLogicControl('" + htmlComponentName + "','" + identifier
 									+ "','" + parentContainerId + "');isDataChanged();"
 							: "isDataChanged();")
@@ -209,10 +209,8 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				+ "selectOnFocus:'true',applyTo: '"
 				+ htmlComponentName
 				+ "'});combo.on(\"select\", function() {"
-				+ (this.isSkipLogic
-						? "getSkipLogicControl('" + htmlComponentName + "','" + identifier + "','"
-								+ parentContainerId + "');isDataChanged();"
-						: "isDataChanged();")
+				+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName + "','" + identifier
+						+ "','" + parentContainerId + "');isDataChanged();" : "isDataChanged();")
 				+ "}), combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"210\");combo.innerList.setStyle(\"width\", \"210\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});"
 				+ "ds.on('load',function(){if (this.getAt(0) != null) {if (this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50} else {combo.typeAheadDelay=60000}}});"
 				+ "});"
@@ -233,7 +231,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				+ "ex' size='"
 				+ (columnSize > 0 ? columnSize : Constants.DEFAULT_COLUMN_SIZE)
 				+ "' class='font_bl_nor' />" + "</div>" + "</div>" + "</div>";
-		if (getIsSkipLogicTargetControl() || this.getParentContainer().isAjaxRequest())
+		if (getIsSkipLogicTargetControl() || getParentContainer().isAjaxRequest())
 		{
 			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
 					+ getHTMLComponentName()
@@ -269,15 +267,15 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		String htmlString = "&nbsp;";
 
 		String defaultValue = "";
-		if (this.value != null)
+		if (value != null)
 		{
-			if (this.value instanceof String)
+			if (value instanceof String)
 			{
-				defaultValue = (String) this.value;
+				defaultValue = (String) value;
 			}
-			else if (this.value instanceof List)
+			else if (value instanceof List)
 			{
-				List valueList = (List) this.value;
+				List valueList = (List) value;
 				if (!valueList.isEmpty())
 				{
 					defaultValue = valueList.get(0).toString();
@@ -289,9 +287,9 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		if (listOfValues == null)
 		{
 			List<String> sourceControlValues = null;
-			if (this.getSourceSkipControl() != null)
+			if (getSourceSkipControl() != null)
 			{
-				sourceControlValues = this.getSourceSkipControl().getValueAsStrings();
+				sourceControlValues = getSourceSkipControl().getValueAsStrings();
 			}
 			nameValueBeanList = ControlsUtility.populateListOfValues(this, sourceControlValues);
 		}
@@ -322,24 +320,23 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		String defaultValue = "";
 		if (!getIsSkipLogicDefaultValue())
 		{
-			if (this.value == null)
+			if (value == null)
 			{
-				AttributeMetadataInterface attributeMetadataInterface = this
-						.getAttibuteMetadataInterface();
+				AttributeMetadataInterface attributeMetadataInterface = getAttibuteMetadataInterface();
 				if (attributeMetadataInterface != null)
 				{
-					this.value = this.getAttibuteMetadataInterface().getDefaultValue();
+					value = getAttibuteMetadataInterface().getDefaultValue();
 				}
 			}
-			if (this.value != null)
+			if (value != null)
 			{
-				if (this.value instanceof String)
+				if (value instanceof String)
 				{
-					defaultValue = (String) this.value;
+					defaultValue = (String) value;
 				}
-				else if (this.value instanceof List)
+				else if (value instanceof List)
 				{
-					List valueList = (List) this.value;
+					List valueList = (List) value;
 					if (!valueList.isEmpty())
 					{
 						defaultValue = valueList.get(0).toString();
@@ -354,15 +351,15 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		else
 		{
 			String controlvalue = null;
-			if (this.value != null)
+			if (value != null)
 			{
-				if (this.value instanceof String)
+				if (value instanceof String)
 				{
-					controlvalue = (String) this.value;
+					controlvalue = (String) value;
 				}
-				else if (this.value instanceof List)
+				else if (value instanceof List)
 				{
-					List valueList = (List) this.value;
+					List valueList = (List) value;
 					if (!valueList.isEmpty())
 					{
 						controlvalue = valueList.get(0).toString();
@@ -380,7 +377,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		}
 		if (isInvalidValue(defaultValue))
 		{
-			defaultValue = this.getAttibuteMetadataInterface().getDefaultValue();
+			defaultValue = getAttibuteMetadataInterface().getDefaultValue();
 			// Set default value to blank, if not set
 			if (defaultValue == null)
 			{
@@ -401,9 +398,8 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	 */
 	private boolean isInvalidValue(String value)
 	{
-		List<NameValueBean> nameValueBeans = new ArrayList<NameValueBean>();
-		nameValueBeans = ControlsUtility.getListOfPermissibleValues(this
-				.getAttibuteMetadataInterface());
+		List<NameValueBean> nameValueBeans = ControlsUtility
+				.getListOfPermissibleValues(getAttibuteMetadataInterface());
 		boolean isInavlidVaue = true;
 		for (NameValueBean bean : nameValueBeans)
 		{

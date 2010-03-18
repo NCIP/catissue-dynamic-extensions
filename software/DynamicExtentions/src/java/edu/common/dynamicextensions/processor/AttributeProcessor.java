@@ -2064,15 +2064,13 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 		{
 			attributeUIBeanInformationIntf
 					.setDisplayChoice(ProcessorConstants.DISPLAY_CHOICE_LOOKUP);
-			if ((associationInterface != null) && (attributeUIBeanInformationIntf != null))
+			EntityInterface targetEntity = associationInterface.getTargetEntity();
+			if (targetEntity != null)
 			{
-				EntityInterface targetEntity = associationInterface.getTargetEntity();
-				if (targetEntity != null)
-				{
-					attributeUIBeanInformationIntf.setGroupName(getGroupName(targetEntity));
-					attributeUIBeanInformationIntf.setFormName(getFormName(targetEntity));
-				}
+				attributeUIBeanInformationIntf.setGroupName(getGroupName(targetEntity));
+				attributeUIBeanInformationIntf.setFormName(getFormName(targetEntity));
 			}
+
 		}
 
 	}
@@ -2139,7 +2137,7 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 	{
 		ArrayList<OptionValueObject> optionDetails = new ArrayList<OptionValueObject>();
 		DataElementInterface dataEltInterface = attributeTypeInformation.getDataElement();
-		if ((attributeTypeInformation != null) && (attributeUIBeanInformationIntf != null))
+		if (attributeUIBeanInformationIntf != null)
 		{
 			attributeUIBeanInformationIntf
 					.setDisplayChoice(ProcessorConstants.DISPLAY_CHOICE_USER_DEFINED);

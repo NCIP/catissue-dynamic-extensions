@@ -183,7 +183,7 @@ public class LoadFormControlsProcessor
 			DynamicExtensionsApplicationException
 	{
 		String userSelectedTool = controlsForm.getUserSelectedTool();
-		if ((userSelectedTool != null) && (controlsForm != null))
+		if (userSelectedTool != null)
 		{
 			if (userSelectedTool.equals(ProcessorConstants.TEXT_CONTROL))
 			{
