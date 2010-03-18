@@ -46,11 +46,14 @@ public class ProcessorConstants
 	public static final String OPERATION_EDIT = "Edit";
 
 	// Date Formats.
-	public static final String DATE_SEPARATOR = CommonServiceLocator.getInstance().getDateSeparator();
-	public static final String DATE_ONLY_FORMAT = CommonServiceLocator.getInstance().getDatePattern();
-	public static final String DATE_TIME_FORMAT = CommonServiceLocator.getInstance().getTimeStampPattern();
+	public static final String DATE_SEPARATOR = CommonServiceLocator.getInstance()
+			.getDateSeparator();
+	public static final String DATE_ONLY_FORMAT = CommonServiceLocator.getInstance()
+			.getDatePattern();
+	public static final String DATE_TIME_FORMAT = CommonServiceLocator.getInstance()
+			.getTimeStampPattern();
 	public static final int DATE_TIME_FORMAT_ROUND_OFF = 12;
-	public static final String MONTH_YEAR_FORMAT = "MM"+DATE_SEPARATOR+"yyyy";
+	public static final String MONTH_YEAR_FORMAT = "MM" + DATE_SEPARATOR + "yyyy";
 	public static final String YEAR_ONLY_FORMAT = "yyyy";
 	public static final String SQL_DATE_ONLY_FORMAT = "MM-dd-yyyy";
 	public static final String SQL_DATE_TIME_FORMAT = "MM-dd-yyyy HH:mm";
@@ -151,8 +154,8 @@ public class ProcessorConstants
 	public static final String TRUE = "true";
 	public static final String FALSE = "false";
 
-	public static String DATE = "date";
-	public static String DATE_RANGE = "dateRange";
+	public static final String DATE = "date";
+	public static final String DATE_RANGE = "dateRange";
 	public static final String ALLOW_FUTURE_DATE = "allowfuturedate";
 	public static final String RANGE = "range";
 
@@ -160,8 +163,8 @@ public class ProcessorConstants
 	public static final String DISABLED = " disabled ";
 
 	// File formats.
-	public static String JPEG_FORMAT = "jpeg";
-	public static String JPG_FORMAT = "jpg";
+	public static final String JPEG_FORMAT = "jpeg";
+	public static final String JPG_FORMAT = "jpg";
 
 	public static final String SDF_ORCL_CAT_REL_ATTR = "yyyy-MM-dd HH:mm:ss";
 	public static final String ORCL_CAT_REL_ATTR_FORMAT = "YYYY-MM-DD HH24:MI:SS";
