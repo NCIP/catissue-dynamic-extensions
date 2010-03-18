@@ -114,9 +114,7 @@
 		</javac>
 	</target>
 
-	<target name="compile_test_cases" depends="compile">
-		<copy file="${extra_lib.dir}/jta.jar" todir="${lib.dir}">
-		</copy>
+	<target name="compile_test_cases">
 		<javac destdir="${target.dir}" includes="**/*.*" includeAntRuntime="false" debug="true">
 			<src path="${test.dir}" />
 			<classpath refid="app.classpath" />
@@ -935,11 +933,13 @@
 		</target>
 
 		<target name="generate_codecoverage_report">
-
+			<copy file="${extra_lib.dir}/jta.jar" todir="${lib.dir}"/>
+			<ant target="compile"/>
+			<copy todir="${test.model.dir}" file="${resource.dir}/catNames2.txt" />
+			<ant antfile="src/conf/cobertura.xml" target="instrument" />
 			<ant target="compile_test_cases" />
 			<!--<ant target="checkout_test_model" />-->
-				<copy todir="${test.model.dir}" file="${resource.dir}/catNames2.txt" />
-			<ant antfile="src/conf/cobertura.xml" target="instrument" />
+
 			<antcall target="import.static.and.test.model"/>
 			<antcall target="deploy" />
 			<ant target="run_junit" />
