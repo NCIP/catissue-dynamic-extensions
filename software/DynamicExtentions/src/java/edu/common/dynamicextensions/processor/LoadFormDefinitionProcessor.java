@@ -2,7 +2,7 @@
 package edu.common.dynamicextensions.processor;
 
 /**
- * This processor class mainly helps the action class to call the related Object driven processors 
+ * This processor class mainly helps the action class to call the related Object driven processors
  * to update the Actionforms by Retrieving  data form Cache.
  * @author deepti_shelar
  * @author chetan_patil
@@ -48,8 +48,8 @@ public class LoadFormDefinitionProcessor extends BaseDynamicExtensionsProcessor
 	}
 
 	/**
-	 * A call to EntityProcessor will update the actionform with the data from cacheObject. 
-	 * @param entityInterface : Entity Interface Domain Object 
+	 * A call to EntityProcessor will update the actionform with the data from cacheObject.
+	 * @param entityInterface : Entity Interface Domain Object
 	 * @param entityUIBeanInterface : UI Bean object containing entity information added by user on UI
 	 */
 	private void populateEntityInformation(EntityInterface entityInterface,
@@ -63,17 +63,17 @@ public class LoadFormDefinitionProcessor extends BaseDynamicExtensionsProcessor
 	}
 
 	/**
-	 * A call to ContainerProcessor will update the actionform with the data from cacheObject. 
+	 * A call to ContainerProcessor will update the actionform with the data from cacheObject.
 	 * @param containerInterfaceObject : Container interface
 	 * @param containerUIBeanInterface : container UI Bean Interface object containing information added by user
-	 * @throws DynamicExtensionsApplicationException 
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public void populateContainerInformation(ContainerInterface containerInterfaceObject,
 			ContainerUIBeanInterface containerUIBeanInterface, EntityGroupInterface entityGroup)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
-		ContainerInterface containerInterface=containerInterfaceObject;
+		ContainerInterface containerInterface = containerInterfaceObject;
 		ContainerProcessor containerProcessor = ContainerProcessor.getInstance();
 		if (containerInterface == null)
 		{
@@ -101,8 +101,8 @@ public class LoadFormDefinitionProcessor extends BaseDynamicExtensionsProcessor
 	/**
 	 * @param container
 	 * @param formDefinitionForm
-	 * @throws DynamicExtensionsApplicationException 
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public void initializeSubFormAttributes(FormDefinitionForm formDefinitionForm,
 			EntityGroupInterface entityGroup) throws DynamicExtensionsSystemException,
@@ -118,8 +118,8 @@ public class LoadFormDefinitionProcessor extends BaseDynamicExtensionsProcessor
 
 	/**
 	 * @return
-	 * @throws DynamicExtensionsApplicationException 
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private String getXMLForDefinedEntities(EntityGroupInterface entityGroup)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
@@ -158,7 +158,8 @@ public class LoadFormDefinitionProcessor extends BaseDynamicExtensionsProcessor
 	/**
 	 * @param text
 	 */
-	private String getXMLNode(String identifier, String text, boolean showSelected, boolean showExpanded)
+	private String getXMLNode(String identifier, String text, boolean showSelected,
+			boolean showExpanded)
 	{
 		StringBuffer xmlNode = new StringBuffer();
 		if (text != null)
@@ -193,8 +194,8 @@ public class LoadFormDefinitionProcessor extends BaseDynamicExtensionsProcessor
 
 	/**
 	 * @return
-	 * @throws DynamicExtensionsApplicationException 
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	private String getAssociationTreeXML(Collection<AssociationTreeObject> associationsCollection)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
@@ -202,20 +203,18 @@ public class LoadFormDefinitionProcessor extends BaseDynamicExtensionsProcessor
 		StringBuffer associationTreeXML = new StringBuffer();
 		if (associationsCollection != null)
 		{
-			AssociationTreeObject associationObj = null;
-			Long identifier = null;
-			String label = null;
 			Iterator<AssociationTreeObject> iterator = associationsCollection.iterator();
 			while (iterator.hasNext())
 			{
-				associationObj = iterator.next();
+				AssociationTreeObject associationObj = iterator.next();
 				if (associationObj != null)
 				{
-					identifier = associationObj.getId();
-					label = associationObj.getLabel();
+					Long identifier = associationObj.getId();
+					String label = associationObj.getLabel();
 					if ((identifier != null) && (label != null))
 					{
-						associationTreeXML.append(getXMLNode(identifier.toString(), label, false, false));
+						associationTreeXML.append(getXMLNode(identifier.toString(), label, false,
+								false));
 						associationTreeXML.append(getAssociationTreeXML(associationObj
 								.getAssociationTreeObjectCollection()));
 						associationTreeXML.append("</item>");
@@ -228,8 +227,8 @@ public class LoadFormDefinitionProcessor extends BaseDynamicExtensionsProcessor
 
 	/**
 	 * @param formDefinitionForm
-	 * @throws DynamicExtensionsApplicationException 
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public void initializeFormAttributes(EntityGroupInterface entityGroup,
 			ContainerInterface container, String currentContainerName,
@@ -279,15 +278,20 @@ public class LoadFormDefinitionProcessor extends BaseDynamicExtensionsProcessor
 
 	/**
 	 * @param container
-	 * @param currentContainerName 
-	 * @param addNewNode 
+	 * @param currentContainerName
+	 * @param addNewNode
 	 * @return
 	 */
 	private String getNodeForContainer(ContainerInterface container, String currentContainerName,
 			boolean addNewNode, boolean showExpanded)
 	{
 		StringBuffer xmlNodeForContainer = new StringBuffer();
-		if (container != null)
+		if (container == null)
+		{
+			//Add new form node to main container node
+			xmlNodeForContainer.append(getNewEntityNode());
+		}
+		else
 		{
 			//Entity tree will always be accessed with the container name
 			String containerName = container.getCaption();
@@ -314,20 +318,16 @@ public class LoadFormDefinitionProcessor extends BaseDynamicExtensionsProcessor
 			}
 			xmlNodeForContainer.append("</item>");
 		}
-		else
-		{
-			//Add new form node to main container node
-			xmlNodeForContainer.append(getNewEntityNode());
-		}
 		return xmlNodeForContainer.toString();
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private String getNewEntityNode()
 	{
-		StringBuffer xmlNodeForNewEntity = new StringBuffer(getXMLNode(null, "New Form", true, true));
+		StringBuffer xmlNodeForNewEntity = new StringBuffer(
+				getXMLNode(null, "New Form", true, true));
 		xmlNodeForNewEntity.append("</item>");
 		return xmlNodeForNewEntity.toString();
 	}
@@ -338,15 +338,15 @@ public class LoadFormDefinitionProcessor extends BaseDynamicExtensionsProcessor
 	 */
 	private String getGroupName(EntityGroupInterface entityGroup)
 	{
-		String groupName = null;
+		String groupName;
 		//Get group object from cache and return it
-		if (entityGroup != null)
+		if (entityGroup == null)
 		{
-			groupName = entityGroup.getName();
+			groupName = "";
 		}
 		else
 		{
-			groupName = "";
+			groupName = entityGroup.getName();
 		}
 		return groupName;
 	}
