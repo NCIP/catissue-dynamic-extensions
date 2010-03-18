@@ -49,12 +49,12 @@ public class LoadFormControlsProcessor
 	}
 
 	/**
-	 * 
+	 *
 	 * @param controlsForm ControlsForm
 	 * @param container ContainerInterface
 	 * @return redirection page path
 	 * @throws DynamicExtensionsSystemException dynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException 
+	 * @throws DynamicExtensionsApplicationException
 	 */
 	public void loadFormControls(ControlsForm controlsForm, ContainerInterface container)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
@@ -114,7 +114,7 @@ public class LoadFormControlsProcessor
 
 		// Set Entity Name as root.
 		EntityInterface entity = (EntityInterface) container.getAbstractEntity();
-		if (entity != null)
+		if (entity == null)
 		{
 			controlsForm.setRootName(entity.getName());
 		}
@@ -158,8 +158,9 @@ public class LoadFormControlsProcessor
 		AttributeProcessor attributeProcessor = AttributeProcessor.getInstance();
 		if (control != null)
 		{
-			attributeProcessor.populateAttributeUIBeanInterface((AbstractAttributeInterface) control
-					.getBaseAbstractAttribute(), attributeUIBean);
+			attributeProcessor.populateAttributeUIBeanInterface(
+					(AbstractAttributeInterface) control.getBaseAbstractAttribute(),
+					attributeUIBean);
 		}
 
 		String userSelectedTool = DynamicExtensionsUtility.getControlName(control);
@@ -224,8 +225,8 @@ public class LoadFormControlsProcessor
 	}
 
 	/**
-	 * This method will separate out the file formats explicitly 
-	 * specified by the user from the supported file format list. 
+	 * This method will separate out the file formats explicitly
+	 * specified by the user from the supported file format list.
 	 * @param controlsForm
 	 */
 	private void initializeFileFormats(ControlsForm controlsForm)
@@ -236,10 +237,9 @@ public class LoadFormControlsProcessor
 		if (usrSelFileFrmts != null)
 		{
 			int noOfSelFrmts = usrSelFileFrmts.length;
-			String selFileFrmts = null;
 			for (int i = 0; i < noOfSelFrmts; i++)
 			{
-				selFileFrmts = usrSelFileFrmts[i];
+				String selFileFrmts = usrSelFileFrmts[i];
 				if (!DynamicExtensionsUtility.isStringInList(selFileFrmts, supFileFrmts))
 				{
 					if ((unsupFileFrmts == null) || (unsupFileFrmts.equals("")))
@@ -289,7 +289,7 @@ public class LoadFormControlsProcessor
 			ContainerInterface container) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
-		// Set default display choice. 
+		// Set default display choice.
 		if ((controlsForm.getDisplayChoice() == null)
 				|| (controlsForm.getDisplayChoice()
 						.equals(ProcessorConstants.DISPLAY_CHOICE_LOOKUP)))
@@ -406,11 +406,9 @@ public class LoadFormControlsProcessor
 		ArrayList<NameValueBean> groupNames = new ArrayList<NameValueBean>();
 		EntityGroupInterface entityGroup = ((Entity) container.getAbstractEntity())
 				.getEntityGroup();
-		NameValueBean groupName = null;
-
 		if (entityGroup.getId() != null)
 		{
-			groupName = new NameValueBean(entityGroup.getName(), entityGroup.getId());
+			NameValueBean groupName = new NameValueBean(entityGroup.getName(), entityGroup.getId());
 			groupNames.add(groupName);
 		}
 
