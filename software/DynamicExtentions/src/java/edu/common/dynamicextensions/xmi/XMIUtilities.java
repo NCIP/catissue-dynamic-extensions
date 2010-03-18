@@ -71,9 +71,7 @@ public class XMIUtilities
 				"org.netbeans.mdr.persistence.btreeimpl.btreestorage.BtreeFactory");
 		repositoryConfigMap.put("org.netbeans.mdr.persistence.btreeimpl.filename", storageFileName);
 		System.setProperty("org.netbeans.lib.jmi.Logger.fileName", storageFileName + ".log");
-		MDRepository repository = new NBMDRepositoryImpl(repositoryConfigMap);
-		return repository;
-
+		return new NBMDRepositoryImpl(repositoryConfigMap);
 	}
 
 	/**
@@ -341,7 +339,7 @@ public class XMIUtilities
 			throws DAOException, DynamicExtensionsApplicationException,
 			DynamicExtensionsSystemException
 	{
-		EntityInterface entity = null;
+		EntityInterface entity;
 		if (hibernatedao == null)
 		{
 			entity = EntityManager.getInstance().getEntityByName(hookEntityName);
