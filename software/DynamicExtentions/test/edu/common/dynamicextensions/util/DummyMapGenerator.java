@@ -33,6 +33,7 @@ import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.NumericTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleParameterInterface;
+import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.global.DEConstants;
@@ -79,11 +80,18 @@ public class DummyMapGenerator
 			{
 				AssociationInterface association = (AssociationInterface) catAtt
 						.getAbstractAttribute();
-				for (AbstractAttributeInterface attributeInterface : association.getTargetEntity()
-						.getAllAttributes())
+				AttributeInterface multiselectAttr = (AttributeInterface) EntityManagerUtil
+						.filterSystemAttributes(
+								association.getTargetEntity().getAllAbstractAttributes())
+						.iterator().next();
+				Map<BaseAbstractAttributeInterface, Object> multiSelectDataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
+				for (int i = 0; i < 2; i++)
 				{
-					updateDataMap(dataValue, catAtt, (AttributeInterface) attributeInterface);
+					updateDataMap(multiSelectDataValue, multiselectAttr, multiselectAttr);
 				}
+				List multiselctValueList = new ArrayList();
+				multiselctValueList.add(multiSelectDataValue);
+				dataValue.put(catAtt, multiselctValueList);
 			}
 		}
 		for (CategoryAssociationInterface catAssociation : rootCatEntity
