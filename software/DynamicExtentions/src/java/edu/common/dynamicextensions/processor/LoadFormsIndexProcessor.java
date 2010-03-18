@@ -12,7 +12,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.actionform.FormsIndexForm;
 
 /**
- * Populates  the actonForm with required data eg. entityList. 
+ * Populates  the actonForm with required data eg. entityList.
  * @author deepti_shelar
  *
  */
@@ -45,9 +45,8 @@ public class LoadFormsIndexProcessor extends BaseDynamicExtensionsProcessor
 	public void populateFormsIndex(FormsIndexForm loadFormIndexForm)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
-		Collection<ContainerInterface> containerCollection = null;
 		EntityManagerInterface entityManager = EntityManager.getInstance();
-		containerCollection = entityManager.getAllContainers();
+		Collection<ContainerInterface> containerCollection = entityManager.getAllContainers();
 		if (containerCollection == null)
 		{
 			containerCollection = new HashSet<ContainerInterface>();
