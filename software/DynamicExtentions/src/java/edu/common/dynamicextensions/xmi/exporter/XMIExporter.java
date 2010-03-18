@@ -584,11 +584,12 @@ public class XMIExporter
 	 */
 	private String getForeignkeyOperationName(final String foreignKeyName)
 	{
+		String operationName = null;
 		if ((foreignKeyOperationNameMapping != null) && (foreignKeyName != null))
 		{
-			return foreignKeyOperationNameMapping.get(foreignKeyName);
+			operationName = foreignKeyOperationNameMapping.get(foreignKeyName);
 		}
-		return null;
+		return operationName;
 	}
 
 	/**
@@ -892,10 +893,9 @@ public class XMIExporter
 		{
 			final Attribute coRelationAttribute = createCoRelationalAttributeAndOperns(
 					cnstrKeyProp, association.getTargetEntity());
-			String targetAttribImplementedAssocn = null;
+			String targetAttribImplementedAssocn;
 			if (XMIConstants.XMI_VERSION_1_2.equals(xmiVersion))
 			{
-				//TODO- check
 				targetAttribImplementedAssocn = packageName + XMIConstants.COLON_SEPARATOR
 						+ association.getEntity().getName() + XMIConstants.COLON_SEPARATOR
 						+ association.getTargetRole().getName() + XMIConstants.COLON_SEPARATOR
@@ -992,6 +992,7 @@ public class XMIExporter
 	private Attribute searchAttribute(final Classifier targetEntityUmlClass,
 			final String attributeName)
 	{
+		Attribute umlAttribute = null;
 		if ((targetEntityUmlClass != null) && (attributeName != null))
 		{
 			final List entityAttributes = targetEntityUmlClass.getFeature();
@@ -1004,12 +1005,13 @@ public class XMIExporter
 					if ((attribute instanceof Attribute)
 							&& ((Attribute) attribute).getName().equals(attributeName))
 					{
-						return (Attribute) attribute;
+						umlAttribute = (Attribute) attribute;
+						break;
 					}
 				}
 			}
 		}
-		return null;
+		return umlAttribute;
 	}
 
 	/**
@@ -1196,6 +1198,7 @@ public class XMIExporter
 	 */
 	private boolean isForeignKey(final String attribute, final List<String> foreignKeyAttributes)
 	{
+		boolean isForiegnKey = false;
 		if ((attribute != null) && (foreignKeyAttributes != null))
 		{
 			final Iterator foreignKeyAttributesIter = foreignKeyAttributes.iterator();
@@ -1204,11 +1207,12 @@ public class XMIExporter
 				final String foreignKey = (String) foreignKeyAttributesIter.next();
 				if (attribute.equals(foreignKey))
 				{
-					return true;
+					isForiegnKey = true;
+					break;
 				}
 			}
 		}
-		return false;
+		return isForiegnKey;
 	}
 
 	/**
@@ -1638,7 +1642,7 @@ public class XMIExporter
 	 * @param taggedValues
 	 * @param attributeInterface
 	 */
-	private void addRuleTagVaues(final ArrayList<TaggedValue> taggedValues,
+	private void addRuleTagVaues(final List<TaggedValue> taggedValues,
 			final AttributeInterface attributeInterface)
 	{
 		final Collection<RuleInterface> ruleColl = attributeInterface.getRuleCollection();
@@ -2306,14 +2310,15 @@ public class XMIExporter
 	private org.omg.uml.modelmanagement.UmlPackage getOrCreatePackage(String packageName,
 			org.omg.uml.modelmanagement.UmlPackage parentPackage)
 	{
-		packageName = PackageName.getLogicalPackageName(packageName, XMIConstants.DOT_SEPARATOR);
+		String logicalPackageName = PackageName.getLogicalPackageName(packageName,
+				XMIConstants.DOT_SEPARATOR);
 		final ModelManagementPackage modelManagement = umlPackage.getModelManagement();
 
 		Object newPackage = null;
-		packageName = StringUtils.trimToEmpty(packageName);
-		if (StringUtils.isNotEmpty(packageName))
+		logicalPackageName = StringUtils.trimToEmpty(logicalPackageName);
+		if (StringUtils.isNotEmpty(logicalPackageName))
 		{
-			final StringTokenizer stringTokenizer = new StringTokenizer(packageName,
+			final StringTokenizer stringTokenizer = new StringTokenizer(logicalPackageName,
 					XMIConstants.DOT_SEPARATOR);
 			if (stringTokenizer != null)
 			{
