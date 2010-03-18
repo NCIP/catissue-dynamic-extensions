@@ -136,7 +136,7 @@ public class DummyMapGenerator
 	private FileAttributeRecordValue getFileRecordValueForAttribute()
 			throws DynamicExtensionsSystemException
 	{
-		File formFile = new File("/src/java/ApplicationDAOProperties.xml");
+		File formFile = new File("src/java/ApplicationDAOProperties.xml");
 		FileAttributeRecordValue fileAttributeRecordValue = new FileAttributeRecordValue();
 		fileAttributeRecordValue.setFileContent(getFileContents(formFile));
 		fileAttributeRecordValue.setFileName(formFile.getName());
