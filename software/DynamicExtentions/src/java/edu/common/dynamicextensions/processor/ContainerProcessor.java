@@ -174,7 +174,11 @@ public class ContainerProcessor extends BaseDynamicExtensionsProcessor
 			containerUIBeanInterface
 					.setTitleCss(Utility.toString(containerInterface.getTitleCss()));
 
-			if (entityGroup.getId() != null)
+			if (entityGroup.getId() == null)
+			{
+				containerUIBeanInterface.setFormList(new ArrayList<NameValueBean>());
+			}
+			else
 			{
 				// Restrict Inherit call from same form.
 
@@ -191,20 +195,17 @@ public class ContainerProcessor extends BaseDynamicExtensionsProcessor
 				formList.remove(formTobeRemoved);
 
 				containerUIBeanInterface.setFormList(formList);
-			}
-			else
-			{
-				containerUIBeanInterface.setFormList(new ArrayList<NameValueBean>());
+
 			}
 
-			if (containerInterface.getBaseContainer() != null)
+			if (containerInterface.getBaseContainer() == null)
+			{
+				containerUIBeanInterface.setParentForm("0");
+			}
+			else
 			{
 				containerUIBeanInterface.setParentForm(containerInterface.getBaseContainer()
 						.getId().toString());
-			}
-			else
-			{
-				containerUIBeanInterface.setParentForm("0");
 			}
 		}
 	}
@@ -220,13 +221,13 @@ public class ContainerProcessor extends BaseDynamicExtensionsProcessor
 	{
 		EntityManagerInterface entityManager = EntityManager.getInstance();
 		List<NameValueBean> containerList;
-		if (groupId != null)
+		if (groupId == null)
 		{
-			containerList = entityManager.getAllContainerBeansByEntityGroupId(groupId);
+			containerList = new ArrayList<NameValueBean>();
 		}
 		else
 		{
-			containerList = new ArrayList<NameValueBean>();
+			containerList = entityManager.getAllContainerBeansByEntityGroupId(groupId);
 		}
 
 		List<NameValueBean> formsList = new ArrayList<NameValueBean>();
