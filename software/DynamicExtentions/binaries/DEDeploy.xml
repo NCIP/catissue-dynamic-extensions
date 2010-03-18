@@ -484,19 +484,26 @@
 	<!-- =================================
           target: create_category_from_xml
          ================================= -->
-	<target name="create_category_from_xml" description="Creates category from XML">
-		<delete dir="${de.temp.dir}" failonerror="no" />
-		<mkdir dir="${de.temp.dir}" />
-		<unzip src="clientFormCreator.zip" dest="${de.temp.dir}" overwrite="true" />
-		<copy file="./${de.temp.dir}/log4j.properties.template" tofile="./log4j.properties" overwrite="true" />
-		<mkdir dir="./log" />
-		<replace file="./log4j.properties">
-			<replacefilter token="@@jbosshome@@" value="." />
-		</replace>
-		<echo message="Creating Categories" />
-		<mkdir dir="${categoryCsvFileDir}" />
-		<java classname="edu.common.dynamicextensions.category.XMLToCSV" fork="true" maxmemory="1024M">
-			<arg value="${categoryXmlFile}" />
+	<target name="create_category_from_xml" depends="create_csv_from_xml, create_category" description="Creates category from XML">
+		<delete dir="${categoryCsvFileDir}"/>
+	</target>
+	
+	<!-- ================================= 
+          target: create_csv_from_xml              
+         ================================= -->
+    <target name="create_csv_from_xml"  description="description">
+    	<delete dir="${de.temp.dir}" failonerror="no" />
+    	<mkdir dir="${de.temp.dir}" />
+    	<unzip src="clientFormCreator.zip" dest="${de.temp.dir}" overwrite="true" />
+    	<copy file="./${de.temp.dir}/log4j.properties.template" tofile="./log4j.properties" overwrite="true" />
+    	<mkdir dir="./log" />
+    	<replace file="./log4j.properties">
+    		<replacefilter token="@@jbosshome@@" value="." />
+    	</replace>
+    	<echo message="Creating Categories" />
+    	<mkdir dir="${categoryCsvFileDir}" />
+    	<java classname="edu.common.dynamicextensions.category.XMLToCSV" fork="true" maxmemory="1024M">
+    		<arg value="${categoryXmlFile}" />
 			<arg value="${categoryCsvFileDir}" />
 			<arg value="${categorySchemaFile}" />
 			<classpath>
@@ -505,10 +512,9 @@
 					<exclude name="uml-1.3.jar" />
 				</fileset>
 			</classpath>
-		</java>
-		<antcall target="create_category" />
-		<delete dir="${categoryCsvFileDir}"/>
-	</target>
+    	</java>
+    </target>
+
 
 	<!-- Target used to create the Category -->
 	<property name="categoryFormNamesFile" value=" " />
