@@ -7,7 +7,7 @@ package edu.common.dynamicextensions.category.enums;
  *
  */
 public enum AttributeEnum {
-	PERMISSIBLEVALUES("PERMISSIBLEVALUES"), CALCULATED("CALCULATED"), DEFAULTVALUE("DEFAULTVALUE");
+	CALCULATED("IsCalculated"), DEFAULTVALUE("defaultValue");
 
 	private AttributeEnum(String name)
 	{
