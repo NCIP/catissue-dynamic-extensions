@@ -65,7 +65,7 @@ public class SaveEntityAction extends BaseDynamicExtensionsAction
 			EntityGroupManager.getInstance().persistEntityGroup(
 					((EntityInterface) containerInterface.getAbstractEntity()).getEntityGroup());
 
-			if ((containerInterface != null) && (containerInterface.getAbstractEntity() != null))
+			if (containerInterface.getAbstractEntity() != null)
 			{
 				formName = containerInterface.getAbstractEntity().getName();
 			}
