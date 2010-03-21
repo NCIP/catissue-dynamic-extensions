@@ -199,6 +199,7 @@
 				<include name="**/dynamicextensions/category/**/*.*" />
 				<include name="**/common/util/**/*.*" />
 				<include name="**/dynamicextensions/bizlogic/**/*.class" />
+				<include name="**/dynamicextensions/host/**/*.*" />
 				<include name="DynamicExtensionsErrorsMessages.properties" />
 				<include name="DynamicExtensionsFileFormats.properties" />
 				<include name="ApplicationResources.properties" />
