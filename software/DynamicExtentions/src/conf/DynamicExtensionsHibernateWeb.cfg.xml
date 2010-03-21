@@ -84,6 +84,8 @@
 		<mapping resource="edu/wustl/common/hbm/AbstractAuditEventLog.hbm.xml"/>
 		<mapping resource="edu/wustl/common/hbm/LoginEvent.hbm.xml"/>
 
+		<mapping resource="edu/common/dynamicextensions/host/csd/util/CategoryInfo.hbm.xml"/>
+
     </session-factory>
 
 </hibernate-configuration>
