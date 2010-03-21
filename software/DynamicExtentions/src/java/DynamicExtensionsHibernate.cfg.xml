@@ -79,6 +79,8 @@
 		<mapping resource="edu/common/dynamicextensions/hbm/databaseproperties/ConstraintKeyProperties.hbm.xml"/>
    		<mapping resource="edu/common/dynamicextensions/hbm/Formula.hbm.xml"/>
 
+		<mapping resource="edu/common/dynamicextensions/host/csd/util/CategoryInfo.hbm.xml"/>
+
     </session-factory>
 
 </hibernate-configuration>
