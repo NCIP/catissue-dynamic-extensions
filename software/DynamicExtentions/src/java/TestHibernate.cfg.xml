@@ -90,6 +90,9 @@
 		<mapping resource="edu/hostApp/src/hbm/RecordEntry.hbm.xml"/>
 		<mapping resource="edu/common/dynamicextensions/hbm/integration/AbstractRecordEntry.hbm.xml"/>
 		<mapping resource="edu/common/dynamicextensions/hbm/integration/AbstractFormContext.hbm.xml"/>
+
+		<mapping resource="edu/common/dynamicextensions/host/csd/util/CategoryInfo.hbm.xml"/>
+
     </session-factory>
 
 </hibernate-configuration>
