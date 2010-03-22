@@ -67,33 +67,6 @@ public enum ListBoxEnum {
 			control.setIsMultiSelect(Boolean.valueOf(propertyToBeSet));
 		}
 	},
-	NUMBEROFROWS("NUMBEROFROWS") {
-
-		/**
-		 * Returns String representation of Number of rows value for a control.
-		 * @param control
-		 * @return String
-		 */
-		public String getControlProperty(ListBox control)
-		{
-			String numberOfRowsString = null;
-			if (control.getNoOfRows() != null)
-			{
-				numberOfRowsString = String.valueOf(control.getNoOfRows());
-			}
-			return numberOfRowsString;
-		}
-
-		/**
-		 * Sets String representation of number of rows value for a control.
-		 * @param control
-		 * @param propertyToBeSet
-		 */
-		public void setControlProperty(ListBox control, String propertyToBeSet)
-		{
-			control.setNoOfRows(Integer.valueOf(propertyToBeSet));
-		}
-	},
 	ISAUTOCOMPLETE("IsUsingAutoCompleteDropdown") {
 
 		/**
