@@ -17,7 +17,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 public class XMLToCSV
 {
 
-	private static final Logger LOGGER = Logger.getLogger(XMLToCSVConverter.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(XMLToCSV.class.getName());
 
 	/**
 	 * This method is called when called from an ant target to create category from xml.
@@ -127,15 +127,31 @@ public class XMLToCSV
 	private void writeXML(final File inputXML, final File outputDir, final File schemaFile)
 			throws IOException, SAXException
 	{
-		final String csvFileName = getCSVFileName(inputXML);
-		final XMLToCSVConverter xmlToCSVConverter = new XMLToCSVConverter(inputXML, new File(
-				outputDir, csvFileName));
-		final SchemaValidator schemaValidator = new SchemaValidator();
-		if (schemaFile != null && schemaFile.isFile())
+		if (isXML(inputXML))
 		{
-			schemaValidator.validateAgainstSchema(schemaFile, inputXML);
+			final String csvFileName = getCSVFileName(inputXML);
+			final XMLToCSVConverter xmlToCSVConverter = new XMLToCSVConverter(inputXML, new File(
+					outputDir, csvFileName));
+			final SchemaValidator schemaValidator = new SchemaValidator();
+			if (schemaFile != null && schemaFile.isFile())
+			{
+				schemaValidator.validateAgainstSchema(schemaFile, inputXML);
+			}
+			xmlToCSVConverter.txXML();
+			
 		}
-		xmlToCSVConverter.txXML();
+		else
+		{
+			LOGGER.info("Input File does not ends with .xml extension. IGNORING INPUT FILE: "
+					+ inputXML);
+		}
+	}
+
+	private boolean isXML(File inputXML)
+	{
+		return inputXML.getName().endsWith(".xml") || inputXML.getName().endsWith(".XML")
+				? true
+				: false;
 	}
 
 	/**
