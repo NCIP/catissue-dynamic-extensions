@@ -1,3 +1,4 @@
+
 package edu.common.dynamicextensions.util;
 
 import java.text.ParseException;
@@ -13,7 +14,6 @@ import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.NumericAttributeTypeInformation;
-import edu.common.dynamicextensions.domain.PathAssociationRelationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CalculatedAttributeInterface;
@@ -29,8 +29,6 @@ import edu.common.dynamicextensions.util.parser.FormulaParser;
 import edu.common.dynamicextensions.validation.ValidatorUtil;
 import edu.wustl.common.util.global.CommonServiceLocator;
 
-
-
 /**
  *
  * @author rajesh_patil
@@ -38,6 +36,7 @@ import edu.wustl.common.util.global.CommonServiceLocator;
  */
 public class FormulaCalculator
 {
+
 	/**
 	 *
 	 */
@@ -48,8 +47,9 @@ public class FormulaCalculator
 	 */
 	public FormulaCalculator()
 	{
-		this.formulaParser = new FormulaParser();
+		formulaParser = new FormulaParser();
 	}
+
 	/**
 	 *
 	 */
@@ -57,6 +57,7 @@ public class FormulaCalculator
 	{
 		this.formulaParser = formulaParser;
 	}
+
 	/**
 	 *
 	 * @param attributeValueMap
@@ -65,12 +66,11 @@ public class FormulaCalculator
 	 * @throws ParseException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public String evaluateFormula(
-Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
+	public String evaluateFormula(Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 			CategoryAttributeInterface categoryAttributeInterface, CategoryInterface category,
 			Integer entryNumber) throws DynamicExtensionsApplicationException,
 			DynamicExtensionsSystemException
-			{
+	{
 		Date dateValue = null;
 		String value = "";
 		Double formulaValue = null;
@@ -87,7 +87,8 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 					.getSourceForCalculatedAttribute();
 			Map<String, String> calculatedKeyValueMap = new HashMap<String, String>();
 			values.clear();
-			if (calculatedAttribute.getCategoryEntity().equals(categoryAttributeInterface.getCategoryEntity()))
+			if (calculatedAttribute.getCategoryEntity().equals(
+					categoryAttributeInterface.getCategoryEntity()))
 			{
 				isSameCatrgoryEntityAttribute = true;
 			}
@@ -95,11 +96,11 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 			{
 				isSameCatrgoryEntityAttribute = false;
 			}
-			if (!isSameCatrgoryEntityAttribute && (calculatedAttribute.getCategoryEntity().getNumberOfEntries() == -1))
+			if (!isSameCatrgoryEntityAttribute
+					&& (calculatedAttribute.getCategoryEntity().getNumberOfEntries() == -1))
 			{
-				evaluateFormulaForMultilineCalulatedAttribute(
-						attributeValueMap, calculatedAttribute,
-						calculatedKeyValueMap, 1);
+				evaluateFormulaForMultilineCalulatedAttribute(attributeValueMap,
+						calculatedAttribute, calculatedKeyValueMap, 1);
 				if (!calculatedKeyValueMap.isEmpty())
 				{
 					attributeValueMapForValidation.put(calculatedAttribute, calculatedKeyValueMap);
@@ -111,9 +112,8 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 			}
 			else
 			{
-				evaluateFormulaForCalulatedAttribute(attributeValueMap,
-						calculatedAttribute, isSameCatrgoryEntityAttribute,
-						values, entryNumber, entryNumber);
+				evaluateFormulaForCalulatedAttribute(attributeValueMap, calculatedAttribute,
+						isSameCatrgoryEntityAttribute, values, entryNumber, entryNumber);
 				if (!values.isEmpty())
 				{
 					attributeValueMapForValidation.put(calculatedAttribute, values.get(0));
@@ -127,32 +127,28 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 
 		List<String> errorList = new ArrayList<String>();
 		Set<Map.Entry<BaseAbstractAttributeInterface, Object>> attributeSet = attributeValueMapForValidation
-		.entrySet();
+				.entrySet();
 		for (Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode : attributeSet)
 		{
 			CategoryAttributeInterface calculatedAttribute = (CategoryAttributeInterface) attributeValueNode
 					.getKey();
-			if (!(!(calculatedAttribute.getCategoryEntity()
-					.equals(categoryAttributeInterface.getCategoryEntity())) && (calculatedAttribute
-							.getCategoryEntity().getNumberOfEntries() == -1)))
+			if (!(!(calculatedAttribute.getCategoryEntity().equals(categoryAttributeInterface
+					.getCategoryEntity())) && (calculatedAttribute.getCategoryEntity()
+					.getNumberOfEntries() == -1)))
 			{
-				errorList.addAll(ValidatorUtil.validateAttributes(
-						attributeValueNode, attributeValueNode.getKey().getName()));
+				errorList.addAll(ValidatorUtil.validateAttributes(attributeValueNode,
+						attributeValueNode.getKey().getName()));
 			}
 			else
 			{
-				List<PathAssociationRelationInterface> pathAssociationCollection = calculatedAttribute
-				.getCategoryEntity().getPath()
-				.getSortedPathAssociationRelationCollection();
-				PathAssociationRelationInterface pathAssoRelationInterface = pathAssociationCollection
-				.get(pathAssociationCollection.size() - 1);
-				String attributeName = calculatedAttribute.getCategoryEntity()
-				.getEntity().getName()
-				+ "_"
-				+ pathAssoRelationInterface
-				.getTargetInstanceId().toString()
-				+ "_"
-				+ calculatedAttribute.getAbstractAttribute().getName();
+				Long targetInstanceId = CategoryGenerationUtil
+						.getInstanceIdOfCategoryEntity(calculatedAttribute.getCategoryEntity());
+				String attributeName = calculatedAttribute.getCategoryEntity().getEntity()
+						.getName()
+						+ "_"
+						+ targetInstanceId.toString()
+						+ "_"
+						+ calculatedAttribute.getAbstractAttribute().getName();
 				StringBuffer newAttribute = new StringBuffer();
 				Map<String, String> entryValueMap = (Map<String, String>) attributeValueNode
 						.getValue();
@@ -178,36 +174,33 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 			for (Map.Entry<BaseAbstractAttributeInterface, Object> entry : entries)
 			{
 				CategoryAttributeInterface attribute = (CategoryAttributeInterface) entry.getKey();
-				List<PathAssociationRelationInterface> pathAssociationCollection = attribute
-						.getCategoryEntity()
-				.getPath().getSortedPathAssociationRelationCollection();
-				PathAssociationRelationInterface pathAssoRelationInterface = pathAssociationCollection
-				.get(pathAssociationCollection.size() - 1);
+				Long targetInstanceId = CategoryGenerationUtil
+						.getInstanceIdOfCategoryEntity(attribute.getCategoryEntity());
 				AttributeMetadataInterface attributeInterface = (AttributeMetadataInterface) attribute
 						.getAbstractAttribute();
 				if (attributeInterface.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
 				{
 					dateValue = getDate(entry.getValue().toString(), attributeInterface);
 					Integer defaultValue = dateValue.getDate();
-					formulaParser.setVariableValue(attribute.getCategoryEntity()
-							.getEntity().getName()
+					formulaParser.setVariableValue(attribute.getCategoryEntity().getEntity()
+							.getName()
 							+ "_"
-							+ pathAssoRelationInterface
-							.getTargetInstanceId().toString()
+							+ targetInstanceId.toString()
 							+ "_"
-							+ attributeInterface.getName(),
-							defaultValue);
+							+ attributeInterface.getName(), defaultValue);
 				}
 				else
 				{
-					if (!(!(attribute.getCategoryEntity()
-							.equals(categoryAttributeInterface.getCategoryEntity())) && (attribute
-									.getCategoryEntity().getNumberOfEntries() == -1)))
+					if (!(!(attribute.getCategoryEntity().equals(categoryAttributeInterface
+							.getCategoryEntity())) && (attribute.getCategoryEntity()
+							.getNumberOfEntries() == -1)))
 					{
 						PermissibleValueInterface permissibleValueInterface = null;
 						try
 						{
-							permissibleValueInterface = attributeInterface.getAttributeTypeInformation().getPermissibleValueForString(entry.getValue().toString());
+							permissibleValueInterface = attributeInterface
+									.getAttributeTypeInformation().getPermissibleValueForString(
+											entry.getValue().toString());
 						}
 						catch (Exception e)
 						{
@@ -218,11 +211,10 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 							formulaParser.setVariableValue(attribute.getCategoryEntity()
 									.getEntity().getName()
 									+ "_"
-									+ pathAssoRelationInterface
-									.getTargetInstanceId().toString()
+									+ targetInstanceId.toString()
 									+ "_"
-									+ attributeInterface.getName(),
-									permissibleValueInterface.getValueAsObject());
+									+ attributeInterface.getName(), permissibleValueInterface
+									.getValueAsObject());
 						}
 					}
 					else
@@ -235,9 +227,8 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 							try
 							{
 								permissibleValueInterface = attributeInterface
-								.getAttributeTypeInformation()
-								.getPermissibleValueForString(
-										mapEntry.getValue());
+										.getAttributeTypeInformation()
+										.getPermissibleValueForString(mapEntry.getValue());
 							}
 							catch (Exception e)
 							{
@@ -245,9 +236,8 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 							}
 							if (permissibleValueInterface != null)
 							{
-								formulaParser.setVariableValue(mapEntry
-										.getKey(), permissibleValueInterface
-										.getValueAsObject());
+								formulaParser.setVariableValue(mapEntry.getKey(),
+										permissibleValueInterface.getValueAsObject());
 							}
 						}
 					}
@@ -259,15 +249,15 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 				if (((AttributeMetadataInterface) categoryAttributeInterface)
 						.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
 				{
-					value = setDate(dateValue, formulaValue, (AttributeMetadataInterface) categoryAttributeInterface);
+					value = setDate(dateValue, formulaValue,
+							(AttributeMetadataInterface) categoryAttributeInterface);
 				}
 				else
 				{
 					try
 					{
 						value = ((NumericAttributeTypeInformation) ((AttributeMetadataInterface) categoryAttributeInterface)
-								.getAttributeTypeInformation())
-								.getFormattedValue(formulaValue);
+								.getAttributeTypeInformation()).getFormattedValue(formulaValue);
 					}
 					catch (Exception e)
 					{
@@ -277,7 +267,8 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 			}
 		}
 		return value;
-			}
+	}
+
 	/**
 	 *
 	 * @param attributeValueMap
@@ -301,19 +292,17 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 					String value = (String) entry.getValue();
 					if ((value != null) && (value.length() > 0))
 					{
-						List<PathAssociationRelationInterface> pathAssociationCollection = categoryAttribute
-						.getCategoryEntity().getPath()
-						.getSortedPathAssociationRelationCollection();
-						PathAssociationRelationInterface pathAssoRelationInterface = pathAssociationCollection
-						.get(pathAssociationCollection.size() - 1);
-						calculatedKeyValueMap.put(categoryAttribute
-								.getCategoryEntity().getEntity().getName()
+						Long targetInstanceId = CategoryGenerationUtil
+								.getInstanceIdOfCategoryEntity(categoryAttribute
+										.getCategoryEntity());
+						calculatedKeyValueMap.put(categoryAttribute.getCategoryEntity().getEntity()
+								.getName()
 								+ "_"
-								+ pathAssoRelationInterface
-								.getTargetInstanceId().toString()
+								+ targetInstanceId.toString()
 								+ "_"
-								+ categoryAttribute.getAbstractAttribute()
-								.getName() + "_" + rowCount, value);
+								+ categoryAttribute.getAbstractAttribute().getName()
+								+ "_"
+								+ rowCount, value);
 
 					}
 				}
@@ -325,13 +314,14 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 						.getValue();
 				for (Map<BaseAbstractAttributeInterface, Object> map : attributeValueMapList)
 				{
-					count ++;
-					evaluateFormulaForMultilineCalulatedAttribute(map,
-							calculatedAttribute, calculatedKeyValueMap,count);
+					count++;
+					evaluateFormulaForMultilineCalulatedAttribute(map, calculatedAttribute,
+							calculatedKeyValueMap, count);
 				}
 			}
 		}
 	}
+
 	/**
 	 *
 	 * @param dateValue
@@ -346,7 +336,7 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 		Date dateValue = null;
 		Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ControlsUtility
-				.getDateFormat(attributeInterface.getAttributeTypeInformation()),locale);
+				.getDateFormat(attributeInterface.getAttributeTypeInformation()), locale);
 		simpleDateFormat.setLenient(true);
 		try
 		{
@@ -354,16 +344,18 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 		}
 		catch (ParseException e)
 		{
-			throw new DynamicExtensionsSystemException("ParseException",e);
+			throw new DynamicExtensionsSystemException("ParseException", e);
 		}
 
 		if (dateValue.getHours() >= ProcessorConstants.DATE_TIME_FORMAT_ROUND_OFF)
 		{
-			dateValue.setHours(dateValue.getHours() - ProcessorConstants.DATE_TIME_FORMAT_ROUND_OFF);
-			dateValue.setDate(dateValue.getDate()+ 1);
+			dateValue
+					.setHours(dateValue.getHours() - ProcessorConstants.DATE_TIME_FORMAT_ROUND_OFF);
+			dateValue.setDate(dateValue.getDate() + 1);
 		}
 		return dateValue;
 	}
+
 	/**
 	 *
 	 * @param dateValue
@@ -374,19 +366,19 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 	private String setDate(Date dateValue, Double formulaValue,
 			AttributeMetadataInterface attributeInterface)
 	{
-		String value ="";
+		String value = "";
 		if ((dateValue != null) && (formulaValue != null))
 		{
 			dateValue.setDate(Integer.valueOf(formulaValue.intValue()));
 			Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ControlsUtility
-					.getDateFormat(attributeInterface
-							.getAttributeTypeInformation()),locale);
+					.getDateFormat(attributeInterface.getAttributeTypeInformation()), locale);
 			simpleDateFormat.setLenient(true);
 			value = simpleDateFormat.format(dateValue);
 		}
 		return value;
 	}
+
 	/**
 	 *
 	 * @param attributeValueMap
@@ -412,8 +404,7 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 				if ((!isSameCategoryEntityAttribute && categoryAttribute
 						.equals(calculatedAttribute))
 						|| (isSameCategoryEntityAttribute
-								&& categoryAttribute
-								.equals(calculatedAttribute) && entryNumber
+								&& categoryAttribute.equals(calculatedAttribute) && entryNumber
 								.equals(mapentryNumber)))
 				{
 					String value = (String) entry.getValue();
@@ -432,11 +423,13 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 				for (Map<BaseAbstractAttributeInterface, Object> map : attributeValueMapList)
 				{
 					rowNumber++;
-					evaluateFormulaForCalulatedAttribute(map,calculatedAttribute,isSameCategoryEntityAttribute,values,entryNumber,rowNumber);
+					evaluateFormulaForCalulatedAttribute(map, calculatedAttribute,
+							isSameCategoryEntityAttribute, values, entryNumber, rowNumber);
 				}
 			}
 		}
 	}
+
 	/**
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws ParseException
@@ -466,35 +459,31 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 			else
 			{
 				String value = "";
-				if (((AttributeMetadataInterface)calculatedAttribute).getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
+				if (((AttributeMetadataInterface) calculatedAttribute)
+						.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
 				{
-					Locale locale = CommonServiceLocator.getInstance()
-					.getDefaultLocale();
-					SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-							ControlsUtility
+					Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat(ControlsUtility
 							.getDateFormat(((AttributeMetadataInterface) calculatedAttribute)
-									.getAttributeTypeInformation()),
-									locale);
+									.getAttributeTypeInformation()), locale);
 					simpleDateFormat.setLenient(true);
-					value = simpleDateFormat
-					.format((Date) calculatedAttribute
-							.getDefaultValuePermissibleValue()
-							.getValueAsObject());
+					value = simpleDateFormat.format((Date) calculatedAttribute
+							.getDefaultValuePermissibleValue().getValueAsObject());
 				}
 				else
 				{
 					value = calculatedAttribute.getDefaultValue();
 				}
-				attributeValueMap.put(calculatedAttribute,value);
+				attributeValueMap.put(calculatedAttribute, value);
 			}
 		}
 		List<String> errorList = new ArrayList<String>();
 		Set<Map.Entry<BaseAbstractAttributeInterface, Object>> attributeSet = attributeValueMap
-		.entrySet();
+				.entrySet();
 		for (Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode : attributeSet)
 		{
-			errorList.addAll(ValidatorUtil.validateAttributes(
-					attributeValueNode, attributeValueNode.getKey().getName()));
+			errorList.addAll(ValidatorUtil.validateAttributes(attributeValueNode,
+					attributeValueNode.getKey().getName()));
 		}
 
 		if (allCalculatedAttributesPresent && errorList.isEmpty())
@@ -506,53 +495,48 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 				CategoryAttributeInterface attribute = (CategoryAttributeInterface) entry.getKey();
 				AttributeMetadataInterface attributeInterface = (AttributeMetadataInterface) attribute
 						.getAbstractAttribute();
+				Long targetInstanceId = CategoryGenerationUtil
+						.getInstanceIdOfCategoryEntity(attribute.getCategoryEntity());
 
-				List<PathAssociationRelationInterface> pathAssociationCollection = attribute
-						.getCategoryEntity()
-				.getPath().getSortedPathAssociationRelationCollection();
-				PathAssociationRelationInterface pathAssoRelationInterface = pathAssociationCollection
-				.get(pathAssociationCollection.size() - 1);
 				if (attributeInterface.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
 				{
 					dateValue = getDate(entry.getValue().toString(), attributeInterface);
 					Integer defaultValue = dateValue.getDate();
-					formulaParser.setVariableValue(attribute.getCategoryEntity()
-							.getEntity().getName()
+					formulaParser.setVariableValue(attribute.getCategoryEntity().getEntity()
+							.getName()
 							+ "_"
-							+ pathAssoRelationInterface
-							.getTargetInstanceId().toString()
+							+ targetInstanceId.toString()
 							+ "_"
-							+ attributeInterface.getName(),
-							defaultValue);
+							+ attributeInterface.getName(), defaultValue);
 				}
 				else
 				{
 					PermissibleValueInterface permissibleValueInterface = null;
 					try
 					{
-						permissibleValueInterface = attributeInterface.getAttributeTypeInformation().getPermissibleValueForString(entry.getValue().toString());
+						permissibleValueInterface = attributeInterface
+								.getAttributeTypeInformation().getPermissibleValueForString(
+										entry.getValue().toString());
 					}
 					catch (ParseException e)
 					{
-						throw new DynamicExtensionsSystemException("ParseException",e);
+						throw new DynamicExtensionsSystemException("ParseException", e);
 					}
 
-					formulaParser.setVariableValue(attribute.getCategoryEntity()
-							.getEntity().getName()
+					formulaParser.setVariableValue(attribute.getCategoryEntity().getEntity()
+							.getName()
 							+ "_"
-							+ pathAssoRelationInterface
-							.getTargetInstanceId().toString()
+							+ targetInstanceId.toString()
 							+ "_"
-							+ attribute.getAbstractAttribute().getName(),
-							permissibleValueInterface.getValueAsObject());
+							+ attribute.getAbstractAttribute().getName(), permissibleValueInterface
+							.getValueAsObject());
 				}
 			}
 			formulaValue = formulaParser.evaluateExpression();
 			if (formulaValue != null)
 			{
 				PermissibleValueInterface defaultValue = null;
-				if (((AttributeMetadataInterface) categoryAttribute)
-						.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
+				if (((AttributeMetadataInterface) categoryAttribute).getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
 				{
 					if (dateValue != null)
 					{
@@ -561,12 +545,12 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 						try
 						{
 							defaultValue = ((AttributeMetadataInterface) categoryAttribute)
-							.getAttributeTypeInformation()
-							.getPermissibleValueForString(value);
+									.getAttributeTypeInformation().getPermissibleValueForString(
+											value);
 						}
 						catch (ParseException e)
 						{
-							throw new DynamicExtensionsSystemException("ParseException",e);
+							throw new DynamicExtensionsSystemException("ParseException", e);
 						}
 					}
 				}
@@ -577,12 +561,12 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 						NumericAttributeTypeInformation numericAttributeTypeInfo = ((NumericAttributeTypeInformation) ((AttributeMetadataInterface) categoryAttribute)
 								.getAttributeTypeInformation());
 						defaultValue = numericAttributeTypeInfo
-						.getPermissibleValueForString(numericAttributeTypeInfo
-								.getFormattedValue(formulaValue));
+								.getPermissibleValueForString(numericAttributeTypeInfo
+										.getFormattedValue(formulaValue));
 					}
 					catch (ParseException e)
 					{
-						throw new DynamicExtensionsSystemException("ParseException",e);
+						throw new DynamicExtensionsSystemException("ParseException", e);
 					}
 				}
 				categoryAttribute.setDefaultValue(defaultValue);
@@ -597,6 +581,7 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 		}
 		return message.toString();
 	}
+
 	/**
 	 *
 	 * @return
@@ -605,6 +590,7 @@ Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 	{
 		return formulaParser;
 	}
+
 	/**
 	 *
 	 * @param formulaParser

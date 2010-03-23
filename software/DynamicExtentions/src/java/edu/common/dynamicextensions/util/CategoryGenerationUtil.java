@@ -612,28 +612,29 @@ public class CategoryGenerationUtil
 			CategoryEntityInterface rootCatEntity, Long lineNumber)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
+
+		for (CategoryAttributeInterface categoryAttributeInterface : rootCatEntity
+				.getAllCategoryAttributes())
+		{
+			Boolean isCalcAttr = categoryAttributeInterface.getIsCalculated();
+			if (isCalcAttr != null && isCalcAttr)
+			{
+				setDefaultValue(categoryAttributeInterface, category);
+				FormulaCalculator formulaCalculator = new FormulaCalculator();
+				String message = formulaCalculator.setDefaultValueForCalculatedAttributes(
+						categoryAttributeInterface, rootCatEntity.getCategory());
+				if (message != null && message.length() > 0)
+				{
+					throw new DynamicExtensionsSystemException(ApplicationProperties
+							.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
+							+ lineNumber + " " + message);
+				}
+			}
+		}
 		for (CategoryAssociationInterface categoryAssociationInterface : rootCatEntity
 				.getCategoryAssociationCollection())
 		{
-			for (CategoryAttributeInterface categoryAttributeInterface : categoryAssociationInterface
-					.getTargetCategoryEntity().getAllCategoryAttributes())
-			{
-				Boolean isCalcAttr = categoryAttributeInterface.getIsCalculated();
-				if (isCalcAttr != null && isCalcAttr)
-				{
-					setDefaultValue(categoryAttributeInterface, category);
-					FormulaCalculator formulaCalculator = new FormulaCalculator();
-					String message = formulaCalculator.setDefaultValueForCalculatedAttributes(
-							categoryAttributeInterface, rootCatEntity.getCategory());
-					if (message != null && message.length() > 0)
-					{
-						throw new DynamicExtensionsSystemException(ApplicationProperties
-								.getValue(CategoryConstants.CREATE_CAT_FAILS)
-								+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-								+ lineNumber + " " + message);
-					}
-				}
-			}
 			setDefaultValueForCalculatedAttributes(category, categoryAssociationInterface
 					.getTargetCategoryEntity(), lineNumber);
 		}
@@ -649,30 +650,25 @@ public class CategoryGenerationUtil
 	{
 		if (rootCatEntity != null)
 		{
-			for (CategoryAssociationInterface categoryAssociationInterface : rootCatEntity
-					.getCategoryAssociationCollection())
+			Long instanceId = getInstanceIdOfCategoryEntity(rootCatEntity);
+			if (rootCatEntity.getEntity().getName().equals(entityName)
+					&& instanceId.equals(instanceNumber))
 			{
-				CategoryEntityInterface categoryEntity = categoryAssociationInterface
-						.getTargetCategoryEntity();
-				List<PathAssociationRelationInterface> pathAssoCollection = categoryEntity
-						.getPath().getSortedPathAssociationRelationCollection();
-				PathAssociationRelationInterface pathAssoRel = pathAssoCollection
-						.get(pathAssoCollection.size() - 1);
-				if (categoryEntity.getEntity().getName().equals(entityName)
-						&& pathAssoRel.getTargetInstanceId().equals(instanceNumber))
+				for (CategoryAttributeInterface categoryAttributeInterface : rootCatEntity
+						.getCategoryAttributeCollection())
 				{
-					for (CategoryAttributeInterface categoryAttributeInterface : categoryAssociationInterface
-							.getTargetCategoryEntity().getCategoryAttributeCollection())
+					if (categoryAttributeInterface.getAbstractAttribute().getName().equals(
+							attributeName))
 					{
-						if (categoryAttributeInterface.getAbstractAttribute().getName().equals(
-								attributeName))
-						{
-							attributes.add(categoryAttributeInterface);
-							return;
-						}
+						attributes.add(categoryAttributeInterface);
+						return;
 					}
 				}
-				else
+			}
+			else
+			{
+				for (CategoryAssociationInterface categoryAssociationInterface : rootCatEntity
+						.getCategoryAssociationCollection())
 				{
 					getCategoryAttribute(entityName, instanceNumber, attributeName,
 							categoryAssociationInterface.getTargetCategoryEntity(), attributes);
@@ -1063,6 +1059,7 @@ public class CategoryGenerationUtil
 	 */
 	public static long getInstanceIdOfCategoryEntity(CategoryEntityInterface catEntity)
 	{
+
 		long instanceId = 1;
 		if (catEntity.getPath() != null)
 		{
@@ -1073,6 +1070,7 @@ public class CategoryGenerationUtil
 			instanceId = pathAssociation.getTargetInstanceId();
 		}
 		return instanceId;
+
 	}
 
 }
