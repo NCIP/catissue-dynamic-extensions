@@ -129,7 +129,7 @@ public class XMLToCSVConverter
 	private transient String entityGroupName;
 
 	private transient String permValueOptionsString;
-	
+
 	private transient boolean isFirstUIProperty;
 
 	private transient boolean isSecondUIProperty;
@@ -578,7 +578,7 @@ public class XMLToCSVConverter
 	private void txAttribute(final Node item) throws IOException
 	{
 
-		boolean isFirstUIProperty = false;
+		//boolean isFirstUIProperty = false;
 
 		final NamedNodeMap controlProperties = item.getAttributes();
 
@@ -605,7 +605,7 @@ public class XMLToCSVConverter
 
 			appendUIProperty(item2, nodeName);
 		}
-		isFirstUIProperty = false;
+		//isFirstUIProperty = false;
 		isSecondUIProperty = false;
 		appendSeparators();
 		appendToStringBuilder(newLine);
@@ -651,7 +651,7 @@ public class XMLToCSVConverter
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void appendRequiredString()
 	{
@@ -664,7 +664,7 @@ public class XMLToCSVConverter
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void appendDefaultValueString()
 	{
@@ -677,7 +677,7 @@ public class XMLToCSVConverter
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void appendPermValueString()
 	{
@@ -709,15 +709,15 @@ public class XMLToCSVConverter
 		final Node keyNode = controlProperties.getNamedItem(KEY);
 		String nodeValue = keyNode.getNodeValue();
 
-		if (nodeValue.equals("required"))
+		if ("required".equals(nodeValue))
 		{
 			rulesRequiredString = ",Rules~required";
 		}
-		else if (nodeValue.equals("IsOrdered"))
+		else if ("IsOrdered".equals(nodeValue))
 		{
 			permValueOptionsString = ",PermVal_Options~IsOrdered=true";
 		}
-		else if (nodeValue.equals("defaultValue"))
+		else if ("defaultValue".equals(nodeValue))
 		{
 			final Node valueNode = controlProperties.getNamedItem(VALUE);
 			permValueOptionsString = ",defaultValue=" + valueNode.getNodeValue();

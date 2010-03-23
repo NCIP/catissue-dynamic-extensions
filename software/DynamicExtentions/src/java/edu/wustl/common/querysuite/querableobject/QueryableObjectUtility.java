@@ -20,7 +20,6 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.entitymanager.CategoryManager;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
-import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.cab2b.common.exception.RuntimeException;
 import edu.wustl.cab2b.server.cache.EntityCache;
@@ -165,7 +164,7 @@ public class QueryableObjectUtility
 	}
 
 	/**
-	 * It will return the original Atribute From which the CategoryAttribute is created.
+	 * It will return the original Attribute From which the CategoryAttribute is created.
 	 * @param categoryAttribute
 	 * @return
 	 */
@@ -281,9 +280,8 @@ public class QueryableObjectUtility
 	/**
 	* It will return the QueryableObject of the Entity or category with the Identifier as given
 	* present in cache.
+	* @param identifier
 	* @return QueryableObjectInterface
-	* @throws DynamicExtensionsApplicationException
-	* @throws DynamicExtensionsSystemException
 	*/
 	public static QueryableObjectInterface getQueryableObjectFromCache(Long identifier)
 	{
@@ -320,6 +318,7 @@ public class QueryableObjectUtility
 	/**
 	 * It will return the QueryableAtribute of the Attribute or categoryAttribute with the Identifier as given
 	 * present in cache.
+	 * @param identifier
 	 * @return QueryableObjectInterface
 	 */
 	public static QueryableAttributeInterface getQueryableAttributeFromCache(Long identifier)
@@ -361,7 +360,7 @@ public class QueryableObjectUtility
 	/**
 	* This method trims out package name form the entity name
 	*
-	* @param entity
+	* @param queryObject
 	* @return
 	*/
 	public static String getQueryableObjectName(QueryableObjectInterface queryObject)

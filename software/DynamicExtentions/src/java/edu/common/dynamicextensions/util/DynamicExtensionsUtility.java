@@ -15,7 +15,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -772,11 +771,11 @@ public class DynamicExtensionsUtility
 		boolean isContainedInList = false;
 		if ((string != null) && (list != null))
 		{
-			String listString = null;
+			//String listString = null;
 			Iterator<String> iterator = list.iterator();
 			while (iterator.hasNext())
 			{
-				listString = iterator.next();
+				String listString = iterator.next();
 				if (string.equals(listString))
 				{
 					isContainedInList = true;
@@ -846,19 +845,19 @@ public class DynamicExtensionsUtility
 		ArrayList<Integer> integerList = new ArrayList<Integer>();
 		if (controlsSeqNumbers != null)
 		{
-			String str = null;
-			Integer integer = null;
 			StringTokenizer strTokenizer = new StringTokenizer(controlsSeqNumbers, delimiter);
 			if (strTokenizer != null)
 			{
+				//String str = null;
+				//Integer integer = null;
 				while (strTokenizer.hasMoreElements())
 				{
-					str = strTokenizer.nextToken();
+					String str = strTokenizer.nextToken();
 					if (str != null)
 					{
 						try
 						{
-							integer = Integer.valueOf(str);
+							Integer integer = Integer.valueOf(str);
 							integerList.add(integer);
 						}
 						catch (NumberFormatException e)
@@ -1308,12 +1307,12 @@ public class DynamicExtensionsUtility
 	{
 		DefaultBizLogic defaultBizLogic = BizLogicFactory.getDefaultBizLogic();
 		defaultBizLogic.setAppName(DynamicExtensionDAO.getInstance().getAppName());
-		List objectList;
-		ContainerInterface containerInterface = null;
+
 		if (caption == null || caption.trim().length() == 0)
 		{
 			return null;
 		}
+		List objectList;
 		try
 		{
 			objectList = defaultBizLogic.retrieve(Container.class.getName(), "caption", caption);
@@ -1323,6 +1322,7 @@ public class DynamicExtensionsUtility
 			throw new DynamicExtensionsSystemException(e.getMessage(), e);
 		}
 
+		ContainerInterface containerInterface = null;
 		if (!objectList.isEmpty())
 		{
 			containerInterface = (ContainerInterface) objectList.get(0);
@@ -1926,16 +1926,14 @@ public class DynamicExtensionsUtility
 	public static String getDefaultDateForRelatedCategoryAttribute(AttributeInterface attr,
 			Object value) throws DynamicExtensionsSystemException
 	{
-		String formattedvalue = null;
+		//String formattedvalue = null;
 		Date date = null;
-
-		String dateFormat = ((DateAttributeTypeInformation) attr.getAttributeTypeInformation())
-				.getFormat();
-		String datePatten = DynamicExtensionsUtility.getDateFormat(dateFormat);
-
 		String str = null;
 		if (value instanceof Date)
 		{
+			String dateFormat = ((DateAttributeTypeInformation) attr.getAttributeTypeInformation())
+					.getFormat();
+			String datePatten = DynamicExtensionsUtility.getDateFormat(dateFormat);
 			str = Utility.parseDateToString(((Date) value), datePatten);
 		}
 		else
@@ -1956,7 +1954,7 @@ public class DynamicExtensionsUtility
 
 		JDBCDAO jdbcDao = getJDBCDAO();
 
-		formattedvalue = jdbcDao.getStrTodateFunction() + "('" + simpleDateFormat.format(date)
+		String formattedvalue = jdbcDao.getStrTodateFunction() + "('" + simpleDateFormat.format(date)
 				+ "','" + ProcessorConstants.ORCL_CAT_REL_ATTR_FORMAT + "')";
 
 		return formattedvalue;
@@ -2149,7 +2147,6 @@ public class DynamicExtensionsUtility
 	 * This method executes a SQL query.
 	 * @param query
 	 * @param colValBeanList
-	 * @throws SQLException
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public static void executeUpdateQuery(final String query, final Long userId,
@@ -2651,8 +2648,9 @@ public class DynamicExtensionsUtility
 	 */
 	public static String replaceHTMLSpecialCharacters(String value)
 	{
-		String escapeStringValue = value;
-		escapeStringValue = getUnEscapedStringValue(escapeStringValue);
+		/*String escapeStringValue = value;
+		escapeStringValue = getUnEscapedStringValue(escapeStringValue);*/
+		String escapeStringValue = getUnEscapedStringValue(value);
 		if (escapeStringValue != null && escapeStringValue.length() > 0)
 		{
 			escapeStringValue = StringEscapeUtils.escapeHtml(escapeStringValue);
