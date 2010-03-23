@@ -278,11 +278,11 @@ public class CategoryHelper implements CategoryHelperInterface
 
 		applyRulesInCSVFile(categoryAttribute, attribute, rulesMap);
 
-		ControlInterface control = null;
 		Map<String, Collection<SemanticPropertyInterface>> permissibleValueNameList = (permissibleValueList.length == 0
 				? null
 				: permissibleValueList[0]);
-		control = createOrUpdateControl(controlType, controlCaption, heading, controlNotes,
+		ControlInterface control = createOrUpdateControl(controlType, controlCaption, heading,
+				controlNotes,
 				container, categoryAttribute, permValueOptions, lineNumber,
 				permissibleValueNameList);
 		return control;
@@ -1644,14 +1644,13 @@ public class CategoryHelper implements CategoryHelperInterface
 			throws DynamicExtensionsSystemException, ParseException
 	{
 		List<PermissibleValueInterface> permissibleValues = new ArrayList<PermissibleValueInterface>();
-		PermissibleValue permissibleValueInterface = null;
 		if (desiredPermissibleValues != null)
 		{
 			Set<String> permissibleValuString = desiredPermissibleValues.keySet();
 
 			for (String value : permissibleValuString)
 			{
-				permissibleValueInterface = (PermissibleValue) attributeTypeInformation
+				PermissibleValue permissibleValueInterface = (PermissibleValue) attributeTypeInformation
 						.getPermissibleValueForString(DynamicExtensionsUtility
 								.getEscapedStringValue(value));
 

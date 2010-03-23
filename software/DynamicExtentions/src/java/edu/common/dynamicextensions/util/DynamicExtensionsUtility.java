@@ -654,8 +654,7 @@ public class DynamicExtensionsUtility
 		boolean isNaturalNumber = true;
 		try
 		{
-			double doubleValue = Double.parseDouble(numString);
-			if (doubleValue < 0)
+			if (Double.parseDouble(numString) < 0)
 			{
 				isNaturalNumber = false;
 			}
@@ -1954,7 +1953,8 @@ public class DynamicExtensionsUtility
 
 		JDBCDAO jdbcDao = getJDBCDAO();
 
-		String formattedvalue = jdbcDao.getStrTodateFunction() + "('" + simpleDateFormat.format(date)
+		String formattedvalue = jdbcDao.getStrTodateFunction() + "('"
+				+ simpleDateFormat.format(date)
 				+ "','" + ProcessorConstants.ORCL_CAT_REL_ATTR_FORMAT + "')";
 
 		return formattedvalue;
@@ -2184,14 +2184,13 @@ public class DynamicExtensionsUtility
 	 */
 	public static String getEscapedStringValue(String value)
 	{
-		String replacedValue = value;
-		replacedValue = replaceUtil(replacedValue, "'", "&#39");
-		replacedValue = replaceUtil(replacedValue, "\"", "&#34");
-		if (replacedValue != null)
+		value = replaceUtil(value, "'", "&#39");
+		value = replaceUtil(value, "\"", "&#34");
+		if (value != null)
 		{
-			replacedValue = replacedValue.trim();
+			value = value.trim();
 		}
-		return replacedValue;
+		return value;
 	}
 
 	/**
@@ -2201,14 +2200,13 @@ public class DynamicExtensionsUtility
 	 */
 	public static String getUnEscapedStringValue(String value)
 	{
-		String replacedValue = value;
-		replacedValue = replaceUtil(replacedValue, "&#39", "'");
-		replacedValue = replaceUtil(replacedValue, "&#34", "\"");
-		if (replacedValue != null)
+		value = replaceUtil(value, "&#39", "'");
+		value = replaceUtil(value, "&#34", "\"");
+		if (value != null)
 		{
-			replacedValue = replacedValue.trim();
+			value = value.trim();
 		}
-		return replacedValue;
+		return value;
 	}
 
 	/**
