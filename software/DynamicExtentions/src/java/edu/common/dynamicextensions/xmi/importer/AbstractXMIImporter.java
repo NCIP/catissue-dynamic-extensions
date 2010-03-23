@@ -137,6 +137,13 @@ public abstract class AbstractXMIImporter
 			long processXMIStartTime = System.currentTimeMillis();
 			DynamicQueryList dynamicQueryList = xmiImportProcessor.processXmi(uml, domainModelName,
 					packageName, containerNames, hibernatedao);
+
+			if (!XMIImportValidator.errorList.isEmpty())
+			{
+				throw new DynamicExtensionsSystemException(
+						"XMI need to be fixed for proper caCore generation. "
+								+ "Please check the logs above.");
+			}
 			mainContainerList = xmiImportProcessor.getMainContainerList();
 			Map<AssociationInterface, String> multiselectMigartionScripts = xmiImportProcessor
 					.getMultiselectMigartionScripts();
@@ -166,12 +173,23 @@ public abstract class AbstractXMIImporter
 			LOGGER.info("Now associating the clinical study to the main Containers");
 			postProcess(isEditedXmi, coRecObjCsvFName, mainContainerList, domainModelName);
 			generateLogForCompleteProcess(processStartTime, csrStartTime);
-
 		}
 		catch (Exception e)
 		{
 			LOGGER.fatal("Fatal error reading XMI!!", e);
 			isImportSuccess = false;
+
+			if (!XMIImportValidator.errorList.isEmpty())
+			{
+				LOGGER.error("==========================================");
+				LOGGER.error("Following ERRORS encountered in the XMI: ");
+				LOGGER.error("==========================================");
+				for (String error : XMIImportValidator.errorList)
+				{
+					LOGGER.error(error);
+				}
+				throw new RuntimeException(e);
+			}
 		}
 		finally
 		{
@@ -189,8 +207,6 @@ public abstract class AbstractXMIImporter
 	 */
 	private void exportXmiForCacore(List<ContainerInterface> mainContainerList)
 	{
-		String exportedXmiFilePath = "./temp_deaudit_related_files/temp_exported_xmi/";
-
 		if (mainContainerList == null)
 		{
 			LOGGER.info("Main container list is empty hence not exporting the XMI for cacore!");
@@ -208,6 +224,7 @@ public abstract class AbstractXMIImporter
 					XMIExporterUtility.addHookEntitiesToGroup(hookEntity, entityGroup);
 				}
 				XMIExporter exporter = new XMIExporter();
+				String exportedXmiFilePath = "./temp_deaudit_related_files/temp_exported_xmi/";
 				String[] arguments = {entityGroup.getName(),
 						exportedXmiFilePath + domainModelName + ".xmi",
 						XMIConstants.XMI_VERSION_1_1, hookEntityName};
@@ -414,7 +431,7 @@ public abstract class AbstractXMIImporter
 	 * @param args arguments
 	 * @throws DynamicExtensionsApplicationException exception
 	 */
-	private static void validate(String args[]) throws DynamicExtensionsApplicationException
+	private static void validate(String[] args) throws DynamicExtensionsApplicationException
 	{
 		if (args.length == 0)
 		{
@@ -989,8 +1006,9 @@ public abstract class AbstractXMIImporter
 
 		if (uml == null)
 		{
-			// UML extent does not exist -> create it (note that in case one want's to instantiate
-			// a metamodel other than MOF, they need to provide the second parameter of the createExtent
+			// UML extent does not exist -> create it (note that in case one want's
+			// to instantiate a metamodel other than MOF, they need to provide the second
+			// parameter of the createExtent
 			// method which indicates the metamodel package that should be instantiated)
 			uml = (UmlPackage) rep.createExtent(UML_INSTANCE, getUmlPackage());
 		}
@@ -1069,8 +1087,10 @@ public abstract class AbstractXMIImporter
 	}
 
 	/**
-	 * This method will return the List of Association which contains the association list upto the hook entity from some base entity
-	 * so that indirect path from the base entity (i.e. the first entity which is source of the first association in the association list)
+	 * This method will return the List of Association which contains the
+	 * association list up to the hook entity from some base entity
+	 * so that indirect path from the base entity (i.e. the first entity
+	 * which is source of the first association in the association list)
 	 * to the main containers found in the model
 	 * @param hibernatedao dao used for retrieving the associations
 	 * @return the list of associations
@@ -1082,7 +1102,7 @@ public abstract class AbstractXMIImporter
 			DynamicExtensionsApplicationException;
 
 	/**
-	 * It will return the xmiconfiguration object to be used while importing the model
+	 * It will return the xmi configuration object to be used while importing the model
 	 * @return XMIConfiguration object
 	 */
 	protected abstract XMIConfiguration getXMIConfigurationObject();

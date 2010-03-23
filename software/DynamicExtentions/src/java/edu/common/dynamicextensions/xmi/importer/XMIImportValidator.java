@@ -2,6 +2,7 @@
 package edu.common.dynamicextensions.xmi.importer;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
+import edu.common.dynamicextensions.domaininterface.RoleInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterface;
 import edu.common.dynamicextensions.exception.DataTypeFactoryInitializationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
@@ -22,6 +24,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsValidationException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.interfaces.AbstractAttributeUIBeanInterface;
+import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.common.dynamicextensions.validation.DateRangeValidator;
 import edu.common.dynamicextensions.validation.RangeValidator;
 import edu.wustl.common.util.global.ApplicationProperties;
@@ -35,7 +38,16 @@ public class XMIImportValidator
 {
 
 	/**
-	 * This method verify that default value specified is withing given range for numeric type attribute
+	 * List to maintain the validation errors
+	 */
+	public static List<String> errorList = new ArrayList<String>();
+	static
+	{
+		ApplicationProperties.initBundle("ApplicationResources");
+	}
+
+	/**
+	 * This method verify that default value specified is within given range for numeric type attribute
 	 * @param attribute
 	 * @param controlsForm
 	 * @param defaultValue
@@ -60,7 +72,7 @@ public class XMIImportValidator
 			}
 			catch (DynamicExtensionsValidationException e)
 			{
-				ApplicationProperties.initBundle("ApplicationResources");
+				//ApplicationProperties.initBundle("ApplicationResources");
 				List<String> placeHolders = new ArrayList<String>();
 				placeHolders.add(defaultValue.toString());
 				placeHolders.add(attribute.getName());
@@ -79,7 +91,8 @@ public class XMIImportValidator
 	}
 
 	/**
-	 * This method verify that default value specified is withing given range for date type attribute only using daterangevalidator
+	 * This method verify that default value specified is within given range for
+	 * date type attribute only using date range validator
 	 * @param attribute
 	 * @param controlsForm
 	 * @param defaultValue
@@ -110,7 +123,7 @@ public class XMIImportValidator
 			}
 			catch (DynamicExtensionsValidationException e)
 			{
-				ApplicationProperties.initBundle("ApplicationResources");
+				//ApplicationProperties.initBundle("ApplicationResources");
 				Logger.out.info(ApplicationProperties.getValue("validationError")
 						+ ApplicationProperties.getValue("defValueFor")
 						+ ApplicationProperties.getValue(e.getErrorCode(), e.getPlaceHolderList()));
@@ -160,7 +173,7 @@ public class XMIImportValidator
 		if (!(booleanVal.trim().equalsIgnoreCase(ProcessorConstants.TRUE) || booleanVal.trim()
 				.equalsIgnoreCase(ProcessorConstants.FALSE)))
 		{
-			ApplicationProperties.initBundle("ApplicationResources");
+			//ApplicationProperties.initBundle("ApplicationResources");
 			List<String> placeHolders = new ArrayList<String>();
 			placeHolders.add(booleanVal);
 			placeHolders.add(attribute.getName());
@@ -175,7 +188,7 @@ public class XMIImportValidator
 	}
 
 	/**
-	 * It will validate weather the data type of the attribute is valid for the
+	 * It will validate whether the data type of the attribute is valid for the
 	 * primary key of the entity
 	 * @param primaryAttribute
 	 * @return
@@ -191,9 +204,8 @@ public class XMIImportValidator
 				|| EntityManagerConstantsInterface.BOOLEAN_ATTRIBUTE_TYPE.equals(attributeDataType)
 				|| EntityManagerConstantsInterface.OBJECT_ATTRIBUTE_TYPE.equals(attributeDataType))
 		{
-			throw new DynamicExtensionsApplicationException(
-					"Data Type of the primaryKey Attribute " + primaryAttribute.getName()
-							+ " is not acceptable for " + primaryAttribute.getEntity().getName());
+			errorList.add("Data Type of the primaryKey Attribute " + primaryAttribute.getName()
+					+ " is not acceptable for " + primaryAttribute.getEntity().getName());
 		}
 
 		return true;
@@ -202,22 +214,28 @@ public class XMIImportValidator
 	/**
 	 * @param entityNameVsAttributeNames Map of entityName and corresponding attribute set
 	 * @param umlAssociationName Name of UML association
-	 * @param entityName Name of source entity
+	 * @param sourceEntityName Name of source entity
+	 * @param targetEntityName
 	 * @param parentIdVsChildrenIds Map of parentId and its corresponding childIds
 	 * @param umlClassIdVsEntity Map of uml class and entity
+	 * @param sourceRole
+	 * @param targetRole
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public static void validateAssociations(Map<String, Set<String>> entityNameVsAttributeNames,
-			String umlAssociationName, String entityName,
+			String umlAssociationName, String sourceEntityName, String targetEntityName,
 			Map<String, List<String>> parentIdVsChildrenIds,
-			Map<String, EntityInterface> umlClassIdVsEntity)
-			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+			Map<String, EntityInterface> umlClassIdVsEntity, RoleInterface sourceRole,
+			RoleInterface targetRole) throws DynamicExtensionsApplicationException,
+			DynamicExtensionsSystemException
 	{
-		Set<String> attributeCollection = entityNameVsAttributeNames.get(entityName);
-		validateAssociationName(attributeCollection, umlAssociationName, entityName);
-		validateAssociationNameInParent(entityNameVsAttributeNames, umlAssociationName, entityName,
+		Set<String> attributeCollection = entityNameVsAttributeNames.get(sourceEntityName);
+		validateName(umlAssociationName, "Association", sourceEntityName, targetEntityName);
+		validateAssociationName(attributeCollection, umlAssociationName, sourceEntityName);
+		validateAssociationNameInParent(entityNameVsAttributeNames, umlAssociationName, sourceEntityName,
 				parentIdVsChildrenIds, umlClassIdVsEntity);
+		validateCardinality(sourceRole, targetRole, sourceEntityName, targetEntityName);
 	}
 
 	/**
@@ -263,7 +281,8 @@ public class XMIImportValidator
 	 * @throws DynamicExtensionsSystemException
 	 */
 	private static void validateAssociationName(Set<String> attributeCollection,
-			String umlAssociationName, String entityName) throws DynamicExtensionsSystemException
+			String umlAssociationName, String sourceEntityName)
+			throws DynamicExtensionsSystemException
 	{
 		if ((attributeCollection != null) && !attributeCollection.isEmpty()
 				&& (umlAssociationName != null) && (umlAssociationName.trim().length() > 0))
@@ -272,9 +291,9 @@ public class XMIImportValidator
 			{
 				if (umlAssociationName.equalsIgnoreCase(attributeName))
 				{
-					throw new DynamicExtensionsSystemException(
-							"Association name and attribute name cannot be same. please verify xmi file. Entity name:-"
-									+ entityName + " Attribute name:-" + attributeName);
+					errorList.add("Association name and attribute name cannot be same. "
+							+ "[Entity name:" + sourceEntityName + ", Attribute name:"
+							+ attributeName + "]");
 				}
 			}
 		}
@@ -302,9 +321,10 @@ public class XMIImportValidator
 			}
 			else
 			{
-
-				throw new DynamicExtensionsSystemException("CYCLE CREATED IN THE MODEL:-"
+				errorList.add("CYCLE CREATED IN THE MODEL: "
 						+ getEntityNameAsPath(sourceEntityCollection));
+				/*throw new DynamicExtensionsSystemException("CYCLE CREATED IN THE MODEL:-"
+						+ getEntityNameAsPath(sourceEntityCollection));*/
 			}
 			if (!sourceEntityCollection.isEmpty())
 			{
@@ -326,7 +346,7 @@ public class XMIImportValidator
 		{
 			path.append(entity + "->");
 		}
-		path.append((new ArrayList<String>(sourceEntityCollection)).get(0));
+		path.append(new ArrayList<String>(sourceEntityCollection).get(0));
 		return path.toString();
 	}
 
@@ -345,5 +365,116 @@ public class XMIImportValidator
 
 		}
 
+	}
+
+	/**
+	 * Validate the name for cacore compatibility
+	 * @param name
+	 * @param artifact
+	 * @param sourceEntityName
+	 * @param targetEntityName
+	 */
+	public static void validateName(String name, String artifact, String sourceEntityName,
+			String targetEntityName)
+	{
+		String artifactDetails = " [Entity:" + sourceEntityName + ", " + artifact + ":" + name
+				+ "]";
+		if (targetEntityName != null)
+		{
+			artifactDetails = " [Source Entity:" + sourceEntityName + ", Target Entity:"
+					+ targetEntityName + ", " + artifact + ":" + name + "]";
+		}
+		if (name == null)
+		{
+			errorList.add(artifact + " name is null." + artifactDetails);
+		}
+		else
+		{
+			if (!name.matches(ApplicationProperties.getValue("regEx.StartWIthTwoLowerCaseLetters")))
+			{
+				errorList.add(artifact + " name do not have first two letters in lower case."
+						+ artifactDetails);
+			}
+			validateNameForSpecialCharacterAndNumericStart(name, artifact, artifactDetails);
+		}
+	}
+
+	/**
+	 * Validate the class name for cacore compatibility
+	 * @param name
+	 * @param entityName
+	 */
+	public static void validateClassName(String name, String entityName)
+	{
+		String artifactDetails = " [Entity:" + entityName + "]";
+		if (!name.matches(ApplicationProperties.getValue("regEx.StartWIthUpperCase")))
+		{
+			errorList.add("Class name do not start with upper case character." + artifactDetails);
+		}
+
+		validateNameForSpecialCharacterAndNumericStart(name, "Class", artifactDetails);
+	}
+
+	/**
+	 * Validate the name for cacore compatibility.
+	 * @param name
+	 * @param artifact
+	 * @param artifactDetails
+	 */
+	public static void validateNameForSpecialCharacterAndNumericStart(String name,
+			String artifact, String artifactDetails)
+	{
+		if (name.matches(ApplicationProperties.getValue("regEx.SpecialCharacters")))
+		{
+			errorList.add(artifact + " name has special characters." + artifactDetails);
+		}
+		if (name.matches(ApplicationProperties.getValue("regEx.StartWithNumber")))
+		{
+			errorList.add(artifact + " name starts with numeric character." + artifactDetails);
+		}
+	}
+
+	/**
+	 * Validate the cardinality for cacore compatibility
+	 * @param sourceRole
+	 * @param targetRole
+	 * @param sourceEntityName
+	 * @param targetEntityName
+	 */
+	public static void validateCardinality(RoleInterface sourceRole, RoleInterface targetRole,
+			String sourceEntityName, String targetEntityName)
+	{
+		String sourceMaxCardinality = sourceRole.getMaximumCardinality().name();
+		String targetMaxCardinality = targetRole.getMaximumCardinality().name();
+
+		if ((Cardinality.MANY.toString()).equals(sourceMaxCardinality)
+				&& (Cardinality.MANY.toString()).equals(targetMaxCardinality))
+		{
+			errorList.add("Either Many-to-Many association present OR Target Role is empty. "
+					+ "[Source Entity:" + sourceEntityName + ", Target Entity: " + targetEntityName
+					+ "]");
+		}
+	}
+
+	/**
+	 * Check if the associations from a class have same names
+	 * @param entity
+	 */
+	public static void validateDuplicateAssociationName(EntityInterface entity)
+	{
+		Collection<AssociationInterface> assoCollection = entity.getAssociationCollection();
+		List<String> associationNames = new ArrayList<String>();
+		for (AssociationInterface association : assoCollection)
+		{
+			if (associationNames.contains(association.getName()))
+			{
+				errorList.add("Associations from the class have same names. [Entity:"
+						+ entity.getName() + ", Association name: " + association.getName() + "]");
+			}
+			else
+			{
+				associationNames.add(association.getName());
+			}
+		}
 	}
 }

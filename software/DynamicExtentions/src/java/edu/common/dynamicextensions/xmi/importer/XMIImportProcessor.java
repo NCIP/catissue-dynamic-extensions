@@ -107,8 +107,14 @@ import edu.wustl.dao.HibernateDAO;
 public class XMIImportProcessor
 {
 
+	/**
+	 * XMI to be edited or not
+	 */
 	public boolean isEditedXmi = false;
 
+	/**
+	 * Package present or not
+	 */
 	public boolean isPackagePresent = false;
 
 	private XMIConfiguration xmiConfigurationObject;
@@ -166,11 +172,19 @@ public class XMIImportProcessor
 
 	private final Map<String, Set<String>> entityNameVsAttributeNames = new HashMap<String, Set<String>>();
 
+	/**
+	 *
+	 * @return
+	 */
 	public Map<AssociationInterface, String> getMultiselectMigartionScripts()
 	{
 		return multiselectMigartionScripts;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public List<ContainerInterface> getMainContainerList()
 	{
 		return mainContainerList;
@@ -197,7 +211,7 @@ public class XMIImportProcessor
 	 * It will import the given xmi & create the DynamicExtensions Accordingly.
 	 * If hibernateDao is passed as argument then it will only save the model using that DAO & will return the
 	 * QueryList outSide to the Caller.
-	 * Its the responsibility of the caller to create all the tables just before commiting the Work.
+	 * Its the responsibility of the caller to create all the tables just before committing the Work.
 	 * @param umlPackage umlPackage
 	 * @param entityGroupName the Name of the group which is to be Created For DynamicExtensions
 	 * @param packageName name of the package which is to be imported From EA Model
@@ -248,6 +262,7 @@ public class XMIImportProcessor
 		//Creating entities and entity group.
 		for (final UmlClass umlClass : umlClassColl)
 		{
+			XMIImportValidator.validateClassName(umlClass.getName(), umlClass.getName());
 			if (xmiConfigurationObject.isEntityGroupSystemGenerated()
 					&& !umlClass.getName().startsWith(
 							xmiConfigurationObject.getDefaultPackagePrefix())
@@ -357,6 +372,9 @@ public class XMIImportProcessor
 		for (final UmlClass umlClass : umlClassColl)
 		{
 			final EntityInterface entity = umlClassIdVsEntity.get(umlClass.refMofId());
+
+			// check if entity has duplicate association names
+			XMIImportValidator.validateDuplicateAssociationName(entity);
 			//In memory operation
 			createContainer(entity);
 			//to retrieve primary key properties of the attribute of entity
@@ -398,7 +416,7 @@ public class XMIImportProcessor
 
 	/**
 	 * This method will check if the model contains the given package& will collect
-	 * all the model elements in the corrosponding collections.
+	 * all the model elements in the corresponding collections.
 	 * @param umlPackage uml package.
 	 * @param packageName package to be searched in the model.
 	 * @param umlClassColl collection which collects all classes.
@@ -749,12 +767,12 @@ public class XMIImportProcessor
 
 		for (final Model model : modelColl)
 		{
-			final Collection ownedElementColl = model.getOwnedElement();
+			/*final Collection ownedElementColl = model.getOwnedElement();
 			Logger.out.info(" ");
 			Logger.out.info("MODEL OWNED ELEMENT COLLECTION SIZE = " + ownedElementColl.size());
 			Logger.out.info(" ");
 			Logger.out.info(" ");
-			final Iterator iter = ownedElementColl.iterator();
+			final Iterator iter = ownedElementColl.iterator();*/
 
 			final StringTokenizer tokens = new StringTokenizer(packageName,
 					XMIConstants.DOT_SEPARATOR);
@@ -770,6 +788,12 @@ public class XMIImportProcessor
 			}
 			else
 			{
+				final Collection ownedElementColl = model.getOwnedElement();
+				Logger.out.info(" ");
+				Logger.out.info("MODEL OWNED ELEMENT COLLECTION SIZE = " + ownedElementColl.size());
+				Logger.out.info(" ");
+				Logger.out.info(" ");
+				final Iterator iter = ownedElementColl.iterator();
 				final StringTokenizer initializedTokens = new StringTokenizer(packageName,
 						XMIConstants.DOT_SEPARATOR);
 				token = "";
@@ -973,7 +997,7 @@ public class XMIImportProcessor
 	}
 
 	/**
-	 * Creates a Dynamic Exension Entity from given UMLClass.<br>
+	 * Creates a Dynamic Extension Entity from given UMLClass.<br>
 	 * It also assigns all the attributes of the UMLClass to the Entity as the
 	 * Dynamic Extension Primitive Attributes.Then stores the input UML class,
 	 * adds the Dynamic Extension's PrimitiveAttributes to the Collection.
@@ -998,7 +1022,7 @@ public class XMIImportProcessor
 		entity.setDescription(entityGroup.getName() + "--" + umlClass.getName());
 		entity.setAbstract(umlClass.isAbstract());
 		populateAttributes(umlClass, entity);
-		populateAttributes(umlClass, entity);
+		//populateAttributes(umlClass, entity);
 
 		//		setSemanticMetadata(entity, umlClass.getSemanticMetadata());
 		return entity;
@@ -1015,15 +1039,16 @@ public class XMIImportProcessor
 			DynamicExtensionsApplicationException
 	{
 		//Not showing id attribute on UI if Id attribute is to be added by DE which is specified in xmiConfiguration Object
-		AttributeInterface originalAttribute = null;
+
 		if (((umlAttribute.getName().equalsIgnoreCase(DEConstants.OBJ_IDENTIFIER) || umlAttribute
 				.getName().equalsIgnoreCase(Constants.IDENTIFIER)))
 				&& xmiConfigurationObject.isAddIdAttribute())
 		{
-			//If id attribute is system generated then dont create attribute for user given Id attribute
+			//If id attribute is system generated then don't create attribute for user given Id attribute
 			return null;
 		}
 		final DataType dataType = DataType.get(umlAttribute.getType().getName());
+		AttributeInterface originalAttribute = null;
 		if (dataType != null)
 		{//Temporary solution for unsupported datatypes. Not adding attributes having unsupported datatypes.
 
@@ -1100,6 +1125,7 @@ public class XMIImportProcessor
 				final Attribute att = (Attribute) object;
 				createAttribute(att, entity);
 				attributeNames.add(att.getName());
+				XMIImportValidator.validateName(att.getName(), "Attribute", entity.getName(), null);
 			}
 		}
 		if (xmiConfigurationObject.isAddInheritedAttribute())
@@ -1260,7 +1286,7 @@ public class XMIImportProcessor
 			final AbstractMetadataInterface abstrMetaDataObj)
 	{
 		final Map<String, String> tagNameVsTagValue = new HashMap<String, String>();
-		String tagName;
+		//String tagName;
 		final Collection<TaggedValueInterface> deTaggedValueCollection = new HashSet<TaggedValueInterface>();
 		final DomainObjectFactory factory = DomainObjectFactory.getInstance();
 		TaggedValueInterface tag;
@@ -1269,7 +1295,7 @@ public class XMIImportProcessor
 			if (taggedValue.getType() != null)
 			{
 				final Collection<String> dataValueColl = taggedValue.getDataValue();
-				tagName = taggedValue.getType().getName();
+				String tagName = taggedValue.getType().getName();
 				for (final String value : dataValueColl)
 				{
 					if (tagName.startsWith(XMIConstants.TAGGED_NAME_PREFIX))
@@ -1586,10 +1612,14 @@ public class XMIImportProcessor
 		final EntityInterface tgtEntity = umlClassIdVsEntity.get(tgtId);
 		final Multiplicity srcMultiplicity = sourceAssociationEnd.getMultiplicity();
 		final String sourceRoleName = sourceAssociationEnd.getName();
+		XMIImportValidator.validateName(sourceRoleName, "Source Role", srcEntity.getName(),
+				tgtEntity.getName());
 		final RoleInterface sourceRole = getRole(srcMultiplicity, sourceRoleName, sourceAssoTypeTV);
 
 		final Multiplicity tgtMultiplicity = targetAssociationEnd.getMultiplicity();
 		final String tgtRoleName = targetAssociationEnd.getName();
+		XMIImportValidator.validateName(tgtRoleName, "Target Role", srcEntity.getName(), tgtEntity
+				.getName());
 		final RoleInterface targetRole = getRole(tgtMultiplicity, tgtRoleName,
 				destinationAssoTypeTV);
 
@@ -1598,7 +1628,8 @@ public class XMIImportProcessor
 				.getAssociationCollection();
 
 		XMIImportValidator.validateAssociations(entityNameVsAttributeNames, umlAssociation
-				.getName(), srcEntity.getName(), parentIdVsChildrenIds, umlClassIdVsEntity);
+				.getName(), srcEntity.getName(), tgtEntity.getName(), parentIdVsChildrenIds,
+				umlClassIdVsEntity, sourceRole, targetRole);
 
 		if ((existingAssociationColl != null) && !existingAssociationColl.isEmpty())
 		{//EDIT Case
@@ -1934,9 +1965,9 @@ public class XMIImportProcessor
 	}
 
 	/**
-	 * Gets dynamic extension's Cardinality enumration for passed integer value.
-	 * @param cardinality intger value of cardinality.
-	 * @return Dynamic Extension's Cardinality enumration
+	 * Gets dynamic extension's Cardinality enumeration for passed integer value.
+	 * @param cardinality integer value of cardinality.
+	 * @return Dynamic Extension's Cardinality enumeration
 	 */
 	private DEConstants.Cardinality getCardinality(final int cardinality)
 	{
@@ -2238,13 +2269,12 @@ public class XMIImportProcessor
 			final Collection<AbstractAttributeInterface> attributesToRemove)
 	{
 		final AssociationInterface association = (AssociationInterface) editedAttribute;
-		final Collection<AssociationInterface> targetEntityAssociationColl = association
-				.getTargetEntity().getAssociationCollection();
-
 		final EntityInterface originalTargetEntity = getEntity(association.getTargetEntity()
 				.getName());
 		if (originalTargetEntity != null)
 		{
+			final Collection<AssociationInterface> targetEntityAssociationColl = association
+					.getTargetEntity().getAssociationCollection();
 			//Removing redundant association
 			for (final AssociationInterface targetAsso : targetEntityAssociationColl)
 			{
@@ -2329,8 +2359,6 @@ public class XMIImportProcessor
 			final ContainerInterface containerInterface) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
-		final LoadFormControlsProcessor loadFormControlsProcessor = LoadFormControlsProcessor
-				.getInstance();
 		controlModel.setControlOperation(ProcessorConstants.OPERATION_EDIT);
 
 		final Collection<ControlInterface> originalControlColl = containerInterface
@@ -2352,6 +2380,8 @@ public class XMIImportProcessor
 			//This method wil give us populated ControlUIBean and AttributeUIBean with original control object corresponding to edited attribute
 			if (!(editedAttribute instanceof AssociationInterface))
 			{
+				final LoadFormControlsProcessor loadFormControlsProcessor = LoadFormControlsProcessor
+						.getInstance();
 				loadFormControlsProcessor.editControl(originalControlObj, controlModel,
 						controlModel);
 
