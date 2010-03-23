@@ -26,7 +26,6 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 import edu.wustl.dao.HibernateDAO;
-import edu.wustl.dao.exception.DAOException;
 
 /**
  * @author falguni_sachde
@@ -48,7 +47,6 @@ public class XMIExporterUtility
 	 * @param hibernatedao
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
-	 * @throws DAOException
 	 */
 	public static void addHookEntitiesToGroup(EntityInterface staticEntity,
 			final EntityGroupInterface entityGroup) throws DynamicExtensionsSystemException,
@@ -57,8 +55,8 @@ public class XMIExporterUtility
 		final Collection<ContainerInterface> mainContainers = entityGroup
 				.getMainContainerCollection();
 		LOGGER.info("mainContainers.size(): " + mainContainers.size());
-		EntityInterface xmiStaticEntity = null;
-		xmiStaticEntity = getHookEntityDetailsForXMI(staticEntity);
+		//EntityInterface xmiStaticEntity = null;
+		EntityInterface xmiStaticEntity = getHookEntityDetailsForXMI(staticEntity);
 		entityGroup.addEntity(xmiStaticEntity);
 		xmiStaticEntity.setEntityGroup(entityGroup);
 		for (final ContainerInterface mainContainer : mainContainers)
