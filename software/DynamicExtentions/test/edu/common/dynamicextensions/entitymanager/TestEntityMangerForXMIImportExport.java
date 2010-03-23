@@ -465,4 +465,19 @@ public class TestEntityMangerForXMIImportExport extends DynamicExtensionsBaseTes
 		//		}
 	}
 
+	public void testXMIImportValidation()
+	{
+		try
+		{
+			String[] args = {XMI_FILE_PATH + "cacoreValidation.xmi",
+					CSV_FILE_PATH + "cacoreValidation.csv", "test", "  "};
+			XMIImporter.main(args);
+			fail("No Exception thrown for validations");
+		}
+		catch (Exception e)
+		{
+			System.out.println("Error thrown as validation messages present");
+		}
+	}
+
 }
