@@ -40,6 +40,8 @@ import edu.wustl.dao.exception.DAOException;
 public class CategoryCSVFileParser extends CategoryFileParser
 {
 
+	private static final String DEFAULT_SEPERATOR=",";
+	public static final String DEFAULT_ESCAPE_CHARACTER = "\"";
 	protected CSVReader reader;
 
 	private String[] line;
@@ -93,6 +95,9 @@ public class CategoryCSVFileParser extends CategoryFileParser
 		if (line == null)
 		{
 			flag = false;
+		}else
+		{
+			line = processEscapeCharacter(line, null, DEFAULT_ESCAPE_CHARACTER, DEFAULT_SEPERATOR);
 		}
 		return flag;
 
@@ -155,7 +160,9 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	 */
 	public String getDisplyLable()
 	{
-		return readLine()[0].split(":")[1].trim();
+		return processEscapeCharacter(readLine()[0].split(":"), readLine()[0],
+				DEFAULT_ESCAPE_CHARACTER, ":")[1]
+				.trim();
 	}
 
 	/**
@@ -252,10 +259,13 @@ public class CategoryCSVFileParser extends CategoryFileParser
 			String pvString = nextLine[counter].substring(indexOfTilda + 1);
 			String originalPVString = pvString;
 			int pvStringLength = 1;
-			while (pvStringLength <= originalPVString.trim().length())
+			String[] pvListString = processEscapeCharacter(originalPVString.split(":"), originalPVString,
+					DEFAULT_ESCAPE_CHARACTER, ":");
+			for (String pv : pvListString)
 			{
-				int indexOFColon = pvString.indexOf(':');
-				int indexOfConceptCodeStart = pvString.indexOf('{');
+
+				int indexOFColon = pv.indexOf(':');
+				int indexOfConceptCodeStart = pv.indexOf('{');
 				if (indexOFColon < indexOfConceptCodeStart
 						|| (indexOFColon == -1 && indexOfConceptCodeStart == -1))
 				{
@@ -267,15 +277,15 @@ public class CategoryCSVFileParser extends CategoryFileParser
 				if (indexOfConceptCodeStart != -1)
 				{//Concept code is present
 					semanticPropertyCollection = new HashSet<SemanticPropertyInterface>();
-					permiValue = pvString.substring(0, indexOfConceptCodeStart);
+					permiValue = pv.substring(0, indexOfConceptCodeStart);
 					pvStringLength = pvStringLength + permiValue.length();
 
-					int conceptCodeEnd = pvString.indexOf('}');
-					if (pvString.charAt(conceptCodeEnd + 1) == ':')
+					int conceptCodeEnd = pv.indexOf('}');
+					if (pv.charAt(conceptCodeEnd + 1) == ':')
 					{
 						pvStringLength = pvStringLength + 1;
 					}
-					String tempCodesString = pvString.substring(indexOfConceptCodeStart + 1,
+					String tempCodesString = pv.substring(indexOfConceptCodeStart + 1,
 							conceptCodeEnd);
 					pvStringLength = pvStringLength + 2;
 
@@ -303,21 +313,15 @@ public class CategoryCSVFileParser extends CategoryFileParser
 				}
 				else
 				{//Concept Code not defined
-					int indexOfColon = pvString.indexOf(':');
-					if (indexOfColon != -1)
+
 					{
-						permiValue = pvString.substring(0, indexOfColon);
-						pvStringLength = pvStringLength + permiValue.length() + 1;
-					}
-					else
-					{
-						permiValue = pvString.substring(0);
+						permiValue = pv;
 						pvStringLength = pvStringLength + permiValue.length();
 					}
 				}
 				pvVsSemanticPropertyCollection.put(DynamicExtensionsUtility
 						.getEscapedStringValue(permiValue), semanticPropertyCollection);
-				validateStringForStinger(permiValue);
+				/*validateStringForStinger(permiValue);*/
 				pvString = originalPVString.substring(pvStringLength - 1);
 			}
 		}
@@ -530,7 +534,9 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	 */
 	public String getTargetContainerCaption()
 	{
-		return readLine()[0].split(":")[1].trim();
+		return processEscapeCharacter(readLine()[0].split(":"), readLine()[0],
+				DEFAULT_ESCAPE_CHARACTER, ":")[1]
+				.trim();
 	}
 
 	/**
@@ -540,7 +546,9 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	public String getMultiplicity() throws DynamicExtensionsSystemException
 	{
 		categoryValidator.validateMultiplicity();
-		return readLine()[0].split(":")[2].trim();
+		return processEscapeCharacter(readLine()[0].split(":"), readLine()[0],
+				DEFAULT_ESCAPE_CHARACTER, ":")[2]
+				.trim();
 	}
 
 	/**
@@ -724,7 +732,9 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	 */
 	public String getDefaultValueForRelatedAttribute()
 	{
-		return readLine()[0].split("=")[1].trim();
+		return processEscapeCharacter(readLine()[0].split("="), readLine()[0],
+				DEFAULT_ESCAPE_CHARACTER, "=")[1]
+				.trim();
 	}
 
 	public String getRelatedAttributeName()
@@ -742,7 +752,9 @@ public class CategoryCSVFileParser extends CategoryFileParser
 		{
 			if (string.startsWith(CategoryCSVConstants.DEFAULT_VALUE))
 			{
-				defaultValue = string.split("=")[1];
+				defaultValue = processEscapeCharacter(string.split("="), string,
+						DEFAULT_ESCAPE_CHARACTER,
+						"=")[1];
 			}
 		}
 		return defaultValue;
@@ -760,9 +772,12 @@ public class CategoryCSVFileParser extends CategoryFileParser
 		{
 			for (String string : readLine())
 			{
-				CategoryValidator.checkIfNoteIsAppropriate(string, lineNumber);
+				CategoryValidator.checkIfNoteIsAppropriate(processEscapeCharacter(string.trim()
+						.split("~"), string, DEFAULT_ESCAPE_CHARACTER, "~")[1], lineNumber);
 
-				String[] notes = string.trim().split("~")[1].split(":");
+				String stringNotes = string.substring(string.indexOf("~") + 1);
+				String[] notes = processEscapeCharacter(stringNotes.split(":"), stringNotes,
+						DEFAULT_ESCAPE_CHARACTER, ":");
 				FormControlNotesInterface formControlNote = new FormControlNotes();
 				formControlNote.setNote(notes[0]);
 				controlNotes.add(formControlNote);
@@ -787,12 +802,14 @@ public class CategoryCSVFileParser extends CategoryFileParser
 		String heading = "";
 
 		String[] headingDetails = readLine();
+
 		if (headingDetails != null && headingDetails.length != 0
 				&& headingDetails[0].startsWith(CategoryConstants.HEADING))
 		{
-			CategoryValidator.checkIfHeadingIsAppropriate(headingDetails[0], lineNumber);
+			categoryValidator.checkIfHeadingIsAppropriate(headingDetails[0], lineNumber);
 
-			heading = headingDetails[0].split("~")[1];
+			heading = processEscapeCharacter(headingDetails[0].split("~"), headingDetails[0],
+					DEFAULT_ESCAPE_CHARACTER, "~")[1];
 			readNext();
 		}
 
@@ -952,6 +969,90 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	private boolean hasEntityGroup() throws IOException
 	{
 		return readLine()[0].trim().contains("Entity_Group");
+	}
+
+	/**
+	 * This method merges the tokens enclosed in within specified separator
+	 * @param tokenizedString
+	 * @param originalString
+	 * @param escapeCharacter
+	 * @param separator
+	 * @return
+	 */
+	public String[] processEscapeCharacter(String[] tokenizedString, String originalString,
+			String escapeCharacter, String separator)
+	{
+		List<String> processedList = new ArrayList<String>();
+
+		for (int tokenNumber = 0; tokenNumber < tokenizedString.length; tokenNumber++)
+		{
+			String processedString = "";
+			int offset = tokenNumber;
+			boolean flag = false;
+			if (tokenizedString[tokenNumber].startsWith(escapeCharacter))
+			{
+				tokenizedString[tokenNumber] = tokenizedString[tokenNumber].substring(1);
+				offset = getLastTokenNumber(escapeCharacter, tokenNumber, tokenizedString);
+				flag = true;
+			}
+
+			for (; tokenNumber <= offset && tokenNumber < tokenizedString.length; tokenNumber++)
+			{
+				processedString = processedString.concat(tokenizedString[tokenNumber]);
+				if (flag && tokenNumber != offset)
+				{
+					processedString = processedString.concat(separator);
+				}
+			}
+
+			if (tokenNumber < tokenizedString.length && processedString.endsWith(escapeCharacter))
+			{
+				processedString = processedString.substring(0, processedString.length() - 1);
+			}
+
+			tokenNumber--;
+			processedList.add(processedString);
+
+		}
+		handleLastToken(originalString, separator, processedList);
+		String str[] = new String[processedList.size()];
+		return processedList.toArray(str);
+	}
+
+	/**
+	 * handles last token which is part if the enclosed string has a separator
+	 * @param originalString
+	 * @param separator
+	 * @param processedList
+	 */
+	private void handleLastToken(String originalString, String separator, List<String> processedList)
+	{
+		if (originalString != null && originalString.endsWith(separator)
+				&& !processedList.get(processedList.size() - 1).endsWith(separator))
+		{
+
+			processedList.add(processedList.size() - 1, processedList.get(processedList.size() - 1)
+					+ separator);
+		}
+
+	}
+
+	/**
+	 * Get the last token number of the enclosed string
+	 * @param escapeCharacter
+	 * @param tokenNumber
+	 * @param strings
+	 * @return
+	 */
+	private int getLastTokenNumber(String escapeCharacter, int tokenNumber, String[] strings)
+	{
+		if (!strings[tokenNumber].endsWith(escapeCharacter) && (tokenNumber + 1 < strings.length))
+		{
+			tokenNumber++;
+			tokenNumber = getLastTokenNumber(escapeCharacter, tokenNumber, strings);
+
+		}
+		return tokenNumber;
 	}
 
 }
