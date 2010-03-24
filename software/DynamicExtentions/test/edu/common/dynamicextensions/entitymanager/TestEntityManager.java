@@ -35,6 +35,7 @@ import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
+import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CaDSRValueDomainInfoInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
@@ -59,6 +60,7 @@ import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.common.dynamicextensions.util.global.DEConstants.ValueDomainType;
 import edu.common.dynamicextensions.validation.ValidatorRuleInterface;
+import edu.common.dynamicextensions.validation.ValidatorUtil;
 import edu.hostApp.src.java.RecordEntry;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.HibernateDAO;
@@ -677,7 +679,6 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 	}
 
-
 	/**
 	 * This method test for updating record for an entity.
 	 */
@@ -738,7 +739,6 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			Logger.out.debug(e.getStackTrace());
 		}
 	}
-
 
 	/**
 	 * This method associates static entity record Id with dynamic entity record Id
@@ -3347,11 +3347,59 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			{
 				EntityInterface entity = (EntityInterface) container.getAbstractEntity();
 				System.out.println("Inserting record for " + entity);
-				Map<AbstractAttributeInterface, Object> dataValueMap = mapGenerator
+				Map<BaseAbstractAttributeInterface, Object> dataValueMap = mapGenerator
 						.createDataValueMapForEntity(entity);
-				long recordId = entityManager.insertData(entity, dataValueMap, null, null);
+				Map map = dataValueMap;
+				List<String> errorList = new ArrayList<String>();
+				ValidatorUtil.validateEntity(dataValueMap, errorList, container);
+				long recordId = entityManager.insertData(entity, map, null, null);
 				System.out.println("Record inserted succesfully for " + entity + " recordId "
 						+ recordId);
+			}
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail();
+		}
+
+	}
+
+	/**
+	 * This test case will try to Validate all the rules applied on that attribute
+	 * in the test model.
+	 *
+	 */
+	public void testValidateDataForAllEntities()
+	{
+		try
+		{
+			EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
+					TEST_ENTITYGROUP_NAME);
+			EntityManager.getInstance();
+			for (ContainerInterface container : testModel.getMainContainerCollection())
+			{
+				EntityInterface entity = (EntityInterface) container.getAbstractEntity();
+				System.out.println("Validating record for " + entity);
+				Map<BaseAbstractAttributeInterface, Object> dataValueMap = mapGenerator
+						.createDataValueMapForEntity(entity);
+				List<String> errorList = new ArrayList<String>();
+				ValidatorUtil.validateEntity(dataValueMap, errorList, container);
+				if (errorList.isEmpty())
+				{
+					System.out.println("Record validated succesfully for " + entity);
+				}
+				else
+				{
+					System.out.println("Record validation failed for " + entity);
+					for (String error : errorList)
+					{
+						System.out.println("error --> " + error);
+					}
+					fail();
+				}
+
 			}
 		}
 		catch (Exception e)
@@ -3379,9 +3427,10 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			{
 				EntityInterface entity = (EntityInterface) container.getAbstractEntity();
 				System.out.println("Inserting record for " + entity.getName());
-				Map<AbstractAttributeInterface, Object> dataValueMap = mapGenerator
+				Map<BaseAbstractAttributeInterface, Object> dataValueMap = mapGenerator
 						.createDataValueMapForEntity(entity);
-				long recordId = entityManager.insertData(entity, dataValueMap, null, null);
+				Map map = dataValueMap;
+				long recordId = entityManager.insertData(entity, map, null, null);
 				System.out.println("Record inserted succesfully for " + entity + " recordId "
 						+ recordId);
 				Map<AbstractAttributeInterface, Object> editedDataValueMap = entityManager

@@ -18,15 +18,21 @@ import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
+import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
+import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.entitymanager.CategoryManager;
 import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
+import edu.common.dynamicextensions.entitymanager.EntityGroupManager;
+import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.CategoryGenerationUtil;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.parser.CategoryFileParser;
+import edu.common.dynamicextensions.validation.ValidatorUtil;
+import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
@@ -277,6 +283,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	 */
 	public void testInsertDataForAllCategories()
 	{
+
 		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
 		try
 		{
@@ -346,6 +353,49 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 				{
 					((ContainerInterface) container).generateContainerHTML(category.getName(),
 							WebUIManagerConstants.VIEW_MODE);
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail();
+		}
+	}
+
+	/**
+	 * This test case will try to validate the data for all categories present in DB.
+	 */
+	public void testValidateDataForAllCategories()
+	{
+
+		CategoryManager.getInstance();
+		try
+		{
+
+			List<CategoryInterface> categoryList = getAllCategories();
+			for (CategoryInterface category : categoryList)
+			{
+				System.out.println("Validating record for " + category.getName());
+				Map<BaseAbstractAttributeInterface, Object> dataValue;
+				CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
+				dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity);
+				List<String> errorList = new ArrayList<String>();
+				ValidatorUtil.validateEntity(dataValue, errorList,
+						(ContainerInterface) rootCatEntity.getContainerCollection().iterator()
+								.next());
+				if (errorList.isEmpty())
+				{
+					System.out.println("Record validated succesfully for " + category.getName());
+				}
+				else
+				{
+					System.out.println("Record validation failed for " + category.getName());
+					for (String error : errorList)
+					{
+						System.out.println("error --> " + error);
+					}
+					fail();
 				}
 			}
 		}
