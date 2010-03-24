@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package edu.common.dynamicextensions.ui.webui.action;
@@ -56,10 +56,10 @@ public class UploadFileAction extends BaseDynamicExtensionsAction
 					StringBuffer tempRowString = new StringBuffer();
 					int firstfoundAt = 0;
 					int lastFoundAt = 0;
-					while (rowsStrings[i].indexOf("\"") != -1)
+					while (rowsStrings[i].indexOf('"') != -1)
 					{
-						firstfoundAt = rowsStrings[i].indexOf("\"");
-						lastFoundAt = rowsStrings[i].indexOf("\"", firstfoundAt + 1);
+						firstfoundAt = rowsStrings[i].indexOf('"');
+						lastFoundAt = rowsStrings[i].indexOf('"', firstfoundAt + 1);
 
 						if (firstfoundAt > 0)
 						{
@@ -89,7 +89,7 @@ public class UploadFileAction extends BaseDynamicExtensionsAction
 						rowsStrings[i] = tempRowString.toString();
 					}
 					rowsStrings[i] = rowNos++ + ",," + rowsStrings[i];
-					returnXML.append(rowsStrings[i] + "|");
+					returnXML.append(rowsStrings[i]).append("|");
 				}
 			}
 

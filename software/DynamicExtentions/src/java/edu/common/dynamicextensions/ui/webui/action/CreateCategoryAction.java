@@ -22,6 +22,7 @@ import org.owasp.stinger.rules.RuleSet;
 
 import edu.common.dynamicextensions.category.CategoryCreatorConstants;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.CategoryGenerationUtil;
@@ -188,22 +189,7 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 				isEdited = false;
 			}
 
-			if (isPersistMetadataOnly)
-			{
-				categoryHelper.saveCategoryMetadata(category);
-			}
-			else
-			{
-				categoryHelper.saveCategory(category);
-			}
-			if (isEdited)
-			{
-				LOGGER.info("Edited category " + category.getName() + " successfully");
-			}
-			else
-			{
-				LOGGER.info("Saved category " + category.getName() + " successfully");
-			}
+			saveCategory(isPersistMetadataOnly, category, categoryHelper, isEdited);
 			LOGGER.info("Form definition file " + filePath + " executed successfully.");
 			catNameVsExcep.put(filePath, null);
 		}
@@ -215,6 +201,37 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 		finally
 		{
 			categoryHelper.releaseLockOnCategory(category);
+		}
+	}
+
+	/**
+	 * This method will save the Category to DB
+	 * @param isPersistMetadataOnly is
+	 * @param category
+	 * @param categoryHelper
+	 * @param isEdited
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
+	 */
+	private void saveCategory(boolean isPersistMetadataOnly, CategoryInterface category,
+			CategoryHelperInterface categoryHelper, boolean isEdited)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
+		if (isPersistMetadataOnly)
+		{
+			categoryHelper.saveCategoryMetadata(category);
+		}
+		else
+		{
+			categoryHelper.saveCategory(category);
+		}
+		if (isEdited)
+		{
+			LOGGER.info("Edited category " + category.getName() + " successfully");
+		}
+		else
+		{
+			LOGGER.info("Saved category " + category.getName() + " successfully");
 		}
 	}
 }

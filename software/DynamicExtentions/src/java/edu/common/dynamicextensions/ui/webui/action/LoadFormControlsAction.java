@@ -157,7 +157,7 @@ public class LoadFormControlsAction extends BaseDynamicExtensionsAction
 	 */
 	private boolean containsValue(List measurementUnitsList, String attributeMeasurementUnit)
 	{
-		String measurementUnit = null;
+		boolean isContains = false;
 		if ((measurementUnitsList != null) && (attributeMeasurementUnit != null))
 		{
 			Iterator iter = measurementUnitsList.iterator();
@@ -165,15 +165,16 @@ public class LoadFormControlsAction extends BaseDynamicExtensionsAction
 			{
 				while (iter.hasNext())
 				{
-					measurementUnit = (String) iter.next();
+					String measurementUnit = (String) iter.next();
 					if (attributeMeasurementUnit.equals(measurementUnit))
 					{
-						return true;
+						isContains = true;
+						break;
 					}
 				}
 			}
 		}
-		return false;
+		return isContains;
 	}
 
 }

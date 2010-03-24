@@ -101,7 +101,17 @@ public class LoadFormDefinitionAction extends BaseDynamicExtensionsAction
 			formDefinitionForm.setOperationMode(operationMode);
 		}
 		String containerIdentifier = request.getParameter("containerIdentifier");
-		if (operationMode != null)
+		if (operationMode == null)
+		{
+			formDefinitionForm.setOperationMode("");
+			container = WebUIManager.getCurrentContainer(request);
+			if (container != null)
+			{
+				loadFormDefinitionProcessor.populateContainerInformation(container,
+						formDefinitionForm, entityGroup);
+			}
+		}
+		else
 		{
 			if (operationMode.equalsIgnoreCase(DEConstants.ADD_NEW_FORM))
 			{
@@ -110,14 +120,14 @@ public class LoadFormDefinitionAction extends BaseDynamicExtensionsAction
 			}
 			else if (operationMode.equalsIgnoreCase(DEConstants.EDIT_FORM))
 			{
-				if (containerIdentifier != null)
+				if (containerIdentifier == null)
 				{
-					container = loadFormDefinitionProcessor
-							.getContainerForEditing(containerIdentifier);
+					container = WebUIManager.getCurrentContainer(request);
 				}
 				else
 				{
-					container = WebUIManager.getCurrentContainer(request);
+					container = loadFormDefinitionProcessor
+							.getContainerForEditing(containerIdentifier);
 				}
 				loadFormDefinitionProcessor.populateContainerInformation(container,
 						formDefinitionForm, entityGroup);
@@ -133,8 +143,6 @@ public class LoadFormDefinitionAction extends BaseDynamicExtensionsAction
 				loadFormDefinitionProcessor.populateContainerInformation(container,
 						formDefinitionForm, entityGroup);
 
-				ContainerInterface parentContainer = null;
-
 				String parentContainerName = formDefinitionForm.getCurrentContainerName();
 				if (parentContainerName == null
 						&& request.getAttribute("currentContainerName") != null)
@@ -145,8 +153,8 @@ public class LoadFormDefinitionAction extends BaseDynamicExtensionsAction
 
 				if (parentContainerName != null)
 				{
-					parentContainer = (ContainerInterface) CacheManager.getObjectFromCache(request,
-							parentContainerName);
+					ContainerInterface parentContainer = (ContainerInterface) CacheManager
+							.getObjectFromCache(request, parentContainerName);
 					populateAssociationInformation(parentContainer, container, formDefinitionForm);
 				}
 			}
@@ -159,16 +167,6 @@ public class LoadFormDefinitionAction extends BaseDynamicExtensionsAction
 				isDataEntered = CategoryHelper.isDataEntered(abstractEntityInterface);
 			}
 			formDefinitionForm.setDataEntered(isDataEntered);
-		}
-		else
-		{
-			formDefinitionForm.setOperationMode("");
-			container = WebUIManager.getCurrentContainer(request);
-			if (container != null)
-			{
-				loadFormDefinitionProcessor.populateContainerInformation(container,
-						formDefinitionForm, entityGroup);
-			}
 		}
 
 		ContainerInterface cachedContainer = (ContainerInterface) CacheManager.getObjectFromCache(
@@ -192,26 +190,25 @@ public class LoadFormDefinitionAction extends BaseDynamicExtensionsAction
 	{
 		if ((parentContainer != null) && (childContainer != null))
 		{
-			String childContainerId = "";
-			if (childContainer.getId() != null)
+			String childContainerId;
+			if (childContainer.getId() == null)
 			{
-				childContainerId = childContainer.getId().toString();
+				childContainerId = childContainer.getCaption();
 			}
 			else
 			{
-				childContainerId = childContainer.getCaption();
+				childContainerId = childContainer.getId().toString();
 			}
 			AbstractContainmentControlInterface containmentAssociationControl = UserInterfaceiUtility
 					.getAssociationControl(parentContainer, childContainerId);
 			if (containmentAssociationControl != null)
 			{
-				AssociationInterface association = null;
 				AbstractAttributeInterface abstractAttributeInterface = (AbstractAttributeInterface) containmentAssociationControl
 						.getBaseAbstractAttribute();
 				if ((abstractAttributeInterface != null)
 						&& (abstractAttributeInterface instanceof AssociationInterface))
 				{
-					association = (AssociationInterface) abstractAttributeInterface;
+					AssociationInterface association = (AssociationInterface) abstractAttributeInterface;
 					Cardinality cardinality = association.getTargetRole().getMaximumCardinality();
 					if (cardinality == Cardinality.MANY)
 					{

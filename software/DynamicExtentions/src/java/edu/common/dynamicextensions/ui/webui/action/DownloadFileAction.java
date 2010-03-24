@@ -59,14 +59,13 @@ public class DownloadFileAction extends HttpServlet
 		String attributeIdentifier = req.getParameter(DEConstants.ATTRIBUTE_IDENTIFIER);
 		EntityManagerInterface entityManagerInterface = EntityManager.getInstance();
 		String recordIdentifier = req.getParameter(DEConstants.RECORD_IDENTIFIER);
-		FileAttributeRecordValue fileAttributeRecordValue;
 		BaseAbstractAttributeInterface baseAbstractAttribute = EntityCache.getInstance()
 				.getBaseAbstractAttributeById(Long.valueOf(attributeIdentifier));
 		AttributeInterface attributeInterface = ((AttributeMetadataInterface) baseAbstractAttribute)
 				.getAttribute();
 		try
 		{
-			fileAttributeRecordValue = entityManagerInterface
+			FileAttributeRecordValue fileAttributeRecordValue = entityManagerInterface
 					.getFileAttributeRecordValueByRecordId(attributeInterface, Long
 							.valueOf(recordIdentifier));
 			byte[] filedata = fileAttributeRecordValue.getFileContent();
@@ -77,9 +76,7 @@ public class DownloadFileAction extends HttpServlet
 			res.setContentType("application/x-unknown");
 			ByteArrayInputStream byteStream = new ByteArrayInputStream(filedata);
 			BufferedInputStream bufStream = new BufferedInputStream(byteStream);
-
-			ServletOutputStream responseOutputStream = null;
-			responseOutputStream = res.getOutputStream();
+			ServletOutputStream responseOutputStream = res.getOutputStream();
 			int data;
 			while ((data = bufStream.read()) != -1)
 			{

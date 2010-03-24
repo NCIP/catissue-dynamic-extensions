@@ -44,7 +44,7 @@ public class LoadGroupDefinitionAction extends BaseDynamicExtensionsAction
 	}
 
 	/**
-	 * 
+	 *
 	 * @param request
 	 * @param groupForm
 	 * @throws DynamicExtensionsSystemException
@@ -55,15 +55,15 @@ public class LoadGroupDefinitionAction extends BaseDynamicExtensionsAction
 	{
 		String operationMode = groupForm.getOperationMode();
 		String containerIdentifier = request.getParameter("containerIdentifier");
-		ContainerInterface container = null;
+		ContainerInterface container;
 		if (operationMode != null && operationMode.equalsIgnoreCase(DEConstants.EDIT_FORM))
 		{
 			container = DynamicExtensionsUtility.getContainerByIdentifier(containerIdentifier);
 			CacheManager.addObjectToCache(request, DEConstants.CONTAINER_INTERFACE, container);
 			if (container != null)
 			{
-				CacheManager.addObjectToCache(request, DEConstants.CURRENT_CONTAINER_NAME, container
-						.getCaption());
+				CacheManager.addObjectToCache(request, DEConstants.CURRENT_CONTAINER_NAME,
+						container.getCaption());
 				CacheManager.addObjectToCache(request, container.getCaption(), container);
 			}
 		}
@@ -73,16 +73,16 @@ public class LoadGroupDefinitionAction extends BaseDynamicExtensionsAction
 					DEConstants.CONTAINER_INTERFACE);
 		}
 
-		EntityGroupInterface entityGroup = null;
-		if (container != null)
-		{
-			EntityInterface entity = (Entity) container.getAbstractEntity();
-			entityGroup = DynamicExtensionsUtility.getEntityGroup(entity);
-		}
-		else
+		EntityGroupInterface entityGroup;
+		if (container == null)
 		{
 			entityGroup = (EntityGroupInterface) CacheManager.getObjectFromCache(request,
 					DEConstants.ENTITYGROUP_INTERFACE);
+		}
+		else
+		{
+			EntityInterface entity = (Entity) container.getAbstractEntity();
+			entityGroup = DynamicExtensionsUtility.getEntityGroup(entity);
 		}
 
 		LoadGroupDefinitionProcessor loadGroupDefinitionProcessor = LoadGroupDefinitionProcessor

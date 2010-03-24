@@ -64,8 +64,7 @@ public class LoadFormPreviewAction extends BaseDynamicExtensionsAction
 		{
 			String childContainerId = dataEntryForm.getChildContainerId();
 			AbstractContainmentControlInterface associationControl = UserInterfaceiUtility
-					.getAssociationControl((ContainerInterface) containerStack.peek(),
-							childContainerId);
+					.getAssociationControl(containerStack.peek(), childContainerId);
 			ContainerInterface childContainer = associationControl.getContainer();
 
 			Map<BaseAbstractAttributeInterface, Object> childContainerValueMap = new HashMap<BaseAbstractAttributeInterface, Object>();
@@ -84,7 +83,7 @@ public class LoadFormPreviewAction extends BaseDynamicExtensionsAction
 			}
 		}
 
-		ActionForward forwardTo = null;
+		ActionForward forwardTo;
 		if (containerStack.isEmpty())
 		{
 			CacheManager.addObjectToCache(request, DEConstants.CONTAINER_STACK, null);
