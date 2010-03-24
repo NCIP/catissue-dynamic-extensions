@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.webui.action.BaseDynamicExtensionsAction;
+import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.beans.NameValueBean;
@@ -63,7 +65,13 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 		JSONArray jsonArray = new JSONArray();
 		JSONObject mainJsonObject = new JSONObject();
 
-		ContainerInterface container =  EntityCache.getInstance().getContainerById(Long.valueOf(containerId));
+		ContainerInterface container = (ContainerInterface) getContainerFromUserSesion(request,
+				containerId);
+		if (container == null)
+		{
+			container = EntityCache.getInstance().getContainerById(Long.valueOf(containerId));
+		}
+
 
 		List<NameValueBean> nameValueBeans = null;
 		for (ControlInterface control : container.getControlCollection())
@@ -100,6 +108,24 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 		out.write(mainJsonObject.toString());
 
 		return null;
+	}
+
+	/**
+	 * Retrieves the container from the session
+	 * @param request http request
+	 * @param containerId containing the requested combobox
+	 * @return
+	 */
+	private Object getContainerFromUserSesion(HttpServletRequest request, String containerId)
+	{
+		Map<String, ContainerInterface> map = (Map<String, ContainerInterface>) request
+				.getSession().getAttribute(WebUIManagerConstants.CONTAINER_MAP);
+		ContainerInterface containerInterface = null;
+		if (map != null)
+		{
+			containerInterface = map.get(containerId);
+		}
+		return containerInterface;
 	}
 
 	/**
