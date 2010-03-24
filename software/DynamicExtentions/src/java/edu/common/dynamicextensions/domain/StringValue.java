@@ -60,8 +60,10 @@ public class StringValue extends PermissibleValue implements StringValueInterfac
 		return stringValue;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.common.dynamicextensions.domain.DynamicExtensionBaseDomainObject#equals(java.lang.Object)
+	/**
+	 * This method overrides the equals method of the parent Class.
+	 * This method checks the equality of the value .
+	 * @return boolean true if the both values objects are equal otherwise false.
 	 */
 	public boolean equals(Object obj)
 	{
@@ -74,8 +76,10 @@ public class StringValue extends PermissibleValue implements StringValueInterfac
 		return isEqual;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.common.dynamicextensions.domain.DynamicExtensionBaseDomainObject#hashCode()
+	/**
+	 * This method overrides the equals method of the Object Class.
+	 * It returns the HashCode of this instance.
+	 * @return int The HashCode of this instance.
 	 */
 	public int hashCode()
 	{
