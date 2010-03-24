@@ -387,11 +387,10 @@ public class ControlsUtility
 						EntityManagerInterface entityManager = EntityManager.getInstance();
 
 						AssociationControlInterface associationControl = (AssociationControlInterface) control;
-						Map<Long, List<String>> displayAttributeMap = null;
 
 						String sepatator = associationControl.getSeparator();
 
-						displayAttributeMap = entityManager
+						Map<Long, List<String>> displayAttributeMap = entityManager
 								.getRecordsForAssociationControl(associationControl);
 
 						nameValueBeanList = getTargetEntityDisplayAttributeList(
@@ -905,23 +904,23 @@ public class ControlsUtility
 		if (containerInterface != null)
 		{
 			Collection controlCollection = containerInterface.getControlCollection();
-			ControlInterface controlInterface = null;
-			ControlInformationObject controlInformationObject = null;
-			String controlCaption = null, controlDatatype = null, controlSequenceNumber = null, controlName = null;
 			ControlConfigurationsFactory controlConfigurationsFactory = ControlConfigurationsFactory
 					.getInstance();
 			if (controlCollection != null)
 			{
 				for (int counter = 1; counter <= controlCollection.size(); counter++)
 				{
-					controlInterface = DynamicExtensionsUtility.getControlBySequenceNumber(
-							controlCollection, counter);
+					ControlInterface controlInterface = DynamicExtensionsUtility
+							.getControlBySequenceNumber(controlCollection, counter);
 					if (controlInterface != null && controlInterface.getCaption() != null
 							&& !controlInterface.getCaption().equals(""))
 					{
-						controlCaption = controlInterface.getCaption();
-						controlSequenceNumber = controlInterface.getSequenceNumber().toString();
-						controlName = DynamicExtensionsUtility.getControlName(controlInterface);
+						String controlCaption = controlInterface.getCaption();
+						String controlDatatype;
+						String controlSequenceNumber = controlInterface.getSequenceNumber()
+								.toString();
+						String controlName = DynamicExtensionsUtility
+								.getControlName(controlInterface);
 						if (controlName.equals(ProcessorConstants.ADD_SUBFORM_CONTROL))
 						{
 							controlDatatype = ProcessorConstants.ADD_SUBFORM_TYPE;
@@ -931,8 +930,8 @@ public class ControlsUtility
 							controlDatatype = getControlCaption(controlConfigurationsFactory
 									.getControlDisplayLabel(controlName));
 						}
-						controlInformationObject = new ControlInformationObject(controlCaption,
-								controlDatatype, controlSequenceNumber);
+						ControlInformationObject controlInformationObject = new ControlInformationObject(
+								controlCaption, controlDatatype, controlSequenceNumber);
 						childList.add(controlInformationObject);
 					}
 				}
@@ -1027,15 +1026,16 @@ public class ControlsUtility
 			Map.Entry<BaseAbstractAttributeInterface, Object> entry, ControlInterface control,
 			boolean isCopyPaste) throws DynamicExtensionsSystemException
 	{
+		Integer currentRowId = rowId;
 		if (rowId == null && isSameContainerControl && cardinality)
 		{
-			rowId = Integer.valueOf(-1);
+			currentRowId = Integer.valueOf(-1);
 		}
 		Object value = null;
 		List<Object> values = new ArrayList<Object>();
 		getAttributeValueForSkipLogicAttributesFromValueMap(fullValueMap, fullValueMap, control
 				.getSourceSkipControl().getBaseAbstractAttribute(), false, values, Integer
-				.valueOf(rowId), Integer.valueOf(rowId));
+				.valueOf(currentRowId), Integer.valueOf(currentRowId));
 
 		if (!values.isEmpty())
 		{

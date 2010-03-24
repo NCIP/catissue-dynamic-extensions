@@ -101,10 +101,9 @@ public class ApplyFormDefinitionAction extends BaseDynamicExtensionsAction
 			}
 
 			target = findForwardTarget(operation);
-			String callbackURL = null;
 			if (target.equals(DEConstants.SHOW_DYEXTN_HOMEPAGE))
 			{
-				callbackURL = redirectCallbackURL(request, WebUIManagerConstants.SUCCESS);
+				String callbackURL = redirectCallbackURL(request, WebUIManagerConstants.SUCCESS);
 				if (callbackURL != null && !callbackURL.equals(""))
 				{
 					response.sendRedirect(callbackURL);
@@ -155,18 +154,19 @@ public class ApplyFormDefinitionAction extends BaseDynamicExtensionsAction
 	 */
 	private String findForwardTarget(String operation)
 	{
+		String target = null;
 		if (operation != null)
 		{
 			if (operation.equals(DEConstants.BUILD_FORM))
 			{
-				return DEConstants.SHOW_BUILD_FORM_JSP;
+				target = DEConstants.SHOW_BUILD_FORM_JSP;
 			}
 			else if (operation.equals(DEConstants.SAVE_FORM))
 			{
-				return DEConstants.SHOW_DYEXTN_HOMEPAGE;
+				target = DEConstants.SHOW_DYEXTN_HOMEPAGE;
 			}
 		}
-		return null;
+		return target;
 	}
 
 	/**
@@ -200,12 +200,11 @@ public class ApplyFormDefinitionAction extends BaseDynamicExtensionsAction
 
 			//Update Associations
 			//Get parent container
-			ContainerInterface parentContainer = null;
 			String parentContainerName = formDefinitionForm.getCurrentContainerName();
 			if (parentContainerName != null)
 			{
-				parentContainer = (ContainerInterface) CacheManager.getObjectFromCache(request,
-						parentContainerName);
+				ContainerInterface parentContainer = (ContainerInterface) CacheManager
+						.getObjectFromCache(request, parentContainerName);
 				updateAssociation(parentContainer, currentContainer, formDefinitionForm);
 			}
 		}
@@ -231,13 +230,12 @@ public class ApplyFormDefinitionAction extends BaseDynamicExtensionsAction
 			if (containmentAssociationControl != null)
 			{
 				containmentAssociationControl.setCaption(childContainer.getCaption());
-				AssociationInterface association = null;
 				AbstractAttributeInterface abstractAttributeInterface = (AbstractAttributeInterface) containmentAssociationControl
 						.getBaseAbstractAttribute();
 				if ((abstractAttributeInterface != null)
 						&& (abstractAttributeInterface instanceof AssociationInterface))
 				{
-					association = (AssociationInterface) abstractAttributeInterface;
+					AssociationInterface association = (AssociationInterface) abstractAttributeInterface;
 					ApplyFormDefinitionProcessor applyFormDefinitionProcessor = ApplyFormDefinitionProcessor
 							.getInstance();
 					applyFormDefinitionProcessor.associateEntity(association, parentContainer,
@@ -318,10 +316,6 @@ public class ApplyFormDefinitionAction extends BaseDynamicExtensionsAction
 			}
 			isValidSubForm(association, traversedAssocioations);
 		}
-		else
-		{
-			return;
-		}
 	}
 
 	/**
@@ -344,12 +338,13 @@ public class ApplyFormDefinitionAction extends BaseDynamicExtensionsAction
 	 */
 	private boolean isNewEnityCreated(FormDefinitionForm formDefinitionForm)
 	{
+		boolean isNewEntity = false;
 		if (formDefinitionForm != null
 				&& ProcessorConstants.CREATE_AS_NEW.equals(formDefinitionForm.getCreateAs()))
 		{
-			return true;
+			isNewEntity = true;
 		}
-		return false;
+		return isNewEntity;
 	}
 
 	/**

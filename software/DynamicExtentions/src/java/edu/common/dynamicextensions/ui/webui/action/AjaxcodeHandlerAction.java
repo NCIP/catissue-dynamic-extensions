@@ -67,12 +67,12 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	/**
 	 *
 	 */
-	private static final String tableEndString = "</td></tr></table>";
+	private static final String TABLE_END_STRING = "</td></tr></table>";
 
 	/**
 	 * path of breadCrumb image
 	 */
-	private static final String breadCrumbImage = "<img alt=\"\" src=\"images/uIEnhancementImages/breadcrumb_arrow.png\">";
+	private static final String BREAD_CRUMB_IMAGE = "<img alt=\"\" src=\"images/uIEnhancementImages/breadcrumb_arrow.png\">";
 
 	/**
 	 * @param mapping ActionMapping mapping
@@ -85,7 +85,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	@Override
 	public ActionForward execute(final ActionMapping mapping, final ActionForm form,
 			final HttpServletRequest request, final HttpServletResponse response)
-	throws DynamicExtensionsApplicationException
+			throws DynamicExtensionsApplicationException
 	{
 		String returnXML = null;
 		String containerId = request.getParameter("containerId");
@@ -142,7 +142,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 				else if (operation.trim().equals("breadCrumbOperation")
 						&& ((request.getParameter("breadCrumbOperation") != null) && request
 								.getParameter("breadCrumbOperation").equalsIgnoreCase(
-								"prepareBreadCrumbLink")))
+										"prepareBreadCrumbLink")))
 				{
 					returnXML = breadCrumbOperation(request);
 				}
@@ -195,20 +195,18 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	 * @throws DynamicExtensionsSystemException
 	 */
 	private String getSelectedFormDetailsById(final String selectedFormId)
-	throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
-		ContainerInterface containerForSelectedForm = null;
 		String formName = "", formDescription = "", formConceptCode = "";
 		boolean isAbstract = false;
 		if (selectedFormId != null)
 		{
-			containerForSelectedForm = DynamicExtensionsUtility
-			.getContainerByIdentifier(selectedFormId);
+			ContainerInterface containerForSelectedForm = DynamicExtensionsUtility
+					.getContainerByIdentifier(selectedFormId);
 			if (containerForSelectedForm != null)
 			{
 				formName = containerForSelectedForm.getCaption();
-				final AbstractEntityInterface entity = containerForSelectedForm
-				.getAbstractEntity();
+				final AbstractEntityInterface entity = containerForSelectedForm.getAbstractEntity();
 				if (entity != null)
 				{
 					formDescription = entity.getDescription();
@@ -239,19 +237,21 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	 * @param controlsSeqNumbers
 	 * @return
 	 */
-	private String updateControlsSequence(final HttpServletRequest request, final String controlsSeqNumbers)
+	private String updateControlsSequence(final HttpServletRequest request,
+			final String controlsSeqNumbers)
 	{
 		final ContainerInterface container = WebUIManager.getCurrentContainer(request);
 		if (container != null)
 		{
-			final Collection<ControlInterface> oldControlsCollection = container.getControlCollection();
+			final Collection<ControlInterface> oldControlsCollection = container
+					.getControlCollection();
 
 			if (oldControlsCollection != null)
 			{
 				final Integer[] sequenceNumbers = DynamicExtensionsUtility.convertToIntegerArray(
 						controlsSeqNumbers, ProcessorConstants.CONTROLS_SEQUENCE_NUMBER_SEPARATOR);
 				final ControlInterface[] oldControls = oldControlsCollection
-				.toArray(new ControlInterface[oldControlsCollection.size()]);
+						.toArray(new ControlInterface[oldControlsCollection.size()]);
 
 				// Adding id attribute to attribute collection.
 				AttributeInterface idAttribute = null;
@@ -272,18 +272,18 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 				container.removeAllControls();
 				(container.getAbstractEntity()).removeAllAttributes();
 
-				ControlInterface control = null;
 				if (sequenceNumbers != null)
 				{
-					for (final Integer sequenceNumber : sequenceNumbers) {
-						control = DynamicExtensionsUtility.getControlBySequenceNumber(oldControls,
-								sequenceNumber.intValue());
+					for (final Integer sequenceNumber : sequenceNumbers)
+					{
+						ControlInterface control = DynamicExtensionsUtility
+								.getControlBySequenceNumber(oldControls, sequenceNumber.intValue());
 						if (control != null)
 						{
 							container.addControl(control);
 							((EntityInterface) container.getAbstractEntity())
-							.addAbstractAttribute((AbstractAttributeInterface) control
-									.getBaseAbstractAttribute());
+									.addAbstractAttribute((AbstractAttributeInterface) control
+											.getBaseAbstractAttribute());
 						}
 					}
 				}
@@ -291,7 +291,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 				if (idAttribute != null)
 				{
 					((EntityInterface) container.getAbstractEntity())
-					.addAbstractAttribute(idAttribute);
+							.addAbstractAttribute(idAttribute);
 				}
 				//Added by Rajesh for removing deleted associations and it's path from path tables.
 				List<Long> deletedIdList = (List<Long>) CacheManager.getObjectFromCache(request,
@@ -328,8 +328,8 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	 * @param childContainerId
 	 * @return
 	 */
-	private String deleteRowsForContainment(final HttpServletRequest request, final String deletedRowIds,
-			final String childContainerId)
+	private String deleteRowsForContainment(final HttpServletRequest request,
+			final String deletedRowIds, final String childContainerId)
 	{
 		final Stack containerStack = (Stack) CacheManager.getObjectFromCache(request,
 				DEConstants.CONTAINER_STACK);
@@ -337,21 +337,22 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 				DEConstants.VALUE_MAP_STACK);
 
 		final Map<AbstractAttributeInterface, Object> valueMap = (Map<AbstractAttributeInterface, Object>) valueMapStack
-		.peek();
+				.peek();
 		final ContainerInterface containerInterface = (ContainerInterface) containerStack.peek();
 
 		final AbstractContainmentControlInterface associationControl = UserInterfaceiUtility
-		.getAssociationControl(containerInterface, childContainerId);
+				.getAssociationControl(containerInterface, childContainerId);
 
 		final AssociationMetadataInterface association = (AssociationMetadataInterface) associationControl
-		.getBaseAbstractAttribute();
+				.getBaseAbstractAttribute();
 
 		final List<Map<AbstractAttributeInterface, Object>> associationValueMapList = (List<Map<AbstractAttributeInterface, Object>>) valueMap
-		.get(association);
+				.get(association);
 
 		final String[] deletedRows = deletedRowIds.split(",");
 
-		for (final String deletedRow : deletedRows) {
+		for (final String deletedRow : deletedRows)
+		{
 			final int removeIndex = Integer.valueOf(deletedRow) - 1;
 
 			if (associationValueMapList.size() > removeIndex)
@@ -371,7 +372,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	 * @throws DynamicExtensionsSystemException
 	 */
 	private String getSelectedGroupDetails(final String selectedGroupName)
-	throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		EntityGroupInterface entityGroup = null;
 		if ((selectedGroupName != null) && (!selectedGroupName.trim().equals("")))
@@ -423,7 +424,8 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	 * @param request
 	 * @param selectedFormName
 	 */
-	private String getSelectedFormDetails(final HttpServletRequest request, final String selectedFormName)
+	private String getSelectedFormDetails(final HttpServletRequest request,
+			final String selectedFormName)
 	{
 		ContainerInterface containerForSelectedForm = null;
 		if ((request != null) && (selectedFormName != null))
@@ -444,39 +446,29 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	 * @param containerForSelectedForm
 	 * @return
 	 */
-	private String getFormDetailsXML(final HttpServletRequest request, final String selectedFormName,
-			final ContainerInterface containerForSelectedForm)
+	private String getFormDetailsXML(final HttpServletRequest request,
+			final String selectedFormName, final ContainerInterface containerForSelectedForm)
 	{
 		String formName = selectedFormName;
 		String formDescription = "";
 		String formConceptCode = "";
-		String operationMode = DEConstants.ADD_SUB_FORM_OPR;
 		boolean isAbstract = false;
 		if (containerForSelectedForm != null)
 		{
 			formName = containerForSelectedForm.getCaption();
-			final AbstractEntityInterface entity = containerForSelectedForm
-			.getAbstractEntity();
+			final AbstractEntityInterface entity = containerForSelectedForm.getAbstractEntity();
 			if (entity != null)
 			{
 				formDescription = entity.getDescription();
 				formConceptCode = SemanticPropertyBuilderUtil.getConceptCodeString(entity);
 				isAbstract = entity.isAbstract();
 			}
-			operationMode = DEConstants.EDIT_FORM;
+
 		}
+		String operationMode = getOperationMode(containerForSelectedForm, request);
 		//If selected form container is null and cache container interface is also null,
 		// it means that there is no container in cache and a new form is to be created.
 
-		if (containerForSelectedForm == null)
-		{
-			final ContainerInterface mainContainerInterface = (ContainerInterface) CacheManager
-			.getObjectFromCache(request, DEConstants.CONTAINER_INTERFACE);
-			if (mainContainerInterface == null)
-			{
-				operationMode = DEConstants.ADD_NEW_FORM;
-			}
-		}
 		String formDetailsXML = createFormDetailsXML(formName, formDescription, formConceptCode,
 				operationMode, isAbstract);
 		if (formDetailsXML == null)
@@ -484,6 +476,32 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 			formDetailsXML = "";
 		}
 		return formDetailsXML;
+	}
+
+	/**
+	 * It will return the current operation mode.
+	 * @param containerForSelectedForm container
+	 * @param request request
+	 * @return operation mode.
+	 */
+	private String getOperationMode(ContainerInterface containerForSelectedForm,
+			HttpServletRequest request)
+	{
+		String operationMode = DEConstants.ADD_SUB_FORM_OPR;
+		if (containerForSelectedForm == null)
+		{
+			final ContainerInterface mainContainerInterface = (ContainerInterface) CacheManager
+					.getObjectFromCache(request, DEConstants.CONTAINER_INTERFACE);
+			if (mainContainerInterface == null)
+			{
+				operationMode = DEConstants.ADD_NEW_FORM;
+			}
+		}
+		else
+		{
+			operationMode = DEConstants.EDIT_FORM;
+		}
+		return operationMode;
 	}
 
 	/**
@@ -513,11 +531,11 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	/**
 	 * @param selectedFormName
 	 */
-	private void updateCacheRefernces(final HttpServletRequest request, final String selectedFormName,
-			final ContainerInterface containerForSelectedForm)
+	private void updateCacheRefernces(final HttpServletRequest request,
+			final String selectedFormName, final ContainerInterface containerForSelectedForm)
 	{
 		CacheManager
-		.addObjectToCache(request, DEConstants.CURRENT_CONTAINER_NAME, selectedFormName);
+				.addObjectToCache(request, DEConstants.CURRENT_CONTAINER_NAME, selectedFormName);
 		CacheManager.addObjectToCache(request, selectedFormName, containerForSelectedForm);
 	}
 
@@ -525,7 +543,8 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	 * @throws IOException
 	 *
 	 */
-	private void sendResponse(final String responseXML, final HttpServletResponse response) throws IOException
+	private void sendResponse(final String responseXML, final HttpServletResponse response)
+			throws IOException
 	{
 		final PrintWriter out = response.getWriter();
 		response.setContentType("text/xml");
@@ -540,7 +559,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	 * @throws DynamicExtensionsApplicationException
 	 */
 	private String changeGroup(final HttpServletRequest request) throws IOException,
-	DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		final List<NameValueBean> formNames = getFormNamesForGroup(request.getParameter("grpName"));
 		DynamicExtensionsUtility.sortNameValueBeanListByName(formNames);
@@ -557,36 +576,48 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	 * @throws DynamicExtensionsApplicationException
 	 */
 	private List<NameValueBean> getFormNamesForGroup(final String groupId)
-	throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		final ArrayList<NameValueBean> formNames = new ArrayList<NameValueBean>();
 
 		if (groupId != null)
 		{
 			final EntityManagerInterface entityManager = EntityManager.getInstance();
-			Long groupIdentifier = null;
 			try
 			{
-				groupIdentifier = Long.parseLong(groupId);
+				Long groupIdentifier = Long.parseLong(groupId);
 
 				final Collection<ContainerInterface> containersCollection = entityManager
-				.getAllContainersByEntityGroupId(groupIdentifier);
-				if (containersCollection != null)
-				{
-					NameValueBean formName = null;
-					for (final ContainerInterface container : containersCollection)
-					{
-						if (container != null)
-						{
-							formName = new NameValueBean(container.getCaption(), container.getId());
-							formNames.add(formName);
-						}
-					}
-				}
+						.getAllContainersByEntityGroupId(groupIdentifier);
+				formNames.addAll(getFormNamesList(containersCollection));
 			}
 			catch (final NumberFormatException e)
 			{
 				Logger.out.error("Group Id is null. Please provide correct Group Id");
+			}
+		}
+		return formNames;
+	}
+
+	/**
+	 * Will return the list of names of forms
+	 * @param containersCollection collection
+	 * @return form names list
+	 */
+	private List<NameValueBean> getFormNamesList(
+			final Collection<ContainerInterface> containersCollection)
+	{
+		List<NameValueBean> formNames = new ArrayList<NameValueBean>();
+		if (containersCollection != null)
+		{
+			for (final ContainerInterface container : containersCollection)
+			{
+				if (container != null)
+				{
+					NameValueBean formName = new NameValueBean(container.getCaption(), container
+							.getId());
+					formNames.add(formName);
+				}
 			}
 		}
 		return formNames;
@@ -598,18 +629,17 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	 * @param listValues
 	 * @return
 	 */
-	private String getResponseXMLString(final String xmlParentNode, final String xmlIdNode, final String xmlNameNode,
-			final List<NameValueBean> listValues)
+	private String getResponseXMLString(final String xmlParentNode, final String xmlIdNode,
+			final String xmlNameNode, final List<NameValueBean> listValues)
 	{
 		final StringBuffer responseXML = new StringBuffer();
-		NameValueBean bean = null;
 		if ((xmlParentNode != null) && (xmlNameNode != null) && (listValues != null))
 		{
 			responseXML.append("<node>");
 			final int noOfValues = listValues.size();
 			for (int i = 0; i < noOfValues; i++)
 			{
-				bean = listValues.get(i);
+				NameValueBean bean = listValues.get(i);
 				if (bean != null)
 				{
 					responseXML.append('<');
@@ -645,9 +675,10 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	 * @throws DynamicExtensionsSystemException
 	 */
 	private String changeForm(final HttpServletRequest request) throws IOException,
-	DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
-		final List<NameValueBean> formAttributes = getAttributesForForm(request.getParameter("frmName"));
+		final List<NameValueBean> formAttributes = getAttributesForForm(request
+				.getParameter("frmName"));
 		DynamicExtensionsUtility.sortNameValueBeanListByName(formAttributes);
 		final String xmlParentNode = "formAttributes";
 		final String xmlNodeId = "form-attribute-id";
@@ -664,39 +695,36 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	 * @throws DynamicExtensionsSystemException
 	 */
 	private List<NameValueBean> getAttributesForForm(final String formId)
-	throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		final ArrayList<NameValueBean> formAttributesList = new ArrayList<NameValueBean>();
 		if (formId != null)
 		{
 			Logger.out.debug("Fetching attributes for [" + formId + "]");
 			final ContainerInterface container = DynamicExtensionsUtility
-			.getContainerByIdentifier(formId);
+					.getContainerByIdentifier(formId);
 			if (container != null)
 			{
 				final Collection<ControlInterface> controlCollection = container
-				.getAllControlsUnderSameDisplayLabel();
+						.getAllControlsUnderSameDisplayLabel();
 				if (controlCollection != null)
 				{
-					NameValueBean controlName = null;
-					AbstractAttributeInterface abstractAttribute = null;
-					AttributeInterface attribute = null;
 					for (final ControlInterface control : controlCollection)
 					{
 						if (control != null)
 						{
 							//if control contains Attribute interface object then only show on UI.
 							//If control contains association objects do not show in attribute list
-							abstractAttribute = (AbstractAttributeInterface) control
-							.getBaseAbstractAttribute();
+							AbstractAttributeInterface abstractAttribute = (AbstractAttributeInterface) control
+									.getBaseAbstractAttribute();
 							if ((abstractAttribute != null)
 									&& (abstractAttribute instanceof AttributeInterface))
 							{
-								attribute = (AttributeInterface) abstractAttribute;
+								AttributeInterface attribute = (AttributeInterface) abstractAttribute;
 								if (!(attribute.getAttributeTypeInformation() instanceof FileAttributeTypeInformation))
 								{
-									controlName = new NameValueBean(control.getCaption(), control
-											.getId());
+									NameValueBean controlName = new NameValueBean(control
+											.getCaption(), control.getId());
 									formAttributesList.add(controlName);
 								}
 							}
@@ -718,7 +746,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	 * @throws DynamicExtensionsSystemException
 	 */
 	private String breadCrumbOperation(final HttpServletRequest request) throws IOException,
-	DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		String responseXML = null;
 		long breadcrumbPosition = 1;
@@ -730,16 +758,16 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 		String breadCrumbURL = (String) request.getSession().getAttribute("breadCrumbURLString");
 		final StringBuffer newBreadCrumbURL = new StringBuffer();
 		final Stack<ContainerInterface> containerStack = (Stack<ContainerInterface>) CacheManager
-		.getObjectFromCache(request, DEConstants.CONTAINER_STACK);
-		if (breadCrumbURL.contains(tableEndString))
+				.getObjectFromCache(request, DEConstants.CONTAINER_STACK);
+		if (breadCrumbURL.contains(TABLE_END_STRING))
 		{
-			final int position = breadCrumbURL.lastIndexOf(tableEndString);
-			breadCrumbURL = breadCrumbURL.substring(0, (position));
+			final int position = breadCrumbURL.lastIndexOf(TABLE_END_STRING);
+			breadCrumbURL = breadCrumbURL.substring(0, position);
 		}
 		newBreadCrumbURL.append(breadCrumbURL);
 
-		String formName = breadCrumbURL.substring(breadCrumbURL.lastIndexOf(breadCrumbImage)
-				+ (breadCrumbImage.length()), breadCrumbURL.length());
+		String formName = breadCrumbURL.substring(breadCrumbURL.lastIndexOf(BREAD_CRUMB_IMAGE)
+				+ (BREAD_CRUMB_IMAGE.length()), breadCrumbURL.length());
 		if (formName.contains(DEConstants.HTML_SPACE))
 		{
 			formName = formName.replace(DEConstants.HTML_SPACE, "");
@@ -748,18 +776,18 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 		{
 			breadCrumbURL = breadCrumbURL.substring(0, breadCrumbURL.lastIndexOf(formName));
 			breadCrumbURL = breadCrumbURL
-			+ "<a onclick=\"javascript:checkForModifiedData("
-			+ breadcrumbPosition
-			+ ");\" style=\"color: #0000ff;font-family: arial;font-size: 12px;font-weight: normal;cursor:pointer;\">"
-			+ formName + "</a>";
+					+ "<a onclick=\"javascript:checkForModifiedData("
+					+ breadcrumbPosition
+					+ ");\" style=\"color: #0000ff;font-family: arial;font-size: 12px;font-weight: normal;cursor:pointer;\">"
+					+ formName + "</a>";
 			breadCrumbURL = breadCrumbURL + DEConstants.HTML_SPACE + DEConstants.HTML_SPACE
-			+ breadCrumbImage;
+					+ BREAD_CRUMB_IMAGE;
 			breadCrumbURL = breadCrumbURL + DEConstants.HTML_SPACE + DEConstants.HTML_SPACE
-			+ containerStack.get(i).getCaption();
+					+ containerStack.get(i).getCaption();
 			formName = containerStack.get(i).getCaption();
 			breadcrumbPosition = breadcrumbPosition + 1;
 		}
-		breadCrumbURL = breadCrumbURL + tableEndString;
+		breadCrumbURL = breadCrumbURL + TABLE_END_STRING;
 
 		responseXML = breadCrumbURL;
 		return responseXML;
@@ -776,18 +804,19 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 		clipboardData = clipboardData.replace("\r", "");
 		int rwoIndex = Integer.parseInt(request.getParameter(DEConstants.INDEX));
 		final String[] records = clipboardData.split(DEConstants.COMMA);
-		String[] cols = null;
 		final Set<String> errorList = new HashSet<String>();
 		ContainerInterface containerInterface = null;
 		try
 		{
-			containerInterface = DynamicExtensionsUtility
-			.getContainerByIdentifier(request.getParameter(DEConstants.CONTAINER_ID));
+			containerInterface = DynamicExtensionsUtility.getContainerByIdentifier(request
+					.getParameter(DEConstants.CONTAINER_ID));
 			setContainerParameters(containerInterface, request);
-			final List<ControlInterface> list = containerInterface.getAllControlsUnderSameDisplayLabel();
+			final List<ControlInterface> list = containerInterface
+					.getAllControlsUnderSameDisplayLabel();
 
-			for (final String record : records) {
-				cols = record.split("\t");
+			for (final String record : records)
+			{
+				String[] cols = record.split("\t");
 				rwoIndex = generateRow(returnString, rwoIndex, cols, errorList, containerInterface,
 						list);
 			}
@@ -799,13 +828,13 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 		}
 		finally
 		{
-			if(containerInterface != null)
+			if (containerInterface != null)
 			{
 				resetContainerParameters(containerInterface);
 			}
 		}
 		returnString.append("~ErrorList");
-		if (errorList.size() > 0)
+		if (!errorList.isEmpty())
 		{
 			returnString.append(errorList);
 		}
@@ -850,7 +879,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 			final Set<String> errorList, final ContainerInterface containerInterface,
 			final List<ControlInterface> list) throws DynamicExtensionsSystemException,
 			DynamicExtensionsValidationException, DynamicExtensionsApplicationException
-			{
+	{
 		if ((cols != null) && (cols.length > 0))
 		{
 			final Map<BaseAbstractAttributeInterface, Object> rowValueMap = new HashMap<BaseAbstractAttributeInterface, Object>();
@@ -873,7 +902,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 			rwoIndex++;
 		}
 		return rwoIndex;
-			}
+	}
 
 	/**
 	 * @param containerInterface
@@ -894,7 +923,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 				final String[] stringArray = {(String) rowValueMap.get(control
 						.getAttibuteMetadataInterface())};
 				final List<ControlInterface> targetSkipControlsList = control
-				.setSkipLogicControls(stringArray);
+						.setSkipLogicControls(stringArray);
 				ControlsUtility.populateAttributeValueMapForSkipLogicAttributes(rowValueMap,
 						rowValueMap, rwoIndex, true, control.getHTMLComponentName() + "_"
 								+ rwoIndex, targetSkipControlsList, true);
