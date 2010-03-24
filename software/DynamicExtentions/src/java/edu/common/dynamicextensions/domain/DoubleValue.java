@@ -77,4 +77,12 @@ public class DoubleValue extends PermissibleValue implements DoubleValueInterfac
 		}
 		return isEqual;
 	}
+
+	/* (non-Javadoc)
+	 * @see edu.common.dynamicextensions.domain.DynamicExtensionBaseDomainObject#hashCode()
+	 */
+	public int hashCode()
+	{
+		return super.hashCode();
+	}
 }

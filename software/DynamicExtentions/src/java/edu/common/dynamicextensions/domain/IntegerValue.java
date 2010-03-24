@@ -74,4 +74,12 @@ public class IntegerValue extends PermissibleValue implements IntegerValueInterf
 		}
 		return isEqual;
 	}
+
+	/* (non-Javadoc)
+	 * @see edu.common.dynamicextensions.domain.DynamicExtensionBaseDomainObject#hashCode()
+	 */
+	public int hashCode()
+	{
+		return super.hashCode();
+	}
 }

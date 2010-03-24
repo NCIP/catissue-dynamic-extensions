@@ -73,4 +73,12 @@ public class StringValue extends PermissibleValue implements StringValueInterfac
 		}
 		return isEqual;
 	}
+
+	/* (non-Javadoc)
+	 * @see edu.common.dynamicextensions.domain.DynamicExtensionBaseDomainObject#hashCode()
+	 */
+	public int hashCode()
+	{
+		return super.hashCode();
+	}
 }

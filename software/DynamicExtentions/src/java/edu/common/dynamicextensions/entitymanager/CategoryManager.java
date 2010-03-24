@@ -150,7 +150,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			throws DynamicExtensionsSystemException
 	{
 		CategoryInterface category = (CategoryInterface) getObjectByName(CategoryInterface.class
-				.getName(), name.toString());
+				.getName(), name);
 		return category;
 	}
 

@@ -75,4 +75,12 @@ public class FloatValue extends PermissibleValue implements FloatValueInterface
 		}
 		return isEqual;
 	}
+
+	/* (non-Javadoc)
+	 * @see edu.common.dynamicextensions.domain.DynamicExtensionBaseDomainObject#hashCode()
+	 */
+	public int hashCode()
+	{
+		return super.hashCode();
+	}
 }

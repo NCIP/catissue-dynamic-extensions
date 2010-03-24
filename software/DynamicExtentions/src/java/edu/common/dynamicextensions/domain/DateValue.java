@@ -87,4 +87,12 @@ public class DateValue extends PermissibleValue implements DateValueInterface
 		}
 		return isEqual;
 	}
+
+	/* (non-Javadoc)
+	 * @see edu.common.dynamicextensions.domain.DynamicExtensionBaseDomainObject#hashCode()
+	 */
+	public int hashCode()
+	{
+		return super.hashCode();
+	}
 }
