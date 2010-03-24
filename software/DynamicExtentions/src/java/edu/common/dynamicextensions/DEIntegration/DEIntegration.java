@@ -234,16 +234,6 @@ public class DEIntegration implements IntegrationInterface
 		return dynRecIds;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.common.dynamicextensions.DEIntegration.IntegrationInterface#associateRecords(java.lang.Long, java.lang.Long, java.lang.Long, java.lang.Long)
-	 */
-	public void associateRecords(Long containerId, Long staticEntityRecordId,
-			Long dynamicEntityRecordId, Long hookEntityId)
-			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException,
-			BizLogicException, DAOException
-	{
-		// TODO Auto-generated constructor stub
-	}
 
 	/**
 	 *
