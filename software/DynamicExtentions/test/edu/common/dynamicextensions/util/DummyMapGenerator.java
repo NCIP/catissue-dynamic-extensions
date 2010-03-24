@@ -76,8 +76,9 @@ public class DummyMapGenerator
 				AttributeInterface attribute = (AttributeInterface) catAtt.getAbstractAttribute();
 				updateDataMap(dataValue, catAtt, attribute);
 			}
-			else
+			else if (!catAtt.getIsRelatedAttribute())
 			{
+				//multiselect case.
 				AssociationInterface association = (AssociationInterface) catAtt
 						.getAbstractAttribute();
 				AttributeInterface multiselectAttr = (AttributeInterface) EntityManagerUtil
