@@ -609,11 +609,11 @@ public class DynamicExtensionBaseQueryBuilder
 		if (catEntity.getTableProperties() != null
 				&& EntityManagerUtil.isParentChanged(catEntity, dbaseCopy))
 		{
-			String frnCnstrRlbkQry = "";
 			if (dbaseCopy.getParentCategoryEntity() != null
 					&& dbaseCopy.getParentCategoryEntity().isCreateTable())
 			{
-				frnCnstrRlbkQry = getForeignKeyConstraintQueryForInheritance(dbaseCopy, dbaseCopy
+				String frnCnstrRlbkQry = getForeignKeyConstraintQueryForInheritance(dbaseCopy,
+						dbaseCopy
 						.getParentCategoryEntity());
 				queries.add(getForeignKeyRemoveConstraintQueryForInheritance(dbaseCopy, dbaseCopy
 						.getParentCategoryEntity()));
@@ -867,8 +867,6 @@ public class DynamicExtensionBaseQueryBuilder
 		String tableName = DynamicExtensionsUtility.getTableName(association);
 		String sourceKey = association.getConstraintProperties()
 				.getSrcEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties().getName();
-		String targetKey = association.getConstraintProperties()
-				.getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties().getName();
 
 		StringBuffer query = new StringBuffer();
 
@@ -915,6 +913,10 @@ public class DynamicExtensionBaseQueryBuilder
 			// For one to many and one to one, update target entity's records
 			// (set value in target column key = null) that are referring to
 			// this record by setting it to null.
+			String targetKey = association.getConstraintProperties()
+					.getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties()
+					.getName();
+
 			query.append(UPDATE_KEYWORD);
 			query.append(WHITESPACE);
 			query.append(tableName);
@@ -1163,11 +1165,11 @@ public class DynamicExtensionBaseQueryBuilder
 		String frgnCnstrName = "";
 		String prmKeyName = "";
 		frnCnstKeyPrpties = sortOnPrimaryAttribute(frnCnstKeyPrpties);
-		String columnName = "";
+
 		// add the constraint in child for each primary key in parent except IDENTIFIER
 		for (ConstraintKeyPropertiesInterface cnstrKeyProp : frnCnstKeyPrpties)
 		{
-			columnName = cnstrKeyProp.getTgtForiegnKeyColumnProperties().getName();
+			String columnName = cnstrKeyProp.getTgtForiegnKeyColumnProperties().getName();
 
 			if (!"".equals(frgnCnstrName.trim()))
 			{
@@ -1533,8 +1535,8 @@ public class DynamicExtensionBaseQueryBuilder
 		List<String> queries = new ArrayList<String>();
 		if (!association.getIsSystemGenerated())
 		{
-			EntityInterface srcEntity = association.getEntity();
-			EntityInterface tgtEntity = association.getTargetEntity();
+
+
 			RoleInterface sourceRole = association.getSourceRole();
 			RoleInterface targetRole = association.getTargetRole();
 
@@ -1548,12 +1550,13 @@ public class DynamicExtensionBaseQueryBuilder
 					.getSrcEntityConstraintKeyPropertiesCollection();
 			Collection<ConstraintKeyPropertiesInterface> tgtCnstrKeyProps = cnstrnPrprties
 					.getTgtEntityConstraintKeyPropertiesCollection();
-			String dataType = getDataTypeForIdentifier();
+
 
 			StringBuffer query = new StringBuffer();
 			if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.MANY)
 			{
 				// For many to many, a middle table is created.
+				String dataType = getDataTypeForIdentifier();
 				tableName = cnstrnPrprties.getName();
 				query.append(CREATE_TABLE);
 				query.append(WHITESPACE);
@@ -1603,6 +1606,7 @@ public class DynamicExtensionBaseQueryBuilder
 			else if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.ONE)
 			{
 				// For many to one, a column is added into source entity table.
+				EntityInterface srcEntity = association.getEntity();
 				tableName = srcEntity.getTableProperties().getName();
 				for (ConstraintKeyPropertiesInterface cnstrKeyProp : srcCnstrKeyProps)
 				{
@@ -1616,6 +1620,7 @@ public class DynamicExtensionBaseQueryBuilder
 			else
 			{
 				// For one to one and one to many, a column is added into target entity table.
+				EntityInterface tgtEntity = association.getTargetEntity();
 				tableName = tgtEntity.getTableProperties().getName();
 				for (ConstraintKeyPropertiesInterface cnstrKeyProp : tgtCnstrKeyProps)
 				{
@@ -1815,7 +1820,6 @@ public class DynamicExtensionBaseQueryBuilder
 		Logger.out.debug("Entering getUpdateAssociationsQueryList method");
 
 		List<String> assoQueries = new ArrayList<String>();
-		boolean isAddAssoQuery = true;
 
 		Collection<AssociationInterface> associations = entity.getAssociationCollection();
 
@@ -1835,9 +1839,8 @@ public class DynamicExtensionBaseQueryBuilder
 				}
 				if (assoDbaseCopy == null)
 				{
-					isAddAssoQuery = true;
-					assoQueries.addAll(getQueryPartForAssociation(association, attrRlbkQries,
-							isAddAssoQuery));
+					assoQueries
+							.addAll(getQueryPartForAssociation(association, attrRlbkQries, true));
 				}
 				else
 				{
@@ -1846,13 +1849,11 @@ public class DynamicExtensionBaseQueryBuilder
 							|| EntityManagerUtil.isPrimaryKeyChanged(association.getTargetEntity(),
 									hibernateDAO))
 					{
-						isAddAssoQuery = false;
 						assoQueries.addAll(getQueryPartForAssociation(assoDbaseCopy, attrRlbkQries,
-								isAddAssoQuery));
+								false));
 
-						isAddAssoQuery = true;
 						assoQueries.addAll(getQueryPartForAssociation(association, attrRlbkQries,
-								isAddAssoQuery));
+								true));
 					}
 				}
 			}
@@ -1878,7 +1879,6 @@ public class DynamicExtensionBaseQueryBuilder
 		Logger.out.debug("Entering getUpdateAssociationsQueryList method");
 
 		List<String> assoQueries = new ArrayList<String>();
-		boolean isAddAssoQry = true;
 
 		Collection<CategoryAssociationInterface> associations = catEntity
 				.getCategoryAssociationCollection();
@@ -1892,9 +1892,8 @@ public class DynamicExtensionBaseQueryBuilder
 
 				if (isAbstarctAttributeColumnToBeAdded(catAsso, assoDbaseCopy))
 				{
-					isAddAssoQry = true;
 					String newAssoQuery = getQueryPartForAssociation(catAsso, attrRlbkQries,
-							isAddAssoQry);
+							true);
 					assoQueries.add(newAssoQuery);
 				}
 			}
