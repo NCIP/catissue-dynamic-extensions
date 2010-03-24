@@ -3063,6 +3063,13 @@ public class XMIImportProcessor
 			{
 				final Map<String, String> taggedValueMap = attrVsMapTagValues
 						.get(attributeInterface);
+				//PHI
+				final String strIsIdentified = getPHIAttributeTagValue(taggedValueMap);
+				if ((strIsIdentified != null) && !strIsIdentified.equalsIgnoreCase(""))
+				{
+					attributeProcessor
+							.populateIsIdentifiedInfo(attributeInterface, strIsIdentified);
+				}
 				if ((userDefinedDEInterface != null)
 						&& (userDefinedDEInterface.getPermissibleValueCollection() != null)
 						&& (userDefinedDEInterface.getPermissibleValueCollection().size() > 0))
@@ -3117,15 +3124,6 @@ public class XMIImportProcessor
 					{
 						controlModel.setDateValueType(ProcessorConstants.DATE_VALUE_SELECT);
 					}
-
-					//PHI
-					final String strIsIdentified = getPHIAttributeTagValue(taggedValueMap);
-					if ((strIsIdentified != null) && !strIsIdentified.equalsIgnoreCase(""))
-					{
-						attributeProcessor.populateIsIdentifiedInfo(attributeInterface,
-								strIsIdentified);
-					}
-
 					//Set Explicit Validation Rules
 					setExplicitValidationRules(taggedValueMap, controlModel);
 
@@ -3179,13 +3177,6 @@ public class XMIImportProcessor
 					attributeProcessor.populateFileAttributeInterface(
 							(FileAttributeTypeInformation) attributeTypeInformation, controlModel);
 
-					//PHI
-					final String strIsIdentified = getPHIAttributeTagValue(taggedValueMap);
-					if ((strIsIdentified != null) && !strIsIdentified.equalsIgnoreCase(""))
-					{
-						attributeProcessor.populateIsIdentifiedInfo(attributeInterface,
-								strIsIdentified);
-					}
 					//Set Explicite validation Rules
 					setExplicitValidationRules(taggedValueMap, controlModel);
 					//populate rules
@@ -3224,11 +3215,6 @@ public class XMIImportProcessor
 
 						// Single/Multiline(Number of Lines) tagged Value
 						setMultilineTaggedValue(taggedValueMap, controlModel);
-						//PHI
-						final String strIsIdentified = getPHIAttributeTagValue(taggedValueMap);
-						attributeProcessor.populateIsIdentifiedInfo(attributeInterface,
-								strIsIdentified);
-
 						if ((controlModel.getLinesType() != null)
 								&& controlModel.getLinesType().equalsIgnoreCase(
 										XMIConstants.MULTILINE))
@@ -3375,8 +3361,8 @@ public class XMIImportProcessor
 			//Grouping Rule Tagged Values
 			for (Entry<String, String> entryKey : keySetForTaggedValue)
 			{
-				if (entryKey.getKey()
-						.startsWith(XMIConstants.TAGGED_VALUE_RULE + XMIConstants.SEPARATOR))
+				if (entryKey.getKey().startsWith(
+						XMIConstants.TAGGED_VALUE_RULE + XMIConstants.SEPARATOR))
 				{
 					taggedValueRuleMap.put(entryKey.getKey(), entryKey.getValue());
 				}
