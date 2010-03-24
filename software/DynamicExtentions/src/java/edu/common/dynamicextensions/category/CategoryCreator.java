@@ -114,18 +114,22 @@ public class CategoryCreator
 			if (args.length > 2 && !"".equals(args[2].trim()))
 			{
 				catFilename = getCategoryFilenameString(args[2]);
-
 			}
-			if (args.length > 3 && args[3].equalsIgnoreCase("true"))
-			{
-				isMetadataOnly = true;
-			}
+			isMetadataOnly(args);
 			serverUrl = new URL(url + CategoryCreatorConstants.METADATA_ONLY + "=" + isMetadataOnly
 					+ "&" + CategoryCreatorConstants.CATEGORY_NAMES_FILE + "=" + catFilename);
 		}
 		catch (MalformedURLException e)
 		{
 			throw new DynamicExtensionsSystemException("Please provide correct ApplicationURL", e);
+		}
+	}
+
+	private void isMetadataOnly(String[] args)
+	{
+		if (args.length > 3 && args[3].equalsIgnoreCase("true"))
+		{
+			isMetadataOnly = true;
 		}
 	}
 
