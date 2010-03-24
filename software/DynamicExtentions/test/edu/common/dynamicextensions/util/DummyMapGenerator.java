@@ -183,10 +183,10 @@ public class DummyMapGenerator
 	 * @throws ParseException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public Map<AbstractAttributeInterface, Object> createDataValueMapForEntity(
+	public Map<BaseAbstractAttributeInterface, Object> createDataValueMapForEntity(
 			EntityInterface rootEntity) throws ParseException, DynamicExtensionsSystemException
 	{
-		Map<AbstractAttributeInterface, Object> dataValue = new HashMap<AbstractAttributeInterface, Object>();
+		Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
 		for (AbstractAttributeInterface abstractAttribute : rootEntity.getAttributeCollection())
 		{
 			// put the different value for diff attribute type
