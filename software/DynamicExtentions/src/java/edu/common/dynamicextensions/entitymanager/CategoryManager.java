@@ -2131,10 +2131,10 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 								sourceObjectClassName, srcEntityId);
 						final Object targetObject = hibernateDao.retrieveById(
 								targetObjectClassName, entityId);
-
+						Object clonedTarget = cloner.clone(targetObject);
 						addSourceObject(sourceObject, targetObject, sourceObjectClassName, lastAsso);
 
-						hibernateDao.update(targetObject);
+						hibernateDao.update(targetObject, clonedTarget);
 
 					}
 
@@ -2232,17 +2232,19 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 										+ "[" + par.getSourceInstanceId() + "]");
 								final Object sourceObject = hibernateDao.retrieveById(
 										sourceObjectClassName, Identifier);
+								Object clonedSourceObject = cloner.clone(sourceObject);
 								Object targetObject = createObjectForClass(targetObjectClassName);
 
 								hibernateDao.insert(targetObject);
+								Object clonedTargetObject = cloner.clone(targetObject);
 								addTargetObject(sourceObject, targetObject, targetObjectClassName,
 										association);
 
-								hibernateDao.update(sourceObject);
+								hibernateDao.update(sourceObject, clonedSourceObject);
 								addSourceObject(sourceObject, targetObject, sourceObjectClassName,
 										association);
 
-								hibernateDao.update(targetObject);
+								hibernateDao.update(targetObject, clonedTargetObject);
 
 								final Long entityId = getObjectId(targetObject);
 								sourceEntityId = entityId;
