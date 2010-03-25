@@ -391,6 +391,8 @@ public class XMIImportProcessor
 				xmiConfigurationObject.getDefaultPackagePrefix());
 
 		Logger.out.info("Checking for validation errors...........");
+		Logger.out.info("Errorlist Size..." + XMIImportValidator.errorList.size()
+				+ "   Validate XMI..." + xmiConfigurationObject.isValidateXMI());
 		if (!XMIImportValidator.errorList.isEmpty() && xmiConfigurationObject.isValidateXMI())
 		{
 			throw new DynamicExtensionsSystemException(
