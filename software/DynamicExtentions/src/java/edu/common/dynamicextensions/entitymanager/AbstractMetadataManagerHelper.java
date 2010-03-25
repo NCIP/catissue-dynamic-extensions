@@ -16,6 +16,7 @@ import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.HQLPlaceHolderObject;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.dao.DAO;
 import edu.wustl.dao.exception.DAOException;
 
@@ -136,7 +137,8 @@ public final class AbstractMetadataManagerHelper
 		{
 			if (isNotEmptyString(value))
 			{
-				String boolVal = ("1".equals(value)) ? "true" : "false";
+				String boolVal = ("1".equals(value) || DEConstants.TRUE.equalsIgnoreCase(value
+						.toString())) ? DEConstants.TRUE : DEConstants.FALSE;
 				dataValue = Boolean.valueOf(boolVal);
 			}
 			dataTypeClassName = Boolean.class.getName();
