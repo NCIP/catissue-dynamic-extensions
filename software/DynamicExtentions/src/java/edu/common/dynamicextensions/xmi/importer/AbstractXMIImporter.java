@@ -138,12 +138,6 @@ public abstract class AbstractXMIImporter
 			DynamicQueryList dynamicQueryList = xmiImportProcessor.processXmi(uml, domainModelName,
 					packageName, containerNames, hibernatedao);
 
-			if (!XMIImportValidator.errorList.isEmpty())
-			{
-				throw new DynamicExtensionsSystemException(
-						"XMI need to be fixed for proper caCore generation. "
-								+ "Please check the logs above.");
-			}
 			mainContainerList = xmiImportProcessor.getMainContainerList();
 			Map<AssociationInterface, String> multiselectMigartionScripts = xmiImportProcessor
 					.getMultiselectMigartionScripts();
@@ -172,6 +166,7 @@ public abstract class AbstractXMIImporter
 			//step 6: associate with clinical study.
 			LOGGER.info("Now associating the clinical study to the main Containers");
 			postProcess(isEditedXmi, coRecObjCsvFName, mainContainerList, domainModelName);
+			generateValidationLogs();
 			generateLogForCompleteProcess(processStartTime, csrStartTime);
 		}
 		catch (Exception e)
@@ -179,16 +174,13 @@ public abstract class AbstractXMIImporter
 			LOGGER.fatal("Fatal error reading XMI!!", e);
 			isImportSuccess = false;
 
+			generateValidationLogs();
 			if (!XMIImportValidator.errorList.isEmpty())
 			{
-				LOGGER.error("==========================================");
-				LOGGER.error("Following ERRORS encountered in the XMI: ");
-				LOGGER.error("==========================================");
-				for (String error : XMIImportValidator.errorList)
+				if(xmiConfiguration.isValidateXMI())
 				{
-					LOGGER.error(error);
+					throw new RuntimeException(e);
 				}
-				//throw new RuntimeException(e);
 			}
 		}
 		finally
@@ -198,6 +190,23 @@ public abstract class AbstractXMIImporter
 		if (isImportSuccess)
 		{
 			exportXmiForCacore(mainContainerList);
+		}
+	}
+
+	/**
+	 *
+	 */
+	private void generateValidationLogs()
+	{
+		if (!XMIImportValidator.errorList.isEmpty())
+		{
+			LOGGER.error("==========================================");
+			LOGGER.error("Following ERRORS encountered in the XMI: ");
+			LOGGER.error("==========================================");
+			for (String error : XMIImportValidator.errorList)
+			{
+				LOGGER.error(error);
+			}
 		}
 	}
 

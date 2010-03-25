@@ -75,6 +75,11 @@ public class XMIConfiguration
 	private List<Long> newEntitiesIds = new ArrayList<Long>();
 
 	/**
+	 * Is the XMI to be validated
+	 */
+	private boolean isValidateXMI = true;
+
+	/**
 	 *
 	 */
 	private XMIConfiguration()
@@ -264,6 +269,24 @@ public class XMIConfiguration
 	public void setNewEntitiesIds(List<Long> newEntitiesIds)
 	{
 		this.newEntitiesIds = newEntitiesIds;
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	public boolean isValidateXMI()
+	{
+		return isValidateXMI;
+	}
+
+	/**
+	 *
+	 * @param isValidateXMI
+	 */
+	public void setValidateXMI(boolean isValidateXMI)
+	{
+		this.isValidateXMI = isValidateXMI;
 	}
 
 }

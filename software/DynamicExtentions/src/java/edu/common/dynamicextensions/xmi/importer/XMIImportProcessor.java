@@ -390,6 +390,14 @@ public class XMIImportProcessor
 		processDataModel(umlPackage, packageName, xmiConfigurationObject.getSkipEntityNames(),
 				xmiConfigurationObject.getDefaultPackagePrefix());
 
+		Logger.out.info("Checking for validation errors...........");
+		if (!XMIImportValidator.errorList.isEmpty() && xmiConfigurationObject.isValidateXMI())
+		{
+			throw new DynamicExtensionsSystemException(
+					"XMI need to be fixed for proper caCore generation. "
+							+ "Please check the logs.");
+		}
+
 		// Persist container in DB.
 		Logger.out.info("Now SAVING DYNAMIC MODEL....");
 		Logger.out.info(" ");
@@ -404,7 +412,7 @@ public class XMIImportProcessor
 			newEntitiesIds.add(newEntity.getId());
 		}
 		// Execute data migration scripts for attributes that were changed from a normal attribute to
-		// a multiselect attribute.IF dao is provided then its the resposibility of the host to execute these Queries.
+		// a multi select attribute.IF dao is provided then its the responsibility of the host to execute these Queries.
 		if ((hibernatedao == null) || (hibernatedao.length == 0))
 		{
 			final List<String> multiSelMigrationQueries = EntityManagerUtil
