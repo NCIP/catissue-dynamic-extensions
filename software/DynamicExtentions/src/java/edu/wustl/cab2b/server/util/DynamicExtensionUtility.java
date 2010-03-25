@@ -701,8 +701,8 @@ public final class DynamicExtensionUtility
 			final HibernateDAO hibernateDAO) throws DAOException
 	{
 		List<EntityGroupInterface> entityGroups = new ArrayList<EntityGroupInterface>();
-		Collection<EntityGroupInterface> allEntityGroups = hibernateDAO
-				.retrieve(EntityGroupInterface.class.getName());
+		Collection<EntityGroupInterface> allEntityGroups = hibernateDAO.executeNamedQuery(
+				"getAllEntityGroups", new HashMap<String, NamedQueryParam>());
 		for (EntityGroupInterface entityGroup : allEntityGroups)
 		{
 			if (isEntityGroupMetadata(entityGroup))
