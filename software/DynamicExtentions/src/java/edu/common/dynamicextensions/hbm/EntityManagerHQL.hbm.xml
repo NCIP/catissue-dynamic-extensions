@@ -98,7 +98,12 @@
 	<query name="getAllGroupBeans">
 		select entityGroup.name,entityGroup.id
 			   from EntityGroup entityGroup
-			   		where entityGroup.isSystemGenerated = false
+			   		where entityGroup.isSystemGenerated = false AND entityGroup.name not like 'deprecated%'
+	</query>
+
+	<query name="getAllEntityGroups">
+		from EntityGroup entityGroup
+			   		where entityGroup.name not like 'deprecated%'
 	</query>
 	<query name="getEntityGroupBeanById">
 		select entityGroup.name,entityGroup.id
