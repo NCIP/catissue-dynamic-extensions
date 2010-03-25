@@ -639,7 +639,7 @@ public class CategoryValidator
 	public static void checkIfNoteIsAppropriate(String note, long lineNumber)
 			throws DynamicExtensionsSystemException
 	{
-		if (note.trim().split("~").length < 2 || note.trim().split("~")[1].length() > 255)
+		if (note.length() > 255)
 		{
 			throw new DynamicExtensionsSystemException(ApplicationProperties
 					.getValue(CategoryConstants.CREATE_CAT_FAILS)
@@ -657,7 +657,7 @@ public class CategoryValidator
 			throws DynamicExtensionsSystemException
 	{
 		String[] strings = this.categoryFileParser.processEscapeCharacter(heading.split("~"),
-				heading, "\\",
+				heading, this.categoryFileParser.DEFAULT_ESCAPE_CHARACTER,
 				"~");
 		if (strings.length < 2 || strings[1].length() > 255)
 		{
