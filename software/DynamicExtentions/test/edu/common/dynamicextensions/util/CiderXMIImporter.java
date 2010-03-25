@@ -38,6 +38,8 @@ public class CiderXMIImporter extends AbstractXMIImporter
 		xmiConfiguration.setAddIdAttr(false);
 		xmiConfiguration.setAddColumnForInherianceInChild(true);
 		xmiConfiguration.setAddInheritedAttribute(true);
+		// Not to validate XMI for caCore errors
+		xmiConfiguration.setValidateXMI(false);
 		return xmiConfiguration;
 	}
 
