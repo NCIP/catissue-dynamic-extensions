@@ -18,13 +18,9 @@ import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
-import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
-import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.entitymanager.CategoryManager;
 import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
-import edu.common.dynamicextensions.entitymanager.EntityGroupManager;
-import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.CategoryGenerationUtil;
@@ -32,7 +28,6 @@ import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.parser.CategoryFileParser;
 import edu.common.dynamicextensions.validation.ValidatorUtil;
-import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
@@ -58,8 +53,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			String[] args = {CATEGORY_FILE_DIR, APPLICATIONURL};//, TEST_MODEL_DIR + "/catNames.txt"};
 			CategoryCreator.main(args);
-			assertAllCategoriesCreatedInDir(CATEGORY_FILE_DIR);
 			System.out.println("done categoryCreation");
+			assertAllCategoriesCreatedInDir(CATEGORY_FILE_DIR);
+
 		}
 		catch (Exception e)
 		{
@@ -98,7 +94,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			List<String> catFiles = CategoryGenerationUtil.getCategoryFileListInDirectory(new File(
-					catDir), "");
+					catDir), catDir);
 			assertCategoriesFromFiles(catFiles);
 		}
 		catch (Exception e)
@@ -287,7 +283,6 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
 		try
 		{
-
 			List<CategoryInterface> categoryList = getAllCategories();
 			for (CategoryInterface category : categoryList)
 			{
