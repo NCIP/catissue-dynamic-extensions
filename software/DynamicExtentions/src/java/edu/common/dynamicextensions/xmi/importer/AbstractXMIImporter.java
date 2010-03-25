@@ -188,7 +188,7 @@ public abstract class AbstractXMIImporter
 				{
 					LOGGER.error(error);
 				}
-				throw new RuntimeException(e);
+				//throw new RuntimeException(e);
 			}
 		}
 		finally
