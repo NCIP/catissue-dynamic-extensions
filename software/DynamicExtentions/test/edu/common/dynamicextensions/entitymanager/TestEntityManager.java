@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
 import edu.common.dynamicextensions.domain.Attribute;
@@ -102,104 +103,6 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	protected void tearDown()
 	{
 		super.tearDown();
-	}
-
-	/**
-	 * PURPOSE : To test the whether editing of an existing entity works properly or not.
-	 * EXPECTED BEHAVIOR : Changes in the existing entity should be stored properly and the changes made to the
-	 * attributes of the entity should get reflected properly in the data tables.
-	 * TEST CASE FLOW :
-	 * 1. Create entity with some attributes
-	 * 2. Save entity using entity manager.
-	 * 3. Add an extra attribute to the entity
-	 * 4. Save the entity again.
-	 * 5. Check whether the added attribute is retrieved back properly from the database.
-	 * 6. Check whether a column is newly added or not  to the data table of the entity.
-	 */
-	public void testEditEntity()
-	{
-		//TODO : Currently DE doesn't support this scenario. So commenting test case for timebeing
-
-		//		EntityGroupInterface entityGroup = DomainObjectFactory.getInstance().createEntityGroup();
-		//		entityGroup.setName("test_" + new Double(Math.random()).toString());
-		//		//Step 1
-		//		Entity entity = (Entity) createAndPopulateEntity();
-		//		entity.setName("Stock Quote");
-		//		entity.setEntityGroup(entityGroup);
-		//		entityGroup.addEntity(entity);
-		//		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-		//
-		//		try
-		//		{
-		//			//Step 2
-		//			EntityInterface savedEntity = EntityManagerInterface.persistEntity(entity);
-		//
-		//			//Step 3 Edit entity-- Add extra attribute
-		//			AttributeInterface floatAtribute = DomainObjectFactory.getInstance()
-		//					.createFloatAttribute();
-		//			floatAtribute.setName("Price");
-		//
-		//			savedEntity.addAbstractAttribute(floatAtribute);
-		//			//Step 4
-		//			EntityInterface editedEntity = EntityManagerInterface.persistEntity(savedEntity);
-		//
-		//			Map dataValue = new HashMap();
-		//
-		//			//          dataValue.put(floatAtribute, "15.90");
-		//			//          entityManagerInterface.insertData(editedEntity, dataValue);
-		//			//
-		//			//          dataValue.put(floatAtribute, "16.90");
-		//			//          entityManagerInterface.insertData(editedEntity, dataValue);
-		//			//
-		//			//          Long id = new EntityManagerUtil().getNextIdentifier(editedEntity.getTableProperties().getName());
-		//			//          System.out.println(id);
-		//
-		//			//Edit entity
-		//			AttributeInterface floatAtribute1 = DomainObjectFactory.getInstance()
-		//					.createFloatAttribute();
-		//			floatAtribute.setName("NewPrice");
-		//			editedEntity.addAbstractAttribute(floatAtribute1);
-		//
-		//			assertEquals(noOfDefaultColumns + 1, getColumnCount("select * from "
-		//					+ editedEntity.getTableProperties().getName()));
-		//
-		//			int rowCount = (Integer) executeQuery("select count(*) from "
-		//					+ editedEntity.getTableProperties().getName(), INT_TYPE, 1, null);
-		//			assertEquals(0, rowCount);
-		//
-		//			//Step 5
-		//			EntityInterface newEditedEntity = EntityManagerInterface.persistEntity(editedEntity);
-		//			dataValue.put(floatAtribute1, "21");
-		//			EntityManagerInterface.insertData(newEditedEntity, dataValue, null);
-		//			//Step 6
-		//
-		//			assertEquals(noOfDefaultColumns + 2, getColumnCount("select * from "
-		//					+ editedEntity.getTableProperties().getName()));
-		//
-		//			rowCount = (Integer) executeQuery("select count(*) from "
-		//					+ editedEntity.getTableProperties().getName(), INT_TYPE, 1, null);
-		//			assertEquals(1, rowCount);
-		//
-		//			EntityManagerInterface.insertData(newEditedEntity, dataValue, null);
-		//			rowCount = (Integer) executeQuery("select count(*) from "
-		//					+ editedEntity.getTableProperties().getName(), INT_TYPE, 1, null);
-		//			assertEquals(2, rowCount);
-		//		}
-		//		catch (DynamicExtensionsSystemException e)
-		//		{
-		//			e.printStackTrace();
-		//			fail();
-		//		}
-		//		catch (DynamicExtensionsApplicationException e)
-		//		{
-		//			e.printStackTrace();
-		//			fail();
-		//		}
-		//		catch (Exception e)
-		//		{
-		//			e.printStackTrace();
-		//			fail();
-		//		}
 	}
 
 	/**
@@ -372,91 +275,6 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	}
 
 	/**
-	 * PURPOSE : To test the behavior when attribute type is changed while editing the entity.
-	 * EXPECTED BEHAVIOR : Change in the attribute type should be stored properly. Also the changes in the data type
-	 * of the column due to the change in attribute type is reflected properly in the data table or not.
-	 * 1. Create entity with integer attribute.
-	 * 2. Save entity using entity manager.
-	 * 3. Check whether the associated column type is numeric or not.
-	 * 4. Change the attribute type to string.
-	 * 5. Save the entity again.
-	 * 6. Check whether the associated column type is changed or not.
-	 */
-	public void testEditAttributeTypeChange()
-	{
-		//TODO : Currently DE doesn't support this scenario. So commenting test case for timebeing
-		//		EntityGroup entityGroup = (EntityGroup) DomainObjectFactory.getInstance()
-		//				.createEntityGroup();
-		//		entityGroup.setName("testGroup" + new Double(Math.random()).toString());
-		//		Entity entity;
-		//		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-		//		String appName = DynamicExtensionDAO.getInstance().getAppName();
-		//		String dyType = DAOConfigFactory.getInstance().getDAOFactory(appName).getDataBaseType();
-		//		try
-		//		{
-		//			//Step 1
-		//			entity = (Entity) createAndPopulateEntity();
-		//			entityGroup.addEntity(entity);
-		//			entity.setEntityGroup(entityGroup);
-		//			AttributeInterface ssn = DomainObjectFactory.getInstance().createIntegerAttribute();
-		//			ssn.setName("SSN of participant");
-		//			entity.addAbstractAttribute(ssn);
-		//			entity.setName("test");
-		//			//Step 2
-		//			entity = (Entity) EntityManagerInterface.persistEntity(entity);
-		//
-		//			//Step 3
-		//			if (dyType.equals(edu.common.dynamicextensions.util.global.DEConstants.MYSQL_DATABASE))
-		//			{
-		//				assertEquals(getColumntype(
-		//						"select * from " + entity.getTableProperties().getName(), 3), Types.INTEGER);
-		//			}
-		//			else if (dyType
-		//					.equals(edu.common.dynamicextensions.util.global.DEConstants.DB2_DATABASE))
-		//			{
-		//				assertEquals(getColumntype(
-		//						"select * from " + entity.getTableProperties().getName(), 3), Types.DECIMAL);
-		//			}
-		//			else
-		//			{
-		//				assertEquals(getColumntype(
-		//						"select * from " + entity.getTableProperties().getName(), 3), Types.NUMERIC);
-		//			}
-		//
-		//			//Step 4
-		//			AttributeTypeInformationInterface stringAttributeType = new StringAttributeTypeInformation();
-		//			ssn.setAttributeTypeInformation(stringAttributeType);
-		//			//Step 5
-		//			//entity = (Entity) EntityManager.getInstance().persistEntity(entity);
-		//			entity = (Entity) EntityManagerInterface.persistEntity(entity);
-		//
-		//			//Step 6
-		//			if (dyType.equals(edu.common.dynamicextensions.util.global.DEConstants.MYSQL_DATABASE))
-		//			{
-		//
-		//				assertEquals(getColumntype(
-		//						"select * from " + entity.getTableProperties().getName(), 3),
-		//						Types.LONGVARCHAR);
-		//			}
-		//			else
-		//			{
-		//				assertEquals(getColumntype(
-		//						"select * from " + entity.getTableProperties().getName(), 3), Types.VARCHAR);
-		//			}
-		//		}
-		//		catch (DynamicExtensionsApplicationException e)
-		//		{
-		//			fail();
-		//			e.printStackTrace();
-		//		}
-		//		catch (DynamicExtensionsSystemException e)
-		//		{
-		//			fail();
-		//			e.printStackTrace();
-		//		}
-	}
-
-	/**
 	 * PURPOSE : To check the behavior when user tries modify data type of the attribute,
 	 * when data is present for that column.
 	 * EXPECTED BEHAVIOR : for oracle it should throw exception.for mysql  it works.
@@ -513,34 +331,6 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			 e.printStackTrace();*/
 		}
 	}
-
-	/**
-	 * PURPOSE : To test the method persistEntityGroup
-	 * EXPECTED BEHAVIOR : The new entity group should be stored correctly and should be retrieved back correctly.
-	 * 1. Create entity group.
-	 * 2. Save entityGroup using entity manager.
-	 * 3. Check whether the saved entity group is retrieved back properly or not.
-	 */
-	/*public void testCreateEntityGroup()
-	{
-		try
-		{
-			EntityGroupManagerInterface entityGroupManager = EntityGroupManager.getInstance();
-			//Step 1
-			EntityGroup entityGroup = (EntityGroup) new MockEntityManager().initializeEntityGroup();
-			//Step 2
-			entityGroupManager.persistEntityGroup(entityGroup);
-			//Step 3
-			Collection collection = ((EntityManager) EntityManager.getInstance()).getAllObjects(EntityGroupInterface.class.getName());
-			assertTrue(collection.contains(entityGroup));
-		}
-		catch (Exception e)
-		{
-			Logger.out.debug(e.getMessage());
-			e.printStackTrace();
-			fail("Exception occured");
-		}
-	}*/
 
 	/**
 	 * PURPOSE : To test the method getEntityGroupByName
@@ -825,90 +615,6 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		}
 		return object;
 	}
-
-	/**
-	 * This method test for updating data for a multiSelect attribute
-	 */
-	/* public void testEditRecordWithMultiselectAttrubuteUpdate()
-	 {
-	     EntityGroup entityGroup = (EntityGroup) DomainObjectFactory.getInstance().createEntityGroup();
-	     entityGroup.setName("testGroup"+ new Double(Math.random()).toString());
-	     Entity study = new Entity();
-	     study.setName("Study");
-	     EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-
-	     DomainObjectFactory factory = DomainObjectFactory.getInstance();
-
-	     try
-	     {
-	         AttributeInterface name = factory.createStringAttribute();
-	         name.setName("Study name");
-
-	         AttributeInterface studyDate = factory.createDateAttribute();
-	         studyDate.setName("Date");
-
-	         AttributeInterface userNames = factory.createStringAttribute();
-	         userNames.setName("users");
-	         userNames.setIsCollection(true);
-
-	         study.addAttribute(name);
-	         study.addAttribute(userNames);
-	         study.addAttribute(studyDate);
-	         entityGroup.addEntity(study);
-	         study.setEntityGroup(entityGroup);
-	         EntityInterface savedStudy = EntityManagerInterface.persistEntity(study);
-
-	         Map dataValue = new HashMap();
-	         List<String> userNameList = new ArrayList<String>();
-	         userNameList.add("a");
-	         userNameList.add("b");
-	         userNameList.add("c");
-
-	         dataValue.put(name, "Java Study");
-	         dataValue.put(userNames, userNameList);
-	         dataValue.put(studyDate, "11-20-2006");
-
-	         Long recordId = EntityManagerInterface.insertData(savedStudy, dataValue);
-
-	         Map map = EntityManagerInterface.getRecordById(savedStudy, recordId);
-
-	         int noOfUsers = ((List) map.get(userNames)).size();
-	         assertEquals(3, noOfUsers);
-	         System.out.println(map);
-
-	         dataValue.clear();
-	         userNameList.clear();
-	         userNameList.add("d");
-
-	         dataValue.put(userNames, userNameList);
-	         dataValue.put(studyDate, "12-20-2006");
-
-	         EntityManagerInterface.editData(savedStudy, dataValue, recordId);
-
-	         map = EntityManagerInterface.getRecordById(savedStudy, recordId);
-	         noOfUsers = ((List) map.get(userNames)).size();
-	         assertEquals(1, noOfUsers);
-	         assertEquals("12-20-2006", (String) map.get(studyDate));
-
-	         System.out.println(map);
-	     }
-	     catch (DynamicExtensionsSystemException e)
-	     {
-	         fail();
-	         Logger.out.debug(e.getStackTrace());
-	     }
-	     catch (DynamicExtensionsApplicationException e)
-	     {
-	         fail();
-	         Logger.out.debug(e.getStackTrace());
-	     }
-	     catch (Exception e)
-	     {
-	         e.printStackTrace();
-	         fail();
-	         Logger.out.debug(e.getStackTrace());
-	     }
-	 }*/
 
 	/**
 	 * This method edits an existing attribute to a file type attribute.
@@ -1540,85 +1246,6 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 	/**
 	 *
-	 *
-	 */
-	/*public void testCreateEntityForRollbackQuery()
-	{
-		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-		Entity entity = null;
-		try
-		{
-			EntityGroupInterface entityGroup = DomainObjectFactory.getInstance().createEntityGroup();
-			entityGroup.setName("test_" + new Double(Math.random()).toString());
-			entity = (Entity) new MockEntityManager().initializeEntity(entityGroup);
-			TableProperties tableProperties = new TableProperties();
-			tableProperties.setName("Created_table");
-			entity.setTableProperties(tableProperties);
-			String query = "create table Created_table (id integer)";
-			executeQueryDDL(query);
-			EntityManagerInterface.persistEntity(entity);
-			fail("Exception should have occured but did not");
-		}
-		catch (DynamicExtensionsSystemException e)
-		{
-			Logger.out.info("Exception because of wrong table name.");
-			Logger.out.info(e.getMessage());
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			executeQueryDDL("drop table Created_table");
-			try
-			{
-				Entity newEntity = (Entity) EntityManagerInterface.getEntityByIdentifier(entity.getId().toString());
-				fail();
-			}
-			catch (DynamicExtensionsApplicationException e)
-			{
-				Logger.out.info("Entity object not found in the database ....");
-			}
-			catch (Exception e1)
-			{
-				e1.printStackTrace();
-			}
-		}
-	}*/
-
-	/**
-	 *
-	 *
-	 */
-	/*public void testCreateEntityForQueryException()
-	{
-		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-
-		try
-		{
-			EntityGroupInterface entityGroup = DomainObjectFactory.getInstance().createEntityGroup();
-			entityGroup.setName("test_" + new Double(Math.random()).toString());
-			Entity entity = (Entity) new MockEntityManager().initializeEntity(entityGroup);
-			TableProperties tableProperties = new TableProperties();
-			tableProperties.setName("!##$$%");
-			entity.setTableProperties(tableProperties);
-			entity = (Entity) EntityManagerInterface.persistEntity(entity);
-			fail("Exception should have occured but did not");
-		}
-		catch (DynamicExtensionsSystemException e)
-		{
-			Logger.out.info("Exception because of wrong table name.");
-			Logger.out.info(e.getMessage());
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}*/
-
-	/**
-	 *
 	 */
 	public void testgetAllContainersByEntityGroupId()
 	{
@@ -1784,137 +1411,6 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			Logger.out.debug(e.getStackTrace());
 		}
 	}
-
-	/**
-	 * PURPOSE : to test the method GetMainContainer
-	 *
-	 *
-	 * EXPECTED BEHAVIOR : GetMainContainer method should return the main container given the entity group id
-	 *
-	 * TEST CASE FLOW :
-	 * 1.Create an entity
-	 * 2.Create an entity Group
-	 * 3.Add entity in entity group
-	 * 4.Create an container
-	 * 5.set its entity to the created entity
-	 * 6.Persist the container.
-	 * 7. invoke getMainContainer
-	 * 8. test if retruned container is same or not
-	 */
-	/*public void testGetMainContainer()
-	{
-	    DomainObjectFactory factory = DomainObjectFactory.getInstance();
-	    EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-
-	    try
-	    {
-	        //Step 1.
-	        EntityInterface user = createAndPopulateEntity();
-	        user.setName("user");
-
-	        //Step 2.
-	        EntityGroupInterface userGroup = factory.createEntityGroup();
-	        ((EntityGroup) userGroup).setCurrent(true);
-
-	        //Step 3.
-	        userGroup.addEntity(user);
-	        user.addEntityGroupInterface(userGroup);
-
-	        //Step 4.
-	        ContainerInterface userContainer = factory.createContainer();
-
-	        userContainer.setCaption("User Container");
-
-	        //Step 5.
-	        userContainer.setEntity(user);
-	        user.getContainerCollection().add(userContainer);
-
-	        //Step 6.
-	        //entityManagerInterface.persistContainer(userContainer);
-	        EntityManagerInterface.persistEntity(user);
-
-	        //Step 7.
-	        Collection<NameValueBean> containerNameValueCollection = entityManagerInterface
-	                .getMainContainer(userGroup.getId());
-
-	        //Step 8.
-	        assertEquals(containerNameValueCollection.size(), 1);
-	        NameValueBean containerNameValue = containerNameValueCollection.iterator().next();
-
-	        assertEquals(containerNameValue.getName(), userContainer.getCaption());
-	        assertEquals(containerNameValue.getValue(), userContainer.getId().toString());
-	    }
-	    catch (Exception e)
-	    {
-	        e.printStackTrace();
-	    }
-	}*/
-
-	/**
-	 *
-	 * Commenting this test case as per bug #5094 as we should be able to see abstract forms for future editing.
-	 * To avoid data entry in abstract forms, we need to check the abstract attribute for entity in code. - Ashish 18/9/07
-	 *
-	 * PURPOSE : to test the method GetMainContainer
-	 *
-	 *
-	 * EXPECTED BEHAVIOR : GetMainContainer method should return null when
-	 *                     main entity within given is abstract
-	 *
-	 * TEST CASE FLOW :
-	 * 1.Create an abstract entity
-	 * 2.Create an entity Group
-	 * 3.Add entity in entity group
-	 * 4.Create an container
-	 * 5.set its entity to the created entity
-	 * 6.Persist the container.
-	 * 7. invoke getMainContainer
-	 * 8. test if retruned container null or not
-	 */
-	//  public void testGetMainContainerForAbstractEntity()
-	//  {
-	//      //EntityManagerInterface entityManagerInterface = NewEntityManger.getInstance();
-	//      DomainObjectFactory factory = DomainObjectFactory.getInstance();
-	//
-	//      try
-	//      {
-	//          //Step 1.
-	//          EntityInterface user = createAndPopulateEntity();
-	//          user.setAbstract(true);
-	//          user.setName("user");
-	//
-	//          //Step 2.
-	//          EntityGroupInterface userGroup = factory.createEntityGroup();
-	//          ((EntityGroup) userGroup).setCurrent(true);
-	//
-	//          //Step 3.
-	//          userGroup.addEntity(user);
-	//          user.addEntityGroupInterface(userGroup);
-	//
-	//          //Step 4.
-	//          ContainerInterface userContainer = factory.createContainer();
-	//          userContainer.setCaption("User Container");
-	//
-	//          //Step 5.
-	//          userContainer.setEntity(user);
-	//
-	//          //Step 6.
-	//          entityManagerInterface.persistContainer(userContainer);
-	//
-	//          //Step 7.
-	//          Collection<NameValueBean> containerNameValueCollection = entityManagerInterface
-	//                  .getMainContainer(userGroup.getId());
-	//
-	//          //Step 8.
-	//          assertEquals(0, containerNameValueCollection.size());
-	//
-	//      }
-	//      catch (Exception e)
-	//      {
-	//          e.printStackTrace();
-	//      }
-	//
-	//  }
 
 	/**
 	 * Create a date only attribute, and try to insert a future date value
@@ -2968,78 +2464,54 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	/**
 	 * This test case will try to insert the data for all the entities present
 	 * in the test model .
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
 	 *
 	 */
-	public void testInsertDataForAllEntities()
+	public void testInsertDataForAllEntities() throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
-		try
+		Map<EntityInterface, Exception> failedEntityVsException = new HashMap<EntityInterface, Exception>();
+		EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
+				TEST_ENTITYGROUP_NAME);
+		EntityManagerInterface entityManager = EntityManager.getInstance();
+		for (ContainerInterface container : testModel.getMainContainerCollection())
 		{
-			EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
-					TEST_ENTITYGROUP_NAME);
-			EntityManagerInterface entityManager = EntityManager.getInstance();
-			for (ContainerInterface container : testModel.getMainContainerCollection())
+			EntityInterface entity = (EntityInterface) container.getAbstractEntity();
+			try
 			{
-				EntityInterface entity = (EntityInterface) container.getAbstractEntity();
-				System.out.println("Inserting record for " + entity);
+				System.out.println("Inserting record for entity " + entity);
 				Map<BaseAbstractAttributeInterface, Object> dataValueMap = mapGenerator
 						.createDataValueMapForEntity(entity);
 				Map map = dataValueMap;
 				List<String> errorList = new ArrayList<String>();
 				ValidatorUtil.validateEntity(dataValueMap, errorList, container);
 				long recordId = entityManager.insertData(entity, map, null, null);
-				System.out.println("Record inserted succesfully for " + entity + " recordId "
-						+ recordId);
+				System.out.println("Record inserted succesfully for entity " + entity
+						+ " recordId " + recordId);
+			}
+			catch (Exception e)
+			{
+				System.out.println("Record Insertion failed for  entity " + entity.getName());
+				failedEntityVsException.put(entity, e);
 			}
 		}
-		catch (Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail();
-		}
-
+		printFailedCategoryReport(failedEntityVsException, "Record Insertion failed for  entity ");
 	}
 
-	/**
-	 * This test case will try to Validate all the rules applied on that attribute
-	 * in the test model.
-	 *
-	 */
-	public void testValidateDataForAllEntities()
+	private void printFailedCategoryReport(Map<EntityInterface, Exception> failedEntityVsException,
+			String message)
 	{
-		try
+		for (Entry<EntityInterface, Exception> entryObject : failedEntityVsException.entrySet())
 		{
-			EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
-					TEST_ENTITYGROUP_NAME);
-			EntityManager.getInstance();
-			for (ContainerInterface container : testModel.getMainContainerCollection())
-			{
-				EntityInterface entity = (EntityInterface) container.getAbstractEntity();
-				System.out.println("Validating record for " + entity);
-				Map<BaseAbstractAttributeInterface, Object> dataValueMap = mapGenerator
-						.createDataValueMapForEntity(entity);
-				List<String> errorList = new ArrayList<String>();
-				ValidatorUtil.validateEntity(dataValueMap, errorList, container);
-				if (errorList.isEmpty())
-				{
-					System.out.println("Record validated succesfully for " + entity);
-				}
-				else
-				{
-					System.out.println("Record validation failed for " + entity);
-					for (String error : errorList)
-					{
-						System.out.println("error --> " + error);
-					}
-					fail();
-				}
-
-			}
+			EntityInterface category = entryObject.getKey();
+			Exception exception = entryObject.getValue();
+			System.out.println(message + category.getName());
+			System.out.println("Exception :");
+			exception.printStackTrace();
 		}
-		catch (Exception e)
+		if (!failedEntityVsException.isEmpty())
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			fail();
 		}
 
@@ -3048,18 +2520,22 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	/**
 	 * This test case will try to insert the data for all the entities present
 	 * in the test model .
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
 	 *
 	 */
-	public void testEditDataForAllEntities()
+	public void testEditDataForAllEntities() throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
-		try
+		Map<EntityInterface, Exception> failedEntityVsException = new HashMap<EntityInterface, Exception>();
+		EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
+				TEST_ENTITYGROUP_NAME);
+		EntityManagerInterface entityManager = EntityManager.getInstance();
+		for (ContainerInterface container : testModel.getMainContainerCollection())
 		{
-			EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
-					TEST_ENTITYGROUP_NAME);
-			EntityManagerInterface entityManager = EntityManager.getInstance();
-			for (ContainerInterface container : testModel.getMainContainerCollection())
+			EntityInterface entity = (EntityInterface) container.getAbstractEntity();
+			try
 			{
-				EntityInterface entity = (EntityInterface) container.getAbstractEntity();
 				System.out.println("Inserting record for " + entity.getName());
 				Map<BaseAbstractAttributeInterface, Object> dataValueMap = mapGenerator
 						.createDataValueMapForEntity(entity);
@@ -3072,14 +2548,68 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				entityManager.editData(entity, editedDataValueMap, recordId, null, null);
 				System.out.println("Record Edited Successfully for " + entity + " recordId "
 						+ recordId);
-				//mapGenerator.validateRetrievedDataValueMap(editedDataValueMap, dataValueMap);
+			}
+			catch (Exception e)
+			{
+				System.out.println("Record Insertion failed for  entity " + entity.getName());
+				failedEntityVsException.put(entity, e);
+			}
+			//mapGenerator.validateRetrievedDataValueMap(editedDataValueMap, dataValueMap);
+		}
+		printFailedCategoryReport(failedEntityVsException, "Record Insertion failed for  entity ");
+
+	}
+
+	/**
+	 * This test case will try to Validate all the rules applied on that attribute
+	 * in the test model.
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
+	 *
+	 */
+	public void testValidateDataForAllEntities() throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
+	{
+		Map<EntityInterface, Exception> failedEntityVsException = new HashMap<EntityInterface, Exception>();
+		boolean isValidationFailed = false;
+
+		EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
+				TEST_ENTITYGROUP_NAME);
+		EntityManager.getInstance();
+		for (ContainerInterface container : testModel.getMainContainerCollection())
+		{
+			EntityInterface entity = (EntityInterface) container.getAbstractEntity();
+			try
+			{
+				System.out.println("Validating record for entity " + entity);
+				Map<BaseAbstractAttributeInterface, Object> dataValueMap = mapGenerator
+						.createDataValueMapForEntity(entity);
+				List<String> errorList = new ArrayList<String>();
+				ValidatorUtil.validateEntity(dataValueMap, errorList, container);
+				if (errorList.isEmpty())
+				{
+					System.out.println("Record validated succesfully for entity " + entity);
+				}
+				else
+				{
+					System.out.println("Record validation failed for entity " + entity);
+					for (String error : errorList)
+					{
+						System.out.println("error --> " + error);
+					}
+					isValidationFailed = true;
+				}
+			}
+			catch (Exception e)
+			{
+				System.out.println("Record validation failed for Entity " + entity.getName());
+				failedEntityVsException.put(entity, e);
 			}
 		}
-		catch (Exception e)
+		printFailedCategoryReport(failedEntityVsException, "Record validation failed for category ");
+		if (isValidationFailed)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail();
+			fail("Record validation failed for entity");
 		}
 
 	}

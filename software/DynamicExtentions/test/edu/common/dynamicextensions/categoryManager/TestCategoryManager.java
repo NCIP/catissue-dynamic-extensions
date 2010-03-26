@@ -10,8 +10,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.category.CategoryCreator;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
@@ -246,11 +248,11 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	public void testEditDataForForAllCategories()
 	{
 		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
-		CategoryInterface failedCategory = null;
-		try
+		Map<CategoryInterface, Exception> failedCatVsException = new HashMap<CategoryInterface, Exception>();
+		List<CategoryInterface> categoryList = getAllCategories();
+		for (CategoryInterface category : categoryList)
 		{
-			List<CategoryInterface> categoryList = getAllCategories();
-			for (CategoryInterface category : categoryList)
+			try
 			{
 				System.out.println("Inserting record for " + category.getName());
 				CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
@@ -262,21 +264,21 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 						+ " RecordId " + recordId);
 				Map<BaseAbstractAttributeInterface, Object> editedDataValue = categoryManager
 						.getRecordById(rootCatEntity, recordId);
+				mapGenerator.validateRetrievedDataValueMap(editedDataValue, dataValue);
 				categoryManager.editData(rootCatEntity, editedDataValue, recordId);
 				System.out.println("Record Edited succesfully for " + category.getName()
 						+ " RecordId " + recordId);
-				//mapGenerator.validateRetrievedDataValueMap(editedDataValue, dataValue);
+				editedDataValue = categoryManager.getRecordById(rootCatEntity, recordId);
+				mapGenerator.validateRetrievedDataValueMap(editedDataValue, dataValue);
 			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			if (failedCategory != null)
+			catch (Exception e)
 			{
-				System.out.println("Record Insertion failed for Category " + failedCategory);
+				System.out.println("Record Insertion failed for Category " + category.getName());
+				failedCatVsException.put(category, e);
 			}
-			fail();
 		}
+		printFailedCategoryReport(failedCatVsException, "Record Insertion failed for Category ");
+
 	}
 
 	/**
@@ -284,14 +286,13 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	 */
 	public void testInsertDataForAllCategories()
 	{
-		CategoryInterface failedCategory = null;
+		Map<CategoryInterface, Exception> failedCatVsException = new HashMap<CategoryInterface, Exception>();
 		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
-		try
+		List<CategoryInterface> categoryList = getAllCategories();
+		for (CategoryInterface category : categoryList)
 		{
-			List<CategoryInterface> categoryList = getAllCategories();
-			for (CategoryInterface category : categoryList)
+			try
 			{
-				failedCategory = category;
 				System.out.println("Inserting record for " + category.getName());
 				Map<BaseAbstractAttributeInterface, Object> dataValue;
 				CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
@@ -300,17 +301,31 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 				System.out.println("Record inserted succesfully for " + category.getName()
 						+ " RecordId " + recordId);
 			}
-
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			if (failedCategory != null)
+			catch (Exception e)
 			{
-				System.out.println("Record Insertion failed for Category " + failedCategory);
+				System.out.println("Record Insertion failed for Category " + category.getName());
+				failedCatVsException.put(category, e);
 			}
+		}
+		printFailedCategoryReport(failedCatVsException, "Record Insertion failed for Category ");
+	}
+
+	private void printFailedCategoryReport(Map<CategoryInterface, Exception> failedCatVsException,
+			String message)
+	{
+		for (Entry<CategoryInterface, Exception> entryObject : failedCatVsException.entrySet())
+		{
+			CategoryInterface category = entryObject.getKey();
+			Exception exception = entryObject.getValue();
+			System.out.println(message + category.getName());
+			System.out.println("Exception :");
+			exception.printStackTrace();
+		}
+		if (!failedCatVsException.isEmpty())
+		{
 			fail();
 		}
+
 	}
 
 	/**
@@ -320,11 +335,12 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	 */
 	public void testGenerateHtmlForContainerInEditMode()
 	{
-		try
-		{
+		Map<CategoryInterface, Exception> failedCatVsException = new HashMap<CategoryInterface, Exception>();
 
-			List<CategoryInterface> categoryList = getAllCategories();
-			for (CategoryInterface category : categoryList)
+		List<CategoryInterface> categoryList = getAllCategories();
+		for (CategoryInterface category : categoryList)
+		{
+			try
 			{
 				for (Object container : category.getRootCategoryElement().getContainerCollection())
 				{
@@ -332,12 +348,14 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 							WebUIManagerConstants.EDIT_MODE);
 				}
 			}
+			catch (Exception e)
+			{
+				System.out.println("Html generation failed for Category " + category.getName());
+				failedCatVsException.put(category, e);
+			}
 		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail();
-		}
+		printFailedCategoryReport(failedCatVsException, "Html generation failed for Category ");
+
 	}
 
 	/**
@@ -347,11 +365,11 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	 */
 	public void testGenerateHtmlForContainerInViewMode()
 	{
-		try
+		Map<CategoryInterface, Exception> failedCatVsException = new HashMap<CategoryInterface, Exception>();
+		List<CategoryInterface> categoryList = getAllCategories();
+		for (CategoryInterface category : categoryList)
 		{
-
-			List<CategoryInterface> categoryList = getAllCategories();
-			for (CategoryInterface category : categoryList)
+			try
 			{
 
 				for (Object container : category.getRootCategoryElement().getContainerCollection())
@@ -360,12 +378,13 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 							WebUIManagerConstants.VIEW_MODE);
 				}
 			}
+			catch (Exception e)
+			{
+				System.out.println("Html generation failed for Category " + category.getName());
+				failedCatVsException.put(category, e);
+			}
 		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail();
-		}
+		printFailedCategoryReport(failedCatVsException, "Html generation failed for Category ");
 	}
 
 	/**
@@ -373,14 +392,14 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	 */
 	public void testValidateDataForAllCategories()
 	{
-
-		CategoryManager.getInstance();
-		try
+		Map<CategoryInterface, Exception> failedCatVsException = new HashMap<CategoryInterface, Exception>();
+		boolean isValidationFailed = false;
+		List<CategoryInterface> categoryList = getAllCategories();
+		for (CategoryInterface category : categoryList)
 		{
-
-			List<CategoryInterface> categoryList = getAllCategories();
-			for (CategoryInterface category : categoryList)
+			try
 			{
+
 				System.out.println("Validating record for " + category.getName());
 				Map<BaseAbstractAttributeInterface, Object> dataValue;
 				CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
@@ -391,23 +410,30 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 								.next());
 				if (errorList.isEmpty())
 				{
-					System.out.println("Record validated succesfully for " + category.getName());
+					System.out.println("Record validated succesfully for category "
+							+ category.getName());
 				}
 				else
 				{
-					System.out.println("Record validation failed for " + category.getName());
+					System.out.println("Record validation failed for category "
+							+ category.getName());
 					for (String error : errorList)
 					{
 						System.out.println("error --> " + error);
 					}
-					fail();
+					isValidationFailed = true;
 				}
 			}
+			catch (Exception e)
+			{
+				System.out.println("Record validation failed for category " + category.getName());
+				failedCatVsException.put(category, e);
+			}
 		}
-		catch (Exception e)
+		printFailedCategoryReport(failedCatVsException, "Record validation failed for category ");
+		if (isValidationFailed)
 		{
-			e.printStackTrace();
-			fail();
+			fail("Record validation failed for category");
 		}
 	}
 
@@ -444,13 +470,22 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DAOException
 	 */
-	private List<CategoryInterface> getAllCategories() throws DynamicExtensionsSystemException,
-			DAOException
+	private List<CategoryInterface> getAllCategories()
 	{
-		HibernateDAO hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
-		List<CategoryInterface> categoryList = hibernateDAO.retrieve(CategoryInterface.class
-				.getName());
-		DynamicExtensionsUtility.closeDAO(hibernateDAO);
+		HibernateDAO hibernateDAO;
+		List<CategoryInterface> categoryList = null;
+		try
+		{
+			hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
+
+			categoryList = hibernateDAO.retrieve(CategoryInterface.class.getName());
+			DynamicExtensionsUtility.closeDAO(hibernateDAO);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail();
+		}
 		return categoryList;
 	}
 

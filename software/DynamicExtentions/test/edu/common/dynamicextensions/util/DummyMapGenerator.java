@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import edu.common.dynamicextensions.domain.BooleanAttributeTypeInformation;
+import edu.common.dynamicextensions.domain.CategoryAttribute;
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.FileAttributeRecordValue;
 import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
@@ -339,7 +340,29 @@ public class DummyMapGenerator
 				{
 					//normal attribute.
 					Object object = retrievedDataValue.get(attribute);
-					if (!entryObject.getValue().toString().equals(object.toString()))
+					if (((AttributeInterface) ((CategoryAttribute) attribute)
+							.getAbstractAttribute()).getAttributeTypeInformation() instanceof BooleanAttributeTypeInformation)
+					{
+						if (!(((object.toString().equals("1") || object.toString()
+								.equalsIgnoreCase("true")) && (entryObject.getValue().toString()
+								.equals("1") || entryObject.getValue().toString().equalsIgnoreCase(
+								"true"))) || ((object.toString().equals("0") || object.toString()
+								.equalsIgnoreCase("false")) && (entryObject.getValue().toString()
+								.equals("0") || entryObject.getValue().toString().equalsIgnoreCase(
+								"false")))))
+						{
+							throw new DynamicExtensionsSystemException("Data values for "
+									+ attribute.getName() + " does not match. Retrieve value : "
+									+ object.toString() + " Inserted value : "
+									+ entryObject.getValue().toString());
+						}
+					}
+					else if (((AttributeInterface) ((CategoryAttribute) attribute)
+							.getAbstractAttribute()).getAttributeTypeInformation() instanceof FileAttributeTypeInformation)
+					{
+						//do not validate
+					}
+					else if (!entryObject.getValue().toString().equals(object.toString()))
 					{
 						throw new DynamicExtensionsSystemException("Data values for "
 								+ attribute.getName() + " does not match. Retrieve value : "
