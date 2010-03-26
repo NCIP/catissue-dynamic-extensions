@@ -188,7 +188,7 @@ public class DummyMapGenerator
 			EntityInterface rootEntity) throws ParseException, DynamicExtensionsSystemException
 	{
 		Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
-		for (AbstractAttributeInterface abstractAttribute : rootEntity.getAttributeCollection())
+		for (AbstractAttributeInterface abstractAttribute : rootEntity.getAllAttributes())
 		{
 			// put the different value for diff attribute type
 			if (abstractAttribute instanceof AttributeInterface)
@@ -198,7 +198,7 @@ public class DummyMapGenerator
 
 			}
 		}
-		for (AssociationInterface association : rootEntity.getAssociationCollection())
+		for (AssociationInterface association : rootEntity.getAllAssociations())
 		{
 			List dataList = new ArrayList();
 			EntityInterface targetCaEntity = association.getTargetEntity();
