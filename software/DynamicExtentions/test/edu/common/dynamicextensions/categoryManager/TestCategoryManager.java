@@ -94,7 +94,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			List<String> catFiles = CategoryGenerationUtil.getCategoryFileListInDirectory(new File(
-					catDir), catDir);
+					catDir), catDir + File.separator);
 			assertCategoriesFromFiles(catFiles);
 		}
 		catch (Exception e)
