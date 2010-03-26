@@ -15,6 +15,7 @@ import edu.common.dynamicextensions.entitymanager.TestEntityManagerForInheritanc
 import edu.common.dynamicextensions.entitymanager.TestEntityManagerWithPrimaryKey;
 import edu.common.dynamicextensions.entitymanager.TestEntityMangerForXMIImportExport;
 import edu.common.dynamicextensions.entitymanager.TestImportPermissibleValues;
+import edu.common.dynamicextensions.host.csd.util.TestCSDUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
 
 /**
@@ -45,6 +46,7 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 		suite.addTestSuite(TestImportPermissibleValues.class);
 		suite.addTestSuite(TestCategoryManager.class);
 		suite.addTestSuite(TestXMLToCSVConverter.class);
+		suite.addTestSuite(TestCSDUtility.class);
 		return suite;
 	}
 }
