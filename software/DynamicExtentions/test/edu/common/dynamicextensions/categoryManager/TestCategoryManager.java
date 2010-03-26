@@ -246,6 +246,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	public void testEditDataForForAllCategories()
 	{
 		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
+		CategoryInterface failedCategory = null;
 		try
 		{
 			List<CategoryInterface> categoryList = getAllCategories();
@@ -270,6 +271,10 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			if (failedCategory != null)
+			{
+				System.out.println("Record Insertion failed for Category " + failedCategory);
+			}
 			fail();
 		}
 	}
@@ -279,13 +284,14 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 	 */
 	public void testInsertDataForAllCategories()
 	{
-
+		CategoryInterface failedCategory = null;
 		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
 		try
 		{
 			List<CategoryInterface> categoryList = getAllCategories();
 			for (CategoryInterface category : categoryList)
 			{
+				failedCategory = category;
 				System.out.println("Inserting record for " + category.getName());
 				Map<BaseAbstractAttributeInterface, Object> dataValue;
 				CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
@@ -299,6 +305,10 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			if (failedCategory != null)
+			{
+				System.out.println("Record Insertion failed for Category " + failedCategory);
+			}
 			fail();
 		}
 	}
