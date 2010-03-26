@@ -45,6 +45,7 @@ public class XMIImporter extends AbstractXMIImporter
 			xmiConfiguration.setAddIdAttr(true);
 			xmiConfiguration.setAddColumnForInherianceInChild(false);
 			xmiConfiguration.setAddInheritedAttribute(false);
+			xmiConfiguration.setValidateXMI(true);
 			return xmiConfiguration;
 		}
 
