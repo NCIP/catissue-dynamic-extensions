@@ -269,6 +269,10 @@ public class XMIUtilities
 		{
 			(new File(storageFileName + ".btx")).delete();
 		}
+		if (new File(storageFileName + ".log").exists())
+		{
+			(new File(storageFileName + ".log")).delete();
+		}
 	}
 
 	/**
