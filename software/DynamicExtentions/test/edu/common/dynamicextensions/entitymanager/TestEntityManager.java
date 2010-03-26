@@ -2882,7 +2882,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 					TEST_ENTITYGROUP_NAME);
 			EntityInterface clinicalAnnotations = testModel.getEntityByName("ClinicalAnnotations");
 			AssociationInterface pathAnnoChildAssocn = (AssociationInterface) clinicalAnnotations
-					.getAbstractAttributeByName("PathAnnoChild");
+					.getAbstractAttributeByName("pathAnnoChild");
 
 			Map dataValue = new HashMap();
 			List dataList = new ArrayList();
@@ -2919,7 +2919,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 					TEST_ENTITYGROUP_NAME);
 			EntityInterface clinicalAnnotations = testModel.getEntityByName("ClinicalAnnotations");
 			AssociationInterface pathAnnoChildAssocn = (AssociationInterface) clinicalAnnotations
-					.getAbstractAttributeByName("PathAnnoChild");
+					.getAbstractAttributeByName("pathAnnoChild");
 
 			Map dataValue = new HashMap();
 			List dataList = new ArrayList();
