@@ -130,7 +130,7 @@ public class DummyMapGenerator
 		}
 		else if (attribute.getAttributeTypeInformation() instanceof StringAttributeTypeInformation)
 		{
-			dataValue.put(catAtt, "test String");
+			dataValue.put(catAtt, "test");
 		}
 		else if (attribute.getAttributeTypeInformation() instanceof FileAttributeTypeInformation)
 		{
