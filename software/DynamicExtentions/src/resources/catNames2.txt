@@ -14,7 +14,6 @@ CPUML/TestModels/TestModel_withTags/edited/EditCategory/categoryEdit16.csv
 CPUML/TestModels/TestModel_withTags/edited/EditCategory/categoryEdit17.csv
 CPUML/TestModels/TestModel_withTags/edited/EditCategory/categoryEdit18.csv
 CPUML/TestModels/TestModel_withTags/edited/EditCategory/categoryEdit19.csv
-CPUML/TestModels/TestModel_withTags/edited/EditCategory/categoryEdit20.csv
 CPUML/TestModels/TestModel_withTags/edited/EditCategory/categoryEdit21.csv
 CPUML/TestModels/TestModel_withTags/edited/EditCategory/categoryEdit22.csv
 CPUML/TestModels/TestModel_withTags/edited/EditCategory/categoryEdit23.csv
