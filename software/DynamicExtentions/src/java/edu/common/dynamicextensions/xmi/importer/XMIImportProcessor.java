@@ -2000,9 +2000,8 @@ public class XMIImportProcessor
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	private ContainerInterface createNewContainer(final EntityInterface entityInterface,
-			final ControlsModel controlModel) throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException
+	private ContainerInterface createNewContainer(final EntityInterface entityInterface)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		final ContainerInterface containerInterface = deFactory.createContainer();
 		containerInterface.setCaption(entityInterface.getName());
@@ -2018,6 +2017,7 @@ public class XMIImportProcessor
 		ControlInterface controlInterface;
 		for (final AbstractAttributeInterface abstractAttributeInterface : abstractAttributeCollection)
 		{
+			final ControlsModel controlModel = new ControlsModel();
 			controlInterface = getControlForAttribute(abstractAttributeInterface, controlModel);
 			if (controlInterface != null) //no control created for id attribute
 			{
@@ -2086,8 +2086,8 @@ public class XMIImportProcessor
 		/*DynamicExtensionsUtility.getContainerByCaption(entityInterface.getName()); */
 		if (containerInterface == null)//Add
 		{
-			final ControlsModel controlModel = new ControlsModel();
-			containerInterface = createNewContainer(entityInterface, controlModel);
+
+			containerInterface = createNewContainer(entityInterface);
 		}
 		else
 		{//Edit
