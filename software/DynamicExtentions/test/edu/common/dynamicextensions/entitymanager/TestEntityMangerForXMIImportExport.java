@@ -68,7 +68,7 @@ public class TestEntityMangerForXMIImportExport extends DynamicExtensionsBaseTes
 	/**
 	 *
 	 */
-	public void testImportClinicalAnnotationsXMI()
+	/*public void testImportClinicalAnnotationsXMI()
 	{
 		try
 		{
@@ -84,14 +84,14 @@ public class TestEntityMangerForXMIImportExport extends DynamicExtensionsBaseTes
 			e.printStackTrace();
 			fail("Could not import clinical annotations XMI.");
 		}
-	}
+	}*/
 
 	/**
 	 *
 	 */
 	public void testEditClinicalAnnotationsXMI()
 	{
-		testImportClinicalAnnotationsXMI();
+		testXMIImport();
 	}
 
 	public void testXMIExport()
