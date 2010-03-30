@@ -70,7 +70,7 @@ public class XMIUtilities
 		repositoryConfigMap.put("storage",
 				"org.netbeans.mdr.persistence.btreeimpl.btreestorage.BtreeFactory");
 		repositoryConfigMap.put("org.netbeans.mdr.persistence.btreeimpl.filename", storageFileName);
-		System.setProperty("org.netbeans.lib.jmi.Logger.fileName", storageFileName + ".log");
+		//System.setProperty("org.netbeans.lib.jmi.Logger.fileName", storageFileName + ".log");
 		return new NBMDRepositoryImpl(repositoryConfigMap);
 	}
 
