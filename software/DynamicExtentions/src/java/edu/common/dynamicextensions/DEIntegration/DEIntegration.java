@@ -234,7 +234,6 @@ public class DEIntegration implements IntegrationInterface
 		return dynRecIds;
 	}
 
-
 	/**
 	 *
 	 * @param hookEntityId
@@ -411,11 +410,22 @@ public class DEIntegration implements IntegrationInterface
 	private Collection<Long> getRecordIdList(List<Long> staticRecIdList, String entityTableName,
 			String columnName, JDBCDAO jdbcDao) throws DAOException
 	{
+		List<ColumnValueBean> colValueBean = new ArrayList<ColumnValueBean>();
+		List<Object> columnValues = new ArrayList<Object>();
+
 		String[] columnNames = {"identifier"};
-		Object[] colValues = staticRecIdList.toArray();
+
+		for (Long colValue : staticRecIdList)
+		{
+			colValueBean.add(new ColumnValueBean(colValue));
+			columnValues.add('?');
+		}
 		QueryWhereClause queryWhereClause = new QueryWhereClause(entityTableName);
-		queryWhereClause.addCondition(new INClause(columnName, colValues));
-		return jdbcDao.retrieve(entityTableName, columnNames, queryWhereClause, false);
+		queryWhereClause.addCondition(new INClause(columnName, columnValues.toArray()));
+		//jdbcDao.retrieve(entityTableName, columnNames, queryWhereClause, false);
+		return jdbcDao
+				.retrieve(entityTableName, columnNames, queryWhereClause, colValueBean, false);
+
 	}
 
 	/**

@@ -105,6 +105,7 @@ import edu.wustl.common.util.logger.LoggerConfig;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 import edu.wustl.metadata.util.PackageName;
 
 /**
@@ -229,9 +230,10 @@ public class XMIExporter
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException,
 			DAOException
 	{
-		List entityGroupList = null;
+		ColumnValueBean colValueBean = new ColumnValueBean( "name", groupName);
+		List entityGroupList = hibernateDao.retrieve(EntityGroup.class.getName(),colValueBean);
 
-		entityGroupList = hibernateDao.retrieve(EntityGroup.class.getName(), "name", groupName);
+		//List entityGroupList = hibernateDao.retrieve(EntityGroup.class.getName(), "name", groupName);
 
 		if (entityGroupList == null || entityGroupList.isEmpty())
 		{

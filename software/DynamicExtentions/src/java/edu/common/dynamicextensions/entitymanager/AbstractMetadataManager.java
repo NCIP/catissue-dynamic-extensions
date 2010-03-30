@@ -470,17 +470,24 @@ public abstract class AbstractMetadataManager extends AbstractBaseMetadataManage
 		List<List> results;
 		try
 		{
+			List<ColumnValueBean> colValueBean = new ArrayList<ColumnValueBean>();
+
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
 			TablePropertiesInterface tblProperties = entity.getTableProperties();
 			String tableName = tblProperties.getName();
+
 			String[] selectColName = {IDENTIFIER};
 			String[] whereColName = {Constants.ACTIVITY_STATUS_COLUMN};
 			String[] whereColCndtn = {EQUAL};
-			Object[] whereColValue = {Status.ACTIVITY_STATUS_ACTIVE.toString()};
+			Object[] whereColValue = {"?"};
+
+			colValueBean.add(new ColumnValueBean(Status.ACTIVITY_STATUS_ACTIVE.toString()));
+
 			QueryWhereClause queryWhereClause = new QueryWhereClause(tableName);
 			queryWhereClause.getWhereCondition(whereColName, whereColCndtn, whereColValue,
 					Constants.AND_JOIN_CONDITION);
-			results = jdbcDao.retrieve(tableName, selectColName, queryWhereClause);
+			//results = jdbcDao.retrieve(tableName, selectColName, queryWhereClause);
+			results = jdbcDao.retrieve(tableName, selectColName, queryWhereClause,colValueBean);
 			/*results = jdbcDao.retrieve(tableName, selectColName, whereColName, whereColCndtn,
 			        whereColValue, null);*/
 			records = getRecordList(results);

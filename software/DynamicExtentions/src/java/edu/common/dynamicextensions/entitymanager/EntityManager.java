@@ -807,7 +807,10 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			Object oldObject = null;
 			if (hibernateDao == null)
 			{
-				List retrievedObjects = hibernateDAO.retrieve(className, "id", recordId);
+				ColumnValueBean valBean = new ColumnValueBean("id", recordId);
+				List retrievedObjects = hibernateDAO.retrieve(className, valBean);
+
+				//List retrievedObjects = hibernateDAO.retrieve(className, "id", recordId);
 				oldObject = retrievedObjects.get(0);
 			}
 			else

@@ -8,6 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -37,6 +38,7 @@ import edu.wustl.dao.DAO;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 import edu.wustl.dao.util.NamedQueryParam;
 
 /**
@@ -522,7 +524,13 @@ public abstract class AbstractBaseMetadataManager
 		{
 			try
 			{
-				List objects = hibernateDao.retrieve(className, "name", objectName);
+				List<ColumnValueBean> valBeanList = new ArrayList<ColumnValueBean>();
+				ColumnValueBean colValueBean = new ColumnValueBean("name", objectName);
+				valBeanList.add(colValueBean);
+
+				//List objects = hibernateDao.retrieve(className, "name", objectName);
+
+				List objects = hibernateDao.retrieve(className,colValueBean);
 				if (objects != null && !objects.isEmpty())
 				{
 					dyExtBsDmnObj = (DynamicExtensionBaseDomainObjectInterface) objects.get(0);
