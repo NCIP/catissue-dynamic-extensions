@@ -49,6 +49,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 
 /**
  * @author preeti_lodha
@@ -70,7 +71,7 @@ public class XMIUtilities
 		repositoryConfigMap.put("storage",
 				"org.netbeans.mdr.persistence.btreeimpl.btreestorage.BtreeFactory");
 		repositoryConfigMap.put("org.netbeans.mdr.persistence.btreeimpl.filename", storageFileName);
-		//System.setProperty("org.netbeans.lib.jmi.Logger.fileName", storageFileName + ".log");
+		System.setProperty("org.netbeans.lib.jmi.Logger.fileName", storageFileName + ".log");
 		return new NBMDRepositoryImpl(repositoryConfigMap);
 	}
 
@@ -350,8 +351,10 @@ public class XMIUtilities
 		}
 		else
 		{
-			List staticEntityList = hibernatedao.retrieve(Entity.class.getName(), "name",
-					hookEntityName);
+			ColumnValueBean colValueBean = new ColumnValueBean("name",hookEntityName);
+			List staticEntityList = hibernatedao.retrieve(Entity.class.getName(), colValueBean);
+			/*List staticEntityList = hibernatedao.retrieve(Entity.class.getName(), "name",
+					hookEntityName);*/
 			if (staticEntityList == null || staticEntityList.isEmpty())
 			{
 				throw new DynamicExtensionsSystemException(
