@@ -292,6 +292,7 @@
 			<input type="hidden" id="mode" name="mode" value="<%=mode%>"/>
 			<input type="hidden" id="breadCrumbPosition" name="breadCrumbPosition" value=""/>
 			<input type="hidden" id="isDirty" name="isDirty" value="false"/>
+			<input type="hidden" id="isShowInDiv" name="isShowInDiv" value="true"/>
 			</div>
 			<c:if test="${requestScope.isDirty == 'true' || requestScope.isDirty == true}">
 				<script>
@@ -301,6 +302,7 @@
 			<c:if test='${(showInDiv=="false")}'>
 				<script>
 					document.getElementById('submit_cancel_td').style.display="none";
+					document.getElementById('isShowInDiv').value = false;
 				</script>
 			</c:if>
 		</html:form>

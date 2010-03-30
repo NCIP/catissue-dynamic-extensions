@@ -2661,6 +2661,10 @@ function insertBreadCrumbForSubFormResponse(responseXML)
 function isDataChanged()
 {
 	document.getElementById('isDirty').value = true;
+	if(document.getElementById('isShowInDiv').value == 'false')
+	{
+		document.getElementById('isDirty').value = false;
+	}
 }
 
 //==================copy paste=======================================
