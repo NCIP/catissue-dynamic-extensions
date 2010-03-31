@@ -321,7 +321,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 				}
 				pvVsSemanticPropertyCollection.put(DynamicExtensionsUtility
 						.getEscapedStringValue(permiValue), semanticPropertyCollection);
-				/*validateStringForStinger(permiValue);*/
+				validateStringForStinger(permiValue);
 				pvString = originalPVString.substring(pvStringLength - 1);
 			}
 		}
