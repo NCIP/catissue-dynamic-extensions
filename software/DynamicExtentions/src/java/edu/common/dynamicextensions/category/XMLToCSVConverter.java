@@ -623,8 +623,8 @@ public class XMLToCSVConverter
 	 * @throws DOMException the DOM exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void appendUIProperty(final Node item2,
-			final String nodeName) throws DOMException, IOException
+	private void appendUIProperty(final Node item2, final String nodeName) throws DOMException,
+			IOException
 	{
 		if (nodeName.equals(UI_PROPERTY))
 		{
@@ -639,15 +639,15 @@ public class XMLToCSVConverter
 	 */
 	private void appendSeparators()
 	{
-			//remove last ":"
-			char charAt = stringBuilder.charAt(stringBuilder.length() - 1);
-			if (charAt == ':')
-			{
-				stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length());
-			}
-			appendRequiredString();
-			appendPermValueString();
-			appendDefaultValueString();
+		//remove last ":"
+		char charAt = stringBuilder.charAt(stringBuilder.length() - 1);
+		if (charAt == ':')
+		{
+			stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length());
+		}
+		appendRequiredString();
+		appendPermValueString();
+		appendDefaultValueString();
 	}
 
 	/**
@@ -697,8 +697,7 @@ public class XMLToCSVConverter
 	 * @throws DOMException the DOM exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void txUIProperties(final Node item) throws DOMException,
-			IOException
+	private void txUIProperties(final Node item) throws DOMException, IOException
 	{
 		if (!isFirstUIProperty)
 		{
@@ -715,7 +714,8 @@ public class XMLToCSVConverter
 		}
 		else if ("IsOrdered".equals(nodeValue))
 		{
-			permValueOptionsString = ",PermVal_Options~IsOrdered=true";
+			final Node valueNode = controlProperties.getNamedItem(VALUE);
+			permValueOptionsString = ",PermVal_Options~IsOrdered=" + valueNode.getNodeValue();
 		}
 		else if ("defaultValue".equals(nodeValue))
 		{
