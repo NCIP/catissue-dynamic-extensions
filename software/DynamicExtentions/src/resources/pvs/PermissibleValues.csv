@@ -1,7 +1,0 @@
-Entity_Group
-
-ClinicalAnnotations
-
-##Renal##
-HealthExaminationAnnotation:nameOfProcedure,Permissible_Values_File~pvs/radProcedure_pv.txt
-PastMedicalHistory:diagnosis,Permissible_Values_File~pvs/radDiagnosis_pv.txt
