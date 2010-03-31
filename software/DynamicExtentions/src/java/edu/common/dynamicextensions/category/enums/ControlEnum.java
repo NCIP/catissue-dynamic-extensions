@@ -4,8 +4,10 @@ package edu.common.dynamicextensions.category.enums;
 import edu.common.dynamicextensions.domain.CategoryAttribute;
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.userinterface.Control;
+import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
+import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
@@ -27,6 +29,22 @@ public enum ControlEnum {
 		{
 
 			String defaultValue = null;
+			BaseAbstractAttributeInterface baseAbstractAttribute = control
+					.getBaseAbstractAttribute();
+			if (baseAbstractAttribute instanceof CategoryAttribute)
+			{
+				defaultValue = defaultValueForControl(control, defaultValue);
+			}
+			return defaultValue;
+		}
+
+		/**
+		 * @param control
+		 * @param defaultValue
+		 * @return
+		 */
+		private String defaultValueForControl(Control control, String defaultValue)
+		{
 			CategoryAttribute categoryAttribute = (CategoryAttribute) control
 					.getBaseAbstractAttribute();
 			if (categoryAttribute.getAbstractAttribute() instanceof AttributeInterface)
@@ -36,15 +54,35 @@ public enum ControlEnum {
 						.getAttributeTypeInformation();
 				PermissibleValueInterface defaultValue2 = attributeTypeInformation
 						.getDefaultValue();
-				if (defaultValue2 != null && defaultValue2.getValueAsObject() != null
-						&& defaultValue2.getValueAsObject().toString().trim().length() != 0)
+				defaultValue = getValueStringFromPV(defaultValue, attributeTypeInformation,
+						defaultValue2);
+			}
+			else if (categoryAttribute.getAbstractAttribute() instanceof AssociationInterface)
+			{
+				//This is for MultiSelect
+				defaultValue = categoryAttribute.getDefaultValue();
+			}
+			return defaultValue;
+		}
+
+		/**
+		 * @param defaultValue
+		 * @param attributeTypeInformation
+		 * @param defaultValue2
+		 * @return
+		 */
+		private String getValueStringFromPV(String defaultValue,
+				AttributeTypeInformationInterface attributeTypeInformation,
+				PermissibleValueInterface defaultValue2)
+		{
+			if (defaultValue2 != null && defaultValue2.getValueAsObject() != null
+					&& defaultValue2.getValueAsObject().toString().trim().length() != 0)
+			{
+				Object valueAsObject = defaultValue2.getValueAsObject();
+				defaultValue = valueAsObject.toString();
+				if (attributeTypeInformation instanceof DateAttributeTypeInformation)
 				{
-					Object valueAsObject = defaultValue2.getValueAsObject();
-					defaultValue = valueAsObject.toString();
-					if(attributeTypeInformation instanceof DateAttributeTypeInformation)
-					{
-						defaultValue = defaultValue.replace('-', '/');
-					}
+					defaultValue = defaultValue.replace('-', '/');
 				}
 			}
 			return defaultValue;
