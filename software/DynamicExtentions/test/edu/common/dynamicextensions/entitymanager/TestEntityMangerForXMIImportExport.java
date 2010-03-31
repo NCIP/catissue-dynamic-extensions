@@ -8,7 +8,6 @@
 
 package edu.common.dynamicextensions.entitymanager;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -24,92 +23,12 @@ import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationDirection;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
-import edu.common.dynamicextensions.xmi.exporter.XMIExporter;
 import edu.wustl.common.util.logger.Logger;
 
 public class TestEntityMangerForXMIImportExport extends DynamicExtensionsBaseTestCase
 {
 
-	/**
-	 * Specify the name of the domain model xmi file to import. This file must be present at the path test/ModelXML under the project root directory
-	 */
-	private final String XMIFileName = XMI_FILE_PATH + "newsurgery.xmi";
-	private final String ClinicalAnnotationXMI = XMI_FILE_PATH + "ClinicalAnnotations.xmi";
-
-	/**
-	 *
-	 */
-	public void testXMIImport()
-	{
-		try
-		{
-			String[] args = {XMIFileName, CSV_FILE_PATH + "surgery.csv", "Surgery", "  "};
-			XMIImporter.main(args);
-			//			DomainModelParser parser = getParser(XMIFileName);
-			//			XMIImportProcessor processor = new XMIImportProcessor(
-			//					parser, "Application1");
-			System.out.println("--------------- Test Case to import XMI successful ------------");
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail("Exception occured");
-		}
-	}
-
-	/**
-	 *
-	 */
-	public void testXMIImportEditCase()
-	{
-		testXMIImport();
-	}
-
-	/**
-	 *
-	 */
-	public void testImportClinicalAnnotationsXMI()
-	{
-		try
-		{
-			String[] args = {ClinicalAnnotationXMI, CSV_FILE_PATH + "AnnotationsMainContainer.csv",
-					"edu.wustl.catissuecore.domain.ClinicalAnnotations", " "};
-			XMIImporter.main(args);
-
-			System.out
-					.println("--------------- Importing clinical annotations XMI successful ---------------");
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail("Could not import clinical annotations XMI.");
-		}
-	}
-
-	/**
-	 *
-	 */
-	public void testEditClinicalAnnotationsXMI()
-	{
-		testImportClinicalAnnotationsXMI();
-	}
-
-	public void testXMIExport()
-	{
-
-		//EntityGroupInterface entityGroup = EntityManager.getInstance().getEntityGroupByName("grp1");
-		//XMIExporter xmiExporter = new XMIExporter();
-		//xmiExporter.exportXMI("D:\\DEXMI.xmi", entityGroup, null);
-		String args[] = {"newsurgery", XMI_FILE_PATH + "exp_newsurgery.xmi", "1.1",
-				"edu.wustl.catissuecore.domain.RecordEntry"};
-		XMIExporter.main(args);
-		File file = new File(XMI_FILE_PATH + "exp_newsurgery.xmi");
-		if (file.exists())
-		{
-
-		}
-
-	}
+	
 
 	/**
 	 *

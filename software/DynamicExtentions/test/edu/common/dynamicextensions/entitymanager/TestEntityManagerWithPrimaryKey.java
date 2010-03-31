@@ -1,7 +1,6 @@
 
 package edu.common.dynamicextensions.entitymanager;
 
-import java.util.Collection;
 import java.util.List;
 
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
@@ -263,16 +262,15 @@ public class TestEntityManagerWithPrimaryKey extends DynamicExtensionsBaseTestCa
 	{
 		try
 		{
-			String[] args = {XMI_FILE_PATH + "test_primaryKey.xmi", CSV_FILE_PATH + "test_primaryKey.csv", "test_id","none","false"};
+			String[] args = {XMI_FILE_PATH + "test_primaryKey.xmi",
+					CSV_FILE_PATH + "test_primaryKey.csv", "test_id", "none", "false"};
 			try
 			{
 				CiderXMIImporter.main(args);
 
 				EntityGroupInterface entityGroup = EntityGroupManager.getInstance()
 						.getEntityGroupByName("test_primaryKey");
-				EntityInterface entity = entityGroup.getEntityByName("child");
-				/*assertEquals(noOfDefaultColumns + 3, getColumnCount("select * from "
-						+ entity.getTableProperties().getName()));*/
+				entityGroup.getEntityByName("child");
 
 				System.out
 						.println("--------------- Test Case to import XMI successful ------------");
@@ -296,7 +294,8 @@ public class TestEntityManagerWithPrimaryKey extends DynamicExtensionsBaseTestCa
 	{
 		try
 		{
-			String[] args = {XMI_FILE_PATH + "testcider.xmi", CSV_FILE_PATH + "testcider.csv","test","none","false" };
+			String[] args = {XMI_FILE_PATH + "testcider.xmi", CSV_FILE_PATH + "testcider.csv",
+					"test", "none", "false"};
 			try
 			{
 				CiderXMIImporter.main(args);
@@ -316,7 +315,7 @@ public class TestEntityManagerWithPrimaryKey extends DynamicExtensionsBaseTestCa
 				{
 					fail();
 				}
-				Collection<AttributeInterface> att = entity.getEntityAttributes();
+				entity.getEntityAttributes();
 
 				EntityInterface patientEntity = entityGroup.getEntityByName("patient");
 				if (patientEntity.getPrimaryKeyAttributeCollection().size() != 3)
@@ -354,7 +353,8 @@ public class TestEntityManagerWithPrimaryKey extends DynamicExtensionsBaseTestCa
 	{
 		try
 		{
-			String[] args = {EDITED_XMI_FILE_PATH + "testcider.xmi", CSV_FILE_PATH + "testcider.csv","test","none", "false"};
+			String[] args = {EDITED_XMI_FILE_PATH + "testcider.xmi",
+					CSV_FILE_PATH + "testcider.csv", "test", "none", "false"};
 			try
 			{
 				CiderXMIImporter.main(args);
@@ -403,7 +403,8 @@ public class TestEntityManagerWithPrimaryKey extends DynamicExtensionsBaseTestCa
 		try
 		{
 			String[] args = {XMI_FILE_PATH + "test_association_without_primaryKey.xmi",
-					CSV_FILE_PATH + "test_association_without_primaryKey.csv","test_primaryKey","none","false"};
+					CSV_FILE_PATH + "test_association_without_primaryKey.csv", "test_primaryKey",
+					"none", "false"};
 			try
 			{
 				CiderXMIImporter.main(args);
@@ -450,12 +451,11 @@ public class TestEntityManagerWithPrimaryKey extends DynamicExtensionsBaseTestCa
 		{
 
 			String[] args = {EDITED_XMI_FILE_PATH + "test_primaryKey.xmi",
-					CSV_FILE_PATH + "test_primaryKey.csv","test_id","none","false"};
+					CSV_FILE_PATH + "test_primaryKey.csv", "test_id", "none", "false"};
 			try
 			{
 				CiderXMIImporter.main(args);
-				EntityGroupInterface entityGroup = EntityGroupManager.getInstance()
-						.getEntityGroupByName("test_primaryKey");
+				EntityGroupManager.getInstance().getEntityGroupByName("test_primaryKey");
 				/*EntityInterface entity = entityGroup.getEntityByName("child");
 				assertEquals(noOfDefaultColumns + 3, getColumnCount("select * from "
 						+ entity.getTableProperties().getName()));*/
@@ -486,12 +486,12 @@ public class TestEntityManagerWithPrimaryKey extends DynamicExtensionsBaseTestCa
 		try
 		{
 
-			String[] args = {XMI_FILE_PATH + "test_primaryKey1.xmi", CSV_FILE_PATH + "test_primaryKey.csv","test_id", "none","false"};
+			String[] args = {XMI_FILE_PATH + "cider.xmi", CSV_FILE_PATH + "cider.csv",
+					"edu.wustl.cider.domain", "none"};
 			try
 			{
 				CiderXMIImporter.main(args);
-				EntityGroupInterface entityGroup = EntityGroupManager.getInstance()
-						.getEntityGroupByName("test_primaryKey1");
+				EntityGroupManager.getInstance().getEntityGroupByName("test_primaryKey1");
 				/*EntityInterface entity = entityGroup.getEntityByName("child");
 				assertEquals(noOfDefaultColumns + 2, getColumnCount("select * from "
 						+ entity.getTableProperties().getName()));*/
@@ -524,15 +524,14 @@ public class TestEntityManagerWithPrimaryKey extends DynamicExtensionsBaseTestCa
 		try
 		{
 			String[] args = {EDITED_XMI_FILE_PATH + "test_primaryKey1.xmi",
-					CSV_FILE_PATH + "test_primaryKey.csv","test_id","none","false"};
+					CSV_FILE_PATH + "test_primaryKey.csv", "test_id", "none", "false"};
 			try
 			{
 				CiderXMIImporter.main(args);
-				EntityGroupInterface entityGroup = EntityGroupManager.getInstance()
-						.getEntityGroupByName("test_primaryKey1");
-			/*	EntityInterface entity = entityGroup.getEntityByName("child");
-				assertEquals(noOfDefaultColumns + 2, getColumnCount("select * from "
-						+ entity.getTableProperties().getName()));*/
+				EntityGroupManager.getInstance().getEntityGroupByName("test_primaryKey1");
+				/*	EntityInterface entity = entityGroup.getEntityByName("child");
+					assertEquals(noOfDefaultColumns + 2, getColumnCount("select * from "
+							+ entity.getTableProperties().getName()));*/
 				System.out
 						.println("--------------- Test Case to import XMI successful ------------");
 
@@ -558,27 +557,27 @@ public class TestEntityManagerWithPrimaryKey extends DynamicExtensionsBaseTestCa
 	public void testXMIImportInvalidPrimaryKeyDataType()
 	{
 		//String[] args = {"F:/SCGModel/scg1.xmi","edu.wustl.catissuecore.domain.PathAnnotation_SCG", "F:/SCGModel/scg.csv"};
-			String[] args = {XMI_FILE_PATH+"test_primaryKey_InvalidDataType.xmi",
-					CSV_FILE_PATH+"test_primaryKey.csv","test_id","none","false"};
-			try
+		String[] args = {XMI_FILE_PATH + "test_primaryKey_InvalidDataType.xmi",
+				CSV_FILE_PATH + "test_primaryKey.csv", "test_id", "none", "false"};
+		try
+		{
+			CiderXMIImporter.main(args);
+
+			EntityGroupInterface entityGroup = EntityGroupManager.getInstance()
+					.getEntityGroupByName("test_primaryKey_InvalidDataType");
+			if (entityGroup != null)
 			{
-				CiderXMIImporter.main(args);
-
-				EntityGroupInterface entityGroup = EntityGroupManager.getInstance()
-						.getEntityGroupByName("test_primaryKey_InvalidDataType");
-				if(entityGroup!=null)
-				{
-					fail();
-				}
-
-			}
-			catch (Exception e)
-			{fail();
-				System.out
-						.println("--------------- Test Case to import XMI successful ------------");
+				fail();
 			}
 
 		}
+		catch (Exception e)
+		{
+			fail();
+			System.out.println("--------------- Test Case to import XMI successful ------------");
+		}
+
+	}
 
 	/**
 	 * Import xmi which contains primary key tag as a attribute which is not present in the entity
@@ -589,7 +588,7 @@ public class TestEntityManagerWithPrimaryKey extends DynamicExtensionsBaseTestCa
 		try
 		{
 			String[] args = {XMI_FILE_PATH + "test_primaryKey_InvalidAttribute.xmi",
-					CSV_FILE_PATH + "test_primaryKey.csv","test_id","none","false"};
+					CSV_FILE_PATH + "test_primaryKey.csv", "test_id", "none", "false"};
 			CiderXMIImporter.main(args);
 
 			EntityGroupInterface entityGroup = EntityGroupManager.getInstance()
@@ -608,7 +607,6 @@ public class TestEntityManagerWithPrimaryKey extends DynamicExtensionsBaseTestCa
 		}
 	}
 
-
 	/**
 	 * Import xmi which contains primary key tag as a attribute which is not present in the entity
 	 * Expected Behaviour : should throw exception saying attribute not present
@@ -619,15 +617,10 @@ public class TestEntityManagerWithPrimaryKey extends DynamicExtensionsBaseTestCa
 		{
 
 			String[] args = {XMI_FILE_PATH + "test_primaryKey_association.xmi",
-					CSV_FILE_PATH + "test_primaryKey.csv","test_id","none","false"};
+					CSV_FILE_PATH + "test_primaryKey.csv", "test_id", "none", "false"};
 
 			CiderXMIImporter.main(args);
-			EntityGroupInterface entityGroup = EntityGroupManager.getInstance()
-					.getEntityGroupByName("test_primaryKey_association");
-			/*EntityInterface entity = entityGroup.getEntityByName("child");
-			assertEquals(noOfDefaultColumns + 3, getColumnCount("select * from "
-					+ entity.getTableProperties().getName()));*/
-			//Exception should occur
+			EntityGroupManager.getInstance().getEntityGroupByName("test_primaryKey_association");
 
 		}
 		catch (Exception e)
@@ -647,15 +640,10 @@ public class TestEntityManagerWithPrimaryKey extends DynamicExtensionsBaseTestCa
 		try
 		{
 			String[] args = {EDITED_XMI_FILE_PATH + "test_primaryKey_association.xmi",
-					CSV_FILE_PATH + "test_primaryKey.csv","test_id","none","false"};
+					CSV_FILE_PATH + "test_primaryKey.csv", "test_id", "none", "false"};
 			CiderXMIImporter.main(args);
 
-			EntityGroupInterface entityGroup = EntityGroupManager.getInstance()
-					.getEntityGroupByName("test_primaryKey_association");
-			/*EntityInterface entity = entityGroup.getEntityByName("child");
-			assertEquals(noOfDefaultColumns + 3, getColumnCount("select * from "
-					+ entity.getTableProperties().getName()));*/
-			//Exception should occur
+			EntityGroupManager.getInstance().getEntityGroupByName("test_primaryKey_association");
 
 		}
 		catch (Exception e)
@@ -808,7 +796,7 @@ public class TestEntityManagerWithPrimaryKey extends DynamicExtensionsBaseTestCa
 			entityGroup.addEntity(user);
 			user.setEntityGroup(entityGroup);
 
-			EntityInterface savedUser = entityManager.persistEntity(user);
+			entityManager.persistEntity(user);
 
 			String tableName = user.getTableProperties().getName();
 
@@ -1126,7 +1114,6 @@ public class TestEntityManagerWithPrimaryKey extends DynamicExtensionsBaseTestCa
 			entityGroup.addEntity(specimen);
 			specimen.setEntityGroup(entityGroup);
 
-
 			EntityInterface tissueSpecimen = factory.createEntity();
 			tissueSpecimen.setName("tissueSpecimen");
 			entityGroup.addEntity(tissueSpecimen);
@@ -1136,7 +1123,6 @@ public class TestEntityManagerWithPrimaryKey extends DynamicExtensionsBaseTestCa
 			doubleAttribute.setIsPrimaryKey(new Boolean(true));
 			doubleAttribute.setIsNullable(new Boolean(false));
 			tissueSpecimen.addAbstractAttribute(doubleAttribute);
-
 
 			AttributeInterface quantityInCellCount = factory.createIntegerAttribute();
 			quantityInCellCount.setName("quantityInCellCount");
