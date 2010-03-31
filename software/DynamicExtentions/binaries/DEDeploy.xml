@@ -463,7 +463,7 @@
 			<arg value="${addQueryPaths}" />
 			<arg value="${condition}" />
 			<arg value="${generate.cacore}" />
-
+			<sysproperty key="net.sourceforge.cobertura.datafile" file="../cobertura/coverage.ser" />
 			<classpath>
 				<pathelement location="${base.dir}/classes/" />
 				<fileset dir="${base.dir}/../lib/server">
@@ -701,6 +701,7 @@
 			<arg value="${relative.filename}" />
 			<arg value="${version}" />
 			<arg value="${hookentity}" />
+			<sysproperty key="net.sourceforge.cobertura.datafile" file="../cobertura/coverage.ser" />
 			<classpath>
 				<pathelement location="${base.dir}/classes/" />
 				<fileset dir="${base.dir}/../lib/server">
@@ -1024,6 +1025,7 @@
           target: import.xmi.to.generate.cacore
          ================================= -->
 	<target name="import.xmi.to.generate.cacore" depends="" description="Import XMI for caCore generation">
+		<mkdir dir="./temp_deaudit_related_files/temp_exported_xmi"/>
 		<antcall target="import.xmi.for.testcases">
 			<param name="filename" value="${xmi.name}" />
 			<param name="mainContainerList" value="${mainContainerList}" />
@@ -1041,6 +1043,7 @@
 		<java failonerror="true" classname="edu.wustl.metadata.util.PackageName" fork="yes">
 			<arg value="${export.dir}/" />
 			<arg value="${xmi.name}" />
+			<sysproperty key="net.sourceforge.cobertura.datafile" file="../cobertura/coverage.ser" />
 			<classpath>
 				<pathelement location="${base.dir}/classes/" />
 				<fileset dir="${base.dir}/../lib/server">

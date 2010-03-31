@@ -363,7 +363,6 @@
 				<exclude name="**/jboss.jar" />
 				<include name="**/log4j.jar" />
 				<include name="binaries/classes/**/*" />
-				<include name="src/conf/error.jsp" />
 				<include name="src/conf/web.xml" />
 				<include name="src/conf/dynamicextensions-struts-config.xml" />
 				<include name="src/resources/ApplicationVersionInfo.txt" />
@@ -460,8 +459,6 @@
 		<copy todir="${temp.dir}/WEB-INF" file="src/conf/dynamicextensions-struts-config.xml">
 		</copy>
 		<copy todir="${temp.dir}/WEB-INF" file="src/conf/stinger.xml"/>
-		<copy todir="${temp.dir}" file="src/conf/error.jsp">
-		</copy>
 		<copy todir="${temp.dir}" file="src/resources/ApplicationVersionInfo.txt">
 		</copy>
 	</target>
@@ -881,11 +878,22 @@
 				<property name="mainContainerList" value="${test.model.dir}/main.csv" />
 				<property name="package.name" value="annotations" />
 				<property name="hookentity" value="edu.wustl.catissuecore.domain.RecordEntry" />
-				<property name="addQueryPaths" value="false" />
+				<property name="addQueryPaths" value="true" />
 				<property name="testcases" value="True" />
 			</ant>
 
 			<echo message="Test Model loaded Successfully" />
+			<echo message="Now Editing the test model for junits" />
+						<ant antfile="DEDeploy.xml" dir="./binaries/" target="import.xmi.to.generate.cacore">
+							<property name="xmi.name" value="${test.model.dir}/test.xmi" />
+							<property name="mainContainerList" value="${test.model.dir}/main.csv" />
+							<property name="package.name" value="annotations" />
+							<property name="hookentity" value="edu.wustl.catissuecore.domain.RecordEntry" />
+							<property name="addQueryPaths" value="true" />
+							<property name="testcases" value="True" />
+						</ant>
+
+						<echo message="Test Model Edited Successfully" />
 
 
 		</target>
@@ -894,6 +902,7 @@
 				<arg value="${permissibleValuesFile}" />
 				<arg value="${pv.dir}"/>
 				<arg value="${Application.url}" />
+				<sysproperty key="net.sourceforge.cobertura.datafile" file="./cobertura/coverage.ser" />
 				<classpath>
 					<pathelement location="${base.dir}/binaries/classes/" />
 					<fileset dir="${base.dir}/lib/server">
