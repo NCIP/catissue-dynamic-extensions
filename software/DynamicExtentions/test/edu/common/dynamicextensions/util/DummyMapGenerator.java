@@ -122,7 +122,7 @@ public class DummyMapGenerator
 		}
 		else if (attribute.getAttributeTypeInformation() instanceof NumericTypeInformationInterface)
 		{
-			String value = getNumericValueForAttribute(attribute);
+			String value = getNumericValueForAttribute(catAtt);
 			dataValue.put(catAtt, value);
 		}
 		else if (attribute.getAttributeTypeInformation() instanceof BooleanAttributeTypeInformation)
@@ -310,7 +310,6 @@ public class DummyMapGenerator
 			attributeRules = new HashSet<RuleInterface>(abstractAttribute.getRuleCollection());
 		}
 
-		abstractAttribute.getAttributeTypeInformation();
 		String minParam = getMinRuleparam(attributeRules);
 		String value = "15";
 		if (minParam != null && !"".equals(minParam))

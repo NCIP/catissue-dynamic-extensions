@@ -26,7 +26,6 @@ import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.global.Constants;
-import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.query.generator.ColumnValueBean;
@@ -39,7 +38,7 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	static
 	{
 		System.setProperty("app.propertiesFile", System.getProperty("user.dir") + "/build.xml");
-		LoggerConfig.configureLogger(System.getProperty("user.dir") + "/src/java/");
+		LoggerConfig.configureLogger(System.getProperty("user.dir") + "/test/");
 		try
 		{
 			ErrorKey.init("~");
@@ -92,8 +91,6 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	@Override
 	protected void setUp()
 	{
-
-		Logger.out = org.apache.log4j.Logger.getLogger("dynamicExtensions.logger");
 		ApplicationProperties.initBundle("ApplicationResources");
 	}
 
