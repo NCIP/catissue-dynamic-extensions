@@ -9,6 +9,7 @@ import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
 
@@ -54,8 +55,8 @@ public enum ControlEnum {
 						.getAttributeTypeInformation();
 				PermissibleValueInterface defaultValue2 = attributeTypeInformation
 						.getDefaultValue();
-				defaultValue = getValueStringFromPV(defaultValue, attributeTypeInformation,
-						defaultValue2);
+				defaultValue = getValueStringFromPV(control, defaultValue,
+						attributeTypeInformation, defaultValue2);
 			}
 			else if (categoryAttribute.getAbstractAttribute() instanceof AssociationInterface)
 			{
@@ -66,12 +67,13 @@ public enum ControlEnum {
 		}
 
 		/**
+		 * @param control
 		 * @param defaultValue
 		 * @param attributeTypeInformation
 		 * @param defaultValue2
 		 * @return
 		 */
-		private String getValueStringFromPV(String defaultValue,
+		private String getValueStringFromPV(ControlInterface control, String defaultValue,
 				AttributeTypeInformationInterface attributeTypeInformation,
 				PermissibleValueInterface defaultValue2)
 		{
@@ -82,8 +84,29 @@ public enum ControlEnum {
 				defaultValue = valueAsObject.toString();
 				if (attributeTypeInformation instanceof DateAttributeTypeInformation)
 				{
-					defaultValue = defaultValue.replace('-', '/');
+					defaultValue = getDateControlDefaultValue(control).replace('-', '/');
 				}
+			}
+			return defaultValue;
+		}
+
+		/**
+		 * @return
+		 */
+		private String getDateControlDefaultValue(ControlInterface control)
+		{
+			String defaultValue = control.getAttibuteMetadataInterface().getDefaultValue();
+			if (defaultValue != null && defaultValue.length() > 0
+					&& control.getAttibuteMetadataInterface() instanceof CategoryAttribute
+					&& defaultValue.indexOf('-') == 4)
+			{
+				String date = defaultValue.substring(0, 10); // 1900-01-01
+				String time = defaultValue.substring(10, defaultValue.length()); // 00:00:00.0
+				String year = date.substring(0, 4); // 1900
+				String month = date.substring(5, 7); // 01
+				String day = date.substring(8, date.length()); // 01
+				date = month + "-" + day + "-" + year;
+				defaultValue = date + time;
 			}
 			return defaultValue;
 		}
