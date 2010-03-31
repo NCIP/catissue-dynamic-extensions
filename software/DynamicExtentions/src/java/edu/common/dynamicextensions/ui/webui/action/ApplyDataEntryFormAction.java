@@ -21,7 +21,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.apache.struts.upload.FormFile;
 
 import edu.common.dynamicextensions.domain.FileAttributeRecordValue;
 import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
@@ -47,6 +46,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ListBoxInterfa
 import edu.common.dynamicextensions.domaininterface.userinterface.MultiSelectInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.SelectInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
+import edu.common.dynamicextensions.entitymanager.FileUploadManager;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ApplyDataEntryFormProcessor;
@@ -707,28 +707,47 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 		}
 		else if (control instanceof FileUploadInterface)
 		{
-			FormFile formFile = null;
-			formFile = (FormFile) dataEntryForm.getValue(controlName);
-			boolean isValidExtension = true;
-			if (formFile.getFileName().equals(""))
+			String fileName = "";
+			String contentType = "";
+			long fileId = 0;
+			System.out.println("Hi");
+			if(request.getParameter(controlName).length() != 0)
+			{
+				fileId = Long.valueOf(request.getParameter(controlName));
+				System.out.println("");
+				fileName = request.getParameter(controlName + "_hidden");
+				contentType = request.getParameter(controlName + "_contentType");
+			}
+
+			if (fileName.length() == 0 || contentType.length() == 0 || fileId == 0)
 			{
 				attributeValueMap.put(abstractAttribute, control.getValue());
 			}
 			else
 			{
-				isValidExtension = checkValidFormat(control, formFile.getFileName(), errorList);
-			}
-			if (isValidExtension
-					&& ((formFile.getFileName() != null) && !formFile.getFileName().equals("")))
-			{
-				FileAttributeRecordValue fileAttributeRecordValue = new FileAttributeRecordValue();
-				fileAttributeRecordValue.setFileContent(formFile.getFileData());
-				fileAttributeRecordValue.setFileName(formFile.getFileName());
-				fileAttributeRecordValue.setContentType(formFile.getContentType());
-				attributeValue = fileAttributeRecordValue;
-				attributeValueMap.put(abstractAttribute, attributeValue);
-			}
+				FileUploadManager fileUploadManager = new FileUploadManager();
+				byte[] fileContent = null;
+				try
+				{
+					fileContent = fileUploadManager.getFilefromDatabase(fileId);
+				}
+				catch (SQLException e)
+				{
+					new DynamicExtensionsSystemException("Error while fetching file from Database",e);
+				}
 
+				boolean isValidExtension = true;
+				isValidExtension = checkValidFormat(control, fileName, errorList);
+				if (isValidExtension && ((fileName != null) && !fileName.equals("")))
+				{
+					FileAttributeRecordValue fileAttributeRecordValue = new FileAttributeRecordValue();
+					fileAttributeRecordValue.setFileContent(fileContent);
+					fileAttributeRecordValue.setFileName(fileName);
+					fileAttributeRecordValue.setContentType(contentType);
+					attributeValue = fileAttributeRecordValue;
+					attributeValueMap.put(abstractAttribute, attributeValue);
+				}
+			}
 		}
 		else if (control instanceof ComboBoxInterface)
 		{

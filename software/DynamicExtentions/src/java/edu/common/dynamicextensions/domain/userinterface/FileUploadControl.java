@@ -22,10 +22,8 @@ import edu.wustl.common.util.global.ApplicationProperties;
 public class FileUploadControl extends Control implements FileUploadInterface
 {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 3211268406984504475L;
+
 	private Integer columns = null;
 
 	/**
@@ -36,32 +34,42 @@ public class FileUploadControl extends Control implements FileUploadInterface
 			throws DynamicExtensionsSystemException
 	{
 		String htmlString = "";
+		String controlname = getHTMLComponentName();
+
 		if (getIsSkipLogicTargetControl())
 		{
-			htmlString += "<div id='" + getHTMLComponentName() + "_div' name='"
-					+ getHTMLComponentName() + "_div'>";
+			htmlString += "<div id='" + controlname + "_div' name='" + controlname + "_div'>";
 		}
+
 		ApplicationProperties.initBundle("ApplicationResources");
+		Container parentContainer = getParentContainer();
 		final CategoryEntityRecord entityRecord = new CategoryEntityRecord(parentContainer
 				.getAbstractEntity().getId(), parentContainer.getAbstractEntity().getName());
+
+		htmlString = htmlString + "<span id='" + controlname + "_button'>";
 		if (value != null)
 		{
 			Long recordId = (Long) parentContainer.getContainerValueMap().get(entityRecord);
-			htmlString = "<A onclick='appendRecordId(this);' href='/dynamicExtensions/DownloadFileAction?attributeIdentifier="
+			htmlString = htmlString + "<input type='text' disabled name='" + controlname + "'_1 id='" + controlname + "_1' value='" + value + "'/>&nbsp;&nbsp;";
+			htmlString = htmlString + "<img src='/images/de/download.bmp' />&nbsp;&nbsp;";
+			htmlString = htmlString + "<img src='/images/de/deleteIcon.jpg' style='cursor:pointer' onClick='updateFileControl(" +controlname+ ");' />";
+			/*htmlString = "<A onclick='appendRecordId(this);' href='/dynamicExtensions/DownloadFileAction?attributeIdentifier="
 					+ baseAbstractAttribute.getId()
 					+ "&recordIdentifier="
 					+ recordId
 					+ "'>"
-					+ value + "</A>";
-
+					+ value + "</A>";*/
 		}
-		htmlString = htmlString + "<input onchange='isDataChanged();' type=\"file\" "
-				+ "name=\"value(" + getHTMLComponentName() + ")\" " + "id=\""
-				+ getHTMLComponentName() + "\"/>";
+		else
+		{
+			htmlString = htmlString + "<input onchange='isDataChanged();' type=\"file\" "
+					+ "name='" + controlname + "' " + "id=\"" + controlname + "\"'/>";
+		}
+		htmlString = htmlString + "</span>";
 		if (getIsSkipLogicTargetControl())
 		{
 			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
-					+ getHTMLComponentName() + "_div' />";
+					+ controlname + "_div' />";
 			htmlString += "</div>";
 		}
 		return htmlString;

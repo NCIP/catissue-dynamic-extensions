@@ -238,6 +238,13 @@ PUBLIC
 		validate="false"
 		scope="request">
 		</action>
+
+		<action path="/UploadFile"
+		type="edu.common.dynamicextensions.ui.webui.action.UploadFileToDB"
+		name="FileUploadForm"
+		validate="false"
+		scope="request">
+		</action>
 	</action-mappings>
 
 	<message-resources parameter="ApplicationResources" />

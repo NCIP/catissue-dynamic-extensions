@@ -25,6 +25,7 @@
 <script src="<%=request.getContextPath()%>/javascripts/de/script.js" type="text/javascript"></script>
 
 <script>var imgsrc="<%=request.getContextPath()%>/images/de/";</script>
+<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/prototype.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/jquery-1.3.2.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/form_plugin.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/dynamicExtensions.js" type="text/javascript"></script>
@@ -33,7 +34,6 @@
 <script src="<%=request.getContextPath()%>/javascripts/de/calendarComponent.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/ajax.js"></script>
 
-<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/prototype.js"></script>
 <script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/scriptaculous.js"></script>
 <script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/scr.js"></script>
 <script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/combobox.js"></script>
@@ -88,6 +88,68 @@
 </c:if>
 <script language="JavaScript" >
 		resetTimeoutCounter();
+</script>
+
+<script type="text/javascript">
+$(document).ready(
+	function()
+	{
+		$('input:file', dataEntryForm).each(
+			function()
+			{
+				var controlId = this.id;
+				new AjaxUpload(this,
+					{
+					   action: 'UploadFile.do',
+					   name: 'upload',
+					   responseType: 'json',
+					   onSubmit : function(file,extension)
+							{
+								var submitButton = document.getElementById('btnDESubmit');
+								var imageSrc = "<%=request.getContextPath()%>/images/de/waiting.gif";
+								var buttonName = controlId + "_button";
+								var spanElement = document.getElementById(buttonName);
+								var htmlComponent = spanElement.innerHTML;
+								htmlComponent = htmlComponent + "&nbsp;&nbsp;<img src='" +imageSrc+ "'/>";
+								spanElement.innerHTML = htmlComponent;
+
+							},
+					   onComplete : function(file, response)
+							{
+								var jsonResponse = response;
+								var fileId = "1";
+								var contentType = "";
+								var htmlComponent = "";
+								var buttonName = controlId + "_button";
+								var spanElement = document.getElementById(buttonName);
+
+								if(jsonResponse.uploadedFile!=null)
+								{
+									fileId = jsonResponse.uploadedFile[0].uploadedFileId;
+									contentType = jsonResponse.uploadedFile[0].contentType;
+									var imageSrc = "<%=request.getContextPath()%>/images/uIEnhancementImages/error-green.gif";
+									var deleteImageSrc = "<%=request.getContextPath()%>/images/de/deleteIcon.jpg";
+
+									htmlComponent = "<input type='text' disabled name='" +controlId+ "'_1 id='" +controlId+ "_1' value='" +file+ "'/>&nbsp;&nbsp;";
+									htmlComponent = htmlComponent + "<img src='" +imageSrc+ "' />&nbsp;&nbsp;";
+									htmlComponent = htmlComponent + "<img src='" +deleteImageSrc+ "' style='cursor:pointer' onClick='updateFileControl(" +controlId+ ");' />";
+									htmlComponent = htmlComponent + "<input type='hidden' name='" +controlId+ "' id='" +controlId+ "' value='" +fileId+ "'/>";
+									htmlComponent = htmlComponent + "<input type='hidden' name='" +controlId+ "_hidden' id='" +controlId+ "_hidden' value='" +file+ "'/>";
+									htmlComponent = htmlComponent + "<input type='hidden' name='" +controlId+ "_contentType' id='" +controlId+ "_contentType' value='" +contentType+ "'/>";
+									spanElement.innerHTML = htmlComponent;
+								}
+								else
+								{
+									updateFileControl(controlId);
+									//htmlComponent = "<input type='file' name='" +controlId+ "' id='" +controlId+ "'/>&nbsp;&nbsp;";
+									//htmlComponent = htmlComponent + "<span class='font_red'>Error occured .Please try again.</span>";
+									//spanElement.innerHTML = htmlComponent;
+									//window.location.reload();
+								}
+							}
+					} );
+	 		} );
+	 } );
 </script>
 
 <html>
