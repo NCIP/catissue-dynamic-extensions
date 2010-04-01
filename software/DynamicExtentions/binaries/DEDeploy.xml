@@ -307,6 +307,25 @@
 		</antcall>
 	</target>
 
+	<target name="upgrade_db_db2_from_DE_1.4.0_to_DE_1.4.2" description="upgrade db db2 from DE 1.4.0 to DE 1.4.2">
+		<antcall target="execute_file_db_db2">
+			<param name="sql.file.name" value="${db2.dbupgrade.sql.dir.DE}/Upgrade_DE_Metadata_DE_1.4.0_to_DE_1.4.2.sql" />
+		</antcall>
+	</target>
+
+	<target name="upgrade_db_mysql_from_DE_1.4.0_to_DE_1.4.2" description="upgrade db from DE 1.4.0 to DE 1.4.2 for mysql">
+		<antcall target="execute_file_db_mysql">
+			<param name="sql.file.name" value="${mysql.dbupgrade.sql.dir.DE}/Upgrade_DE_Metadata_DE_1.4.0_to_DE_1.4.2.sql" />
+		</antcall>
+	</target>
+
+	<target name="upgrade_db_oracle_from_DE_1.4.0_to_DE_1.4.2" description="upgrade db from DE 1.4.0 to DE 1.4.2 for oracle">
+		<antcall target="execute_file_db_oracle">
+			<param name="sql.file.name" value="${oracle.dbupgrade.sql.dir.DE}/Upgrade_DE_Metadata_DE_1.4.0_to_DE_1.4.2.sql" />
+		</antcall>
+	</target>
+
+
 	<target name="execute_file_db_mysql" description="execute the DynamicExtensions sql script for mysql">
 		<echo message="upgrading the DB For DynamicExtensions" />
 		<sql driver="${mysql.driver.string.DE}" url="jdbc:mysql://${database.host}:${database.port}/${database.name}" userid="${database.username}" password="${database.password}" onerror="continue">
@@ -487,9 +506,9 @@
 	<target name="create_category_from_xml" depends="create_csv_from_xml, create_category" description="Creates category from XML">
 		<delete dir="${categoryCsvFileDir}"/>
 	</target>
-	
-	<!-- ================================= 
-          target: create_csv_from_xml              
+
+	<!-- =================================
+          target: create_csv_from_xml
          ================================= -->
     <target name="create_csv_from_xml"  description="description">
     	<delete dir="${de.temp.dir}" failonerror="no" />
