@@ -145,6 +145,8 @@ public class DEConstants
 	public static final String INVALID_CONTROL_VALUE = "errors.invalidInputForControl";
 	public static final String VIOLATING_PROPERTY_NAMES = "propertyNamesList";
 
+	public static final String DATA_INSERTION_ERROR_MESSAGE = "Error while inserting data";
+
 	public enum Cardinality {
 		ZERO(0), ONE(1), MANY(100);
 

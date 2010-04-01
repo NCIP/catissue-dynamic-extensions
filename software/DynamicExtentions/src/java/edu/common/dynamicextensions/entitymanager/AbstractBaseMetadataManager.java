@@ -543,32 +543,6 @@ public abstract class AbstractBaseMetadataManager
 		}
 		return dyExtBsDmnObj;
 	}
-
-	/**
-	 * Handle rollback.
-	 *
-	 * @param exception
-	 *            the exception
-	 * @param excMessage
-	 *            the exc message
-	 * @param dao
-	 *            the dao
-	 * @throws DynamicExtensionsSystemException
-	 */
-	protected void handleRollback(String excMessage, DAO dao)
-			throws DynamicExtensionsSystemException
-	{
-		try
-		{
-			dao.rollback();
-		}
-		catch (DAOException e)
-		{
-			throw new DynamicExtensionsSystemException(excMessage, e);
-		}
-
-	}
-
 	/**
 	 * This method will return the name of the TargetRole for the given association
 	 * with its first letter capitalized.

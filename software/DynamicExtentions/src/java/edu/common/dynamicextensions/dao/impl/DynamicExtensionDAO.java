@@ -8,7 +8,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.HibernateDAO;
+import edu.wustl.dao.exception.DAOException;
 
 /**
  * This class is a used to set different parameter like application name,
@@ -83,5 +88,58 @@ public final class DynamicExtensionDAO
 	{
 		appName = props.getProperty("app.name");
 	}
-
+	/**
+	 * This method adds the DE object.
+	 * @param object Object
+	 * @return Object object
+	 * @throws DynamicExtensionsApplicationException DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException DynamicExtensionsSystemException
+	 */
+	public Object insertData(Object object) throws DynamicExtensionsApplicationException,
+	DynamicExtensionsSystemException
+	{
+		HibernateDAO hibernateDAO = null;
+		try
+		{
+			hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
+			hibernateDAO.insert(object);
+			hibernateDAO.commit();
+		}
+		catch (Exception e)
+		{
+			DynamicExtensionsUtility.rollBackDAO(hibernateDAO);
+		}
+		finally
+		{
+			DynamicExtensionsUtility.closeDAO(hibernateDAO);
+		}
+		return object;
+	}
+	/**
+	 * This method updates the DE object.
+	 * @param object Object
+	 * @return Object object
+	 * @throws DynamicExtensionsApplicationException DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException DynamicExtensionsSystemException
+	 */
+	public Object updateData(Object object) throws DynamicExtensionsApplicationException,
+	DynamicExtensionsSystemException
+	{
+		HibernateDAO hibernateDAO = null;
+		try
+		{
+			hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
+			hibernateDAO.update(object);
+			hibernateDAO.commit();
+		}
+		catch (Exception e)
+		{
+			DynamicExtensionsUtility.rollBackDAO(hibernateDAO);
+		}
+		finally
+		{
+			DynamicExtensionsUtility.closeDAO(hibernateDAO);
+		}
+		return object;
+	}
 }

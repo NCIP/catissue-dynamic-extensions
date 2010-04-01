@@ -357,12 +357,12 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		}
 		catch (final DAOException e)
 		{
-			handleRollback("Error while inserting data", jdbcDao);
+			DynamicExtensionsUtility.rollBackDAO(jdbcDao);
 			throw new DynamicExtensionsSystemException("Error while inserting data", e);
 		}
 		catch (final SQLException e)
 		{
-			handleRollback("Error while inserting data", jdbcDao);
+			DynamicExtensionsUtility.rollBackDAO(jdbcDao);
 			throw new DynamicExtensionsSystemException("Error while inserting data", e);
 		}
 		finally
@@ -1383,7 +1383,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		}
 		catch (final Exception e)
 		{
-			handleRollback("Error while editing data", jdbcDao);
+			DynamicExtensionsUtility.rollBackDAO(jdbcDao);
 			throw new DynamicExtensionsSystemException("Error while editing data", e);
 		}
 		finally

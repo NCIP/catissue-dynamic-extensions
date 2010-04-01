@@ -94,6 +94,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.util.global.CategoryConstants;
+import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.common.dynamicextensions.util.global.DEConstants.InheritanceStrategy;
@@ -2359,6 +2360,22 @@ public class DynamicExtensionsUtility
 			{
 				throw new DynamicExtensionsSystemException("Eror while closing the DAO", e);
 			}
+		}
+	}
+	/**
+	 * Roll Back DAO.
+	 * @param hibernateDAO DAO
+	 * @throws DynamicExtensionsSystemException DynamicExtensionsSystemException
+	 */
+	public static void rollBackDAO(DAO hibernateDAO) throws DynamicExtensionsSystemException
+	{
+		try
+		{
+			hibernateDAO.rollback();
+		}
+		catch (DAOException daoExp)
+		{
+			throw new DynamicExtensionsSystemException(DEConstants.DATA_INSERTION_ERROR_MESSAGE, daoExp);
 		}
 	}
 
