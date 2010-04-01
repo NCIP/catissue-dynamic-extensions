@@ -355,6 +355,7 @@ $(document).ready(
 			<input type="hidden" id="breadCrumbPosition" name="breadCrumbPosition" value=""/>
 			<input type="hidden" id="isDirty" name="isDirty" value="false"/>
 			<input type="hidden" id="isShowInDiv" name="isShowInDiv" value="true"/>
+			<input type="hidden" id="scrollTop" name="scrollTop" value="null"/>
 			</div>
 			<c:if test="${requestScope.isDirty == 'true' || requestScope.isDirty == true}">
 				<script>

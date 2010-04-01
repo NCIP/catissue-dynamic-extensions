@@ -2020,6 +2020,7 @@ function showChildContainerInsertDataPage(containerId,ths)
     else if(mode == "view" || mode == "edit")
     {
         dataEntryForm.action= contextParam + "/ApplyDataEntryFormAction.do?scrollTop="+document.getElementById('dataEntryFormDiv').scrollTop;
+        document.getElementById('scrollTop').value = document.getElementById('dataEntryFormDiv').scrollTop;
     }
     setWaitCursorforAllObjectHierarchy(dataEntryForm);
     dataEntryForm.submit();
