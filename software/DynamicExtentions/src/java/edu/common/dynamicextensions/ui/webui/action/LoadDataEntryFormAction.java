@@ -184,6 +184,11 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 				containerMap.put(container.getId().toString(), container);
 			}
 		}
+		for (ContainerInterface childContainer : mainContainer.getChildContainerCollection())
+		{
+			addContainersToMap(containerMap, childContainer);
+			containerMap.put(childContainer.getId().toString(), childContainer);
+		}
 
 	}
 
