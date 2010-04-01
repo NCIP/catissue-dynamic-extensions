@@ -261,12 +261,13 @@ public class ControlsUtility
 	{
 		String defaultValue = null;
 		DateValueInterface dateValue = (DateValueInterface) dateAttribute.getDefaultValue();
-		Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
+
 		if (dateValue != null)
 		{
 			Date defaultDate = dateValue.getValue();
 			if (defaultDate != null)
 			{
+				Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
 				defaultValue = new SimpleDateFormat(getDateFormat(dateAttribute), locale)
 						.format(defaultDate);
 			}
@@ -294,10 +295,9 @@ public class ControlsUtility
 		if (dateAttribute instanceof DateTypeInformationInterface)
 		{
 			dateFormat = ((DateTypeInformationInterface) dateAttribute).getFormat();
-		}
-		dateFormat = DynamicExtensionsUtility.getDateFormat(dateFormat);
 
-		return dateFormat;
+		}
+		return DynamicExtensionsUtility.getDateFormat(dateFormat);
 	}
 
 	/**
@@ -749,9 +749,10 @@ public class ControlsUtility
 	{
 		DateValueInterface dateValue = (DateValueInterface) permissibleValue;
 		NameValueBean nameValueBean = null;
-		Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
+
 		if (dateValue != null && dateValue.getValue() != null)
 		{
+			Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
 			nameValueBean = new NameValueBean();
 			String date = new SimpleDateFormat(getDateFormat(dateAttribute), locale)
 					.format(dateValue.getValue());
@@ -1000,10 +1001,9 @@ public class ControlsUtility
 						.getValue();
 				for (Map<BaseAbstractAttributeInterface, Object> map : attributeValueMapList)
 				{
-					rowNumber++;
 					getAttributeValueForSkipLogicAttributesFromValueMap(fullValueMap, map,
 							skipLogicAttribute, isSameContainerControl, values, entryNumber,
-							rowNumber);
+							++rowNumber);
 				}
 			}
 		}
@@ -1116,7 +1116,6 @@ public class ControlsUtility
 				if (categoryAttributeInterface != null)
 				{
 					boolean isSameContainerControl = false;
-					String sourceControlName = null;
 					ContainerInterface controlContainerInterface = DynamicExtensionsUtility
 							.getContainerForAbstractEntity(categoryAttributeInterface
 									.getCategoryEntity());
@@ -1146,18 +1145,20 @@ public class ControlsUtility
 							isSameContainerControl = false;
 						}
 						Integer controlSequenceNumber = control.getSequenceNumber();
+						StringBuffer sourceControlName = new StringBuffer();
 						if (controlSequenceNumber != null)
 						{
-							sourceControlName = control.getSourceSkipControl()
-									.getHTMLComponentName();
+							sourceControlName.append(control.getSourceSkipControl()
+									.getHTMLComponentName());
 							if (rowId != null && isSameContainerControl && cardinality
 									&& !rowId.equals(Integer.valueOf(-1)))
 							{
-								sourceControlName = sourceControlName + "_" + rowId;
+								sourceControlName.append('_');
+								sourceControlName.append(rowId);
 							}
 						}
 						if (found && control.getIsSkipLogicTargetControl()
-								&& controlName.equals(sourceControlName))
+								&& controlName.equals(sourceControlName.toString()))
 						{
 							setValueMapForEnumeratedControls(rowId, isSameContainerControl,
 									cardinality, fullValueMap, entry, control, isCopyPaste);
@@ -1178,8 +1179,7 @@ public class ControlsUtility
 				Integer entryNumber = 0;
 				for (Map<BaseAbstractAttributeInterface, Object> map : attributeValueMapList)
 				{
-					entryNumber++;
-					populateAttributeValueMapForSkipLogicAttributes(fullValueMap, map, entryNumber,
+					populateAttributeValueMapForSkipLogicAttributes(fullValueMap, map, ++entryNumber,
 							oneToManyCardinality, controlName, controlsList, isCopyPaste);
 				}
 			}
@@ -1220,10 +1220,9 @@ public class ControlsUtility
 
 		Collection<RuleInterface> ruleCollection = ValidatorUtil.getRuleCollection(control
 				.getBaseAbstractAttribute());
-		String ruleName = null;
 		for (RuleInterface rule : ruleCollection)
 		{
-			ruleName = rule.getName();
+			String ruleName = rule.getName();
 			if (ruleName.equalsIgnoreCase(ruleName2))
 			{
 				result = true;
