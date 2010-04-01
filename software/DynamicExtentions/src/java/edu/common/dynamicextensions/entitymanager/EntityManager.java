@@ -1539,7 +1539,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			}
 			else
 			{
-				query.append(selectClause + fromClause + whereClause);
+				query.append(selectClause);
+				query.append(fromClause);
+				query.append(whereClause);
 
 			}
 

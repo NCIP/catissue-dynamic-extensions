@@ -412,7 +412,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	 */
 	private String createGroupDetailsXML(final String groupDescription)
 	{
-		final StringBuffer responseXML = new StringBuffer();
+		final StringBuffer responseXML = new StringBuffer(54);
 		responseXML.append("<group><group-description>");
 		responseXML.append(groupDescription);
 		responseXML.append("</group-description></group>");
@@ -513,7 +513,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	private String createFormDetailsXML(final String formName, final String formDescription,
 			final String formConceptCode, final String operationMode, final boolean isAbstract)
 	{
-		final StringBuffer responseXML = new StringBuffer();
+		final StringBuffer responseXML = new StringBuffer(166);
 		responseXML.append("<form><form-name>");
 		responseXML.append(formName);
 		responseXML.append("</form-name><form-description>");

@@ -490,13 +490,13 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 							}
 							else
 							{
-								collectAttributeValues(request, dataEntryForm, controlName,
+								collectAttributeValues(request, controlName,
 										control, attributeValueMap, errorList);
 							}
 						}
 						else
 						{
-							collectAttributeValues(request, dataEntryForm, controlName, control,
+							collectAttributeValues(request,  controlName, control,
 									attributeValueMap, errorList);
 						}
 					}
@@ -691,7 +691,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 	 * @throws IOException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void collectAttributeValues(HttpServletRequest request, DataEntryForm dataEntryForm,
+	private void collectAttributeValues(HttpServletRequest request,
 			String controlName, ControlInterface control,
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap, List<String> errorList)
 			throws FileNotFoundException, IOException, DynamicExtensionsSystemException
@@ -710,11 +710,9 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 			String fileName = "";
 			String contentType = "";
 			long fileId = 0;
-			System.out.println("Hi");
 			if(request.getParameter(controlName).length() != 0)
 			{
 				fileId = Long.valueOf(request.getParameter(controlName));
-				System.out.println("");
 				fileName = request.getParameter(controlName + "_hidden");
 				contentType = request.getParameter(controlName + "_contentType");
 			}
