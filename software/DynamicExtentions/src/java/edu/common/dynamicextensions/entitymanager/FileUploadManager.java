@@ -50,14 +50,13 @@ public class FileUploadManager implements DynamicExtensionsQueryBuilderConstants
 		catch (DAOException e)
 		{
 			LOGGER.info("Error occured while connecting to database.", e);
-			new DynamicExtensionsSystemException(e.getMessage());
+			throw new DynamicExtensionsSystemException(e.getMessage());
 		}
 		catch (SQLException e)
 		{
 			LOGGER.info("Error occured while fetching results from database.", e);
-			new DynamicExtensionsSystemException(e.getMessage());
+			throw new DynamicExtensionsSystemException(e.getMessage());
 		}
-
 		return identifier;
 	}
 

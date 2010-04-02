@@ -2918,13 +2918,13 @@ function updateOffsets()
 
 function updateFileControl(controlId)
 {
-  var spanName = controlId.id + "_button";
-  var spanElement = document.getElementById(spanName);
+ var spanName = controlId + "_button";
+ var controlID = controlId;
+ var spanElement = document.getElementById(spanName);
+ var innerHTMLString = "<input type='file' id='" +controlID+ "' name='" +controlID+ "' onchange='isDataChanged();' />";
 
-  var innerHTMLString = "<input type='file' id='" +controlId.id+ "' name='" +controlId.id+ "' onchange='isDataChanged();' />";
-  spanElement.innerHTML = innerHTMLString;
-  window.location.reload();
-  //setJQueryParameters(controlId.id);
+ spanElement.innerHTML = innerHTMLString;
+ setJQueryParameters(controlID);
 }
 
 function setJQueryParameters(controlId)
@@ -2932,45 +2932,49 @@ function setJQueryParameters(controlId)
 	new AjaxUpload(controlId,
 		{
 		   action: 'UploadFile.do',
-			 name: 'upload',
+			 name: 'upload1',
 			 responseType: 'json',
 			 onSubmit : function(file,extension)
 					{
           var submitButton = document.getElementById('btnDESubmit');
-							var imageSrc = "<%=request.getContextPath()%>/images/de/waiting.gif";
-							var buttonName = controlId + "_button";
-							var spanElement = document.getElementById(buttonName);
-							var htmlComponent = spanElement.innerHTML;
-							htmlComponent = htmlComponent + "&nbsp;&nbsp;<img src='" +imageSrc+ "'/>";
-							spanElement.innerHTML = htmlComponent;
+						var imageSrc = "/clinportal/images/de/waiting.gif";
+						var buttonName = controlId + "_button";
+						var spanElement = document.getElementById(buttonName);
+						var htmlComponent = spanElement.innerHTML;
+						htmlComponent = htmlComponent + "&nbsp;&nbsp;<img src='" +imageSrc+ "'/>";
+						spanElement.innerHTML = htmlComponent;
 					},
 			onComplete : function(file, response)
 					{
-							var jsonResponse = response;
-							var fileId = "1";
-							var htmlComponent = "";
-							var buttonName = controlId + "_button";
-							var spanElement = document.getElementById(buttonName);
+						var jsonResponse = response;
+						var fileId = "1";
+						var contentType = "";
+						var htmlComponent = "";
+						var buttonName = controlId + "_button";
+						var spanElement = document.getElementById(buttonName);
 
-							if(jsonResponse.uploadedFileId!=null)
-							{
-								fileId = jsonResponse.uploadedFileId;
-								var imageSrc = "/clinportal/images/uIEnhancementImages/error-green.gif";
-								var deleteImageSrc = "/clinportal/images/de/deleteIcon.jpg";
-								htmlComponent = "<input type='text' disabled name='" +controlId+ "'_1 id='" +controlId+ "_1' value='" +file+ "'/>&nbsp;&nbsp;";
-								htmlComponent = htmlComponent + "<img src='" +imageSrc+ "' />&nbsp;&nbsp;";
-								htmlComponent = htmlComponent + "<img src='" +deleteImageSrc+ "' style='cursor:pointer' onClick='updateFileControl(" +controlId+ ");' />";
-								htmlComponent = htmlComponent + "<input type='hidden' name='" +controlId+ "' id='" +controlId+ "' value='" +fileId+ "'/>";
-								htmlComponent = htmlComponent + "<input type='hidden' name='" +controlId+ "_hidden' id='" +controlId+ "_hidden' value='" +file+ "'/>";
-								spanElement.innerHTML = htmlComponent;
-							}
-							else
-							{
-								htmlComponent = "<input type='file' name='" +controlId+ "' id='" +controlId+ "'/>&nbsp;&nbsp;";
-								htmlComponent = htmlComponent + "<span class='font_red'>Error occured .Please try again.</span>";
-								spanElement.innerHTML = htmlComponent;
-								//window.location.reload();
-							}
+						if(jsonResponse.uploadedFile!=null)
+						{
+							fileId = jsonResponse.uploadedFile[0].uploadedFileId;
+							contentType = jsonResponse.uploadedFile[0].contentType;
+							var imageSrc = "/clinportal/images/uIEnhancementImages/error-green.gif";
+							var deleteImageSrc = "/clinportal/images/de/deleteIcon.jpg";
+
+							htmlComponent = "<input type='text' disabled name='" +controlId+ "'_1 id='" +controlId+ "_1' value='" +file+ "'/>&nbsp;&nbsp;";
+							htmlComponent = htmlComponent + "<img src='" +imageSrc+ "' />&nbsp;&nbsp;";
+							htmlComponent = htmlComponent + "<img src='" +deleteImageSrc+ "' style='cursor:pointer' onClick='updateFileControl(" +controlId+ ");' />";
+							htmlComponent = htmlComponent + "<input type='hidden' name='" +controlId+ "' id='" +controlId+ "' value='" +fileId+ "'/>";
+							htmlComponent = htmlComponent + "<input type='hidden' name='" +controlId+ "_hidden' id='" +controlId+ "_hidden' value='" +file+ "'/>";
+							htmlComponent = htmlComponent + "<input type='hidden' name='" +controlId+ "_contentType' id='" +controlId+ "_contentType' value='" +contentType+ "'/>";
+							spanElement.innerHTML = htmlComponent;
+						}
+						else
+						{
+							htmlComponent = "<input type='file' name='" +controlId+ "' id='" +controlId+ "'/>&nbsp;&nbsp;";
+							htmlComponent = htmlComponent + "<span class='font_red'>Error occured .Please try again.</span>";
+							spanElement.innerHTML = htmlComponent;
+							updateFileControl(controlId);
+						}
 					}
 		});
 }

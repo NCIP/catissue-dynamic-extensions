@@ -70,7 +70,14 @@ public class UploadFileToDB extends BaseDynamicExtensionsAction
 		catch (FileUploadException e)
 		{
 			LOGGER.info("Error occured while uploading file to database");
-			new DynamicExtensionsSystemException("Exception occured while uploading file.", e);
+			try
+			{
+				throw new DynamicExtensionsSystemException("Exception occured while uploading file.", e);
+			}
+			catch (DynamicExtensionsSystemException e1)
+			{
+				LOGGER.info("Error occured while uploading file to database", e);
+			}
 		}
 		catch (DynamicExtensionsSystemException e)
 		{

@@ -40,6 +40,7 @@
 <script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/ext-base.js"></script>
 <script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/ext-all.js"></script>
 <script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/combos.js"></script>
+<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/ajaxupload.js"></script>
 
 
 <c:set var="containerInterface" value="${dataEntryForm.containerInterface}"/>
@@ -106,7 +107,7 @@ $(document).ready(
 					   onSubmit : function(file,extension)
 							{
 								var submitButton = document.getElementById('btnDESubmit');
-								var imageSrc = "<%=request.getContextPath()%>/images/de/waiting.gif";
+								var imageSrc = "/clinportal/images/de/waiting.gif";
 								var buttonName = controlId + "_button";
 								var spanElement = document.getElementById(buttonName);
 								var htmlComponent = spanElement.innerHTML;
@@ -127,8 +128,8 @@ $(document).ready(
 								{
 									fileId = jsonResponse.uploadedFile[0].uploadedFileId;
 									contentType = jsonResponse.uploadedFile[0].contentType;
-									var imageSrc = "<%=request.getContextPath()%>/images/uIEnhancementImages/error-green.gif";
-									var deleteImageSrc = "<%=request.getContextPath()%>/images/de/deleteIcon.jpg";
+									var imageSrc = "/clinportal/images/uIEnhancementImages/error-green.gif";
+									var deleteImageSrc = "/clinportal/images/de/deleteIcon.jpg";
 
 									htmlComponent = "<input type='text' disabled name='" +controlId+ "'_1 id='" +controlId+ "_1' value='" +file+ "'/>&nbsp;&nbsp;";
 									htmlComponent = htmlComponent + "<img src='" +imageSrc+ "' />&nbsp;&nbsp;";
@@ -140,11 +141,10 @@ $(document).ready(
 								}
 								else
 								{
+									htmlComponent = "<input type='file' name='" +controlId+ "' id='" +controlId+ "'/>&nbsp;&nbsp;";
+									htmlComponent = htmlComponent + "<span class='font_red'>Error occured .Please try again.</span>";
+									spanElement.innerHTML = htmlComponent;
 									updateFileControl(controlId);
-									//htmlComponent = "<input type='file' name='" +controlId+ "' id='" +controlId+ "'/>&nbsp;&nbsp;";
-									//htmlComponent = htmlComponent + "<span class='font_red'>Error occured .Please try again.</span>";
-									//spanElement.innerHTML = htmlComponent;
-									//window.location.reload();
 								}
 							}
 					} );

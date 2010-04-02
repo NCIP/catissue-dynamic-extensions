@@ -764,16 +764,33 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			LinkedList<ColumnValueBean> columnValueList, Object value,
 			AttributeInterface primitiveAttr)
 	{
-		if (primitiveAttr.getAttributeTypeInformation() instanceof FileAttributeTypeInformation
-				&& value instanceof FileAttributeRecordValue)
+		if (primitiveAttr.getAttributeTypeInformation() instanceof FileAttributeTypeInformation)
 		{
-			FileAttributeRecordValue recordValue = (FileAttributeRecordValue) value;
-			columnValueList.add(new ColumnValueBean(primitiveAttr.getColumnProperties().getName()
-					+ UNDERSCORE + FILE_NAME, recordValue.getFileName()));
-			columnValueList.add(new ColumnValueBean(primitiveAttr.getColumnProperties().getName()
-					+ UNDERSCORE + CONTENT_TYPE, recordValue.getContentType()));
-			columnValueList.add(new ColumnValueBean(primitiveAttr.getColumnProperties().getName(),
-					recordValue.getFileContent()));
+
+			if (value == null)
+			{
+				columnValueList.add(new ColumnValueBean(primitiveAttr.getColumnProperties()
+						.getName()
+						+ UNDERSCORE + FILE_NAME, null));
+				columnValueList.add(new ColumnValueBean(primitiveAttr.getColumnProperties()
+						.getName()
+						+ UNDERSCORE + CONTENT_TYPE, null));
+				columnValueList.add(new ColumnValueBean(primitiveAttr.getColumnProperties()
+						.getName(), null));
+			}
+			else if (value instanceof FileAttributeRecordValue)
+			{
+				FileAttributeRecordValue recordValue = (FileAttributeRecordValue) value;
+
+				columnValueList.add(new ColumnValueBean(primitiveAttr.getColumnProperties()
+						.getName()
+						+ UNDERSCORE + FILE_NAME, recordValue.getFileName()));
+				columnValueList.add(new ColumnValueBean(primitiveAttr.getColumnProperties()
+						.getName()
+						+ UNDERSCORE + CONTENT_TYPE, recordValue.getContentType()));
+				columnValueList.add(new ColumnValueBean(primitiveAttr.getColumnProperties()
+						.getName(), recordValue.getFileContent()));
+			}
 		}
 
 	}

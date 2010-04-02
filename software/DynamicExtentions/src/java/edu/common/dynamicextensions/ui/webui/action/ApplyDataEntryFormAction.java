@@ -710,7 +710,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 			String fileName = "";
 			String contentType = "";
 			long fileId = 0;
-			if(request.getParameter(controlName).length() != 0)
+			if(request.getParameter(controlName) != null)
 			{
 				fileId = Long.valueOf(request.getParameter(controlName));
 				fileName = request.getParameter(controlName + "_hidden");
@@ -719,7 +719,14 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 
 			if (fileName.length() == 0 || contentType.length() == 0 || fileId == 0)
 			{
-				attributeValueMap.put(abstractAttribute, control.getValue());
+				if(request.getParameter(controlName + "_hidden") != null)
+				{
+					attributeValueMap.put(abstractAttribute, control.getValue());
+				}
+				else
+				{
+					attributeValueMap.put(abstractAttribute, null);
+				}
 			}
 			else
 			{
