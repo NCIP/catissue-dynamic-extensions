@@ -2937,7 +2937,7 @@ function setJQueryParameters(controlId)
 			 onSubmit : function(file,extension)
 					{
           var submitButton = document.getElementById('btnDESubmit');
-						var imageSrc = "/clinportal/images/de/waiting.gif";
+						var imageSrc = "/images/de/waiting.gif";
 						var buttonName = controlId + "_button";
 						var spanElement = document.getElementById(buttonName);
 						var htmlComponent = spanElement.innerHTML;
@@ -2957,8 +2957,8 @@ function setJQueryParameters(controlId)
 						{
 							fileId = jsonResponse.uploadedFile[0].uploadedFileId;
 							contentType = jsonResponse.uploadedFile[0].contentType;
-							var imageSrc = "/clinportal/images/uIEnhancementImages/error-green.gif";
-							var deleteImageSrc = "/clinportal/images/de/deleteIcon.jpg";
+							var imageSrc = "/images/uIEnhancementImages/error-green.gif";
+							var deleteImageSrc = "/images/de/deleteIcon.jpg";
 
 							htmlComponent = "<input type='text' disabled name='" +controlId+ "'_1 id='" +controlId+ "_1' value='" +file+ "'/>&nbsp;&nbsp;";
 							htmlComponent = htmlComponent + "<img src='" +imageSrc+ "' />&nbsp;&nbsp;";
