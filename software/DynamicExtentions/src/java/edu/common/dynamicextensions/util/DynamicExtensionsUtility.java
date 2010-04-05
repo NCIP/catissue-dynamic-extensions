@@ -471,7 +471,8 @@ public class DynamicExtensionsUtility
 			ContainerInterface containerInterface)
 	{
 		ControlInterface control = null;
-		Collection<ControlInterface> controlCollection = containerInterface.getAllControls();
+		Collection<ControlInterface> controlCollection = containerInterface
+				.getAllControlsUnderSameDisplayLabel();;
 		for (ControlInterface controlInterface : controlCollection)
 		{
 			if (controlInterface instanceof AbstractContainmentControlInterface)
@@ -1955,8 +1956,8 @@ public class DynamicExtensionsUtility
 		JDBCDAO jdbcDao = getJDBCDAO();
 
 		String formattedvalue = jdbcDao.getStrTodateFunction() + "('"
-				+ simpleDateFormat.format(date)
-				+ "','" + ProcessorConstants.ORCL_CAT_REL_ATTR_FORMAT + "')";
+				+ simpleDateFormat.format(date) + "','"
+				+ ProcessorConstants.ORCL_CAT_REL_ATTR_FORMAT + "')";
 
 		return formattedvalue;
 	}
@@ -2362,6 +2363,7 @@ public class DynamicExtensionsUtility
 			}
 		}
 	}
+
 	/**
 	 * Roll Back DAO.
 	 * @param hibernateDAO DAO
@@ -2375,7 +2377,8 @@ public class DynamicExtensionsUtility
 		}
 		catch (DAOException daoExp)
 		{
-			throw new DynamicExtensionsSystemException(DEConstants.DATA_INSERTION_ERROR_MESSAGE, daoExp);
+			throw new DynamicExtensionsSystemException(DEConstants.DATA_INSERTION_ERROR_MESSAGE,
+					daoExp);
 		}
 	}
 
