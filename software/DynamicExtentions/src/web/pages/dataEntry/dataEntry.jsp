@@ -15,6 +15,7 @@
 <%@ page import="org.apache.struts.action.ActionMessages" %>
 
 <%-- Stylesheet --%>
+<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/prototype.js"></script>
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/styleSheet.css" />
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/de_style.css" />
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/ext-all.css" />
@@ -25,7 +26,6 @@
 <script src="<%=request.getContextPath()%>/javascripts/de/script.js" type="text/javascript"></script>
 
 <script>var imgsrc="<%=request.getContextPath()%>/images/de/";</script>
-<script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/prototype.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/jquery-1.3.2.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/form_plugin.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/dynamicExtensions.js" type="text/javascript"></script>
@@ -92,10 +92,11 @@
 </script>
 
 <script type="text/javascript">
-$(document).ready(
+jQuery.noConflict();
+jQuery(document).ready(
 	function()
 	{
-		$('input:file', dataEntryForm).each(
+		jQuery('input:file', dataEntryForm).each(
 			function()
 			{
 				var controlId = this.id;
@@ -107,7 +108,7 @@ $(document).ready(
 					   onSubmit : function(file,extension)
 							{
 								var submitButton = document.getElementById('btnDESubmit');
-								var imageSrc = "/clinportal/images/de/waiting.gif";
+								var imageSrc = "<%=request.getContextPath()%>/images/de/waiting.gif";
 								var buttonName = controlId + "_button";
 								var spanElement = document.getElementById(buttonName);
 								var htmlComponent = spanElement.innerHTML;
@@ -128,8 +129,8 @@ $(document).ready(
 								{
 									fileId = jsonResponse.uploadedFile[0].uploadedFileId;
 									contentType = jsonResponse.uploadedFile[0].contentType;
-									var imageSrc = "/clinportal/images/uIEnhancementImages/error-green.gif";
-									var deleteImageSrc = "/clinportal/images/de/deleteIcon.jpg";
+									var imageSrc = "<%=request.getContextPath()%>/images/uIEnhancementImages/error-green.gif";
+									var deleteImageSrc = "<%=request.getContextPath()%>/images/de/deleteIcon.jpg";
 
 									htmlComponent = "<input type='text' disabled name='" +controlId+ "'_1 id='" +controlId+ "_1' value='" +file+ "'/>&nbsp;&nbsp;";
 									htmlComponent = htmlComponent + "<img src='" +imageSrc+ "' />&nbsp;&nbsp;";
