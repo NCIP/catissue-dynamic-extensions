@@ -392,7 +392,7 @@ public class XMIImportValidator
 		{
 			if (!name.matches(ApplicationProperties.getValue("regEx.StartWIthTwoLowerCaseLetters")))
 			{
-				errorList.add(artifact + " name do not have first two letters in lower case."
+				errorList.add(artifact + " name does not have first two letters in lower case."
 						+ artifactDetails);
 			}
 			validateNameForSpecialCharacterAndNumericStart(name, artifact, artifactDetails);
@@ -409,7 +409,7 @@ public class XMIImportValidator
 		String artifactDetails = " [Entity:" + entityName + "]";
 		if (!name.matches(ApplicationProperties.getValue("regEx.StartWIthUpperCase")))
 		{
-			errorList.add("Class name do not start with upper case character." + artifactDetails);
+			errorList.add("Class name does not start with upper case character." + artifactDetails);
 		}
 
 		validateNameForSpecialCharacterAndNumericStart(name, "Class", artifactDetails);
