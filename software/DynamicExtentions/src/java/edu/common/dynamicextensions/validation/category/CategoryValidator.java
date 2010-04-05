@@ -480,23 +480,19 @@ public class CategoryValidator
 	{
 		if (rootCategoryEntity != null)
 		{
+			if (rootCategoryEntity.getEntity().equals(rootEntityInterface))
+			{
+				String errorMessage = getErrorMessageStart()
+						+ ApplicationProperties.getValue(CategoryConstants.ROOT_ENT_TWICE)
+						+ rootCategoryEntity.getEntity().getName();
+				throw new DynamicExtensionsSystemException(errorMessage);
+			}
 			for (CategoryAssociationInterface categoryAssociationInterface : rootCategoryEntity
 					.getCategoryAssociationCollection())
 			{
-				if (categoryAssociationInterface.getTargetCategoryEntity().getEntity().equals(
-						rootEntityInterface))
-				{
-					String errorMessage = getErrorMessageStart()
-							+ ApplicationProperties.getValue(CategoryConstants.ROOT_ENT_TWICE)
-							+ categoryAssociationInterface.getTargetCategoryEntity().getEntity()
-									.getName();
-					throw new DynamicExtensionsSystemException(errorMessage);
-				}
-				else
-				{
+
 					isRootEntityUsedTwice(categoryAssociationInterface.getTargetCategoryEntity(),
 							rootEntityInterface);
-				}
 			}
 		}
 	}
@@ -715,4 +711,22 @@ public class CategoryValidator
 			}
 		}
 	}
+
+	public void validateQuotes(String[] line) throws DynamicExtensionsSystemException
+	{
+		String errorMessage = getErrorMessageStart() + " Missing qoute(\").";
+		if (line != null)
+		{
+			for (String string : line)
+			{
+				if (string.contains("\n"))
+				{
+					throw new DynamicExtensionsSystemException(errorMessage);
+				}
+			}
+
+		}
+
+	}
+
 }
