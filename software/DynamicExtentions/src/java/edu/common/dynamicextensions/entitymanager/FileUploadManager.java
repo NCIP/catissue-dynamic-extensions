@@ -107,30 +107,23 @@ public class FileUploadManager implements DynamicExtensionsQueryBuilderConstants
 		return colValBeanList;
 	}
 
-	public void updateRecord(long recordIdentifier, long identifier)
+	public void deleteRecord(long identifier)
 			throws DynamicExtensionsSystemException
 	{
 		JDBCDAO jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
 
-		StringBuffer updateQuery = new StringBuffer(UPDATE_KEYWORD);
-		updateQuery.append(FILETABLE);
-		updateQuery.append(" SET ");
-		updateQuery.append(RECORD_ID);
-		updateQuery.append(EQUAL);
-		updateQuery.append(QUESTION_MARK);
-		updateQuery.append(WHERE_KEYWORD);
-		updateQuery.append(IDENTIFIER);
-		updateQuery.append(EQUAL);
-		updateQuery.append(QUESTION_MARK);
+		StringBuffer deleteQuery = new StringBuffer(DELETE_KEYWORD);
+		deleteQuery.append(FILETABLE);
+		deleteQuery.append(WHERE_KEYWORD);
+		deleteQuery.append(IDENTIFIER);
+		deleteQuery.append(EQUAL);
+		deleteQuery.append(QUESTION_MARK);
 
 		final ColumnValueBean identifierValueBean = new ColumnValueBean(IDENTIFIER, identifier);
-		final ColumnValueBean recordIdentifierValueBean = new ColumnValueBean(RECORD_ID,
-				recordIdentifier);
 		final LinkedList<ColumnValueBean> colValBeanList = new LinkedList<ColumnValueBean>();
-		colValBeanList.add(recordIdentifierValueBean);
 		colValBeanList.add(identifierValueBean);
 
-		DynamicExtensionsUtility.executeUpdateQuery(updateQuery.toString(), null, jdbcDao,
+		DynamicExtensionsUtility.executeUpdateQuery(deleteQuery.toString(), null, jdbcDao,
 				colValBeanList);
 		DynamicExtensionsUtility.closeDAO(jdbcDao);
 	}

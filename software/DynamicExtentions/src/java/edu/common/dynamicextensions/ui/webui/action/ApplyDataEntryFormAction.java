@@ -490,13 +490,13 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 							}
 							else
 							{
-								collectAttributeValues(request, controlName,
-										control, attributeValueMap, errorList);
+								collectAttributeValues(request, controlName, control,
+										attributeValueMap, errorList);
 							}
 						}
 						else
 						{
-							collectAttributeValues(request,  controlName, control,
+							collectAttributeValues(request, controlName, control,
 									attributeValueMap, errorList);
 						}
 					}
@@ -691,8 +691,8 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 	 * @throws IOException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void collectAttributeValues(HttpServletRequest request,
-			String controlName, ControlInterface control,
+	private void collectAttributeValues(HttpServletRequest request, String controlName,
+			ControlInterface control,
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap, List<String> errorList)
 			throws FileNotFoundException, IOException, DynamicExtensionsSystemException
 	{
@@ -710,7 +710,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 			String fileName = "";
 			String contentType = "";
 			long fileId = 0;
-			if(request.getParameter(controlName) != null)
+			if (request.getParameter(controlName) != null)
 			{
 				fileId = Long.valueOf(request.getParameter(controlName));
 				fileName = request.getParameter(controlName + "_hidden");
@@ -719,7 +719,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 
 			if (fileName.length() == 0 || contentType.length() == 0 || fileId == 0)
 			{
-				if(request.getParameter(controlName + "_hidden") != null)
+				if (request.getParameter(controlName + "_hidden") != null)
 				{
 					attributeValueMap.put(abstractAttribute, control.getValue());
 				}
@@ -735,22 +735,24 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				try
 				{
 					fileContent = fileUploadManager.getFilefromDatabase(fileId);
+					boolean isValidExtension = true;
+					isValidExtension = checkValidFormat(control, fileName, errorList);
+					if (isValidExtension && ((fileName != null) && !fileName.equals("")))
+					{
+						FileAttributeRecordValue fileAttributeRecordValue = new FileAttributeRecordValue();
+						fileAttributeRecordValue.setFileContent(fileContent);
+						fileAttributeRecordValue.setFileName(fileName);
+						fileAttributeRecordValue.setContentType(contentType);
+						attributeValue = fileAttributeRecordValue;
+						attributeValueMap.put(abstractAttribute, attributeValue);
+						fileUploadManager.deleteRecord(fileId);
+						System.out.println("A");
+					}
 				}
 				catch (SQLException e)
 				{
-					new DynamicExtensionsSystemException("Error while fetching file from Database",e);
-				}
-
-				boolean isValidExtension = true;
-				isValidExtension = checkValidFormat(control, fileName, errorList);
-				if (isValidExtension && ((fileName != null) && !fileName.equals("")))
-				{
-					FileAttributeRecordValue fileAttributeRecordValue = new FileAttributeRecordValue();
-					fileAttributeRecordValue.setFileContent(fileContent);
-					fileAttributeRecordValue.setFileName(fileName);
-					fileAttributeRecordValue.setContentType(contentType);
-					attributeValue = fileAttributeRecordValue;
-					attributeValueMap.put(abstractAttribute, attributeValue);
+					new DynamicExtensionsSystemException("Error while fetching file from Database",
+							e);
 				}
 			}
 		}
