@@ -52,8 +52,8 @@ public class FileUploadControl extends Control implements FileUploadInterface
 		{
 			Long recordId = (Long) parentContainer.getContainerValueMap().get(entityRecord);
 			htmlString = htmlString + "<input type='text' disabled name='" + controlname + "'_1 id='" + controlname + "_1' value='" + value + "'/>&nbsp;&nbsp;";
-			htmlString = htmlString + "<img src='/clinportal/images/de/download.bmp' />&nbsp;&nbsp;";
-			htmlString = htmlString + "<img src='/clinportal/images/de/deleteIcon.jpg' style='cursor:pointer' onClick='updateFileControl(\"" +controlname +"\");' />";
+			htmlString = htmlString + "<img src='images/de/download.bmp' />&nbsp;&nbsp;";
+			htmlString = htmlString + "<img src='images/de/deleteIcon.jpg' style='cursor:pointer' onClick='updateFileControl(\"" +controlname +"\");' />";
 			htmlString = htmlString + "<input type='hidden' id='" +controlname +"_hidden' name='" +controlname +"_hidden' value='hidden'/>";
 			/*htmlString = "<A onclick='appendRecordId(this);' href='/dynamicExtensions/DownloadFileAction?attributeIdentifier="
 					+ baseAbstractAttribute.getId()
