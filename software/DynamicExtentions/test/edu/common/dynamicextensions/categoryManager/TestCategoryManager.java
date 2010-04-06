@@ -257,7 +257,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 				System.out.println("Inserting record for " + category.getName());
 				CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 				Map<BaseAbstractAttributeInterface, Object> dataValue = mapGenerator
-						.createDataValueMapForCategory(rootCatEntity);
+						.createDataValueMapForCategory(rootCatEntity, 1);
 
 				Long recordId = categoryManager.insertData(category, dataValue);
 				System.out.println("Record inserted succesfully for " + category.getName()
@@ -296,7 +296,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 				System.out.println("Inserting record for " + category.getName());
 				Map<BaseAbstractAttributeInterface, Object> dataValue;
 				CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
-				dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity);
+				dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity, 1);
 				long recordId = categoryManager.insertData(category, dataValue);
 				System.out.println("Record inserted succesfully for " + category.getName()
 						+ " RecordId " + recordId);
@@ -403,7 +403,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 				System.out.println("Validating record for " + category.getName());
 				Map<BaseAbstractAttributeInterface, Object> dataValue;
 				CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
-				dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity);
+				dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity, 1);
 				List<String> errorList = new ArrayList<String>();
 				ValidatorUtil.validateEntity(dataValue, errorList,
 						(ContainerInterface) rootCatEntity.getContainerCollection().iterator()
