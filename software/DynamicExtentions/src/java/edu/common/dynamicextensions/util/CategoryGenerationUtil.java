@@ -985,15 +985,19 @@ public class CategoryGenerationUtil
 				}
 				else
 				{
-					CategoryFileParser categoryFileParser = DomainObjectFactory.getInstance()
-							.createCategoryFileParser(file.getAbsolutePath(), "", null);
-					if (categoryFileParser != null)
+					if (file.getAbsolutePath().endsWith(".csv")
+							|| file.getAbsolutePath().endsWith(".CSV"))
 					{
-						if (categoryFileParser.isCategoryFile())
+						CategoryFileParser categoryFileParser = DomainObjectFactory.getInstance()
+								.createCategoryFileParser(file.getAbsolutePath(), "", null);
+						if (categoryFileParser != null)
 						{
-							fileNameList.add(relativePath + file.getName());
+							if (categoryFileParser.isCategoryFile())
+							{
+								fileNameList.add(relativePath + file.getName());
+							}
+							categoryFileParser.closeResources();
 						}
-						categoryFileParser.closeResources();
 					}
 				}
 			}
