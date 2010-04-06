@@ -9,8 +9,8 @@ import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterfac
 /**
  * @version 1.0
  * @created 28-Sep-2006 12:20:08 PM
- * @hibernate.joined-subclass table="DYEXTN_STRING_TYPE_INFO" 
- * @hibernate.joined-subclass-key column="IDENTIFIER" 
+ * @hibernate.joined-subclass table="DYEXTN_STRING_TYPE_INFO"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  */
 public class StringAttributeTypeInformation extends AttributeTypeInformation
 		implements
@@ -28,16 +28,8 @@ public class StringAttributeTypeInformation extends AttributeTypeInformation
 	protected Integer size;
 
 	/**
-	 * @see java.lang.Object#finalize()
-	 */
-	public void finalize() throws Throwable
-	{
-		super.finalize();
-	}
-
-	/**
 	 * This method returns the length of the string.
-	 * @hibernate.property name="size" type="integer" column="MAX_SIZE" 
+	 * @hibernate.property name="size" type="integer" column="MAX_SIZE"
 	 * @return Returns the length of the string.
 	 */
 	public Integer getSize()
@@ -46,6 +38,8 @@ public class StringAttributeTypeInformation extends AttributeTypeInformation
 	}
 
 	/**
+	 * Sets the size.
+	 *
 	 * @param size The size to set.
 	 */
 	public void setSize(Integer size)
@@ -53,7 +47,11 @@ public class StringAttributeTypeInformation extends AttributeTypeInformation
 		this.size = size;
 	}
 
-	/** 
+	/**
+	 * Gets the data type.
+	 *
+	 * @return the data type
+	 *
 	 * @see edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface#getDataType()
 	 */
 	public String getDataType()
@@ -62,7 +60,13 @@ public class StringAttributeTypeInformation extends AttributeTypeInformation
 	}
 
 	/**
-	 * 
+	 * Gets the permissible value for string.
+	 *
+	 * @param value the value
+	 *
+	 * @return the permissible value for string
+	 *
+	 * @see edu.common.dynamicextensions.domain.AttributeTypeInformation#getPermissibleValueForString(java.lang.String)
 	 */
 	public PermissibleValueInterface getPermissibleValueForString(String value)
 	{
