@@ -973,6 +973,10 @@ public class DomainObjectFactory
 		{
 			categoryFileParser = new CategoryCSVFileParser(filePath, baseDir, stinger);
 		}
+		else
+		{
+			throw new DynamicExtensionsSystemException("Invalid file type.");
+		}
 		return categoryFileParser;
 	}
 }
