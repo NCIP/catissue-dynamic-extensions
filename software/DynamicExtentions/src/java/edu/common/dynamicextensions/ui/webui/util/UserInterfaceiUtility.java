@@ -36,35 +36,20 @@ import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class UserInterfaceiUtility.
  *
  * @author chetan_patil
  */
-/**
- * @author Gaurav_mehta
- *
- */
-/**
- * @author Gaurav_mehta
- *
- */
-/**
- * @author Gaurav_mehta
- *
- */
-public final class UserInterfaceiUtility
-{
 
+public final class UserInterfaceiUtility {
 	/** The user utility. */
 	private UserInterfaceiUtility userUtility = null;
 
 	/**
-	 * Instantiates a new user interfacei utility.
+	 * Instantiates a new user interface utility.
 	 */
-	private UserInterfaceiUtility()
-	{
+	private UserInterfaceiUtility() {
 
 	}
 
@@ -90,32 +75,34 @@ public final class UserInterfaceiUtility
 	 *
 	 * @return the string
 	 *
-	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
+	 * @throws DynamicExtensionsSystemException the dynamic extensions
+	 *  system exception
 	 */
-	public static String generateHTMLforGrid(ContainerInterface subContainer,
-			List<Map<BaseAbstractAttributeInterface, Object>> valueMaps, String dataEntryOperation,
-			ContainerInterface mainContainer) throws DynamicExtensionsSystemException
-	{
+	public static String generateHTMLforGrid(ContainerInterface subContainer
+			, List<Map<BaseAbstractAttributeInterface, Object>> valueMaps
+			, String dataEntryOperation, ContainerInterface mainContainer)
+			throws DynamicExtensionsSystemException {
 		StringBuffer htmlForGrid = new StringBuffer(1066);
 
 		int rowCount = 0;
-		if (valueMaps != null)
-		{
+		if (valueMaps != null) {
 			rowCount = valueMaps.size();
 		}
 
 		List<ControlInterface> controls = new ArrayList<ControlInterface>(subContainer
 				.getAllControlsUnderSameDisplayLabel());
 
-		// Do not sort the controls list; it jumbles up the attributes order.
+		// Do not sort the controls list;it jumbles up the attributes order.
 		//Collections.sort(controlsList);
 
-		htmlForGrid.append("<tr width='100%'><td colspan='3'<div style='display:none' id='");
+		htmlForGrid.append("<tr width='100%'><td colspan='3'"
+				+ "<div style='display:none' id='");
 		htmlForGrid.append(subContainer.getId());
 		htmlForGrid.append("_substitutionDiv'><table>");
-		subContainer.setContainerValueMap(new HashMap<BaseAbstractAttributeInterface, Object>()); //empty hashmap to generate hidden row
-		htmlForGrid.append(getContainerHTMLAsARow(subContainer, -1, dataEntryOperation,
-				mainContainer));
+		//empty hashmap to generate hidden row
+		subContainer.setContainerValueMap(new HashMap<BaseAbstractAttributeInterface, Object>());
+		htmlForGrid.append(getContainerHTMLAsARow(subContainer, -1,
+				dataEntryOperation, mainContainer));
 		htmlForGrid.append("</table></div><input type='hidden' name='");
 
 		htmlForGrid.append(subContainer.getId());
@@ -123,29 +110,32 @@ public final class UserInterfaceiUtility
 		htmlForGrid.append(subContainer.getId());
 		htmlForGrid.append("_rowCount' value='");
 		htmlForGrid.append(rowCount);
-		htmlForGrid
-				.append("'/> </td></tr><tr width='100%'><td class='formFieldContainer_withoutBorder' colspan='100' align='center'><table cellpadding='3' cellspacing='0' align='center' width='100%'>");
+		htmlForGrid.append("'/> </td></tr><tr width='100%'> <td "
+		+ "class='formFieldContainer_withoutBorder' colspan='100'"
+		+ " align='center'> <table cellpadding='3' cellspacing='0' "
+		+ "align='center' width='100%'>");
 
-		if (subContainer.getAddCaption())
-		{
+		if (subContainer.getAddCaption()) {
 			htmlForGrid
-					.append("<tr width='100%'><td class='td_color_6e81a6' colspan='3' align='left'>");
-			htmlForGrid.append(((AbstractEntity) subContainer.getAbstractEntity())
-					.getCapitalizedName(DynamicExtensionsUtility
-							.replaceHTMLSpecialCharacters(subContainer.getCaption())));
+			.append("<tr width='100%'><td class='td_color_6e81a6' "
+					+ "colspan='3' align='left'>");
+			htmlForGrid.append(((AbstractEntity) subContainer.
+				getAbstractEntity()).getCapitalizedName
+				(DynamicExtensionsUtility.replaceHTMLSpecialCharacters(
+							subContainer.getCaption())));
 			htmlForGrid.append("</td></tr>");
 		}
 
-		htmlForGrid
-				.append("<tr>"
-						+ "<td width='59'><input type='button' style='border: 0px; background-image: url(images/de/b_paste.gif);height: 20px; width: 59px;' align='middle'  id='paste_"
-						+ subContainer.getId()
-						+ "' "
-						+ "onclick='pasteData(\""
-						+ subContainer.getId()
-						+ "\",\"many\")'/>"
-						+ "</td><td class='formField_withoutBorder' style='background-color:#E3E2E7;' width='100%'>&nbsp;</td></tr>"
-						+ "<tr width='100%'><td colspan='3' width='100%'>");
+		htmlForGrid.append("<tr> <td width='59'><input type='button' "
+				+ "style='border: 0px; background-image: "
+				+ "url(images/de/b_paste.gif);height: 20px; width: 59px;'"
+				+ "align='middle'  id='paste_"
+				+ subContainer.getId() + "' "
+				+ "onclick='pasteData(\"" + subContainer.getId()
+				+ "\",\"many\")'/> </td><td class='formField_withoutBorder'"
+				+ " style='background-color:#E3E2E7;' width='100%'>&nbsp;</td>"
+				+ "</tr> <tr width='100%'><td colspan='3' width='100%'>");
+
 		// For category attribute controls, if heading and/or notes are specified, then
 		// render the UI that displays heading followed by notes for particular
 		// category attribute controls.
