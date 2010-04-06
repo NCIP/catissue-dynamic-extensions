@@ -53,18 +53,24 @@ public class DummyMapGenerator
 	/**
 	 * This method will create the Data Value map for the Given Category Entity .
 	 * It will put some hard coded values for the different attributes as follows.
-	 * Date Attribute  = current date, If range is specified then the min range date + 1 day.
-	 * Numeric Attribute = 15 , If range is specified then the min range value.
+	 * Date Attribute  = current date,
+	 * Numeric Attribute = 15
 	 * Boolean attribute = true.
 	 * String attribute  = test String.
 	 * other attribute = test String for other data type
+	 * If the range is specified on the attribute then depending on the mapStrategry varible the values will
+	 * be put.
+	 * e.g if mapStrategry = 0 then min range value is used.
+	 * if mapStrategry < 0 then value less than min range value is used.
+	 * if mapStrategry > 0 then value greater than max range value is used
 	 * @param rootCatEntity the root category entity for which to generate the map
+	 * @param mapStrategry map generation stratergy
 	 * @return generated map.
 	 * @throws ParseException
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public Map<BaseAbstractAttributeInterface, Object> createDataValueMapForCategory(
-			CategoryEntityInterface rootCatEntity) throws ParseException,
+			CategoryEntityInterface rootCatEntity, int mapStrategry) throws ParseException,
 			DynamicExtensionsSystemException
 	{
 		Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
@@ -75,7 +81,7 @@ public class DummyMapGenerator
 					&& !catAtt.getIsRelatedAttribute())
 			{
 				AttributeInterface attribute = (AttributeInterface) catAtt.getAbstractAttribute();
-				updateDataMap(dataValue, catAtt, attribute);
+				updateDataMap(dataValue, catAtt, attribute, mapStrategry);
 			}
 			else if (!catAtt.getIsRelatedAttribute())
 			{
@@ -89,7 +95,8 @@ public class DummyMapGenerator
 				Map<BaseAbstractAttributeInterface, Object> multiSelectDataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
 				for (int i = 0; i < 2; i++)
 				{
-					updateDataMap(multiSelectDataValue, multiselectAttr, multiselectAttr);
+					updateDataMap(multiSelectDataValue, multiselectAttr, multiselectAttr,
+							mapStrategry);
 				}
 				List multiselctValueList = new ArrayList();
 				multiselctValueList.add(multiSelectDataValue);
@@ -101,10 +108,10 @@ public class DummyMapGenerator
 		{
 			List dataList = new ArrayList();
 			CategoryEntityInterface targetCaEntity = catAssociation.getTargetCategoryEntity();
-			dataList.add(createDataValueMapForCategory(targetCaEntity));
+			dataList.add(createDataValueMapForCategory(targetCaEntity, mapStrategry));
 			if (targetCaEntity.getNumberOfEntries().equals(-1))
 			{
-				dataList.add(createDataValueMapForCategory(targetCaEntity));
+				dataList.add(createDataValueMapForCategory(targetCaEntity, mapStrategry));
 			}
 			dataValue.put(catAssociation, dataList);
 		}
@@ -112,17 +119,18 @@ public class DummyMapGenerator
 	}
 
 	private void updateDataMap(Map dataValue, BaseAbstractAttributeInterface catAtt,
-			AttributeInterface attribute) throws ParseException, DynamicExtensionsSystemException
+			AttributeInterface attribute, int mapStrategry) throws ParseException,
+			DynamicExtensionsSystemException
 	{
 		if (attribute.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
 		{
 
-			String value = getDateValueForAttribute(catAtt);
+			String value = getDateValueForAttribute(catAtt, mapStrategry);
 			dataValue.put(catAtt, value);
 		}
 		else if (attribute.getAttributeTypeInformation() instanceof NumericTypeInformationInterface)
 		{
-			String value = getNumericValueForAttribute(catAtt);
+			String value = getNumericValueForAttribute(catAtt, mapStrategry);
 			dataValue.put(catAtt, value);
 		}
 		else if (attribute.getAttributeTypeInformation() instanceof BooleanAttributeTypeInformation)
@@ -175,18 +183,25 @@ public class DummyMapGenerator
 	/**
 	 * This method will create the Data Value map for the Given Entity .
 	 * It will put some hard coded values for the different attributes as follows.
-	 * Date Attribute  = current date, If range is specified then the min range date + 1 day.
-	 * Numeric Attribute = 15 , If range is specified then the min range value.
+	 * Date Attribute  = current date
+	 * Numeric Attribute = 15
 	 * Boolean attribute = true.
 	 * String attribute  = test String.
 	 * Other attribtue = test String for other data type.
+	 * If the range is specified on the attribute then depending on the mapStrategry varible the values will
+	 * be put.
+	 * e.g if mapStrategry = 0 then min range value is used.
+	 * if mapStrategry < 0 then value less than min range value is used.
+	 * if mapStrategry > 0 then value greater than max range value is used
 	 * @param rootCatEntity the main entity for which to generate the map
+	 * @param mapStrategry
 	 * @return generated map.
 	 * @throws ParseException
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public Map<BaseAbstractAttributeInterface, Object> createDataValueMapForEntity(
-			EntityInterface rootEntity) throws ParseException, DynamicExtensionsSystemException
+			EntityInterface rootEntity, int mapStrategry) throws ParseException,
+			DynamicExtensionsSystemException
 	{
 		Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
 		for (AbstractAttributeInterface abstractAttribute : rootEntity.getAllAttributes())
@@ -195,7 +210,7 @@ public class DummyMapGenerator
 			if (abstractAttribute instanceof AttributeInterface)
 			{
 				AttributeInterface attribute = (AttributeInterface) abstractAttribute;
-				updateDataMap(dataValue, attribute, attribute);
+				updateDataMap(dataValue, attribute, attribute, mapStrategry);
 
 			}
 		}
@@ -203,11 +218,11 @@ public class DummyMapGenerator
 		{
 			List dataList = new ArrayList();
 			EntityInterface targetCaEntity = association.getTargetEntity();
-			dataList.add(createDataValueMapForEntity(targetCaEntity));
+			dataList.add(createDataValueMapForEntity(targetCaEntity, mapStrategry));
 			if (association.getTargetRole().getMaximumCardinality().equals(
 					DEConstants.Cardinality.MANY.getValue()))
 			{
-				dataList.add(createDataValueMapForEntity(targetCaEntity));
+				dataList.add(createDataValueMapForEntity(targetCaEntity, mapStrategry));
 			}
 			dataValue.put(association, dataList);
 		}
@@ -217,11 +232,12 @@ public class DummyMapGenerator
 	/**
 	 * This will return the value to be added in a map for date Attribute for attribute.
 	 * @param attribute attribtue interface
+	 * @param mapStratergy
 	 * @return valid date value.
 	 * @throws ParseException
 	 */
-	private String getDateValueForAttribute(BaseAbstractAttributeInterface attribute)
-			throws ParseException
+	private String getDateValueForAttribute(BaseAbstractAttributeInterface attribute,
+			int mapStratergy) throws ParseException
 	{
 		AttributeInterface abstractAttribute;
 		Set<RuleInterface> attributeRules;
@@ -237,19 +253,50 @@ public class DummyMapGenerator
 			abstractAttribute = (AttributeInterface) attribute;
 			attributeRules = new HashSet<RuleInterface>(abstractAttribute.getRuleCollection());
 		}
-		Date newDate = new Date();
+		String minParam = getRangeRuleparam(attributeRules, CategoryCSVConstants.MIN);
+		String maxParam = getRangeRuleparam(attributeRules, CategoryCSVConstants.MAX);
 		String format = ((DateAttributeTypeInformation) abstractAttribute
 				.getAttributeTypeInformation()).getFormat();
-		String minParam = getMinRuleparam(attributeRules);
+
+		String dateValue = getDateValueForAttribute(mapStratergy, minParam, maxParam, format);
+		return dateValue;
+	}
+
+	private String getDateValueForAttribute(int mapStratergy, String minParam, String maxParam,
+			String format) throws ParseException
+	{
+		Date newDate = new Date();
 		if (minParam != null && !"".equals(minParam))
 		{
-			Date date = Utility.parseDate(minParam, DynamicExtensionsUtility.getDateFormat(format));
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(date);
-			cal.add(Calendar.DAY_OF_MONTH, 1);
-			newDate = cal.getTime();
-		}
 
+			if (mapStratergy > 0)
+			{
+				Date date = Utility.parseDate(maxParam, DynamicExtensionsUtility
+						.getDateFormat(format));
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(date);
+				cal.add(Calendar.DAY_OF_MONTH, 1);
+				newDate = cal.getTime();
+			}
+			else if (mapStratergy < 0)
+			{
+				Date date = Utility.parseDate(minParam, DynamicExtensionsUtility
+						.getDateFormat(format));
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(date);
+				cal.add(Calendar.DAY_OF_MONTH, 1);
+				newDate = cal.getTime();
+			}
+			else
+			{
+				Date date = Utility.parseDate(minParam, DynamicExtensionsUtility
+						.getDateFormat(format));
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(date);
+				newDate = cal.getTime();
+			}
+
+		}
 		SimpleDateFormat formatter = new SimpleDateFormat(DynamicExtensionsUtility
 				.getDateFormat(format));
 		return formatter.format(newDate);
@@ -259,9 +306,10 @@ public class DummyMapGenerator
 	 * It will serach for the date_range or range rule & if found will return the minimun value specified
 	 * in the range else will return empty string.
 	 * @param attributeRules rule collection.
+	 * @param paramName name of the parameter whose value is needed.
 	 * @return min param value for range rule.
 	 */
-	private String getMinRuleparam(Set<RuleInterface> attributeRules)
+	private String getRangeRuleparam(Set<RuleInterface> attributeRules, String paramName)
 	{
 		String value = "";
 		for (RuleInterface rule : attributeRules)
@@ -273,7 +321,7 @@ public class DummyMapGenerator
 						.getRuleParameterCollection();
 				for (RuleParameterInterface ruleParameter : ruleParameters)
 				{
-					if (ruleParameter.getName().equalsIgnoreCase(CategoryCSVConstants.MIN))
+					if (ruleParameter.getName().equalsIgnoreCase(paramName))
 					{
 						value = ruleParameter.getValue();
 
@@ -289,11 +337,12 @@ public class DummyMapGenerator
 	/**
 	 * This will return the value to be added in a map for numeric Attribute for attribute.
 	 * @param attribute attribtue interface
+	 * @param mapStratergy
 	 * @return valid numeric value.
 	 * @throws ParseException
 	 */
-	private String getNumericValueForAttribute(BaseAbstractAttributeInterface attribute)
-			throws ParseException
+	private String getNumericValueForAttribute(BaseAbstractAttributeInterface attribute,
+			int mapStratergy) throws ParseException
 	{
 		AttributeInterface abstractAttribute;
 
@@ -310,11 +359,42 @@ public class DummyMapGenerator
 			attributeRules = new HashSet<RuleInterface>(abstractAttribute.getRuleCollection());
 		}
 
-		String minParam = getMinRuleparam(attributeRules);
+		String minParam = getRangeRuleparam(attributeRules, CategoryCSVConstants.MIN);
+		String maxParam = getRangeRuleparam(attributeRules, CategoryCSVConstants.MAX);
+		return getNumericAttributeValue(mapStratergy, minParam, maxParam);
+
+	}
+
+	/**
+	 * This method will return the attribute value depending on the mapStratergy.
+	 * If mapStratergy variable is negative it will return the value which is less than the
+	 * range specified, if it is positive then it will return the value which is greater than
+	 * the specified range and if it is zero then it will return the minimum value itself.
+	 * (Boundry value.)
+	 * @param mapStratergy map stratergy.
+	 * @param minParam minimum value.
+	 * @param maxParam
+	 * @return
+	 */
+	private String getNumericAttributeValue(int mapStratergy, String minParam, String maxParam)
+	{
 		String value = "15";
 		if (minParam != null && !"".equals(minParam))
 		{
-			value = minParam;
+			if (mapStratergy < 0)
+			{
+				Integer newValue = Integer.valueOf(minParam) - 1;
+				value = newValue.toString();
+			}
+			else if (mapStratergy > 0)
+			{
+				Integer newValue = Integer.valueOf(maxParam) + 1;
+				value = newValue.toString();
+			}
+			else
+			{
+				value = minParam;
+			}
 		}
 		return value;
 	}
