@@ -36,25 +36,67 @@ import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class UserInterfaceiUtility.
+ *
  * @author chetan_patil
+ */
+/**
+ * @author Gaurav_mehta
  *
  */
-public class UserInterfaceiUtility
+/**
+ * @author Gaurav_mehta
+ *
+ */
+/**
+ * @author Gaurav_mehta
+ *
+ */
+public final class UserInterfaceiUtility
 {
 
+	/** The user utility. */
+	private UserInterfaceiUtility userUtility = null;
+
 	/**
+	 * Instantiates a new user interfacei utility.
+	 */
+	private UserInterfaceiUtility()
+	{
+
+	}
+
+	/**
+	 * Gets the single instance of UserInterfaceiUtility.
 	 *
-	 * @param stringBuffer
-	 * @param controlInterface
-	 * @param containerInterface
-	 * @throws DynamicExtensionsSystemException
+	 * @return single instance of UserInterfaceiUtility
+	 */
+	public UserInterfaceiUtility getInstance() {
+		if (userUtility == null) {
+			userUtility = new UserInterfaceiUtility();
+		}
+		return userUtility;
+	}
+
+	/**
+	 * Generate htm lfor grid.
+	 *
+	 * @param subContainer the sub container
+	 * @param valueMaps the value maps
+	 * @param dataEntryOperation the data entry operation
+	 * @param mainContainer the main container
+	 *
+	 * @return the string
+	 *
+	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
 	 */
 	public static String generateHTMLforGrid(ContainerInterface subContainer,
 			List<Map<BaseAbstractAttributeInterface, Object>> valueMaps, String dataEntryOperation,
 			ContainerInterface mainContainer) throws DynamicExtensionsSystemException
 	{
-		StringBuffer htmlForGrid = new StringBuffer();
+		StringBuffer htmlForGrid = new StringBuffer(1066);
 
 		int rowCount = 0;
 		if (valueMaps != null)
@@ -88,11 +130,9 @@ public class UserInterfaceiUtility
 		{
 			htmlForGrid
 					.append("<tr width='100%'><td class='td_color_6e81a6' colspan='3' align='left'>");
-			htmlForGrid.append(((AbstractEntity) subContainer
-					.getAbstractEntity())
+			htmlForGrid.append(((AbstractEntity) subContainer.getAbstractEntity())
 					.getCapitalizedName(DynamicExtensionsUtility
-							.replaceHTMLSpecialCharacters(subContainer
-									.getCaption())));
+							.replaceHTMLSpecialCharacters(subContainer.getCaption())));
 			htmlForGrid.append("</td></tr>");
 		}
 
@@ -104,9 +144,8 @@ public class UserInterfaceiUtility
 						+ "onclick='pasteData(\""
 						+ subContainer.getId()
 						+ "\",\"many\")'/>"
-						+ "</td><td class='formField_withoutBorder' style='background-color:#E3E2E7;' width='100%'>&nbsp;</td></tr>");
-
-		htmlForGrid.append("<tr width='100%'><td colspan='3' width='100%'>");
+						+ "</td><td class='formField_withoutBorder' style='background-color:#E3E2E7;' width='100%'>&nbsp;</td></tr>"
+						+ "<tr width='100%'><td colspan='3' width='100%'>");
 		// For category attribute controls, if heading and/or notes are specified, then
 		// render the UI that displays heading followed by notes for particular
 		// category attribute controls.
@@ -150,21 +189,17 @@ public class UserInterfaceiUtility
 				htmlForGrid.append("<span class='font_red'>");
 				htmlForGrid.append(subContainer.getRequiredFieldIndicatior());
 				htmlForGrid.append("</span>&nbsp;&nbsp;<span class='font_bl_nor'>");
-				htmlForGrid.append(((BaseAbstractAttribute) control
-						.getBaseAbstractAttribute())
+				htmlForGrid.append(((BaseAbstractAttribute) control.getBaseAbstractAttribute())
 						.getCapitalizedName(DynamicExtensionsUtility
-								.replaceHTMLSpecialCharacters(control
-										.getCaption())));
+								.replaceHTMLSpecialCharacters(control.getCaption())));
 				htmlForGrid.append("</span>");
 			}
 			else
 			{
 				htmlForGrid.append("&nbsp;&nbsp;<span class='font_bl_nor'>");
-				htmlForGrid.append(((BaseAbstractAttribute) control
-						.getBaseAbstractAttribute())
+				htmlForGrid.append(((BaseAbstractAttribute) control.getBaseAbstractAttribute())
 						.getCapitalizedName(DynamicExtensionsUtility
-								.replaceHTMLSpecialCharacters(control
-										.getCaption())));
+								.replaceHTMLSpecialCharacters(control.getCaption())));
 				htmlForGrid.append("</span>");
 			}
 
@@ -184,33 +219,34 @@ public class UserInterfaceiUtility
 			}
 		}
 
-		htmlForGrid.append("</table>");
-		htmlForGrid.append("<div id='wrapper_div_");
-		htmlForGrid.append(subContainer.getId() + "' > &nbsp;</div>");
+		htmlForGrid.append("</table>" + "<div id='wrapper_div_");
+		htmlForGrid.append(subContainer.getId());
+		htmlForGrid.append("' > &nbsp;</div>");
 
 		if (subContainer.getMode().equals("edit"))
 		{
 			htmlForGrid
-					.append("<table cellpadding='3' cellspacing='0' align='center' width='100%' class='td_color_e3e2e7'><tr><td align='left'>");
-			htmlForGrid
-					.append("<input type='button' style='border: 0px; background-image: url(images/de/b_delete.gif); height: 20px; width: 59px;' align='middle' onClick=\"removeCheckedRow('"
+					.append("<table cellpadding='3' cellspacing='0' align='center' width='100%' class='td_color_e3e2e7'><tr><td align='left'>"
+							+ "<input type='button' style='border: 0px; background-image: url(images/de/b_delete.gif); height: 20px; width: 59px;' align='middle' onClick=\"removeCheckedRow('"
 							+ subContainer.getId()
 							+ "');"
-							+ (subContainer.getIsSourceCalculatedAttributes() ? "calculateAttributes();"
+							+ (subContainer.getIsSourceCalculatedAttributes()
+									? "calculateAttributes();"
 									: "")
 							+ "\" id='btnDelete"
-							+ subContainer.getId() + "'/>");
-
-			htmlForGrid.append("</td><td align='right'>");
-			htmlForGrid
-					.append("<input type='button' style='border: 0px; background-image: url(images/de/b_add_more.gif); height: 20px; width: 76px;' align='middle' onClick=\"addRow('"
-							+ subContainer.getId() + "')\" id='btnAddMore" + subContainer.getId() + "'/>");
+							+ subContainer.getId()
+							+ "'/>"
+							+ "</td><td align='right'>"
+							+ "<input type='button' style='border: 0px; background-image: url(images/de/b_add_more.gif); height: 20px; width: 76px;' align='middle' onClick=\"addRow('"
+							+ subContainer.getId()
+							+ "')\" id='btnAddMore"
+							+ subContainer.getId()
+							+ "'/>" + "</td></tr></table>");
 
 			//stringBuffer.append("<button type='button' class='actionButton' id='removeRow' onclick=\"removeCheckedRow('" + subContainer.getId()
 			//		+ "')\">");
 			//stringBuffer.append(ApplicationProperties.getValue("buttons.delete"));
 			//stringBuffer.append("</button>");
-			htmlForGrid.append("</td></tr></table>");
 			//stringBuffer.append("<button type='button' class='actionButton' id='addMore' onclick=\"addRow('" + subContainer.getId() + "')\">");
 			//stringBuffer.append(ApplicationProperties.getValue("eav.button.AddRow"));
 			//stringBuffer.append("</button>");
@@ -220,45 +256,50 @@ public class UserInterfaceiUtility
 
 		return htmlForGrid.toString();
 	}
+
 	/**
+	 * Checks if is control required.
 	 *
-	 * @param control
-	 * @return
+	 * @param control the control
+	 *
+	 * @return true, if checks if is control required
 	 */
 	public static boolean isControlRequired(ControlInterface control)
 	{
+		boolean required = false;
 		if (control.getBaseAbstractAttribute() instanceof AssociationMetadataInterface
 				|| control.getBaseAbstractAttribute() == null)
 		{
-			return false;
+			required = false;
 		}
-
-		AttributeMetadataInterface attributeMetadata = (AttributeMetadataInterface) control
-				.getBaseAbstractAttribute();
-		Collection<RuleInterface> rules = attributeMetadata.getRuleCollection();
-
-		boolean required = false;
-		if (rules != null && !rules.isEmpty())
+		else
 		{
-			for (RuleInterface attributeRule : rules)
+			AttributeMetadataInterface attributeMetadata = (AttributeMetadataInterface) control
+					.getBaseAbstractAttribute();
+			Collection<RuleInterface> rules = attributeMetadata.getRuleCollection();
+
+			if (rules != null && !rules.isEmpty())
 			{
-				if (attributeRule.getName().equals("required"))
+				for (RuleInterface attributeRule : rules)
 				{
-					required = true;
-					break;
+					if (attributeRule.getName().equals("required"))
+					{
+						required = true;
+						break;
+					}
 				}
 			}
 		}
-
 		return required;
 	}
 
 	/**
+	 * Adds the container info.
 	 *
-	 * @param containers
-	 * @param container
-	 * @param valueMaps
-	 * @param valueMap
+	 * @param containers the containers
+	 * @param container the container
+	 * @param valueMaps the value maps
+	 * @param valueMap the value map
 	 */
 	public static void addContainerInfo(Stack<ContainerInterface> containers,
 			ContainerInterface container,
@@ -269,10 +310,12 @@ public class UserInterfaceiUtility
 		valueMaps.push(valueMap);
 	}
 
+
 	/**
+	 * Removes the container info.
 	 *
-	 * @param containers
-	 * @param valueMaps
+	 * @param containers the containers
+	 * @param valueMaps the value maps
 	 */
 	public static void removeContainerInfo(Stack<ContainerInterface> containers,
 			Stack<Map<BaseAbstractAttributeInterface, Object>> valueMaps)
@@ -282,34 +325,46 @@ public class UserInterfaceiUtility
 	}
 
 	/**
-	 * @param request
+	 * Clear container stack.
+	 * @param request the request
 	 */
-	public static void clearContainerStack(HttpServletRequest request)
-	{
-		ContainerInterface container = (ContainerInterface) CacheManager.getObjectFromCache(
-				request, DEConstants.CONTAINER_INTERFACE);
-		if (container != null && container.getId() != null)
-		{
-			request.setAttribute("containerIdentifier", container.getId().toString());
+	public static void clearContainerStack(final HttpServletRequest request) {
+		ContainerInterface container = (ContainerInterface) CacheManager.
+					getObjectFromCache(request,
+						DEConstants.CONTAINER_INTERFACE);
+		if (container != null && container.getId() != null) {
+			request.setAttribute("containerIdentifier",
+							container.getId().toString());
 		}
 
-		CacheManager.addObjectToCache(request, DEConstants.CONTAINER_STACK, null);
-		CacheManager.addObjectToCache(request, DEConstants.VALUE_MAP_STACK, null);
-		CacheManager.addObjectToCache(request, DEConstants.CONTAINER_INTERFACE, null);
-		CacheManager.addObjectToCache(request, "rootRecordIdentifier", null);
+		CacheManager.addObjectToCache(request,
+				DEConstants.CONTAINER_STACK, null);
+		CacheManager.addObjectToCache(request,
+				DEConstants.VALUE_MAP_STACK, null);
+		CacheManager.addObjectToCache(request,
+				DEConstants.CONTAINER_INTERFACE, null);
+		CacheManager.addObjectToCache(request, "rootRecordIdentifier",
+				null);
 	}
 
 	/**
-	 * @param container
-	 * @return
-	 * @throws DynamicExtensionsSystemException
+	 * Gets the container html as a row.
+	 *
+	 * @param container the container
+	 * @param rowId the row id
+	 * @param dataEntryOperation the data entry operation
+	 * @param mainContainer the main container
+	 *
+	 * @return the container html as a row
+	 *
+	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
 	 */
-	public static String getContainerHTMLAsARow(ContainerInterface container, int rowId,String dataEntryOperation,ContainerInterface mainContainer)
+	public static String getContainerHTMLAsARow(ContainerInterface container, int rowId,
+			String dataEntryOperation, ContainerInterface mainContainer)
 			throws DynamicExtensionsSystemException
 	{
-		StringBuffer contHtmlAsARow = new StringBuffer();
+		StringBuffer contHtmlAsARow = new StringBuffer(96);
 		List<Object> values = new ArrayList<Object>();
-		boolean isSameContainerControl = false;
 		Map<BaseAbstractAttributeInterface, Object> containerValues = container
 				.getContainerValueMap();
 		List<ControlInterface> controls = new ArrayList<ControlInterface>(container
@@ -327,77 +382,22 @@ public class UserInterfaceiUtility
 		contHtmlAsARow.append(rowClass);
 		contHtmlAsARow.append("'><td width='1%'>");
 
-		if (container.getMode().equals("edit"))
-		{
-			contHtmlAsARow.append("<input type='checkbox' name='deleteRow' value='' id='checkBox_");
+		if (container.getMode().equals("edit")) {
+			contHtmlAsARow.append("<input type='checkbox' name='deleteRow' value='' "
+					+ "id='checkBox_");
 			contHtmlAsARow.append(container.getId());
 			contHtmlAsARow.append('_');
 			contHtmlAsARow.append(rowId);
 			contHtmlAsARow.append("'/>");
 		}
-		else
-		{
+		else {
 			contHtmlAsARow.append("&nbsp;");
 		}
 
 		contHtmlAsARow.append("</td>");
-		for (ControlInterface control : controls)
-		{
-			if (control.getIsSkipLogicTargetControl())
-			{
-				Object value = null;
-				values.clear();
-				if (control.getSourceSkipControl().getParentContainer().equals(
-						control.getParentContainer()))
-				{
-					isSameContainerControl = true;
-				}
-				else
-				{
-					isSameContainerControl = false;
-				}
-				ControlsUtility
-						.getAttributeValueForSkipLogicAttributesFromValueMap(
-								mainContainer.getContainerValueMap(),
-								mainContainer.getContainerValueMap(), control
-										.getSourceSkipControl()
-										.getBaseAbstractAttribute(),
-								isSameContainerControl, values, Integer
-										.valueOf(rowId), Integer.valueOf(rowId));
-				if (!values.isEmpty())
-				{
-					value = values.get(0);
-				}
-				control.getSourceSkipControl().setValue(value);
-				control.getSourceSkipControl().setSkipLogicControls();
-			}
-			String controlHTML = "";
-			control.setDataEntryOperation(dataEntryOperation);
-			control.setIsSubControl(true);
-
-			if (control instanceof AbstractContainmentControlInterface)
-			{
-				controlHTML = ((AbstractContainmentControlInterface) control).generateLinkHTML();
-			}
-			else
-			{
-				if (containerValues != null)
-				{
-					Object value = containerValues.get(control.getBaseAbstractAttribute());
-					control.setValue(value);
-				}
-				controlHTML = control.generateHTML(mainContainer);
-				if (rowId != -1)
-				{
-					String oldName = control.getHTMLComponentName();
-					String newName = oldName + "_" + rowId;
-					controlHTML = controlHTML.replaceAll(oldName, newName);
-				}
-			}
-
-			contHtmlAsARow.append("<td valign='middle' NOWRAP='true'>");
-			contHtmlAsARow.append(controlHTML.replaceAll("style='float:left'", ""));
-			contHtmlAsARow.append("</td>");
+		for (ControlInterface control : controls) {
+			generateHTMLforControl(rowId, dataEntryOperation, mainContainer,
+					contHtmlAsARow, values, containerValues, control);
 		}
 
 		contHtmlAsARow.append("</tr>");
@@ -406,27 +406,120 @@ public class UserInterfaceiUtility
 	}
 
 	/**
-	 * This method returns the associationControl for a given Container and its child caintener id
-	 * @param container
-	 * @param childContainerId
-	 * @return
+	 * Generate html for control.
+	 *
+	 * @param rowId the row id
+	 * @param dataEntryOperation the data entry operation
+	 * @param mainContainer the main container
+	 * @param contHtmlAsARow the cont html as a row
+	 * @param values the values
+	 * @param containerValues the container values
+	 * @param control the control
+	 *
+	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
+	 */
+	private static void generateHTMLforControl(int rowId,
+			String dataEntryOperation,ContainerInterface mainContainer,
+			StringBuffer contHtmlAsARow, List<Object> values,
+			Map<BaseAbstractAttributeInterface, Object> containerValues,
+			final ControlInterface control)
+			throws DynamicExtensionsSystemException
+	{
+		if (control.getIsSkipLogicTargetControl())
+		{
+			skipLogicControl(rowId, mainContainer, values, control);
+		}
+		String controlHTML = "";
+		control.setDataEntryOperation(dataEntryOperation);
+		control.setIsSubControl(true);
+
+		if (control instanceof AbstractContainmentControlInterface)
+		{
+			controlHTML = ((AbstractContainmentControlInterface) control).
+			generateLinkHTML();
+		}
+		else
+		{
+			if (containerValues != null)
+			{
+				Object value = containerValues.get(control.
+						getBaseAbstractAttribute());
+				control.setValue(value);
+			}
+			controlHTML = control.generateHTML(mainContainer);
+			if (rowId != -1)
+			{
+				String oldName = control.getHTMLComponentName();
+				String newName = oldName + "_" + rowId;
+				controlHTML = controlHTML.replaceAll(oldName, newName);
+			}
+		}
+
+		contHtmlAsARow.append("<td valign='middle' NOWRAP='true'>");
+		contHtmlAsARow.append(controlHTML.replaceAll("style='float:left'", ""));
+		contHtmlAsARow.append("</td>");
+	}
+
+	/**
+	 * Skip logic control.
+	 *
+	 * @param rowId the row id
+	 * @param mainContainer the main container
+	 * @param values the values
+	 * @param control the control
+	 */
+	private static void skipLogicControl(int rowId, ContainerInterface mainContainer,
+			List<Object> values, ControlInterface control)
+	{
+		boolean isSameContainerControl;
+		Object value = null;
+		values.clear();
+		if (control.getSourceSkipControl().getParentContainer()
+				.equals(control.getParentContainer()))
+		{
+			isSameContainerControl = true;
+		}
+		else
+		{
+			isSameContainerControl = false;
+		}
+		ControlsUtility.getAttributeValueForSkipLogicAttributesFromValueMap(mainContainer
+				.getContainerValueMap(), mainContainer.getContainerValueMap(), control
+				.getSourceSkipControl().getBaseAbstractAttribute(), isSameContainerControl, values,
+				Integer.valueOf(rowId), Integer.valueOf(rowId));
+		if (!values.isEmpty())
+		{
+			value = values.get(0);
+		}
+		control.getSourceSkipControl().setValue(value);
+		control.getSourceSkipControl().setSkipLogicControls();
+	}
+
+	/**
+	 * This method returns the associationControl for a given Container and its child caintener id.
+	 *
+	 * @param container the container
+	 * @param childContainerId the child container id
+	 *
+	 * @return the association control
 	 */
 	public static AbstractContainmentControlInterface getAssociationControl(
 			ContainerInterface container, String childContainerId)
 	{
 		Collection<ControlInterface> controls = container.getAllControlsUnderSameDisplayLabel();
+		AbstractContainmentControl abstrctCntnmntControl = null;
 		for (ControlInterface control : controls)
 		{
 			if (control instanceof AbstractContainmentControlInterface)
 			{
-				AbstractContainmentControl abstrctCntnmntControl = (AbstractContainmentControl) control;
+				abstrctCntnmntControl = (AbstractContainmentControl) control;
 				Long containerId = abstrctCntnmntControl.getContainer().getId();
 				if (containerId != null)
 				{
 					String associationControlId = containerId.toString();
 					if (associationControlId.equals(childContainerId))
 					{
-						return abstrctCntnmntControl;
+						break;
 					}
 					else
 					{
@@ -434,26 +527,28 @@ public class UserInterfaceiUtility
 								abstrctCntnmntControl.getContainer(), childContainerId);
 						if (abstrctCntnmntControl != null)
 						{
-							return abstrctCntnmntControl;
+							break;
 						}
 					}
 				}
 			}
 		}
-		return null;
+		return abstrctCntnmntControl;
 	}
 
 	/**
+	 * Gets the control html as a row.
 	 *
-	 * @param control
-	 * @param htmlString
-	 * @return
+	 * @param control the control
+	 * @param htmlString the html string
+	 *
+	 * @return the control html as a row
 	 */
 	public static String getControlHTMLAsARow(ControlInterface control, String htmlString)
 	{
 		boolean isControlRequired = UserInterfaceiUtility.isControlRequired(control);
 
-		StringBuffer controlHtmlAsARow = new StringBuffer();
+		StringBuffer controlHtmlAsARow = new StringBuffer(166);
 		controlHtmlAsARow.append("<tr><td class='formRequiredNotice_withoutBorder' width='2%'>");
 		if (isControlRequired)
 		{
@@ -465,10 +560,9 @@ public class UserInterfaceiUtility
 			controlHtmlAsARow.append("&nbsp;</td><td class='formRequiredLabel_withoutBorder'>");
 		}
 
-		controlHtmlAsARow.append(((BaseAbstractAttribute) control
-				.getBaseAbstractAttribute())
-				.getCapitalizedName(DynamicExtensionsUtility
-						.replaceHTMLSpecialCharacters(control.getCaption())));
+		controlHtmlAsARow.append(((BaseAbstractAttribute) control.getBaseAbstractAttribute())
+				.getCapitalizedName(DynamicExtensionsUtility.replaceHTMLSpecialCharacters(control
+						.getCaption())));
 		controlHtmlAsARow.append("</td><td class='formField_withoutBorder'>");
 		controlHtmlAsARow.append(htmlString);
 		controlHtmlAsARow.append("</td></tr>");
@@ -478,6 +572,9 @@ public class UserInterfaceiUtility
 
 	/**
 	 * This method returns true if the cardinality of the Containment Association is One to Many.
+	 *
+	 * @param control the control
+	 *
 	 * @return true if Caridnality is One to Many, false otherwise.
 	 */
 	public static boolean isCardinalityOneToMany(AbstractContainmentControlInterface control)
@@ -496,9 +593,11 @@ public class UserInterfaceiUtility
 	}
 
 	/**
+	 * Checks if is data present.
 	 *
-	 * @param container
-	 * @return
+	 * @param valueMap the value map
+	 *
+	 * @return true, if checks if is data present
 	 */
 	public static boolean isDataPresent(Map<BaseAbstractAttributeInterface, Object> valueMap)
 	{
@@ -548,20 +647,20 @@ public class UserInterfaceiUtility
 	}
 
 	/**
-	 * This method resets request parameter map
-	 * @param request
+	 * This method resets request parameter map.
+	 *
+	 * @param request the request
 	 */
 	public static void resetRequestParameterMap(HttpServletRequest request)
 	{
 		if ((request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME) != null)
-				&& (request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME).trim()
-						.length() > 0)
+				&& (request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME).trim().length() > 0)
 				&& (DEConstants.CANCEL.equalsIgnoreCase(request
 						.getParameter(WebUIManagerConstants.MODE_PARAM_NAME)))
-						&& request instanceof MultipartRequestWrapper)
+				&& request instanceof MultipartRequestWrapper)
 		{
 			MultipartRequestWrapper wrapper = (MultipartRequestWrapper) request;
-			if(wrapper.getRequest()!= null && wrapper.getRequest().getParameterMap()!=null
+			if (wrapper.getRequest() != null && wrapper.getRequest().getParameterMap() != null
 					&& !wrapper.getRequest().getParameterMap().isEmpty())
 			{
 				wrapper.getRequest().getParameterMap().clear();
