@@ -399,6 +399,8 @@ public class CategoryGenerator
 
 				categoryValidator.isRootEntityUsedTwice(category.getRootCategoryElement(), category
 						.getRootCategoryElement().getEntity());
+				categoryValidator.isRootEntitySeconadIntsnaceUsed(category);
+
 				if (categoryFileParser.hasRelatedAttributes())
 				{
 					handleRelatedAttributes(entityGroup, category, entityNameAssociationMap,

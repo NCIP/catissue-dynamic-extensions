@@ -22,6 +22,7 @@ import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ListBoxInterface;
@@ -480,19 +481,23 @@ public class CategoryValidator
 	{
 		if (rootCategoryEntity != null)
 		{
-			if (rootCategoryEntity.getEntity().equals(rootEntityInterface))
-			{
-				String errorMessage = getErrorMessageStart()
-						+ ApplicationProperties.getValue(CategoryConstants.ROOT_ENT_TWICE)
-						+ rootCategoryEntity.getEntity().getName();
-				throw new DynamicExtensionsSystemException(errorMessage);
-			}
 			for (CategoryAssociationInterface categoryAssociationInterface : rootCategoryEntity
 					.getCategoryAssociationCollection())
 			{
-
+				if (categoryAssociationInterface.getTargetCategoryEntity().getEntity().equals(
+						rootEntityInterface))
+				{
+					String errorMessage = getErrorMessageStart()
+							+ ApplicationProperties.getValue(CategoryConstants.ROOT_ENT_TWICE)
+							+ categoryAssociationInterface.getTargetCategoryEntity().getEntity()
+									.getName();
+					throw new DynamicExtensionsSystemException(errorMessage);
+				}
+				else
+				{
 					isRootEntityUsedTwice(categoryAssociationInterface.getTargetCategoryEntity(),
 							rootEntityInterface);
+				}
 			}
 		}
 	}
@@ -712,6 +717,10 @@ public class CategoryValidator
 		}
 	}
 
+	/**
+	 * @param line
+	 * @throws DynamicExtensionsSystemException
+	 */
 	public void validateQuotes(String[] line) throws DynamicExtensionsSystemException
 	{
 		String errorMessage = getErrorMessageStart() + " Missing qoute(\").";
@@ -725,6 +734,22 @@ public class CategoryValidator
 				}
 			}
 
+		}
+
+	}
+
+	/**
+	 * @param category
+	 * @throws DynamicExtensionsSystemException
+	 */
+	public void isRootEntitySeconadIntsnaceUsed(CategoryInterface category)
+			throws DynamicExtensionsSystemException
+	{
+		if (!category.getRootCategoryElement().getName().endsWith("[1]"))
+		{
+			String errorMessage = getErrorMessageStart()
+					+ " Root entity insatnce should be 1 only.";
+			throw new DynamicExtensionsSystemException(errorMessage);
 		}
 
 	}
