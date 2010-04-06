@@ -466,6 +466,7 @@ public class CategoryValidator
 	private String getErrorMessageStart()
 	{
 		return ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
+ + ":"
 				+ categoryFileParser.getLineNumber();
 	}
 
