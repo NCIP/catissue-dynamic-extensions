@@ -4,10 +4,11 @@ package edu.common.dynamicextensions.category;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.wustl.common.util.logger.Logger;
+import edu.wustl.common.util.logger.LoggerConfig;
 
 /**
  * Create Category through xml files. This is required in CSD application.
@@ -17,7 +18,11 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 public class XMLToCSV
 {
 
-	private static final Logger LOGGER = Logger.getLogger(XMLToCSV.class.getName());
+	static
+	{
+		LoggerConfig.configureLogger(System.getProperty("user.dir"));
+	}
+	private static final Logger LOGGER = Logger.getCommonLogger(XMLToCSV.class);
 
 	/**
 	 * This method is called when called from an ant target to create category from xml.
@@ -32,13 +37,22 @@ public class XMLToCSV
 
 			xmlToCSV.validateArguments(args);
 			final File input = new File(args[0]);
-			final File outputDir = new File(args[1]);
+			String outputDirName = args[1];
+
+			if ("".equals(outputDirName.trim()))
+			{
+				outputDirName = System.getProperty("user.dir") + File.separator
+						+ "category_xml_to_csv";
+			}
+
+			final File outputDir = new File(outputDirName);
 			File schemaFile = null;
 			if (args.length > 2)
 			{
 				schemaFile = new File(args[2]);
 			}
 			xmlToCSV.convertXMLs(input, outputDir, schemaFile);
+			LOGGER.info("Category csv files saved in " + outputDirName);
 		}
 		catch (final DynamicExtensionsSystemException e)
 		{
@@ -55,7 +69,7 @@ public class XMLToCSV
 	}
 
 	/**
-	 * 
+	 *
 	 * @param args
 	 * @throws DynamicExtensionsSystemException
 	 */
@@ -67,6 +81,7 @@ public class XMLToCSV
 					"Not enough arguments passed. At least 3 arguments expected as input and output diretory. e.g.\n "
 							+ "XMLToCSVConverter input.xml output/ schema.xsd");
 		}
+
 	}
 
 	/**
@@ -99,6 +114,10 @@ public class XMLToCSV
 	 */
 	private void validateOutputDir(final File outputDir) throws DynamicExtensionsSystemException
 	{
+		if (!outputDir.exists())
+		{
+			outputDir.mkdirs();
+		}
 		if (!outputDir.isDirectory())
 		{
 			throw new DynamicExtensionsSystemException(
@@ -138,7 +157,7 @@ public class XMLToCSV
 				schemaValidator.validateAgainstSchema(schemaFile, inputXML);
 			}
 			xmlToCSVConverter.txXML();
-			
+
 		}
 		else
 		{

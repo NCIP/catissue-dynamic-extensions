@@ -531,18 +531,25 @@
 	</target>
 
 	<property name="categoryXmlFile" value=" " />
-	<property name="categoryCsvFileDir" value="temp_csv" />
+	<property name="categoryCsvFileDir" value=" "/>
 	<property name="categorySchemaFile" value="./${de.temp.dir}/category_schema.xsd" />
 	<!-- =================================
           target: create_category_from_xml
          ================================= -->
-	<target name="create_category_from_xml" depends="create_csv_from_xml, create_category" description="Creates category from XML">
-		<delete dir="${categoryCsvFileDir}" />
+	<target name="create_category_from_xml" description="Creates category from XML">
+		<antcall target="create_csv_from_xml">
+			<param name="categoryCsvFileDir" value="temp_csv"/>
+		</antcall>
+		<antcall target="create_category">
+			<param name="categoryFileDir" value="temp_csv"/>
+		</antcall>
+		<delete dir="temp_csv" />
 	</target>
 
 	<!-- =================================
           target: create_csv_from_xml
          ================================= -->
+
 	<target name="create_csv_from_xml" description="description">
 		<delete dir="${de.temp.dir}" failonerror="no" />
 		<mkdir dir="${de.temp.dir}" />
@@ -553,7 +560,7 @@
 			<replacefilter token="@@jbosshome@@" value="." />
 		</replace>
 		<echo message="Creating Categories" />
-		<mkdir dir="${categoryCsvFileDir}" />
+
 		<java classname="edu.common.dynamicextensions.category.XMLToCSV" fork="true" maxmemory="1024M">
 			<arg value="${categoryXmlFile}" />
 			<arg value="${categoryCsvFileDir}" />
@@ -571,7 +578,7 @@
 	<!-- Target used to create the Category -->
 	<property name="categoryFormNamesFile" value=" " />
 	<property name="isPersistMetadataOnly" value=" " />
-	<property name="categoryFileDir" value="${categoryCsvFileDir}" />
+	<property name="categoryFileDir" value=" " />
 	<target name="create_category" description="Target used to create the Category">
 		<delete dir="${de.temp.dir}" failonerror="no" />
 		<mkdir dir="${de.temp.dir}" />
@@ -856,7 +863,7 @@
 					<include name="*.jar" />
 				</fileset>
 			</classpath>
-			<transaction src="${oracle.dbupgrade.sql.dir.DE}/updatePermissibleValues.sql" />
+			<transaction src="update_query_cacut_cong_anno.sql" />
 		</sql>
 	</target>
 
