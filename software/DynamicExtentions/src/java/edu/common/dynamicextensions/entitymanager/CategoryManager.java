@@ -1541,10 +1541,13 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 							{
 								previousEntityId = sourceEntityId;
 							}
-							if (targetEntityId == null)
+							if (targetEntityId == null
+                                    || pathAssociation.getAssociation().getTargetEntity().getId() == categoryEnt
+                                                .getEntity().getId())
 							{
 								targetEntityId = entityId;
 							}
+
 							final AssociationInterface asso = pathAssociation.getAssociation();
 							String packageName = null;
 							packageName = getPackageName(asso.getEntity(), packageName);
