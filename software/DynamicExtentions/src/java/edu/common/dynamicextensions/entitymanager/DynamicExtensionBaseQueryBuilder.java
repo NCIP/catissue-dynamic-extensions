@@ -3123,76 +3123,77 @@ public class DynamicExtensionBaseQueryBuilder
 	 * @param tgtEntRecId
 	 * @throws DynamicExtensionsSystemException
 	 */
+	/*
 	public static void associateRecords(AssociationInterface asso, Long srcEntRecId,
-			Long tgtEntRecId) throws DynamicExtensionsSystemException
+		Long tgtEntRecId) throws DynamicExtensionsSystemException
 	{
-		RoleInterface srcRole = asso.getSourceRole();
-		RoleInterface tgtRole = asso.getTargetRole();
+	RoleInterface srcRole = asso.getSourceRole();
+	RoleInterface tgtRole = asso.getTargetRole();
 
-		Cardinality srcMaxCard = srcRole.getMaximumCardinality();
-		Cardinality tgtMaxCard = tgtRole.getMaximumCardinality();
+	Cardinality srcMaxCard = srcRole.getMaximumCardinality();
+	Cardinality tgtMaxCard = tgtRole.getMaximumCardinality();
 
-		ConstraintPropertiesInterface constraint = asso.getConstraintProperties();
+	ConstraintPropertiesInterface constraint = asso.getConstraintProperties();
 
-		String tableName = DynamicExtensionsUtility.getTableName(asso);
+	String tableName = DynamicExtensionsUtility.getTableName(asso);
 
-		StringBuffer query = new StringBuffer();
-		query.append(UPDATE_KEYWORD).append(tableName).append(SET_KEYWORD);
-		LinkedList<ColumnValueBean> colValBeanList = new LinkedList<ColumnValueBean>();
+	StringBuffer query = new StringBuffer();
+	query.append(UPDATE_KEYWORD).append(tableName).append(SET_KEYWORD);
+	LinkedList<ColumnValueBean> colValBeanList = new LinkedList<ColumnValueBean>();
 
-		if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.MANY)
-		{
-			query = new StringBuffer();
-			String tgtFkColName = constraint.getSrcEntityConstraintKeyProperties()
-					.getTgtForiegnKeyColumnProperties().getName();
-			String srcFkColname = constraint.getTgtEntityConstraintKeyProperties()
-					.getTgtForiegnKeyColumnProperties().getName();
-			query.append(INSERT_INTO_KEYWORD).append(tableName).append(OPENING_BRACKET).append(
-					tgtFkColName).append(COMMA).append(srcFkColname).append(CLOSING_BRACKET)
-					.append("values").append(OPENING_BRACKET).append(QUESTION_MARK).append(COMMA)
-					.append(QUESTION_MARK).append(CLOSING_BRACKET);
-			colValBeanList.add(new ColumnValueBean(tgtFkColName, srcEntRecId));
-			colValBeanList.add(new ColumnValueBean(srcFkColname, tgtEntRecId));
+	if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.MANY)
+	{
+		query = new StringBuffer();
+		String tgtFkColName = constraint.getSrcEntityConstraintKeyProperties()
+				.getTgtForiegnKeyColumnProperties().getName();
+		String srcFkColname = constraint.getTgtEntityConstraintKeyProperties()
+				.getTgtForiegnKeyColumnProperties().getName();
+		query.append(INSERT_INTO_KEYWORD).append(tableName).append(OPENING_BRACKET).append(
+				tgtFkColName).append(COMMA).append(srcFkColname).append(CLOSING_BRACKET)
+				.append("values").append(OPENING_BRACKET).append(QUESTION_MARK).append(COMMA)
+				.append(QUESTION_MARK).append(CLOSING_BRACKET);
+		colValBeanList.add(new ColumnValueBean(tgtFkColName, srcEntRecId));
+		colValBeanList.add(new ColumnValueBean(srcFkColname, tgtEntRecId));
 
-		}
-		else if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.ONE)
-		{
-			String tgtFkColName = constraint.getSrcEntityConstraintKeyProperties()
-					.getTgtForiegnKeyColumnProperties().getName();
-			query.append(tgtFkColName).append(EQUAL).append(QUESTION_MARK).append(WHERE_KEYWORD)
-					.append(IDENTIFIER).append(EQUAL).append(QUESTION_MARK);
-			colValBeanList.add(new ColumnValueBean(tgtFkColName, tgtEntRecId));
-			colValBeanList.add(new ColumnValueBean(IDENTIFIER, srcEntRecId));
-		}
-		else
-		{
-			String srcFkColname = constraint.getTgtEntityConstraintKeyProperties()
-					.getTgtForiegnKeyColumnProperties().getName();
-			query.append(srcFkColname).append(EQUAL).append(QUESTION_MARK).append(WHERE_KEYWORD)
-					.append(IDENTIFIER).append(EQUAL).append(QUESTION_MARK);
-			colValBeanList.add(new ColumnValueBean(srcFkColname, srcEntRecId));
-			colValBeanList.add(new ColumnValueBean(IDENTIFIER, tgtEntRecId));
-		}
-
-		JDBCDAO jdbcDao = null;
-		try
-		{
-			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			LinkedList<LinkedList<ColumnValueBean>> columnValLinkedList = new LinkedList<LinkedList<ColumnValueBean>>();
-			columnValLinkedList.add(colValBeanList);
-			jdbcDao.executeUpdate(query.toString(), columnValLinkedList);
-			jdbcDao.commit();
-		}
-		catch (DAOException e)
-		{
-			connectionRollBack(jdbcDao);
-		}
-		finally
-		{
-			DynamicExtensionsUtility.closeDAO(jdbcDao);
-		}
+	}
+	else if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.ONE)
+	{
+		String tgtFkColName = constraint.getSrcEntityConstraintKeyProperties()
+				.getTgtForiegnKeyColumnProperties().getName();
+		query.append(tgtFkColName).append(EQUAL).append(QUESTION_MARK).append(WHERE_KEYWORD)
+				.append(IDENTIFIER).append(EQUAL).append(QUESTION_MARK);
+		colValBeanList.add(new ColumnValueBean(tgtFkColName, tgtEntRecId));
+		colValBeanList.add(new ColumnValueBean(IDENTIFIER, srcEntRecId));
+	}
+	else
+	{
+		String srcFkColname = constraint.getTgtEntityConstraintKeyProperties()
+				.getTgtForiegnKeyColumnProperties().getName();
+		query.append(srcFkColname).append(EQUAL).append(QUESTION_MARK).append(WHERE_KEYWORD)
+				.append(IDENTIFIER).append(EQUAL).append(QUESTION_MARK);
+		colValBeanList.add(new ColumnValueBean(srcFkColname, srcEntRecId));
+		colValBeanList.add(new ColumnValueBean(IDENTIFIER, tgtEntRecId));
 	}
 
+	JDBCDAO jdbcDao = null;
+	try
+	{
+		jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
+		LinkedList<LinkedList<ColumnValueBean>> columnValLinkedList = new LinkedList<LinkedList<ColumnValueBean>>();
+		columnValLinkedList.add(colValBeanList);
+		jdbcDao.executeUpdate(query.toString(), columnValLinkedList);
+		jdbcDao.commit();
+	}
+	catch (DAOException e)
+	{
+		connectionRollBack(jdbcDao);
+	}
+	finally
+	{
+		DynamicExtensionsUtility.closeDAO(jdbcDao);
+	}
+	}
+	*/
 	/**
 	 * This method rolls back the connection.
 	 * @param connection

@@ -821,11 +821,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 
 			String className = packageName + "." + entity.getName();
 
-			Object oldObject = null;
-
-			ColumnValueBean valBean = new ColumnValueBean("id", recordId);
-			List retrievedObjects = hibernateDAO.retrieve(className, valBean);
-			oldObject = retrievedObjects.get(0);
+			Object oldObject = hibernateDAO.retrieveById(className, recordId);;
 
 			Object updatedObject = updateObject(entity, dataVal, oldObject, hibernateDAO);
 
@@ -1905,7 +1901,56 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	public void associateEntityRecords(AssociationInterface association, Long srcEntRecId,
 			Long tgtEntRecId) throws DynamicExtensionsSystemException
 	{
-		queryBuilder.associateRecords(association, srcEntRecId, tgtEntRecId);
+		HibernateDAO hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
+		String tmpPackageName = getPackageName(association.getTargetEntity(), "");
+		try
+		{
+			Object staticEntity = hibernateDAO.retrieveById(tmpPackageName
+					+ "."
+					+ association.getEntity().getName().substring(
+							association.getEntity().getName().lastIndexOf(".") + 1), srcEntRecId);
+			Object oldStaticEntity = cloner.clone(staticEntity);
+			Object dynamicEntity = hibernateDAO.retrieveById(tmpPackageName + "."
+					+ association.getTargetEntity().getName(), tgtEntRecId);
+			Object oldDynamicEntity = cloner.clone(staticEntity);
+
+			Set<Object> containedObjects = (Set<Object>) invokeGetterMethod(
+					staticEntity.getClass(),
+					association.getTargetEntity().getName() + "Collection", staticEntity);
+			containedObjects.add(dynamicEntity);
+			invokeSetterMethod(staticEntity.getClass(), association.getTargetEntity().getName()
+					+ "Collection", Class.forName("java.util.Collection"), staticEntity,
+					containedObjects);
+
+			invokeSetterMethod(dynamicEntity.getClass(), association.getEntity().getName()
+					.substring(association.getEntity().getName().lastIndexOf(".") + 1),
+					staticEntity.getClass(), dynamicEntity, staticEntity);
+
+			hibernateDAO.update(dynamicEntity, oldDynamicEntity);
+			hibernateDAO.update(staticEntity, oldStaticEntity);
+			hibernateDAO.commit();
+
+		}
+		catch (DAOException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
+		}
+		catch (NoSuchMethodException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
+		}
+		catch (InvocationTargetException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
+		}
 	}
 
 	/* (non-Javadoc)
