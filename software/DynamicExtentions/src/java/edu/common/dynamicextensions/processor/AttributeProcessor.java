@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import edu.common.dynamicextensions.domain.BooleanAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.BooleanValue;
@@ -510,9 +509,9 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 			}
 
 			//Set list of extensions supported
-			fileAttributeInformation.setFileExtensionCollection(getFileExtensionCollection(
-					attributeUIBeanInformationIntf.getFileFormats(), attributeUIBeanInformationIntf
-							.getFormat()));
+			fileAttributeInformation
+					.setFileExtensionCollection(getFileExtensionCollection(attributeUIBeanInformationIntf
+							.getFileFormats()));
 		}
 	}
 
@@ -521,8 +520,7 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 	 * @param fileFormatsString Comma separated set of file formats specified by the user explicitly
 	 * @return
 	 */
-	private Collection<FileExtension> getFileExtensionCollection(String[] fileFormats,
-			String fileFormatsString)
+	private Collection<FileExtension> getFileExtensionCollection(String[] fileFormats)
 	{
 		Collection<FileExtension> fileExtensionCollection = new HashSet<FileExtension>();
 		if (fileFormats != null)
@@ -537,20 +535,8 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 				fileExtensionCollection.add(getFileExtension(fileFormats[i]));
 			}
 		}
-		if (fileFormatsString != null)
-		{
-			StringTokenizer stringTokenizer = new StringTokenizer(fileFormatsString,
-					ProcessorConstants.FILE_FORMATS_SEPARATOR);
-			if (stringTokenizer != null)
-			{
-				while (stringTokenizer.hasMoreElements())
-				{
-					fileExtensionCollection.add(getFileExtension(stringTokenizer.nextToken()));
-				}
-			}
-		}
-		return fileExtensionCollection;
 
+		return fileExtensionCollection;
 	}
 
 	/**
