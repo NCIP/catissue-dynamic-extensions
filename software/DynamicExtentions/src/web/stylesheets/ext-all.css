@@ -2,7 +2,7 @@
  * Ext JS Library 2.0.2
  * Copyright(c) 2006-2008, Ext JS, LLC.
  * licensing@extjs.com
- * 
+ *
  * http://extjs.com/license
  */
 
@@ -133,7 +133,7 @@ ul.x-tab-strip li.x-tab-edge{float:left;margin:0!important;padding:0!important;b
  .x-form-field{margin:0;font:normal 12px tahoma,arial,helvetica,sans-serif;}
 .x-form-text,textarea.x-form-field{padding:1px 3px;background:#fff url(../../images/de/default/form/text-bg.gif) repeat-x 0 0;border:1px solid #B5B8C8;}
 textarea.x-form-field{padding:2px 3px;}
-.x-form-text{height:22px;line-height:18px;vertical-align:middle;}
+.x-form-text{height:22px;line-height:18px;vertical-align:middle;color:#333333;}
 .ext-ie .x-form-text{margin:-1px 0;height:22px;line-height:18px;}
 .ext-ie textarea.x-form-field{margin:-1px 0;}
 .ext-strict .x-form-text{height:18px;}
@@ -177,7 +177,7 @@ textarea{resize:none;}
 .x-form-label-top .x-form-item label{width:auto;float:none;clear:none;display:inline;margin-bottom:4px;position:static;}
 .x-form-label-top .x-form-element{padding-left:0;padding-top:4px;}
 .x-form-label-top .x-form-item{padding-bottom:4px;}
-.x-form-empty-field{color:gray;}
+.x-form-empty-field{color:#333333;font-family:Arial,Helvetica,sans-serif;}
 .x-small-editor .x-form-field{font:normal 11px arial,tahoma,helvetica,sans-serif;}
 .x-small-editor .x-form-text{height:20px;line-height:16px;vertical-align:middle;}
 .ext-ie .x-small-editor .x-form-text{margin-top:-1px!important;margin-bottom:-1px!important;height:20px!important;line-height:16px!important;}
