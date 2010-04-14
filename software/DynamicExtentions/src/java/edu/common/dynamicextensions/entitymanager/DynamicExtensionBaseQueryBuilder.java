@@ -613,8 +613,7 @@ public class DynamicExtensionBaseQueryBuilder
 					&& dbaseCopy.getParentCategoryEntity().isCreateTable())
 			{
 				String frnCnstrRlbkQry = getForeignKeyConstraintQueryForInheritance(dbaseCopy,
-						dbaseCopy
-						.getParentCategoryEntity());
+						dbaseCopy.getParentCategoryEntity());
 				queries.add(getForeignKeyRemoveConstraintQueryForInheritance(dbaseCopy, dbaseCopy
 						.getParentCategoryEntity()));
 				attrRlbkQries.add(frnCnstrRlbkQry);
@@ -854,88 +853,6 @@ public class DynamicExtensionBaseQueryBuilder
 		}
 
 		return assocValues;
-	}
-
-	/**
-	 * This method returns the queries to remove the the association.
-	 * @param association
-	 * @param recId
-	 * @return
-	 */
-	public String getAssociationRemoveDataQuery(Association association, Long recId)
-	{
-		String tableName = DynamicExtensionsUtility.getTableName(association);
-		String sourceKey = association.getConstraintProperties()
-				.getSrcEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties().getName();
-
-		StringBuffer query = new StringBuffer();
-
-		RoleInterface sourceRole = association.getSourceRole();
-		RoleInterface targetRole = association.getTargetRole();
-
-		Cardinality srcMaxCard = sourceRole.getMaximumCardinality();
-		Cardinality tgtMaxCard = targetRole.getMaximumCardinality();
-		if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.MANY)
-		{
-			// For many to many, delete all the records referred to by this recordId.
-			query.append(DELETE_KEYWORD);
-			query.append(WHITESPACE);
-			query.append(tableName);
-			query.append(WHITESPACE);
-			query.append(WHERE_KEYWORD);
-			query.append(WHITESPACE);
-			query.append(sourceKey);
-			query.append(WHITESPACE);
-			query.append(EQUAL);
-			query.append(recId.toString());
-		}
-		else if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.ONE)
-		{
-			query.append(UPDATE_KEYWORD);
-			query.append(WHITESPACE);
-			query.append(tableName);
-			query.append(WHITESPACE);
-			query.append(SET_KEYWORD);
-			query.append(WHITESPACE);
-			query.append(sourceKey);
-			query.append(EQUAL);
-			query.append(WHITESPACE);
-			query.append("null");
-			query.append(WHITESPACE);
-			query.append(WHERE_KEYWORD);
-			query.append(WHITESPACE);
-			query.append(sourceKey);
-			query.append(EQUAL);
-			query.append(recId);
-		}
-		else
-		{
-			// For one to many and one to one, update target entity's records
-			// (set value in target column key = null) that are referring to
-			// this record by setting it to null.
-			String targetKey = association.getConstraintProperties()
-					.getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties()
-					.getName();
-
-			query.append(UPDATE_KEYWORD);
-			query.append(WHITESPACE);
-			query.append(tableName);
-			query.append(WHITESPACE);
-			query.append(SET_KEYWORD);
-			query.append(WHITESPACE);
-			query.append(targetKey);
-			query.append(EQUAL);
-			query.append(WHITESPACE);
-			query.append("null");
-			query.append(WHITESPACE);
-			query.append(WHERE_KEYWORD);
-			query.append(WHITESPACE);
-			query.append(targetKey);
-			query.append(EQUAL);
-			query.append(recId);
-		}
-
-		return query.toString();
 	}
 
 	/**
@@ -1536,7 +1453,6 @@ public class DynamicExtensionBaseQueryBuilder
 		if (!association.getIsSystemGenerated())
 		{
 
-
 			RoleInterface sourceRole = association.getSourceRole();
 			RoleInterface targetRole = association.getTargetRole();
 
@@ -1550,7 +1466,6 @@ public class DynamicExtensionBaseQueryBuilder
 					.getSrcEntityConstraintKeyPropertiesCollection();
 			Collection<ConstraintKeyPropertiesInterface> tgtCnstrKeyProps = cnstrnPrprties
 					.getTgtEntityConstraintKeyPropertiesCollection();
-
 
 			StringBuffer query = new StringBuffer();
 			if (srcMaxCard == Cardinality.MANY && tgtMaxCard == Cardinality.MANY)
@@ -1892,8 +1807,7 @@ public class DynamicExtensionBaseQueryBuilder
 
 				if (isAbstarctAttributeColumnToBeAdded(catAsso, assoDbaseCopy))
 				{
-					String newAssoQuery = getQueryPartForAssociation(catAsso, attrRlbkQries,
-							true);
+					String newAssoQuery = getQueryPartForAssociation(catAsso, attrRlbkQries, true);
 					assoQueries.add(newAssoQuery);
 				}
 			}
