@@ -41,7 +41,6 @@ import edu.common.dynamicextensions.util.DataValueMapUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
-import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.actionForm.AbstractActionForm;
 
 /**
@@ -271,17 +270,10 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 
 			final Long containerId = Long.valueOf(containerIdentifier);
 
-			containerInterface = EntityCache.getInstance().getContainerById(containerId);
-			if (containerInterface == null)
-			{
-				containerInterface = DynamicExtensionsUtility
-						.getContainerByIdentifier(containerIdentifier);
-			}
-			else
-			{
-				containerInterface.getContainerValueMap().clear();
-				DynamicExtensionsUtility.cleanContainerControlsValue(containerInterface);
-			}
+			containerInterface = DynamicExtensionsUtility.getClonedContainerFromCache(containerId
+					.toString());
+			containerInterface.getContainerValueMap().clear();
+			DynamicExtensionsUtility.cleanContainerControlsValue(containerInterface);
 
 			CacheManager.addObjectToCache(request, DEConstants.CONTAINER_INTERFACE,
 					containerInterface);

@@ -116,6 +116,7 @@ import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
+import edu.wustl.metadata.util.DyExtnObjectCloner;
 
 /**
  * @author chetan_patil
@@ -179,6 +180,21 @@ public class DynamicExtensionsUtility
 					Long.valueOf(containerIdentifier));
 		}
 		return containerInterface;
+	}
+
+	/**
+	 *
+	 * @param containerIdentifier
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
+	 */
+	public static ContainerInterface getClonedContainerFromCache(String containerIdentifier)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
+		ContainerInterface containerInterface = getContainerByIdentifier(containerIdentifier);
+		DyExtnObjectCloner cloner = new DyExtnObjectCloner();
+		return cloner.clone(containerInterface);
 	}
 
 	/**
