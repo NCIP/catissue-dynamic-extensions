@@ -20,23 +20,40 @@ import edu.wustl.common.beans.NameValueBean;
 
 /**
  * @author Gaurav_mehta
- * This class generates names of Entity Groups and writes it to a property file
+ * This class fetches names of Entity Groups from database and writes it to a property file
  */
 public class EntityGroupName
 {
 
+	/** The Constant $_EXCLUDE_ENTITYGROUP. */
+	private static final String $_EXCLUDE_ENTITYGROUP = "${exclude.entitygroup},";
+
+	/** The Constant $_INCLUDE_ENTITYGROUP. */
+	private static final String $_INCLUDE_ENTITYGROUP = "${include.entitygroup},";
+
+	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(EntityGroupName.class);
 
+	/** The entity manager. */
 	private static EntityGroupManagerInterface entityManager = EntityGroupManager.getInstance();
 
-	public final void getAllEntityGroupBean(final String directoryPath, final String tobeRemovedEntityGroups,
-			final String toBeIncludedEntityGroups)
+	/**
+	 * Gets the all entity group bean.
+	 * @param directoryPath the directory path
+	 * @param tobeRemovedEntityGroups the tobe removed entity groups
+	 * @param includeEntityGroups the to be included entity groups
+	 * @return the all entity group bean
+	 */
+	public final void getAllEntityGroupBean(final String directoryPath,
+			final String tobeRemovedEntityGroups, final String includeEntityGroups)
 	{
 		try
 		{
 			final Collection<NameValueBean> allEntityNames = entityManager.getAllEntityGroupBeans();
-			final List<String> allEntGrpNames = filterEntityGroups(tobeRemovedEntityGroups,
-					toBeIncludedEntityGroups, allEntityNames);
+			final String removeEntityGroups = tobeRemovedEntityGroups.trim();
+			final String includeEntityGrps = includeEntityGroups.trim();
+			final List<String> allEntGrpNames = filterEntityGroups(removeEntityGroups,
+					includeEntityGrps, allEntityNames);
 			writeToFile(allEntGrpNames, directoryPath);
 		}
 		catch (DynamicExtensionsSystemException e)
@@ -46,12 +63,16 @@ public class EntityGroupName
 	}
 
 	/**
-	 * @param tobeRemovedEntityGroups
-	 * @param toBeIncludedEntityGroups
-	 * @param allEntityNames
+	 * Filter entity groups.
+	 *
+	 * @param tobeRemovedEntityGroups the tobe removed entity groups
+	 * @param includeEntityGroups the include entity groups
+	 * @param allEntityNames the all entity names
+	 *
+	 * @return the list< string>
 	 */
 	private List<String> filterEntityGroups(final String tobeRemovedEntityGroups,
-			final String toBeIncludedEntityGroups, final Collection<NameValueBean> allEntityNames)
+			final String includeEntityGroups, final Collection<NameValueBean> allEntityNames)
 	{
 		List<String> allEntGrpNames = new ArrayList<String>();
 
@@ -61,31 +82,36 @@ public class EntityGroupName
 		}
 
 		filterEntityGroupsToBeRemoved(tobeRemovedEntityGroups, allEntGrpNames);
-		allEntGrpNames = addOnlySpecificEntityGroups(toBeIncludedEntityGroups, allEntGrpNames);
+		allEntGrpNames = addOnlySpecificEntityGroups(includeEntityGroups, allEntGrpNames);
 
 		return allEntGrpNames;
 	}
 
 	/**
-	 * @param toBeIncludedEntityGroups
-	 * @param allEntGrpNames
-	 * @return
+	 * Adds the only specific entity groups.
+	 *
+	 * @param includeEntityGroups the include entity groups
+	 * @param allEntGrpNames the all entity group names
+	 *
+	 * @return the list< string>
 	 */
-	private List<String> addOnlySpecificEntityGroups(final String toBeIncludedEntityGroups,
+	private List<String> addOnlySpecificEntityGroups(final String includeEntityGroups,
 			final List<String> allEntGrpNames)
 	{
-		validateEntityGroupNames(toBeIncludedEntityGroups, allEntGrpNames);
-		StringTokenizer tokens = new StringTokenizer(toBeIncludedEntityGroups, ",");
-		if (tokens.countTokens() != 0)
+		final String entityGroupsList = validateEntityGroupNames(includeEntityGroups, allEntGrpNames);
+		if (!$_INCLUDE_ENTITYGROUP.equalsIgnoreCase(entityGroupsList))
 		{
-			allEntGrpNames.clear();
+			final StringTokenizer tokens = new StringTokenizer(entityGroupsList, ",");
+			if (tokens.countTokens() != 0)
+			{
+				allEntGrpNames.clear();
+			}
+			while (tokens.hasMoreTokens())
+			{
+				final String entityGroup = tokens.nextToken().trim();
+				allEntGrpNames.add(entityGroup);
+			}
 		}
-		while (tokens.hasMoreTokens())
-		{
-			String entityGroup = tokens.nextToken();
-			allEntGrpNames.add(entityGroup);
-		}
-
 		return allEntGrpNames;
 	}
 
@@ -96,12 +122,14 @@ public class EntityGroupName
 	private void filterEntityGroupsToBeRemoved(final String tobeRemovedEntityGroups,
 			final List<String> allEntGrpNames)
 	{
-		validateEntityGroupNames(tobeRemovedEntityGroups, allEntGrpNames);
-		StringTokenizer tokens = new StringTokenizer(tobeRemovedEntityGroups, ",");
-		while (tokens.hasMoreTokens())
+		if (!$_EXCLUDE_ENTITYGROUP.equalsIgnoreCase(tobeRemovedEntityGroups))
 		{
-			String entityGroup = tokens.nextToken();
-			allEntGrpNames.remove(entityGroup);
+			final StringTokenizer tokens = new StringTokenizer(tobeRemovedEntityGroups, ",");
+			while (tokens.hasMoreTokens())
+			{
+				final String entityGroup = tokens.nextToken().trim();
+				allEntGrpNames.remove(entityGroup);
+			}
 		}
 	}
 
@@ -109,18 +137,26 @@ public class EntityGroupName
 	 * @param listOfEntityGroups
 	 * @param allEntGrpNames
 	 */
-	private void validateEntityGroupNames(final String listOfEntityGroups, final List<String> allEntGrpNames)
+	private String validateEntityGroupNames(final String listOfEntityGroups,
+			final List<String> allEntGrpNames)
 	{
-		StringTokenizer tokens = new StringTokenizer(listOfEntityGroups, ",");
+		final StringTokenizer tokens = new StringTokenizer(listOfEntityGroups, ",");
+		final StringBuffer filteredEntityGroup = new StringBuffer();
 		while (tokens.hasMoreTokens())
 		{
-			String entityGroup = tokens.nextToken();
-			if (!allEntGrpNames.contains(entityGroup))
+			final String entityGroup = tokens.nextToken().trim();
+			if (allEntGrpNames.contains(entityGroup))
+			{
+				filteredEntityGroup.append(entityGroup);
+				filteredEntityGroup.append(',');
+			}
+			else
 			{
 				LOGGER.info("The Entity Group " + entityGroup + " is not present in Database.");
 				LOGGER.info("Hence it cannot be included / excluded for caCore generation");
 			}
 		}
+		return filteredEntityGroup.toString();
 	}
 
 	/**
@@ -140,7 +176,11 @@ public class EntityGroupName
 				writer.write(',');
 			}
 			writer.close();
-			newFile.renameTo(new File(directoryPath + File.separator + "EntityGroup.properties"));
+			boolean fileSuccess = newFile.renameTo(new File(directoryPath + File.separator + "EntityGroup.properties"));
+			if(!fileSuccess)
+			{
+				throw new IOException("Error while writing Entity Groups Name to file");
+			}
 		}
 		catch (IOException e)
 		{
