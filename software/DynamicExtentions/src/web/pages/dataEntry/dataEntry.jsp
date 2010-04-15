@@ -133,8 +133,8 @@ jQuery(document).ready(
 									var deleteImageSrc = "<%=request.getContextPath()%>/images/de/deleteIcon.jpg";
 
 									htmlComponent = "<input type='text' disabled name='" +controlId+ "'_1 id='" +controlId+ "_1' value='" +file+ "'/>&nbsp;&nbsp;";
-									htmlComponent = htmlComponent + "<img src='" +imageSrc+ "' />&nbsp;&nbsp;";
-									htmlComponent = htmlComponent + "<img src='" +deleteImageSrc+ "' style='cursor:pointer' onClick='updateFileControl(" +controlId+ ");' />";
+									htmlComponent = htmlComponent + "<img src='" +imageSrc+ "' title='File uploaded'/>&nbsp;&nbsp;";
+									htmlComponent = htmlComponent + "<img src='" +deleteImageSrc+ "' style='cursor:pointer' onClick='updateFileControl(" +controlId+ ");' title='Delete file'/>";
 									htmlComponent = htmlComponent + "<input type='hidden' name='" +controlId+ "' id='" +controlId+ "' value='" +fileId+ "'/>";
 									htmlComponent = htmlComponent + "<input type='hidden' name='" +controlId+ "_hidden' id='" +controlId+ "_hidden' value='" +file+ "'/>";
 									htmlComponent = htmlComponent + "<input type='hidden' name='" +controlId+ "_contentType' id='" +controlId+ "_contentType' value='" +contentType+ "'/>";

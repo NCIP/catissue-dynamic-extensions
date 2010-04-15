@@ -2918,8 +2918,16 @@ function updateOffsets()
 
 function updateFileControl(controlId)
 {
- var spanName = controlId + "_button";
- var controlID = controlId;
+ if(controlId.id == null)
+ {
+    ctrlID = controlId;
+ }
+ else
+ {
+    ctrlID = controlId.id;
+ }
+ var spanName = ctrlID + "_button";
+ var controlID = ctrlID;
  var spanElement = document.getElementById(spanName);
  var innerHTMLString = "<input type='file' id='" +controlID+ "' name='" +controlID+ "' onchange='isDataChanged();' />";
 
