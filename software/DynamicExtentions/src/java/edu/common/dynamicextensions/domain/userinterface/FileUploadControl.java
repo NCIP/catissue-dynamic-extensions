@@ -57,9 +57,9 @@ public class FileUploadControl extends Control implements FileUploadInterface
 				+ recordId
 				+ "'>";
 				//+ value + "</A>";
-			htmlString = htmlString + "<img src='images/de/download.bmp' />";
-			htmlString += "</A>";
-			htmlString = htmlString + "<img src='images/de/deleteIcon.jpg' style='cursor:pointer' onClick='updateFileControl(\"" +controlname +"\");' />";
+			htmlString = htmlString + "<img src='images/de/download.bmp' title='Download File'/>";
+			htmlString += "</A>&nbsp;&nbsp;";
+			htmlString = htmlString + "<img src='images/de/deleteIcon.jpg' style='cursor:pointer' title='Delete File' onClick='updateFileControl(\"" +controlname +"\");' />";
 			htmlString = htmlString + "<input type='hidden' id='" +controlname +"_hidden' name='" +controlname +"_hidden' value='hidden'/>";
 			System.out.println("");
 		}
