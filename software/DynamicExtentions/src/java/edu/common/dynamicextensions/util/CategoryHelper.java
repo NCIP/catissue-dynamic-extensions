@@ -282,8 +282,7 @@ public class CategoryHelper implements CategoryHelperInterface
 				? null
 				: permissibleValueList[0]);
 		ControlInterface control = createOrUpdateControl(controlType, controlCaption, heading,
-				controlNotes,
-				container, categoryAttribute, permValueOptions, lineNumber,
+				controlNotes, container, categoryAttribute, permValueOptions, lineNumber,
 				permissibleValueNameList);
 		return control;
 	}
@@ -1034,14 +1033,31 @@ public class CategoryHelper implements CategoryHelperInterface
 		if (isPermissibleValueRemoved)
 		{
 			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue("ERROR AT LINE NO:" + categoryFileParser.getLineNumber() + " "
-							+ CategoryConstants.CREATE_CAT_FAILS)
+					.getValue(CategoryConstants.CREATE_CAT_FAILS)
+					+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
+					+ categoryFileParser.getLineNumber()
 					+ ApplicationProperties.getValue(CategoryConstants.PV_EDIT)
 					+ "\nORIGINAL PV SET FOR CATEGORY ATTRIBUE "
 					+ categoryAttribute.getName()
-					+ ":" + existingPv);
+					+ ":" + getExistingPvList(existingPv));
 		}
 		return isPermissibleValueRemoved;
+	}
+
+	/**
+	 * This method will return the String formed from the given existingPv parameter.
+	 * @param existingPv colection of permissible values.
+	 * @return string formed using the above parameter.
+	 */
+	private String getExistingPvList(Collection<PermissibleValueInterface> existingPv)
+	{
+		StringBuffer existingPvList = new StringBuffer();
+		for (PermissibleValueInterface permissibleValue : existingPv)
+		{
+			existingPvList.append(permissibleValue.getValueAsObject());
+			existingPvList.append(DEConstants.COMMA);
+		}
+		return existingPvList.toString();
 	}
 
 	/**
