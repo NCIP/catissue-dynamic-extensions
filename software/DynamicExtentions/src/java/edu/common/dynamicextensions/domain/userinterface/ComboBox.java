@@ -1,6 +1,8 @@
 
 package edu.common.dynamicextensions.domain.userinterface;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -120,21 +122,81 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		 */
 		String textComponent = "combo" + htmlComponentName;
 		String attributeName = ((Control) this).getCaption();
-		if ((!getParentContainer().isAjaxRequest())
-				&& (!getIsSkipLogicTargetControl() && !"skipLogicAttributes"
-						.equals(getDataEntryOperation())))
+		try
 		{
-			htmlString += "<script defer='defer'>Ext.onReady(function(){ "
-					+ "var myUrl= \"DEComboDataAction.do?controlId="
+			if ((!getParentContainer().isAjaxRequest())
+					&& (!getIsSkipLogicTargetControl() && !"skipLogicAttributes"
+							.equals(getDataEntryOperation())))
+			{
+				htmlString += "<script defer='defer'>Ext.onReady(function(){ "
+						+ "var myUrl= \"DEComboDataAction.do?controlId="
+						+ identifier
+						+ "~containerIdentifier="
+						+ parentContainerId
+						+ "~sourceControlValues="
+						+ URLEncoder.encode(sourceHtmlComponentValues.toString(), "utf-8")
+						+ "~attributeName="
+						+ attributeName
+						+ "\";"
+						+ "var ds = new Ext.data.Store({"
+						+ "proxy: new Ext.data.HttpProxy({url: myUrl}),"
+						+ "reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, "
+						+ "[{name: 'id', mapping: 'id'},{name: 'excerpt', mapping: 'field'}])});"
+						+ "var combo = new Ext.form.ComboBox({store: ds,"
+						+ "hiddenName: '"
+						+ textComponent
+						+ "',displayField:'excerpt',valueField: 'id',"
+						+ "typeAhead: 'false',pageSize:15,forceSelection: 'true',queryParam : 'query',"
+						+ "mode: 'remote',triggerAction: 'all',minChars : 3,queryDelay:500,lazyInit:true"
+						+ isDisabled
+						+ ",emptyText:\""
+						+ defaultValue
+						+ "\",valueNotFoundText:'',"
+						+ "selectOnFocus:'true',applyTo: '"
+						+ htmlComponentName
+						+ "'});combo.on(\"select\", function() {"
+						+ (isSkipLogic
+								? "getSkipLogicControl('" + htmlComponentName + "','" + identifier
+										+ "','" + parentContainerId + "');isDataChanged();"
+								: "isDataChanged();")
+						+ "}), combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"210\");combo.innerList.setStyle(\"width\", \"210\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});";
+
+				htmlString = htmlString
+						+ "ds.on('load',function(){if (this.getAt(0) != null && this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50;} else {combo.typeAheadDelay=60000}});";
+
+				htmlString = htmlString + "});</script>";
+			}
+			htmlString += "<div id='auto_complete_dropdown'>"
+					+ "<input type='text' onmouseover=\"showToolTip('"
+					+ htmlComponentName
+					+ "')\" id='"
+					+ htmlComponentName
+					+ "' "
+					+ " name='"
+					+ htmlComponentName
+					+ "' value =\""
+					+ defaultValue
+					+ "\" "
+					+ "' style='width:"
+					+ (columnSize > 0 ? (columnSize + 1) : (Constants.DEFAULT_COLUMN_SIZE + 1))
+					+ "ex' size='"
+					+ (columnSize > 0 ? columnSize : Constants.DEFAULT_COLUMN_SIZE)
+					+ "'/>"
+					+ "<div id='comboScript_"
+					+ getHTMLComponentName()
+					+ "' name='comboScript_"
+					+ getHTMLComponentName()
+					+ "' style='display:none'>"
+					+ "Ext.onReady(function(){ "
+					+ "var myUrl=\"DEComboDataAction.do?controlId="
 					+ identifier
 					+ "~containerIdentifier="
 					+ parentContainerId
 					+ "~sourceControlValues="
-					+ sourceHtmlComponentValues.toString()
+					+ URLEncoder.encode(sourceHtmlComponentValues.toString(), "utf-8")
 					+ "~attributeName="
 					+ attributeName
-					+ "\";"
-					+ "var ds = new Ext.data.Store({"
+					+ "\";var ds = new Ext.data.Store({"
 					+ "proxy: new Ext.data.HttpProxy({url: myUrl}),"
 					+ "reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, "
 					+ "[{name: 'id', mapping: 'id'},{name: 'excerpt', mapping: 'field'}])});"
@@ -155,82 +217,31 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 							? "getSkipLogicControl('" + htmlComponentName + "','" + identifier
 									+ "','" + parentContainerId + "');isDataChanged();"
 							: "isDataChanged();")
-					+ "}), combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"210\");combo.innerList.setStyle(\"width\", \"210\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});";
-
-			htmlString = htmlString
-					+ "ds.on('load',function(){if (this.getAt(0) != null && this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50;} else {combo.typeAheadDelay=60000}});";
-
-			htmlString = htmlString + "});</script>";
+					+ "}), combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"210\");combo.innerList.setStyle(\"width\", \"210\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});"
+					+ "ds.on('load',function(){if (this.getAt(0) != null) {if (this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50} else {combo.typeAheadDelay=60000}}});"
+					+ "});"
+					+ "</div>"
+					+ "<div name=\"comboHtml\" style='display:none'>"
+					+ "<div>"
+					+ "<input type='text' onmouseover=\"showToolTip('"
+					+ htmlComponentName
+					+ "')\" id='"
+					+ htmlComponentName
+					+ "' "
+					+ " name='"
+					+ htmlComponentName
+					+ "' value =\""
+					+ defaultValue
+					+ "\" style='width:"
+					+ (columnSize > 0 ? (columnSize + 1) : (Constants.DEFAULT_COLUMN_SIZE + 1))
+					+ "ex' size='"
+					+ (columnSize > 0 ? columnSize : Constants.DEFAULT_COLUMN_SIZE)
+					+ "' class='font_bl_nor' />" + "</div>" + "</div>" + "</div>";
 		}
-		htmlString += "<div id='auto_complete_dropdown'>"
-				+ "<input type='text' onmouseover=\"showToolTip('"
-				+ htmlComponentName
-				+ "')\" id='"
-				+ htmlComponentName
-				+ "' "
-				+ " name='"
-				+ htmlComponentName
-				+ "' value =\""
-				+ defaultValue
-				+ "\" "
-				+ "' style='width:"
-				+ (columnSize > 0 ? (columnSize + 1) : (Constants.DEFAULT_COLUMN_SIZE + 1))
-				+ "ex' size='"
-				+ (columnSize > 0 ? columnSize : Constants.DEFAULT_COLUMN_SIZE)
-				+ "'/>"
-				+ "<div id='comboScript_"
-				+ getHTMLComponentName()
-				+ "' name='comboScript_"
-				+ getHTMLComponentName()
-				+ "' style='display:none'>"
-				+ "Ext.onReady(function(){ "
-				+ "var myUrl=\"DEComboDataAction.do?controlId="
-				+ identifier
-				+ "~containerIdentifier="
-				+ parentContainerId
-				+ "~sourceControlValues="
-				+ sourceHtmlComponentValues.toString()
-				+ "~attributeName="
-				+ attributeName
-				+ "\";var ds = new Ext.data.Store({"
-				+ "proxy: new Ext.data.HttpProxy({url: myUrl}),"
-				+ "reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, "
-				+ "[{name: 'id', mapping: 'id'},{name: 'excerpt', mapping: 'field'}])});"
-				+ "var combo = new Ext.form.ComboBox({store: ds,"
-				+ "hiddenName: '"
-				+ textComponent
-				+ "',displayField:'excerpt',valueField: 'id',"
-				+ "typeAhead: 'false',pageSize:15,forceSelection: 'true',queryParam : 'query',"
-				+ "mode: 'remote',triggerAction: 'all',minChars : 3,queryDelay:500,lazyInit:true"
-				+ isDisabled
-				+ ",emptyText:\""
-				+ defaultValue
-				+ "\",valueNotFoundText:'',"
-				+ "selectOnFocus:'true',applyTo: '"
-				+ htmlComponentName
-				+ "'});combo.on(\"select\", function() {"
-				+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName + "','" + identifier
-						+ "','" + parentContainerId + "');isDataChanged();" : "isDataChanged();")
-				+ "}), combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"210\");combo.innerList.setStyle(\"width\", \"210\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});"
-				+ "ds.on('load',function(){if (this.getAt(0) != null) {if (this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50} else {combo.typeAheadDelay=60000}}});"
-				+ "});"
-				+ "</div>"
-				+ "<div name=\"comboHtml\" style='display:none'>"
-				+ "<div>"
-				+ "<input type='text' onmouseover=\"showToolTip('"
-				+ htmlComponentName
-				+ "')\" id='"
-				+ htmlComponentName
-				+ "' "
-				+ " name='"
-				+ htmlComponentName
-				+ "' value =\""
-				+ defaultValue
-				+ "\" style='width:"
-				+ (columnSize > 0 ? (columnSize + 1) : (Constants.DEFAULT_COLUMN_SIZE + 1))
-				+ "ex' size='"
-				+ (columnSize > 0 ? columnSize : Constants.DEFAULT_COLUMN_SIZE)
-				+ "' class='font_bl_nor' />" + "</div>" + "</div>" + "</div>";
+		catch (UnsupportedEncodingException e)
+		{
+			throw new DynamicExtensionsSystemException("Error while encoding url.", e);
+		}
 		if (getIsSkipLogicTargetControl() || getParentContainer().isAjaxRequest())
 		{
 			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
