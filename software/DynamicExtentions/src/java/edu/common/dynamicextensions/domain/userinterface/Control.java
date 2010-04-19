@@ -393,7 +393,24 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		// category attribute controls.
 		if ((heading != null) || ((getFormNotes() != null) && (getFormNotes().size() != 0)))
 		{
-			controlHTML.append("<tr><td width='100%' colspan='3' align='left'>");
+			if (getIsSkipLogicTargetControl())
+			{
+				controlHTML.append("</tr><tr><td width='100%' colspan='3' align='left'><div ");
+				controlHTML.append("id='" + getHTMLComponentName() + "_row_div_heading' name='"
+						+ getHTMLComponentName() + "_row_div_heading' ");
+				controlHTML.append((getIsSkipLogicShowHideTargetControl()
+						? "style='display:none'>"
+						: ">"));
+				controlHTML
+						.append("<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
+								+ getHTMLComponentName()
+								+ "_row_div_heading' /><input type='hidden' name='skipLogicHideControls' id='skipLogicHideControls' value = '"
+								+ getHTMLComponentName() + "_row_div_heading' />");
+			}
+			else
+			{
+				controlHTML.append("<tr><td width='100%' colspan='3' align='left'>");
+			}
 
 			if ((heading != null) && (heading.length() != 0))
 			{
@@ -411,8 +428,22 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 									.getNote()) + "</div>");
 				}
 			}
-
+			if (getIsSkipLogicTargetControl())
+			{
+				controlHTML.append("</div>");
+			}
 			controlHTML.append("</td></tr>");
+			if (getIsSkipLogicTargetControl())
+			{
+				controlHTML.append("<tr id='" + getHTMLComponentName() + "_row_div_cntrl' name='"
+						+ getHTMLComponentName() + "_row_div_cntrl' ");
+				controlHTML.append((getIsSkipLogicShowHideTargetControl()
+						? "style='display:none'>"
+						: ">"));
+				controlHTML
+						.append("<input type='hidden' name='skipLogicHideControls' id='skipLogicHideControls' value = '"
+								+ getHTMLComponentName() + "_row_div_cntrl' />");
+			}
 		}
 		if ((yPosition != null) && (yPosition <= 1))
 		{
