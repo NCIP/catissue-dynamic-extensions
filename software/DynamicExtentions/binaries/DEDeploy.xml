@@ -1429,4 +1429,12 @@
 		<jar destfile="${entity.jar.location}/${entitygroupname}.jar" basedir="${entity.jar.location}" />
 	</target>
 
+	<!-- =================================
+			target:update_DE - upgrade Dynamic Extension database
+			This target is for bug#16635 Single upgrade target required.
+					         	================================= -->
+	<target name="upgrade.DE">
+		<antcall target="upgrade_db_from_DE_1.4.0_to_DE_1.4.2" />
+	</target>
+
 </project>
