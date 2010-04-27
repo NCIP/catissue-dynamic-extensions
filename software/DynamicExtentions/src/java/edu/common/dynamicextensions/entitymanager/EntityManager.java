@@ -1268,12 +1268,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			try
 			{
 				jdbcDao.closeStatement(resultSet);
-
-				if ((dao != null) && (dao.length > 0))
-				{
-					Logger.out.info("Dao passed by calling method....");
-				}
-				else
+				if (dao == null)
 				{
 					DynamicExtensionsUtility.closeDAO(jdbcDao);
 				}
