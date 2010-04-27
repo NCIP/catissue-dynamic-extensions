@@ -40,7 +40,7 @@ import edu.wustl.dao.exception.DAOException;
 public class CategoryCSVFileParser extends CategoryFileParser
 {
 
-	private static final String DEFAULT_SEPERATOR=",";
+	private static final String DEFAULT_SEPERATOR = ",";
 	public static final String DEFAULT_ESCAPE_CHARACTER = "\"";
 	protected CSVReader reader;
 
@@ -95,7 +95,8 @@ public class CategoryCSVFileParser extends CategoryFileParser
 		if (line == null)
 		{
 			flag = false;
-		}else
+		}
+		else
 		{
 			line = processEscapeCharacter(line, null, DEFAULT_ESCAPE_CHARACTER, DEFAULT_SEPERATOR);
 		}
@@ -161,8 +162,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	public String getDisplyLable()
 	{
 		return processEscapeCharacter(readLine()[0].split(":"), readLine()[0],
-				DEFAULT_ESCAPE_CHARACTER, ":")[1]
-				.trim();
+				DEFAULT_ESCAPE_CHARACTER, ":")[1].trim();
 	}
 
 	/**
@@ -259,8 +259,8 @@ public class CategoryCSVFileParser extends CategoryFileParser
 			String pvString = nextLine[counter].substring(indexOfTilda + 1);
 			String originalPVString = pvString;
 			int pvStringLength = 1;
-			String[] pvListString = processEscapeCharacter(originalPVString.split(":"), originalPVString,
-					DEFAULT_ESCAPE_CHARACTER, ":");
+			String[] pvListString = processEscapeCharacter(originalPVString.split(":"),
+					originalPVString, DEFAULT_ESCAPE_CHARACTER, ":");
 			for (String pv : pvListString)
 			{
 
@@ -313,15 +313,17 @@ public class CategoryCSVFileParser extends CategoryFileParser
 				}
 				else
 				{//Concept Code not defined
+					permiValue = pv;
+					pvStringLength = pvStringLength + permiValue.length();
 
-					{
-						permiValue = pv;
-						pvStringLength = pvStringLength + permiValue.length();
-					}
 				}
-				pvVsSemanticPropertyCollection.put(DynamicExtensionsUtility
-						.getEscapedStringValue(permiValue), semanticPropertyCollection);
 				validateStringForStinger(permiValue);
+				if (!"".equals(permiValue.trim()))
+				{
+					pvVsSemanticPropertyCollection.put(DynamicExtensionsUtility
+							.getEscapedStringValue(permiValue), semanticPropertyCollection);
+				}
+
 				pvString = originalPVString.substring(pvStringLength - 1);
 			}
 		}
@@ -373,10 +375,12 @@ public class CategoryCSVFileParser extends CategoryFileParser
 							permissibleVale = pvString;
 						}
 						validateStringForStinger(permissibleVale);
-						pvVsSemanticPropertyCollection
-								.put(DynamicExtensionsUtility
-										.getEscapedStringValue(permissibleVale),
-										semanticPropertyCollection);
+						if (!"".equals(permissibleVale.trim()))
+						{
+							pvVsSemanticPropertyCollection.put(DynamicExtensionsUtility
+									.getEscapedStringValue(permissibleVale),
+									semanticPropertyCollection);
+						}
 					}
 				}
 			}
@@ -535,8 +539,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	public String getTargetContainerCaption()
 	{
 		return processEscapeCharacter(readLine()[0].split(":"), readLine()[0],
-				DEFAULT_ESCAPE_CHARACTER, ":")[1]
-				.trim();
+				DEFAULT_ESCAPE_CHARACTER, ":")[1].trim();
 	}
 
 	/**
@@ -547,8 +550,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	{
 		categoryValidator.validateMultiplicity();
 		return processEscapeCharacter(readLine()[0].split(":"), readLine()[0],
-				DEFAULT_ESCAPE_CHARACTER, ":")[2]
-				.trim();
+				DEFAULT_ESCAPE_CHARACTER, ":")[2].trim();
 	}
 
 	/**
@@ -733,8 +735,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	public String getDefaultValueForRelatedAttribute()
 	{
 		return processEscapeCharacter(readLine()[0].split("="), readLine()[0],
-				DEFAULT_ESCAPE_CHARACTER, "=")[1]
-				.trim();
+				DEFAULT_ESCAPE_CHARACTER, "=")[1].trim();
 	}
 
 	public String getRelatedAttributeName()
@@ -753,8 +754,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 			if (string.startsWith(CategoryCSVConstants.DEFAULT_VALUE))
 			{
 				defaultValue = processEscapeCharacter(string.split("="), string,
-						DEFAULT_ESCAPE_CHARACTER,
-						"=")[1];
+						DEFAULT_ESCAPE_CHARACTER, "=")[1];
 			}
 		}
 		return defaultValue;
