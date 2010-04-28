@@ -257,7 +257,11 @@ public final class HTTPSConnection
 			else
 			{
 				LOGGER.error("This operation failed for file : " + entry.getKey());
-				if (entry.getValue().getCause() == null)
+				// if the actual exception occured was DE exception then the localised message will be wmpty
+				// & actual message will be in its cause, in other case like if Null pointer exception then the
+				//Actual message is in the wrapped exception itself.
+				if (entry.getValue().getCause() == null
+						|| !"".equals(entry.getValue().getLocalizedMessage()))
 				{
 					LOGGER.error("Exception : " + entry.getValue().getLocalizedMessage());
 				}

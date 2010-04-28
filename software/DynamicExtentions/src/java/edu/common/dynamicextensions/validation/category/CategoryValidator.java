@@ -78,8 +78,7 @@ public class CategoryValidator
 	public void validateMultiplicity() throws DynamicExtensionsSystemException
 	{
 		if (categoryFileParser.processEscapeCharacter(categoryFileParser.readLine()[0].split(":"),
-				categoryFileParser.readLine()[0],
-				"\\", ":").length < 2)
+				categoryFileParser.readLine()[0], "\\", ":").length < 2)
 		{
 			throw new DynamicExtensionsSystemException(ApplicationProperties
 					.getValue(CategoryConstants.CREATE_CAT_FAILS)
@@ -107,7 +106,7 @@ public class CategoryValidator
 		{
 			throw new DynamicExtensionsSystemException(errorMessage);
 		}
-		checkForNullRefernce(entityIdList.get(0), errorMessage);
+		//checkForNullRefernce(entityIdList.get(0), errorMessage);
 	}
 
 	/**
@@ -119,18 +118,30 @@ public class CategoryValidator
 	}
 
 	/**
-	 * @param object
-	 * @param message
+	 * Check is object null & if yes then throw exception with the given message
+	 * @param object object to check for null
+	 * @param message message to append
+	 * @param isImportPv if passed then the message will be shown with respect to
+	 * import PV case else Category creation.
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public static void checkForNullRefernce(Object object, String message)
+	public static void checkForNullRefernce(Object object, String message, boolean... isImportPv)
 			throws DynamicExtensionsSystemException
 	{
 		if (object == null)
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ message);
+			if (isImportPv != null && isImportPv.length > 0 && isImportPv[0])
+			{
+				throw new DynamicExtensionsSystemException(ApplicationProperties
+						.getValue(CategoryConstants.IMPORT_PV_FAILS)
+						+ message);
+			}
+			else
+			{
+				throw new DynamicExtensionsSystemException(ApplicationProperties
+						.getValue(CategoryConstants.CREATE_CAT_FAILS)
+						+ message);
+			}
 		}
 	}
 
@@ -465,8 +476,7 @@ public class CategoryValidator
 	 */
 	private String getErrorMessageStart()
 	{
-		return ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
- + ":"
+		return ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER) + ":"
 				+ categoryFileParser.getLineNumber();
 	}
 
@@ -658,9 +668,8 @@ public class CategoryValidator
 	public void checkIfHeadingIsAppropriate(String heading, long lineNumber)
 			throws DynamicExtensionsSystemException
 	{
-		String[] strings = this.categoryFileParser.processEscapeCharacter(heading.split("~"),
-				heading, this.categoryFileParser.DEFAULT_ESCAPE_CHARACTER,
-				"~");
+		String[] strings = categoryFileParser.processEscapeCharacter(heading.split("~"), heading,
+				categoryFileParser.DEFAULT_ESCAPE_CHARACTER, "~");
 		if (strings.length < 2 || strings[1].length() > 255)
 		{
 			throw new DynamicExtensionsSystemException(ApplicationProperties

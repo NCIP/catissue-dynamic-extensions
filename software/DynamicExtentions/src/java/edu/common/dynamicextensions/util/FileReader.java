@@ -14,6 +14,7 @@ public class FileReader
 
 	private String filePath;
 	protected final String baseDir;
+
 	/**
 	 * @param filePath file path
 	 * @throws DynamicExtensionsSystemException
@@ -21,7 +22,7 @@ public class FileReader
 	public FileReader(String filePath) throws DynamicExtensionsSystemException
 	{
 		this.filePath = getSystemIndependantFilePath(filePath);
-		baseDir="";
+		baseDir = "";
 	}
 
 	/**
@@ -30,11 +31,13 @@ public class FileReader
 	 * @param baseDirectory base directory
 	 * @throws DynamicExtensionsSystemException exception
 	 */
-	public FileReader(String filePath,String baseDirectory) throws DynamicExtensionsSystemException
+	public FileReader(String filePath, String baseDirectory)
+			throws DynamicExtensionsSystemException
 	{
-		baseDir=baseDirectory;
+		baseDir = baseDirectory;
 		this.filePath = getSystemIndependantFilePath(filePath);
 	}
+
 	/**
 	 * @return file path by replacing %20 by space
 	 * sinces spaces are replaced by %20
@@ -42,6 +45,16 @@ public class FileReader
 	public String getFilePath()
 	{
 		return filePath.replace("%20", " ");
+	}
+
+	/**
+	 * @return relative file path from base directory by replacing %20 by space
+	 * sinces spaces are replaced by %20
+	 */
+
+	public String getRelativeFilePath()
+	{
+		return getFilePath().replace(baseDir, "");
 	}
 
 	/**
@@ -58,12 +71,11 @@ public class FileReader
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public String getSystemIndependantFilePath(String path)
-			throws DynamicExtensionsSystemException
+	public String getSystemIndependantFilePath(String path) throws DynamicExtensionsSystemException
 	{
-		if(baseDir!=null && !"".equals(baseDir))
+		if (baseDir != null && !"".equals(baseDir))
 		{
-			path = baseDir+"/"+path;
+			path = baseDir + "/" + path;
 		}
 		File file = new File(path.replace(" ", "%20"));
 		return file.getAbsolutePath();

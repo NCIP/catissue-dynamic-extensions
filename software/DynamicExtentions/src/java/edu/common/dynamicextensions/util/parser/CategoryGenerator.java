@@ -433,21 +433,22 @@ public class CategoryGenerator
 			}
 
 		}
+		catch (DynamicExtensionsSystemException e)
+		{
+			categoryHelper.releaseLockOnCategory(category);
+			throw new DynamicExtensionsSystemException("", e);
+		}
 		catch (final Exception e)
 		{
 			categoryHelper.releaseLockOnCategory(category);
-			if (!(e instanceof DynamicExtensionsSystemException))
-			{
-				throw new DynamicExtensionsSystemException(ApplicationProperties
-						.getValue(CategoryConstants.CREATE_CAT_FAILS)
-						+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-						+ categoryFileParser.getLineNumber()
-						+ " "
-						+ ApplicationProperties.getValue("readingFile")
-						+ categoryFileParser.getFilePath(), e);
-			}
+			throw new DynamicExtensionsSystemException(ApplicationProperties
+					.getValue(CategoryConstants.CREATE_CAT_FAILS)
+					+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
+					+ categoryFileParser.getLineNumber()
+					+ " "
+					+ ApplicationProperties.getValue("readingFile")
+					+ categoryFileParser.getRelativeFilePath(), e);
 
-			throw new DynamicExtensionsSystemException("", e);
 		}
 		finally
 		{
@@ -918,10 +919,11 @@ public class CategoryGenerator
 					else
 					{
 						skipLogicAttributeInterface
-							.setDefaultValue(((AttributeMetadataInterface) targetCategoryAttribute)
-									.getAttributeTypeInformation().getPermissibleValueForString(
-											DynamicExtensionsUtility
-													.getEscapedStringValue(defaultValue)));
+								.setDefaultValue(((AttributeMetadataInterface) targetCategoryAttribute)
+										.getAttributeTypeInformation()
+										.getPermissibleValueForString(
+												DynamicExtensionsUtility
+														.getEscapedStringValue(defaultValue)));
 					}
 				}
 				//Setting control options

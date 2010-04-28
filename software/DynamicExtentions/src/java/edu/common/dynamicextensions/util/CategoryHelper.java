@@ -1647,17 +1647,17 @@ public class CategoryHelper implements CategoryHelperInterface
 	}
 
 	/**
-	 *
-	 * @param attributeTypeInformation
-	 * @param desiredPermissibleValues
-	 * @return
-	 * @throws DynamicExtensionsSystemException
+	 *This method will return the list of permissible values for given attribute type info
+	 * from the file.
+	 * @param attributeTypeInformation attribute type info.
+	 * @param desiredPermissibleValues desired permissible values
+	 * @return list of permissible Values
 	 * @throws ParseException
 	 */
 	public List<PermissibleValueInterface> getPermissibleValueList(
 			AttributeTypeInformationInterface attributeTypeInformation,
 			Map<String, Collection<SemanticPropertyInterface>> desiredPermissibleValues)
-			throws DynamicExtensionsSystemException, ParseException
+			throws ParseException
 	{
 		List<PermissibleValueInterface> permissibleValues = new ArrayList<PermissibleValueInterface>();
 		if (desiredPermissibleValues != null)

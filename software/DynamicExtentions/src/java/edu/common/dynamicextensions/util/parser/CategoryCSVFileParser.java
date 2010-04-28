@@ -419,7 +419,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 					+ getLineNumber()
 					+ " "
 					+ ApplicationProperties.getValue("readingFile")
-					+ getFilePath()
+					+ getRelativeFilePath()
 					+ ". "
 					+ ApplicationProperties.getValue("dynExtn.validation.unsafe.character", value));
 		}

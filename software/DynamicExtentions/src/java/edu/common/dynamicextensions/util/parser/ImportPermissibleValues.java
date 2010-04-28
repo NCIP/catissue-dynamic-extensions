@@ -2,8 +2,6 @@
 package edu.common.dynamicextensions.util.parser;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -26,8 +24,10 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.CategoryHelper;
 import edu.common.dynamicextensions.util.CategoryHelperInterface;
+import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.common.dynamicextensions.validation.category.CategoryValidator;
 import edu.wustl.cab2b.server.cache.EntityCache;
+import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 
@@ -63,12 +63,10 @@ public class ImportPermissibleValues
 	}
 
 	/**
-	 * @throws DynamicExtensionsApplicationException
-	 * @throws DynamicExtensionsSystemException
-	 * @throws ParseException
+	 * This method will start importing the permissible values from csv file.
+	 * @throws DynamicExtensionsSystemException exception.
 	 */
-	public void importValues() throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException, ParseException
+	public void importValues() throws DynamicExtensionsSystemException
 	{
 		CategoryHelperInterface categoryHelper = new CategoryHelper();
 
@@ -91,7 +89,7 @@ public class ImportPermissibleValues
 						.getEntityGroupName());
 				CategoryValidator.checkForNullRefernce(entityGroupId, " ERROR AT LINE:"
 						+ catCSVFileParser.getLineNumber() + " ENTITY GROUP WITH NAME "
-						+ catCSVFileParser.getEntityGroupName() + " DOES NOT");
+						+ catCSVFileParser.getEntityGroupName() + " DOES NOT", true);
 
 				catCSVFileParser.getCategoryValidator().setEntityGroupId(entityGroupId);
 
@@ -110,7 +108,7 @@ public class ImportPermissibleValues
 					Long entityId = entityManager.getEntityId(entityName, entityGroupId);
 					CategoryValidator.checkForNullRefernce(entityId, " ERROR AT LINE:"
 							+ catCSVFileParser.getLineNumber() + " ENTITY WITH NAME " + entityName
-							+ " DOES NOT EXIST");
+							+ " DOES NOT EXIST", true);
 
 					String attributeName = catCSVFileParser.getAttributeName();
 
@@ -120,7 +118,7 @@ public class ImportPermissibleValues
 					Long attributeId = entityManager.getAttributeId(attributeName, entityId);
 					CategoryValidator.checkForNullRefernce(attributeId, " ERROR AT LINE:"
 							+ catCSVFileParser.getLineNumber() + " ATTRIBUTE WITH NAME "
-							+ attributeName + " DOES NOT EXIST");
+							+ attributeName + " DOES NOT EXIST", true);
 					// Bug # 10432,10382
 					// If this attribute is of type association (as in case of multi select),
 					// it is required to fetch association's target entity's attribute id.
@@ -177,21 +175,19 @@ public class ImportPermissibleValues
 				}
 			}
 		}
-		catch (IOException e)
+		catch (DynamicExtensionsSystemException e)
 		{
-			throw new DynamicExtensionsSystemException("FATAL ERROR AT LINE:"
-					+ catCSVFileParser.getLineNumber(), e);
+			throw new DynamicExtensionsSystemException("", e);
 		}
-		catch (DynamicExtensionsSystemException dse)
+		catch (final Exception e)
 		{
-			throw new DynamicExtensionsSystemException("", dse);
-		}
-
-		catch (Exception e)
-		{
-			throw new DynamicExtensionsSystemException(
-					"Error encountered while importing Permissible Values", e);
-
+			throw new DynamicExtensionsSystemException(ApplicationProperties
+					.getValue(CategoryConstants.IMPORT_PV_FAILS)
+					+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
+					+ catCSVFileParser.getLineNumber()
+					+ " "
+					+ ApplicationProperties.getValue("readingFile")
+					+ catCSVFileParser.getRelativeFilePath(), e);
 		}
 		finally
 		{

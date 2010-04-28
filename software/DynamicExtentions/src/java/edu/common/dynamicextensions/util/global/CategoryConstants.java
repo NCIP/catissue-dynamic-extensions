@@ -12,6 +12,8 @@ public class CategoryConstants
 
 	public final static String CREATE_CAT_FAILS = "categoryCreationFailure";
 
+	public final static String IMPORT_PV_FAILS = "importPermissibleValuesFailure";
+
 	public final static String CONTACT_ADMIN = "contactAdmin";
 
 	public final static String MULT_UNDEFINED = "multiplicityUndefined";

@@ -5,12 +5,12 @@
 package edu.common.dynamicextensions.ui.webui.action;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +22,6 @@ import org.apache.struts.action.ActionMapping;
 import org.owasp.stinger.Stinger;
 import org.owasp.stinger.rules.RuleSet;
 
-import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.CategoryGenerationUtil;
 import edu.common.dynamicextensions.util.DirOperationsUtility;
@@ -56,15 +55,14 @@ public class ImportPVAction extends BaseDynamicExtensionsAction
 		{
 			DownloadUtility.downloadZipFile(request, pvDir, "pv.zip");
 			LOGGER.info("Artifacts Downloaded");
-
+			Map<String, Exception> pvFileNameVsExcep = new HashMap<String, Exception>();
 			List<String> listOfFiles = getPVFileNames(request, pvDir);
 
 			for (String file : listOfFiles)
 			{
-				importPVs(file, pvDir);
+				importPVs(file, pvDir, pvFileNameVsExcep);
 			}
-			sendResponse(response, "PV Uploaded Successfully");
-			LOGGER.info("Permissible Values uploaded successfully");
+			sendResponse(response, pvFileNameVsExcep);
 		}
 		catch (Exception e)
 		{
@@ -79,22 +77,28 @@ public class ImportPVAction extends BaseDynamicExtensionsAction
 	}
 
 	/**
-	 * @param relativeFileName
-	 * @param file
-	 * @param pvDir
-	 * @throws DynamicExtensionsSystemException
-	 * @throws FileNotFoundException
-	 * @throws DynamicExtensionsApplicationException
-	 * @throws ParseException
+	 * Method will import permissible values mentioned in the file.
+	 * @param file pv file name
+	 * @param pvDir base diretory from which the file path is mentioned.
+	 * @param pvFileNameVsExcep map of file name vs exception occured.
 	 */
-	private void importPVs(String file, String pvDir) throws DynamicExtensionsSystemException,
-			FileNotFoundException, DynamicExtensionsApplicationException, ParseException
+	private void importPVs(String file, String pvDir, Map<String, Exception> pvFileNameVsExcep)
 	{
-		ServletContext servletContext = servlet.getServletContext();
-		String config = servletContext.getRealPath("WEB-INF") + "/stinger.xml";
-		Stinger stinger = new Stinger(new RuleSet(config, servletContext), servletContext);
-		ImportPermissibleValues importPVs = new ImportPermissibleValues(file, pvDir, stinger);
-		importPVs.importValues();
+		try
+		{
+			ServletContext servletContext = servlet.getServletContext();
+			String config = servletContext.getRealPath("WEB-INF") + "/stinger.xml";
+			Stinger stinger = new Stinger(new RuleSet(config, servletContext), servletContext);
+			ImportPermissibleValues importPVs = new ImportPermissibleValues(file, pvDir, stinger);
+			importPVs.importValues();
+			LOGGER.info("Permissible values from file " + file + " uploaded successfully.");
+			pvFileNameVsExcep.put(file, null);
+		}
+		catch (Exception ex)
+		{
+			LOGGER.error("Error occured while importing permissible values", ex);
+			pvFileNameVsExcep.put(file, ex);
+		}
 	}
 
 	/**
