@@ -719,13 +719,13 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 
 			if (fileName.length() == 0 || contentType.length() == 0 || fileId == 0)
 			{
-				if (request.getParameter(controlName + "_hidden") != null)
+				if (request.getParameter(controlName + "_hidden") == null)
 				{
-					attributeValueMap.put(abstractAttribute, control.getValue());
+					attributeValueMap.put(abstractAttribute, null);
 				}
 				else
 				{
-					attributeValueMap.put(abstractAttribute, null);
+					attributeValueMap.put(abstractAttribute, control.getValue());
 				}
 			}
 			else
@@ -746,7 +746,6 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 						attributeValue = fileAttributeRecordValue;
 						attributeValueMap.put(abstractAttribute, attributeValue);
 						fileUploadManager.deleteRecord(fileId);
-						System.out.println("A");
 					}
 				}
 				catch (SQLException e)
@@ -762,6 +761,10 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 			if ((value != null) && value.equalsIgnoreCase("undefined"))
 			{
 				value = "1";
+			}
+			else if (value == null)
+			{
+				value = ((AttributeMetadataInterface) abstractAttribute).getDefaultValue();
 			}
 			attributeValue = value;
 			attributeValueMap.put(abstractAttribute, attributeValue);
