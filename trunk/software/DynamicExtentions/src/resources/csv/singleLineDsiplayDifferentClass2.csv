@@ -1,0 +1,35 @@
+## HERE CONTROLS FROM TWO DIFFERNT INSTANCES ARE PLACED UNDER THE SAME LABEL,
+## BECAUSE OF show=false FOR THE DISPLAY LABEL GleasonScore IT SHOULD THROW SYSTEM EXCEPTION 
+Form_Definition
+singleLineDisplayDifferentClass2
+scg
+RadicalProstatectomyPathologyAnnotation~RadicalProstatectomyPathologyAnnotation,GleasonScore~RadicalProstatectomyPathologyAnnotation:GleasonScore,HistologicGrade~RadicalProstatectomyPathologyAnnotation:HistologicGrade
+
+Display_Label:GleasonScore,show=false
+instance:RadicalProstatectomyPathologyAnnotation[1]->GleasonScore[1],RadicalProstatectomyPathologyAnnotation[1]->HistologicGrade[1]
+
+SingleLineDisplay:start
+GleasonScore:primaryPatternScore,comboBox,Primary patternscore
+separator:':'
+HistologicGrade:gradingSystemName,comboBox,Grading sysname,options~ShowLabel=false
+SingleLineDisplay:end
+GleasonScore:tertiaryPatternScore,comboBox,Teritory patternscore
+GleasonScore:secondaryPatternScore,comboBox,Secondary patternscore
+
+
+SingleLineDisplay:start
+##HERE commonOptions FEATURE IS USED, WHICH CAN BE USED TO ASSIGN COMMON PROPERTIES TO THE CONTROLS
+##ON THE SAME LINE    
+commonOptions~Columns=20:IsPassword=false
+HistologicGrade:otherGradingSystemName,textField,Other grading system
+HistologicGrade:grade,textField,Grade
+SingleLineDisplay:end
+
+
+
+
+Display_Label:RadicalProstatectomyPathologyAnnotation,show=true
+instance:RadicalProstatectomyPathologyAnnotation[1]->RadicalProstatectomyPathologyAnnotation[1]
+RadicalProstatectomyPathologyAnnotation:specimenProcedure,comboBox, SP.procedure
+RadicalProstatectomyPathologyAnnotation:otherSpecimenProcedure,textField,Other sp. procedure,options~Columns=20:IsPassword=false
+subcategory:GleasonScore:single

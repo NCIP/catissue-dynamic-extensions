@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 2.0//EN" 
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-lazy="false">
+    <class
+        name="edu.common.dynamicextensions.domain.Path"
+        table="DYEXTN_PATH"
+        dynamic-update="false"
+        dynamic-insert="false"
+    >
+
+        <id
+            name="id"
+            column="IDENTIFIER"
+            type="long"
+            length="30"
+            unsaved-value="null"
+        >
+            <generator class="native">
+                <param name="sequence">DYEXTN_PATH_SEQ</param>
+            </generator>
+        </id>
+
+        <set
+            name="pathAssociationRelationCollection"
+            table="DYEXTN_PATH_ASSO_REL"
+            lazy="false"
+            inverse="false"
+            cascade="save-update"
+            sort="unsorted"
+            order-by="PATH_SEQUENCE_NUMBER desc"
+        >
+            <cache 
+                usage="read-write" 
+             />
+
+              <key
+                  column="PATH_ID"
+              />
+
+              <one-to-many
+                  class="edu.common.dynamicextensions.domain.PathAssociationRelation"
+              />
+        </set>
+
+        <!--
+            To add non XDoclet property mappings, create a file named
+                hibernate-properties-Path.xml
+            containing the additional properties and place it in your merge dir.
+        -->
+
+    </class>
+
+</hibernate-mapping>

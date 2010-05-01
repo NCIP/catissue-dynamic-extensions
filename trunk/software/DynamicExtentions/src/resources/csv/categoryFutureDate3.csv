@@ -1,0 +1,41 @@
+Form_Definition
+
+Category_Lab Information
+
+Test_date
+
+
+ClinicalAnnotations~ClinicalAnnotations,History~ClinicalAnnotations:History,Hazards~ClinicalAnnotations:History:Hazards,SmokingHistory~ClinicalAnnotations:History:Hazards:SmokingHistory,Alcohol~ClinicalAnnotations:History:Hazards:Alcohol,LabInfo~ClinicalAnnotations:LabInfo,LabTest~ClinicalAnnotations:LabInfo:LabTest,Diagnosis~ClinicalAnnotations:LabInfo:Diagnosis,PrimaryDiagnosis~ClinicalAnnotations:LabInfo:Diagnosis:PrimaryDiagnosis,Infections~ClinicalAnnotations:LabInfo:Diagnosis:PrimaryDiagnosis:Infections,ViralInfections~ClinicalAnnotations:LabInfo:Diagnosis:PrimaryDiagnosis:Infections:ViralInfections,BacterialInfections~ClinicalAnnotations:LabInfo:Diagnosis:PrimaryDiagnosis:Infections:BacterialInfections,FungalInfections~ClinicalAnnotations:LabInfo:Diagnosis:PrimaryDiagnosis:Infections:FungalInfections,HealthAnnotations~ClinicalAnnotations:HealthAnnotations,Chemotherapy~ClinicalAnnotations:HealthAnnotations:Chemotherapy,RadiationTherapy~ClinicalAnnotations:HealthAnnotations:RadiationTherapy
+
+
+Display_Label:Source,show=true
+instance:ClinicalAnnotations[1]->LabInfo[1]
+
+LabInfo:source,textField,Source
+
+Display_Label:Lab Test - Hb,show=true
+instance:ClinicalAnnotations[1]->LabInfo[1]->LabTest[1]
+
+LabTest:testName,comboBox,TestName,PermVal_Options~IsOrdered=false,defaultValue=--Select--,Rules~required
+
+LabTest:quantResult,textField,Result
+
+LabTest:testDate,datePicker,TestDate,Rules~allowfuturedate
+
+Display_Label:Lab Test - Platelets,show=true
+instance:ClinicalAnnotations[1]->LabInfo[1]->LabTest[2]
+
+LabTest:testName,comboBox,TestName,PermVal_Options~IsOrdered=false,defaultValue=--Select--,Rules~required
+
+LabTest:qualResult,textField,Result
+
+LabTest:testDate,datePicker,TestDate,Rules~allowfuturedate
+
+Display_Label:Lab Test - RBC,show=true
+instance:ClinicalAnnotations[1]->LabInfo[2]->LabTest[3]
+
+LabTest:testName,comboBox,TestName,PermVal_Options~IsOrdered=false,defaultValue=--Select--,Rules~required
+
+LabTest:qualResult,textField,Result
+
+LabTest:testDate,datePicker,TestDate

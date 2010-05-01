@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Specification-Title: JBoss
+Created-By: 1.5.0_11-b03 (Sun Microsystems Inc.)
+Specification-Version: 4.2.2.GA
+Implementation-Vendor-Id: http://www.jboss.org/
+Implementation-URL: http://www.jboss.org/
+Class-Path: ../client/jbossall-client.jar ../client/log4j.jar ../lib/j
+ boss-jmx.jar 
+Ant-Version: Apache Ant 1.6.2
+Main-Class: org.jboss.Shutdown
+Implementation-Title: JBoss [Trinity]
+Specification-Vendor: JBoss (http://www.jboss.org/)
+Implementation-Version: 4.2.2.GA (build: SVNTag=JBoss_4_2_2_GA date=20
+ 0710221139)
+Implementation-Vendor: JBoss Inc.
+

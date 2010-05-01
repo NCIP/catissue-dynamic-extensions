@@ -1,0 +1,1100 @@
+
+validate:pre:build:
+     [echo] Checking for existence of GLOBUS_LOCATION envrironment variable.
+     [echo] wscore.relative.dir = ws-core-4.0.3
+     [echo] GLOBUS_LOCATION not set, downloading and installing http://gforge.nci.nih.gov/svnroot/commonlibrary/trunk/techstack-2006/os-independent/ws-core-enum-4.0.3.zip
+
+clean:
+   [delete] Deleting directory D:\BDA\DynamicExtentions\software\target\dist
+   [delete] Deleting directory D:\BDA\DynamicExtentions\software\target\temp
+
+init:
+     [echo]  ______   ______   _______ 
+     [echo] (____  \ (______) (_______)
+     [echo]  ____)  ) _     _  _______ 
+     [echo] |  __  ( | |   | ||  ___  |
+     [echo] | |__)  )| |__/ / | |   | |
+     [echo] |______/ |_____/  |_|   |_|
+    [mkdir] Created dir: D:\BDA\DynamicExtentions\software\target\dist
+    [mkdir] Created dir: D:\BDA\DynamicExtentions\software\target\dist\exploded
+    [mkdir] Created dir: D:\BDA\DynamicExtentions\software\target\dist\exploded\DynamicExtentions-api
+    [mkdir] Created dir: D:\BDA\DynamicExtentions\software\target\dist\exploded\DynamicExtentions-webapp
+    [mkdir] Created dir: D:\BDA\DynamicExtentions\software\target\dist\exploded\common
+    [mkdir] Created dir: D:\BDA\DynamicExtentions\software\target\dist\exploded\tools
+    [mkdir] Created dir: D:\BDA\DynamicExtentions\software\target\temp
+
+build:DynamicExtentions-api:
+
+build:DynamicExtentions-webapp:
+Trying to override old definition of task shellscript
+Trying to override old definition of task propertycopy
+Trying to override old definition of task pathtofileset
+Trying to override old definition of task remoteant
+Trying to override old definition of task runtarget
+Trying to override old definition of task assert
+Trying to override old definition of task propertyregex
+Trying to override old definition of task math
+Trying to override old definition of task trycatch
+Trying to override old definition of task antserver
+Trying to override old definition of task antcallback
+Trying to override old definition of task compilewithwalls
+Trying to override old definition of task outofdate
+Trying to override old definition of task osfamily
+Trying to override old definition of task stopwatch
+Trying to override old definition of task throw
+Trying to override old definition of task antclipse
+Trying to override old definition of task urlencode
+Trying to override old definition of task timestampselector
+Trying to override old definition of task foreach
+Trying to override old definition of task if
+Trying to override old definition of task propertyselector
+Trying to override old definition of task sortlist
+Trying to override old definition of task antfetch
+Trying to override old definition of task post
+Trying to override old definition of task forget
+Trying to override old definition of task limit
+Trying to override old definition of task switch
+Trying to override old definition of task var
+Trying to override old definition of task inifile
+Trying to override old definition of task verifydesign
+
+init:
+   [delete] Deleting directory D:\BDA\DynamicExtentions\software\DynamicExtentions\binaries\classes
+   [delete] Deleting directory D:\BDA\DynamicExtentions\software\DynamicExtentions\build
+    [mkdir] Created dir: D:\BDA\DynamicExtentions\software\DynamicExtentions\binaries\classes
+    [mkdir] Created dir: D:\BDA\DynamicExtentions\software\DynamicExtentions\build
+
+compile:
+    [javac] Compiling 448 source files to D:\BDA\DynamicExtentions\software\DynamicExtentions\binaries\classes
+    [javac] Note: Some input files use or override a deprecated API.
+    [javac] Note: Recompile with -Xlint:deprecation for details.
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+     [copy] Copying 65 files to D:\BDA\DynamicExtentions\software\DynamicExtentions\binaries\classes
+
+remove_generics:
+    [mkdir] Created dir: D:\BDA\DynamicExtentions\software\DynamicExtentions\temp
+     [echo] Pattern used to remove generics : <[^=(]*>|(for\s?\(.+:.+\))
+     [copy] Copying 138 files to D:\BDA\DynamicExtentions\software\DynamicExtentions\temp
+
+generate_hbm:
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.AttributeRecord.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.AttributeRecord
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.FileExtension.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.FileExtension
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.PermissibleValue.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.PermissibleValue
+[hibernatedoclet]    edu.common.dynamicextensions.domain.DoubleValue
+[hibernatedoclet]    edu.common.dynamicextensions.domain.ByteArrayValue
+[hibernatedoclet]    edu.common.dynamicextensions.domain.BooleanValue
+[hibernatedoclet]    edu.common.dynamicextensions.domain.DateValue
+[hibernatedoclet]    edu.common.dynamicextensions.domain.FloatValue
+[hibernatedoclet]    edu.common.dynamicextensions.domain.LongValue
+[hibernatedoclet]    edu.common.dynamicextensions.domain.StringValue
+[hibernatedoclet]    edu.common.dynamicextensions.domain.ShortValue
+[hibernatedoclet]    edu.common.dynamicextensions.domain.IntegerValue
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.AttributeTypeInformation.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.AttributeTypeInformation
+[hibernatedoclet]    edu.common.dynamicextensions.domain.ByteArrayAttributeTypeInformation
+[hibernatedoclet]    edu.common.dynamicextensions.domain.FileAttributeTypeInformation
+[hibernatedoclet]    edu.common.dynamicextensions.domain.StringAttributeTypeInformation
+[hibernatedoclet]    edu.common.dynamicextensions.domain.ObjectAttributeTypeInformation
+[hibernatedoclet]    edu.common.dynamicextensions.domain.DateAttributeTypeInformation
+[hibernatedoclet]    edu.common.dynamicextensions.domain.BooleanAttributeTypeInformation
+[hibernatedoclet]    edu.common.dynamicextensions.domain.NumericAttributeTypeInformation
+[hibernatedoclet]    edu.common.dynamicextensions.domain.DoubleAttributeTypeInformation
+[hibernatedoclet]    edu.common.dynamicextensions.domain.ShortAttributeTypeInformation
+[hibernatedoclet]    edu.common.dynamicextensions.domain.IntegerAttributeTypeInformation
+[hibernatedoclet]    edu.common.dynamicextensions.domain.LongAttributeTypeInformation
+[hibernatedoclet]    edu.common.dynamicextensions.domain.FloatAttributeTypeInformation
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.userinterface.View.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.userinterface.View
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.ObjectAttributeRecordValue.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.ObjectAttributeRecordValue
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.Role.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.Role
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.Path.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.Path
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.integration.EntityMapCondition.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.integration.EntityMapCondition
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.databaseproperties.DatabaseProperties.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.databaseproperties.DatabaseProperties
+[hibernatedoclet]    edu.common.dynamicextensions.domain.databaseproperties.TableProperties
+[hibernatedoclet]    edu.common.dynamicextensions.domain.databaseproperties.ColumnProperties
+[hibernatedoclet]    edu.common.dynamicextensions.domain.databaseproperties.ConstraintProperties
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.integration.FormContext.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.integration.FormContext
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.databaseproperties.ConstraintKeyProperties.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.databaseproperties.ConstraintKeyProperties
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.AbstractMetadata.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.AbstractMetadata
+[hibernatedoclet]    edu.common.dynamicextensions.domain.EntityGroup
+[hibernatedoclet]    edu.common.dynamicextensions.domain.Category
+[hibernatedoclet]    edu.common.dynamicextensions.domain.BaseAbstractAttribute
+[hibernatedoclet]    edu.common.dynamicextensions.domain.AbstractAttribute
+[hibernatedoclet]    edu.common.dynamicextensions.domain.Attribute
+[hibernatedoclet]    edu.common.dynamicextensions.domain.Association
+[hibernatedoclet]    edu.common.dynamicextensions.domain.CategoryAttribute
+[hibernatedoclet]    edu.common.dynamicextensions.domain.CategoryAssociation
+[hibernatedoclet]    edu.common.dynamicextensions.domain.AbstractEntity
+[hibernatedoclet]    edu.common.dynamicextensions.domain.Entity
+[hibernatedoclet]    edu.common.dynamicextensions.domain.CategoryEntity
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.validationrules.RuleParameter.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.validationrules.RuleParameter
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.userinterface.Container.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.userinterface.Container
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.DataElement.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.DataElement
+[hibernatedoclet]    edu.common.dynamicextensions.domain.UserDefinedDE
+[hibernatedoclet]    edu.common.dynamicextensions.domain.CaDSRDE
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.PathAssociationRelation.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.PathAssociationRelation
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.DESQLAudit.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.DESQLAudit
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.IdGenerator.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.IdGenerator
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.FileAttributeRecordValue.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.FileAttributeRecordValue
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.validationrules.Rule.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.validationrules.Rule
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.SemanticProperty.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.SemanticProperty
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.integration.EntityMapRecord.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.integration.EntityMapRecord
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.CaDSRValueDomainInfo.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.CaDSRValueDomainInfo
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.AssociationDisplayAttribute.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.AssociationDisplayAttribute
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.FormControlNotes.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.FormControlNotes
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.userinterface.Control.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.userinterface.Control
+[hibernatedoclet]    edu.common.dynamicextensions.domain.userinterface.DataGrid
+[hibernatedoclet]    edu.common.dynamicextensions.domain.userinterface.AbstractContainmentControl
+[hibernatedoclet]    edu.common.dynamicextensions.domain.userinterface.ContainmentAssociationControl
+[hibernatedoclet]    edu.common.dynamicextensions.domain.userinterface.CategoryAssociationControl
+[hibernatedoclet]    edu.common.dynamicextensions.domain.userinterface.RadioButton
+[hibernatedoclet]    edu.common.dynamicextensions.domain.userinterface.TextField
+[hibernatedoclet]    edu.common.dynamicextensions.domain.userinterface.FileUploadControl
+[hibernatedoclet]    edu.common.dynamicextensions.domain.userinterface.DatePicker
+[hibernatedoclet]    edu.common.dynamicextensions.domain.userinterface.SelectControl
+[hibernatedoclet]    edu.common.dynamicextensions.domain.userinterface.ListBox
+[hibernatedoclet]    edu.common.dynamicextensions.domain.userinterface.ComboBox
+[hibernatedoclet]    edu.common.dynamicextensions.domain.userinterface.Label
+[hibernatedoclet]    edu.common.dynamicextensions.domain.userinterface.TextArea
+[hibernatedoclet]    edu.common.dynamicextensions.domain.userinterface.CheckBox
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.CollectionAttributeRecordValue.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.CollectionAttributeRecordValue
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.integration.EntityMap.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.integration.EntityMap
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.TaggedValue.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.TaggedValue
+[hibernatedoclet] Generating mapping file for edu.common.dynamicextensions.domain.Formula.
+[hibernatedoclet]    edu.common.dynamicextensions.domain.Formula
+     [move] Moving 1 file to D:\BDA\DynamicExtentions\software\DynamicExtentions\src\java\edu\common\dynamicextensions\domain\userinterface
+     [copy] Copying 31 files to D:\BDA\DynamicExtentions\software\DynamicExtentions\src\java\edu\common\dynamicextensions\hbm
+   [delete] Deleting directory D:\BDA\DynamicExtentions\software\DynamicExtentions\temp
+
+build_jar:
+ [buildJar] Building jar: D:\BDA\DynamicExtentions\software\DynamicExtentions\build\cawebeav.jar
+
+init_build_war:
+    [mkdir] Created dir: D:\BDA\DynamicExtentions\software\dynamicExtentions\tmp
+    [mkdir] Created dir: D:\BDA\DynamicExtentions\software\dynamicExtentions\tmp\WEB-INF\classes
+    [mkdir] Created dir: D:\BDA\DynamicExtentions\software\dynamicExtentions\tmp\de
+    [mkdir] Created dir: D:\BDA\DynamicExtentions\software\dynamicExtentions\tmp\WEB-INF\lib
+    [mkdir] Created dir: D:\BDA\DynamicExtentions\software\dynamicExtentions\tmp\de\css
+    [mkdir] Created dir: D:\BDA\DynamicExtentions\software\dynamicExtentions\tmp\de\jss
+    [mkdir] Created dir: D:\BDA\DynamicExtentions\software\dynamicExtentions\tmp\de\dhtml_comp
+     [copy] Copying 572 files to D:\BDA\DynamicExtentions\software\dynamicExtentions\tmp\WEB-INF\classes
+     [copy] Copying 104 files to D:\BDA\DynamicExtentions\software\dynamicExtentions\tmp\WEB-INF\lib
+     [copy] Copying 12 files to D:\BDA\DynamicExtentions\software\dynamicExtentions\tmp\WEB-INF
+     [copy] Copying 47 files to D:\BDA\DynamicExtentions\software\dynamicExtentions\tmp
+     [copy] Copying 354 files to D:\BDA\DynamicExtentions\software\dynamicExtentions\tmp\de
+     [copy] Copying 7 files to D:\BDA\DynamicExtentions\software\dynamicExtentions\tmp\de\css
+     [copy] Copying 17 files to D:\BDA\DynamicExtentions\software\dynamicExtentions\tmp\de\jss
+     [copy] Copying 147 files to D:\BDA\DynamicExtentions\software\dynamicExtentions\tmp\de\dhtml_comp
+     [copy] Copying 1 file to D:\BDA\DynamicExtentions\software\dynamicExtentions\tmp\WEB-INF
+     [copy] Copying 1 file to D:\BDA\DynamicExtentions\software\dynamicExtentions\tmp
+     [copy] Copying 1 file to D:\BDA\DynamicExtentions\software\dynamicExtentions\tmp
+
+build_app_war:
+      [war] Building war: D:\BDA\DynamicExtentions\software\DynamicExtentions\dynamicExtensions.war
+     [copy] Copying 1 file to D:\BDA\DynamicExtentions\software\target\dist\exploded\DynamicExtentions-webapp
+     [copy] Copying 1 file to D:\BDA\DynamicExtentions\software\DynamicExtentions\build
+   [delete] Deleting: D:\BDA\DynamicExtentions\software\DynamicExtentions\dynamicExtensions.war
+   [delete] Deleting directory D:\BDA\DynamicExtentions\software\dynamicExtentions\tmp
+
+generate_schema:
+     [echo] false
+     [java] INFO  [org.hibernate.cfg.Environment] 	Hibernate 3.1.3
+     [java] INFO  [org.hibernate.cfg.Environment] 	loaded properties from resource hibernate.properties: {hibernate.statement_cache.size=25, hibernate.cglib.use_reflection_optimizer=true, hibernate.connection.pool_size=1, hibernate.use_outer_join=true, hibernate.show_sql=true}
+     [java] INFO  [org.hibernate.cfg.Environment] 	using CGLIB reflection optimizer
+     [java] INFO  [org.hibernate.cfg.Environment] 	using JDK 1.4 java.sql.Timestamp handling
+     [java] INFO  [org.hibernate.dialect.Dialect] 	Using dialect: org.hibernate.dialect.Oracle9Dialect
+     [java] INFO  [org.hibernate.tool.hbm2ddl.SchemaExport] 	Running hbm2ddl schema export
+     [java] INFO  [org.hibernate.tool.hbm2ddl.SchemaExport] 	writing generated schema to file: query.sql
+     [java] INFO  [org.hibernate.tool.hbm2ddl.SchemaExport] 	schema export complete
+
+dist:
+
+build:all:
+
+dist:tools:retrieve:jboss:
+
+dist:tools:retrieve:jbosscp:
+
+dist:tools:retrieve:
+
+dist:tools:retrieve:jboss-bindings:
+      [get] Getting: http://gforge.nci.nih.gov/svnroot/automation/trunk/resources/jboss-bindings/ncicb-jboss4.0.x-bindings.xml
+      [get] To: D:\BDA\DynamicExtentions\software\target\dist\exploded\ncicb-jboss4.0.x-bindings.xml
+
+dist:installer:prep:
+     [copy] Copying 2 files to D:\BDA\DynamicExtentions\software\target\dist\exploded\db\db-install
+     [copy] Copied 3 empty directories to 1 empty directory under D:\BDA\DynamicExtentions\software\target\dist\exploded\db\db-install
+     [copy] Copying 52 files to D:\BDA\DynamicExtentions\software\target\dist\exploded\bda-utils\resource
+     [copy] Copied 12 empty directories to 4 empty directories under D:\BDA\DynamicExtentions\software\target\dist\exploded\bda-utils\resource
+     [copy] Copying 1 file to D:\BDA\DynamicExtentions\software\target\dist\exploded\db\db-upgrade
+     [copy] Copied 3 empty directories to 2 empty directories under D:\BDA\DynamicExtentions\software\target\dist\exploded\db\db-upgrade
+     [echo] Copying build and property files
+     [copy] Copying 4 files to D:\BDA\DynamicExtentions\software\target\dist\exploded
+     [move] Moving 1 file to D:\BDA\DynamicExtentions\software\target\dist\exploded
+     [echo] Copying bda-utils dir
+     [copy] Copying 155 files to D:\BDA\DynamicExtentions\software\target\dist\exploded\bda-utils
+     [echo] Copying common dir
+     [copy] Copying 12 files to D:\BDA\DynamicExtentions\software\target\dist\exploded\common
+     [echo] Copying tools dir
+     [copy] Copying 4 files to D:\BDA\DynamicExtentions\software\target\dist\exploded\tools
+
+deploy:local:install:
+     [copy] Copying 1 file to D:\BDA\DynamicExtentions\software\target\dist\exploded
+     [exec] Buildfile: build.xml
+     [exec]      [echo] Using properties file of install.properties.
+     [exec] Trying to override old definition of task propertycopy
+     [exec] Trying to override old definition of task shellscript
+     [exec] Trying to override old definition of task pathtofileset
+     [exec] Trying to override old definition of task runtarget
+     [exec] Trying to override old definition of task remoteant
+     [exec] Trying to override old definition of task propertyregex
+     [exec] Trying to override old definition of task assert
+     [exec] Trying to override old definition of task math
+     [exec] Trying to override old definition of task trycatch
+     [exec] Trying to override old definition of task antserver
+     [exec] Trying to override old definition of task antcallback
+     [exec] Trying to override old definition of task compilewithwalls
+     [exec] Trying to override old definition of task outofdate
+     [exec] Trying to override old definition of task osfamily
+     [exec] Trying to override old definition of task stopwatch
+     [exec] Trying to override old definition of task throw
+     [exec] Trying to override old definition of task antclipse
+     [exec] Trying to override old definition of task urlencode
+     [exec] Trying to override old definition of task timestampselector
+     [exec] Trying to override old definition of task foreach
+     [exec] Trying to override old definition of task if
+     [exec] Trying to override old definition of task propertyselector
+     [exec] Trying to override old definition of task sortlist
+     [exec] Trying to override old definition of task antfetch
+     [exec] Trying to override old definition of task post
+     [exec] Trying to override old definition of task forget
+     [exec] Trying to override old definition of task limit
+     [exec] Trying to override old definition of task switch
+     [exec] Trying to override old definition of task relentless
+     [exec] Trying to override old definition of task var
+     [exec] Trying to override old definition of task inifile
+     [exec] Trying to override old definition of task verifydesign
+     [exec] Trying to override old definition of task antlib:org.apache.ant.antunit:antunit
+     [exec] Trying to override old definition of task antlib:org.apache.ant.antunit:assertTrue
+     [exec] Trying to override old definition of task antlib:org.apache.ant.antunit:expectfailure
+     [exec] Trying to override old definition of datatype antlib:org.apache.ant.antunit:plainlistener
+     [exec] Trying to override old definition of datatype antlib:org.apache.ant.antunit:xmllistener
+     [exec] Trying to override old definition of datatype antlib:org.apache.ant.antunit:logcapturer
+     [exec] Trying to override old definition of datatype antlib:org.apache.ant.antunit:logcontains
+     [exec] Trying to override old definition of datatype antlib:org.apache.ant.antunit:logcontent
+     [exec] Trying to override old definition of task for
+     [exec]     [mkdir] Created dir: D:\BDA\DynamicExtentions\software\target\dist\exploded\working\temp
+     [exec]    [delete] Deleting directory D:\BDA\DynamicExtentions\software\target\dist\exploded\working
+     [exec]     [mkdir] Created dir: D:\BDA\DynamicExtentions\software\target\dist\exploded\working
+     [exec] 
+     [exec] init:install:
+     [exec]      [echo] application.base.path=c:/apps/DynamicExtentions-webapp
+     [exec]      [echo] Using custom JBoss port configurations
+     [exec] 
+     [exec] init:common:
+     [exec] [echoproperties] #Ant properties
+     [exec] [echoproperties] #Tue Sep 15 11:30:04 GMT+05:30 2009
+     [exec] [echoproperties] database.context.path=DynamicExtentions-webapp
+     [exec] [echoproperties] database.dialect=org.hibernate.dialect.OracleDialect
+     [exec] [echoproperties] database.driver=oracle.jdbc.driver.OracleDriver
+     [exec] [echoproperties] database.driver.file=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils/ojdbc14-10.2.0.3.0.jar 
+     [exec] [echoproperties] database.jndi.datasource.name=java\:/catissuecore
+     [exec] [echoproperties] database.name=orcl
+     [exec] [echoproperties] database.password=DE_NBUSER
+     [exec] [echoproperties] database.port=1521
+     [exec] [echoproperties] database.re-create=true
+     [exec] [echoproperties] database.release.version=1.1
+     [exec] [echoproperties] database.schema=orcl
+     [exec] [echoproperties] database.server=ps5301
+     [exec] [echoproperties] database.system.password=sys123
+     [exec] [echoproperties] database.system.url=jdbc\:oracle\:thin\:@ps5301\:1521\:orcl
+     [exec] [echoproperties] database.system.user=system
+     [exec] [echoproperties] database.type=oracle
+     [exec] [echoproperties] database.url=jdbc\:oracle\:thin\:@ps5301\:1521\:orcl
+     [exec] [echoproperties] database.user=DE_NBUSER
+     [exec]      [echo] Properties file type = install
+     [exec]     [mkdir] Created dir: D:\BDA\DynamicExtentions\software\target\dist\exploded\logs
+     [exec] 
+     [exec] install:validation:pre-install:
+     [exec] [echoproperties] #Ant properties
+     [exec] [echoproperties] #Tue Sep 15 11:30:04 GMT+05:30 2009
+     [exec] [echoproperties] DSTAMP=20090915
+     [exec] [echoproperties] DynamicExtentions-api.dist.relative.dir=DynamicExtentions-api
+     [exec] [echoproperties] DynamicExtentions-webapp.dir.dist=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\DynamicExtentions-webapp
+     [exec] [echoproperties] DynamicExtentions-webapp.dist.relative.dir=DynamicExtentions-webapp
+     [exec] [echoproperties] DynamicExtentions-webapp.ds.file=DynamicExtentions-ds.xml
+     [exec] [echoproperties] DynamicExtentions-webapp.install.name=DynamicExtentions_install
+     [exec] [echoproperties] DynamicExtentions-webapp.install.zip.file=DynamicExtentions_install_0.1.0.zip
+     [exec] [echoproperties] DynamicExtentions-webapp.name=dynamicExtensions
+     [exec] [echoproperties] DynamicExtentions-webapp.upgrade.name=DynamicExtentions_ugprade
+     [exec] [echoproperties] DynamicExtentions-webapp.upgrade.zip.file=DynamicExtentions_ugprade_0.1.0.zip
+     [exec] [echoproperties] DynamicExtentions-webapp.version=0.1.0
+     [exec] [echoproperties] DynamicExtentions-webapp.war.file=dynamicExtensions.war
+     [exec] [echoproperties] TODAY=September 15 2009
+     [exec] [echoproperties] TSTAMP=1130
+     [exec] [echoproperties] ant.core.lib=C\:\\apache-ant-1.7.1\\lib\\ant.jar
+     [exec] [echoproperties] ant.file=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\build.xml
+     [exec] [echoproperties] ant.file.DynamicExtentions-installer=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\build.xml
+     [exec] [echoproperties] ant.file.bda-utils=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils\\bda-build-utils-0.12.0-beta.xml
+     [exec] [echoproperties] ant.home=C\:\\apache-ant-1.7.1
+     [exec] [echoproperties] ant.java.version=1.5
+     [exec] [echoproperties] ant.library.dir=C\:\\apache-ant-1.7.1\\lib
+     [exec] [echoproperties] ant.minimum.version=1.7.0
+     [exec] [echoproperties] ant.project.name=DynamicExtentions-installer
+     [exec] [echoproperties] ant.version=Apache Ant version 1.7.1 compiled on June 27 2008
+     [exec] [echoproperties] antunit.jar=antunit-1.0.jar
+     [exec] [echoproperties] application.base.path=c\:/apps/DynamicExtentions-webapp
+     [exec] [echoproperties] application.base.path.linux=C\:\\Documents and Settings\\pulkit_kumar/apps/DynamicExtentions-webapp
+     [exec] [echoproperties] application.base.path.windows=c\:/apps/DynamicExtentions-webapp
+     [exec] [echoproperties] application.context.name=catissuecore
+     [exec] [echoproperties] application.url=http\://localhost\:46210/dynamicExtensions
+     [exec] [echoproperties] authentication.type=db
+     [exec] [echoproperties] awt.toolkit=sun.awt.windows.WToolkit
+     [exec] [echoproperties] basedir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded
+     [exec] [echoproperties] bda-utils.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils
+     [exec] [echoproperties] bda-utils.resource.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils\\resource
+     [exec] [echoproperties] bda.version=0.12.0-beta
+     [exec] [echoproperties] build.bda.src.url=http\://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-download/bda-ivy-build.xml
+     [exec] [echoproperties] cacore-sdk.binaries.file=caCORE_SDK_411-src.zip
+     [exec] [echoproperties] cacore-sdk.binaries.relative.dir=codegen
+     [exec] [echoproperties] cacore-sdk.required=true
+     [exec] [echoproperties] cacore-sdk.src.url=http\://gforge.nci.nih.gov/svnroot/commonlibrary/trunk/cacore-sdk/4.1.1/caCORE_SDK_411-src.zip
+     [exec] [echoproperties] checkstyle.revision.number=0
+     [exec] [echoproperties] common.dir.dest=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working\\common
+     [exec] [echoproperties] common.dir.src=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\common
+     [exec] [echoproperties] common.dist.relative.dir=common
+     [exec] [echoproperties] database.context.path=DynamicExtentions-webapp
+     [exec] [echoproperties] database.dialect=org.hibernate.dialect.OracleDialect
+     [exec] [echoproperties] database.driver=oracle.jdbc.driver.OracleDriver
+     [exec] [echoproperties] database.driver.file=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils/ojdbc14-10.2.0.3.0.jar 
+     [exec] [echoproperties] database.jndi.datasource.name=java\:/catissuecore
+     [exec] [echoproperties] database.name=orcl
+     [exec] [echoproperties] database.password=DE_NBUSER
+     [exec] [echoproperties] database.port=1521
+     [exec] [echoproperties] database.re-create=true
+     [exec] [echoproperties] database.release.version=1.1
+     [exec] [echoproperties] database.schema=orcl
+     [exec] [echoproperties] database.server=ps5301
+     [exec] [echoproperties] database.system.password=sys123
+     [exec] [echoproperties] database.system.url=jdbc\:oracle\:thin\:@ps5301\:1521\:orcl
+     [exec] [echoproperties] database.system.user=system
+     [exec] [echoproperties] database.type=oracle
+     [exec] [echoproperties] database.url=jdbc\:oracle\:thin\:@ps5301\:1521\:orcl
+     [exec] [echoproperties] database.user=DE_NBUSER
+     [exec] [echoproperties] db-install.dir.dest=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working\\db\\db-install
+     [exec] [echoproperties] db-install.dist.relative.dir=db/db-install
+     [exec] [echoproperties] db-upgrade.dir.dest=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working\\db\\db-upgrade
+     [exec] [echoproperties] db-upgrade.dist.relative.dir=db/db-upgrade
+     [exec] [echoproperties] db.dir.dest=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working\\db
+     [exec] [echoproperties] db.dir.src=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\db
+     [exec] [echoproperties] db.dist.relative.dir=db
+     [exec] [echoproperties] db.install.create.mysql.file.list=dynamicextension.sql
+     [exec] [echoproperties] db.install.create.oracle.file.list=dynamicextension.sql
+     [exec] [echoproperties] db.install.create.postgresql.file.list=
+     [exec] [echoproperties] env.ALLUSERSPROFILE=C\:\\Documents and Settings\\All Users
+     [exec] [echoproperties] env.ANT_CMD_LINE_ARGS=-Dproperties.file install.properties -Dforce.reinstall true install
+     [exec] [echoproperties] env.ANT_HOME=C\:\\apache-ant-1.7.1
+     [exec] [echoproperties] env.APPDATA=C\:\\Documents and Settings\\pulkit_kumar\\Application Data
+     [exec] [echoproperties] env.CLASSPATH=.;C\:\\Program Files\\Java\\jre6\\lib\\ext\\QTJava.zip
+     [exec] [echoproperties] env.COMPUTERNAME=PS5301
+     [exec] [echoproperties] env.CVSROOT=C\:\\CVS_HOME
+     [exec] [echoproperties] env.ComSpec=C\:\\WINDOWS\\system32\\cmd.exe
+     [exec] [echoproperties] env.CommonProgramFiles=C\:\\Program Files\\Common Files
+     [exec] [echoproperties] env.FP_NO_HOST_CHECK=NO
+     [exec] [echoproperties] env.HOMEDRIVE=C\:
+     [exec] [echoproperties] env.HOMEPATH=\\Documents and Settings\\pulkit_kumar
+     [exec] [echoproperties] env.JAVA_HOME=C\:\\Program Files\\Java\\jdk1.5.0_10
+     [exec] [echoproperties] env.LOGONSERVER=\\\\PTDC
+     [exec] [echoproperties] env.NUMBER_OF_PROCESSORS=2
+     [exec] [echoproperties] env.ORACLE_HOME=E\:/oracle/product/10.2.0/db_1/BIN
+     [exec] [echoproperties] env.OS=Windows_NT
+     [exec] [echoproperties] env.PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH
+     [exec] [echoproperties] env.PERL5LIB=E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\perl\\5.8.3\\lib\\MSWin32-x86;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\perl\\5.8.3\\lib;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\perl\\5.8.3\\lib\\MSWin32-x86;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\perl\\site\\5.8.3;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\perl\\site\\5.8.3\\lib;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\sysman\\admin\\scripts;
+     [exec] [echoproperties] env.PROCESSOR_ARCHITECTURE=x86
+     [exec] [echoproperties] env.PROCESSOR_IDENTIFIER=x86 Family 15 Model 6 Stepping 5, GenuineIntel
+     [exec] [echoproperties] env.PROCESSOR_LEVEL=15
+     [exec] [echoproperties] env.PROCESSOR_REVISION=0605
+     [exec] [echoproperties] env.PROMPT=$P$G
+     [exec] [echoproperties] env.Path=C\:\\Program Files\\Windows Resource Kits\\Tools\\;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\bin;C\:\\Program Files\\CollabNet Subversion Client;C\:\\Perl\\site\\bin;C\:\\Perl\\bin;C\:\\WINDOWS\\system32;C\:\\WINDOWS;C\:\\WINDOWS\\System32\\Wbem;;C\:\\Program Files\\TortoiseSVN\\bin;C\:\\Python25;C\:\\Program Files\\VisualSVN Server\\bin;C\:\\apache-ant-1.7.1\\bin;C\:\\Program Files\\Java\\jdk1.5.0_05\\bin;;C\:\\Dos-Unix;C\:\\Program Files\\Mercurial;C\:\\Program Files\\TortoiseHg;C\:\\Program Files\\QuickTime\\QTSystem\\;C\:\\utils;C\:\\Program Files\\Windows Imaging\\;C\:\\Program Files\\MySQL\\MySQL Server 5.0\\bin;C\:\\Program Files\\DeID\\;C\:\\apache-ant-1.7.1\\lib;C\:\\Program Files\\Java\\jdk1.5.0_10\\bin;C\:\\Program Files\\Bitvise Tunnelier;C\:\\Program Files\\CVSNT\\
+     [exec] [echoproperties] env.ProgramFiles=C\:\\Program Files
+     [exec] [echoproperties] env.QTJAVA=C\:\\Program Files\\Java\\jre6\\lib\\ext\\QTJava.zip
+     [exec] [echoproperties] env.SESSIONNAME=Console
+     [exec] [echoproperties] env.SystemDrive=C\:
+     [exec] [echoproperties] env.SystemRoot=C\:\\WINDOWS
+     [exec] [echoproperties] env.TEMP=C\:\\DOCUME~1\\PULKIT~1\\LOCALS~1\\Temp
+     [exec] [echoproperties] env.THG_ICON_PATH=C\:\\Program Files\\TortoiseHg\\icons
+     [exec] [echoproperties] env.TMP=C\:\\DOCUME~1\\PULKIT~1\\LOCALS~1\\Temp
+     [exec] [echoproperties] env.UATDATA=C\:\\WINDOWS\\system32\\CCM\\UATData\\D9F8C395-CAB8-491d-B8AC-179A1FE1BE77
+     [exec] [echoproperties] env.USERDNSDOMAIN=PERSISTENT.CO.IN
+     [exec] [echoproperties] env.USERDOMAIN=PERSISTENT
+     [exec] [echoproperties] env.USERNAME=pulkit_kumar
+     [exec] [echoproperties] env.USERPROFILE=C\:\\Documents and Settings\\pulkit_kumar
+     [exec] [echoproperties] env.VISUALSVN_SERVER=C\:\\Program Files\\VisualSVN Server\\
+     [exec] [echoproperties] env.XCHAT_WARNING_IGNORE=true
+     [exec] [echoproperties] env._JAVACMD=C\:\\Program Files\\Java\\jdk1.5.0_10\\bin\\java.exe
+     [exec] [echoproperties] env._USE_CLASSPATH=yes
+     [exec] [echoproperties] env.http.proxyHost=ptproxy.persistent.co.in
+     [exec] [echoproperties] env.http.proxyPassword=agra@123
+     [exec] [echoproperties] env.http.proxyPort=8080
+     [exec] [echoproperties] env.http.proxyUser=pulkit_kumar
+     [exec] [echoproperties] env.jboss.home.dir=C\:/Program Files/jboss-4.2.2.GA
+     [exec] [echoproperties] env.name=internal
+     [exec] [echoproperties] env.windir=C\:\\WINDOWS
+     [exec] [echoproperties] exclude.access-logs=true
+     [exec] [echoproperties] exclude.jboss.backup=true
+     [exec] [echoproperties] file.encoding=Cp1252
+     [exec] [echoproperties] file.encoding.pkg=sun.io
+     [exec] [echoproperties] file.separator=\\
+     [exec] [echoproperties] findbugs.binaries.file=findbugs-1.3.4.zip
+     [exec] [echoproperties] findbugs.binaries.relative.dir=findbugs-1.3.4
+     [exec] [echoproperties] findbugs.src.url=http\://gforge.nci.nih.gov/svnroot/commonlibrary/trunk/other/os-independent/findbugs-1.3.4.zip
+     [exec] [echoproperties] force.reinstall=true
+     [exec] [echoproperties] fs-data.base.dir=
+     [exec] [echoproperties] install-logs.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\logs
+     [exec] [echoproperties] install.running=true
+     [exec] [echoproperties] install.time=2009-09-15-11-30
+     [exec] [echoproperties] is.oracle=true
+     [exec] [echoproperties] ivy.bda.settings.src.url=http\://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-download/ivy-bda-settings.xml
+     [exec] [echoproperties] ivy.bda.src.url=http\://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-download/ivy-bda.xml 
+     [exec] [echoproperties] java.awt.graphicsenv=sun.awt.Win32GraphicsEnvironment
+     [exec] [echoproperties] java.awt.printerjob=sun.awt.windows.WPrinterJob
+     [exec] [echoproperties] java.class.path=C\:\\apache-ant-1.7.1\\lib\\ant-launcher.jar;D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\.\\;C\:\\Program Files\\Java\\jre6\\lib\\ext\\QTJava.zip;C\:\\apache-ant-1.7.1\\lib\\ant-antlr.jar;C\:\\apache-ant-1.7.1\\lib\\ant-apache-bcel.jar;C\:\\apache-ant-1.7.1\\lib\\ant-apache-bsf.jar;C\:\\apache-ant-1.7.1\\lib\\ant-apache-log4j.jar;C\:\\apache-ant-1.7.1\\lib\\ant-apache-oro.jar;C\:\\apache-ant-1.7.1\\lib\\ant-apache-regexp.jar;C\:\\apache-ant-1.7.1\\lib\\ant-apache-resolver.jar;C\:\\apache-ant-1.7.1\\lib\\ant-commons-logging.jar;C\:\\apache-ant-1.7.1\\lib\\ant-commons-net.jar;C\:\\apache-ant-1.7.1\\lib\\ant-jai.jar;C\:\\apache-ant-1.7.1\\lib\\ant-javamail.jar;C\:\\apache-ant-1.7.1\\lib\\ant-jdepend.jar;C\:\\apache-ant-1.7.1\\lib\\ant-jmf.jar;C\:\\apache-ant-1.7.1\\lib\\ant-jsch.jar;C\:\\apache-ant-1.7.1\\lib\\ant-junit.jar;C\:\\apache-ant-1.7.1\\lib\\ant-launcher.jar;C\:\\apache-ant-1.7.1\\lib\\ant-netrexx.jar;C\:\\apache-ant-1.7.1\\lib\\ant-nodeps.jar;C\:\\apache-ant-1.7.1\\lib\\ant-starteam.jar;C\:\\apache-ant-1.7.1\\lib\\ant-stylebook.jar;C\:\\apache-ant-1.7.1\\lib\\ant-swing.jar;C\:\\apache-ant-1.7.1\\lib\\ant-testutil.jar;C\:\\apache-ant-1.7.1\\lib\\ant-trax.jar;C\:\\apache-ant-1.7.1\\lib\\ant-weblogic.jar;C\:\\apache-ant-1.7.1\\lib\\ant.jar;C\:\\apache-ant-1.7.1\\lib\\junit-3.8.1.jar;C\:\\apache-ant-1.7.1\\lib\\xercesImpl.jar;C\:\\apache-ant-1.7.1\\lib\\xml-apis.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\lib\\tools.jar
+     [exec] [echoproperties] java.class.version=49.0
+     [exec] [echoproperties] java.endorsed.dirs=C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\endorsed
+     [exec] [echoproperties] java.ext.dirs=C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\ext
+     [exec] [echoproperties] java.home=C\:\\Program Files\\Java\\jdk1.5.0_10\\jre
+     [exec] [echoproperties] java.io.tmpdir=C\:\\DOCUME~1\\PULKIT~1\\LOCALS~1\\Temp\\
+     [exec] [echoproperties] java.library.path=C\:\\Program Files\\Java\\jdk1.5.0_10\\bin;.;C\:\\WINDOWS\\system32;C\:\\WINDOWS;C\:\\Program Files\\Windows Resource Kits\\Tools\\;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\bin;C\:\\Program Files\\CollabNet Subversion Client;C\:\\Perl\\site\\bin;C\:\\Perl\\bin;C\:\\WINDOWS\\system32;C\:\\WINDOWS;C\:\\WINDOWS\\System32\\Wbem;;C\:\\Program Files\\TortoiseSVN\\bin;C\:\\Python25;C\:\\Program Files\\VisualSVN Server\\bin;C\:\\apache-ant-1.7.1\\bin;C\:\\Program Files\\Java\\jdk1.5.0_05\\bin;;C\:\\Dos-Unix;C\:\\Program Files\\Mercurial;C\:\\Program Files\\TortoiseHg;C\:\\Program Files\\QuickTime\\QTSystem\\;C\:\\utils;C\:\\Program Files\\Windows Imaging\\;C\:\\Program Files\\MySQL\\MySQL Server 5.0\\bin;C\:\\Program Files\\DeID\\;C\:\\apache-ant-1.7.1\\lib;C\:\\Program Files\\Java\\jdk1.5.0_10\\bin;C\:\\Program Files\\Bitvise Tunnelier;C\:\\Program Files\\CVSNT\\
+     [exec] [echoproperties] java.major.version=1.5
+     [exec] [echoproperties] java.minor.version=1.5.0_10
+     [exec] [echoproperties] java.runtime.name=Java(TM) 2 Runtime Environment, Standard Edition
+     [exec] [echoproperties] java.runtime.version=1.5.0_10-b03
+     [exec] [echoproperties] java.specification.name=Java Platform API Specification
+     [exec] [echoproperties] java.specification.vendor=Sun Microsystems Inc.
+     [exec] [echoproperties] java.specification.version=1.5
+     [exec] [echoproperties] java.vendor=Sun Microsystems Inc.
+     [exec] [echoproperties] java.vendor.url=http\://java.sun.com/
+     [exec] [echoproperties] java.vendor.url.bug=http\://java.sun.com/cgi-bin/bugreport.cgi
+     [exec] [echoproperties] java.version=1.5.0_10
+     [exec] [echoproperties] java.vm.info=mixed mode, sharing
+     [exec] [echoproperties] java.vm.name=Java HotSpot(TM) Client VM
+     [exec] [echoproperties] java.vm.specification.name=Java Virtual Machine Specification
+     [exec] [echoproperties] java.vm.specification.vendor=Sun Microsystems Inc.
+     [exec] [echoproperties] java.vm.specification.version=1.0
+     [exec] [echoproperties] java.vm.vendor=Sun Microsystems Inc.
+     [exec] [echoproperties] java.vm.version=1.5.0_10-b03
+     [exec] [echoproperties] jboss-bindings.file=ncicb-jboss4.0.x-bindings.xml
+     [exec] [echoproperties] jboss-bindings.src.url=http\://gforge.nci.nih.gov/svnroot/automation/trunk/resources/jboss-bindings/ncicb-jboss4.0.x-bindings.xml
+     [exec] [echoproperties] jboss-conf.dir.dest=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working\\common\\resources\\jboss-conf
+     [exec] [echoproperties] jboss-conf.dir.src=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\common\\resources\\jboss-conf
+     [exec] [echoproperties] jboss-conf.dist.relative.dir=common/resources/jboss-conf
+     [exec] [echoproperties] jboss.binaries.file=jboss-4.2.2.GA.zip
+     [exec] [echoproperties] jboss.binaries.relative.dir=jboss-4.2.2.GA
+     [exec] [echoproperties] jboss.cobraorb.port=46350
+     [exec] [echoproperties] jboss.ejbinvoker.port=46150
+     [exec] [echoproperties] jboss.external.http.host=
+     [exec] [echoproperties] jboss.external.http.port=
+     [exec] [echoproperties] jboss.external.ssl.host=
+     [exec] [echoproperties] jboss.external.ssl.port=
+     [exec] [echoproperties] jboss.hajndi.port=46160
+     [exec] [echoproperties] jboss.hajrmi.port=46260
+     [exec] [echoproperties] jboss.home=c\:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA
+     [exec] [echoproperties] jboss.java.opts=-server -Xms256m -Xmx512m -XX\:ThreadStackSize\=128 -XX\:SurvivorRatio\=10 -XX\:PermSize\=128m -XX\:MaxPermSize\=128m -Dsun.rmi.dgc.client.gcInterval\=3600000 -Dsun.rmi.dgc.server.gcInterval\=3600000 -Djava.awt.headless\=true
+     [exec] [echoproperties] jboss.jms.port=46170
+     [exec] [echoproperties] jboss.jmx-rmi.port=46290
+     [exec] [echoproperties] jboss.messaging.port=46330
+     [exec] [echoproperties] jboss.pooledha.port=46270
+     [exec] [echoproperties] jboss.relative.path=jboss-4.2.2.GA
+     [exec] [echoproperties] jboss.remoting.port=46320
+     [exec] [echoproperties] jboss.server.bind.port=0
+     [exec] [echoproperties] jboss.server.binding.template.location=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils/resource/jboss-4.2.2.GA/bindings.xml
+     [exec] [echoproperties] jboss.server.hostname=localhost
+     [exec] [echoproperties] jboss.server.jndi.port=46200
+     [exec] [echoproperties] jboss.server.name=default
+     [exec] [echoproperties] jboss.server.port=46210
+     [exec] [echoproperties] jboss.server.ports.name=bda-ports
+     [exec] [echoproperties] jboss.server.rmi.port=46230
+     [exec] [echoproperties] jboss.service.rmiobject.port=46240
+     [exec] [echoproperties] jboss.snmp-trapd.port=46300
+     [exec] [echoproperties] jboss.snmp.port=46310
+     [exec] [echoproperties] jboss.src.url=http\://gforge.nci.nih.gov/svnroot/commonlibrary/trunk/techstack-2008/os-independent/jboss-4.2.2.GA.zip
+     [exec] [echoproperties] jboss.ssl.enable=false
+     [exec] [echoproperties] jboss.ssl.fullyqualified.hostname=localhost.nci.nih.gov
+     [exec] [echoproperties] jboss.ssl.keystore.alias=ncicb-test-ssl-key
+     [exec] [echoproperties] jboss.ssl.keystore.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\common\\resources\\security
+     [exec] [echoproperties] jboss.ssl.keystore.file=ncicb-test-ssl.keystore
+     [exec] [echoproperties] jboss.ssl.keystore.location=common/resources/security/ncicb-test-ssl.keystore
+     [exec] [echoproperties] jboss.ssl.keystore.pass=ncicb1\!
+     [exec] [echoproperties] jboss.version.max=4.2.2
+     [exec] [echoproperties] jboss.version.min=4.0.4
+     [exec] [echoproperties] jboss.web.password=blueprint123\!
+     [exec] [echoproperties] jboss.web.service.port=46250
+     [exec] [echoproperties] jboss.web.user=admin
+     [exec] [echoproperties] jbosscp.binaries.file=jboss-4.0.5.GA_CP15.zip
+     [exec] [echoproperties] jbosscp.src.url=http\://gforge.nci.nih.gov/svnroot/commonlibrary/trunk/techstack-2007/os-independent/jboss-4.0.5.GA_CP15.zip
+     [exec] [echoproperties] ldap.basedn=ou\=nci,o\=nih
+     [exec] [echoproperties] ldap.url=ldaps\://ncids4a.nci.nih.gov\:636
+     [exec] [echoproperties] line.separator=\r\n
+     [exec] [echoproperties] log.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\logs
+     [exec] [echoproperties] log4j.level=WARN
+     [exec] [echoproperties] log4j.maxDays=7
+     [exec] [echoproperties] log4j.maxFileSize=100MB
+     [exec] [echoproperties] mail.smtp.server=mailfwd.nih.gov
+     [exec] [echoproperties] mysql.minimum.version=5.0.27
+     [exec] [echoproperties] os.arch=x86
+     [exec] [echoproperties] os.name=Windows XP
+     [exec] [echoproperties] os.temp.dir=c\:/temp
+     [exec] [echoproperties] os.version=5.1
+     [exec] [echoproperties] path.separator=;
+     [exec] [echoproperties] pmd.revision.number=0
+     [exec] [echoproperties] project.name=DynamicExtentions
+     [exec] [echoproperties] prop.list.item.trimmed=jboss.web.service.port
+     [exec] [echoproperties] properties.file=install.properties
+     [exec] [echoproperties] properties.file.exists=true
+     [exec] [echoproperties] properties.file.type=install
+     [exec] [echoproperties] properties.template.file=install.properties.template
+     [exec] [echoproperties] require.build.wscore=true
+     [exec] [echoproperties] run.date=0909151130
+     [exec] [echoproperties] security.dist.relative.dir=common/resources/security
+     [exec] [echoproperties] software.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded
+     [exec] [echoproperties] sun.arch.data.model=32
+     [exec] [echoproperties] sun.boot.class.path=C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\rt.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\i18n.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\sunrsasign.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\jsse.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\jce.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\charsets.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\classes
+     [exec] [echoproperties] sun.boot.library.path=C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\bin
+     [exec] [echoproperties] sun.cpu.endian=little
+     [exec] [echoproperties] sun.cpu.isalist=
+     [exec] [echoproperties] sun.desktop=windows
+     [exec] [echoproperties] sun.io.unicode.encoding=UnicodeLittle
+     [exec] [echoproperties] sun.jnu.encoding=Cp1252
+     [exec] [echoproperties] sun.management.compiler=HotSpot Client Compiler
+     [exec] [echoproperties] sun.os.patch.level=Service Pack 2
+     [exec] [echoproperties] temp.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working\\temp
+     [exec] [echoproperties] template.dbintegrate.file=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils\\resource\\template-db-integrate.xml
+     [exec] [echoproperties] tomcat.version.max=5.5.999
+     [exec] [echoproperties] tomcat.version.min=5.0.0
+     [exec] [echoproperties] tools.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\tools
+     [exec] [echoproperties] tools.dist.relative.dir=tools
+     [exec] [echoproperties] user.country=US
+     [exec] [echoproperties] user.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded
+     [exec] [echoproperties] user.home=C\:\\Documents and Settings\\pulkit_kumar
+     [exec] [echoproperties] user.language=en
+     [exec] [echoproperties] user.name=pulkit_kumar
+     [exec] [echoproperties] user.timezone=
+     [exec] [echoproperties] user.variant=
+     [exec] [echoproperties] validation.post.http.list=46210
+     [exec] [echoproperties] validation.post.socket.list=46230,46200,46240,46170,46250
+     [exec] [echoproperties] validation.pre.port.list=46230,46200,46240,46170,46210,46250
+     [exec] [echoproperties] working.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working
+     [exec]      [echo] Validating Ant version...
+     [exec]      [echo] Ant Version: PASSED
+     [exec]      [echo] Validating Java version...
+     [exec]      [echo] Java version check: PASSED
+     [exec]      [echo] Java version check: PASSED
+     [exec]      [echo] Not running as root.
+     [exec]      [echo] Validating database connection...
+     [exec]      [echo] Database Connection: PASSED
+     [exec]      [echo] Validating properties file  install.properties...
+     [exec]      [echo] Evaluating line in properties file = database.system.user=system
+     [exec]      [echo] Attempting to connnect to localhost.nci.nih.gov....
+     [exec]      [echo] Attempting to connnect to localhost....
+     [exec]      [echo] Checking install.properties against template file install.properties.template
+     [exec]      [echo] Template file install.properties.template not avaliable
+     [exec]      [echo] application.base.path is an absolute path.
+     [exec]      [echo] jboss.home=c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA is direct child of application.base.path=c:/apps/DynamicExtentions-webapp.
+     [exec]      [echo] basedir=D:\BDA\DynamicExtentions\software\target\dist\exploded is not child of application.base.path=c:/apps/DynamicExtentions-webapp.
+     [exec]      [echo] jboss.home c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA does not exist or the force.reinstall property is set.
+     [exec]      [echo] Database is oracle, warning prompt not displayed.
+     [exec]      [echo] appserver.ssl.enable not set or true so skipping ssl validation
+     [exec]      [echo] appserver.ssl.enable not set or true so skipping ssl validation
+     [exec]      [echo] checking jboss version - 4.2.2.
+     [exec]    [groovy] Check version is 4002002
+     [exec]    [groovy] Min version is 4000004
+     [exec]    [groovy] Max version is 4002002
+     [exec]      [echo] checking tomcat version - ${tomcat.version.check}.
+     [exec] 
+     [exec] install:jboss:stop:
+     [exec] 
+     [exec] install:validation:pre-install:ports:
+     [exec]      [echo] Validationg Ports Are not in use...
+     [exec]      [echo] Checking if 46230 is running.
+     [exec]      [echo] Ports check: PASSED
+     [exec]      [echo] Checking if 46200 is running.
+     [exec]      [echo] Ports check: PASSED
+     [exec]      [echo] Checking if 46240 is running.
+     [exec]      [echo] Ports check: PASSED
+     [exec]      [echo] Checking if 46170 is running.
+     [exec]      [echo] Ports check: PASSED
+     [exec]      [echo] Checking if 46210 is running.
+     [exec]      [echo] Ports check: PASSED
+     [exec]      [echo] Checking if 46250 is running.
+     [exec]      [echo] Ports check: PASSED
+     [exec] 
+     [exec] install:clean:jboss:
+     [exec] 
+     [exec] install:clean:
+     [exec] 
+     [exec] install:init:
+     [exec]      [copy] Copying 12 files to D:\BDA\DynamicExtentions\software\target\dist\exploded\working\common
+     [exec]    [groovy] install:init debug
+     [exec] 
+     [exec] install:database:prep:
+     [exec]      [echo] Checking if database properties exist: database.url,database.user,database.password,database.name
+     [exec] [echoproperties] #Ant properties
+     [exec] [echoproperties] #Tue Sep 15 11:30:20 GMT+05:30 2009
+     [exec] [echoproperties] database.context.path=DynamicExtentions-webapp
+     [exec] [echoproperties] database.dialect=org.hibernate.dialect.OracleDialect
+     [exec] [echoproperties] database.driver=oracle.jdbc.driver.OracleDriver
+     [exec] [echoproperties] database.driver.file=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils/ojdbc14-10.2.0.3.0.jar 
+     [exec] [echoproperties] database.jndi.datasource.name=java\:/catissuecore
+     [exec] [echoproperties] database.name=orcl
+     [exec] [echoproperties] database.password=DE_NBUSER
+     [exec] [echoproperties] database.port=1521
+     [exec] [echoproperties] database.re-create=true
+     [exec] [echoproperties] database.release.version=1.1
+     [exec] [echoproperties] database.schema=orcl
+     [exec] [echoproperties] database.server=ps5301
+     [exec] [echoproperties] database.system.password=sys123
+     [exec] [echoproperties] database.system.url=jdbc\:oracle\:thin\:@ps5301\:1521\:orcl
+     [exec] [echoproperties] database.system.user=system
+     [exec] [echoproperties] database.type=oracle
+     [exec] [echoproperties] database.url=jdbc\:oracle\:thin\:@ps5301\:1521\:orcl
+     [exec] [echoproperties] database.user=DE_NBUSER
+     [exec]      [copy] Copying 3 files to D:\BDA\DynamicExtentions\software\target\dist\exploded\working\db
+     [exec]      [copy] Copied 8 empty directories to 3 empty directories under D:\BDA\DynamicExtentions\software\target\dist\exploded\working\db
+     [exec]      [copy] Copying 1 file to c:\temp\DynamicExtentions
+     [exec]    [groovy] install:database:prep debug
+     [exec] 
+     [exec] install:database:
+     [exec]    [groovy] begin liquibase debug
+     [exec]      [echo] Re-creation (drop and re-create) of oracle databases is not supported, nothing done.
+     [exec]      [echo] Database.drop-schema flag not set, database schema not dropped.
+     [exec]       [sql] Executing resource: D:\BDA\DynamicExtentions\software\target\dist\exploded\working\db\db-install\oracle\dynamicextension.sql
+     [exec]       [sql] Failed to execute: 
+     [exec]       [sql] drop table ABSTRACT_CATEGORIAL_ATTRIBUTE cascade constraints;
+     [exec]       [sql] drop table ABSTRACT_CATEGORIAL_CLASS cascade constraints;
+     [exec]       [sql] drop table ABSTRACT_CATEGORY cascade constraints;
+     [exec]       [sql] drop table CATEGORIAL_ATTRIBUTE cascade constraints;
+     [exec]       [sql] drop table CATEGORIAL_CLASS cascade constraints;
+     [exec]       [sql] drop table CATEGORY cascade constraints;
+     [exec]       [sql] drop table CURATED_PATH cascade constraints;
+     [exec]       [sql] drop table CURATED_PATH_TO_PATH cascade constraints;
+     [exec]       [sql] drop table DE_COLL_ATTR_RECORD_VALUES cascade constraints;
+     [exec]       [sql] drop table DE_FILE_ATTR_RECORD_VALUES cascade constraints;
+     [exec]       [sql] drop table DE_OBJECT_ATTR_RECORD_VALUES cascade constraints;
+     [exec]       [sql] drop table DYEXTN_ABSTRACT_ENTITY cascade constraints;
+     [exec]       [sql] drop table DYEXTN_ABSTRACT_METADATA cascade constraints;
+     [exec]       [sql] drop table DYEXTN_ABSTR_CONTAIN_CTR cascade constraints;
+     [exec]       [sql] drop table DYEXTN_ASSOCIATION cascade constraints;
+     [exec]       [sql] drop table DYEXTN_ASSO_DISPLAY_ATTR cascade constraints;
+     [exec]       [sql] drop table DYEXTN_ATTRIBUTE cascade constraints;
+     [exec]       [sql] drop table DYEXTN_ATTRIBUTE_RECORD cascade constraints;
+     [exec]       [sql] drop table DYEXTN_ATTRIBUTE_TYPE_INFO cascade constraints;
+     [exec]       [sql] drop table DYEXTN_BARR_CONCEPT_VALUE cascade constraints;
+     [exec]       [sql] drop table DYEXTN_BASE_ABSTRACT_ATTRIBUTE cascade constraints;
+     [exec]       [sql] drop table DYEXTN_BOOLEAN_CONCEPT_VALUE cascade constraints;
+     [exec]       [sql] drop table DYEXTN_BOOLEAN_TYPE_INFO cascade constraints;
+     [exec]       [sql] drop table DYEXTN_BYTE_ARRAY_TYPE_INFO cascade constraints;
+     [exec]       [sql] drop table DYEXTN_CADSRDE cascade constraints;
+     [exec]       [sql] drop table DYEXTN_CADSR_VALUE_DOMAIN_INFO cascade constraints;
+     [exec]       [sql] drop table DYEXTN_CATEGORY cascade constraints;
+     [exec]       [sql] drop table DYEXTN_CATEGORY_ASSOCIATION cascade constraints;
+     [exec]       [sql] drop table DYEXTN_CATEGORY_ATTRIBUTE cascade constraints;
+     [exec]       [sql] drop table DYEXTN_CATEGORY_ENTITY cascade constraints;
+     [exec]       [sql] drop table DYEXTN_CAT_ASSO_CTL cascade constraints;
+     [exec]       [sql] drop table DYEXTN_CHECK_BOX cascade constraints;
+     [exec]       [sql] drop table DYEXTN_COLUMN_PROPERTIES cascade constraints;
+     [exec]       [sql] drop table DYEXTN_COMBOBOX cascade constraints;
+     [exec]       [sql] drop table DYEXTN_CONSTRAINTKEY_PROP cascade constraints;
+     [exec]       [sql] drop table DYEXTN_CONSTRAINT_PROPERTIES cascade constraints;
+     [exec]       [sql] drop table DYEXTN_CONTAINER cascade constraints;
+     [exec]       [sql] drop table DYEXTN_CONTAINMENT_CONTROL cascade constraints;
+     [exec]       [sql] drop table DYEXTN_CONTROL cascade constraints;
+     [exec]       [sql] drop table DYEXTN_DATABASE_PROPERTIES cascade constraints;
+     [exec]       [sql] drop table DYEXTN_DATA_ELEMENT cascade constraints;
+     [exec]       [sql] drop table DYEXTN_DATA_GRID cascade constraints;
+     [exec]       [sql] drop table DYEXTN_DATEPICKER cascade constraints;
+     [exec]       [sql] drop table DYEXTN_DATE_CONCEPT_VALUE cascade constraints;
+     [exec]       [sql] drop table DYEXTN_DATE_TYPE_INFO cascade constraints;
+     [exec]       [sql] drop table DYEXTN_DOUBLE_CONCEPT_VALUE cascade constraints;
+     [exec]       [sql] drop table DYEXTN_DOUBLE_TYPE_INFO cascade constraints;
+     [exec]       [sql] drop table DYEXTN_ENTITY cascade constraints;
+     [exec]       [sql] drop table DYEXTN_ENTITY_GROUP cascade constraints;
+     [exec]       [sql] drop table DYEXTN_ENTITY_MAP cascade constraints;
+     [exec]       [sql] drop table DYEXTN_ENTITY_MAP_CONDNS cascade constraints;
+     [exec]       [sql] drop table DYEXTN_ENTITY_MAP_RECORD cascade constraints;
+     [exec]       [sql] drop table DYEXTN_ENTIY_COMPOSITE_KEY_REL cascade constraints;
+     [exec]       [sql] drop table DYEXTN_FILE_EXTENSIONS cascade constraints;
+     [exec]       [sql] drop table DYEXTN_FILE_TYPE_INFO cascade constraints;
+     [exec]       [sql] drop table DYEXTN_FILE_UPLOAD cascade constraints;
+     [exec]       [sql] drop table DYEXTN_FLOAT_CONCEPT_VALUE cascade constraints;
+     [exec]       [sql] drop table DYEXTN_FLOAT_TYPE_INFO cascade constraints;
+     [exec]       [sql] drop table DYEXTN_FORMULA cascade constraints;
+     [exec]       [sql] drop table DYEXTN_FORM_CONTEXT cascade constraints;
+     [exec]       [sql] drop table DYEXTN_FORM_CTRL_NOTES cascade constraints;
+     [exec]       [sql] drop table DYEXTN_INTEGER_CONCEPT_VALUE cascade constraints;
+     [exec]       [sql] drop table DYEXTN_INTEGER_TYPE_INFO cascade constraints;
+     [exec]       [sql] drop table DYEXTN_LABEL cascade constraints;
+     [exec]       [sql] drop table DYEXTN_LIST_BOX cascade constraints;
+     [exec]       [sql] drop table DYEXTN_LONG_CONCEPT_VALUE cascade constraints;
+     [exec]       [sql] drop table DYEXTN_LONG_TYPE_INFO cascade constraints;
+     [exec]       [sql] drop table DYEXTN_NUMERIC_TYPE_INFO cascade constraints;
+     [exec]       [sql] drop table DYEXTN_OBJECT_TYPE_INFO cascade constraints;
+     [exec]       [sql] drop table DYEXTN_PATH cascade constraints;
+     [exec]       [sql] drop table DYEXTN_PATH_ASSO_REL cascade constraints;
+     [exec]       [sql] drop table DYEXTN_PERMISSIBLE_VALUE cascade constraints;
+     [exec]       [sql] drop table DYEXTN_PRIMITIVE_ATTRIBUTE cascade constraints;
+     [exec]       [sql] drop table DYEXTN_RADIOBUTTON cascade constraints;
+     [exec]       [sql] drop table DYEXTN_ROLE cascade constraints;
+     [exec]       [sql] drop table DYEXTN_RULE cascade constraints;
+     [exec]       [sql] drop table DYEXTN_RULE_PARAMETER cascade constraints;
+     [exec]       [sql] drop table DYEXTN_SELECT_CONTROL cascade constraints;
+     [exec]       [sql] drop table DYEXTN_SEMANTIC_PROPERTY cascade constraints;
+     [exec]       [sql] drop table DYEXTN_SHORT_CONCEPT_VALUE cascade constraints;
+     [exec]       [sql] drop table DYEXTN_SHORT_TYPE_INFO cascade constraints;
+     [exec]       [sql] drop table DYEXTN_SQL_AUDIT cascade constraints;
+     [exec]       [sql] drop table DYEXTN_STRING_CONCEPT_VALUE cascade constraints;
+     [exec]       [sql] drop table DYEXTN_STRING_TYPE_INFO cascade constraints;
+     [exec]       [sql] drop table DYEXTN_TABLE_PROPERTIES cascade constraints;
+     [exec]       [sql] drop table DYEXTN_TAGGED_VALUE cascade constraints;
+     [exec]       [sql] drop table DYEXTN_TEXTAREA cascade constraints;
+     [exec]       [sql] drop table DYEXTN_TEXTFIELD cascade constraints;
+     [exec]       [sql] drop table DYEXTN_USERDEFINED_DE cascade constraints;
+     [exec]       [sql] drop table DYEXTN_USERDEF_DE_VALUE_REL cascade constraints;
+     [exec]       [sql] drop table DYEXTN_VIEW cascade constraints;
+     [exec]       [sql] drop table PATH cascade constraints;
+     [exec]       [sql] drop table dyextn_id_generator cascade constraints;
+     [exec]       [sql] drop sequence ABSTRACT_CATEGORIAL_ATTRIBUTE_SEQ;
+     [exec]       [sql] drop sequence ABSTRACT_CATEGORY_SEQ;
+     [exec]       [sql] drop sequence CONSTRAINT_SEQ;
+     [exec]       [sql] drop sequence CURATED_PATH_SEQ;
+     [exec]       [sql] drop sequence DE_ATTR_REC_SEQ;
+     [exec]       [sql] drop sequence DE_COLL_ATTR_REC_VALUES_SEQ;
+     [exec]       [sql] drop sequence DE_FILE_ATTR_REC_VALUES_SEQ;
+     [exec]       [sql] drop sequence DE_OBJECT_ATTR_REC_VALUES_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_ABSTRACT_METADATA_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_ASSO_DISPLAY_ATTR_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_CNSTRKEY_PROP_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_CONTAINER_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_CONTROL_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_DATABASE_PROPERTIES_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_DATA_ELEMENT_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_DE_AUDIT_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_ENTITY_MAP_CONDN_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_ENTITY_MAP_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_ENTITY_RECORD_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_FILE_EXTN_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_FORMULA_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_FORM_CONTEXT_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_FRM_CONTROL_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_PATH_ASSO_REL_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_PATH_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_PERMISSIBLEVAL_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_ROLE_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_RULE_PARAMETER_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_RULE_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_SEMANTIC_PROPERTY_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_TAGGED_VALUE_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_VALUE_DOMAIN_SEQ;
+     [exec]       [sql] drop sequence DYEXTN_VIEW_SEQ;
+     [exec]       [sql] drop sequence DYEX_ATTR_TYP_INFO_SEQ;
+     [exec]       [sql] drop sequence PATH_SEQ;
+     [exec]       [sql] create table ABSTRACT_CATEGORIAL_ATTRIBUTE (ID number(19,0) not null, CATEGORIAL_CLASS_ID number(19,0), DE_SOURCE_CLASS_ATTRIBUTE_ID number(19,0), ABSTRACT_CATEGORIAL_ATTRIBUTE_ID number(19,0), primary key (ID));
+     [exec]       [sql] create table ABSTRACT_CATEGORIAL_CLASS (IDENTIFIER number(19,0) not null, ABSTRACT_CATEGORY_ID number(19,0), PARENT_CATEGORIAL_CLASS_ID number(19,0), PATH_FROM_PARENT_ID number(19,0), DE_ENTITY_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table ABSTRACT_CATEGORY (ID number(19,0) not null, PARENT_CATEGORY_ID number(19,0) unique, primary key (ID));
+     [exec]       [sql] create table CATEGORIAL_ATTRIBUTE (ID number(19,0) not null, DE_CATEGORY_ATTRIBUTE_ID number(19,0), primary key (ID));
+     [exec]       [sql] create table CATEGORIAL_CLASS (ID number(19,0) not null, primary key (ID));
+     [exec]       [sql] create table CATEGORY (ID number(19,0) not null, DE_ENTITY_ID number(19,0), ROOT_CLASS_ID number(19,0) unique, primary key (ID));
+     [exec]       [sql] create table CURATED_PATH (CURATED_PATH_ID number(19,0) not null, ENTITY_IDS varchar2(30 char), SELECTED number(1,0), primary key (CURATED_PATH_ID));
+     [exec]       [sql] create table CURATED_PATH_TO_PATH (CURATED_PATH_ID number(19,0) not null, PATH_ID number(19,0) not null, primary key (CURATED_PATH_ID, PATH_ID));
+     [exec]       [sql] create table DE_COLL_ATTR_RECORD_VALUES (IDENTIFIER number(19,0) not null, RECORD_VALUE varchar2(4000 char), COLLECTION_ATTR_RECORD_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DE_FILE_ATTR_RECORD_VALUES (IDENTIFIER number(19,0) not null, CONTENT_TYPE varchar2(255 char), FILE_CONTENT blob, FILE_NAME varchar2(255 char), RECORD_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DE_OBJECT_ATTR_RECORD_VALUES (IDENTIFIER number(19,0) not null, CLASS_NAME varchar2(255 char), OBJECT_CONTENT blob, RECORD_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_ABSTRACT_ENTITY (id number(19,0) not null, primary key (id));
+     [exec]       [sql] create table DYEXTN_ABSTRACT_METADATA (IDENTIFIER number(19,0) not null, CREATED_DATE date, DESCRIPTION varchar2(1000 char), LAST_UPDATED date, NAME varchar2(1000 char), PUBLIC_ID varchar2(255 char), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_ABSTR_CONTAIN_CTR (IDENTIFIER number(19,0) not null, CONTAINER_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_ASSOCIATION (IDENTIFIER number(19,0) not null, IS_COLLECTION number(1,0), DIRECTION varchar2(255 char), TARGET_ENTITY_ID number(19,0), SOURCE_ROLE_ID number(19,0), TARGET_ROLE_ID number(19,0), IS_SYSTEM_GENERATED number(1,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_ASSO_DISPLAY_ATTR (IDENTIFIER number(19,0) not null, SEQUENCE_NUMBER number(10,0), DISPLAY_ATTRIBUTE_ID number(19,0), SELECT_CONTROL_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_ATTRIBUTE (IDENTIFIER number(19,0) not null, ENTIY_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_ATTRIBUTE_RECORD (IDENTIFIER number(19,0) not null, ENTITY_ID number(19,0), ATTRIBUTE_ID number(19,0), RECORD_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_ATTRIBUTE_TYPE_INFO (IDENTIFIER number(19,0) not null, PRIMITIVE_ATTRIBUTE_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_BARR_CONCEPT_VALUE (IDENTIFIER number(19,0) not null, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_BASE_ABSTRACT_ATTRIBUTE (IDENTIFIER number(19,0) not null, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_BOOLEAN_CONCEPT_VALUE (IDENTIFIER number(19,0) not null, VALUE number(1,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_BOOLEAN_TYPE_INFO (IDENTIFIER number(19,0) not null, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_BYTE_ARRAY_TYPE_INFO (IDENTIFIER number(19,0) not null, CONTENT_TYPE varchar2(255 char), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_CADSRDE (IDENTIFIER number(19,0) not null, PUBLIC_ID varchar2(255 char), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_CADSR_VALUE_DOMAIN_INFO (IDENTIFIER number(19,0) not null, DATATYPE varchar2(255 char), NAME varchar2(255 char), TYPE varchar2(255 char), PRIMITIVE_ATTRIBUTE_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_CATEGORY (IDENTIFIER number(19,0) not null, ROOT_CATEGORY_ELEMENT number(19,0), CATEGORY_ENTITY_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_CATEGORY_ASSOCIATION (IDENTIFIER number(19,0) not null, CATEGORY_ENTIY_ID number(19,0), CATEGORY_ENTITY_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_CATEGORY_ATTRIBUTE (IDENTIFIER number(19,0) not null, ABSTRACT_ATTRIBUTE_ID number(19,0), CATEGORY_ENTIY_ID number(19,0), IS_VISIBLE number(1,0), IS_RELATTRIBUTE number(1,0), IS_CAL_ATTRIBUTE number(1,0), CAL_CATEGORY_ATTR_ID number(19,0), CAL_DEPENDENT_CATEGORY_ATTR_ID number(19,0), CATEGORY_ENTITY_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_CATEGORY_ENTITY (IDENTIFIER number(19,0) not null, NUMBER_OF_ENTRIES number(10,0), ENTITY_ID number(19,0), OWN_PARENT_CATEGORY_ENTITY_ID number(19,0), TREE_PARENT_CATEGORY_ENTITY_ID number(19,0), IS_CREATETABLE number(1,0), REL_ATTR_CAT_ENTITY_ID number(19,0), CATEGORY_ASSOCIATION_ID number(19,0), PARENT_CATEGORY_ENTITY_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_CAT_ASSO_CTL (IDENTIFIER number(19,0) not null, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_CHECK_BOX (IDENTIFIER number(19,0) not null, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_COLUMN_PROPERTIES (IDENTIFIER number(19,0) not null, PRIMITIVE_ATTRIBUTE_ID number(19,0), CATEGORY_ATTRIBUTE_ID number(19,0), CNSTR_KEY_PROP_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_COMBOBOX (IDENTIFIER number(19,0) not null, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_CONSTRAINTKEY_PROP (IDENTIFIER number(19,0) not null, PRIMARY_ATTRIBUTE_ID number(19,0), SRC_CONSTRAINT_KEY_ID number(19,0), TGT_CONSTRAINT_KEY_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_CONSTRAINT_PROPERTIES (IDENTIFIER number(19,0) not null, CONSTRAINT_NAME varchar2(255 char), ASSOCIATION_ID number(19,0), CATEGORY_ASSOCIATION_ID number(19,0), ABSTRACT_ENTITY_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_CONTAINER (IDENTIFIER number(19,0) not null, BUTTON_CSS varchar2(255 char), CAPTION varchar2(800 char), ABSTRACT_ENTITY_ID number(19,0), MAIN_TABLE_CSS varchar2(255 char), REQUIRED_FIELD_INDICATOR varchar2(255 char), REQUIRED_FIELD_WARNING_MESSAGE varchar2(255 char), TITLE_CSS varchar2(255 char), BASE_CONTAINER_ID number(19,0), ADD_CAPTION number(1,0), ENTITY_GROUP_ID number(19,0), PARENT_CONTAINER_ID number(19,0), VIEW_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_CONTAINMENT_CONTROL (IDENTIFIER number(19,0) not null, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_CONTROL (IDENTIFIER number(19,0) not null, SHOW_LABEL number(1,0), CAPTION varchar2(800 char), IS_CALCULATED number(1,0), CSS_CLASS varchar2(255 char), HIDDEN number(1,0), NAME varchar2(255 char), SEQUENCE_NUMBER number(10,0), TOOLTIP varchar2(255 char), CONTAINER_ID number(19,0), BASE_ABST_ATR_ID number(19,0), READ_ONLY number(1,0), HEADING varchar2(255 char), yPosition number(10,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_DATABASE_PROPERTIES (IDENTIFIER number(19,0) not null, NAME varchar2(255 char), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_DATA_ELEMENT (IDENTIFIER number(19,0) not null, CATEGORY_ATTRIBUTE_ID number(19,0), ATTRIBUTE_TYPE_INFO_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_DATA_GRID (IDENTIFIER number(19,0) not null, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_DATEPICKER (IDENTIFIER number(19,0) not null, DATE_VALUE_TYPE varchar2(255 char), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_DATE_CONCEPT_VALUE (IDENTIFIER number(19,0) not null, VALUE timestamp, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_DATE_TYPE_INFO (IDENTIFIER number(19,0) not null, FORMAT varchar2(255 char), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_DOUBLE_CONCEPT_VALUE (IDENTIFIER number(19,0) not null, VALUE double precision, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_DOUBLE_TYPE_INFO (IDENTIFIER number(19,0) not null, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_ENTITY (IDENTIFIER number(19,0) not null, DATA_TABLE_STATE number(10,0), ENTITY_GROUP_ID number(19,0), IS_ABSTRACT number(1,0), PARENT_ENTITY_ID number(19,0), INHERITANCE_STRATEGY number(10,0), DISCRIMINATOR_COLUMN_NAME varchar2(255 char), DISCRIMINATOR_VALUE varchar2(255 char), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_ENTITY_GROUP (IDENTIFIER number(19,0) not null, LONG_NAME varchar2(255 char), SHORT_NAME varchar2(255 char), VERSION varchar2(255 char), IS_SYSTEM_GENERATED number(1,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_ENTITY_MAP (IDENTIFIER number(19,0) not null, CONTAINER_ID number(19,0), STATUS varchar2(10 char), STATIC_ENTITY_ID number(19,0), CREATED_DATE date, CREATED_BY varchar2(255 char), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_ENTITY_MAP_CONDNS (IDENTIFIER number(19,0) not null, STATIC_RECORD_ID number(19,0), TYPE_ID number(19,0), FORM_CONTEXT_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_ENTITY_MAP_RECORD (IDENTIFIER number(19,0) not null, FORM_CONTEXT_ID number(19,0), STATIC_ENTITY_RECORD_ID number(19,0), STATUS varchar2(10 char), DYNAMIC_ENTITY_RECORD_ID number(19,0), MODIFIED_DATE date, CREATED_DATE date, CREATED_BY varchar2(255 char), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_ENTIY_COMPOSITE_KEY_REL (ENTITY_ID number(19,0) not null, ATTRIBUTE_ID number(19,0) not null, INSERTION_ORDER number(10,0) not null, primary key (ENTITY_ID, INSERTION_ORDER));
+     [exec]       [sql] create table DYEXTN_FILE_EXTENSIONS (IDENTIFIER number(19,0) not null, FILE_EXTENSION varchar2(255 char), ATTRIBUTE_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_FILE_TYPE_INFO (IDENTIFIER number(19,0) not null, MAX_FILE_SIZE float, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_FILE_UPLOAD (IDENTIFIER number(19,0) not null, NO_OF_COLUMNS number(10,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_FLOAT_CONCEPT_VALUE (IDENTIFIER number(19,0) not null, VALUE float, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_FLOAT_TYPE_INFO (IDENTIFIER number(19,0) not null, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_FORMULA (IDENTIFIER number(19,0) not null, EXPRESSION varchar2(255 char), CATEGORY_ATTRIBUTE_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_FORM_CONTEXT (IDENTIFIER number(19,0) not null, IS_INFINITE_ENTRY number(1,0), ENTITY_MAP_ID number(19,0), STUDY_FORM_LABEL varchar2(255 char), NO_OF_ENTRIES number(10,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_FORM_CTRL_NOTES (IDENTIFIER number(19,0) not null, NOTE varchar2(255 char), FORM_CONTROL_ID number(19,0), INSERTION_ORDER number(10,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_INTEGER_CONCEPT_VALUE (IDENTIFIER number(19,0) not null, VALUE number(10,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_INTEGER_TYPE_INFO (IDENTIFIER number(19,0) not null, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_LABEL (IDENTIFIER number(19,0) not null, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_LIST_BOX (IDENTIFIER number(19,0) not null, NO_OF_ROWS number(10,0), MULTISELECT number(1,0), USE_AUTOCOMPLETE number(1,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_LONG_CONCEPT_VALUE (IDENTIFIER number(19,0) not null, VALUE number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_LONG_TYPE_INFO (IDENTIFIER number(19,0) not null, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_NUMERIC_TYPE_INFO (IDENTIFIER number(19,0) not null, MEASUREMENT_UNITS varchar2(255 char), DECIMAL_PLACES number(10,0), NO_DIGITS number(10,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_OBJECT_TYPE_INFO (IDENTIFIER number(19,0) not null, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_PATH (IDENTIFIER number(19,0) not null, CATEGORY_ENTITY_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_PATH_ASSO_REL (IDENTIFIER number(19,0) not null, PATH_ID number(19,0), ASSOCIATION_ID number(19,0), PATH_SEQUENCE_NUMBER number(10,0), SRC_INSTANCE_ID number(19,0), TGT_INSTANCE_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_PERMISSIBLE_VALUE (IDENTIFIER number(19,0) not null, DESCRIPTION varchar2(255 char), CATEGORY_ATTRIBUTE_ID number(19,0), ATTRIBUTE_TYPE_INFO_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_PRIMITIVE_ATTRIBUTE (IDENTIFIER number(19,0) not null, IS_IDENTIFIED number(1,0), IS_PRIMARY_KEY number(1,0), IS_NULLABLE number(1,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_RADIOBUTTON (IDENTIFIER number(19,0) not null, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_ROLE (IDENTIFIER number(19,0) not null, ASSOCIATION_TYPE varchar2(255 char), MAX_CARDINALITY number(10,0), MIN_CARDINALITY number(10,0), NAME varchar2(255 char), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_RULE (IDENTIFIER number(19,0) not null, NAME varchar2(255 char), IS_IMPLICIT number(1,0), ATTRIBUTE_ID number(19,0), CATEGORY_ATTR_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_RULE_PARAMETER (IDENTIFIER number(19,0) not null, NAME varchar2(255 char), VALUE varchar2(255 char), RULE_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_SELECT_CONTROL (IDENTIFIER number(19,0) not null, SEPARATOR_STRING varchar2(255 char), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_SEMANTIC_PROPERTY (IDENTIFIER number(19,0) not null, CONCEPT_CODE varchar2(255 char), TERM varchar2(255 char), THESAURAS_NAME varchar2(255 char), SEQUENCE_NUMBER number(10,0), CONCEPT_DEFINITION varchar2(255 char), ABSTRACT_METADATA_ID number(19,0), ABSTRACT_VALUE_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_SHORT_CONCEPT_VALUE (IDENTIFIER number(19,0) not null, VALUE number(5,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_SHORT_TYPE_INFO (IDENTIFIER number(19,0) not null, primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_SQL_AUDIT (IDENTIFIER number(19,0) not null, AUDIT_DATE timestamp, QUERY_EXECUTED varchar2(4000 char), USER_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_STRING_CONCEPT_VALUE (IDENTIFIER number(19,0) not null, VALUE varchar2(255 char), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_STRING_TYPE_INFO (IDENTIFIER number(19,0) not null, MAX_SIZE number(10,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_TABLE_PROPERTIES (IDENTIFIER number(19,0) not null, ABSTRACT_ENTITY_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_TAGGED_VALUE (IDENTIFIER number(19,0) not null, T_KEY varchar2(255 char), T_VALUE varchar2(255 char), ABSTRACT_METADATA_ID number(19,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_TEXTAREA (IDENTIFIER number(19,0) not null, TEXTAREA_COLUMNS number(10,0), TEXTAREA_ROWS number(10,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_TEXTFIELD (IDENTIFIER number(19,0) not null, NO_OF_COLUMNS number(10,0), IS_PASSWORD number(1,0), IS_URL number(1,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_USERDEFINED_DE (IDENTIFIER number(19,0) not null, IS_ORDERED number(1,0), primary key (IDENTIFIER));
+     [exec]       [sql] create table DYEXTN_USERDEF_DE_VALUE_REL (USER_DEF_DE_ID number(19,0) not null, PERMISSIBLE_VALUE_ID number(19,0) not null, primary key (USER_DEF_DE_ID, PERMISSIBLE_VALUE_ID));
+     [exec]       [sql] create table DYEXTN_VIEW (IDENTIFIER number(19,0) not null, NAME varchar2(255 char), primary key (IDENTIFIER));
+     [exec]       [sql] create table PATH (PATH_ID number(19,0) not null, FIRST_ENTITY_ID number(19,0), LAST_ENTITY_ID number(19,0), INTERMEDIATE_PATH varchar2(150 char), primary key (PATH_ID));
+     [exec]       [sql] create table dyextn_id_generator (id number(19,0) not null, next_available_id number(19,0), primary key (id));
+     [exec]       [sql] alter table ABSTRACT_CATEGORIAL_ATTRIBUTE add constraint FK85397F53A5F024A0 foreign key (CATEGORIAL_CLASS_ID) references ABSTRACT_CATEGORIAL_CLASS;
+     [exec]       [sql] alter table ABSTRACT_CATEGORIAL_ATTRIBUTE add constraint FK85397F5379C8ACDF foreign key (ABSTRACT_CATEGORIAL_ATTRIBUTE_ID) references ABSTRACT_CATEGORIAL_CLASS;
+     [exec]       [sql] alter table ABSTRACT_CATEGORIAL_CLASS add constraint FK6C8779AF8168C18B foreign key (PARENT_CATEGORIAL_CLASS_ID) references ABSTRACT_CATEGORIAL_CLASS;
+     [exec]       [sql] alter table ABSTRACT_CATEGORIAL_CLASS add constraint FK6C8779AF1E10D264 foreign key (ABSTRACT_CATEGORY_ID) references ABSTRACT_CATEGORY;
+     [exec]       [sql] alter table ABSTRACT_CATEGORY add constraint FK92BB047B70295EEC foreign key (PARENT_CATEGORY_ID) references ABSTRACT_CATEGORY;
+     [exec]       [sql] alter table CATEGORIAL_ATTRIBUTE add constraint FK31F77B5634ED55B7 foreign key (ID) references ABSTRACT_CATEGORIAL_ATTRIBUTE;
+     [exec]       [sql] alter table CATEGORIAL_CLASS add constraint FK9651EF32F94A5493 foreign key (ID) references ABSTRACT_CATEGORIAL_CLASS;
+     [exec]       [sql] alter table CATEGORY add constraint FK31A8ACFEC88316F9 foreign key (ROOT_CLASS_ID) references CATEGORIAL_CLASS;
+     [exec]       [sql] alter table CATEGORY add constraint FK31A8ACFEA2330820 foreign key (ID) references ABSTRACT_CATEGORY;
+     [exec]       [sql] alter table CURATED_PATH_TO_PATH add constraint FK9D8A323C20A0CA98 foreign key (PATH_ID) references PATH;
+     [exec]       [sql] alter table CURATED_PATH_TO_PATH add constraint FK9D8A323C7D782761 foreign key (CURATED_PATH_ID) references CURATED_PATH;
+     [exec]       [sql] alter table DE_COLL_ATTR_RECORD_VALUES add constraint FK847DA57775255CA5 foreign key (COLLECTION_ATTR_RECORD_ID) references DYEXTN_ATTRIBUTE_RECORD;
+     [exec]       [sql] alter table DE_FILE_ATTR_RECORD_VALUES add constraint FKE68334E74EB991B2 foreign key (RECORD_ID) references DYEXTN_ATTRIBUTE_RECORD;
+     [exec]       [sql] alter table DE_OBJECT_ATTR_RECORD_VALUES add constraint FK504EADC44EB991B2 foreign key (RECORD_ID) references DYEXTN_ATTRIBUTE_RECORD;
+     [exec]       [sql] alter table DYEXTN_ABSTRACT_ENTITY add constraint FKA4A164E3D3027A30 foreign key (id) references DYEXTN_ABSTRACT_METADATA;
+     [exec]       [sql] alter table DYEXTN_ABSTR_CONTAIN_CTR add constraint FK9EB9020A40F198C2 foreign key (IDENTIFIER) references DYEXTN_CONTROL;
+     [exec]       [sql] alter table DYEXTN_ABSTR_CONTAIN_CTR add constraint FK9EB9020A69935DD6 foreign key (CONTAINER_ID) references DYEXTN_CONTAINER;
+     [exec]       [sql] alter table DYEXTN_ASSOCIATION add constraint FK1046842439780F7A foreign key (SOURCE_ROLE_ID) references DYEXTN_ROLE;
+     [exec]       [sql] alter table DYEXTN_ASSOCIATION add constraint FK104684242BD842F0 foreign key (TARGET_ROLE_ID) references DYEXTN_ROLE;
+     [exec]       [sql] alter table DYEXTN_ASSOCIATION add constraint FK1046842440738A50 foreign key (TARGET_ENTITY_ID) references DYEXTN_ENTITY;
+     [exec]       [sql] alter table DYEXTN_ASSOCIATION add constraint FK104684246D19A21F foreign key (IDENTIFIER) references DYEXTN_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_ASSO_DISPLAY_ATTR add constraint FKD12FD3827FD29CDD foreign key (SELECT_CONTROL_ID) references DYEXTN_SELECT_CONTROL;
+     [exec]       [sql] alter table DYEXTN_ASSO_DISPLAY_ATTR add constraint FKD12FD38235D6E973 foreign key (DISPLAY_ATTRIBUTE_ID) references DYEXTN_PRIMITIVE_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_ATTRIBUTE add constraint FK37F1E2FFF99EA906 foreign key (ENTIY_ID) references DYEXTN_ENTITY;
+     [exec]       [sql] alter table DYEXTN_ATTRIBUTE add constraint FK37F1E2FF5CC8694E foreign key (IDENTIFIER) references DYEXTN_BASE_ABSTRACT_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_ATTRIBUTE_RECORD add constraint FK9B20ED914AC41F7E foreign key (ENTITY_ID) references DYEXTN_ENTITY;
+     [exec]       [sql] alter table DYEXTN_ATTRIBUTE_RECORD add constraint FK9B20ED914DC2CD16 foreign key (ATTRIBUTE_ID) references DYEXTN_PRIMITIVE_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_ATTRIBUTE_TYPE_INFO add constraint FK62596D531333996E foreign key (PRIMITIVE_ATTRIBUTE_ID) references DYEXTN_PRIMITIVE_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_BARR_CONCEPT_VALUE add constraint FK89D27DF74641D513 foreign key (IDENTIFIER) references DYEXTN_PERMISSIBLE_VALUE;
+     [exec]       [sql] alter table DYEXTN_BASE_ABSTRACT_ATTRIBUTE add constraint FK14BA6610728B19BE foreign key (IDENTIFIER) references DYEXTN_ABSTRACT_METADATA;
+     [exec]       [sql] alter table DYEXTN_BOOLEAN_CONCEPT_VALUE add constraint FK57B6C4A64641D513 foreign key (IDENTIFIER) references DYEXTN_PERMISSIBLE_VALUE;
+     [exec]       [sql] alter table DYEXTN_BOOLEAN_TYPE_INFO add constraint FK28F1809FE5294FA3 foreign key (IDENTIFIER) references DYEXTN_ATTRIBUTE_TYPE_INFO;
+     [exec]       [sql] alter table DYEXTN_BYTE_ARRAY_TYPE_INFO add constraint FK18BDA73E5294FA3 foreign key (IDENTIFIER) references DYEXTN_ATTRIBUTE_TYPE_INFO;
+     [exec]       [sql] alter table DYEXTN_CADSRDE add constraint FK588A250953CC4A77 foreign key (IDENTIFIER) references DYEXTN_DATA_ELEMENT;
+     [exec]       [sql] alter table DYEXTN_CADSR_VALUE_DOMAIN_INFO add constraint FK1C9AA3641333996E foreign key (PRIMITIVE_ATTRIBUTE_ID) references DYEXTN_PRIMITIVE_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_CATEGORY add constraint FKD33DE81B54A9F59D foreign key (ROOT_CATEGORY_ELEMENT) references DYEXTN_CATEGORY_ENTITY;
+     [exec]       [sql] alter table DYEXTN_CATEGORY add constraint FKD33DE81B728B19BE foreign key (IDENTIFIER) references DYEXTN_ABSTRACT_METADATA;
+     [exec]       [sql] alter table DYEXTN_CATEGORY add constraint FKD33DE81B854AC01B foreign key (CATEGORY_ENTITY_ID) references DYEXTN_CATEGORY_ENTITY;
+     [exec]       [sql] alter table DYEXTN_CATEGORY_ASSOCIATION add constraint FK1B7C663DCAC769C5 foreign key (CATEGORY_ENTIY_ID) references DYEXTN_CATEGORY_ENTITY;
+     [exec]       [sql] alter table DYEXTN_CATEGORY_ASSOCIATION add constraint FK1B7C663D5CC8694E foreign key (IDENTIFIER) references DYEXTN_BASE_ABSTRACT_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_CATEGORY_ASSOCIATION add constraint FK1B7C663D854AC01B foreign key (CATEGORY_ENTITY_ID) references DYEXTN_CATEGORY_ENTITY;
+     [exec]       [sql] alter table DYEXTN_CATEGORY_ATTRIBUTE add constraint FKEF3B7758A2CA8853 foreign key (CAL_DEPENDENT_CATEGORY_ATTR_ID) references DYEXTN_CATEGORY_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_CATEGORY_ATTRIBUTE add constraint FKEF3B7758CAC769C5 foreign key (CATEGORY_ENTIY_ID) references DYEXTN_CATEGORY_ENTITY;
+     [exec]       [sql] alter table DYEXTN_CATEGORY_ATTRIBUTE add constraint FKEF3B77587769A811 foreign key (ABSTRACT_ATTRIBUTE_ID) references DYEXTN_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_CATEGORY_ATTRIBUTE add constraint FKEF3B77585CC8694E foreign key (IDENTIFIER) references DYEXTN_BASE_ABSTRACT_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_CATEGORY_ATTRIBUTE add constraint FKEF3B7758854AC01B foreign key (CATEGORY_ENTITY_ID) references DYEXTN_CATEGORY_ENTITY;
+     [exec]       [sql] alter table DYEXTN_CATEGORY_ATTRIBUTE add constraint FKEF3B77585697A453 foreign key (CAL_CATEGORY_ATTR_ID) references DYEXTN_CATEGORY_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_CATEGORY_ENTITY add constraint FK9F2DA887FB6EB979 foreign key (CATEGORY_ASSOCIATION_ID) references DYEXTN_CATEGORY_ASSOCIATION;
+     [exec]       [sql] alter table DYEXTN_CATEGORY_ENTITY add constraint FK9F2DA887D06EE657 foreign key (OWN_PARENT_CATEGORY_ENTITY_ID) references DYEXTN_CATEGORY_ENTITY;
+     [exec]       [sql] alter table DYEXTN_CATEGORY_ENTITY add constraint FK9F2DA887A52559D0 foreign key (PARENT_CATEGORY_ENTITY_ID) references DYEXTN_CATEGORY_ENTITY;
+     [exec]       [sql] alter table DYEXTN_CATEGORY_ENTITY add constraint FK9F2DA887743AC3F2 foreign key (IDENTIFIER) references DYEXTN_ABSTRACT_ENTITY;
+     [exec]       [sql] alter table DYEXTN_CATEGORY_ENTITY add constraint FK9F2DA8874AC41F7E foreign key (ENTITY_ID) references DYEXTN_ENTITY;
+     [exec]       [sql] alter table DYEXTN_CATEGORY_ENTITY add constraint FK9F2DA887F5A32608 foreign key (REL_ATTR_CAT_ENTITY_ID) references DYEXTN_CATEGORY;
+     [exec]       [sql] alter table DYEXTN_CATEGORY_ENTITY add constraint FK9F2DA887A8103C6F foreign key (TREE_PARENT_CATEGORY_ENTITY_ID) references DYEXTN_CATEGORY_ENTITY;
+     [exec]       [sql] alter table DYEXTN_CAT_ASSO_CTL add constraint FK281FAB50C45A8CFA foreign key (IDENTIFIER) references DYEXTN_ABSTR_CONTAIN_CTR;
+     [exec]       [sql] alter table DYEXTN_CHECK_BOX add constraint FK4EFF925740F198C2 foreign key (IDENTIFIER) references DYEXTN_CONTROL;
+     [exec]       [sql] alter table DYEXTN_COLUMN_PROPERTIES add constraint FK8FCE2B3F67F8B59 foreign key (CATEGORY_ATTRIBUTE_ID) references DYEXTN_CATEGORY_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_COLUMN_PROPERTIES add constraint FK8FCE2B3F4953F037 foreign key (CNSTR_KEY_PROP_ID) references DYEXTN_CONSTRAINTKEY_PROP;
+     [exec]       [sql] alter table DYEXTN_COLUMN_PROPERTIES add constraint FK8FCE2B3F3AB6A1D3 foreign key (IDENTIFIER) references DYEXTN_DATABASE_PROPERTIES;
+     [exec]       [sql] alter table DYEXTN_COLUMN_PROPERTIES add constraint FK8FCE2B3F1333996E foreign key (PRIMITIVE_ATTRIBUTE_ID) references DYEXTN_PRIMITIVE_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_COMBOBOX add constraint FKABBC649ABF67AB26 foreign key (IDENTIFIER) references DYEXTN_SELECT_CONTROL;
+     [exec]       [sql] alter table DYEXTN_CONSTRAINTKEY_PROP add constraint FK80C9511D6B558E0E foreign key (SRC_CONSTRAINT_KEY_ID) references DYEXTN_CONSTRAINT_PROPERTIES;
+     [exec]       [sql] alter table DYEXTN_CONSTRAINTKEY_PROP add constraint FK80C9511D2C4ACB4B foreign key (TGT_CONSTRAINT_KEY_ID) references DYEXTN_CONSTRAINT_PROPERTIES;
+     [exec]       [sql] alter table DYEXTN_CONSTRAINTKEY_PROP add constraint FK80C9511DF3077C33 foreign key (PRIMARY_ATTRIBUTE_ID) references DYEXTN_PRIMITIVE_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_CONSTRAINT_PROPERTIES add constraint FK82886CD8FB6EB979 foreign key (CATEGORY_ASSOCIATION_ID) references DYEXTN_CATEGORY_ASSOCIATION;
+     [exec]       [sql] alter table DYEXTN_CONSTRAINT_PROPERTIES add constraint FK82886CD87EE87FF6 foreign key (ASSOCIATION_ID) references DYEXTN_ASSOCIATION;
+     [exec]       [sql] alter table DYEXTN_CONSTRAINT_PROPERTIES add constraint FK82886CD83AB6A1D3 foreign key (IDENTIFIER) references DYEXTN_DATABASE_PROPERTIES;
+     [exec]       [sql] alter table DYEXTN_CONSTRAINT_PROPERTIES add constraint FK82886CD81DCC9E63 foreign key (ABSTRACT_ENTITY_ID) references DYEXTN_ABSTRACT_ENTITY;
+     [exec]       [sql] alter table DYEXTN_CONTAINER add constraint FK1EAB84E488C075EF foreign key (ENTITY_GROUP_ID) references DYEXTN_ENTITY_GROUP;
+     [exec]       [sql] alter table DYEXTN_CONTAINER add constraint FK1EAB84E440FCA34B foreign key (PARENT_CONTAINER_ID) references DYEXTN_CONTAINER;
+     [exec]       [sql] alter table DYEXTN_CONTAINER add constraint FK1EAB84E4BF901C84 foreign key (BASE_CONTAINER_ID) references DYEXTN_CONTAINER;
+     [exec]       [sql] alter table DYEXTN_CONTAINER add constraint FK1EAB84E41DCC9E63 foreign key (ABSTRACT_ENTITY_ID) references DYEXTN_ABSTRACT_ENTITY;
+     [exec]       [sql] alter table DYEXTN_CONTAINER add constraint FK1EAB84E4178865E foreign key (VIEW_ID) references DYEXTN_VIEW;
+     [exec]       [sql] alter table DYEXTN_CONTAINMENT_CONTROL add constraint FK3F9D4AD3C45A8CFA foreign key (IDENTIFIER) references DYEXTN_ABSTR_CONTAIN_CTR;
+     [exec]       [sql] alter table DYEXTN_CONTROL add constraint FK70FB5E807792A78F foreign key (BASE_ABST_ATR_ID) references DYEXTN_BASE_ABSTRACT_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_CONTROL add constraint FK70FB5E8069935DD6 foreign key (CONTAINER_ID) references DYEXTN_CONTAINER;
+     [exec]       [sql] alter table DYEXTN_DATA_ELEMENT add constraint FKB1153E4AA208204 foreign key (ATTRIBUTE_TYPE_INFO_ID) references DYEXTN_ATTRIBUTE_TYPE_INFO;
+     [exec]       [sql] alter table DYEXTN_DATA_ELEMENT add constraint FKB1153E467F8B59 foreign key (CATEGORY_ATTRIBUTE_ID) references DYEXTN_CATEGORY_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_DATA_GRID add constraint FK233EB73E40F198C2 foreign key (IDENTIFIER) references DYEXTN_CONTROL;
+     [exec]       [sql] alter table DYEXTN_DATEPICKER add constraint FKFEADD19940F198C2 foreign key (IDENTIFIER) references DYEXTN_CONTROL;
+     [exec]       [sql] alter table DYEXTN_DATE_CONCEPT_VALUE add constraint FK45F598A64641D513 foreign key (IDENTIFIER) references DYEXTN_PERMISSIBLE_VALUE;
+     [exec]       [sql] alter table DYEXTN_DATE_TYPE_INFO add constraint FKFBA549FE5294FA3 foreign key (IDENTIFIER) references DYEXTN_ATTRIBUTE_TYPE_INFO;
+     [exec]       [sql] alter table DYEXTN_DOUBLE_CONCEPT_VALUE add constraint FKB94E64494641D513 foreign key (IDENTIFIER) references DYEXTN_PERMISSIBLE_VALUE;
+     [exec]       [sql] alter table DYEXTN_DOUBLE_TYPE_INFO add constraint FKC83869C2BA4AE008 foreign key (IDENTIFIER) references DYEXTN_NUMERIC_TYPE_INFO;
+     [exec]       [sql] alter table DYEXTN_ENTITY add constraint FK8B24364088C075EF foreign key (ENTITY_GROUP_ID) references DYEXTN_ENTITY_GROUP;
+     [exec]       [sql] alter table DYEXTN_ENTITY add constraint FK8B2436402264D629 foreign key (PARENT_ENTITY_ID) references DYEXTN_ENTITY;
+     [exec]       [sql] alter table DYEXTN_ENTITY add constraint FK8B243640743AC3F2 foreign key (IDENTIFIER) references DYEXTN_ABSTRACT_ENTITY;
+     [exec]       [sql] alter table DYEXTN_ENTITY_GROUP add constraint FK105DE7A0728B19BE foreign key (IDENTIFIER) references DYEXTN_ABSTRACT_METADATA;
+     [exec]       [sql] alter table DYEXTN_ENTITY_MAP_CONDNS add constraint FK2A9D6029CFA08B13 foreign key (FORM_CONTEXT_ID) references DYEXTN_FORM_CONTEXT;
+     [exec]       [sql] alter table DYEXTN_ENTITY_MAP_RECORD add constraint FK43A45013CFA08B13 foreign key (FORM_CONTEXT_ID) references DYEXTN_FORM_CONTEXT;
+     [exec]       [sql] alter table DYEXTN_ENTIY_COMPOSITE_KEY_REL add constraint FKB3AA6FE04AC41F7E foreign key (ENTITY_ID) references DYEXTN_ENTITY;
+     [exec]       [sql] alter table DYEXTN_ENTIY_COMPOSITE_KEY_REL add constraint FKB3AA6FE04DC2CD16 foreign key (ATTRIBUTE_ID) references DYEXTN_PRIMITIVE_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_FILE_EXTENSIONS add constraint FKD49834FA56AF0834 foreign key (ATTRIBUTE_ID) references DYEXTN_FILE_TYPE_INFO;
+     [exec]       [sql] alter table DYEXTN_FILE_TYPE_INFO add constraint FKA00F0EDE5294FA3 foreign key (IDENTIFIER) references DYEXTN_ATTRIBUTE_TYPE_INFO;
+     [exec]       [sql] alter table DYEXTN_FILE_UPLOAD add constraint FK2FAD41E740F198C2 foreign key (IDENTIFIER) references DYEXTN_CONTROL;
+     [exec]       [sql] alter table DYEXTN_FLOAT_CONCEPT_VALUE add constraint FK6785309A4641D513 foreign key (IDENTIFIER) references DYEXTN_PERMISSIBLE_VALUE;
+     [exec]       [sql] alter table DYEXTN_FLOAT_TYPE_INFO add constraint FK7E1C0693BA4AE008 foreign key (IDENTIFIER) references DYEXTN_NUMERIC_TYPE_INFO;
+     [exec]       [sql] alter table DYEXTN_FORMULA add constraint FKFE34A8967F8B59 foreign key (CATEGORY_ATTRIBUTE_ID) references DYEXTN_CATEGORY_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_FORM_CONTEXT add constraint FKE56CCDB12B784475 foreign key (ENTITY_MAP_ID) references DYEXTN_ENTITY_MAP;
+     [exec]       [sql] alter table DYEXTN_FORM_CTRL_NOTES add constraint FK7A0DA06B41D885B1 foreign key (FORM_CONTROL_ID) references DYEXTN_CONTROL;
+     [exec]       [sql] alter table DYEXTN_INTEGER_CONCEPT_VALUE add constraint FKFBA33B3C4641D513 foreign key (IDENTIFIER) references DYEXTN_PERMISSIBLE_VALUE;
+     [exec]       [sql] alter table DYEXTN_INTEGER_TYPE_INFO add constraint FK5F9CB235BA4AE008 foreign key (IDENTIFIER) references DYEXTN_NUMERIC_TYPE_INFO;
+     [exec]       [sql] alter table DYEXTN_LABEL add constraint FK787668D740F198C2 foreign key (IDENTIFIER) references DYEXTN_CONTROL;
+     [exec]       [sql] alter table DYEXTN_LIST_BOX add constraint FK208395A7BF67AB26 foreign key (IDENTIFIER) references DYEXTN_SELECT_CONTROL;
+     [exec]       [sql] alter table DYEXTN_LONG_CONCEPT_VALUE add constraint FK3E1A6EF44641D513 foreign key (IDENTIFIER) references DYEXTN_PERMISSIBLE_VALUE;
+     [exec]       [sql] alter table DYEXTN_LONG_TYPE_INFO add constraint FK257281EDBA4AE008 foreign key (IDENTIFIER) references DYEXTN_NUMERIC_TYPE_INFO;
+     [exec]       [sql] alter table DYEXTN_NUMERIC_TYPE_INFO add constraint FK4DEC9544E5294FA3 foreign key (IDENTIFIER) references DYEXTN_ATTRIBUTE_TYPE_INFO;
+     [exec]       [sql] alter table DYEXTN_OBJECT_TYPE_INFO add constraint FK74819FB0E5294FA3 foreign key (IDENTIFIER) references DYEXTN_ATTRIBUTE_TYPE_INFO;
+     [exec]       [sql] alter table DYEXTN_PATH add constraint FKC26ADC2854AC01B foreign key (CATEGORY_ENTITY_ID) references DYEXTN_CATEGORY_ENTITY;
+     [exec]       [sql] alter table DYEXTN_PATH_ASSO_REL add constraint FK1E1260A580C8F93E foreign key (PATH_ID) references DYEXTN_PATH;
+     [exec]       [sql] alter table DYEXTN_PATH_ASSO_REL add constraint FK1E1260A57EE87FF6 foreign key (ASSOCIATION_ID) references DYEXTN_ASSOCIATION;
+     [exec]       [sql] alter table DYEXTN_PERMISSIBLE_VALUE add constraint FK136264E0AA208204 foreign key (ATTRIBUTE_TYPE_INFO_ID) references DYEXTN_ATTRIBUTE_TYPE_INFO;
+     [exec]       [sql] alter table DYEXTN_PERMISSIBLE_VALUE add constraint FK136264E067F8B59 foreign key (CATEGORY_ATTRIBUTE_ID) references DYEXTN_CATEGORY_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_PRIMITIVE_ATTRIBUTE add constraint FKA9F765C76D19A21F foreign key (IDENTIFIER) references DYEXTN_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_RADIOBUTTON add constraint FK16F5BA9040F198C2 foreign key (IDENTIFIER) references DYEXTN_CONTROL;
+     [exec]       [sql] alter table DYEXTN_RULE add constraint FKC27E099F8DDEC02 foreign key (CATEGORY_ATTR_ID) references DYEXTN_CATEGORY_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_RULE add constraint FKC27E09990F96714 foreign key (ATTRIBUTE_ID) references DYEXTN_ATTRIBUTE;
+     [exec]       [sql] alter table DYEXTN_RULE_PARAMETER add constraint FK2256736395D4A5AE foreign key (RULE_ID) references DYEXTN_RULE;
+     [exec]       [sql] alter table DYEXTN_SELECT_CONTROL add constraint FKDFEBB65740F198C2 foreign key (IDENTIFIER) references DYEXTN_CONTROL;
+     [exec]       [sql] alter table DYEXTN_SEMANTIC_PROPERTY add constraint FKD2A0B5B15EB60E90 foreign key (ABSTRACT_VALUE_ID) references DYEXTN_PERMISSIBLE_VALUE;
+     [exec]       [sql] alter table DYEXTN_SEMANTIC_PROPERTY add constraint FKD2A0B5B19AEB0CA3 foreign key (ABSTRACT_METADATA_ID) references DYEXTN_ABSTRACT_METADATA;
+     [exec]       [sql] alter table DYEXTN_SHORT_CONCEPT_VALUE add constraint FKC1945ABA4641D513 foreign key (IDENTIFIER) references DYEXTN_PERMISSIBLE_VALUE;
+     [exec]       [sql] alter table DYEXTN_SHORT_TYPE_INFO add constraint FK99540B3BA4AE008 foreign key (IDENTIFIER) references DYEXTN_NUMERIC_TYPE_INFO;
+     [exec]       [sql] alter table DYEXTN_STRING_CONCEPT_VALUE add constraint FKADE7D8894641D513 foreign key (IDENTIFIER) references DYEXTN_PERMISSIBLE_VALUE;
+     [exec]       [sql] alter table DYEXTN_STRING_TYPE_INFO add constraint FKDA35FE02E5294FA3 foreign key (IDENTIFIER) references DYEXTN_ATTRIBUTE_TYPE_INFO;
+     [exec]       [sql] alter table DYEXTN_TABLE_PROPERTIES add constraint FKE608E0813AB6A1D3 foreign key (IDENTIFIER) references DYEXTN_DATABASE_PROPERTIES;
+     [exec]       [sql] alter table DYEXTN_TABLE_PROPERTIES add constraint FKE608E0811DCC9E63 foreign key (ABSTRACT_ENTITY_ID) references DYEXTN_ABSTRACT_ENTITY;
+     [exec]       [sql] alter table DYEXTN_TAGGED_VALUE add constraint FKF79D055B9AEB0CA3 foreign key (ABSTRACT_METADATA_ID) references DYEXTN_ABSTRACT_METADATA;
+     [exec]       [sql] alter table DYEXTN_TEXTAREA add constraint FK946EE25740F198C2 foreign key (IDENTIFIER) references DYEXTN_CONTROL;
+     [exec]       [sql] alter table DYEXTN_TEXTFIELD add constraint FKF9AFC85040F198C2 foreign key (IDENTIFIER) references DYEXTN_CONTROL;
+     [exec]       [sql] alter table DYEXTN_USERDEFINED_DE add constraint FK630761FF53CC4A77 foreign key (IDENTIFIER) references DYEXTN_DATA_ELEMENT;
+     [exec]       [sql] alter table DYEXTN_USERDEF_DE_VALUE_REL add constraint FK3EE58DCF49BDD67 foreign key (PERMISSIBLE_VALUE_ID) references DYEXTN_PERMISSIBLE_VALUE;
+     [exec]       [sql] alter table DYEXTN_USERDEF_DE_VALUE_REL add constraint FK3EE58DCF5521B106 foreign key (USER_DEF_DE_ID) references DYEXTN_USERDEFINED_DE;
+     [exec]       [sql] create sequence ABSTRACT_CATEGORIAL_ATTRIBUTE_SEQ;
+     [exec]       [sql] create sequence ABSTRACT_CATEGORY_SEQ;
+     [exec]       [sql] create sequence CONSTRAINT_SEQ;
+     [exec]       [sql] create sequence CURATED_PATH_SEQ;
+     [exec]       [sql] create sequence DE_ATTR_REC_SEQ;
+     [exec]       [sql] create sequence DE_COLL_ATTR_REC_VALUES_SEQ;
+     [exec]       [sql] create sequence DE_FILE_ATTR_REC_VALUES_SEQ;
+     [exec]       [sql] create sequence DE_OBJECT_ATTR_REC_VALUES_SEQ;
+     [exec]       [sql] create sequence DYEXTN_ABSTRACT_METADATA_SEQ;
+     [exec]       [sql] create sequence DYEXTN_ASSO_DISPLAY_ATTR_SEQ;
+     [exec]       [sql] create sequence DYEXTN_CNSTRKEY_PROP_SEQ;
+     [exec]       [sql] create sequence DYEXTN_CONTAINER_SEQ;
+     [exec]       [sql] create sequence DYEXTN_CONTROL_SEQ;
+     [exec]       [sql] create sequence DYEXTN_DATABASE_PROPERTIES_SEQ;
+     [exec]       [sql] create sequence DYEXTN_DATA_ELEMENT_SEQ;
+     [exec]       [sql] create sequence DYEXTN_DE_AUDIT_SEQ;
+     [exec]       [sql] create sequence DYEXTN_ENTITY_MAP_CONDN_SEQ;
+     [exec]       [sql] create sequence DYEXTN_ENTITY_MAP_SEQ;
+     [exec]       [sql] create sequence DYEXTN_ENTITY_RECORD_SEQ;
+     [exec]       [sql] create sequence DYEXTN_FILE_EXTN_SEQ;
+     [exec]       [sql] create sequence DYEXTN_FORMULA_SEQ;
+     [exec]       [sql] create sequence DYEXTN_FORM_CONTEXT_SEQ;
+     [exec]       [sql] create sequence DYEXTN_FRM_CONTROL_SEQ;
+     [exec]       [sql] create sequence DYEXTN_PATH_ASSO_REL_SEQ;
+     [exec]       [sql] create sequence DYEXTN_PATH_SEQ;
+     [exec]       [sql] create sequence DYEXTN_PERMISSIBLEVAL_SEQ;
+     [exec]       [sql] create sequence DYEXTN_ROLE_SEQ;
+     [exec]       [sql] create sequence DYEXTN_RULE_PARAMETER_SEQ;
+     [exec]       [sql] create sequence DYEXTN_RULE_SEQ;
+     [exec]       [sql] create sequence DYEXTN_SEMANTIC_PROPERTY_SEQ;
+     [exec]       [sql] create sequence DYEXTN_TAGGED_VALUE_SEQ;
+     [exec]       [sql] create sequence DYEXTN_VALUE_DOMAIN_SEQ;
+     [exec]       [sql] create sequence DYEXTN_VIEW_SEQ;
+     [exec]       [sql] create sequence DYEX_ATTR_TYP_INFO_SEQ;
+     [exec]       [sql] create sequence PATH_SEQ;
+     [exec] 
+     [exec] BUILD FAILED
+     [exec] D:\BDA\DynamicExtentions\software\target\dist\exploded\build.xml:290: The following error occurred while executing this line:
+     [exec] D:\BDA\DynamicExtentions\software\target\dist\exploded\bda-utils\bda-build-utils-0.12.0-beta.xml:2309: The following error occurred while executing this line:
+     [exec] D:\BDA\DynamicExtentions\software\target\dist\exploded\bda-utils\bda-build-utils-0.12.0-beta.xml:2317: The following error occurred while executing this line:
+     [exec] D:\BDA\DynamicExtentions\software\target\dist\exploded\bda-utils\bda-build-utils-0.12.0-beta.xml:239: java.sql.SQLException: ORA-00911: invalid character
+     [exec] 
+     [exec] 
+     [exec] Total time: 28 seconds
+
+BUILD SUCCESSFUL

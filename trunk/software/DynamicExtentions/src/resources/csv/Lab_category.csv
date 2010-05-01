@@ -1,0 +1,125 @@
+Form_Definition
+
+CIDER Test Category
+
+cider
+
+LaboratoryProcedure~LaboratoryProcedure,LaboratoryProcedureDetails~LaboratoryProcedure:LaboratoryProcedureDetails,LaboratoryProcedureType~LaboratoryProcedure:LaboratoryProcedureType,Application~LaboratoryProcedure:Application,Facility~LaboratoryProcedure:LaboratoryProcedureDetails:Facility,SpecimenType~LaboratoryProcedure:LaboratoryProcedureDetails:SpecimenType,LaboratoryResult~LaboratoryProcedure:LaboratoryProcedureDetails:LaboratoryResult,LaboratoryTestType~LaboratoryProcedure:LaboratoryProcedureDetails:LaboratoryResult:LaboratoryTestType,Status~LaboratoryProcedure:LaboratoryProcedureDetails:LaboratoryResult:Status,AbnormalFlag~LaboratoryProcedure:LaboratoryProcedureDetails:LaboratoryResult:AbnormalFlag,ResultValue~LaboratoryProcedure:LaboratoryProcedureDetails:LaboratoryResult:ResultValue(sourceResult),Result~LaboratoryProcedure:LaboratoryProcedureDetails:LaboratoryResult:ResultValue(sourceResult):Result,UnitsOfMeasure~LaboratoryProcedure:LaboratoryProcedureDetails:LaboratoryResult:ResultValue(sourceResult):Result:UnitsOfMeasure,NormalRange~LaboratoryProcedure:LaboratoryProcedureDetails:LaboratoryResult:ResultValue(sourceResult):Result:NormalRange,ResultValue~LaboratoryProcedure:LaboratoryProcedureDetails:LaboratoryResult:ResultValue(),Result~LaboratoryProcedure:LaboratoryProcedureDetails:LaboratoryResult:ResultValue(normalizedResult):Result,UnitsOfMeasure~LaboratoryProcedure:LaboratoryProcedureDetails:LaboratoryResult:ResultValue(normalizedResult):Result:UnitsOfMeasure,NormalRange~LaboratoryProcedure:LaboratoryProcedureDetails:LaboratoryResult:ResultValue(normalizedResult):Result:NormalRange
+
+Display_Label:Normal Range source,show=true
+instance:LaboratoryProcedure[1]->LaboratoryProcedureDetails[1]->LaboratoryResult[1]->ResultValue(sourceResult)[1]->Result[1]->NormalRange[1]
+NormalRange:high,textField,Normal Range High source
+NormalRange:low,textField,Normal Range Low source
+NormalRange:value,textField,Normal Range Value source
+
+
+Display_Label:Units Of Measure source ,show=true
+instance:LaboratoryProcedure[1]->LaboratoryProcedureDetails[1]->LaboratoryResult[1]->ResultValue(sourceResult)[1]->Result[1]->UnitsOfMeasure[1]
+UnitsOfMeasure:name,textField,Units Of Measure source
+UnitsOfMeasure:id,textField,Units Of Measure source
+
+Display_Label:Result source,show=true
+instance:LaboratoryProcedure[1]->LaboratoryProcedureDetails[1]->LaboratoryResult[1]->ResultValue(sourceResult)[1]->Result[1]
+Result:high,textField,Result High source
+Result:low,textField,Result Low source
+Result:value,textField,Result Value source
+subcategory:Normal Range source:single
+subcategory:Units Of Measure source:single
+
+
+Display_Label:Normal Range normalised,show=true
+instance:LaboratoryProcedure[1]->LaboratoryProcedureDetails[1]->LaboratoryResult[1]->ResultValue(normalizedResult)[1]->Result[1]->NormalRange[2]
+NormalRange:high,textField,Normal Range High normalised
+NormalRange:low,textField,Normal Range Low normalised
+NormalRange:value,textField,Normal Range Value normalised
+
+
+Display_Label:Units Of Measure normalised ,show=true
+instance:LaboratoryProcedure[1]->LaboratoryProcedureDetails[1]->LaboratoryResult[1]->ResultValue(normalizedResult)[1]->Result[1]->UnitsOfMeasure[2]
+UnitsOfMeasure:name,textField,Units Of Measure normalised
+UnitsOfMeasure:id,textField,Units Of Measure normalised
+
+Display_Label:Result normalised,show=true
+instance:LaboratoryProcedure[1]->LaboratoryProcedureDetails[1]->LaboratoryResult[1]->ResultValue(normalizedResult)[1]->Result[2]
+Result:high,textField,Result High normalised
+Result:low,textField,Result Low normalised
+Result:value,textField,Result Value normalised
+subcategory:Normal Range normalised:single
+subcategory:Units Of Measure normalised:single
+
+
+Display_Label:Laboratory Test Type,show=true
+instance:LaboratoryProcedure[1]->LaboratoryProcedureDetails[1]->LaboratoryResult[1]->LaboratoryTestType[1]
+LaboratoryTestType:name,textField,Laboratory Test Type
+LaboratoryTestType:id,textField,Laboratory Test Type
+LaboratoryTestType:standardUnitOfMeasure,textField,Standard Unit Of Measure
+
+
+Display_Label:Abnormal Flag,show=true
+instance:LaboratoryProcedure[1]->LaboratoryProcedureDetails[1]->LaboratoryResult[1]->AbnormalFlag[1]
+AbnormalFlag:name,textField,Abnormal Flag
+AbnormalFlag:id,textField,Abnormal Flag
+
+
+Display_Label:Status,show=true
+instance:LaboratoryProcedure[1]->LaboratoryProcedureDetails[1]->LaboratoryResult[1]->Status[1]
+Status:name,textField,Status
+Status:id,textField,Status
+
+
+Display_Label:Laboratory Result,show=true
+instance:LaboratoryProcedure[1]->LaboratoryProcedureDetails[1]->LaboratoryResult[1]
+LaboratoryResult:resultComments,textField,Result Comments
+LaboratoryResult:testSynonym,textField,Test Synonym
+LaboratoryResult:resultTimeStamp,datePicker,Result Time Stamp
+subcategory:Result source:single
+subcategory:Result normalised:single
+subcategory:Status:single
+subcategory:Abnormal Flag:multiline
+subcategory:Laboratory Test Type:single
+
+
+Display_Label:Specimen Type,show=true
+instance:LaboratoryProcedure[1]->LaboratoryProcedureDetails[1]->SpecimenType[1]
+SpecimenType:name,textField,Specimen Type
+SpecimenType:id,textField,Specimen Type
+
+
+Display_Label:Facility,show=true
+instance:LaboratoryProcedure[1]->LaboratoryProcedureDetails[1]->Facility[1]
+Facility:name,textField,Facility
+Facility:id,textField,Facility
+
+
+Display_Label:Laboratory Procedure Details,show=true
+instance:LaboratoryProcedure[1]->LaboratoryProcedureDetails[1]
+LaboratoryProcedureDetails:ageAtProcedure,textField,Age at procedure
+LaboratoryProcedureDetails:collectionTimeStamp,datePicker,Collection Time Stamp
+LaboratoryProcedureDetails:effectiveEndTimeStamp,datePicker,Effective End Time Stamp
+LaboratoryProcedureDetails:effectiveStartTimeStamp,datePicker,Effective Start Time Stamp
+LaboratoryProcedureDetails:lastResultTimeStamp,datePicker,Last Result Time Samp
+LaboratoryProcedureDetails:procedureComment,textField,Procedure Comment
+LaboratoryProcedureDetails:receivedTimeStamp,datePicker,Received Time Stamp
+subcategory:Facility:single
+subcategory:Specimen Type:single
+subcategory:Laboratory Result:multiline
+
+
+Display_Label:Application,show=true
+instance:LaboratoryProcedure[1]->Application[1]
+Application:name,textField,Application
+Application:id,textField,Application
+
+Display_Label:Laboratory Procedure Type,show=true
+instance:LaboratoryProcedure[1]->LaboratoryProcedureType[1]
+LaboratoryProcedureType:name,textField,Laboratory Procedure Type
+LaboratoryProcedureType:id,textField,Laboratory Procedure Type
+
+Display_Label:Laboratory Procedure,show=true
+instance:LaboratoryProcedure[1]
+LaboratoryProcedure:accessionNumber,textField,Accession Number
+LaboratoryProcedure:patientAccountNumber,textField,Patient Account Number
+LaboratoryProcedure:procedureSynonym,textField,Procedure Synonym
+subcategory:Laboratory Procedure Details:multiline
+subcategory:Application:single
+subcategory:Laboratory Procedure Type:single

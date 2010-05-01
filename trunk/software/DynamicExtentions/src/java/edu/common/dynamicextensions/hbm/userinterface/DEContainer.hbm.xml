@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 2.0//EN" 
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="false">
+    <class
+        name="edu.common.dynamicextensions.domain.userinterface.Container"
+        table="DYEXTN_CONTAINER"
+        dynamic-update="false"
+        dynamic-insert="false"
+    >
+        <cache usage="read-write" />
+
+        <id
+            name="id"
+            column="IDENTIFIER"
+            type="long"
+            length="30"
+            unsaved-value="null"
+        >
+            <generator class="native">
+                <param name="sequence">DYEXTN_CONTAINER_SEQ</param>
+            </generator>
+        </id>
+
+        <set
+            name="childContainerCollection"
+            table="DYEXTN_CONTAINER"
+            lazy="false"
+            inverse="false"
+            cascade="all-delete-orphan"
+            sort="unsorted"
+        >
+            <cache 
+                usage="read-write" 
+             />
+
+              <key
+                  column="PARENT_CONTAINER_ID"
+              />
+
+              <one-to-many
+                  class="edu.common.dynamicextensions.domain.userinterface.Container"
+              />
+        </set>
+
+        <property
+            name="buttonCss"
+            type="string"
+            update="true"
+            insert="true"
+            column="BUTTON_CSS"
+        />
+
+        <property
+            name="caption"
+            type="string"
+            update="true"
+            insert="true"
+            column="CAPTION"
+            length="800"
+        />
+
+        <set
+            name="controlCollection"
+            table="DYEXTN_CONTROL"
+            lazy="false"
+            inverse="false"
+            cascade="all-delete-orphan"
+            sort="unsorted"
+        >
+            <cache 
+                usage="read-write" 
+             />
+
+              <key
+                  column="CONTAINER_ID"
+              />
+
+              <one-to-many
+                  class="edu.common.dynamicextensions.domain.userinterface.Control"
+              />
+        </set>
+
+        <many-to-one
+            name="abstractEntity"
+            class="edu.common.dynamicextensions.domain.AbstractEntity"
+            cascade="save-update"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="ABSTRACT_ENTITY_ID"
+        />
+
+        <property
+            name="mainTableCss"
+            type="string"
+            update="true"
+            insert="true"
+            column="MAIN_TABLE_CSS"
+        />
+
+        <property
+            name="requiredFieldIndicatior"
+            type="string"
+            update="true"
+            insert="true"
+            column="REQUIRED_FIELD_INDICATOR"
+        />
+
+        <property
+            name="requiredFieldWarningMessage"
+            type="string"
+            update="true"
+            insert="true"
+            column="REQUIRED_FIELD_WARNING_MESSAGE"
+        />
+
+        <property
+            name="titleCss"
+            type="string"
+            update="true"
+            insert="true"
+            column="TITLE_CSS"
+        />
+
+        <many-to-one
+            name="baseContainer"
+            class="edu.common.dynamicextensions.domain.userinterface.Container"
+            cascade="save-update"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="BASE_CONTAINER_ID"
+        />
+
+        <property
+            name="addCaption"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="ADD_CAPTION"
+        />
+
+        <!--
+            To add non XDoclet property mappings, create a file named
+                hibernate-properties-Container.xml
+            containing the additional properties and place it in your merge dir.
+        -->
+
+    </class>
+
+</hibernate-mapping>

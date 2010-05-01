@@ -1,0 +1,1078 @@
+
+install:validation:pre-install:
+[echoproperties] #Ant properties
+#Tue Sep 22 09:52:25 GMT+05:30 2009
+DSTAMP=20090922
+DynamicExtentions-api.dist.relative.dir=DynamicExtentions-api
+DynamicExtentions-webapp.dir.dist=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\DynamicExtentions-webapp
+DynamicExtentions-webapp.dist.relative.dir=DynamicExtentions-webapp
+DynamicExtentions-webapp.ds.file=DynamicExtentions-ds.xml
+DynamicExtentions-webapp.install.name=DynamicExtentions_install
+DynamicExtentions-webapp.install.zip.file=DynamicExtentions_install_0.1.0.zip
+DynamicExtentions-webapp.name=dynamicExtensions
+DynamicExtentions-webapp.upgrade.name=DynamicExtentions_ugprade
+DynamicExtentions-webapp.upgrade.zip.file=DynamicExtentions_ugprade_0.1.0.zip
+DynamicExtentions-webapp.version=0.1.0
+DynamicExtentions-webapp.war.file=dynamicExtensions.war
+TODAY=September 22 2009
+TSTAMP=0952
+ant.core.lib=C\:\\apache-ant-1.7.1\\lib\\ant.jar
+ant.file=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\build.xml
+ant.file.DynamicExtentions-installer=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\build.xml
+ant.file.bda-utils=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils\\bda-build-utils-0.12.0-beta.xml
+ant.home=C\:\\apache-ant-1.7.1
+ant.java.version=1.5
+ant.library.dir=C\:\\apache-ant-1.7.1\\lib
+ant.minimum.version=1.7.0
+ant.project.name=DynamicExtentions-installer
+ant.version=Apache Ant version 1.7.1 compiled on June 27 2008
+antunit.jar=antunit-1.0.jar
+application.base.path=c\:/apps/DynamicExtentions-webapp
+application.base.path.linux=C\:\\Documents and Settings\\pulkit_kumar/apps/DynamicExtentions-webapp
+application.base.path.windows=c\:/apps/DynamicExtentions-webapp
+application.context.name=catissuecore
+application.url=http\://localhost\:46210/dynamicExtensions
+authentication.type=db
+awt.toolkit=sun.awt.windows.WToolkit
+basedir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded
+bda-utils.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils
+bda-utils.resource.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils\\resource
+bda.version=0.12.0-beta
+build.bda.src.url=http\://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-download/bda-ivy-build.xml
+cacore-sdk.binaries.file=caCORE_SDK_411-src.zip
+cacore-sdk.binaries.relative.dir=codegen
+cacore-sdk.required=true
+cacore-sdk.src.url=http\://gforge.nci.nih.gov/svnroot/commonlibrary/trunk/cacore-sdk/4.1.1/caCORE_SDK_411-src.zip
+checkstyle.revision.number=0
+common.dir.dest=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working\\common
+common.dir.src=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\common
+common.dist.relative.dir=common
+database.context.path=DynamicExtentions-webapp
+database.dialect=org.hibernate.dialect.DB2Dialect
+database.driver=com.ibm.db2.jcc.DB2Driver
+database.driver.file=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils/db2jcc.jar
+database.drop-schema=true
+database.jndi.datasource.name=java\:/catissuecore
+database.name=dynext
+database.password=Prasad\#1
+database.port=50000
+database.release.version=1.1
+database.schema=DB2ADMIN
+database.server=10.88.199.105
+database.system.url=jdbc\:db2\://10.88.199.105\:50000/dynext
+database.type=db2
+database.url=jdbc\:db2\://10.88.199.105\:50000/dynext
+database.user=db2admin
+db-install.dir.dest=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working\\db\\db-install
+db-install.dist.relative.dir=db/db-install
+db-upgrade.dir.dest=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working\\db\\db-upgrade
+db-upgrade.dist.relative.dir=db/db-upgrade
+db.dir.dest=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working\\db
+db.dir.src=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\db
+db.dist.relative.dir=db
+db.install.create.db2.file.list=dynamicextension.sql
+db.install.create.mysql.file.list=dynamicextension.sql
+db.install.create.oracle.file.list=dynamicextension.sql
+db.install.create.postgresql.file.list=
+env.ALLUSERSPROFILE=C\:\\Documents and Settings\\All Users
+env.ANT_CMD_LINE_ARGS=-Dproperties.file install.properties -Dforce.reinstall true install
+env.ANT_HOME=C\:\\apache-ant-1.7.1
+env.APPDATA=C\:\\Documents and Settings\\pulkit_kumar\\Application Data
+env.CLASSPATH=.;C\:\\Program Files\\Java\\jre6\\lib\\ext\\QTJava.zip
+env.COMPUTERNAME=PS5301
+env.CVSROOT=C\:\\CVS_HOME
+env.ComSpec=C\:\\WINDOWS\\system32\\cmd.exe
+env.CommonProgramFiles=C\:\\Program Files\\Common Files
+env.FP_NO_HOST_CHECK=NO
+env.HOMEDRIVE=C\:
+env.HOMEPATH=\\Documents and Settings\\pulkit_kumar
+env.JAVA_HOME=C\:\\Program Files\\Java\\jdk1.5.0_10
+env.LOGONSERVER=\\\\PTDC
+env.NUMBER_OF_PROCESSORS=2
+env.ORACLE_HOME=E\:/oracle/product/10.2.0/db_1/BIN
+env.OS=Windows_NT
+env.PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH
+env.PERL5LIB=E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\perl\\5.8.3\\lib\\MSWin32-x86;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\perl\\5.8.3\\lib;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\perl\\5.8.3\\lib\\MSWin32-x86;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\perl\\site\\5.8.3;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\perl\\site\\5.8.3\\lib;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\sysman\\admin\\scripts;
+env.PROCESSOR_ARCHITECTURE=x86
+env.PROCESSOR_IDENTIFIER=x86 Family 15 Model 6 Stepping 5, GenuineIntel
+env.PROCESSOR_LEVEL=15
+env.PROCESSOR_REVISION=0605
+env.PROMPT=$P$G
+env.Path=C\:\\Program Files\\Windows Resource Kits\\Tools\\;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\bin;C\:\\Program Files\\CollabNet Subversion Client;C\:\\Perl\\site\\bin;C\:\\Perl\\bin;C\:\\WINDOWS\\system32;C\:\\WINDOWS;C\:\\WINDOWS\\System32\\Wbem;;C\:\\Program Files\\TortoiseSVN\\bin;C\:\\Python25;C\:\\Program Files\\VisualSVN Server\\bin;C\:\\apache-ant-1.7.1\\bin;C\:\\Program Files\\Java\\jdk1.5.0_05\\bin;;C\:\\Dos-Unix;C\:\\Program Files\\Mercurial;C\:\\Program Files\\TortoiseHg;C\:\\Program Files\\QuickTime\\QTSystem\\;C\:\\utils;C\:\\Program Files\\Windows Imaging\\;C\:\\Program Files\\MySQL\\MySQL Server 5.0\\bin;C\:\\Program Files\\DeID\\;C\:\\apache-ant-1.7.1\\lib;C\:\\Program Files\\Java\\jdk1.5.0_10\\bin;C\:\\Program Files\\Bitvise Tunnelier;C\:\\Program Files\\CVSNT\\
+env.ProgramFiles=C\:\\Program Files
+env.QTJAVA=C\:\\Program Files\\Java\\jre6\\lib\\ext\\QTJava.zip
+env.SESSIONNAME=Console
+env.SystemDrive=C\:
+env.SystemRoot=C\:\\WINDOWS
+env.TEMP=C\:\\DOCUME~1\\PULKIT~1\\LOCALS~1\\Temp
+env.THG_ICON_PATH=C\:\\Program Files\\TortoiseHg\\icons
+env.TMP=C\:\\DOCUME~1\\PULKIT~1\\LOCALS~1\\Temp
+env.UATDATA=C\:\\WINDOWS\\system32\\CCM\\UATData\\D9F8C395-CAB8-491d-B8AC-179A1FE1BE77
+env.USERDNSDOMAIN=PERSISTENT.CO.IN
+env.USERDOMAIN=PERSISTENT
+env.USERNAME=pulkit_kumar
+env.USERPROFILE=C\:\\Documents and Settings\\pulkit_kumar
+env.VISUALSVN_SERVER=C\:\\Program Files\\VisualSVN Server\\
+env.XCHAT_WARNING_IGNORE=true
+env._JAVACMD=C\:\\Program Files\\Java\\jdk1.5.0_10\\bin\\java.exe
+env._USE_CLASSPATH=yes
+env.http.proxyHost=ptproxy.persistent.co.in
+env.http.proxyPassword=agra@123
+env.http.proxyPort=8080
+env.http.proxyUser=pulkit_kumar
+env.jboss.home.dir=C\:/Program Files/jboss-4.2.2.GA
+env.name=internal
+env.windir=C\:\\WINDOWS
+exclude.access-logs=true
+exclude.jboss.backup=true
+file.encoding=Cp1252
+file.encoding.pkg=sun.io
+file.separator=\\
+findbugs.binaries.file=findbugs-1.3.4.zip
+findbugs.binaries.relative.dir=findbugs-1.3.4
+findbugs.src.url=http\://gforge.nci.nih.gov/svnroot/commonlibrary/trunk/other/os-independent/findbugs-1.3.4.zip
+force.reinstall=true
+fs-data.base.dir=
+install-logs.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\logs
+install.running=true
+install.time=2009-09-22-09-52
+ivy.bda.settings.src.url=http\://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-download/ivy-bda-settings.xml
+ivy.bda.src.url=http\://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-download/ivy-bda.xml 
+java.awt.graphicsenv=sun.awt.Win32GraphicsEnvironment
+java.awt.printerjob=sun.awt.windows.WPrinterJob
+java.class.path=C\:\\apache-ant-1.7.1\\lib\\ant-launcher.jar;D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\.\\;C\:\\Program Files\\Java\\jre6\\lib\\ext\\QTJava.zip;C\:\\apache-ant-1.7.1\\lib\\ant-antlr.jar;C\:\\apache-ant-1.7.1\\lib\\ant-apache-bcel.jar;C\:\\apache-ant-1.7.1\\lib\\ant-apache-bsf.jar;C\:\\apache-ant-1.7.1\\lib\\ant-apache-log4j.jar;C\:\\apache-ant-1.7.1\\lib\\ant-apache-oro.jar;C\:\\apache-ant-1.7.1\\lib\\ant-apache-regexp.jar;C\:\\apache-ant-1.7.1\\lib\\ant-apache-resolver.jar;C\:\\apache-ant-1.7.1\\lib\\ant-commons-logging.jar;C\:\\apache-ant-1.7.1\\lib\\ant-commons-net.jar;C\:\\apache-ant-1.7.1\\lib\\ant-jai.jar;C\:\\apache-ant-1.7.1\\lib\\ant-javamail.jar;C\:\\apache-ant-1.7.1\\lib\\ant-jdepend.jar;C\:\\apache-ant-1.7.1\\lib\\ant-jmf.jar;C\:\\apache-ant-1.7.1\\lib\\ant-jsch.jar;C\:\\apache-ant-1.7.1\\lib\\ant-junit.jar;C\:\\apache-ant-1.7.1\\lib\\ant-launcher.jar;C\:\\apache-ant-1.7.1\\lib\\ant-netrexx.jar;C\:\\apache-ant-1.7.1\\lib\\ant-nodeps.jar;C\:\\apache-ant-1.7.1\\lib\\ant-starteam.jar;C\:\\apache-ant-1.7.1\\lib\\ant-stylebook.jar;C\:\\apache-ant-1.7.1\\lib\\ant-swing.jar;C\:\\apache-ant-1.7.1\\lib\\ant-testutil.jar;C\:\\apache-ant-1.7.1\\lib\\ant-trax.jar;C\:\\apache-ant-1.7.1\\lib\\ant-weblogic.jar;C\:\\apache-ant-1.7.1\\lib\\ant.jar;C\:\\apache-ant-1.7.1\\lib\\junit-3.8.1.jar;C\:\\apache-ant-1.7.1\\lib\\xercesImpl.jar;C\:\\apache-ant-1.7.1\\lib\\xml-apis.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\lib\\tools.jar
+java.class.version=49.0
+java.endorsed.dirs=C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\endorsed
+java.ext.dirs=C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\ext
+java.home=C\:\\Program Files\\Java\\jdk1.5.0_10\\jre
+java.io.tmpdir=C\:\\DOCUME~1\\PULKIT~1\\LOCALS~1\\Temp\\
+java.library.path=C\:\\Program Files\\Java\\jdk1.5.0_10\\bin;.;C\:\\WINDOWS\\system32;C\:\\WINDOWS;C\:\\Program Files\\Windows Resource Kits\\Tools\\;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\bin;C\:\\Program Files\\CollabNet Subversion Client;C\:\\Perl\\site\\bin;C\:\\Perl\\bin;C\:\\WINDOWS\\system32;C\:\\WINDOWS;C\:\\WINDOWS\\System32\\Wbem;;C\:\\Program Files\\TortoiseSVN\\bin;C\:\\Python25;C\:\\Program Files\\VisualSVN Server\\bin;C\:\\apache-ant-1.7.1\\bin;C\:\\Program Files\\Java\\jdk1.5.0_05\\bin;;C\:\\Dos-Unix;C\:\\Program Files\\Mercurial;C\:\\Program Files\\TortoiseHg;C\:\\Program Files\\QuickTime\\QTSystem\\;C\:\\utils;C\:\\Program Files\\Windows Imaging\\;C\:\\Program Files\\MySQL\\MySQL Server 5.0\\bin;C\:\\Program Files\\DeID\\;C\:\\apache-ant-1.7.1\\lib;C\:\\Program Files\\Java\\jdk1.5.0_10\\bin;C\:\\Program Files\\Bitvise Tunnelier;C\:\\Program Files\\CVSNT\\
+java.major.version=1.5
+java.minor.version=1.5.0_10
+java.runtime.name=Java(TM) 2 Runtime Environment, Standard Edition
+java.runtime.version=1.5.0_10-b03
+java.specification.name=Java Platform API Specification
+java.specification.vendor=Sun Microsystems Inc.
+java.specification.version=1.5
+java.vendor=Sun Microsystems Inc.
+java.vendor.url=http\://java.sun.com/
+java.vendor.url.bug=http\://java.sun.com/cgi-bin/bugreport.cgi
+java.version=1.5.0_10
+java.vm.info=mixed mode, sharing
+java.vm.name=Java HotSpot(TM) Client VM
+java.vm.specification.name=Java Virtual Machine Specification
+java.vm.specification.vendor=Sun Microsystems Inc.
+java.vm.specification.version=1.0
+java.vm.vendor=Sun Microsystems Inc.
+java.vm.version=1.5.0_10-b03
+jboss-bindings.file=ncicb-jboss4.0.x-bindings.xml
+jboss-bindings.src.url=http\://gforge.nci.nih.gov/svnroot/automation/trunk/resources/jboss-bindings/ncicb-jboss4.0.x-bindings.xml
+jboss-conf.dir.dest=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working\\common\\resources\\jboss-conf
+jboss-conf.dir.src=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\common\\resources\\jboss-conf
+jboss-conf.dist.relative.dir=common/resources/jboss-conf
+jboss.binaries.file=jboss-4.2.2.GA.zip
+jboss.binaries.relative.dir=jboss-4.2.2.GA
+jboss.cobraorb.port=46350
+jboss.ejbinvoker.port=46150
+jboss.external.http.host=
+jboss.external.http.port=
+jboss.external.ssl.host=
+jboss.external.ssl.port=
+jboss.hajndi.port=46160
+jboss.hajrmi.port=46260
+jboss.home=c\:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA
+jboss.java.opts=-server -Xms256m -Xmx512m -XX\:ThreadStackSize\=128 -XX\:SurvivorRatio\=10 -XX\:PermSize\=128m -XX\:MaxPermSize\=128m -Dsun.rmi.dgc.client.gcInterval\=3600000 -Dsun.rmi.dgc.server.gcInterval\=3600000 -Djava.awt.headless\=true
+jboss.jms.port=46170
+jboss.jmx-rmi.port=46290
+jboss.messaging.port=46330
+jboss.pooledha.port=46270
+jboss.relative.path=jboss-4.2.2.GA
+jboss.remoting.port=46320
+jboss.server.bind.port=0
+jboss.server.binding.template.location=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils/resource/jboss-4.2.2.GA/bindings.xml
+jboss.server.hostname=localhost
+jboss.server.jndi.port=46200
+jboss.server.name=default
+jboss.server.port=46210
+jboss.server.ports.name=bda-ports
+jboss.server.rmi.port=46230
+jboss.service.rmiobject.port=46240
+jboss.snmp-trapd.port=46300
+jboss.snmp.port=46310
+jboss.src.url=http\://gforge.nci.nih.gov/svnroot/commonlibrary/trunk/techstack-2008/os-independent/jboss-4.2.2.GA.zip
+jboss.ssl.enable=false
+jboss.ssl.fullyqualified.hostname=localhost.nci.nih.gov
+jboss.ssl.keystore.alias=ncicb-test-ssl-key
+jboss.ssl.keystore.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\common\\resources\\security
+jboss.ssl.keystore.file=ncicb-test-ssl.keystore
+jboss.ssl.keystore.location=common/resources/security/ncicb-test-ssl.keystore
+jboss.ssl.keystore.pass=ncicb1\!
+jboss.version.max=4.2.2
+jboss.version.min=4.0.4
+jboss.web.password=blueprint123\!
+jboss.web.service.port=46250
+jboss.web.user=admin
+jbosscp.binaries.file=jboss-4.0.5.GA_CP15.zip
+jbosscp.src.url=http\://gforge.nci.nih.gov/svnroot/commonlibrary/trunk/techstack-2007/os-independent/jboss-4.0.5.GA_CP15.zip
+ldap.basedn=ou\=nci,o\=nih
+ldap.url=ldaps\://ncids4a.nci.nih.gov\:636
+line.separator=\r\n
+log.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\logs
+log4j.level=WARN
+log4j.maxDays=7
+log4j.maxFileSize=100MB
+mail.smtp.server=mailfwd.nih.gov
+mysql.minimum.version=5.0.27
+os.arch=x86
+os.name=Windows XP
+os.temp.dir=c\:/temp
+os.version=5.1
+path.separator=;
+pmd.revision.number=0
+project.name=DynamicExtentions
+prop.list.item.trimmed=jboss.web.service.port
+properties.file=install.properties
+properties.file.exists=true
+properties.file.type=install
+properties.template.file=install.properties.template
+require.build.wscore=true
+run.date=0909220952
+security.dist.relative.dir=common/resources/security
+software.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded
+sun.arch.data.model=32
+sun.boot.class.path=C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\rt.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\i18n.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\sunrsasign.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\jsse.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\jce.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\charsets.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\classes
+sun.boot.library.path=C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\bin
+sun.cpu.endian=little
+sun.cpu.isalist=
+sun.desktop=windows
+sun.io.unicode.encoding=UnicodeLittle
+sun.jnu.encoding=Cp1252
+sun.management.compiler=HotSpot Client Compiler
+sun.os.patch.level=Service Pack 2
+temp.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working\\temp
+template.dbintegrate.file=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils\\resource\\template-db-integrate.xml
+tomcat.version.max=5.5.999
+tomcat.version.min=5.0.0
+tools.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\tools
+tools.dist.relative.dir=tools
+user.country=US
+user.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded
+user.home=C\:\\Documents and Settings\\pulkit_kumar
+user.language=en
+user.name=pulkit_kumar
+user.timezone=
+user.variant=
+validation.post.http.list=46210
+validation.post.socket.list=46230,46200,46240,46170,46250
+validation.pre.port.list=46230,46200,46240,46170,46210,46250
+working.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working
+     [echo] Validating Ant version...
+     [echo] Ant Version: PASSED
+     [echo] Validating Java version...
+     [echo] Java version check: PASSED
+     [echo] Java version check: PASSED
+     [echo] Not running as root.
+     [echo] Validating database connection...
+     [echo] Database Connection: PASSED
+     [echo] Validating properties file  install.properties...
+     [echo] Attempting to connnect to localhost.nci.nih.gov....
+     [echo] Attempting to connnect to localhost....
+     [echo] Checking install.properties against template file install.properties.template
+     [echo] Template file install.properties.template not avaliable
+     [echo] application.base.path is an absolute path.
+     [echo] jboss.home=c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA is direct child of application.base.path=c:/apps/DynamicExtentions-webapp.
+     [echo] basedir=D:\BDA\DynamicExtentions\software\target\dist\exploded is not child of application.base.path=c:/apps/DynamicExtentions-webapp.
+     [echo] jboss.home c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA does not exist or the force.reinstall property is set.
+     [echo] Database is db2, warning prompt not displayed.
+     [echo] appserver.ssl.enable not set or true so skipping ssl validation
+     [echo] appserver.ssl.enable not set or true so skipping ssl validation
+     [echo] checking jboss version - 4.2.2.
+   [groovy] Check version is 4002002
+   [groovy] Min version is 4000004
+   [groovy] Max version is 4002002
+     [echo] checking tomcat version - ${tomcat.version.check}.
+
+install:jboss:stop:
+
+install:validation:pre-install:ports:
+     [echo] Validationg Ports Are not in use...
+     [echo] Checking if 46230 is running.
+     [echo] Ports check: PASSED
+     [echo] Checking if 46200 is running.
+     [echo] Ports check: PASSED
+     [echo] Checking if 46240 is running.
+     [echo] Ports check: PASSED
+     [echo] Checking if 46170 is running.
+     [echo] Ports check: PASSED
+     [echo] Checking if 46210 is running.
+     [echo] Ports check: PASSED
+     [echo] Checking if 46250 is running.
+     [echo] Ports check: PASSED
+
+install:clean:jboss:
+
+install:clean:
+
+install:init:
+     [copy] Copying 12 files to D:\BDA\DynamicExtentions\software\target\dist\exploded\working\common
+   [groovy] install:init debug
+
+install:database:prep:
+     [echo] Checking if database properties exist: database.url,database.user,database.password,database.name
+[echoproperties] #Ant properties
+#Tue Sep 22 09:52:46 GMT+05:30 2009
+database.context.path=DynamicExtentions-webapp
+database.dialect=org.hibernate.dialect.DB2Dialect
+database.driver=com.ibm.db2.jcc.DB2Driver
+database.driver.file=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils/db2jcc.jar
+database.drop-schema=true
+database.jndi.datasource.name=java\:/catissuecore
+database.name=dynext
+database.password=Prasad\#1
+database.port=50000
+database.release.version=1.1
+database.schema=DB2ADMIN
+database.server=10.88.199.105
+database.system.url=jdbc\:db2\://10.88.199.105\:50000/dynext
+database.type=db2
+database.url=jdbc\:db2\://10.88.199.105\:50000/dynext
+database.user=db2admin
+     [copy] Copying 4 files to D:\BDA\DynamicExtentions\software\target\dist\exploded\working\db
+     [copy] Copied 8 empty directories to 2 empty directories under D:\BDA\DynamicExtentions\software\target\dist\exploded\working\db
+     [copy] Copying 1 file to c:\temp\DynamicExtentions
+   [groovy] install:database:prep debug
+
+install:database:
+   [groovy] begin liquibase debug
+     [echo] Database.recreate flag not set, database not re-created.
+     [echo] Dropping database objects
+[dropAllDatabaseObjects] Lock Database
+[dropAllDatabaseObjects] Successfully acquired change log lock
+[dropAllDatabaseObjects] Dropping Database Objects in schema: DB2ADMIN
+[dropAllDatabaseObjects] Release Database Lock
+[dropAllDatabaseObjects] Successfully released change log lock
+[dropAllDatabaseObjects] Lock Database
+[dropAllDatabaseObjects] Successfully acquired change log lock
+[dropAllDatabaseObjects] Dropping Database Objects in schema: DB2ADMIN
+[dropAllDatabaseObjects] Release Database Lock
+[dropAllDatabaseObjects] Successfully released change log lock
+      [sql] Executing resource: D:\BDA\DynamicExtentions\software\target\dist\exploded\working\db\db-install\db2\dynamicextension.sql
+      [sql] Failed to execute: 
+drop table ABSTRACT_CATEGORIAL_ATTRIBUTE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.ABSTRACT_CATEGORIAL_ATTRIBUTE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table ABSTRACT_CATEGORIAL_CLASS
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.ABSTRACT_CATEGORIAL_CLASS, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table ABSTRACT_CATEGORY
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.ABSTRACT_CATEGORY, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table CATEGORIAL_ATTRIBUTE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.CATEGORIAL_ATTRIBUTE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table CATEGORIAL_CLASS
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.CATEGORIAL_CLASS, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table CATEGORY
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.CATEGORY, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table CURATED_PATH
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.CURATED_PATH, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table CURATED_PATH_TO_PATH
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.CURATED_PATH_TO_PATH, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DE_COLL_ATTR_RECORD_VALUES
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DE_COLL_ATTR_RECORD_VALUES, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DE_FILE_ATTR_RECORD_VALUES
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DE_FILE_ATTR_RECORD_VALUES, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DE_OBJECT_ATTR_RECORD_VALUES
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DE_OBJECT_ATTR_RECORD_VALUES, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_ABSTRACT_ENTITY
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_ABSTRACT_ENTITY, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_ABSTRACT_METADATA
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_ABSTRACT_METADATA, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_ABSTR_CONTAIN_CTR
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_ABSTR_CONTAIN_CTR, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_ASSOCIATION
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_ASSOCIATION, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_ASSO_DISPLAY_ATTR
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_ASSO_DISPLAY_ATTR, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_ATTRIBUTE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_ATTRIBUTE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_ATTRIBUTE_RECORD
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_ATTRIBUTE_RECORD, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_ATTRIBUTE_TYPE_INFO
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_ATTRIBUTE_TYPE_INFO, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_BARR_CONCEPT_VALUE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_BARR_CONCEPT_VALUE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_BASE_ABSTRACT_ATTRIBUTE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_BASE_ABSTRACT_ATTRIBUTE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_BOOLEAN_CONCEPT_VALUE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_BOOLEAN_CONCEPT_VALUE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_BOOLEAN_TYPE_INFO
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_BOOLEAN_TYPE_INFO, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_BYTE_ARRAY_TYPE_INFO
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_BYTE_ARRAY_TYPE_INFO, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_CADSRDE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_CADSRDE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_CADSR_VALUE_DOMAIN_INFO
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_CADSR_VALUE_DOMAIN_INFO, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_CATEGORY
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_CATEGORY, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_CATEGORY_ASSOCIATION
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_CATEGORY_ASSOCIATION, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_CATEGORY_ATTRIBUTE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_CATEGORY_ATTRIBUTE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_CATEGORY_ENTITY
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_CATEGORY_ENTITY, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_CAT_ASSO_CTL
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_CAT_ASSO_CTL, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_CHECK_BOX
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_CHECK_BOX, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_COLUMN_PROPERTIES
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_COLUMN_PROPERTIES, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_COMBOBOX
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_COMBOBOX, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_CONSTRAINTKEY_PROP
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_CONSTRAINTKEY_PROP, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_CONSTRAINT_PROPERTIES
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_CONSTRAINT_PROPERTIES, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_CONTAINER
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_CONTAINER, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_CONTAINMENT_CONTROL
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_CONTAINMENT_CONTROL, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_CONTROL
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_CONTROL, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_DATABASE_PROPERTIES
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_DATABASE_PROPERTIES, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_DATA_ELEMENT
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_DATA_ELEMENT, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_DATA_GRID
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_DATA_GRID, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_DATEPICKER
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_DATEPICKER, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_DATE_CONCEPT_VALUE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_DATE_CONCEPT_VALUE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_DATE_TYPE_INFO
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_DATE_TYPE_INFO, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_DOUBLE_CONCEPT_VALUE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_DOUBLE_CONCEPT_VALUE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_DOUBLE_TYPE_INFO
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_DOUBLE_TYPE_INFO, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_ENTITY
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_ENTITY, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_ENTITY_GROUP
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_ENTITY_GROUP, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_ENTITY_MAP
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_ENTITY_MAP, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_ENTITY_MAP_CONDNS
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_ENTITY_MAP_CONDNS, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_ENTITY_MAP_RECORD
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_ENTITY_MAP_RECORD, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_ENTIY_COMPOSITE_KEY_REL
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_ENTIY_COMPOSITE_KEY_REL, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_FILE_EXTENSIONS
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_FILE_EXTENSIONS, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_FILE_TYPE_INFO
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_FILE_TYPE_INFO, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_FILE_UPLOAD
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_FILE_UPLOAD, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_FLOAT_CONCEPT_VALUE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_FLOAT_CONCEPT_VALUE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_FLOAT_TYPE_INFO
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_FLOAT_TYPE_INFO, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_FORM_CONTEXT
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_FORM_CONTEXT, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_FORM_CTRL_NOTES
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_FORM_CTRL_NOTES, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_INTEGER_CONCEPT_VALUE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_INTEGER_CONCEPT_VALUE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_INTEGER_TYPE_INFO
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_INTEGER_TYPE_INFO, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_LIST_BOX
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_LIST_BOX, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_LONG_CONCEPT_VALUE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_LONG_CONCEPT_VALUE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_LONG_TYPE_INFO
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_LONG_TYPE_INFO, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_NUMERIC_TYPE_INFO
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_NUMERIC_TYPE_INFO, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_OBJECT_TYPE_INFO
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_OBJECT_TYPE_INFO, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_PATH
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_PATH, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_PATH_ASSO_REL
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_PATH_ASSO_REL, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_PERMISSIBLE_VALUE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_PERMISSIBLE_VALUE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_PRIMITIVE_ATTRIBUTE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_PRIMITIVE_ATTRIBUTE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_RADIOBUTTON
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_RADIOBUTTON, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_ROLE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_ROLE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_RULE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_RULE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_RULE_PARAMETER
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_RULE_PARAMETER, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_SELECT_CONTROL
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_SELECT_CONTROL, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_SEMANTIC_PROPERTY
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_SEMANTIC_PROPERTY, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_SHORT_CONCEPT_VALUE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_SHORT_CONCEPT_VALUE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_SHORT_TYPE_INFO
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_SHORT_TYPE_INFO, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_SQL_AUDIT
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_SQL_AUDIT, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_STRING_CONCEPT_VALUE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_STRING_CONCEPT_VALUE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_STRING_TYPE_INFO
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_STRING_TYPE_INFO, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_TABLE_PROPERTIES
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_TABLE_PROPERTIES, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_TAGGED_VALUE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_TAGGED_VALUE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_TEXTAREA
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_TEXTAREA, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_TEXTFIELD
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_TEXTFIELD, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_USERDEFINED_DE
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_USERDEFINED_DE, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_USERDEF_DE_VALUE_REL
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_USERDEF_DE_VALUE_REL, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table DYEXTN_VIEW
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_VIEW, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table PATH
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.PATH, DRIVER=3.50.152
+      [sql] Failed to execute: 
+drop table dyextn_id_generator
+      [sql] com.ibm.db2.jcc.b.nm: DB2 SQL Error: SQLCODE=-204, SQLSTATE=42704, SQLERRMC=DB2ADMIN.DYEXTN_ID_GENERATOR, DRIVER=3.50.152
+      [sql] 219 of 310 SQL statements executed successfully
+
+install:jboss:binaries:
+    [unzip] Expanding: D:\BDA\DynamicExtentions\software\target\dist\exploded\tools\jboss-4.2.2.GA.zip into c:\apps\DynamicExtentions-webapp
+
+install:jboss:DynamicExtentions-webapp:re-configure:
+
+install:jboss:DynamicExtentions-webapp:filesystem-data:
+
+install:jboss:DynamicExtentions-webapp:
+     [move] Warning: Could not find file c:\apps\DynamicExtentions-webapp\jboss-4.2.2.GA\server\default\log\server.log to copy.
+     [copy] Copying 1 file to c:\apps\DynamicExtentions-webapp\jboss-4.2.2.GA\server\default\deploy
+     [copy] Copying 1 file to c:\apps\DynamicExtentions-webapp\jboss-4.2.2.GA\server\default\lib
+
+install:jboss:DynamicExtentions-webapp:configure:
+     [copy] Copying 1 file to c:\apps\DynamicExtentions-webapp\jboss-4.2.2.GA\server\default\deploy
+     [echo] Creating D:\BDA\DynamicExtentions\software\target\dist\exploded\working/property.block.txt
+     [echo] property block is property1=db
+    property2=internal
+    property3=c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA
+    property4=${tomcat.home}
+    
+     [echo] read.property.block is ${read.property.block}
+     [echo] No properties found in c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/deploy/properties-service.xml, inserting
+
+install:jboss:configure:log4j:
+
+install:jboss:configure:
+     [echo] Configuring JBoss ports (bindings)
+     [echo] Bindings file location c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/conf/bindings.xml
+     [copy] Copying 1 file to c:\apps\DynamicExtentions-webapp\jboss-4.2.2.GA\server\default\conf
+     [echo] FYI - c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/conf/bindings.xml has no tokens.
+     [echo] Configuring JBoss authentication settins (login-config.xml)
+     [echo] Inserting D:\BDA\DynamicExtentions\software\target\dist\exploded\working\common\resources\jboss-conf/login-config.db-block.xml into c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/conf/login-config.xml
+     [echo] Adding user and password to JBoss console apps
+     [echo] Updating c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/deploy/jmx-console.war/WEB-INF/web.xml
+     [echo] Updating c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/deploy/jmx-console.war/WEB-INF/jboss-web.xml
+     [echo] Updating c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/conf/props/jmx-console-users.properties
+     [echo] admin found in c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/conf/props/jmx-console-users.properties updating record.
+     [echo] Updating c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/conf/props/jmx-console-roles.properties
+     [echo] admin found in c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/conf/props/jmx-console-roles.properties updating record.
+     [echo] Updating c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/deploy/management/console-mgr.sar/web-console.war/WEB-INF/web.xml
+     [echo] Updating c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/deploy/management/console-mgr.sar/web-console.war/WEB-INF/jboss-web.xml
+     [copy] Copying 2 files to c:\apps\DynamicExtentions-webapp\jboss-4.2.2.GA\server\default\conf\props
+     [echo] Updating c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/conf/props/web-console-users.properties
+     [echo] admin found in c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/conf/props/web-console-users.properties updating record.
+     [echo] Updating c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/conf/props/web-console-roles.properties
+     [echo] admin found in c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/conf/props/web-console-roles.properties updating record.
+     [echo] Updating JBoss shutdown.jar to allow shutdown without command line args
+    [unzip] Expanding: c:\apps\DynamicExtentions-webapp\jboss-4.2.2.GA\bin\shutdown.jar into D:\BDA\DynamicExtentions\software\target\dist\exploded\working\temp\shutdown
+      [jar] Building jar: D:\BDA\DynamicExtentions\software\target\dist\exploded\working\temp\shutdown\shutdown.jar
+     [copy] Copying 1 file to c:\apps\DynamicExtentions-webapp\jboss-4.2.2.GA\bin
+     [echo] Enableing SSL for JBoss
+     [echo] appserver.ssl.enable not set or true so skipping install of JBoss SSL configuration
+     [echo] Configuring JBoss proxy settings for ssl
+     [echo] Grid External Host Name not set so doing nothing
+     [echo] Configuring JBoss proxy settings for http
+     [echo] Grid External Host Name not set so doing nothing
+     [echo] Configuring secure grid in JBoss
+     [echo] Skipping configuration of GRID on JBos
+     [echo] Skipping configuring access logs for jboss because exclude.access-logs is set.
+     [echo] jboss.java.opts.is.set = -server
+     [echo] Setting JBoss java options
+     [echo] os.family=windows
+     [echo] jboss.java.opts.is.set = -server
+     [echo] Java options not updated because c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/bin does not exist or jboss.java.opts has not value (-server -Xms256m -Xmx512m -XX:ThreadStackSize=128 -XX:SurvivorRatio=10 -XX:PermSize=128m -XX:MaxPermSize=128m -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000 -Djava.awt.headless=true).
+
+install:post:jboss:
+
+install:post:
+
+install:jboss:start:
+     [echo] Starting JBoss instance at c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA with run.sh
+
+install:jboss:
+
+install:validation:post-install:
+[echoproperties] #Ant properties
+#Tue Sep 22 09:56:09 GMT+05:30 2009
+DSTAMP=20090922
+DynamicExtentions-api.dist.relative.dir=DynamicExtentions-api
+DynamicExtentions-webapp.dir.dist=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\DynamicExtentions-webapp
+DynamicExtentions-webapp.dist.relative.dir=DynamicExtentions-webapp
+DynamicExtentions-webapp.ds.file=DynamicExtentions-ds.xml
+DynamicExtentions-webapp.install.name=DynamicExtentions_install
+DynamicExtentions-webapp.install.zip.file=DynamicExtentions_install_0.1.0.zip
+DynamicExtentions-webapp.name=dynamicExtensions
+DynamicExtentions-webapp.upgrade.name=DynamicExtentions_ugprade
+DynamicExtentions-webapp.upgrade.zip.file=DynamicExtentions_ugprade_0.1.0.zip
+DynamicExtentions-webapp.version=0.1.0
+DynamicExtentions-webapp.war.file=dynamicExtensions.war
+TODAY=September 22 2009
+TSTAMP=0952
+ant.core.lib=C\:\\apache-ant-1.7.1\\lib\\ant.jar
+ant.file=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\build.xml
+ant.file.DynamicExtentions-installer=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\build.xml
+ant.file.bda-utils=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils\\bda-build-utils-0.12.0-beta.xml
+ant.home=C\:\\apache-ant-1.7.1
+ant.java.version=1.5
+ant.library.dir=C\:\\apache-ant-1.7.1\\lib
+ant.minimum.version=1.7.0
+ant.project.name=DynamicExtentions-installer
+ant.version=Apache Ant version 1.7.1 compiled on June 27 2008
+ant.version.success=true
+antunit.jar=antunit-1.0.jar
+application.base.path=c\:/apps/DynamicExtentions-webapp
+application.base.path.linux=C\:\\Documents and Settings\\pulkit_kumar/apps/DynamicExtentions-webapp
+application.base.path.windows=c\:/apps/DynamicExtentions-webapp
+application.context.name=catissuecore
+application.dir=c\:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA
+application.url=http\://localhost\:46210/dynamicExtensions
+authentication.type=db
+awt.toolkit=sun.awt.windows.WToolkit
+backup.count=5
+basedir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded
+bda-utils.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils
+bda-utils.resource.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils\\resource
+bda.version=0.12.0-beta
+bindings.file.has.server=\   <server name\="bda-ports">\r\n
+build.bda.src.url=http\://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-download/bda-ivy-build.xml
+cacore-sdk.binaries.file=caCORE_SDK_411-src.zip
+cacore-sdk.binaries.relative.dir=codegen
+cacore-sdk.required=true
+cacore-sdk.src.url=http\://gforge.nci.nih.gov/svnroot/commonlibrary/trunk/cacore-sdk/4.1.1/caCORE_SDK_411-src.zip
+checkstyle.revision.number=0
+child.dir=c\:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA
+child.good=true
+common.dir.dest=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working\\common
+common.dir.src=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\common
+common.dist.relative.dir=common
+database.context.path=DynamicExtentions-webapp
+database.dialect=org.hibernate.dialect.DB2Dialect
+database.driver=com.ibm.db2.jcc.DB2Driver
+database.driver.file=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils/db2jcc.jar
+database.drop-schema=true
+database.jndi.datasource.name=java\:/catissuecore
+database.name=dynext
+database.password=Prasad\#1
+database.port=50000
+database.release.version=1.1
+database.schema=DB2ADMIN
+database.server=10.88.199.105
+database.system.url=jdbc\:db2\://10.88.199.105\:50000/dynext
+database.type=db2
+database.url=jdbc\:db2\://10.88.199.105\:50000/dynext
+database.user=db2admin
+db-install.dir.dest=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working\\db\\db-install
+db-install.dist.relative.dir=db/db-install
+db-upgrade.dir.dest=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working\\db\\db-upgrade
+db-upgrade.dist.relative.dir=db/db-upgrade
+db.dir.dest=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working\\db
+db.dir.src=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\db
+db.dist.relative.dir=db
+db.install.create.db2.file.list=dynamicextension.sql
+db.install.create.mysql.file.list=dynamicextension.sql
+db.install.create.oracle.file.list=dynamicextension.sql
+db.install.create.postgresql.file.list=
+db.prop.list=database.url,database.user,database.password,database.name
+db2.connection.success=true
+directory.value=c\:/apps/DynamicExtentions-webapp
+env.ALLUSERSPROFILE=C\:\\Documents and Settings\\All Users
+env.ANT_CMD_LINE_ARGS=-Dproperties.file install.properties -Dforce.reinstall true install
+env.ANT_HOME=C\:\\apache-ant-1.7.1
+env.APPDATA=C\:\\Documents and Settings\\pulkit_kumar\\Application Data
+env.CLASSPATH=.;C\:\\Program Files\\Java\\jre6\\lib\\ext\\QTJava.zip
+env.COMPUTERNAME=PS5301
+env.CVSROOT=C\:\\CVS_HOME
+env.ComSpec=C\:\\WINDOWS\\system32\\cmd.exe
+env.CommonProgramFiles=C\:\\Program Files\\Common Files
+env.FP_NO_HOST_CHECK=NO
+env.HOMEDRIVE=C\:
+env.HOMEPATH=\\Documents and Settings\\pulkit_kumar
+env.JAVA_HOME=C\:\\Program Files\\Java\\jdk1.5.0_10
+env.LOGONSERVER=\\\\PTDC
+env.NUMBER_OF_PROCESSORS=2
+env.ORACLE_HOME=E\:/oracle/product/10.2.0/db_1/BIN
+env.OS=Windows_NT
+env.PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH
+env.PERL5LIB=E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\perl\\5.8.3\\lib\\MSWin32-x86;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\perl\\5.8.3\\lib;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\perl\\5.8.3\\lib\\MSWin32-x86;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\perl\\site\\5.8.3;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\perl\\site\\5.8.3\\lib;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\sysman\\admin\\scripts;
+env.PROCESSOR_ARCHITECTURE=x86
+env.PROCESSOR_IDENTIFIER=x86 Family 15 Model 6 Stepping 5, GenuineIntel
+env.PROCESSOR_LEVEL=15
+env.PROCESSOR_REVISION=0605
+env.PROMPT=$P$G
+env.Path=C\:\\Program Files\\Windows Resource Kits\\Tools\\;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\bin;C\:\\Program Files\\CollabNet Subversion Client;C\:\\Perl\\site\\bin;C\:\\Perl\\bin;C\:\\WINDOWS\\system32;C\:\\WINDOWS;C\:\\WINDOWS\\System32\\Wbem;;C\:\\Program Files\\TortoiseSVN\\bin;C\:\\Python25;C\:\\Program Files\\VisualSVN Server\\bin;C\:\\apache-ant-1.7.1\\bin;C\:\\Program Files\\Java\\jdk1.5.0_05\\bin;;C\:\\Dos-Unix;C\:\\Program Files\\Mercurial;C\:\\Program Files\\TortoiseHg;C\:\\Program Files\\QuickTime\\QTSystem\\;C\:\\utils;C\:\\Program Files\\Windows Imaging\\;C\:\\Program Files\\MySQL\\MySQL Server 5.0\\bin;C\:\\Program Files\\DeID\\;C\:\\apache-ant-1.7.1\\lib;C\:\\Program Files\\Java\\jdk1.5.0_10\\bin;C\:\\Program Files\\Bitvise Tunnelier;C\:\\Program Files\\CVSNT\\
+env.ProgramFiles=C\:\\Program Files
+env.QTJAVA=C\:\\Program Files\\Java\\jre6\\lib\\ext\\QTJava.zip
+env.SESSIONNAME=Console
+env.SystemDrive=C\:
+env.SystemRoot=C\:\\WINDOWS
+env.TEMP=C\:\\DOCUME~1\\PULKIT~1\\LOCALS~1\\Temp
+env.THG_ICON_PATH=C\:\\Program Files\\TortoiseHg\\icons
+env.TMP=C\:\\DOCUME~1\\PULKIT~1\\LOCALS~1\\Temp
+env.UATDATA=C\:\\WINDOWS\\system32\\CCM\\UATData\\D9F8C395-CAB8-491d-B8AC-179A1FE1BE77
+env.USERDNSDOMAIN=PERSISTENT.CO.IN
+env.USERDOMAIN=PERSISTENT
+env.USERNAME=pulkit_kumar
+env.USERPROFILE=C\:\\Documents and Settings\\pulkit_kumar
+env.VISUALSVN_SERVER=C\:\\Program Files\\VisualSVN Server\\
+env.XCHAT_WARNING_IGNORE=true
+env._JAVACMD=C\:\\Program Files\\Java\\jdk1.5.0_10\\bin\\java.exe
+env._USE_CLASSPATH=yes
+env.http.proxyHost=ptproxy.persistent.co.in
+env.http.proxyPassword=agra@123
+env.http.proxyPort=8080
+env.http.proxyUser=pulkit_kumar
+env.jboss.home.dir=C\:/Program Files/jboss-4.2.2.GA
+env.name=internal
+env.windir=C\:\\WINDOWS
+exclude.access-logs=true
+exclude.jboss.backup=true
+file.encoding=Cp1252
+file.encoding.pkg=sun.io
+file.separator=\\
+findbugs.binaries.file=findbugs-1.3.4.zip
+findbugs.binaries.relative.dir=findbugs-1.3.4
+findbugs.src.url=http\://gforge.nci.nih.gov/svnroot/commonlibrary/trunk/other/os-independent/findbugs-1.3.4.zip
+force.reinstall=true
+fs-data.base.dir=
+hostname.has.value=false
+hostname.property.list=jboss.ssl.fullyqualified.hostname,jboss.server.hostname
+hostname.value=localhost
+install-logs.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\logs
+install.running=true
+install.time=2009-09-22-09-52
+is.absolute.dir=c\:/
+ivy.bda.settings.src.url=http\://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-download/ivy-bda-settings.xml
+ivy.bda.src.url=http\://gforge.nci.nih.gov/svnroot/automation/trunk/software/bda-download/ivy-bda.xml 
+java.awt.graphicsenv=sun.awt.Win32GraphicsEnvironment
+java.awt.printerjob=sun.awt.windows.WPrinterJob
+java.class.path=C\:\\apache-ant-1.7.1\\lib\\ant-launcher.jar;D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\.\\;C\:\\Program Files\\Java\\jre6\\lib\\ext\\QTJava.zip;C\:\\apache-ant-1.7.1\\lib\\ant-antlr.jar;C\:\\apache-ant-1.7.1\\lib\\ant-apache-bcel.jar;C\:\\apache-ant-1.7.1\\lib\\ant-apache-bsf.jar;C\:\\apache-ant-1.7.1\\lib\\ant-apache-log4j.jar;C\:\\apache-ant-1.7.1\\lib\\ant-apache-oro.jar;C\:\\apache-ant-1.7.1\\lib\\ant-apache-regexp.jar;C\:\\apache-ant-1.7.1\\lib\\ant-apache-resolver.jar;C\:\\apache-ant-1.7.1\\lib\\ant-commons-logging.jar;C\:\\apache-ant-1.7.1\\lib\\ant-commons-net.jar;C\:\\apache-ant-1.7.1\\lib\\ant-jai.jar;C\:\\apache-ant-1.7.1\\lib\\ant-javamail.jar;C\:\\apache-ant-1.7.1\\lib\\ant-jdepend.jar;C\:\\apache-ant-1.7.1\\lib\\ant-jmf.jar;C\:\\apache-ant-1.7.1\\lib\\ant-jsch.jar;C\:\\apache-ant-1.7.1\\lib\\ant-junit.jar;C\:\\apache-ant-1.7.1\\lib\\ant-launcher.jar;C\:\\apache-ant-1.7.1\\lib\\ant-netrexx.jar;C\:\\apache-ant-1.7.1\\lib\\ant-nodeps.jar;C\:\\apache-ant-1.7.1\\lib\\ant-starteam.jar;C\:\\apache-ant-1.7.1\\lib\\ant-stylebook.jar;C\:\\apache-ant-1.7.1\\lib\\ant-swing.jar;C\:\\apache-ant-1.7.1\\lib\\ant-testutil.jar;C\:\\apache-ant-1.7.1\\lib\\ant-trax.jar;C\:\\apache-ant-1.7.1\\lib\\ant-weblogic.jar;C\:\\apache-ant-1.7.1\\lib\\ant.jar;C\:\\apache-ant-1.7.1\\lib\\junit-3.8.1.jar;C\:\\apache-ant-1.7.1\\lib\\xercesImpl.jar;C\:\\apache-ant-1.7.1\\lib\\xml-apis.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\lib\\tools.jar
+java.class.version=49.0
+java.endorsed.dirs=C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\endorsed
+java.ext.dirs=C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\ext
+java.home=C\:\\Program Files\\Java\\jdk1.5.0_10\\jre
+java.io.tmpdir=C\:\\DOCUME~1\\PULKIT~1\\LOCALS~1\\Temp\\
+java.library.path=C\:\\Program Files\\Java\\jdk1.5.0_10\\bin;.;C\:\\WINDOWS\\system32;C\:\\WINDOWS;C\:\\Program Files\\Windows Resource Kits\\Tools\\;E\:\\oracle\\product\\10.2.0\\db_1\\BIN\\bin;C\:\\Program Files\\CollabNet Subversion Client;C\:\\Perl\\site\\bin;C\:\\Perl\\bin;C\:\\WINDOWS\\system32;C\:\\WINDOWS;C\:\\WINDOWS\\System32\\Wbem;;C\:\\Program Files\\TortoiseSVN\\bin;C\:\\Python25;C\:\\Program Files\\VisualSVN Server\\bin;C\:\\apache-ant-1.7.1\\bin;C\:\\Program Files\\Java\\jdk1.5.0_05\\bin;;C\:\\Dos-Unix;C\:\\Program Files\\Mercurial;C\:\\Program Files\\TortoiseHg;C\:\\Program Files\\QuickTime\\QTSystem\\;C\:\\utils;C\:\\Program Files\\Windows Imaging\\;C\:\\Program Files\\MySQL\\MySQL Server 5.0\\bin;C\:\\Program Files\\DeID\\;C\:\\apache-ant-1.7.1\\lib;C\:\\Program Files\\Java\\jdk1.5.0_10\\bin;C\:\\Program Files\\Bitvise Tunnelier;C\:\\Program Files\\CVSNT\\
+java.major.version=1.5
+java.major.version.good=true
+java.minor.version=1.5.0_10
+java.runtime.name=Java(TM) 2 Runtime Environment, Standard Edition
+java.runtime.version=1.5.0_10-b03
+java.specification.name=Java Platform API Specification
+java.specification.vendor=Sun Microsystems Inc.
+java.specification.version=1.5
+java.vendor=Sun Microsystems Inc.
+java.vendor.url=http\://java.sun.com/
+java.vendor.url.bug=http\://java.sun.com/cgi-bin/bugreport.cgi
+java.version=1.5.0_10
+java.vm.info=mixed mode, sharing
+java.vm.name=Java HotSpot(TM) Client VM
+java.vm.specification.name=Java Virtual Machine Specification
+java.vm.specification.vendor=Sun Microsystems Inc.
+java.vm.specification.version=1.0
+java.vm.vendor=Sun Microsystems Inc.
+java.vm.version=1.5.0_10-b03
+jboss-bindings.file=ncicb-jboss4.0.x-bindings.xml
+jboss-bindings.src.url=http\://gforge.nci.nih.gov/svnroot/automation/trunk/resources/jboss-bindings/ncicb-jboss4.0.x-bindings.xml
+jboss-conf.dir.dest=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working\\common\\resources\\jboss-conf
+jboss-conf.dir.src=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\common\\resources\\jboss-conf
+jboss-conf.dist.relative.dir=common/resources/jboss-conf
+jboss.base.dir=c\:\\apps\\DynamicExtentions-webapp
+jboss.binaries.file=jboss-4.2.2.GA.zip
+jboss.binaries.relative.dir=jboss-4.2.2.GA
+jboss.cobraorb.port=46350
+jboss.ejbinvoker.port=46150
+jboss.external.http.host=
+jboss.external.http.port=
+jboss.external.ssl.host=
+jboss.external.ssl.port=
+jboss.file.is.zip=true
+jboss.hajndi.port=46160
+jboss.hajrmi.port=46260
+jboss.home=c\:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA
+jboss.java.opts=-server -Xms256m -Xmx512m -XX\:ThreadStackSize\=128 -XX\:SurvivorRatio\=10 -XX\:PermSize\=128m -XX\:MaxPermSize\=128m -Dsun.rmi.dgc.client.gcInterval\=3600000 -Dsun.rmi.dgc.server.gcInterval\=3600000 -Djava.awt.headless\=true
+jboss.java.opts.is.set=-server
+jboss.jms.port=46170
+jboss.jmx-rmi.port=46290
+jboss.messaging.port=46330
+jboss.pooledha.port=46270
+jboss.props.dir=c\:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/conf/props
+jboss.relative.path=jboss-4.2.2.GA
+jboss.remoting.port=46320
+jboss.server.bind.port=0
+jboss.server.binding.template.location=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils/resource/jboss-4.2.2.GA/bindings.xml
+jboss.server.hostname=localhost
+jboss.server.jndi.port=46200
+jboss.server.name=default
+jboss.server.port=46210
+jboss.server.ports.name=bda-ports
+jboss.server.rmi.port=46230
+jboss.service.rmiobject.port=46240
+jboss.snmp-trapd.port=46300
+jboss.snmp.port=46310
+jboss.src.url=http\://gforge.nci.nih.gov/svnroot/commonlibrary/trunk/techstack-2008/os-independent/jboss-4.2.2.GA.zip
+jboss.ssl.enable=false
+jboss.ssl.fullyqualified.hostname=localhost.nci.nih.gov
+jboss.ssl.keystore.alias=ncicb-test-ssl-key
+jboss.ssl.keystore.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\common\\resources\\security
+jboss.ssl.keystore.file=ncicb-test-ssl.keystore
+jboss.ssl.keystore.location=common/resources/security/ncicb-test-ssl.keystore
+jboss.ssl.keystore.pass=ncicb1\!
+jboss.ssl.port=46573
+jboss.version.check=4.2.2
+jboss.version.max=4.2.2
+jboss.version.min=4.0.4
+jboss.web.password=blueprint123\!
+jboss.web.service.port=46250
+jboss.web.user=admin
+jbosscp.binaries.file=jboss-4.0.5.GA_CP15.zip
+jbosscp.exists=true
+jbosscp.src.url=http\://gforge.nci.nih.gov/svnroot/commonlibrary/trunk/techstack-2007/os-independent/jboss-4.0.5.GA_CP15.zip
+jmx-console.jboss-web-xml.file=c\:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/deploy/jmx-console.war/WEB-INF/jboss-web.xml
+jmx-console.role.file=c\:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/conf/props/jmx-console-roles.properties
+jmx-console.role.matched=admin\=JBossAdmin,HttpInvoker\n
+jmx-console.user.file=c\:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/conf/props/jmx-console-users.properties
+jmx-console.user.matched=admin\=admin\n
+jmx-console.web-xml.file=c\:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/deploy/jmx-console.war/WEB-INF/web.xml
+ldap.basedn=ou\=nci,o\=nih
+ldap.url=ldaps\://ncids4a.nci.nih.gov\:636
+line.separator=\r\n
+log.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\logs
+log4j.level=WARN
+log4j.maxDays=7
+log4j.maxFileSize=100MB
+login-config.block.file=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working\\common\\resources\\jboss-conf/login-config.db-block.xml
+mail.smtp.server=mailfwd.nih.gov
+mysql.minimum.version=5.0.27
+not.child.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded
+not.parent.dir=c\:/apps/DynamicExtentions-webapp
+os.arch=x86
+os.family=windows
+os.name=Windows XP
+os.temp.dir=c\:/temp
+os.version=5.1
+parent.dir=c\:/apps/DynamicExtentions-webapp
+path.separator=;
+pmd.revision.number=0
+project.name=DynamicExtentions
+prop.list.item.trimmed=database.name
+properties-service.file=c\:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/deploy/properties-service.xml
+properties.file=install.properties
+properties.file.exists=true
+properties.file.type=install
+properties.template.file=install.properties.template
+property.block=property1\=db\r\n    property2\=internal\r\n    property3\=c\:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA\r\n    property4\=${tomcat.home}\r\n    
+property.block.file=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working/property.block.txt
+require.build.wscore=true
+run.date=0909220952
+security.dist.relative.dir=common/resources/security
+software.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded
+sun.arch.data.model=32
+sun.boot.class.path=C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\rt.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\i18n.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\sunrsasign.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\jsse.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\jce.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\lib\\charsets.jar;C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\classes
+sun.boot.library.path=C\:\\Program Files\\Java\\jdk1.5.0_10\\jre\\bin
+sun.cpu.endian=little
+sun.cpu.isalist=
+sun.desktop=windows
+sun.io.unicode.encoding=UnicodeLittle
+sun.jnu.encoding=Cp1252
+sun.management.compiler=HotSpot Client Compiler
+sun.os.patch.level=Service Pack 2
+temp.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working\\temp
+template.dbintegrate.file=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\bda-utils\\resource\\template-db-integrate.xml
+tomcat.version.max=5.5.999
+tomcat.version.min=5.0.0
+tools.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\tools
+tools.dist.relative.dir=tools
+user.country=US
+user.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded
+user.home=C\:\\Documents and Settings\\pulkit_kumar
+user.language=en
+user.name=pulkit_kumar
+user.timezone=
+user.variant=
+validation.post.http.list=46210
+validation.post.socket.list=46230,46200,46240,46170,46250
+validation.pre.port.list=46230,46200,46240,46170,46210,46250
+web-console.classes.dir=c\:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/deploy/management/console-mgr.sar/web-console.war/WEB-INF/classes
+web-console.jboss-web-xml.file=c\:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/deploy/management/console-mgr.sar/web-console.war/WEB-INF/jboss-web.xml
+web-console.role.file=c\:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/conf/props/web-console-roles.properties
+web-console.role.matched=admin\=JBossAdmin\n
+web-console.user.file=c\:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/conf/props/web-console-users.properties
+web-console.user.matched=admin\=admin\n
+web-console.web-xml.file=c\:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/deploy/management/console-mgr.sar/web-console.war/WEB-INF/web.xml
+working.dir=D\:\\BDA\\DynamicExtentions\\software\\target\\dist\\exploded\\working
+     [echo] The following are ERRORS from the c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/log/server.log.
+     [echo] 2009-09-22 09:57:35,373 ERROR [STDERR] Initializing c3p0 pool... com.mchange.v2.c3p0.PoolBackedDataSource@1941dc9 [ connectionPoolDataSource -> com.mchange.v2.c3p0.WrapperConnectionPoolDataSource@63f6ea [ acquireIncrement -> 2, autoCommitOnClose -> false, connectionTesterClassName -> com.mchange.v2.c3p0.impl.DefaultConnectionTester, factoryClassLocation -> null, forceIgnoreUnresolvedTransactions -> false, idleConnectionTestPeriod -> 3000, initialPoolSize -> 2, maxIdleTime -> 5000, maxPoolSize -> 3, maxStatements -> 0, minPoolSize -> 2, nestedDataSource -> com.mchange.v2.c3p0.DriverManagerDataSource@12fa617 [ description -> null, driverClass -> null, factoryClassLocation -> null, jdbcUrl -> jdbc:oracle:thin:@localhost:1521:orcl, properties -> {user=DE_NBUSER, password=DE_NBUSER, release_mode=after_transaction} ] , propertyCycle -> 300, testConnectionOnCheckout -> false ] , factoryClassLocation -> null, numHelperThreads -> 3 ] 
+     [echo] 
+The following are WARNINGS from the c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA/server/default/log/server.log.
+     [echo] 2009-09-22 09:57:37,623 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.AbstractMetadata]; using defaults.
+2009-09-22 09:57:38,904 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.Role]; using defaults.
+2009-09-22 09:57:39,779 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.userinterface.Container]; using defaults.
+2009-09-22 09:57:40,154 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.DESQLAudit]; using defaults.
+2009-09-22 09:57:40,529 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.SemanticProperty]; using defaults.
+2009-09-22 09:57:40,904 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.TaggedValue]; using defaults.
+2009-09-22 09:57:40,983 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.AttributeTypeInformation.defaultValueCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.AbstractMetadata.taggedValueCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.CategoryAssociation.targetCategoryEntityCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.userinterface.Container.childContainerCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.PermissibleValue.semanticPropertyCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.CategoryAttribute.dataElementCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.Entity.primaryKeyAttributeCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.EntityGroup.entityCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.databaseproperties.ConstraintProperties.srcEntityConstraintKeyPropertiesCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.AbstractEntity.constraintPropertiesCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.CategoryAttribute.columnPropertiesCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.databaseproperties.ConstraintKeyProperties.tgtForiegnKeyColumnPropertiesCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.EntityGroup.mainContainerCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.AttributeRecord.fileRecordCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.CategoryAttribute.ruleCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.CategoryEntity.categoryAssociationCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.Attribute.columnPropertiesCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.FileAttributeTypeInformation.fileExtensionCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.AbstractAttribute.ruleCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.UserDefinedDE.permissibleValueCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.CategoryAttribute.defaultPermissibleValuesCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.AbstractEntity.containerCollection]; using defaults.
+2009-09-22 09:57:40,998 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.Category.relatedAttributeCategoryEntityCollection]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.userinterface.Container.controlCollection]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.Association.constraintPropertiesCollection]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.CategoryEntity.pathCollection]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.databaseproperties.ConstraintProperties.tgtEntityConstraintKeyPropertiesCollection]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.Path.pathAssociationRelationCollection]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.CategoryAttribute.calculatedCategoryAttributeCollection]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.Attribute.caDSRValueDomainInfoCollection]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.CategoryEntity.childCategories]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.CategoryAttribute.calculatedDependentCategoryAttributes]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.AbstractMetadata.semanticPropertyCollection]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.Entity.abstractAttributeCollection]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.CategoryEntity.categoryAttributeCollection]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.Attribute.attributeTypeInformationCollection]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.AttributeRecord.objectRecordCollection]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.AttributeTypeInformation.dataElementCollection]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.CategoryEntity.categoryCollection]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.AbstractEntity.tablePropertiesCollection]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.CategoryAssociation.constraintPropertiesCollection]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.AttributeRecord.valueCollection]; using defaults.
+2009-09-22 09:57:41,014 INFO  [STDOUT] WARN  [org.hibernate.cache.EhCacheProvider] 	Could not find configuration [edu.common.dynamicextensions.domain.CategoryAttribute.formulaCollection]; using defaults.
+     [echo] ******* INSTALLATION COMPLETED SUCESSFULLY *******
+     [echo] 
+To view your application goto http://localhost:46210/dynamicExtensions.
+     [copy] Copying 1 file to c:\apps\DynamicExtentions-webapp\jboss-4.2.2.GA
+
+install:
+
+BUILD SUCCESSFUL

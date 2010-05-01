@@ -1,0 +1,20 @@
+Form_Definition
+Date Calculation
+BMIDate
+Annotations~Annotations,PhysicalExam~Annotations:PhysicalExam
+
+Display_Label:BMIDate1,show=true
+instance:Annotations[1]->PhysicalExam[1]
+PhysicalExam:startDate,datePicker, Start Date,defaultValue=07-02-2009 15:07
+PhysicalExam:endDate,datePicker, End Date,defaultValue=05-2009
+PhysicalExam:duration,textField,Duration,options~IsReadOnly=true:IsCalculated=true,defaultValue=(PhysicalExam_1_endDate - PhysicalExam_1_startDate)
+
+Display_Label:BMIDate2,show=true
+instance:Annotations[1]->PhysicalExam[2]
+PhysicalExam:startDate,datePicker, Start Date,defaultValue=07-01-2009 14:07
+PhysicalExam:endDate,textField,Calculated DATE,options~IsCalculated=true,defaultValue=(PhysicalExam_2_startDate + 4)
+
+Display_Label:BMI Calculation,show=true
+instance:Annotations[1]
+subcategory:BMIDate1:single
+subcategory:BMIDate2:multiline

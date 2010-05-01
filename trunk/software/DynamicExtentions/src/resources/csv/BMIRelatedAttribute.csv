@@ -1,0 +1,25 @@
+Form_Definition
+BMI RA Calculation
+BMI
+Annotations~Annotations,PhysicalExam~Annotations:PhysicalExam
+
+Display_Label:BMI Data 1,show=true
+instance:Annotations[1]->PhysicalExam[1]
+PhysicalExam:height,textField, Enter Height (cm),defaultValue=150
+PhysicalExam:weight,textField, Enter Weight (Kg),defaultValue=55
+PhysicalExam:bmi,textField,Calculated BMI,options~IsReadOnly=true:IsCalculated=true,defaultValue=((PhysicalExam_1_weight)/((PhysicalExam_1_height)*(PhysicalExam_1_height)))
+
+Display_Label:BMI Data 2,show=true
+instance:Annotations[1]->PhysicalExam[2]
+PhysicalExam:height,textField, Enter Height (cm),defaultValue=160
+PhysicalExam:weight,textField, Enter Weight (Kg),defaultValue=65
+
+Display_Label:BMI Calculation,show=true
+instance:Annotations[1]
+subcategory:BMI Data 1:single
+subcategory:BMI Data 2:multiline
+
+RelatedAttribute:
+
+instance:Annotations[1]->PhysicalExam[2]
+PhysicalExam:bmi=((PhysicalExam_2_weight)/((PhysicalExam_2_height)*(PhysicalExam_2_height))),options~IsCalculated=true

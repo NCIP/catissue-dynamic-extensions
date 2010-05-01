@@ -1,0 +1,37 @@
+##TO TEST CONTROL VALIDATIONS 
+Form_Definition
+singleLineDisplaySameClass5
+scg
+RadicalProstatectomyPathologyAnnotation~RadicalProstatectomyPathologyAnnotation,GleasonScore~RadicalProstatectomyPathologyAnnotation:GleasonScore,HistologicGrade~RadicalProstatectomyPathologyAnnotation:HistologicGrade
+
+Display_Label:GleasonScore,show=true
+instance:RadicalProstatectomyPathologyAnnotation[1]->GleasonScore[1]
+## Two controls will be displayed with caption of the second control is hidden
+SingleLineDisplay:start
+GleasonScore:primaryPatternScore,listBox,Primary patternscore
+separator:':'
+GleasonScore:secondaryPatternScore,comboBox,Secondary patternscore,options~ShowLabel=false
+SingleLineDisplay:end
+GleasonScore:tertiaryPatternScore,comboBox,Teritory patternscore
+
+Display_Label:HistologicGrade,show=true
+instance:RadicalProstatectomyPathologyAnnotation[1]->HistologicGrade[1]
+SingleLineDisplay:start
+##HERE commonOptions FEATURE IS USED, WHICH CAN BE USED TO ASSIGN COMMON PROPERTIES TO THE CONTROLS
+##ON THE SAME LINE    
+
+HistologicGrade:otherGradingSystemName,listBox,Other grading system
+HistologicGrade:grade,listBox,Grade
+SingleLineDisplay:end
+HistologicGrade:gradingSystemName,comboBox,Grading sysname
+
+
+
+Display_Label:RadicalProstatectomyPathologyAnnotation,show=true
+instance:RadicalProstatectomyPathologyAnnotation[1]->RadicalProstatectomyPathologyAnnotation[1]
+SingleLineDisplay:start
+RadicalProstatectomyPathologyAnnotation:specimenProcedure,listBox, SP.procedure
+RadicalProstatectomyPathologyAnnotation:otherSpecimenProcedure,textField,Other sp. procedure
+SingleLineDisplay:end
+subcategory:GleasonScore:single
+subcategory:HistologicGrade:multiline

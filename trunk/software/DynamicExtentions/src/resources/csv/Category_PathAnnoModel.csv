@@ -1,0 +1,24 @@
+Form_Definition
+RadicalProstatectomyPathologyAnnotation_TestCaseCategory
+scg
+RadicalProstatectomyPathologyAnnotation~RadicalProstatectomyPathologyAnnotation,GleasonScore~RadicalProstatectomyPathologyAnnotation:GleasonScore,HistologicGrade~RadicalProstatectomyPathologyAnnotation:HistologicGrade
+
+Display_Label:GleasonScore,show=true
+instance:RadicalProstatectomyPathologyAnnotation[1]->GleasonScore[1]
+GleasonScore:primaryPatternScore,listBox,Primary patternscore
+GleasonScore:secondaryPatternScore,listBox,Secondary patternscore
+GleasonScore:tertiaryPatternScore,listBox,Teritory patternscore
+
+Display_Label:HistologicGrade,show=true
+instance:RadicalProstatectomyPathologyAnnotation[1]->HistologicGrade[1]
+HistologicGrade:gradingSystemName,listBox,Grading sysname
+HistologicGrade:otherGradingSystemName,textField,Other grading system,options~Columns=20:IsPassword=false
+HistologicGrade:grade,textField,Grade,options~Columns=20:IsPassword=false
+
+
+Display_Label:RadicalProstatectomyPathologyAnnotation,show=true
+instance:RadicalProstatectomyPathologyAnnotation[1]->RadicalProstatectomyPathologyAnnotation[1]
+RadicalProstatectomyPathologyAnnotation:specimenProcedure,listBox, SP.procedure
+RadicalProstatectomyPathologyAnnotation:otherSpecimenProcedure,textField,Other sp. procedure,options~Columns=20:IsPassword=false
+subcategory:GleasonScore:single
+subcategory:HistologicGrade:multiline
