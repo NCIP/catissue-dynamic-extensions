@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<metadataQuery>
+	<query name="tableNamesColumnNamesQuery" description="Querying metadata to get dynamically generated table names and column names">
+		<queryString>
+		select temp2.Table_Name ,temp2.Class_Name, temp2.attribute_name,db.name column_name from
+		DYEXTN_DATABASE_PROPERTIES db join
+		(select temp1.Table_Name ,temp1.Class_Name, cols.IDENTIFIER,temp1.attribute_name
+		from DYEXTN_COLUMN_PROPERTIES cols join
+		(select m3.Table_Name ,m3.Class_Name,m2.identifier attribute_Id,m1.NAME attribute_name
+		from DYEXTN_ABSTRACT_METADATA m1 ,DYEXTN_ATTRIBUTE  m2,
+		(select MT.identifier, PROP.name Table_Name, MT.name Class_Name from
+		DYEXTN_DATABASE_PROPERTIES PROP, DYEXTN_TABLE_PROPERTIES tp, DYEXTN_ABSTRACT_METADATA MT
+		where tp.ABSTRACT_ENTITY_ID = MT.IDENTIFIER and tp.IDENTIFIER = prop.IDENTIFIER and
+		MT.identifier in (select identifier from dyextn_entity where
+		ENTITY_GROUP_ID = (select identifier from DYEXTN_ENTITY_GROUP where
+		long_name = '@entityGroupName@')) and MT.name like '@entityName@') m3
+		where m1.IDENTIFIER =  m2.IDENTIFIER  and m2.ENTIY_ID = m3.identifier)temp1
+		on cols.PRIMITIVE_ATTRIBUTE_ID = temp1.attribute_Id ) temp2
+		on db.identifier = temp2.identifier
+		</queryString>
+		<rowHeader>
+			Class name,Table name,Attribute name,Column name
+		</rowHeader>
+		<paramNames>
+			@entityGroupName@,@entityName@
+		</paramNames>
+	</query>
+</metadataQuery>
