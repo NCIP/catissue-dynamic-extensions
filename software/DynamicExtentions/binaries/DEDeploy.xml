@@ -1437,4 +1437,24 @@
 		<antcall target="upgrade_db_from_DE_1.4.0_to_DE_1.4.2" />
 	</target>
 
+	<target name="query.metadata" description="Querying metadata to get dynamically generated table names and column names">
+			<antcall target="setupClassExecutionEnvironment" />
+			<java classname="edu.common.dynamicextensions.util.global.MetadataQueryUtility" fork="true" maxmemory="1024M">
+				<arg value="${de.temp.dir}/conf/metadataQuery.xml" />
+				<arg value="tableNamesColumnNamesQuery" />
+				<arg value="${entityGroupName}" />
+				<arg value="${entityName}" />
+				<classpath>
+					<pathelement location="${temp.dir.DE}" />
+					<fileset dir="${lib.dir.DE}">
+						<include name="*.jar" />
+						<exclude name="uml-1.3.jar" />
+					</fileset>
+					<fileset dir="${extra.lib.dir.DE}">
+						<include name="jboss-j2ee.jar" />
+						<include name="jta.jar" />
+					</fileset>
+				</classpath>
+			</java>
+		</target>
 </project>

@@ -295,6 +295,7 @@
 				<include name="DynamicExtensionsHibernateWeb.cfg.xml" />
 				<include name="log4j.properties.template" />
 				<include name="DynamicExtensionsAuditMetadata.xml" />
+				<include name="metadataQuery.xml" />
 			</fileset>
 		</copy>
 
@@ -1158,46 +1159,16 @@
 			<mkdir dir="${temp.hdoclet.dir}" />
 		</target>
 
-		<!-- DE release target start-->
-		<target name="de_release">
-			<antcall target="init_release" />
-			<antcall target="do_checkout">
-				<param name="repository.url" value="${svn.repository.url}" />
-				<param name="destination.dir" value="${temp.hdoclet.dir}/project" />
-				<param name="user.id" value="${svn.user.id}" />
-				<param name="user.password" value="${svn.user.password}" />
-			</antcall>
-			<antcall target="create_junit_reports_for_release" />
-			<if>
-				<contains substring="Windows" casesensitive="no" string="${os.name}" />
-				<then>
-					<exec dir="${basedir}/script" executable="cmd">
-						<arg line="/c create_release.bat" />
-					</exec>
-				</then>
-				<elseif>
-					<contains substring="Linux" casesensitive="no" string="${os.name}" />
-					<then>
-						<exec dir="${basedir}/script" executable="cmd">
-							<arg line="/c create_release.sh" />
-						</exec>
-					</then>
-				</elseif>
-				<else>
-					<if>
-						<contains substring="unix" casesensitive="no" string="${os.name}" />
-						<then>
-							<exec dir="${basedir}/script" executable="cmd">
-								<arg line="/c create_release.sh" />
-							</exec>
-						</then>
-					</if>
-				</else>
-			</if>
-			<copy file="${temp.hdoclet.dir}/project/software/DynamicExtentions/binaries/dynamicExtensions.zip" todir="${de_release_dir}" overwrite="true" />
-			<copy file="${temp.hdoclet.dir}/project/software/DynamicExtentions/binaries/DynamicExtensionsInterface/dynamicExtensions.jar" todir="${de_release_dir}" overwrite="true" />
-			<copy file="${temp.hdoclet.dir}/project/software/DynamicExtentions/binaries/categoryCreator.zip" todir="${de_release_dir}" overwrite="true" />
+		<!-- DE release target start -->
+		<target name="de.release" depends="create_dynamic_extensions_zip,build.formCreator.zip">
+			<copy file="binaries/dynamicExtensions.zip" todir="${de_release_dir}" overwrite="true" />
+			<copy file="binaries/DynamicExtensionsInterface/dynamicExtensions.jar" todir="${de_release_dir}" overwrite="true" />
+			<copy file="binaries/clientFormCreator.zip" todir="${de_release_dir}" overwrite="true" />
+			<copy file="binaries/DEDeploy.xml" todir="${de_release_dir}" overwrite="true" />
 		</target>
+
+
+
 		<!-- DE release target end-->
 
 		<target name="create_junit_reports_for_release" description="copies junit report">
