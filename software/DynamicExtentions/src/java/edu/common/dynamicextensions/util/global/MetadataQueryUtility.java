@@ -34,17 +34,49 @@ import edu.wustl.dao.exception.DAOException;
 public class MetadataQueryUtility
 {
 
+	/**
+	 * start of the parameter list in the args[]
+	 */
+	private static final int PARAMETER_VALUE_START = 2;
+
+	/**
+	 * SLQ query
+	 */
 	private String query;
+
+	/**
+	 * Parameter values to be replaced in the query
+	 */
 	private List<String> paramValueList;
+
+	/**
+	 * metadataQuery.xml path
+	 */
 	private final String metadataQueryFilepath;
+
+	/**
+	 * Header to be added in the csv
+	 */
 	private List<String> header;
+
+	/**
+	 * Parameter name list from the sql
+	 */
 	private List<String> paramNameList;
+
+	/**
+	 * JDBC DAO for executing query
+	 */
 	private final JDBCDAO jdbcdao;
 
 	static
 	{
 		LoggerConfig.configureLogger(System.getProperty("user.dir"));
 	}
+
+	/**
+	 * For logging
+	 */
 	private static final Logger LOGGER = Logger.getCommonLogger(CategoryCreator.class);
 
 	/**
@@ -92,7 +124,9 @@ public class MetadataQueryUtility
 		jdbcdao = DynamicExtensionsUtility.getJDBCDAO();
 	}
 
+
 	/**
+	 * @param args
 	 * @throws DAOException
 	 * @throws FileNotFoundException
 	 */
@@ -134,8 +168,9 @@ public class MetadataQueryUtility
 	 * @throws FileNotFoundException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public static void main(String args[]) throws DAOException, FileNotFoundException,
+	public static void main(String[] args) throws DAOException, FileNotFoundException,
 			DynamicExtensionsSystemException
+
 	{
 		/*args = new String[]{"query1", "NeuroOncPeds", "NeuroOncPedsRelapseProgression"};*/
 		/*for (String string : args)
@@ -183,7 +218,7 @@ public class MetadataQueryUtility
 	public void initParamValues(String[] strings)
 	{
 		paramValueList = new ArrayList<String>();
-		for (int i = 2; i < strings.length; i++)
+		for (int i = PARAMETER_VALUE_START; i < strings.length; i++)
 		{
 			if (strings[i].startsWith("${"))
 			{
