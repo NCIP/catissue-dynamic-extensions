@@ -109,7 +109,7 @@ public class CategoryCreator
 			//validate size of the folder is less than 500MB
 			DirOperationsUtility.validateFolderSizeForUpload(args[0], 500000000L);
 			zipFile = ZipUtility.zipFolder(args[0], "tempCategoryDir.zip");
-			String url = args[1] + "/CreateCategoryAction.do?";
+			String url = getCorrectedApplicationURL(args[1]) + "/CreateCategoryAction.do?";
 			String catFilename = "";
 			if (args.length > 2 && !"".equals(args[2].trim()))
 			{
@@ -125,6 +125,30 @@ public class CategoryCreator
 		}
 	}
 
+	/**
+	 * @param appUrl
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 */
+	private String getCorrectedApplicationURL(String appUrl)
+			throws DynamicExtensionsSystemException
+	{
+		if (appUrl.contains("\\"))
+		{
+			throw new DynamicExtensionsSystemException("In Application.url replace '\\' with '/'.");
+		}
+		if ('/' == appUrl.charAt(appUrl.length() - 1))
+		{
+			appUrl = appUrl.substring(0, appUrl.length() - 1);
+
+		}
+		return appUrl;
+
+	}
+
+	/**
+	 * @param args
+	 */
 	private void isMetadataOnly(String[] args)
 	{
 		if (args.length > 3 && args[3].equalsIgnoreCase("true"))
