@@ -200,8 +200,9 @@ public class CategoryHelper implements CategoryHelperInterface
 		}
 	}
 
+
 	/* (non-Javadoc)
-	 * @see edu.common.dynamicextensions.categoryManager.CategoryHelperInterface#createCategoryEntity(java.lang.String, edu.common.dynamicextensions.domaininterface.CategoryInterface[])
+	 * @see edu.common.dynamicextensions.util.CategoryHelperInterface#createOrUpdateCategoryEntityAndContainer(edu.common.dynamicextensions.domaininterface.EntityInterface, java.lang.String, edu.common.dynamicextensions.domaininterface.CategoryInterface, java.lang.String[])
 	 */
 	public ContainerInterface createOrUpdateCategoryEntityAndContainer(EntityInterface entity,
 			String containerCaptionValue, CategoryInterface category, String... categoryEntityName)
@@ -866,6 +867,11 @@ public class CategoryHelper implements CategoryHelperInterface
 		return textField;
 	}
 
+	/**
+	 * @param container
+	 * @param baseAbstractAttribute
+	 * @return
+	 */
 	private ControlInterface getControl(ContainerInterface container,
 			BaseAbstractAttributeInterface baseAbstractAttribute)
 	{
@@ -1165,13 +1171,11 @@ public class CategoryHelper implements CategoryHelperInterface
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 * @throws NoSuchMethodException
-	 * @throws SecurityException
 	 * @throws InvocationTargetException
-	 * @throws IllegalArgumentException
 	 */
-	private Object getFormattedValues(Class type, String string) throws SecurityException,
+	private Object getFormattedValues(Class type, String string) throws
 			NoSuchMethodException, InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException
+			InvocationTargetException
 	{
 		Method method = type.getMethod("valueOf", new Class[]{String.class});
 		return method.invoke(type, new Object[]{string});
@@ -1883,11 +1887,17 @@ public class CategoryHelper implements CategoryHelperInterface
 
 	}
 
+	/**
+	 * @return
+	 */
 	public CategoryFileParser getCategoryFileParser()
 	{
 		return categoryFileParser;
 	}
 
+	/**
+	 * @param categoryFileParser
+	 */
 	public void setCategoryFileParser(CategoryFileParser categoryFileParser)
 	{
 		this.categoryFileParser = categoryFileParser;
