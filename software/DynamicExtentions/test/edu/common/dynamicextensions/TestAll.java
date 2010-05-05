@@ -17,6 +17,7 @@ import edu.common.dynamicextensions.entitymanager.TestEntityMangerForXMIImportEx
 import edu.common.dynamicextensions.entitymanager.TestImportPermissibleValues;
 import edu.common.dynamicextensions.host.csd.util.TestCSDUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
+import edu.common.dynamicextensions.util.TestMetadataQueryUtil;
 
 /**
  * Test Suite for testing all DE  related classes.
@@ -47,6 +48,7 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 		suite.addTestSuite(TestCategoryManager.class);
 		suite.addTestSuite(TestXMLToCSVConverter.class);
 		suite.addTestSuite(TestCSDUtility.class);
+		suite.addTestSuite(TestMetadataQueryUtil.class);
 		return suite;
 	}
 }
