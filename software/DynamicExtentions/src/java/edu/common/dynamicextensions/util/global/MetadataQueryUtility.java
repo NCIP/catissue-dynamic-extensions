@@ -80,7 +80,7 @@ public class MetadataQueryUtility
 	private static final Logger LOGGER = Logger.getCommonLogger(CategoryCreator.class);
 
 	/**
-	 * @return
+	 * @return paramValueList paramValueList
 	 */
 	public List<String> getParamValueList()
 	{
@@ -88,7 +88,7 @@ public class MetadataQueryUtility
 	}
 
 	/**
-	 * @param paramValueList
+	 * @param paramValueList paramValueList
 	 */
 	public void setParamValueList(List<String> paramValueList)
 	{
@@ -96,24 +96,24 @@ public class MetadataQueryUtility
 	}
 
 	/**
-	 * @return
+	 * @return paramNameList
 	 */
-	public List<String> getParamNameList()
+	public final List<String> getParamNameList()
 	{
 		return paramNameList;
 	}
 
 	/**
-	 * @param paramNameList
+	 * @param paramNameList paramNameList
 	 */
-	public void setParamNameList(List<String> paramNameList)
+	public final void setParamNameList(List<String> paramNameList)
 	{
 		this.paramNameList = paramNameList;
 	}
 
 	/**
-	 * @param queryXmlPath
-	 * @param queryName
+	 * @param queryXmlPath metadataQuery.xml path
+	 * @param queryName query name
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public MetadataQueryUtility(String queryXmlPath, String queryName)
@@ -160,8 +160,7 @@ public class MetadataQueryUtility
 	}
 
 	/**
-	 * @param args
-	 * args[0] - metadataQuery.xml path
+	 * @param args args[0] - metadataQuery.xml path
 	 * args[1] - query to be executed
 	 * arguments 3rd onwards is the list of parameter value list to be rapleced in the query
 	 * @throws DAOException
@@ -212,10 +211,10 @@ public class MetadataQueryUtility
 	}
 
 	/**
-	 * @param strings
+	 * @param strings parameter values to be set
 	 * initializes the parameter values from arguments passed through  the ant task
 	 */
-	public void initParamValues(String[] strings)
+	public final void initParamValues(String[] strings)
 	{
 		paramValueList = new ArrayList<String>();
 		for (int i = PARAMETER_VALUE_START; i < strings.length; i++)
@@ -233,7 +232,7 @@ public class MetadataQueryUtility
 	}
 
 	/**
-	 * @param strings
+	 * @param parentNode query node
 	 * initializes the parameter names list from the comma separated list given in the metadataQuery.xml
 	 */
 	private void initParamNames(Node parentNode)
@@ -243,7 +242,7 @@ public class MetadataQueryUtility
 	}
 
 	/**
-	 * @param parentNode
+	 * @param parentNode query node
 	 */
 	private void initRowHeader(Node parentNode)
 	{
@@ -252,9 +251,9 @@ public class MetadataQueryUtility
 	}
 
 	/**
-	 * @param header
-	 * @param parentNode
-	 * @param tagName
+	 * @param header header list
+	 * @param parentNode query node
+	 * @param tagName header tag
 	 */
 	private void populateList(List<String> header, Node parentNode, String tagName)
 	{
@@ -265,7 +264,7 @@ public class MetadataQueryUtility
 	}
 
 	/**
-	 * @param queryName
+	 * @param queryName query to be executed
 	 * @throws DynamicExtensionsSystemException
 	 */
 	private void init(String queryName) throws DynamicExtensionsSystemException
@@ -322,6 +321,9 @@ public class MetadataQueryUtility
 
 	}
 
+	/**
+	 * @param queryNode query Node
+	 */
 	private void initQuery(Node queryNode)
 	{
 		query = getValueByTagName((Element) queryNode, "queryString");
@@ -329,9 +331,9 @@ public class MetadataQueryUtility
 	}
 
 	/**
-	 * @param firstTemplateElement
-	 * @param tagName
-	 * @return
+	 * @param firstTemplateElement tag element
+	 * @param tagName name of the tag
+	 * @return value for the given tag
 	 */
 	public static String getValueByTagName(Element firstTemplateElement, String tagName)
 	{
