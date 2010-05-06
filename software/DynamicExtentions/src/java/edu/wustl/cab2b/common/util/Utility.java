@@ -770,7 +770,7 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 	/**
 	 * Utility method to capitalize first character in the String
 	 */
-	private static String capitalizeFirstCharacter(String str)
+	protected static String capitalizeFirstCharacter(String str)
 	{
 		char[] chars = str.toCharArray();
 		char firstChar = chars[0];

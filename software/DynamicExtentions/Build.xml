@@ -898,6 +898,29 @@
 
 
 		</target>
+
+		<target name="import.caTissueCoreModel" description="Import caTissue Core Model into database">
+			<ant antfile="DEDeploy.xml" dir="./binaries/" target="import.xmi.for.testcases.without.caCore">
+				<property name="filename" value="${basedir}/${resource.dir}/xmi/catissueCore.xmi" />
+				<property name="mainContainerList" value="${basedir}/${resource.dir}/csv/caTissueStaticModelContainer.csv" />
+				<property name="package" value="edu.wustl.catissuecore.domain" />
+				<property name="hookentity" value="none" />
+				<property name="addQueryPaths" value="true" />
+				<property name="generate.cacore" value="false" />
+			</ant>
+		</target>
+
+		<target name="import.GeneconnectModel" description="Import Gene connect Model into database">
+			<ant antfile="DEDeploy.xml" dir="./binaries/" target="import.xmi.for.testcases.without.caCore">
+				<property name="filename" value="${basedir}/${resource.dir}/xmi/GeneConnect111.xmi" />
+				<property name="mainContainerList" value="${basedir}/${resource.dir}/csv/geneConnectModelContainer.csv" />
+				<property name="package" value="edu.wustl.geneconnect.domain" />
+				<property name="hookentity" value="none" />
+				<property name="addQueryPaths" value="true" />
+				<property name="generate.cacore" value="false" />
+			</ant>
+		</target>
+
 		<target name="import.pvs.testcases" description="Import permissible values for testcases">
 			<java classname="edu.common.dynamicextensions.util.parser.DynamicallyImportPermissibleValues" fork="true" maxmemory="1024M">
 				<arg value="${permissibleValuesFile}" />
@@ -952,7 +975,10 @@
 			<!--<ant target="checkout_test_model" />-->
 
 			<antcall target="import.static.and.test.model"/>
+			<antcall target="import.caTissueCoreModel"/>
+			<antcall target="import.GeneconnectModel"/>
 			<antcall target="deploy" />
+			
 			<ant target="run_junit" />
 			<ant antfile="src/conf/cobertura.xml" target="coverage.report" >
 				<property name="jboss.home.dir" value="${jboss.home.dir}" />

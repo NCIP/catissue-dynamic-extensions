@@ -18,6 +18,24 @@ import edu.common.dynamicextensions.entitymanager.TestImportPermissibleValues;
 import edu.common.dynamicextensions.host.csd.util.TestCSDUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
 import edu.common.dynamicextensions.util.TestMetadataQueryUtil;
+import edu.wustl.cab2b.client.metadatasearch.MetadataSearchTest;
+import edu.wustl.cab2b.client.ui.query.UtilityTest;
+import edu.wustl.cab2b.common.cache.CompareUtilTest;
+import edu.wustl.cab2b.common.util.IdGeneratorTest;
+import edu.wustl.cab2b.common.util.TreeNodeTest;
+import edu.wustl.cab2b.server.path.CuratedPathOperationsTest;
+import edu.wustl.cab2b.server.path.CuratedPathTest;
+import edu.wustl.cab2b.server.path.DataTypeTest;
+import edu.wustl.cab2b.server.path.DomainModelParserTest;
+import edu.wustl.cab2b.server.path.InterModelConnectionTest;
+import edu.wustl.cab2b.server.path.PathFinderTest;
+import edu.wustl.cab2b.server.path.PathRecordTest;
+import edu.wustl.cab2b.server.path.pathgen.GraphPathFinderTest;
+import edu.wustl.cab2b.server.util.ConnectionUtilTest;
+import edu.wustl.cab2b.server.util.DataFileLoaderTest;
+import edu.wustl.cab2b.server.util.DynamicExtensionUtilityTest;
+import edu.wustl.cab2b.server.util.InheritanceUtilTest;
+import edu.wustl.cab2b.server.util.SQLQueryUtilTest;
 
 /**
  * Test Suite for testing all DE  related classes.
@@ -49,6 +67,26 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 		suite.addTestSuite(TestXMLToCSVConverter.class);
 		suite.addTestSuite(TestCSDUtility.class);
 		suite.addTestSuite(TestMetadataQueryUtil.class);
+
+		suite.addTestSuite(MetadataSearchTest.class);
+		suite.addTestSuite(UtilityTest.class);
+		suite.addTestSuite(CompareUtilTest.class);
+		suite.addTestSuite(IdGeneratorTest.class);
+		suite.addTestSuite(TreeNodeTest.class);
+		suite.addTestSuite(edu.wustl.cab2b.common.util.UtilityTest.class);
+		suite.addTestSuite(CuratedPathOperationsTest.class);
+		suite.addTestSuite(CuratedPathTest.class);
+		suite.addTestSuite(DataTypeTest.class);
+		suite.addTestSuite(DomainModelParserTest.class);
+		suite.addTestSuite(InterModelConnectionTest.class);
+		suite.addTestSuite(PathFinderTest.class);
+		suite.addTestSuite(PathRecordTest.class);
+		suite.addTestSuite(GraphPathFinderTest.class);
+		suite.addTestSuite(ConnectionUtilTest.class);
+		suite.addTestSuite(DataFileLoaderTest.class);
+		suite.addTestSuite(DynamicExtensionUtilityTest.class);
+		suite.addTestSuite(InheritanceUtilTest.class);
+		suite.addTestSuite(SQLQueryUtilTest.class);
 		return suite;
 	}
 }
