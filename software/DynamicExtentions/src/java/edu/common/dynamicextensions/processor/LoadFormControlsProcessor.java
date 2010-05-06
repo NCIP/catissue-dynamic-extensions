@@ -24,16 +24,17 @@ import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.global.ApplicationProperties;
 
 /**
+ * The Class LoadFormControlsProcessor.
+ *
  * @author sujay_narkar
  * @author mandar_shidhore
- *
  */
 public class LoadFormControlsProcessor
 {
 
 	/**
-	 * Protected constructor for entity processor
-	 */
+     * Protected constructor for entity processor.
+     */
 	protected LoadFormControlsProcessor()
 	{
 		// TODO Auto-generated constructor stub
@@ -49,13 +50,18 @@ public class LoadFormControlsProcessor
 	}
 
 	/**
-	 *
-	 * @param controlsForm ControlsForm
-	 * @param container ContainerInterface
-	 * @return redirection page path
-	 * @throws DynamicExtensionsSystemException dynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
-	 */
+     * Load form controls.
+     *
+     * @param controlsForm
+     *            ControlsForm
+     * @param container
+     *            ContainerInterface
+     * @return redirection page path
+     * @throws DynamicExtensionsSystemException
+     *             dynamicExtensionsSystemException
+     * @throws DynamicExtensionsApplicationException
+     *             the dynamic extensions application exception
+     */
 	public void loadFormControls(ControlsForm controlsForm, ContainerInterface container)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
@@ -88,10 +94,15 @@ public class LoadFormControlsProcessor
 	}
 
 	/**
-	 * @param controlsForm
-	 * @param container
-	 * @throws DynamicExtensionsSystemException
-	 */
+     * Initialize form attribute values.
+     *
+     * @param controlsForm
+     *            the controls form
+     * @param container
+     *            the container
+     * @throws DynamicExtensionsSystemException
+     *             the dynamic extensions system exception
+     */
 	private void initializeFormAttributeValues(ControlsForm controlsForm,
 			ContainerInterface container) throws DynamicExtensionsSystemException
 	{
@@ -114,7 +125,7 @@ public class LoadFormControlsProcessor
 
 		// Set Entity Name as root.
 		EntityInterface entity = (EntityInterface) container.getAbstractEntity();
-		if (entity == null)
+		if (entity != null)
 		{
 			controlsForm.setRootName(entity.getName());
 		}
@@ -128,8 +139,11 @@ public class LoadFormControlsProcessor
 	}
 
 	/**
-	 * @param controlsForm
-	 */
+     * Adds the control.
+     *
+     * @param controlsForm
+     *            the controls form
+     */
 	private void addControl(ControlsForm controlsForm)
 	{
 		String userSelectedTool = controlsForm.getUserSelectedTool();
@@ -142,12 +156,19 @@ public class LoadFormControlsProcessor
 	}
 
 	/**
-	 * @param control
-	 * @param controlUIBean
-	 * @param attributeUIBean
-	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
-	 */
+     * Edits the control.
+     *
+     * @param control
+     *            the control
+     * @param controlUIBean
+     *            the control ui bean
+     * @param attributeUIBean
+     *            the attribute ui bean
+     * @throws DynamicExtensionsSystemException
+     *             the dynamic extensions system exception
+     * @throws DynamicExtensionsApplicationException
+     *             the dynamic extensions application exception
+     */
 	public void editControl(ControlInterface control, ControlUIBeanInterface controlUIBean,
 			AbstractAttributeUIBeanInterface attributeUIBean)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
@@ -173,11 +194,17 @@ public class LoadFormControlsProcessor
 	}
 
 	/**
-	 * @param controlsForm
-	 * @param container
-	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
-	 */
+     * Initialize control default values.
+     *
+     * @param controlsForm
+     *            the controls form
+     * @param container
+     *            the container
+     * @throws DynamicExtensionsSystemException
+     *             the dynamic extensions system exception
+     * @throws DynamicExtensionsApplicationException
+     *             the dynamic extensions application exception
+     */
 	private void initializeControlDefaultValues(ControlsForm controlsForm,
 			ContainerInterface container) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
@@ -213,8 +240,11 @@ public class LoadFormControlsProcessor
 	}
 
 	/**
-	 * @param controlsForm
-	 */
+     * Initialize file upload control default values.
+     *
+     * @param controlsForm
+     *            the controls form
+     */
 	private void initializeFileUploadControlDefaultValues(ControlsForm controlsForm)
 	{
 		if (controlsForm.getSupportedFileFormatsList() == null)
@@ -225,10 +255,12 @@ public class LoadFormControlsProcessor
 	}
 
 	/**
-	 * This method will separate out the file formats explicitly
-	 * specified by the user from the supported file format list.
-	 * @param controlsForm
-	 */
+     * This method will separate out the file formats explicitly specified by
+     * the user from the supported file format list.
+     *
+     * @param controlsForm
+     *            the controls form
+     */
 	private void initializeFileFormats(ControlsForm controlsForm)
 	{
 		String unsupFileFrmts = null;
@@ -259,8 +291,10 @@ public class LoadFormControlsProcessor
 	}
 
 	/**
-	 * @return List<String> list of file formats available for file control.
-	 */
+     * Gets the file formats list.
+     *
+     * @return List list of file formats available for file control.
+     */
 	private List<String> getFileFormatsList()
 	{
 		// Initialize the DynamicExtensionsFileFormats.properties file.
@@ -273,18 +307,25 @@ public class LoadFormControlsProcessor
 			fileFormats.add(strTokenizer.nextToken());
 		}
 
-		// Initialize the ApplicationResources.properties file once the purpose of file formats is complete.
+        // Initialize the ApplicationResources.properties file once the purpose
+        // of file formats is complete.
 		ApplicationProperties.initBundle("ApplicationResources");
 
 		return fileFormats;
 	}
 
 	/**
-	 * @param controlsForm
-	 * @param container
-	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
-	 */
+     * Initialize option button control default values.
+     *
+     * @param controlsForm
+     *            the controls form
+     * @param container
+     *            the container
+     * @throws DynamicExtensionsSystemException
+     *             the dynamic extensions system exception
+     * @throws DynamicExtensionsApplicationException
+     *             the dynamic extensions application exception
+     */
 	private void initializeOptionButtonControlDefaultValues(ControlsForm controlsForm,
 			ContainerInterface container) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
@@ -312,8 +353,11 @@ public class LoadFormControlsProcessor
 	}
 
 	/**
-	 * @param controlsForm
-	 */
+     * Initialize check box control default values.
+     *
+     * @param controlsForm
+     *            the controls form
+     */
 	private void initializeCheckBoxControlDefaultValues(ControlsForm controlsForm)
 	{
 		if (controlsForm.getAttributeDefaultValue() == null
@@ -324,8 +368,11 @@ public class LoadFormControlsProcessor
 	}
 
 	/**
-	 * @param controlsForm
-	 */
+     * Initialize date picker control default values.
+     *
+     * @param controlsForm
+     *            the controls form
+     */
 	private void initializeDatePickerControlDefaultValues(ControlsForm controlsForm)
 	{
 		// Date value type.
@@ -341,11 +388,17 @@ public class LoadFormControlsProcessor
 	}
 
 	/**
-	 * @param controlsForm
-	 * @param container
-	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
-	 */
+     * Initialize combobox control default values.
+     *
+     * @param controlsForm
+     *            the controls form
+     * @param container
+     *            the container
+     * @throws DynamicExtensionsSystemException
+     *             the dynamic extensions system exception
+     * @throws DynamicExtensionsApplicationException
+     *             the dynamic extensions application exception
+     */
 	private void initializeComboboxControlDefaultValues(ControlsForm controlsForm,
 			ContainerInterface container) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
@@ -381,8 +434,10 @@ public class LoadFormControlsProcessor
 	}
 
 	/**
-	 * @return List<NameValueBean> list of name value beans
-	 */
+     * Gets the separators list.
+     *
+     * @return List list of name value beans
+     */
 	private List<NameValueBean> getSeparatorsList()
 	{
 		ArrayList<NameValueBean> sprtrs = new ArrayList<NameValueBean>();
@@ -395,11 +450,16 @@ public class LoadFormControlsProcessor
 	}
 
 	/**
-	 * @param container
-	 * @return List<NameValueBean> list of name value beans
-	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
-	 */
+     * Gets the group names list.
+     *
+     * @param container
+     *            the container
+     * @return List list of name value beans
+     * @throws DynamicExtensionsSystemException
+     *             the dynamic extensions system exception
+     * @throws DynamicExtensionsApplicationException
+     *             the dynamic extensions application exception
+     */
 	private List<NameValueBean> getGroupNamesList(ContainerInterface container)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
@@ -417,8 +477,11 @@ public class LoadFormControlsProcessor
 	}
 
 	/**
-	 * @param controlsForm
-	 */
+     * Initialize text control default values.
+     *
+     * @param controlsForm
+     *            the controls form
+     */
 	private void initializeTextControlDefaultValues(ControlsForm controlsForm)
 	{
 		// Default Data type.
@@ -439,9 +502,10 @@ public class LoadFormControlsProcessor
 	}
 
 	/**
-	 * Get a List of measurement units.
-	 * @return List<String>
-	 */
+     * Get a List of measurement units.
+     *
+     * @return List
+     */
 	private List<String> getListOfMeasurementUnits()
 	{
 		List<String> measurementUnits = new ArrayList<String>();
@@ -456,10 +520,14 @@ public class LoadFormControlsProcessor
 	}
 
 	/**
-	 * @param controlName Name of the control
-	 * @return Map ControlRulesMap
-	 * @throws DynamicExtensionsSystemException
-	 */
+     * Gets the control rules map.
+     *
+     * @param controlName
+     *            Name of the control
+     * @return Map ControlRulesMap
+     * @throws DynamicExtensionsSystemException
+     *             the dynamic extensions system exception
+     */
 	private Map getControlRulesMap(String controlName) throws DynamicExtensionsSystemException
 	{
 		ControlConfigurationsFactory ctrlCfgFact = ControlConfigurationsFactory.getInstance();
@@ -467,10 +535,14 @@ public class LoadFormControlsProcessor
 	}
 
 	/**
-	 * @param controlsForm
-	 * @param container
-	 * @return ControlInterface selected control.
-	 */
+     * Gets the selected control.
+     *
+     * @param controlsForm
+     *            the controls form
+     * @param container
+     *            the container
+     * @return ControlInterface selected control.
+     */
 	public ControlInterface getSelectedControl(ControlsForm controlsForm,
 			ContainerInterface container)
 	{
