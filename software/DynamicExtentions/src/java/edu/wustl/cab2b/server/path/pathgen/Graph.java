@@ -12,13 +12,16 @@ import java.util.Set;
  * @see edu.wustl.cab2b.server.path.pathgen.Node
  * @author srinath_k
  */
-public class Graph
+public class Graph implements Cloneable
 {
 
-	private Map<Node, Set<Node>> graphNodes;
+	/**
+     * The graph nodes.
+     */
+	private transient Map<Node, Set<Node>> graphNodes;
 
 	/**
-	 * Default constructor for Graph
+	 * Default constructor for Graph.
 	 */
 	public Graph()
 	{
@@ -51,10 +54,22 @@ public class Graph
 			throw new IllegalArgumentException("Adjacency matrix must be square.");
 		}
 		graphNodes = new HashMap<Node, Set<Node>>();
-		Node[] nodes = new Node[adjacencyMatrix.length];
+		addNodesToGraph(adjacencyMatrix);
+	}
+
+
+    /**
+     * Adds the nodes to graph.
+     *
+     * @param adjacencyMatrix
+     *            the adjacency matrix
+     */
+    private void addNodesToGraph(boolean[][] adjacencyMatrix)
+    {
+        Node[] nodes = new Node[adjacencyMatrix.length];
 		for (int i = 0; i < adjacencyMatrix.length; i++)
 		{
-			nodes[i] = new Node(i);
+			nodes[i] = getNode(i);
 			addNode(nodes[i]);
 		}
 		for (int i = 0; i < adjacencyMatrix.length; i++)
@@ -67,14 +82,29 @@ public class Graph
 				}
 			}
 		}
-	}
+    }
 
 	/**
-	 * Adds adjacent nodes
-	 * @param fromNode
-	 * @param toNode
-	 */
-	public void addAdjacentNode(Node fromNode, Node toNode)
+     * Gets the node.
+     *
+     * @param index
+     *            the index
+     * @return the node
+     */
+	private Node getNode(int index)
+    {
+        return new Node(index);
+    }
+
+    /**
+     * Adds adjacent nodes.
+     *
+     * @param fromNode
+     *            the from node
+     * @param toNode
+     *            the to node
+     */
+	public final void addAdjacentNode(Node fromNode, Node toNode)
 	{
 		if (!containsNode(fromNode))
 		{
@@ -84,71 +114,88 @@ public class Graph
 	}
 
 	/**
-	 * Adds new Node
-	 * @param node
-	 */
-	public void addNode(Node node)
+     * Adds new Node.
+     *
+     * @param node
+     *            the node
+     */
+	public final void addNode(Node node)
 	{
 		graphNodes.put(node, new HashSet<Node>());
 	}
 
 	/**
-	 * Removes a Node from Graph
-	 * @param node
-	 * @return
-	 */
+     * Removes a Node from Graph.
+     *
+     * @param node
+     *            the node
+     * @return true, if successful
+     */
 	public boolean removeNode(Node node)
 	{
+	    boolean isNodeRemoved = true; // NOPMD by gaurav_sawant on 5/6/10 11:16 AM
 		if (!containsNode(node))
 		{
-			return false;
+		    isNodeRemoved = false;
 		}
 		graphNodes.remove(node);
 		for (Node fromNode : graphNodes.keySet())
 		{
 			removeEdge(fromNode, node);
 		}
-		return true;
+		return isNodeRemoved;
 	}
 
 	/**
-	 * Removes edge from Graph
-	 * @param fromNode
-	 * @param toNode
-	 * @return
-	 */
+     * Removes edge from Graph.
+     *
+     * @param fromNode
+     *            the from node
+     * @param toNode
+     *            the to node
+     * @return true, if successful
+     */
 	public boolean removeEdge(Node fromNode, Node toNode)
 	{
+	    boolean isEdgeRemoved = true; // NOPMD by gaurav_sawant on 5/6/10 11:16 AM
 		if (!containsNode(fromNode))
 		{
-			return false;
+		    isEdgeRemoved = false; // NOPMD by gaurav_sawant on 5/6/10 11:16 AM
 		}
-		return getAdjacentNodes(fromNode).remove(toNode);
+		isEdgeRemoved = getAdjacentNodes(fromNode).remove(toNode);
+		return isEdgeRemoved;
 	}
 
 	/**
-	 * Node y is adjacent to node x iff edge (x,y) exists.
-	 * @return set of adjacent nodes.
-	 */
+     * Node y is adjacent to node x iff edge (x,y) exists.
+     *
+     * @param node
+     *            the node
+     * @return set of adjacent nodes.
+     */
 	public Set<Node> getAdjacentNodes(Node node)
 	{
 		return graphNodes.get(node);
 	}
 
 	/**
-	 * Check whether Node is in Graph or not
-	 * @param node
-	 * @return
-	 */
-	public boolean containsNode(Node node)
+     * Check whether Node is in Graph or not.
+     *
+     * @param node
+     *            the node
+     * @return true, if successful
+     */
+	public final boolean containsNode(Node node)
 	{
 		return graphNodes.containsKey(node);
 	}
 
 	/**
-	 * Overrides Object clone method.
-	 * @see java.lang.Object#clone()
-	 */
+     * Overrides Object clone method.
+     *
+     * @return the graph
+     * @see java.lang.Object#clone()
+     */
 	public Graph clone()
 	{
 		Graph clone = new Graph();
@@ -166,70 +213,84 @@ public class Graph
 	}
 
 	/**
-	 * Returns no. of node in Graph
-	 * @return
-	 */
+     * Returns no. of node in Graph.
+     *
+     * @return no. of node in Graph
+     */
 	public int numberOfNodes()
 	{
 		return graphNodes.size();
 	}
 
 	/**
-	 * Returns all nodes
-	 * @return
-	 */
+     * Returns all nodes.
+     *
+     * @return the set
+     */
 	public Set<Node> allNodes()
 	{
 		return graphNodes.keySet();
 	}
 
 	/**
-	 * Clears Graph
-	 */
+     * Clears Graph.
+     */
 	public void clear()
 	{
 		graphNodes.clear();
 	}
 
 	/**
-	 * Checks whether edge present in Graph or not.
-	 * @param fromNode
-	 * @param toNode
-	 * @return
-	 */
+     * Checks whether edge present in Graph or not.
+     *
+     * @param fromNode
+     *            the from node
+     * @param toNode
+     *            the to node
+     * @return true, if is edge present
+     */
 	public boolean isEdgePresent(Node fromNode, Node toNode)
 	{
+	    boolean isPresent = true; // NOPMD by gaurav_sawant on 5/6/10 11:16 AM
 		if (!containsNode(fromNode))
 		{
-			return false;
+		    isPresent = false; // NOPMD by gaurav_sawant on 5/6/10 11:17 AM
 		}
-		return getAdjacentNodes(fromNode).contains(toNode);
+		isPresent = getAdjacentNodes(fromNode).contains(toNode);
+		return isPresent;
 	}
 
 	/**
-	 * Overrides Object equals. Returns
-	 * @param obj
-	 * @return true if this object is equal to obj
-	 * @see java.lang.Object#equals(Object)
-	 */
+     * Overrides Object equals. Returns
+     *
+     * @param obj
+     *            the obj
+     * @return true if this object is equal to obj
+     * @see java.lang.Object#equals(Object)
+     */
+	@Override
 	public boolean equals(Object obj)
 	{
+	    boolean isEqual = true; // NOPMD by gaurav_sawant on 5/6/10 11:17 AM
 		if (this == obj)
 		{
-			return true;
+		    isEqual = true; // NOPMD by gaurav_sawant on 5/6/10 11:17 AM
 		}
 		if (!(obj instanceof Graph))
 		{
-			return false;
+		    isEqual = false; // NOPMD by gaurav_sawant on 5/6/10 11:17 AM
 		}
 		Graph otherGraph = (Graph) obj;
-		return graphNodes.equals(otherGraph.graphNodes);
+		isEqual = graphNodes.equals(otherGraph.graphNodes);
+		return isEqual;
 	}
 
 	/**
-	 * @return hash code
-	 * @see java.lang.Object#hashCode()
-	 */
+     * Hash code.
+     *
+     * @return hash code
+     * @see java.lang.Object#hashCode()
+     */
 	public int hashCode()
 	{
 		return graphNodes.hashCode();
