@@ -113,7 +113,7 @@ public class ControlsForm extends CommonControlModel
 	 */
 	private void getErrorsForCheckBoxControl(ActionErrors errors)
 	{
-		// Radio button checked status 
+		// Radio button checked status
 		if (attributeDefaultValue == null)
 		{
 			errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("errors.item.required",
@@ -148,7 +148,7 @@ public class ControlsForm extends CommonControlModel
 	 */
 	private void getErrorsForDatePickerControl(ActionErrors errors)
 	{
-		String dateFormat = DynamicExtensionsUtility.getDateFormat(this.format);
+		String dateFormat = DynamicExtensionsUtility.getDateFormat(format);
 
 		//check for date format of default value field
 		//if dateValueType is "Select" then default value cannot be blank and should be valid date
@@ -192,21 +192,21 @@ public class ControlsForm extends CommonControlModel
 			{
 				if ((min != null) && !(min.equals("")) && (max != null) && !(max.equals("")))
 				{
-					if ((!DynamicExtensionsUtility.isDateValid(dateFormat, this.min)))
+					if ((!DynamicExtensionsUtility.isDateValid(dateFormat, min)))
 					{
 						errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("errors.date.format",
 								ApplicationProperties.getValue("eav.att.Minimum")));
 						isValid = false;
 					}
 
-					if ((!DynamicExtensionsUtility.isDateValid(dateFormat, this.max)))
+					if ((!DynamicExtensionsUtility.isDateValid(dateFormat, max)))
 					{
 						errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("errors.date.format",
 								ApplicationProperties.getValue("eav.att.Maximum")));
 						isValid = false;
 					}
 
-					if (DynamicExtensionsUtility.compareDates(this.min, this.max, dateFormat) > 0
+					if (DynamicExtensionsUtility.compareDates(min, max, dateFormat) > 0
 							&& isValid)
 					{
 						errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("errors.date.range",
@@ -235,14 +235,16 @@ public class ControlsForm extends CommonControlModel
 					ApplicationProperties.getValue("eav.att.ListBoxType")));
 		}
 
-		if ((attributeMultiSelect != null && attributeMultiSelect.equalsIgnoreCase("SingleSelect")
-				|| attributeMultiSelect.equalsIgnoreCase("MultiSelect"))&&
-				(displayChoice != null
-						&& displayChoice
-								.equalsIgnoreCase(ProcessorConstants.DISPLAY_CHOICE_USER_DEFINED)
-						&& csvString.length() == 0 || csvString.equalsIgnoreCase("0\t0\t\t\t\r\n")))
-		{
-			
+        if ((attributeMultiSelect != null &&
+                (attributeMultiSelect.equalsIgnoreCase("SingleSelect") ||
+                        attributeMultiSelect.equalsIgnoreCase("MultiSelect")))
+                && (displayChoice != null
+                        && displayChoice
+                                .equalsIgnoreCase(ProcessorConstants.DISPLAY_CHOICE_USER_DEFINED)
+                        && csvString.length() == 0 || csvString
+                        .equalsIgnoreCase("0\t0\t\t\t\r\n")))
+        {
+
 				errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("errors.item.required",
 						ApplicationProperties.getValue("dynExtn.validation.listCombo.NoPV")));
 		}
@@ -314,9 +316,9 @@ public class ControlsForm extends CommonControlModel
 	 */
 	private void getErrorsForNumericDatatype(Validator validator, ActionErrors errors)
 	{
-		if (this.attributeDecimalPlaces.trim().length() == 0)
+		if (attributeDecimalPlaces.trim().length() == 0)
 		{
-			this.attributeDecimalPlaces = "0";
+			attributeDecimalPlaces = "0";
 		}
 		if (!isNaturalNumber(attributeDecimalPlaces))
 		{
@@ -324,7 +326,7 @@ public class ControlsForm extends CommonControlModel
 					"errors.item.naturalNumericField", ApplicationProperties
 							.getValue("eav.att.AttributeDecimalPlaces")));
 		}
-		else if (Integer.parseInt(this.attributeDecimalPlaces) > edu.common.dynamicextensions.ui.util.Constants.DOUBLE_PRECISION)
+		else if (Integer.parseInt(attributeDecimalPlaces) > edu.common.dynamicextensions.ui.util.Constants.DOUBLE_PRECISION)
 		{
 			errors
 					.add(
@@ -409,11 +411,11 @@ public class ControlsForm extends CommonControlModel
 		if ((linesType != null) && (linesType.equals(ProcessorConstants.LINE_TYPE_MULTILINE))
 				&& !isNaturalNumber(attributeNoOfRows))
 		{
-		
+
 				errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
 						"errors.item.naturalNumericField", ApplicationProperties
 								.getValue("eav.text.noOfLines")));
-		
+
 		}
 	}
 
@@ -523,6 +525,10 @@ public class ControlsForm extends CommonControlModel
 		{
 			if (min != null && max != null && !min.equals("") && !max.equals(""))
 			{
+			    if (min.length() == 0 || max.length() == 0)
+			    {
+			        isValid = false;
+			    }
 				double doubleMin = Double.parseDouble(min);
 				double doubleMax = Double.parseDouble(max);
 
@@ -531,10 +537,11 @@ public class ControlsForm extends CommonControlModel
 					isValid = false;
 				}
 			}
-			else if (min.length() == 0 || max.length() == 0)
-			{
-				isValid = false;
-			}
+//            else if (min != null && max != null
+//                    && (min.length() == 0 || max.length() == 0))
+//            {
+//                isValid = false;
+//            }
 		}
 		return isValid;
 	}
