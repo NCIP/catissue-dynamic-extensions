@@ -17,8 +17,8 @@ import edu.common.dynamicextensions.exception.DataTypeFactoryInitializationExcep
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 
 /**
- * This is a Singleton class which parses the XML file that consists of mapping between PrimitiveAttribute 
- * and Database DataTypes and generates the Map of the same. 
+ * This is a Singleton class which parses the XML file that consists of mapping between PrimitiveAttribute
+ * and Database DataTypes and generates the Map of the same.
  * @author chetan_patil
  */
 /**
@@ -29,12 +29,12 @@ public class DataTypeFactory
 {
 
 	/**
-	 * 
+	 *
 	 */
 	private static DataTypeFactory dataTypeFactoryObj = null;
 
 	/**
-	 * 
+	 *
 	 */
 	private Map<String, Object> dataTypeMap;
 
@@ -57,8 +57,8 @@ public class DataTypeFactory
 		if (dataTypeFactoryObj == null)
 		{
 			String appName=DynamicExtensionDAO.getInstance().getAppName();
-			String dbType = DAOConfigFactory.getInstance().getDAOFactory(appName).getDataBaseType();				
-			String dataTypeMappingFileName=DynamicExtensionDBFactory.getInstance().getDataTypeMappingFile(dbType);			
+			String dbType = DAOConfigFactory.getInstance().getDAOFactory(appName).getDataBaseType();
+			String dataTypeMappingFileName=DynamicExtensionDBFactory.getInstance().getDataTypeMappingFile(dbType);
 			dataTypeFactoryObj = new DataTypeFactory();
 			dataTypeFactoryObj.populateDataTypeMap(dataTypeMappingFileName);
 		}
@@ -75,45 +75,36 @@ public class DataTypeFactory
 			throws DataTypeFactoryInitializationException
 	{
 		dataTypeMap = new HashMap<String, Object>();
-
 		SAXReader saxReader = new SAXReader();
 		InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(xmlFileName);
-
-		Document document = null;
-
+		Document document = null; // NOPMD by gaurav_sawant on 5/6/10 7:55 PM
 		try
 		{
 			document = saxReader.read(inputStream);
-			Element name = null;
-			Element databaseDataType = null;
-			Element digitsBeforeDecimal = null;
-			Element digitsAfterDecimal = null;
+			Element name = null; // NOPMD by gaurav_sawant
+			Element databaseDataType = null; // NOPMD by gaurav_sawant
+			Element digitsBeforeDecimal = null; // NOPMD by gaurav_sawant
+			Element digitsAfterDecimal = null; // NOPMD by gaurav_sawant
 
 			Element primitiveAttributesElement = document.getRootElement();
 			Iterator primitiveAttrElementIterator = primitiveAttributesElement
 					.elementIterator("Primitive-Attribute");
-
-			Element primitiveAttributeElement = null;
-
+			Element primitiveAttributeElement = null; // NOPMD by gaurav_sawant
 			while (primitiveAttrElementIterator.hasNext())
 			{
 				primitiveAttributeElement = (Element) primitiveAttrElementIterator.next();
-
 				name = primitiveAttributeElement.element("name");
 				databaseDataType = primitiveAttributeElement.element("database-datatype");
 				digitsBeforeDecimal = primitiveAttributeElement.element("digits-before-decimal");
 				digitsAfterDecimal = primitiveAttributeElement.element("digits-after-decimal");
-
 				DataTypeInformation dataTypeInfo = new DataTypeInformation();
 				dataTypeInfo.setName(name.getStringValue());
 				dataTypeInfo.setDatabaseDataType(databaseDataType.getStringValue());
-
 				if (digitsBeforeDecimal != null && digitsAfterDecimal != null)
 				{
 					dataTypeInfo.setDigitsBeforeDecimal(digitsBeforeDecimal.getStringValue());
 					dataTypeInfo.setDigitsAfterDecimal(digitsAfterDecimal.getStringValue());
 				}
-
 				dataTypeMap.put(name.getStringValue(), dataTypeInfo);
 			}
 		}
@@ -121,7 +112,6 @@ public class DataTypeFactory
 		{
 			throw new DataTypeFactoryInitializationException(documentException);
 		}
-
 		return dataTypeMap;
 	}
 
@@ -135,7 +125,7 @@ public class DataTypeFactory
 	public String getDatabaseDataType(String primitiveAttribute)
 			throws DataTypeFactoryInitializationException
 	{
-		String databaseDataType = null;
+		String databaseDataType = null; // NOPMD by gaurav_sawant
 		if (dataTypeMap == null)
 		{
 			throw new DataTypeFactoryInitializationException("Cannot find populated dataType Map.");
@@ -159,7 +149,7 @@ public class DataTypeFactory
 	 */
 	public DataTypeInformation getDataTypePrecisionScaleInformation(String dataType)
 	{
-		DataTypeInformation dataTypeInfo = null;
+		DataTypeInformation dataTypeInfo = null; // NOPMD by gaurav_sawant
 		if(dataTypeMap != null)
 		{
 			dataTypeInfo=(DataTypeInformation) dataTypeMap.get(dataType);
