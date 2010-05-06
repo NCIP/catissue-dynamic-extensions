@@ -169,7 +169,7 @@ public class TreeNode<T> implements Serializable
     public boolean equals(Object obj)
     {
         boolean flag = false;
-        if (!TreeNode.class.equals(obj.getClass()))
+        if (obj != null && obj instanceof TreeNode<?>)
         {
             TreeNode<T> treeNode = (TreeNode<T>) obj;
             if (this.getValue().equals(treeNode.getValue())
