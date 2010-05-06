@@ -35,7 +35,7 @@ public class UploadFileAction extends BaseDynamicExtensionsAction
 
 		String totalRows = request.getParameter("totalRows");
 		int rowNos = 0;
-		if (totalRows != null || !"".equals(totalRows))
+		if (totalRows != null && !"".equals(totalRows))
 		{
 			rowNos = Integer.parseInt(totalRows);
 		}
