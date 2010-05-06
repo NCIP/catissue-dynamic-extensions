@@ -717,7 +717,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 				contentType = request.getParameter(controlName + "_contentType");
 			}
 
-			if (fileName.length() == 0 || contentType.length() == 0 || fileId == 0)
+			if (fileName != null && fileName.length() == 0 || contentType.length() == 0 || fileId == 0)
 			{
 				if (request.getParameter(controlName + "_hidden") == null)
 				{
@@ -748,11 +748,11 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 						fileUploadManager.deleteRecord(fileId);
 					}
 				}
-				catch (SQLException e)
-				{
-					new DynamicExtensionsSystemException("Error while fetching file from Database",
-							e);
-				}
+                catch (SQLException e)
+                {
+                    throw new DynamicExtensionsSystemException(
+                            "Error while fetching file from Database", e);
+                }
 			}
 		}
 		else if (control instanceof ComboBoxInterface)
