@@ -444,7 +444,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		}
 		else
 		{
-			if (values == null || values.isEmpty())
+			if (values != null && values.isEmpty())
 			{
 				values.add(getSkipLogicDefaultValue());
 			}

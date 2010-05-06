@@ -415,10 +415,12 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 
 						if (placesAfterDecimal != decimalPlaces)
 						{
+						    StringBuilder val = new StringBuilder(value);
 							for (int j = decimalPlaces; j > placesAfterDecimal; j--)
 							{
-								value = value + "0";
+								val.append("0");
 							}
+							value = val.toString();
 							recordMap.put(currentAttribute, value);
 						}
 					}

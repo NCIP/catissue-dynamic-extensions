@@ -38,11 +38,11 @@ public class LoadGroupDefinitionProcessor extends BaseDynamicExtensionsProcessor
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entityGroup Object that contains information of  group
 	 * @param groupForm : Form object
-	 * @throws DynamicExtensionsApplicationException 
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public void loadGroupDetails(EntityGroupInterface entityGroup, GroupUIBeanInterface groupUIBean)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
@@ -64,12 +64,12 @@ public class LoadGroupDefinitionProcessor extends BaseDynamicExtensionsProcessor
 			{
 				groupUIBean.setCreateGroupAs(ProcessorConstants.DEFAULT_GROUP_CREATEAS);
 			}
+			groupUIBean.setGroupList(populateGroupList());
 		}
-		groupUIBean.setGroupList(populateGroupList());
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
@@ -78,7 +78,7 @@ public class LoadGroupDefinitionProcessor extends BaseDynamicExtensionsProcessor
 			DynamicExtensionsApplicationException
 	{
 		EntityManagerInterface entityManagerInterface = EntityManager.getInstance();
-		Collection entityGroupCollection = (Collection) entityManagerInterface
+		Collection entityGroupCollection = entityManagerInterface
 				.getAllEntityGroupBeans();
 		List<NameValueBean> groupList = new ArrayList<NameValueBean>(entityGroupCollection);
 

@@ -89,21 +89,21 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 		List<String> values = getValueAsStrings();
 		String disabled = "";
 		//		If control is defined as readonly through category CSV file,make it Disabled
-		if ((this.isReadOnly != null && getIsReadOnly())
-				|| (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly))
+		if ((isReadOnly != null && getIsReadOnly())
+				|| (isSkipLogicReadOnly != null && isSkipLogicReadOnly))
 		{
 			disabled = ProcessorConstants.DISABLED;
 		}
 		String htmlComponentName = getHTMLComponentName();
 		String parentContainerId = "";
-		if (this.getParentContainer() != null && this.getParentContainer().getId() != null)
+		if (getParentContainer() != null && getParentContainer().getId() != null)
 		{
-			parentContainerId = this.getParentContainer().getId().toString();
+			parentContainerId = getParentContainer().getId().toString();
 		}
 		String identifier = "";
-		if (this.getId() != null)
+		if (getId() != null)
 		{
-			identifier = this.getId().toString();
+			identifier = getId().toString();
 		}
 		if (getIsSkipLogicTargetControl())
 		{
@@ -113,9 +113,9 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 		if (listOfValues == null)
 		{
 			List<String> sourceControlValues = null;
-			if (this.getSourceSkipControl() != null)
+			if (getSourceSkipControl() != null)
 			{
-				sourceControlValues = this.getSourceSkipControl().getValueAsStrings();
+				sourceControlValues = getSourceSkipControl().getValueAsStrings();
 			}
 			nameValueBeans = ControlsUtility.populateListOfValues(this, sourceControlValues);
 		}
@@ -128,7 +128,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 						&& values.contains(nameValueBean.getValue()))
 				{
 					htmlString += "<input type='checkbox' class='"
-							+ this.cssClass
+							+ cssClass
 							+ "' name='"
 							+ htmlComponentName
 							+ "' checkedValue='"
@@ -145,10 +145,10 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 							+ " checked"
 							+ disabled
 							+ " onchange='isDataChanged();' ondblclick=\"changeValueForAllCheckBoxes(this);"
-							+ (this.isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
+							+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
 									+ "','" + identifier + "','" + parentContainerId + "');" : "")
 							+ "\" onclick=\"changeValueForMultiSelectCheckBox(this);"
-							+ (this.isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
+							+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
 									+ "','" + identifier + "','" + parentContainerId + "');" : "")
 							+ "\" /><img src='images/de/spacer.gif' width='2' height='2'>"
 							+ "<label for=\"" + htmlComponentName + "\">" + DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean.getName())
@@ -157,7 +157,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 				else
 				{
 					htmlString += "<input type='checkbox' class='"
-							+ this.cssClass
+							+ cssClass
 							+ "' name='"
 							+ htmlComponentName
 							+ "' checkedValue='"
@@ -173,10 +173,10 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 							+ nameValueBean.getValue()
 							+ "'"
 							+ " onchange='isDataChanged();' ondblclick=\"changeValueForAllCheckBoxes(this);"
-							+ (this.isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
+							+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
 									+ "','" + identifier + "','" + parentContainerId + "');" : "")
 							+ "\" onclick=\"changeValueForMultiSelectCheckBox(this);"
-							+ (this.isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
+							+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
 									+ "','" + identifier + "','" + parentContainerId + "');" : "")
 							+ "\" /><img src='images/de/spacer.gif' width='2' height='2'>"
 							+ "<label for=\"" + htmlComponentName + "\">" + nameValueBean.getName()
@@ -213,7 +213,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 			}
 			else
 			{
-				selectedOptions = (List<String>) this.value;
+				selectedOptions = (List<String>) value;
 			}
 		}
 		else
@@ -263,7 +263,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 			}
 			else
 			{
-				values = (List<String>) this.value;
+				values = (List<String>) value;
 			}
 		}
 		else
@@ -276,7 +276,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 			{
 				String defaultValue = null;
 				values = new ArrayList<String>();
-				AttributeMetadataInterface attrMetadataInterface = this.getAttibuteMetadataInterface();
+				AttributeMetadataInterface attrMetadataInterface = getAttibuteMetadataInterface();
 				if (attrMetadataInterface != null)
 				{
 					if (attrMetadataInterface instanceof CategoryAttributeInterface)
@@ -301,7 +301,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 		}
 		else
 		{
-			if (values == null || values.isEmpty())
+			if (values != null && values.isEmpty())
 			{
 				values.add(getSkipLogicDefaultValue());
 			}

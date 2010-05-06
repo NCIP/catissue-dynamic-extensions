@@ -1903,12 +1903,17 @@ public class DynamicExtensionsUtility
 	}
 
 	/**
-	 * This method used to replace escape characters such as single and double quote
-	 * @param str
-	 * @param one
-	 * @param another
-	 * @return
-	 */
+     * This method used to replace escape characters such as single and double
+     * quote.
+     *
+     * @param str
+     *            the str
+     * @param one
+     *            the one
+     * @param another
+     *            the another
+     * @return the string
+     */
 	public static String replaceUtil(String str, String one, String another)
 	{
 		if (str == null)
@@ -1920,17 +1925,17 @@ public class DynamicExtensionsUtility
 		{
 			return "";
 		}
-		String res = "";
+		StringBuilder res = new StringBuilder();
 		int index = str.indexOf(one, 0);
 		int lastpos = 0;
 		while (index != -1)
 		{
-			res += str.substring(lastpos, index) + another;
+			res.append(str.substring(lastpos, index) + another);
 			lastpos = index + one.length();
 			index = str.indexOf(one, lastpos);
 		}
-		res += str.substring(lastpos);
-		return res;
+		res.append(str.substring(lastpos));
+		return res.toString();
 	}
 
 	/**

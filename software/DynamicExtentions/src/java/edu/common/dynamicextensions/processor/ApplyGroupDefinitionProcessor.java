@@ -168,7 +168,7 @@ public class ApplyGroupDefinitionProcessor extends BaseDynamicExtensionsProcesso
 			groupProcessor.populateEntityGroupDetails(objEntityGroup, groupUIBean);
 		}
 
-		if (createGroupAs.equals(ProcessorConstants.GROUP_CREATEAS_NEW) && (groupOperation != null)
+		if (ProcessorConstants.GROUP_CREATEAS_NEW.equals(createGroupAs) && (groupOperation != null)
 				&& (groupOperation.equals(ProcessorConstants.SAVE_GROUP)))
 		{
 

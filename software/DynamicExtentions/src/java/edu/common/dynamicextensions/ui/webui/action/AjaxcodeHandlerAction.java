@@ -310,14 +310,15 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 						WebUIManagerConstants.DELETED_ASSOCIATION_IDS, deletedIdList);
 				//				System.out.println("deletedIdList : " + deletedIdList.size());
 			}
+
+			final Collection<ControlInterface> controlCollection = container.getControlCollection();
+			for (final ControlInterface control : controlCollection)
+			{
+			    Logger.out.info("[" + control.getSequenceNumber() + "] = [" + control.getCaption()
+			            + "]");
+			}
 		}
 
-		final Collection<ControlInterface> controlCollection = container.getControlCollection();
-		for (final ControlInterface control : controlCollection)
-		{
-			Logger.out.info("[" + control.getSequenceNumber() + "] = [" + control.getCaption()
-					+ "]");
-		}
 
 		return "";
 	}

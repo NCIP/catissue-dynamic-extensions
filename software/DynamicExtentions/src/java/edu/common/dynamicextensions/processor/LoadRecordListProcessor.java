@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package edu.common.dynamicextensions.processor;
@@ -40,11 +40,20 @@ public class LoadRecordListProcessor extends BaseDynamicExtensionsProcessor
 	}
 
 	/**
-	 * A call to EntityManager will return the entityList which will then added to actionForm.
-	 * @param loadFormIndexForm FormsIndexForm
-	 * @throws DynamicExtensionsApplicationException  DynamicExtensionsApplicationException
-	 * @throws DynamicExtensionsSystemException DynamicExtensionsSystemException
-	 */
+     * A call to EntityManager will return the entityList which will then added
+     * to actionForm.
+     *
+     * @param recordListForm
+     *            the record list form
+     * @param container
+     *            the container
+     * @param mode
+     *            the mode
+     * @throws DynamicExtensionsApplicationException
+     *             DynamicExtensionsApplicationException
+     * @throws DynamicExtensionsSystemException
+     *             DynamicExtensionsSystemException
+     */
 	public void populateRecordIndex(RecordListForm recordListForm, ContainerInterface container,
 			String mode) throws DynamicExtensionsApplicationException,
 			DynamicExtensionsSystemException
@@ -58,13 +67,13 @@ public class LoadRecordListProcessor extends BaseDynamicExtensionsProcessor
 		{
 			entityRecordList = entityManager.getAllRecords(container.getAbstractEntity());
 			container.setMode(mode);
+			recordListForm.setContainerIdentifier(container.getId().toString());
 		}
 
 		if (entityRecordList == null)
 		{
 			entityRecordList = new ArrayList<EntityRecord>();
 		}
-		recordListForm.setContainerIdentifier(container.getId().toString());
 		recordListForm.setEntityRecordList(entityRecordList);
 		recordListForm.setMode(mode);
 	}

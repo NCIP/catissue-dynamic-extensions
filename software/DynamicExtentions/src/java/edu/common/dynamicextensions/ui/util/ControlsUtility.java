@@ -66,16 +66,23 @@ import edu.common.dynamicextensions.validation.ValidatorUtil;
 import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.global.CommonServiceLocator;
 
+/**
+ * The Class ControlsUtility.
+ */
 public class ControlsUtility
 {
 
-	/**
-	 * This method returns the default value of the PrimitiveAttribute for displaying in corresponding controls on UI.
-	 * @param abstractAttribute the PrimitiveAttribute
-	 * @return the Default Value of the PrimitiveAttribute
-	 */
-	public static String getDefaultValue(AbstractAttributeInterface abstractAttribute)
-	{
+    /**
+     * This method returns the default value of the PrimitiveAttribute for
+     * displaying in corresponding controls on UI.
+     *
+     * @param abstractAttribute
+     *            the PrimitiveAttribute
+     * @return the Default Value of the PrimitiveAttribute
+     */
+    public static String getDefaultValue(
+            AbstractAttributeInterface abstractAttribute)
+    {
 		String defaultValue = null;
 		AttributeTypeInformationInterface abstractAttributeType = null;
 
@@ -88,15 +95,17 @@ public class ControlsUtility
 		{
 			if (abstractAttributeType instanceof StringTypeInformationInterface)
 			{
-				StringTypeInformationInterface stringAttribute = (StringTypeInformationInterface) abstractAttributeType;
-				if (stringAttribute != null)
+                StringTypeInformationInterface stringAttribute =
+                    (StringTypeInformationInterface) abstractAttributeType;
+                if (stringAttribute != null)
 				{
 					defaultValue = getDefaultString(stringAttribute);
 				}
 			}
 			else if (abstractAttributeType instanceof BooleanTypeInformationInterface)
 			{
-				BooleanTypeInformationInterface booleanAttribute = (BooleanTypeInformationInterface) abstractAttributeType;
+				BooleanTypeInformationInterface booleanAttribute =
+				    (BooleanTypeInformationInterface) abstractAttributeType;
 				if (booleanAttribute != null)
 				{
 					defaultValue = getDefaultBoolean(booleanAttribute);
@@ -104,7 +113,8 @@ public class ControlsUtility
 			}
 			else if (abstractAttributeType instanceof IntegerTypeInformationInterface)
 			{
-				IntegerTypeInformationInterface integerAttribute = (IntegerTypeInformationInterface) abstractAttributeType;
+				IntegerTypeInformationInterface integerAttribute =
+				    (IntegerTypeInformationInterface) abstractAttributeType;
 				if (integerAttribute != null)
 				{
 					defaultValue = getDefaultInteger(integerAttribute);
@@ -112,7 +122,8 @@ public class ControlsUtility
 			}
 			else if (abstractAttributeType instanceof LongTypeInformationInterface)
 			{
-				LongTypeInformationInterface longAttribute = (LongTypeInformationInterface) abstractAttributeType;
+				LongTypeInformationInterface longAttribute =
+				    (LongTypeInformationInterface) abstractAttributeType;
 				if (longAttribute != null)
 				{
 					defaultValue = getDefaultLong(longAttribute);
@@ -120,7 +131,8 @@ public class ControlsUtility
 			}
 			else if (abstractAttributeType instanceof DoubleTypeInformationInterface)
 			{
-				DoubleTypeInformationInterface doubleAttribute = (DoubleTypeInformationInterface) abstractAttributeType;
+				DoubleTypeInformationInterface doubleAttribute =
+				    (DoubleTypeInformationInterface) abstractAttributeType;
 				if (doubleAttribute != null)
 				{
 					defaultValue = getDefaultDouble(doubleAttribute);
@@ -128,7 +140,8 @@ public class ControlsUtility
 			}
 			else if (abstractAttributeType instanceof FloatTypeInformationInterface)
 			{
-				FloatTypeInformationInterface floatAttribute = (FloatTypeInformationInterface) abstractAttributeType;
+				FloatTypeInformationInterface floatAttribute =
+				    (FloatTypeInformationInterface) abstractAttributeType;
 				if (floatAttribute != null)
 				{
 					defaultValue = getDefaultFloat(floatAttribute);
@@ -136,7 +149,8 @@ public class ControlsUtility
 			}
 			else if (abstractAttributeType instanceof ShortTypeInformationInterface)
 			{
-				ShortTypeInformationInterface shortAttribute = (ShortTypeInformationInterface) abstractAttributeType;
+				ShortTypeInformationInterface shortAttribute =
+				    (ShortTypeInformationInterface) abstractAttributeType;
 				if (shortAttribute != null)
 				{
 					defaultValue = getDefaultShort(shortAttribute);
@@ -144,7 +158,8 @@ public class ControlsUtility
 			}
 			else if (abstractAttributeType instanceof DateTypeInformationInterface)
 			{
-				DateTypeInformationInterface dateAttribute = (DateTypeInformationInterface) abstractAttributeType;
+				DateTypeInformationInterface dateAttribute =
+				    (DateTypeInformationInterface) abstractAttributeType;
 				if (dateAttribute != null)
 				{
 					defaultValue = getDefaultDate(dateAttribute);
@@ -154,6 +169,13 @@ public class ControlsUtility
 		return defaultValue;
 	}
 
+	/**
+     * Gets the default string.
+     *
+     * @param stringAttribute
+     *            the string attribute
+     * @return the default string
+     */
 	private static String getDefaultString(StringTypeInformationInterface stringAttribute)
 	{
 		String defaultValue = null;
@@ -165,6 +187,13 @@ public class ControlsUtility
 		return defaultValue;
 	}
 
+	/**
+     * Gets the default boolean.
+     *
+     * @param booleanAttribute
+     *            the boolean attribute
+     * @return the default boolean
+     */
 	private static String getDefaultBoolean(BooleanTypeInformationInterface booleanAttribute)
 	{
 		String defaultValue = null;
@@ -181,6 +210,13 @@ public class ControlsUtility
 		return defaultValue;
 	}
 
+	/**
+     * Gets the default integer.
+     *
+     * @param integerAttribute
+     *            the integer attribute
+     * @return the default integer
+     */
 	private static String getDefaultInteger(IntegerTypeInformationInterface integerAttribute)
 	{
 		String defaultValue = null;
@@ -197,6 +233,13 @@ public class ControlsUtility
 		return defaultValue;
 	}
 
+	/**
+     * Gets the default long.
+     *
+     * @param longAttribute
+     *            the long attribute
+     * @return the default long
+     */
 	private static String getDefaultLong(LongTypeInformationInterface longAttribute)
 	{
 		String defaultValue = null;
@@ -212,6 +255,13 @@ public class ControlsUtility
 		return defaultValue;
 	}
 
+	/**
+     * Gets the default double.
+     *
+     * @param doubleAttribute
+     *            the double attribute
+     * @return the default double
+     */
 	private static String getDefaultDouble(DoubleTypeInformationInterface doubleAttribute)
 	{
 		String defaultValue = null;
@@ -227,6 +277,13 @@ public class ControlsUtility
 		return defaultValue;
 	}
 
+	/**
+     * Gets the default float.
+     *
+     * @param floatAttribute
+     *            the float attribute
+     * @return the default float
+     */
 	private static String getDefaultFloat(FloatTypeInformationInterface floatAttribute)
 	{
 		String defaultValue = null;
@@ -242,6 +299,13 @@ public class ControlsUtility
 		return defaultValue;
 	}
 
+	/**
+     * Gets the default short.
+     *
+     * @param shortAttribute
+     *            the short attribute
+     * @return the default short
+     */
 	private static String getDefaultShort(ShortTypeInformationInterface shortAttribute)
 	{
 		String defaultValue = null;
@@ -257,6 +321,13 @@ public class ControlsUtility
 		return defaultValue;
 	}
 
+	/**
+     * Gets the default date.
+     *
+     * @param dateAttribute
+     *            the date attribute
+     * @return the default date
+     */
 	private static String getDefaultDate(DateTypeInformationInterface dateAttribute)
 	{
 		String defaultValue = null;
@@ -276,10 +347,13 @@ public class ControlsUtility
 	}
 
 	/**
-	 * This method returns the prescribed date format for the given DateAttributeTypeInformation
-	 * @param attribute the DateAttributeTypeInformation
-	 * @return the date format String
-	 */
+     * This method returns the prescribed date format for the given
+     * DateAttributeTypeInformation.
+     *
+     * @param dateAttribute
+     *            the date attribute
+     * @return the date format String
+     */
 	public static String getDateFormat(AttributeTypeInformationInterface dateAttribute)
 	{
 		String dateFormat = null;
@@ -301,9 +375,11 @@ public class ControlsUtility
 	}
 
 	/**
-	 *
-	 * @param nameValueList
-	 */
+     * Sort name value list.
+     *
+     * @param nameValueList
+     *            the name value list
+     */
 	public static void sortNameValueList(List nameValueList)
 	{
 		if (nameValueList != null && !nameValueList.isEmpty())
@@ -320,87 +396,102 @@ public class ControlsUtility
 	}
 
 	/**
-	 * This method populates the List of Values of the ListBox in the NameValueBean Collection.
-	 * @return List of pair of Name and its corresponding Value.
-	 */
+     * This method populates the List of Values of the ListBox in the
+     * NameValueBean Collection.
+     *
+     * @param control
+     *            the control
+     * @param sourceControlValue
+     *            the source control value
+     * @return List of pair of Name and its corresponding Value.
+     */
 	public static List<NameValueBean> populateListOfValues(ControlInterface control,
 			List<String> sourceControlValue)
 	{
 		AttributeMetadataInterface attributeMetadataInterface = null;
 		List<NameValueBean> nameValueBeanList = null;
 		try
-		{
-			BaseAbstractAttributeInterface attribute = control.getBaseAbstractAttribute();
-			if (attribute != null)
-			{
-				if (attribute instanceof AttributeMetadataInterface)
-				{
-					if (control.getIsSkipLogicTargetControl())
-					{
-						control.getSourceSkipControl().setSkipLogicControls(sourceControlValue);
-					}
-					attributeMetadataInterface = (AttributeMetadataInterface) attribute;
-					if (control.getIsSkipLogicLoadPermValues())
-					{
-						List<PermissibleValueInterface> permissibleValueList = getSkipLogicPermissibleValues(
-								control.getSourceSkipControl(), control, sourceControlValue);
-						nameValueBeanList = getPermissibleValues(permissibleValueList,
-								attributeMetadataInterface);
-					}
-					else
-					{
-						nameValueBeanList = getListOfPermissibleValues(attributeMetadataInterface);
-					}
-				}
-				else if (attribute instanceof AssociationInterface)
-				{
-					AssociationInterface association = (AssociationInterface) attribute;
-					if (association.getIsCollection())
-					{
-						Collection<AbstractAttributeInterface> attributeCollection = association
-								.getTargetEntity().getAllAbstractAttributes();
-						Collection<AbstractAttributeInterface> filteredAttributeCollection = EntityManagerUtil
-								.filterSystemAttributes(attributeCollection);
-						List<AbstractAttributeInterface> attributesList = new ArrayList<AbstractAttributeInterface>(
-								filteredAttributeCollection);
+        {
+            BaseAbstractAttributeInterface attribute = control
+                    .getBaseAbstractAttribute();
+            if (attribute != null)
+            {
+                if (attribute instanceof AttributeMetadataInterface)
+                {
+                    if (control.getIsSkipLogicTargetControl())
+                    {
+                        control.getSourceSkipControl().setSkipLogicControls(
+                                sourceControlValue);
+                    }
+                    attributeMetadataInterface = (AttributeMetadataInterface) attribute;
+                    if (control.getIsSkipLogicLoadPermValues())
+                    {
+                        List<PermissibleValueInterface> permissibleValueList =
+                            getSkipLogicPermissibleValues(
+                                control.getSourceSkipControl(), control,
+                                sourceControlValue);
+                        nameValueBeanList = getPermissibleValues(
+                                permissibleValueList,
+                                attributeMetadataInterface);
+                    }
+                    else
+                    {
+                        nameValueBeanList = getListOfPermissibleValues(attributeMetadataInterface);
+                    }
+                }
+                else if (attribute instanceof AssociationInterface)
+                {
+                    AssociationInterface association = (AssociationInterface) attribute;
+                    if (association.getIsCollection())
+                    {
+                        Collection<AbstractAttributeInterface> attributeCollection =
+                            association.getTargetEntity().getAllAbstractAttributes();
+                        Collection<AbstractAttributeInterface> filteredAttributeCollection = EntityManagerUtil
+                                .filterSystemAttributes(attributeCollection);
+                        List<AbstractAttributeInterface> attributesList = new ArrayList<AbstractAttributeInterface>(
+                                filteredAttributeCollection);
 
-						attributeMetadataInterface = (AttributeMetadataInterface) attributesList
-								.get(0);
-						if (control.getIsSkipLogicTargetControl())
-						{
-							control.getSourceSkipControl().setSkipLogicControls(sourceControlValue);
-						}
-						if (control.getIsSkipLogicLoadPermValues())
-						{
-							List<PermissibleValueInterface> permissibleValueList = getSkipLogicPermissibleValues(
-									control.getSourceSkipControl(), control, sourceControlValue);
-							nameValueBeanList = getPermissibleValues(permissibleValueList,
-									attributeMetadataInterface);
-						}
-						else
-						{
-							nameValueBeanList = getListOfPermissibleValues(attributeMetadataInterface);
-						}
-					}
-					else
-					{
-						EntityManagerInterface entityManager = EntityManager.getInstance();
+                        attributeMetadataInterface = (AttributeMetadataInterface) attributesList
+                                .get(0);
+                        if (control.getIsSkipLogicTargetControl())
+                        {
+                            control.getSourceSkipControl()
+                                    .setSkipLogicControls(sourceControlValue);
+                        }
+                        if (control.getIsSkipLogicLoadPermValues())
+                        {
+                            List<PermissibleValueInterface> permissibleValueList = getSkipLogicPermissibleValues(
+                                    control.getSourceSkipControl(), control,
+                                    sourceControlValue);
+                            nameValueBeanList = getPermissibleValues(
+                                    permissibleValueList,
+                                    attributeMetadataInterface);
+                        }
+                        else
+                        {
+                            nameValueBeanList = getListOfPermissibleValues(attributeMetadataInterface);
+                        }
+                    }
+                    else
+                    {
+                        EntityManagerInterface entityManager = EntityManager
+                                .getInstance();
 
-						AssociationControlInterface associationControl = (AssociationControlInterface) control;
+                        AssociationControlInterface associationControl = (AssociationControlInterface) control;
 
-						String sepatator = associationControl.getSeparator();
+                        String sepatator = associationControl.getSeparator();
 
-						Map<Long, List<String>> displayAttributeMap = entityManager
-								.getRecordsForAssociationControl(associationControl);
+                        Map<Long, List<String>> displayAttributeMap = entityManager
+                                .getRecordsForAssociationControl(associationControl);
 
-						nameValueBeanList = getTargetEntityDisplayAttributeList(
-								displayAttributeMap, sepatator);
+                        nameValueBeanList = getTargetEntityDisplayAttributeList(
+                                displayAttributeMap, sepatator);
 
-						sortNameValueList(nameValueBeanList);
-					}
-				}
-			}
-		}
+                        sortNameValueList(nameValueBeanList);
+                    }
+                }
+            }
+        }
 		catch (Exception exception)
 		{
 			throw new RuntimeException(exception);
@@ -410,9 +501,10 @@ public class ControlsUtility
 			DataElementInterface dataElement = attributeMetadataInterface.getDataElement();
 			if (dataElement instanceof UserDefinedDEInterface)
 			{
-				UserDefinedDEInterface userDefinedDEInterface = (UserDefinedDEInterface) dataElement;
-				if (userDefinedDEInterface != null && userDefinedDEInterface.getIsOrdered())
-				{
+                UserDefinedDEInterface userDefinedDEInterface = (UserDefinedDEInterface) dataElement;
+                if (userDefinedDEInterface != null
+                        && userDefinedDEInterface.getIsOrdered())
+                {
 					sortNameValueList(nameValueBeanList);
 				}
 			}
@@ -421,18 +513,24 @@ public class ControlsUtility
 	}
 
 	/**
-	 *
-	 * @param selectedPermissibleValues
-	 * @return
-	 */
+     * Gets the skip logic attribute for attribute.
+     *
+     * @param selectedPermissibleValues
+     *            the selected permissible values
+     * @param srcAttrMetadataInterface
+     *            the src attr metadata interface
+     * @param tgtAttrMetadataInterface
+     *            the tgt attr metadata interface
+     * @return the skip logic attribute for attribute
+     */
 	public static SkipLogicAttributeInterface getSkipLogicAttributeForAttribute(
 			List<PermissibleValueInterface> selectedPermissibleValues,
 			AttributeMetadataInterface srcAttrMetadataInterface,
 			AttributeMetadataInterface tgtAttrMetadataInterface)
 	{
 		SkipLogicAttributeInterface skipLogicAttributeInterface = null;
-		if (srcAttrMetadataInterface.getAttributeTypeInformation() instanceof BooleanAttributeTypeInformation)
-		{
+        if (srcAttrMetadataInterface.getAttributeTypeInformation() instanceof BooleanAttributeTypeInformation)
+        {
 			CategoryAttributeInterface categoryAttributeInterface = null;
 			if (srcAttrMetadataInterface instanceof CategoryAttributeInterface)
 			{
@@ -455,48 +553,52 @@ public class ControlsUtility
 			}
 		}
 		else
-		{
-			for (PermissibleValueInterface selectedPermissibleValue : selectedPermissibleValues)
-			{
-				Collection<PermissibleValueInterface> skipLogicPermissibleValues = srcAttrMetadataInterface
-						.getSkipLogicPermissibleValues();
-				if (skipLogicPermissibleValues != null)
-				{
-					for (PermissibleValueInterface skipLogicValue : skipLogicPermissibleValues)
-					{
-						for (SkipLogicAttributeInterface skipLogicAttribute : skipLogicValue
-								.getDependentSkipLogicAttributes())
-						{
-							if (skipLogicValue.equals(selectedPermissibleValue)
-									&& skipLogicAttribute.getSourceSkipLogicAttribute().equals(
-											srcAttrMetadataInterface)
-									&& skipLogicAttribute.getTargetSkipLogicAttribute().equals(
-											tgtAttrMetadataInterface))
-							{
-								skipLogicAttributeInterface = skipLogicAttribute;
-								break;
-							}
-						}
-						if (skipLogicAttributeInterface != null)
-						{
-							break;
-						}
-					}
-				}
-				if (skipLogicAttributeInterface != null)
-				{
-					break;
-				}
-			}
-		}
+        {
+            for (PermissibleValueInterface selectedPermissibleValue : selectedPermissibleValues)
+            {
+                Collection<PermissibleValueInterface> skipLogicPermissibleValues = srcAttrMetadataInterface
+                        .getSkipLogicPermissibleValues();
+                if (skipLogicPermissibleValues != null)
+                {
+                    for (PermissibleValueInterface skipLogicValue : skipLogicPermissibleValues)
+                    {
+                        for (SkipLogicAttributeInterface skipLogicAttribute : skipLogicValue
+                                .getDependentSkipLogicAttributes())
+                        {
+                            if (skipLogicValue.equals(selectedPermissibleValue)
+                                    && skipLogicAttribute
+                                            .getSourceSkipLogicAttribute()
+                                            .equals(srcAttrMetadataInterface)
+                                    && skipLogicAttribute
+                                            .getTargetSkipLogicAttribute()
+                                            .equals(tgtAttrMetadataInterface))
+                            {
+                                skipLogicAttributeInterface = skipLogicAttribute;
+                                break;
+                            }
+                        }
+                        if (skipLogicAttributeInterface != null)
+                        {
+                            break;
+                        }
+                    }
+                }
+                if (skipLogicAttributeInterface != null)
+                {
+                    break;
+                }
+            }
+        }
 		return skipLogicAttributeInterface;
 	}
 
 	/**
-	 *
-	 * @param selectedPermissibleValues
-	 * @return
-	 */
+     * Gets the skip logic attributes for check box.
+     *
+     * @param attributeMetadataInterface
+     *            the attribute metadata interface
+     * @return the skip logic attributes for check box
+     */
 	public static Collection<SkipLogicAttributeInterface> getSkipLogicAttributesForCheckBox(
 			AttributeMetadataInterface attributeMetadataInterface)
 	{
@@ -514,138 +616,158 @@ public class ControlsUtility
 	}
 
 	/**
-	 * @throws ParseException
-	 *
-	 */
+     * Gets the skip logic permissible values.
+     *
+     * @param sourceControl
+     *            the source control
+     * @param targetControl
+     *            the target control
+     * @param values
+     *            the values
+     * @return the skip logic permissible values
+     * @throws ParseException
+     *             the parse exception
+     */
 	public static List<PermissibleValueInterface> getSkipLogicPermissibleValues(
 			ControlInterface sourceControl, ControlInterface targetControl, List<String> values)
 			throws ParseException
-	{
-		List<PermissibleValueInterface> skipLogicPermissibleValueList = new ArrayList<PermissibleValueInterface>();
-		List<PermissibleValueInterface> permissibleValueList = new ArrayList<PermissibleValueInterface>();
-		if (values != null)
-		{
-			for (String controlValue : values)
-			{
-				PermissibleValueInterface selectedPermissibleValue = null;
-				AttributeMetadataInterface attributeMetadataInterface = ControlsUtility
-						.getAttributeMetadataInterface(sourceControl.getBaseAbstractAttribute());
-				if (attributeMetadataInterface != null)
-				{
-					if (controlValue != null && controlValue.length() > 0)
-					{
-						selectedPermissibleValue = attributeMetadataInterface
-								.getAttributeTypeInformation().getPermissibleValueForString(
-										controlValue);
-					}
-					permissibleValueList.add(selectedPermissibleValue);
-				}
-			}
-			if (sourceControl.getIsSkipLogic())
-			{
-				AttributeMetadataInterface tgtAttrMetadataInterface = ControlsUtility
-						.getAttributeMetadataInterface(targetControl.getBaseAbstractAttribute());
-				for (PermissibleValueInterface selectedPermissibleValue : permissibleValueList)
-				{
-					AttributeMetadataInterface attributeMetadataInterface = ControlsUtility
-							.getAttributeMetadataInterface(sourceControl.getBaseAbstractAttribute());
-					PermissibleValueInterface skipLogicPermissibleValue = attributeMetadataInterface
-							.getSkipLogicPermissibleValue(selectedPermissibleValue);
-					if (skipLogicPermissibleValue != null)
-					{
-						Collection<SkipLogicAttributeInterface> skipLogicAttributes = skipLogicPermissibleValue
-								.getDependentSkipLogicAttributes();
-						for (SkipLogicAttributeInterface skipLogicAttributeInterface : skipLogicAttributes)
-						{
-							if (skipLogicAttributeInterface.getTargetSkipLogicAttribute().equals(
-									tgtAttrMetadataInterface))
-							{
-								DataElementInterface dataElementInterface = skipLogicAttributeInterface
-										.getDataElement();
-								if (dataElementInterface instanceof UserDefinedDEInterface)
-								{
-									UserDefinedDEInterface userDefinedDEInterface = (UserDefinedDEInterface) dataElementInterface;
-									skipLogicPermissibleValueList.addAll(userDefinedDEInterface
-											.getPermissibleValues());
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		return skipLogicPermissibleValueList;
-	}
+    {
+        List<PermissibleValueInterface> skipLogicPermissibleValueList = new ArrayList<PermissibleValueInterface>();
+        List<PermissibleValueInterface> permissibleValueList = new ArrayList<PermissibleValueInterface>();
+        if (values != null)
+        {
+            for (String controlValue : values)
+            {
+                PermissibleValueInterface selectedPermissibleValue = null;
+                AttributeMetadataInterface attributeMetadataInterface = ControlsUtility
+                        .getAttributeMetadataInterface(sourceControl
+                                .getBaseAbstractAttribute());
+                if (attributeMetadataInterface != null)
+                {
+                    if (controlValue != null && controlValue.length() > 0)
+                    {
+                        selectedPermissibleValue = attributeMetadataInterface
+                                .getAttributeTypeInformation()
+                                .getPermissibleValueForString(controlValue);
+                    }
+                    permissibleValueList.add(selectedPermissibleValue);
+                }
+            }
+            if (sourceControl.getIsSkipLogic())
+            {
+                AttributeMetadataInterface tgtAttrMetadataInterface = ControlsUtility
+                        .getAttributeMetadataInterface(targetControl
+                                .getBaseAbstractAttribute());
+                for (PermissibleValueInterface selectedPermissibleValue : permissibleValueList)
+                {
+                    AttributeMetadataInterface attributeMetadataInterface = ControlsUtility
+                            .getAttributeMetadataInterface(sourceControl
+                                    .getBaseAbstractAttribute());
+                    PermissibleValueInterface skipLogicPermissibleValue = attributeMetadataInterface
+                            .getSkipLogicPermissibleValue(selectedPermissibleValue);
+                    if (skipLogicPermissibleValue != null)
+                    {
+                        Collection<SkipLogicAttributeInterface> skipLogicAttributes = skipLogicPermissibleValue
+                                .getDependentSkipLogicAttributes();
+                        for (SkipLogicAttributeInterface skipLogicAttributeInterface : skipLogicAttributes)
+                        {
+                            if (skipLogicAttributeInterface
+                                    .getTargetSkipLogicAttribute().equals(
+                                            tgtAttrMetadataInterface))
+                            {
+                                DataElementInterface dataElementInterface = skipLogicAttributeInterface
+                                        .getDataElement();
+                                if (dataElementInterface instanceof UserDefinedDEInterface)
+                                {
+                                    UserDefinedDEInterface userDefinedDEInterface = (UserDefinedDEInterface) dataElementInterface;
+                                    skipLogicPermissibleValueList
+                                            .addAll(userDefinedDEInterface
+                                                    .getPermissibleValues());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return skipLogicPermissibleValueList;
+    }
 
 	/**
-	 *
-	 * @param attribute
-	 * @return
-	 */
+     * Gets the attribute metadata interface.
+     *
+     * @param attribute
+     *            the attribute
+     * @return the attribute metadata interface
+     */
 	public static AttributeMetadataInterface getAttributeMetadataInterface(
 			BaseAbstractAttributeInterface attribute)
-	{
-		AttributeMetadataInterface attributeMetadataInterface = null;
-		if (attribute != null)
-		{
-			if (attribute instanceof AttributeMetadataInterface)
-			{
-				if (attribute instanceof CategoryAttributeInterface)
-				{
-					CategoryAttributeInterface categoryAttribute = (CategoryAttributeInterface) attribute;
-					AbstractAttributeInterface abstractAttribute = categoryAttribute
-							.getAbstractAttribute();
-					if (abstractAttribute instanceof AssociationInterface)
-					{
-						AssociationInterface association = (AssociationInterface) abstractAttribute;
-						if (association.getIsCollection())
-						{
-							Collection<AbstractAttributeInterface> attributeCollection = association
-									.getTargetEntity().getAllAbstractAttributes();
-							Collection<AbstractAttributeInterface> filteredAttributeCollection = EntityManagerUtil
-									.filterSystemAttributes(attributeCollection);
-							List<AbstractAttributeInterface> attributesList = new ArrayList<AbstractAttributeInterface>(
-									filteredAttributeCollection);
+    {
+        AttributeMetadataInterface attributeMetadataInterface = null;
+        if (attribute != null)
+        {
+            if (attribute instanceof AttributeMetadataInterface)
+            {
+                if (attribute instanceof CategoryAttributeInterface)
+                {
+                    CategoryAttributeInterface categoryAttribute = (CategoryAttributeInterface) attribute;
+                    AbstractAttributeInterface abstractAttribute = categoryAttribute
+                            .getAbstractAttribute();
+                    if (abstractAttribute instanceof AssociationInterface)
+                    {
+                        AssociationInterface association = (AssociationInterface) abstractAttribute;
+                        if (association.getIsCollection())
+                        {
+                            Collection<AbstractAttributeInterface> attributeCollection = association
+                                    .getTargetEntity()
+                                    .getAllAbstractAttributes();
+                            Collection<AbstractAttributeInterface> filteredAttributeCollection = EntityManagerUtil
+                                    .filterSystemAttributes(attributeCollection);
+                            List<AbstractAttributeInterface> attributesList = new ArrayList<AbstractAttributeInterface>(
+                                    filteredAttributeCollection);
 
-							attributeMetadataInterface = (AttributeMetadataInterface) attributesList
-									.get(0);
-						}
-					}
-					else
-					{
-						attributeMetadataInterface = (AttributeMetadataInterface) attribute;
-					}
-				}
-				else
-				{
-					attributeMetadataInterface = (AttributeMetadataInterface) attribute;
-				}
+                            attributeMetadataInterface = (AttributeMetadataInterface) attributesList
+                                    .get(0);
+                        }
+                    }
+                    else
+                    {
+                        attributeMetadataInterface = (AttributeMetadataInterface) attribute;
+                    }
+                }
+                else
+                {
+                    attributeMetadataInterface = (AttributeMetadataInterface) attribute;
+                }
 
-			}
-			else if (attribute instanceof AssociationInterface)
-			{
-				AssociationInterface association = (AssociationInterface) attribute;
-				if (association.getIsCollection())
-				{
-					Collection<AbstractAttributeInterface> attributeCollection = association
-							.getTargetEntity().getAllAbstractAttributes();
-					Collection<AbstractAttributeInterface> filteredAttributeCollection = EntityManagerUtil
-							.filterSystemAttributes(attributeCollection);
-					List<AbstractAttributeInterface> attributesList = new ArrayList<AbstractAttributeInterface>(
-							filteredAttributeCollection);
+            }
+            else if (attribute instanceof AssociationInterface)
+            {
+                AssociationInterface association = (AssociationInterface) attribute;
+                if (association.getIsCollection())
+                {
+                    Collection<AbstractAttributeInterface> attributeCollection = association
+                            .getTargetEntity().getAllAbstractAttributes();
+                    Collection<AbstractAttributeInterface> filteredAttributeCollection = EntityManagerUtil
+                            .filterSystemAttributes(attributeCollection);
+                    List<AbstractAttributeInterface> attributesList = new ArrayList<AbstractAttributeInterface>(
+                            filteredAttributeCollection);
 
-					attributeMetadataInterface = (AttributeMetadataInterface) attributesList.get(0);
-				}
-			}
-		}
-		return attributeMetadataInterface;
-	}
+                    attributeMetadataInterface = (AttributeMetadataInterface) attributesList
+                            .get(0);
+                }
+            }
+        }
+        return attributeMetadataInterface;
+    }
 
 	/**
-	 * Gets a list of permissible values for attribute or category attribute.
-	 * @param attribute
-	 * @return List of NameValueBean
-	 */
+     * Gets a list of permissible values for attribute or category attribute.
+     *
+     * @param attribute
+     *            the attribute
+     * @return List of NameValueBean
+     */
 	public static List<NameValueBean> getListOfPermissibleValues(
 			AttributeMetadataInterface attribute)
 	{
@@ -661,10 +783,14 @@ public class ControlsUtility
 	}
 
 	/**
-	 *
-	 * @param permissibleValueList
-	 * @return
-	 */
+     * Gets the permissible values.
+     *
+     * @param permissibleValueList
+     *            the permissible value list
+     * @param attribute
+     *            the attribute
+     * @return the permissible values
+     */
 	private static List<NameValueBean> getPermissibleValues(
 			List<PermissibleValueInterface> permissibleValueList,
 			AttributeMetadataInterface attribute)
@@ -715,6 +841,19 @@ public class ControlsUtility
 		return nameValueBeanList;
 	}
 
+	/**
+     * Gets the target entity display attribute list.
+     *
+     * @param displayAttributeMap
+     *            the display attribute map
+     * @param separator
+     *            the separator
+     * @return the target entity display attribute list
+     * @throws DynamicExtensionsSystemException
+     *             the dynamic extensions system exception
+     * @throws DynamicExtensionsApplicationException
+     *             the dynamic extensions application exception
+     */
 	private static List<NameValueBean> getTargetEntityDisplayAttributeList(
 			Map<Long, List<String>> displayAttributeMap, String separator)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
@@ -744,6 +883,15 @@ public class ControlsUtility
 		return displayAttributeList;
 	}
 
+	/**
+     * Gets the permissible date value.
+     *
+     * @param permissibleValue
+     *            the permissible value
+     * @param dateAttribute
+     *            the date attribute
+     * @return the permissible date value
+     */
 	private static NameValueBean getPermissibleDateValue(
 			PermissibleValueInterface permissibleValue, DateTypeInformationInterface dateAttribute)
 	{
@@ -762,6 +910,13 @@ public class ControlsUtility
 		return nameValueBean;
 	}
 
+	/**
+     * Gets the permissible double value.
+     *
+     * @param permissibleValue
+     *            the permissible value
+     * @return the permissible double value
+     */
 	private static NameValueBean getPermissibleDoubleValue(
 			PermissibleValueInterface permissibleValue)
 	{
@@ -777,12 +932,19 @@ public class ControlsUtility
 		return nameValueBean;
 	}
 
+	/**
+     * Gets the permissible float value.
+     *
+     * @param permissibleValue
+     *            the permissible value
+     * @return the permissible float value
+     */
 	private static NameValueBean getPermissibleFloatValue(PermissibleValueInterface permissibleValue)
 	{
 		FloatValueInterface floatValue = (FloatValueInterface) permissibleValue;
 		NameValueBean nameValueBean = null;
 
-		if (floatValue != null & floatValue.getValue() != null)
+		if (floatValue != null && floatValue.getValue() != null)
 		{
 			nameValueBean = new NameValueBean();
 			nameValueBean.setName(floatValue.getValue().floatValue());
@@ -791,6 +953,13 @@ public class ControlsUtility
 		return nameValueBean;
 	}
 
+	/**
+     * Gets the permissible long value.
+     *
+     * @param permissibleValue
+     *            the permissible value
+     * @return the permissible long value
+     */
 	private static NameValueBean getPermissibleLongValue(PermissibleValueInterface permissibleValue)
 	{
 		LongValueInterface longValue = (LongValueInterface) permissibleValue;
@@ -805,6 +974,13 @@ public class ControlsUtility
 		return nameValueBean;
 	}
 
+	/**
+     * Gets the permissible integer value.
+     *
+     * @param permissibleValue
+     *            the permissible value
+     * @return the permissible integer value
+     */
 	private static NameValueBean getPermissibleIntegerValue(
 			PermissibleValueInterface permissibleValue)
 	{
@@ -820,6 +996,13 @@ public class ControlsUtility
 		return nameValueBean;
 	}
 
+	/**
+     * Gets the permissible short value.
+     *
+     * @param permissibleValue
+     *            the permissible value
+     * @return the permissible short value
+     */
 	private static NameValueBean getPermissibleShortValue(PermissibleValueInterface permissibleValue)
 	{
 		ShortValueInterface shortValue = (ShortValueInterface) permissibleValue;
@@ -834,6 +1017,13 @@ public class ControlsUtility
 		return nameValueBean;
 	}
 
+	/**
+     * Gets the permissible boolean value.
+     *
+     * @param permissibleValue
+     *            the permissible value
+     * @return the permissible boolean value
+     */
 	private static NameValueBean getPermissibleBooleanValue(
 			PermissibleValueInterface permissibleValue)
 	{
@@ -849,6 +1039,13 @@ public class ControlsUtility
 		return nameValueBean;
 	}
 
+	/**
+     * Gets the permissible string value.
+     *
+     * @param permissibleValue
+     *            the permissible value
+     * @return the permissible string value
+     */
 	private static NameValueBean getPermissibleStringValue(
 			PermissibleValueInterface permissibleValue)
 	{
@@ -865,10 +1062,13 @@ public class ControlsUtility
 	}
 
 	/**
-	 *	Added by Preeti
-	 * @param entityInterface
-	 * @param sequenceNumbers
-	 */
+     * Added by Preeti.
+     *
+     * @param controlsCollection
+     *            the controls collection
+     * @param controlsSequenceNumbers
+     *            the controls sequence numbers
+     */
 	public static void reinitializeSequenceNumbers(Collection<ControlInterface> controlsCollection,
 			String controlsSequenceNumbers)
 	{
@@ -893,11 +1093,14 @@ public class ControlsUtility
 	}
 
 	/**
-	 *
-	 * @param containerInterface containerInterface
-	 * @return List ChildList
-	 * @throws DynamicExtensionsSystemException DynamicExtensionsSystemException
-	 */
+     * Gets the child list.
+     *
+     * @param containerInterface
+     *            containerInterface
+     * @return List ChildList
+     * @throws DynamicExtensionsSystemException
+     *             DynamicExtensionsSystemException
+     */
 	public static List getChildList(ContainerInterface containerInterface)
 			throws DynamicExtensionsSystemException
 	{
@@ -942,10 +1145,12 @@ public class ControlsUtility
 	}
 
 	/**
-	 *
-	 * @param captionKey String captionKey
-	 * @return String ControlCaption
-	 */
+     * Gets the control caption.
+     *
+     * @param captionKey
+     *            String captionKey
+     * @return String ControlCaption
+     */
 	public static String getControlCaption(String captionKey)
 	{
 		String caption = null;
@@ -961,12 +1166,24 @@ public class ControlsUtility
 	}
 
 	/**
-	 * @throws ParseException
-	 * @throws DynamicExtensionsApplicationException
-	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsSystemException
-	 *
-	 */
+     * Gets the attribute value for skip logic attributes from value map.
+     *
+     * @param fullValueMap
+     *            the full value map
+     * @param valueMap
+     *            the value map
+     * @param skipLogicAttribute
+     *            the skip logic attribute
+     * @param isSameContainerControl
+     *            the is same container control
+     * @param values
+     *            the values
+     * @param entryNumber
+     *            the entry number
+     * @param mapentryNumber
+     *            the mapentry number
+     * @return the attribute value for skip logic attributes from value map
+     */
 	public static Object getAttributeValueForSkipLogicAttributesFromValueMap(
 			Map<BaseAbstractAttributeInterface, Object> fullValueMap,
 			Map<BaseAbstractAttributeInterface, Object> valueMap,
@@ -994,32 +1211,43 @@ public class ControlsUtility
 					return entry.getValue();
 				}
 			}
-			else if (attribute instanceof CategoryAssociationInterface)
-			{
-				Integer rowNumber = 0;
-				List<Map<BaseAbstractAttributeInterface, Object>> attributeValueMapList = (List<Map<BaseAbstractAttributeInterface, Object>>) entry
-						.getValue();
-				for (Map<BaseAbstractAttributeInterface, Object> map : attributeValueMapList)
-				{
-					getAttributeValueForSkipLogicAttributesFromValueMap(fullValueMap, map,
-							skipLogicAttribute, isSameContainerControl, values, entryNumber,
-							++rowNumber);
-				}
-			}
-		}
+            else if (attribute instanceof CategoryAssociationInterface)
+            {
+                Integer rowNumber = 0;
+                List<Map<BaseAbstractAttributeInterface, Object>> attributeValueMapList = (List<Map<BaseAbstractAttributeInterface, Object>>) entry
+                        .getValue();
+                for (Map<BaseAbstractAttributeInterface, Object> map : attributeValueMapList)
+                {
+                    getAttributeValueForSkipLogicAttributesFromValueMap(
+                            fullValueMap, map, skipLogicAttribute,
+                            isSameContainerControl, values, entryNumber,
+                            ++rowNumber);
+                }
+            }
+        }
 		return null;
 	}
 
 	/**
-	 *
-	 * @param rowId
-	 * @param isSameContainerControl
-	 * @param cardinality
-	 * @param fullValueMap
-	 * @param entry
-	 * @param control
-	 * @throws DynamicExtensionsSystemException
-	 */
+     * Sets the value map for enumerated controls.
+     *
+     * @param rowId
+     *            the row id
+     * @param isSameContainerControl
+     *            the is same container control
+     * @param cardinality
+     *            the cardinality
+     * @param fullValueMap
+     *            the full value map
+     * @param entry
+     *            the entry
+     * @param control
+     *            the control
+     * @param isCopyPaste
+     *            the is copy paste
+     * @throws DynamicExtensionsSystemException
+     *             the dynamic extensions system exception
+     */
 	private static void setValueMapForEnumeratedControls(Integer rowId,
 			boolean isSameContainerControl, boolean cardinality,
 			Map<BaseAbstractAttributeInterface, Object> fullValueMap,
@@ -1031,6 +1259,7 @@ public class ControlsUtility
 		{
 			currentRowId = Integer.valueOf(-1);
 		}
+
 		Object value = null;
 		List<Object> values = new ArrayList<Object>();
 		getAttributeValueForSkipLogicAttributesFromValueMap(fullValueMap, fullValueMap, control
@@ -1094,102 +1323,132 @@ public class ControlsUtility
 	}
 
 	/**
-	 * @throws ParseException
-	 * @throws DynamicExtensionsApplicationException
-	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsSystemException
-	 *
-	 */
+     * Populate attribute value map for skip logic attributes.
+     *
+     * @param fullValueMap
+     *            the full value map
+     * @param valueMap
+     *            the value map
+     * @param rowId
+     *            the row id
+     * @param cardinality
+     *            the cardinality
+     * @param controlName
+     *            the control name
+     * @param controlsList
+     *            the controls list
+     * @param isCopyPaste
+     *            the is copy paste
+     * @throws DynamicExtensionsApplicationException
+     *             the dynamic extensions application exception
+     * @throws DynamicExtensionsSystemException
+     *             the dynamic extensions system exception
+     */
 	public static void populateAttributeValueMapForSkipLogicAttributes(
 			Map<BaseAbstractAttributeInterface, Object> fullValueMap,
 			Map<BaseAbstractAttributeInterface, Object> valueMap, Integer rowId,
 			boolean cardinality, String controlName, List<ControlInterface> controlsList,
 			boolean isCopyPaste) throws DynamicExtensionsApplicationException,
 			DynamicExtensionsSystemException
-	{
-		for (Map.Entry<BaseAbstractAttributeInterface, Object> entry : valueMap.entrySet())
-		{
-			BaseAbstractAttributeInterface attribute = entry.getKey();
-			if (attribute instanceof CategoryAttributeInterface)
-			{
-				CategoryAttributeInterface categoryAttributeInterface = (CategoryAttributeInterface) attribute;
-				if (categoryAttributeInterface != null)
-				{
-					boolean isSameContainerControl = false;
-					ContainerInterface controlContainerInterface = DynamicExtensionsUtility
-							.getContainerForAbstractEntity(categoryAttributeInterface
-									.getCategoryEntity());
+    {
+        for (Map.Entry<BaseAbstractAttributeInterface, Object> entry : valueMap
+                .entrySet())
+        {
+            BaseAbstractAttributeInterface attribute = entry.getKey();
+            if (attribute instanceof CategoryAttributeInterface)
+            {
+                CategoryAttributeInterface categoryAttributeInterface = (CategoryAttributeInterface) attribute;
+                if (categoryAttributeInterface != null)
+                {
+                    boolean isSameContainerControl = false;
+                    ContainerInterface controlContainerInterface = DynamicExtensionsUtility
+                            .getContainerForAbstractEntity(categoryAttributeInterface
+                                    .getCategoryEntity());
 
-					ControlInterface control = DynamicExtensionsUtility
-							.getControlForAbstractAttribute(
-									(AttributeMetadataInterface) categoryAttributeInterface,
-									controlContainerInterface);
-					if (control != null && control.getIsSkipLogicTargetControl())
-					{
-						boolean found = false;
-						for (ControlInterface targetSkipControl : controlsList)
-						{
-							if (control.equals(targetSkipControl))
-							{
-								found = true;
-								break;
-							}
-						}
-						if (control.getSourceSkipControl().getParentContainer().equals(
-								control.getParentContainer()))
-						{
-							isSameContainerControl = true;
-						}
-						else
-						{
-							isSameContainerControl = false;
-						}
-						Integer controlSequenceNumber = control.getSequenceNumber();
-						StringBuffer sourceControlName = new StringBuffer();
-						if (controlSequenceNumber != null)
-						{
-							sourceControlName.append(control.getSourceSkipControl()
-									.getHTMLComponentName());
-							if (rowId != null && isSameContainerControl && cardinality
-									&& !rowId.equals(Integer.valueOf(-1)))
-							{
-								sourceControlName.append('_');
-								sourceControlName.append(rowId);
-							}
-						}
-						if (found && control.getIsSkipLogicTargetControl()
-								&& controlName.equals(sourceControlName.toString()))
-						{
-							setValueMapForEnumeratedControls(rowId, isSameContainerControl,
-									cardinality, fullValueMap, entry, control, isCopyPaste);
-						}
-					}
-				}
-			}
-			else if (attribute instanceof CategoryAssociationInterface)
-			{
-				List<Map<BaseAbstractAttributeInterface, Object>> attributeValueMapList = (List<Map<BaseAbstractAttributeInterface, Object>>) entry
-						.getValue();
-				boolean oneToManyCardinality = false;
-				CategoryAssociationInterface categoryAssociation = (CategoryAssociationInterface) attribute;
-				if (categoryAssociation.getTargetCategoryEntity().getNumberOfEntries() == -1)
-				{
-					oneToManyCardinality = true;
-				}
-				Integer entryNumber = 0;
-				for (Map<BaseAbstractAttributeInterface, Object> map : attributeValueMapList)
-				{
-					populateAttributeValueMapForSkipLogicAttributes(fullValueMap, map, ++entryNumber,
-							oneToManyCardinality, controlName, controlsList, isCopyPaste);
-				}
-			}
-		}
-	}
+                    ControlInterface control = DynamicExtensionsUtility
+                            .getControlForAbstractAttribute(
+                                    (AttributeMetadataInterface) categoryAttributeInterface,
+                                    controlContainerInterface);
+                    if (control != null
+                            && control.getIsSkipLogicTargetControl())
+                    {
+                        boolean found = false;
+                        for (ControlInterface targetSkipControl : controlsList)
+                        {
+                            if (control.equals(targetSkipControl))
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (control.getSourceSkipControl().getParentContainer()
+                                .equals(control.getParentContainer()))
+                        {
+                            isSameContainerControl = true;
+                        }
+                        else
+                        {
+                            isSameContainerControl = false;
+                        }
+                        Integer controlSequenceNumber = control
+                                .getSequenceNumber();
+                        StringBuffer sourceControlName = new StringBuffer();
+                        if (controlSequenceNumber != null)
+                        {
+                            sourceControlName.append(control
+                                    .getSourceSkipControl()
+                                    .getHTMLComponentName());
+                            if (rowId != null && isSameContainerControl
+                                    && cardinality
+                                    && !rowId.equals(Integer.valueOf(-1)))
+                            {
+                                sourceControlName.append('_');
+                                sourceControlName.append(rowId);
+                            }
+                        }
+                        if (found
+                                && control.getIsSkipLogicTargetControl()
+                                && controlName.equals(sourceControlName
+                                        .toString()))
+                        {
+                            setValueMapForEnumeratedControls(rowId,
+                                    isSameContainerControl, cardinality,
+                                    fullValueMap, entry, control, isCopyPaste);
+                        }
+                    }
+                }
+            }
+            else if (attribute instanceof CategoryAssociationInterface)
+            {
+                List<Map<BaseAbstractAttributeInterface, Object>> attributeValueMapList = (List<Map<BaseAbstractAttributeInterface, Object>>) entry
+                        .getValue();
+                boolean oneToManyCardinality = false;
+                CategoryAssociationInterface categoryAssociation = (CategoryAssociationInterface) attribute;
+                if (categoryAssociation.getTargetCategoryEntity()
+                        .getNumberOfEntries() == -1)
+                {
+                    oneToManyCardinality = true;
+                }
+                Integer entryNumber = 0;
+                for (Map<BaseAbstractAttributeInterface, Object> map : attributeValueMapList)
+                {
+                    populateAttributeValueMapForSkipLogicAttributes(
+                            fullValueMap, map, ++entryNumber,
+                            oneToManyCardinality, controlName, controlsList,
+                            isCopyPaste);
+                }
+            }
+        }
+    }
 
 	/**
-	 * Defines a RuleInterface for this control.
-	 * @param ruleName Rule name
-	 */
+     * Defines a RuleInterface for this control.
+     *
+     * @param ruleName
+     *            Rule name
+     * @param control
+     *            the control
+     */
 	public static void defineRule(String ruleName, ControlInterface control)
 	{
 		CategoryAttribute categoryAttribute = (CategoryAttribute) control
@@ -1210,10 +1469,14 @@ public class ControlsUtility
 	}
 
 	/**
-	 * Checks if the given RuleInterface is already defined for this Control
-	 * @param ruleName2
-	 * @return
-	 */
+     * Checks if the given RuleInterface is already defined for this Control.
+     *
+     * @param ruleName2
+     *            the rule name2
+     * @param control
+     *            the control
+     * @return true, if is rule defined
+     */
 	public static boolean isRuleDefined(String ruleName2, ControlInterface control)
 	{
 		boolean result = false;
@@ -1231,5 +1494,4 @@ public class ControlsUtility
 		}
 		return result;
 	}
-
 }

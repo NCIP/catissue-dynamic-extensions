@@ -61,8 +61,8 @@ public class LoadFormControlsAction extends BaseDynamicExtensionsAction
 
 				ControlsUtility.reinitializeSequenceNumbers(containerInterface
 						.getControlCollection(), controlsForm.getControlsSequenceNumbers());
+				Logger.out.debug("Loading form controls for [" + containerInterface.getCaption() + "]");
 			}
-			Logger.out.debug("Loading form controls for [" + containerInterface.getCaption() + "]");
 			LoadFormControlsProcessor loadFormControlsProcessor = LoadFormControlsProcessor
 					.getInstance();
 
