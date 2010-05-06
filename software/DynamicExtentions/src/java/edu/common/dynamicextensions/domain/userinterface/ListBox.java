@@ -60,7 +60,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 	 */
 	public Integer getNoOfRows()
 	{
-		return this.noOfRows;
+		return noOfRows;
 	}
 
 	/**
@@ -120,22 +120,22 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		List<NameValueBean> nameValueBeans = null;
 		List<String> values = getValueAsStrings();
 		String parentContainerId = "";
-		if (this.getParentContainer() != null && this.getParentContainer().getId() != null)
+		if (getParentContainer() != null && getParentContainer().getId() != null)
 		{
-			parentContainerId = this.getParentContainer().getId().toString();
+			parentContainerId = getParentContainer().getId().toString();
 		}
 		String identifier = "";
-		if (this.getId() != null)
+		if (getId() != null)
 		{
-			identifier = this.getId().toString();
+			identifier = getId().toString();
 		}
 
 		String htmlComponentName = getHTMLComponentName();
 		StringBuffer sourceHtmlComponentValues = null;
-		if (this.getSourceSkipControl() != null)
+		if (getSourceSkipControl() != null)
 		{
 			sourceHtmlComponentValues = new StringBuffer();
-			List<String> sourceControlValues = this.getSourceSkipControl().getValueAsStrings();
+			List<String> sourceControlValues = getSourceSkipControl().getValueAsStrings();
 			if (sourceControlValues != null)
 			{
 				for (String value : sourceControlValues)
@@ -162,9 +162,9 @@ public class ListBox extends SelectControl implements ListBoxInterface
 					+ getHTMLComponentName() + "_div'>");
 		}
 		htmlString.append("<SELECT ");
-		htmlString.append(strMultiSelect).append(" size=").append(this.noOfRows).append(
+		htmlString.append(strMultiSelect).append(" size=").append(noOfRows).append(
 				" class='font_bl_s' name='").append(getHTMLComponentName()).append("' onchange=\"");
-		if (this.isSkipLogic != null && this.isSkipLogic)
+		if (isSkipLogic != null && isSkipLogic)
 		{
 			htmlString.append("getSkipLogicControl('");
 			htmlString.append(htmlComponentName);
@@ -176,8 +176,8 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		}
 		htmlString.append("isDataChanged();\" id='").append(htmlComponentName).append("' ");
 
-		if ((this.isReadOnly != null && this.isReadOnly)
-				|| (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly))
+		if ((isReadOnly != null && isReadOnly)
+				|| (isSkipLogicReadOnly != null && isSkipLogicReadOnly))
 		{
 			htmlString.append(" disabled='").append(ProcessorConstants.TRUE).append("' ");
 		}
@@ -186,9 +186,9 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		if (listOfValues == null)
 		{
 			List<String> sourceControlValues = null;
-			if (this.getSourceSkipControl() != null)
+			if (getSourceSkipControl() != null)
 			{
-				sourceControlValues = this.getSourceSkipControl().getValueAsStrings();
+				sourceControlValues = getSourceSkipControl().getValueAsStrings();
 			}
 			nameValueBeans = ControlsUtility.populateListOfValues(this, sourceControlValues);
 		}
@@ -347,7 +347,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 			}
 			else
 			{
-				selectedOptions = (List<String>) this.value;
+				selectedOptions = (List<String>) value;
 			}
 		}
 
@@ -413,7 +413,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 			}
 			else
 			{
-				values = (List<String>) this.value;
+				values = (List<String>) value;
 			}
 		}
 		if (!getIsSkipLogicDefaultValue())
@@ -423,17 +423,17 @@ public class ListBox extends SelectControl implements ListBoxInterface
 				String defaultValue = null;
 				values = new ArrayList<String>();
 
-				AttributeMetadataInterface attributeMetadata = this.getAttibuteMetadataInterface();
+				AttributeMetadataInterface attributeMetadata = getAttibuteMetadataInterface();
 				if (attributeMetadata != null)
 				{
-					if (attributeMetadata instanceof CategoryAttributeInterface)
+//					if (attributeMetadata instanceof CategoryAttributeInterface)
 					{
 						defaultValue = attributeMetadata.getDefaultValue();
 					}
-					else
-					{
-						defaultValue = attributeMetadata.getDefaultValue();
-					}
+//					else
+//					{
+//						defaultValue = attributeMetadata.getDefaultValue();
+//					}
 
 					if (defaultValue != null && defaultValue.trim().length() != 0)
 					{
