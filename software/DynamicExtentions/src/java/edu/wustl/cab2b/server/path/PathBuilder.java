@@ -60,16 +60,42 @@ import edu.wustl.cab2b.server.util.ServerProperties;
  * @author Chandrakant Talele
  * @author Munesh
  */
-public class PathBuilder
+public final class PathBuilder
 {
 
+    /**
+     * The Constant EXCEPTION_LOAD_MDL_DE.
+     */
+    private static final String EXCEPTION_LOAD_MDL_DE = "Exception while loading model in DE";
+
+    /**
+     * Instantiates a new path builder.
+     */
+    private PathBuilder()
+    {
+        // Empty constructor
+    }
+
+	/**
+     * The Constant LOGGER.
+     */
 	private static final Logger LOGGER = edu.wustl.common.util.logger.Logger
 			.getLogger(PathBuilder.class);
 
+	/**
+     * The association set.
+     */
 	private static Set<Long> associationSet = new HashSet<Long>();
 
-	private static HashMap<String, List<AssociationInterface>> srcDesVsAssociations = new HashMap<String, List<AssociationInterface>>();
+    /**
+     * The src des vs associations.
+     */
+    private static Map<String, List<AssociationInterface>> srcDesVsAssociations
+    = new HashMap<String, List<AssociationInterface>>();
 
+	/**
+     * The data file loader.
+     */
 	private static DataFileLoaderInterface dataFileLoader;
 
 	/**
@@ -116,21 +142,21 @@ public class PathBuilder
 	public static synchronized void loadSingleModelFromParserObject(Connection connection,
 			DomainModelParser parser, String applicationName, int maxPathLength)
 	{
-		DomainModelProcessor processor = null;
+		DomainModelProcessor processor = null; // NOPMD by gaurav_sawant on 5/6/10 5:39 PM
 		init();
 		try
 		{
-			processor = new DomainModelProcessor(parser, applicationName);
+			processor = new DomainModelProcessor(parser, applicationName); // NOPMD by gaurav_sawant on 5/6/10 5:39 PM
 		}
 		catch (DynamicExtensionsSystemException e)
 		{
-			LOGGER.error("Exception while loading model in DE", e);
-			throw new RuntimeException("Exception while loading model in DE", e);
+			LOGGER.error(EXCEPTION_LOAD_MDL_DE, e);
+			throw new RuntimeException(EXCEPTION_LOAD_MDL_DE, e);
 		}
 		catch (DynamicExtensionsApplicationException e)
 		{
-			LOGGER.error("Exception while loading model in DE", e);
-			throw new RuntimeException("Exception while loading model in DE", e);
+			LOGGER.error(EXCEPTION_LOAD_MDL_DE, e);
+			throw new RuntimeException(EXCEPTION_LOAD_MDL_DE, e);
 		}
 		try
 		{
@@ -157,15 +183,20 @@ public class PathBuilder
 	}
 
 	/**
-	 * Reads model present at given location and appends the generated paths to
-	 * {@link PathConstants#PATH_FILE_NAME} <b>NOTE : </b> Paths are appended to
-	 * existing file (if any).
-	 * @param processor Name of the application. The Entity Group will have this as its short name
-	 * @param applicationName Name of the application. The Entity Group will have this as its short name.
-	 * @param maxPathLength max length (no. of classes) in path.
-	 * @param applicationName Application name
-	 * @param append Append or not
-	 */
+     * Reads model present at given location and appends the generated paths to.
+     *
+     * @param processor
+     *            Name of the application. The Entity Group will have this as
+     *            its short name
+     * @param applicationName
+     *            Application name
+     * @param append
+     *            Append or not
+     * @param maxPathLength
+     *            max length (no. of classes) in path.
+     *            {@link PathConstants#PATH_FILE_NAME} <b>NOTE : </b> Paths are
+     *            appended to existing file (if any).
+     */
 	protected static void storeModelAndGeneratePaths(DomainModelProcessor processor,
 			String applicationName, boolean append, int maxPathLength)
 	{
@@ -186,11 +217,13 @@ public class PathBuilder
 	}
 
 	/**
-	 * Transforms paths into list of associations.s
-	 *
-	 * @param connection
-	 *            Database connection to use.
-	 */
+     * Transforms paths into list of associations.s
+     *
+     * @param connection
+     *            Database connection to use.
+     * @param entityGroup
+     *            the entity group
+     */
 	protected static void transformAndLoadPaths(Connection connection,
 			EntityGroupInterface entityGroup)
 	{
@@ -224,40 +257,49 @@ public class PathBuilder
 	 * @throws IOException
 	 *             If file operation fails.
 	 */
-	protected static synchronized void registerIntraModelAssociations(Connection connection,
-			Set<Long> associationIdSet) throws IOException
+    protected static synchronized void registerIntraModelAssociations(
+            Connection connection, Set<Long> associationIdSet)
+            throws IOException
 	{
 		LOGGER.debug("Registering all the associations present in DE as IntraModelAssociations");
 		BufferedWriter associationFile = new BufferedWriter(new FileWriter(new File(
 				ASSOCIATION_FILE_NAME)));
 		BufferedWriter intraModelAssociationFile = new BufferedWriter(new FileWriter(new File(
 				INTRA_MODEL_ASSOCIATION_FILE_NAME)));
-
-		long nextId = getNextAssociationId(associationIdSet.size(), connection).longValue();
-		for (Long associationId : associationIdSet)
+		try
 		{
-			associationFile.write(Long.toString(nextId));
-			associationFile.write(FIELD_SEPARATOR);
-			associationFile.write(Integer.toString(AssociationType.INTRA_MODEL_ASSOCIATION
-					.getValue()));
-			associationFile.write("\n");
-			associationFile.flush();
+		    long nextId = getNextAssociationId(associationIdSet.size(), connection).longValue(); // NOPMD by gaurav_sawant on 5/6/10 6:46 PM
+		    for (Long associationId : associationIdSet)
+		    {
+		        associationFile.write(Long.toString(nextId));
+		        associationFile.write(FIELD_SEPARATOR);
+		        associationFile.write(Integer.toString(AssociationType.INTRA_MODEL_ASSOCIATION
+		                .getValue()));
+		        associationFile.write("\n");
+		        associationFile.flush();
 
-			intraModelAssociationFile.write(Long.toString(nextId));
-			intraModelAssociationFile.write(FIELD_SEPARATOR);
-			intraModelAssociationFile.write(Long.toString(associationId));
-			intraModelAssociationFile.write("\n");
-			intraModelAssociationFile.flush();
-			nextId++;
+		        intraModelAssociationFile.write(Long.toString(nextId));
+		        intraModelAssociationFile.write(FIELD_SEPARATOR);
+		        intraModelAssociationFile.write(Long.toString(associationId));
+		        intraModelAssociationFile.write("\n");
+		        intraModelAssociationFile.flush();
+		        nextId++; // NOPMD by gaurav_sawant on 5/6/10 6:46 PM
+		    }
+		    String columns = "(ASSOCIATION_ID,ASSOCIATION_TYPE)";
+		    loadDataFromFile(connection, ASSOCIATION_FILE_NAME, columns, "ASSOCIATION", new Class[]{
+		            Long.class, Integer.class});
+
+		    columns = "(ASSOCIATION_ID,DE_ASSOCIATION_ID)";
+		    loadDataFromFile(connection, INTRA_MODEL_ASSOCIATION_FILE_NAME, columns,
+		            "INTRA_MODEL_ASSOCIATION", new Class[]{Long.class, Long.class});
+		    LOGGER.debug("All the associations are registered");
 		}
-		String columns = "(ASSOCIATION_ID,ASSOCIATION_TYPE)";
-		loadDataFromFile(connection, ASSOCIATION_FILE_NAME, columns, "ASSOCIATION", new Class[]{
-				Long.class, Integer.class});
+		finally
+		{
+		    associationFile.close();
+		    intraModelAssociationFile.close();
+		}
 
-		columns = "(ASSOCIATION_ID,DE_ASSOCIATION_ID)";
-		loadDataFromFile(connection, INTRA_MODEL_ASSOCIATION_FILE_NAME, columns,
-				"INTRA_MODEL_ASSOCIATION", new Class[]{Long.class, Long.class});
-		LOGGER.debug("All the associations are registered");
 	}
 
 	/**
@@ -281,7 +323,7 @@ public class PathBuilder
 
 		List<String> pathList = readFullFile();
 		BufferedWriter pathFile = new BufferedWriter(new FileWriter(new File(PATH_FILE_NAME)));
-		IdGenerator idGenerator = new IdGenerator(getNextPathId(connection));
+		IdGenerator idGenerator = new IdGenerator(getNextPathId(connection)); // NOPMD by gaurav_sawant on 5/6/10 6:47 PM
 		int totalPaths = pathList.size();
 		LOGGER.info("Transforming " + totalPaths + " paths...");
 		for (int i = 0; i < totalPaths; i++)
@@ -315,13 +357,21 @@ public class PathBuilder
 				Long.class, String.class, Long.class});
 	}
 
+	/**
+     * Log.
+     *
+     * @param totalPaths
+     *            the total paths
+     * @param transformedPaths
+     *            the transformed paths
+     */
 	private static void log(int totalPaths, int transformedPaths)
 	{
 		if (transformedPaths % 200 == 0)
 		{
 			Float percentage = (((float) transformedPaths) / totalPaths) * 100;
 			String percentageAsString = percentage.toString();
-			int index = percentageAsString.indexOf(('.'));
+			int index = percentageAsString.indexOf('.');
 			if (percentageAsString.length() >= index + 3)
 			{
 				percentageAsString = percentageAsString.substring(0, index + 3);
@@ -331,18 +381,19 @@ public class PathBuilder
 	}
 
 	/**
-	 * Reads full file {@link PathConstants#PATH_FILE_NAME} and returns it as
-	 * array of Strings
-	 *
-	 * @return Array of strings where one element is one line from file.
-	 * @throws IOException
-	 */
+     * Reads full file {@link PathConstants#PATH_FILE_NAME} and returns it as
+     * array of Strings.
+     *
+     * @return Array of strings where one element is one line from file.
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
 	protected static List<String> readFullFile() throws IOException
 	{
-		BufferedReader bufferedReader = null;
+		BufferedReader bufferedReader = null; // NOPMD by gaurav_sawant on 5/6/10 6:44 PM
 		try
 		{
-			bufferedReader = new BufferedReader(new FileReader(PATH_FILE_NAME));
+			bufferedReader = new BufferedReader(new FileReader(PATH_FILE_NAME)); // NOPMD by gaurav_sawant on 5/6/10 6:55 PM
 		}
 		catch (FileNotFoundException e)
 		{
@@ -361,16 +412,17 @@ public class PathBuilder
 	}
 
 	/**
-	 * Returns All Possible Paths present in given list of entities. The order
-	 * of entity IDs is important. Paths will be list of association IDs.
-	 *
-	 * @param entityIds
-	 *            Array of entities IDs present in a path.
-	 * @param con -
-	 *            Database connection to use to fire SQLs.
-	 * @return the List of possible intra model paths.
-	 * @throws SQLException
-	 */
+     * Returns All Possible Paths present in given list of entities. The order
+     * of entity IDs is important. Paths will be list of association IDs.
+     *
+     * @param entityIds
+     *            Array of entities IDs present in a path.
+     * @param prepareStatement
+     *            the prepare statement
+     * @return the List of possible intra model paths.
+     * @throws SQLException
+     *             the SQL exception
+     */
 	protected static List<String> getIntraModelPaths(Long[] entityIds,
 			PreparedStatement prepareStatement) throws SQLException
 	{
@@ -398,37 +450,35 @@ public class PathBuilder
 				}
 				newPathList.addAll(pathList);
 			}
-			allPossiblePaths = newPathList;
+			allPossiblePaths = newPathList; // NOPMD by gaurav_sawant on 5/6/10 6:55 PM
 		}
 		return allPossiblePaths;
 	}
 
 	/**
-	 * This method calls Dynamic extension's API to get all the Associations
-	 * present between passed Source and Target Entities. Then it gets IDs of
-	 * those and finds corresponding mapping IDs from table
-	 * INTRA_MODEL_ASSOCIATION. and returns list of all those mapping identifiers.
-	 *
-	 * @param source
-	 *            Source end of the association.
-	 * @param target
-	 *            Target end of the association.
-	 * @param con -
-	 *            Database connection to use to fire SQLs.
-	 * @return List of association IDs from INTRA_MODEL_ASSOCIATION table
-	 * @throws SQLException
-	 */
+     * This method calls Dynamic extension's API to get all the Associations
+     * present between passed Source and Target Entities. Then it gets IDs of
+     * those and finds corresponding mapping IDs from table
+     * INTRA_MODEL_ASSOCIATION. and returns list of all those mapping
+     * identifiers.
+     *
+     * @param source
+     *            Source end of the association.
+     * @param target
+     *            Target end of the association.
+     * @param prepareStatement
+     *            the prepare statement
+     * @return List of association IDs from INTRA_MODEL_ASSOCIATION table
+     * @throws SQLException
+     *             the SQL exception
+     */
 	protected static List<Long> getIntraModelAssociations(Long source, Long target,
 			PreparedStatement prepareStatement) throws SQLException
 	{
 		List<AssociationInterface> associations = srcDesVsAssociations.get(source + CONNECTOR
 				+ target);
-		if (associations == null || associations.isEmpty())
-		{
-			throw new RuntimeException("No association present in entity : " + source
-					+ " and entity: " + target);
-		}
-		ArrayList<Long> list = new ArrayList<Long>(associations.size());
+		checkEmptyAssociations(source, target, associations);
+		ArrayList<Long> list = new ArrayList<Long>(associations.size()); // NOPMD by gaurav_sawant on 5/6/10 6:55 PM
 		for (AssociationInterface association : associations)
 		{
 			prepareStatement.setLong(1, association.getId());
@@ -444,17 +494,43 @@ public class PathBuilder
 		return list;
 	}
 
+    /**
+     * Check empty associations.
+     *
+     * @param source
+     *            the source
+     * @param target
+     *            the target
+     * @param associations
+     *            the associations
+     */
+    private static void checkEmptyAssociations(Long source, Long target,
+            List<AssociationInterface> associations)
+    {
+        if (associations == null || associations.isEmpty())
+		{
+			throw new RuntimeException("No association present in entity : " + source
+					+ " and entity: " + target);
+		}
+    }
+
 	/**
-	 * This method parses the intermediate path and returns all identifiers present in
-	 * it.<br>
-	 * It parses intermediate path string based on
-	 * {@link PathConstants#CONNECTOR} and then converts it to entity identifiers. Then
-	 * adds first entity id at the start and last entity id to the end and
-	 * returns the list of Long.
-	 *
-	 * @return the Long[] identifiers of all entities present in the path in sequential
-	 *         order.
-	 */
+     * This method parses the intermediate path and returns all identifiers
+     * present in it.<br>
+     * It parses intermediate path string based on
+     *
+     * @param firstEntityId
+     *            the first entity id
+     * @param intermediatePath
+     *            the intermediate path
+     * @param lastEntityId
+     *            the last entity id
+     * @return the Long[] identifiers of all entities present in the path in
+     *         sequential order. {@link PathConstants#CONNECTOR} and then
+     *         converts it to entity identifiers. Then adds first entity id at
+     *         the start and last entity id to the end and returns the list of
+     *         Long.
+     */
 	protected static Long[] getEntityIdSequence(Long firstEntityId, String intermediatePath,
 			Long lastEntityId)
 	{
@@ -501,63 +577,85 @@ public class PathBuilder
 		return nextId;
 	}
 
-	/**
-	 * Loads data from given file into given table. <b> NOTE : </b> This method
-	 * will not create table in database. It assumes that table is already
-	 * present
-	 *
-	 * @param connection
-	 *            Connection to use to fire SQL
-	 * @param fileName
-	 *            Full path of data file.
-	 * @param columns
-	 *            Data columns in table. They should be in format
-	 *            "(column1,column2,...)"
-	 * @param tableName
-	 *            Name of the table in which data to load.
-	 */
-	protected static void loadDataFromFile(Connection connection, String fileName, String columns,
-			String tableName, Class<?>[] dataTypes)
-	{
-		String className = null;
-		if (dataFileLoader == null)
-		{
-			try
-			{
-				className = ServerProperties.getDatabaseLoader();
-				dataFileLoader = (DataFileLoaderInterface) Class.forName(className).newInstance();
-			}
-			catch (InstantiationException e)
-			{
-				LOGGER.error("Unable to instantiation " + className);
-				LOGGER.error(Utility.getStackTrace(e));
-			}
-			catch (IllegalAccessException e)
-			{
-				LOGGER.error("Unable to access public default constructor of " + className);
-				LOGGER.error(Utility.getStackTrace(e));
-			}
-			catch (ClassNotFoundException e)
-			{
-				LOGGER.error("Class " + className + " not found. Please put it in classpath");
-				LOGGER.error(Utility.getStackTrace(e));
-			}
-			catch (ClassCastException e)
-			{
-				LOGGER.error("Class " + className + " must implement DataFileLoaderInterface");
-				LOGGER.error(Utility.getStackTrace(e));
-			}
-		}
-		dataFileLoader.loadDataFromFile(connection, fileName, columns, tableName, dataTypes,
-				PathConstants.FIELD_SEPARATOR);
-	}
+    /**
+     * Loads data from given file into given table. <b> NOTE : </b> This method
+     * will not create table in database. It assumes that table is already
+     * present
+     *
+     * @param connection
+     *            Connection to use to fire SQL
+     * @param fileName
+     *            Full path of data file.
+     * @param columns
+     *            Data columns in table. They should be in format
+     *            "(column1,column2,...)"
+     * @param tableName
+     *            Name of the table in which data to load.
+     * @param dataTypes
+     *            the data types
+     */
+    protected static void loadDataFromFile(Connection connection,
+            String fileName, String columns, String tableName,
+            Class<?>[] dataTypes)
+    {
+        synchronized (PathBuilder.class)
+        {
+            if (dataFileLoader == null)
+            {
+                initDataLoader();
+            }
+        }
+        dataFileLoader.loadDataFromFile(connection, fileName, columns,
+                tableName, dataTypes, PathConstants.FIELD_SEPARATOR);
+    }
+
+    /**
+     * Inits the data loader.
+     */
+    private static void initDataLoader()
+    {
+        String className = null;
+        try
+        {
+            className = ServerProperties.getDatabaseLoader();
+            dataFileLoader = (DataFileLoaderInterface) Class.forName(className)
+                    .newInstance();
+        }
+        catch (InstantiationException e)
+        {
+            LOGGER.error("Unable to instantiation " + className);
+            LOGGER.error(Utility.getStackTrace(e));
+        }
+        catch (IllegalAccessException e)
+        {
+            LOGGER.error("Unable to access public default constructor of "
+                    + className);
+            LOGGER.error(Utility.getStackTrace(e));
+        }
+        catch (ClassNotFoundException e)
+        {
+            LOGGER.error("Class " + className
+                    + " not found. Please put it in classpath");
+            LOGGER.error(Utility.getStackTrace(e));
+        }
+        catch (ClassCastException e)
+        {
+            LOGGER.error("Class " + className
+                    + " must implement DataFileLoaderInterface");
+            LOGGER.error(Utility.getStackTrace(e));
+        }
+    }
 
 	/**
-	 * Persists all the input intermodel connection
-	 *
-	 * @param interModelConnections
-	 * @throws IOException
-	 */
+     * Persists all the input intermodel connection.
+     *
+     * @param interModelConnections
+     *            the inter model connections
+     * @param connection
+     *            the connection
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
 	protected static synchronized void persistInterModelConnections(
 			List<InterModelConnection> interModelConnections, Connection connection)
 			throws IOException
@@ -567,42 +665,84 @@ public class PathBuilder
 		BufferedWriter interModelAssociationFile = new BufferedWriter(new FileWriter(new File(
 				INTER_MODEL_ASSOCIATION_FILE_NAME)));
 
-		long nextId = getNextAssociationId(interModelConnections.size(), connection).longValue();
-		for (InterModelConnection interModelConnection : interModelConnections)
+		try
+        {
+            long nextId = getNextAssociationId(interModelConnections.size(), // NOPMD by gaurav_sawant on 5/6/10 6:46 PM
+                    connection).longValue();
+            for (InterModelConnection interModelConnection : interModelConnections)
+            {
+                writeToAssociationFile(associationFile, nextId);
+                writeToInterModelAssocFile(interModelAssociationFile, nextId,
+                        interModelConnection);
+                nextId++; // NOPMD by gaurav_sawant on 5/6/10 6:46 PM
+            }
+            String columns = "(ASSOCIATION_ID,ASSOCIATION_TYPE)";
+            loadDataFromFile(connection, ASSOCIATION_FILE_NAME, columns,
+                    "ASSOCIATION", new Class[] { Long.class, Integer.class });
+
+            columns = "(ASSOCIATION_ID,LEFT_ENTITY_ID,LEFT_ATTRIBUTE_ID,RIGHT_ENTITY_ID,RIGHT_ATTRIBUTE_ID)";
+            loadDataFromFile(connection, INTER_MODEL_ASSOCIATION_FILE_NAME,
+                    columns, "INTER_MODEL_ASSOCIATION", new Class[] {
+                            Long.class, Long.class, Long.class, Long.class,
+                            Long.class });
+        }
+		finally
 		{
-			associationFile.write(Long.toString(nextId));
-			associationFile.write(FIELD_SEPARATOR);
-			associationFile.write(Integer.toString(AssociationType.INTER_MODEL_ASSOCIATION
-					.getValue()));
-			associationFile.write("\n");
-			associationFile.flush();
-
-			interModelAssociationFile.write(Long.toString(nextId));
-			interModelAssociationFile.write(FIELD_SEPARATOR);
-			interModelAssociationFile.write(interModelConnection.getLeftEntityId().toString());
-			interModelAssociationFile.write(FIELD_SEPARATOR);
-			interModelAssociationFile.write(interModelConnection.getLeftAttributeId().toString());
-			interModelAssociationFile.write(FIELD_SEPARATOR);
-			interModelAssociationFile.write(interModelConnection.getRightEntityId().toString());
-			interModelAssociationFile.write(FIELD_SEPARATOR);
-			interModelAssociationFile.write(interModelConnection.getRightAttributeId().toString());
-			interModelAssociationFile.write("\n");
-			interModelAssociationFile.flush();
-			nextId++;
+		    associationFile.close();
+		    interModelAssociationFile.close();
 		}
-		String columns = "(ASSOCIATION_ID,ASSOCIATION_TYPE)";
-		loadDataFromFile(connection, ASSOCIATION_FILE_NAME, columns, "ASSOCIATION", new Class[]{
-				Long.class, Integer.class});
-
-		columns = "(ASSOCIATION_ID,LEFT_ENTITY_ID,LEFT_ATTRIBUTE_ID,RIGHT_ENTITY_ID,RIGHT_ATTRIBUTE_ID)";
-		loadDataFromFile(connection, INTER_MODEL_ASSOCIATION_FILE_NAME, columns,
-				"INTER_MODEL_ASSOCIATION", new Class[]{Long.class, Long.class, Long.class,
-						Long.class, Long.class});
 	}
 
+    /**
+     * @param interModelAssociationFile
+     * @param nextId
+     * @param interModelConnection
+     * @throws IOException
+     */
+    private static void writeToInterModelAssocFile(
+            BufferedWriter interModelAssociationFile, long nextId,
+            InterModelConnection interModelConnection) throws IOException
+    {
+        interModelAssociationFile.write(Long.toString(nextId));
+        interModelAssociationFile.write(FIELD_SEPARATOR);
+        interModelAssociationFile.write(interModelConnection
+                .getLeftEntityId().toString());
+        interModelAssociationFile.write(FIELD_SEPARATOR);
+        interModelAssociationFile.write(interModelConnection
+                .getLeftAttributeId().toString());
+        interModelAssociationFile.write(FIELD_SEPARATOR);
+        interModelAssociationFile.write(interModelConnection
+                .getRightEntityId().toString());
+        interModelAssociationFile.write(FIELD_SEPARATOR);
+        interModelAssociationFile.write(interModelConnection
+                .getRightAttributeId().toString());
+        interModelAssociationFile.write("\n");
+        interModelAssociationFile.flush();
+    }
+
+    /**
+     * @param associationFile
+     * @param nextId
+     * @throws IOException
+     */
+    private static void writeToAssociationFile(BufferedWriter associationFile,
+            long nextId) throws IOException
+    {
+        associationFile.write(Long.toString(nextId));
+        associationFile.write(FIELD_SEPARATOR);
+        associationFile.write(Integer
+                .toString(AssociationType.INTER_MODEL_ASSOCIATION
+                        .getValue()));
+        associationFile.write("\n");
+        associationFile.flush();
+    }
+
 	/**
-	 * Initializes the cache for building paths.
-	 */
+     * Initializes the cache for building paths.
+     *
+     * @param entGroup
+     *            the ent group
+     */
 	private static void loadCache(EntityGroupInterface entGroup)
 	{
 		EntityCache.getInstance().refreshCache();
@@ -610,20 +750,7 @@ public class PathBuilder
 		{
 			Collection<EntityInterface> allEntities = entityGroup.getEntityCollection();
 
-			for (EntityInterface entity : allEntities)
-			{
-				for (AssociationInterface association : entity.getAssociationCollection())
-				{
-					String key = entity.getId() + CONNECTOR + association.getTargetEntity().getId();
-					List<AssociationInterface> associations = srcDesVsAssociations.get(key);
-					if (associations == null)
-					{
-						associations = new ArrayList<AssociationInterface>();
-						srcDesVsAssociations.put(key, associations);
-					}
-					associations.add(association);
-				}
-			}
+			fetchEntityAssociations(allEntities);
 		}
 		for (EntityInterface entity : entGroup.getEntityCollection())
 		{
@@ -634,11 +761,38 @@ public class PathBuilder
 		}
 	}
 
+    /**
+     * Fetch entity associations.
+     *
+     * @param allEntities
+     *            the all entities
+     */
+    private static void fetchEntityAssociations(
+            Collection<EntityInterface> allEntities)
+    {
+        for (EntityInterface entity : allEntities)
+        {
+        	for (AssociationInterface association : entity.getAssociationCollection())
+        	{
+        		String key = entity.getId() + CONNECTOR + association.getTargetEntity().getId();
+        		List<AssociationInterface> associations = srcDesVsAssociations.get(key);
+        		if (associations == null)
+        		{
+        			associations = new ArrayList<AssociationInterface>();
+        			srcDesVsAssociations.put(key, associations);
+        		}
+        		associations.add(association);
+        	}
+        }
+    }
+
 	/**
-	 * Returns next path Id.
-	 * @param connection
-	 * @return Next path Id.
-	 */
+     * Returns next path Id.
+     *
+     * @param connection
+     *            the connection
+     * @return Next path Id.
+     */
 	public static long getNextPathId(Connection connection)
 	{
 		String[][] result = SQLQueryUtil.executeQuery("select MAX(PATH_ID) from PATH", connection);
