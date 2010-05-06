@@ -4,6 +4,7 @@ package edu.common.dynamicextensions.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -710,7 +711,7 @@ public class CategoryGenerationUtil
 						throw new DynamicExtensionsSystemException(ApplicationProperties
 								.getValue(CategoryConstants.CREATE_CAT_FAILS)
 								+ " "
-								+ names
+								+ Arrays.toString(names)
 								+ ApplicationProperties
 										.getValue("incorrectFormulaSyntaxCalculatedAttribute")
 								+ categoryAttribute.getFormula().getExpression(), e);
@@ -723,7 +724,7 @@ public class CategoryGenerationUtil
 						throw new DynamicExtensionsSystemException(ApplicationProperties
 								.getValue(CategoryConstants.CREATE_CAT_FAILS)
 								+ " "
-								+ names
+								+ Arrays.toString(names)
 								+ ApplicationProperties
 										.getValue("incorrectFormulaSyntaxCalculatedAttribute")
 								+ categoryAttribute.getFormula().getExpression());
@@ -748,7 +749,7 @@ public class CategoryGenerationUtil
 							throw new DynamicExtensionsSystemException(ApplicationProperties
 									.getValue(CategoryConstants.CREATE_CAT_FAILS)
 									+ " "
-									+ names
+									+ Arrays.toString(names)
 									+ ApplicationProperties
 											.getValue("incorrectDataTypeForCalculatedAttribute")
 									+ categoryAttribute.getFormula().getExpression());

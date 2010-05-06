@@ -2,6 +2,7 @@
 package edu.wustl.cab2b.client.metadatasearch;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,6 +28,8 @@ import edu.wustl.cab2b.common.util.AlphabeticalComparator;
 import edu.wustl.cab2b.common.util.Constants;
 
 /**
+ * The Class MetadataSearch.
+ *
  * @author hrishikesh_rajpathak
  * @author gautam_shetty
  */
@@ -78,7 +81,8 @@ public class MetadataSearch
 				matchedClass = searchConceptCode(searchString, searchTarget);
 				break;
 			default :
-				throw new CheckedException("Search target does not exist : " + searchTarget);
+            throw new CheckedException("Search target does not exist : "
+                    + Arrays.toString(searchTarget));
 		}
 		matchedClass.setEntityCollection(matchedClass.getSortedEntityCollection());
 
@@ -338,7 +342,8 @@ public class MetadataSearch
 					resultantMatchedClass = createResultClass(resultantMatchedClass, matchedClass);
 					break;
 				default :
-					throw new CheckedException("Search target does not exist : " + searchTarget);
+                throw new CheckedException("Search target does not exist : "
+                        + Arrays.toString(searchTarget));
 			}
 		}
 		return resultantMatchedClass;
