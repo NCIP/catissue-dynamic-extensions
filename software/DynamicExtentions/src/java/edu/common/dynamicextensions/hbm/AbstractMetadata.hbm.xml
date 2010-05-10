@@ -254,13 +254,7 @@
             insert="true"
             column="IS_CACHEABLE"
         />
-		<property
-            name="isCacheable"
-            type="boolean"
-            update="true"
-            insert="true"
-            column="IS_CACHEABLE"
-        />
+
         </joined-subclass>
         <joined-subclass
             name="edu.common.dynamicextensions.domain.BaseAbstractAttribute"
