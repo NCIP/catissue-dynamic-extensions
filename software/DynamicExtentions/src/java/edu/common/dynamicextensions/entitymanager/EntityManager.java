@@ -2554,6 +2554,33 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		return contIdentifier;
 	}
 
+	/**
+	 * This method will return the Entity of the RootCategoryEntity based on the
+	 * container ID of the root CategoryEntity.
+	 * @param containerId Container id of the root container id.
+	 * @return Entity from which the root category Entity is created
+	 * & its container id as given in the parameter.
+	 * @exception DynamicExtensionsSystemException exception.
+	 */
+	public EntityInterface getCategoryRootEntityByContainerId(Long containerId)
+			throws DynamicExtensionsSystemException
+	{
+		EntityInterface rootEntity = null;
+
+		// Create a map of substitution parameters.
+		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
+		substParams.put("0", new NamedQueryParam(DBTypes.LONG, containerId));
+
+		Collection<EntityInterface> containers = executeHQL("getCategoryRootEntityByContainerId",
+				substParams);
+		if ((containers != null) && !containers.isEmpty())
+		{
+			rootEntity = containers.iterator().next();
+		}
+
+		return rootEntity;
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.entitymanager.EntityManagerInterface#getColumnNameForAssociation(java.lang.Long, java.lang.Long)
 	 */

@@ -468,6 +468,7 @@
             outer-join="auto"
             update="true"
             insert="true"
+            lazy="false"
             column="TARGET_ENTITY_ID"
         />
 
@@ -478,6 +479,7 @@
             outer-join="auto"
             update="true"
             insert="true"
+            lazy="false"
             column="SOURCE_ROLE_ID"
         />
 
@@ -596,15 +598,16 @@
               />
         </set>
 
-        <many-to-one
+		<property
             name="abstractAttribute"
-            class="edu.common.dynamicextensions.domain.AbstractAttribute"
-            cascade="save-update"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="ABSTRACT_ATTRIBUTE_ID"
-        />
+            column="ABSTRACT_ATTRIBUTE_ID">
+	       <type name="edu.wustl.common.hibernate.CanonicalFormType">
+				<param name="canonical-form-provider">
+					edu.wustl.metadata.hibernate.AttributeCanonicalFormProvider
+				</param>
+			</type>
+		</property>
+
 
         <many-to-one
             name="categoryEntity"
@@ -1192,16 +1195,16 @@
                   class="edu.common.dynamicextensions.domain.CategoryEntity"
               />
         </set>
-
-        <many-to-one
+		<property
             name="entity"
-            class="edu.common.dynamicextensions.domain.Entity"
-            cascade="save-update"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="ENTITY_ID"
-        />
+            column="ENTITY_ID">
+	       <type name="edu.wustl.common.hibernate.CanonicalFormType">
+				<param name="canonical-form-provider">
+					edu.wustl.metadata.hibernate.EntityCanonicalFormProvider
+				</param>
+			</type>
+		</property>
+
 
         <set
             name="pathCollection"

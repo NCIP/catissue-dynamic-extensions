@@ -217,4 +217,17 @@ public interface CategoryManagerInterface
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
 			CacheException, DAOException, SQLException;
 
+	/**
+	 * This method will found out the record Entry id associated with the deRecordId
+	 * which is of Entity & entered for the dynEntContainerId container of the category
+	 * of whose static Entity id is recordEntryStaticId.
+	 * @param dynEntContainerId category root container Id.
+	 * @param deRecordId dynamicRecordId of the Entity from which that category Entity is created.
+	 * @param recordEntryStaticId Entity id of the static entity which is hooked to the DE model.
+	 * @return recordEntry Id associated with this record.
+	 * @exception DynamicExtensionsSystemException Exception.
+	 *
+	 */
+	public long getRecordEntryIdByEntityRecordId(Long dynEntContainerId, Long deRecordId,
+			Long recordEntryStaticId) throws DynamicExtensionsSystemException;
 }

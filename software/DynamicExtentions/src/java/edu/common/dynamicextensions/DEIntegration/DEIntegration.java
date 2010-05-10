@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.ehcache.CacheException;
-import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
-import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.entitymanager.CategoryManager;
 import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
@@ -559,34 +557,56 @@ public class DEIntegration implements IntegrationInterface
 	}
 
 	/**
-	 * @param container
-	 * @param recordEntryId
-	 * @param recEntryEntityId
-	 * @return
-	 * @throws DynamicExtensionsSystemException
-	 * @throws DAOException
-	 * @throws SQLException
+	 * This method will verify weather dta associated with the given recordEntryId is properly hooked or
+	 * not.
+	 * @param containerId container Id.
+	 * @param recordEntryId record entry id.
+	 * @param recEntryEntityId static entity id.
+	 * @return true if data is properly hooked else returns false.
+	 * @throws DynamicExtensionsSystemException exception.
+	 * @throws DAOException exception.
 	 */
-	public boolean isDataHooked(ContainerInterface container, Long recordEntryId,
-			Long recEntryEntityId) throws DynamicExtensionsSystemException, DAOException,
-			SQLException
+	public boolean isDataHooked(Long containerId, Long recordEntryId, Long recEntryEntityId)
+			throws DynamicExtensionsSystemException, DAOException, SQLException
 	{
 		boolean isDataHooked = false;
-		Collection entityRecordList = getCategoryRecIdBasedOnHookEntityRecId(container.getId(),
+		Collection entityRecordList = getCategoryRecIdBasedOnHookEntityRecId(containerId,
 				recordEntryId, Long.valueOf(recEntryEntityId));
+		String catTableName = EntityManager.getInstance().getDynamicTableName(containerId);
 		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
 		if (entityRecordList != null && !entityRecordList.isEmpty())
 		{
 			Long dynamicRecId = (Long) entityRecordList.iterator().next();
-			CategoryEntityInterface rootCatEntity = (CategoryEntityInterface) container
-					.getAbstractEntity();
-
 			Long categoryRecordId = categoryManager.getRootCategoryEntityRecordIdByEntityRecordId(
-					dynamicRecId, rootCatEntity.getTableProperties().getName());
+					dynamicRecId, catTableName);
 			if (categoryRecordId != null && !"".equalsIgnoreCase(categoryRecordId.toString()))
 			{
 				isDataHooked = true;
 			}
+		}
+		return isDataHooked;
+	}
+
+	/**
+	 * This method will verify weather data associated with the given dynamicEntityRecordId is properly
+	 * hooked or not.
+	 * @param containerId container Id.
+	 * @param dynamicEntityRecordId record entry id.
+	 * @return true if data is properly hooked else returns false.
+	 * @throws DynamicExtensionsSystemException exception.
+	 * @throws DAOException exception.
+	 */
+	public boolean isDataHooked(Long containerId, Long dynamicEntityRecordId)
+			throws DynamicExtensionsSystemException, DAOException
+	{
+		boolean isDataHooked = false;
+		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
+		String catTableName = EntityManager.getInstance().getDynamicTableName(containerId);
+		Long categoryRecordId = categoryManager.getRootCategoryEntityRecordIdByEntityRecordId(
+				dynamicEntityRecordId, catTableName);
+		if (categoryRecordId != null && !"".equalsIgnoreCase(categoryRecordId.toString()))
+		{
+			isDataHooked = true;
 		}
 		return isDataHooked;
 	}

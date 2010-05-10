@@ -32,7 +32,6 @@ import edu.common.dynamicextensions.entitymanager.AbstractMetadataManager;
 import edu.common.dynamicextensions.entitymanager.CategoryManager;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
-import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.cab2b.common.beans.MatchedClass;
@@ -759,20 +758,17 @@ public abstract class AbstractEntityCache implements IEntityCache
 	* It will return the Container with the id as given identifier in the parameter.
 	* @param identifier
 	* @return Container with given identifier
-	* @throws DynamicExceptionsCacheException
 	*/
 
 	public ContainerInterface getContainerById(final Long identifier)
-			throws DynamicExtensionsCacheException
 	{
 		ContainerInterface container = idVscontainers.get(identifier);
 		try
 		{
 			if (container == null)
 			{
-				container = (ContainerInterface) ((AbstractMetadataManager) CategoryManager
-						.getInstance()).getObjectByIdentifier(ContainerInterface.class.getName(),
-						identifier.toString());
+				container = (ContainerInterface) CategoryManager.getObjectByIdentifier(
+						ContainerInterface.class.getName(), identifier.toString());
 			}
 		}
 		catch (DynamicExtensionsSystemException e)

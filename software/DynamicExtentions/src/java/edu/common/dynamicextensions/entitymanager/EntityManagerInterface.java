@@ -757,4 +757,15 @@ public interface EntityManagerInterface
 	String getCategoryEntityNameByCategoryEntityId(Long categoryId)
 			throws DynamicExtensionsSystemException;
 
+	/**
+	 * This method will return the Entity of the RootCategoryEntity based on the
+	 * container ID of the root CategoryEntity.
+	 * @param containerId Container id of the root container id.
+	 * @return Entity from which the root category Entity is created
+	 * & its container id as given in the parameter.
+	 * @exception DynamicExtensionsSystemException exception.
+	 */
+	EntityInterface getCategoryRootEntityByContainerId(Long containerId)
+			throws DynamicExtensionsSystemException;
+
 }

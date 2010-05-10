@@ -2350,8 +2350,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				{
 					Long dynamicRecId = (Long) recIdList.iterator().next();
 					Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
-					Long categoryRecordId = getRootCategoryEntityRecordIdByEntityRecordId(dynamicRecId,
-							rootCatEntity.getTableProperties().getName());
+					Long categoryRecordId = getRootCategoryEntityRecordIdByEntityRecordId(
+							dynamicRecId, rootCatEntity.getTableProperties().getName());
 					if (categoryRecordId == null)
 					{
 						throw new DynamicExtensionsSystemException(
@@ -2364,10 +2364,10 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				}
 				else
 				{
-					throw new DynamicExtensionsSystemException(
-							"Exception in execution query :: " + "Unhooked data present in database for recordEntryId "
-							+ recordEntryId + " formId :" + formId
-							+ " recordEntryStaticId : " + recordEntryStaticId);
+					throw new DynamicExtensionsSystemException("Exception in execution query :: "
+							+ "Unhooked data present in database for recordEntryId "
+							+ recordEntryId + " formId :" + formId + " recordEntryStaticId : "
+							+ recordEntryStaticId);
 				}
 			}
 		}
@@ -3132,8 +3132,44 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		final String query = "select IDENTIFIER from " + rootCategoryTableName
 				+ " where record_Id =?";
 
-		final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+		final List<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 		queryDataList.add(new ColumnValueBean(RECORD_ID, rootCategoryEntityRecordId));
+		return getEntityRecordId(query, queryDataList);
+	}
+
+	/**
+	 * This method will found out the record Entry id associated with the deRecordId
+	 * which is of Entity & entered for the dynEntContainerId container of the category
+	 * of whose static Entity id is recordEntryStaticId.
+	 * @param dynEntContainerId category root container Id.
+	 * @param deRecordId dynamicRecordId of the Entity from which that category Entity is created.
+	 * @param recordEntryStaticId Entity id of the static entity which is hooked to the DE model.
+	 * @return recordEntry Id associated with this record.
+	 * @exception DynamicExtensionsSystemException Exception.
+	 *
+	 */
+	public long getRecordEntryIdByEntityRecordId(Long dynEntContainerId, Long deRecordId,
+			Long recordEntryStaticId) throws DynamicExtensionsSystemException
+	{
+
+		EntityInterface entity = EntityManager.getInstance().getCategoryRootEntityByContainerId(
+				dynEntContainerId);
+		EntityInterface staticEntity = EntityCache.getInstance().getEntityById(recordEntryStaticId);
+		AssociationInterface hookAssociation = null;
+		for (AssociationInterface association : staticEntity.getAssociationCollection())
+		{
+			if (association.getTargetEntity().equals(entity))
+			{
+				hookAssociation = association;
+				break;
+			}
+		}
+		String hookColName = hookAssociation.getConstraintProperties()
+				.getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties().getName();
+		String query = "select " + hookColName + " from " + entity.getTableProperties().getName()
+				+ " where identifier = ?";
+		List<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+		queryDataList.add(new ColumnValueBean("identifier", deRecordId));
 		return getEntityRecordId(query, queryDataList);
 	}
 
