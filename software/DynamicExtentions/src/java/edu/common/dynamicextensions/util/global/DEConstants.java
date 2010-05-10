@@ -147,6 +147,8 @@ public class DEConstants
 
 	public static final String DATA_INSERTION_ERROR_MESSAGE = "Error while inserting data";
 
+	public static final String APPLICATION_ERROR_MSGS = "ApplicationErrorMsgs";
+
 	public enum Cardinality {
 		ZERO(0), ONE(1), MANY(100);
 

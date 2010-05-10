@@ -136,7 +136,7 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 						containerStack.peek());
 			}
 			updateContainerMap(request, containerInterface);
-
+			updateApplicationErrorMsgs(request, dataEntryForm);
 			return mapping.findForward("Success");
 		}
 		catch (DynamicExtensionsCacheException cacheException)
@@ -147,6 +147,21 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 			return mapping.findForward(WebUIManagerConstants.CACHE_ERROR);
 		}
 
+	}
+
+	/**
+	 * @param request
+	 * @param dataEntryForm
+	 */
+	private void updateApplicationErrorMsgs(HttpServletRequest request, DataEntryForm dataEntryForm)
+	{
+		if (request.getParameter(DEConstants.APPLICATION_ERROR_MSGS) != null
+				&& !"".equals(request.getParameter(DEConstants.APPLICATION_ERROR_MSGS)))
+		{
+			List<String> applicationErrorMsgs = new ArrayList<String>();
+			applicationErrorMsgs.add(request.getParameter(DEConstants.APPLICATION_ERROR_MSGS));
+			dataEntryForm.setErrorList(applicationErrorMsgs);
+		}
 	}
 
 	/**
