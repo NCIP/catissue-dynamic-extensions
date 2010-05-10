@@ -19,6 +19,10 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.ehcache.CacheException;
+import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
+import edu.common.dynamicextensions.entitymanager.CategoryManager;
+import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
@@ -552,5 +556,38 @@ public class DEIntegration implements IntegrationInterface
 			DynamicExtensionsUtility.closeDAO(jdbcDao);
 		}
 		return catRecIds;
+	}
+
+	/**
+	 * @param container
+	 * @param recordEntryId
+	 * @param recEntryEntityId
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DAOException
+	 * @throws SQLException
+	 */
+	public boolean isDataHooked(ContainerInterface container, Long recordEntryId,
+			Long recEntryEntityId) throws DynamicExtensionsSystemException, DAOException,
+			SQLException
+	{
+		boolean isDataHooked = false;
+		Collection entityRecordList = getCategoryRecIdBasedOnHookEntityRecId(container.getId(),
+				recordEntryId, Long.valueOf(recEntryEntityId));
+		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
+		if (entityRecordList != null && !entityRecordList.isEmpty())
+		{
+			Long dynamicRecId = (Long) entityRecordList.iterator().next();
+			CategoryEntityInterface rootCatEntity = (CategoryEntityInterface) container
+					.getAbstractEntity();
+
+			Long categoryRecordId = categoryManager.getRootCategoryEntityRecordIdByEntityRecordId(
+					dynamicRecId, rootCatEntity.getTableProperties().getName());
+			if (categoryRecordId != null && !"".equalsIgnoreCase(categoryRecordId.toString()))
+			{
+				isDataHooked = true;
+			}
+		}
+		return isDataHooked;
 	}
 }
