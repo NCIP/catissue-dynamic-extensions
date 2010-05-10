@@ -1545,8 +1545,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 								previousEntityId = sourceEntityId;
 							}
 							if (targetEntityId == null
-                                    || pathAssociation.getAssociation().getTargetEntity().getId() == categoryEnt
-                                                .getEntity().getId())
+									|| pathAssociation.getAssociation().getTargetEntity().getId() == categoryEnt
+											.getEntity().getId())
 							{
 								targetEntityId = entityId;
 							}
@@ -2346,16 +2346,29 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			{
 				Collection recIdList = deIntegration.getCategoryRecIdBasedOnHookEntityRecId(formId,
 						recordEntryId, recordEntryStaticId);
-				Long dynamicRecId = 0L;
 				if (recIdList != null && !recIdList.isEmpty())
 				{
-					dynamicRecId = (Long) recIdList.iterator().next();
+					Long dynamicRecId = (Long) recIdList.iterator().next();
+					Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
+					Long categoryRecordId = getRootCategoryEntityRecordIdByEntityRecordId(dynamicRecId,
+							rootCatEntity.getTableProperties().getName());
+					if (categoryRecordId == null)
+					{
+						throw new DynamicExtensionsSystemException(
+								"Exception in execution query :: " + "select IDENTIFIER from "
+										+ rootCatEntity.getTableProperties().getName()
+										+ " where record_Id = " + dynamicRecId);
+					}
+					retrieveRecords(rootCatEntity, dataValue, categoryRecordId, jdbcDao);
+					recordMapList.add(dataValue);
 				}
-				Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
-				Long recordId = getRootCategoryEntityRecordIdByEntityRecordId(dynamicRecId,
-						rootCatEntity.getTableProperties().getName());
-				retrieveRecords(rootCatEntity, dataValue, recordId, jdbcDao);
-				recordMapList.add(dataValue);
+				else
+				{
+					throw new DynamicExtensionsSystemException(
+							"Exception in execution query :: " + "Unhooked data present in database for recordEntryId "
+							+ recordEntryId + " formId :" + formId
+							+ " recordEntryStaticId : " + recordEntryStaticId);
+				}
 			}
 		}
 		finally
@@ -3140,8 +3153,10 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		{
 			jdbcDAO = DynamicExtensionsUtility.getJDBCDAO();
 			resultSet = jdbcDAO.getResultSet(query, queryDataList, null);
-			resultSet.next();
-			entityRecordId = resultSet.getLong(1);
+			if (resultSet.next())
+			{
+				entityRecordId = resultSet.getLong(1);
+			}
 		}
 		catch (final DAOException e)
 		{
@@ -3149,7 +3164,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		}
 		catch (final SQLException e)
 		{
-			throw new DynamicExtensionsSystemException("Exception in query execution", e);
+			throw new DynamicExtensionsSystemException("Exception in execution query :: " + query
+					+ " identifier :: " + queryDataList.get(0).getColumnValue(), e);
 		}
 		finally
 		{
