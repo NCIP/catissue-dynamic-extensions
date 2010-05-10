@@ -2,6 +2,7 @@
 package edu.common.dynamicextensions.entitymanager;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import edu.wustl.dao.exception.DAOException;
  * @author rajesh_patil
  *
  */
+
 public interface CategoryManagerInterface
 {
 
@@ -110,7 +112,19 @@ public interface CategoryManagerInterface
 	List<Long> insertData(CategoryInterface category,
 			List<Map<BaseAbstractAttributeInterface, Object>> dataValueMaps, Long... userId)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException;
-
+	
+	/**
+	 * Insert data to category given category id and BaseAbstractInterface id to value map.
+	 * @param categoryId category id to which data entry should be done.
+	 * @param dataValue attribute id to value map.
+	 * @return record entry identifier.
+	 * @throws DynamicExtensionsApplicationException thrown if error while inserting data.
+	 * @throws DynamicExtensionsSystemException thrown if attribute id 
+	 * does not match or system exception.  
+	 * @throws ParseException thrown if fails to pars the date.
+	 */
+	Long insertData(Long categoryId,Map<Long, Object> dataValue)
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException,ParseException;
 	/**
 	 * @param rootCatEntity
 	 * @param recordId

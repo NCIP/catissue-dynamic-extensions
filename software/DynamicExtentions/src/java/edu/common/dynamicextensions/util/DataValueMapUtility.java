@@ -1,22 +1,49 @@
 
 package edu.common.dynamicextensions.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.antcontrib.logic.Throw;
+
+import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry.Entry;
+
+import edu.common.dynamicextensions.domain.AbstractAttribute;
+import edu.common.dynamicextensions.domain.Association;
+import edu.common.dynamicextensions.domain.Attribute;
+import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
+import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.AssociationInterface;
+import edu.common.dynamicextensions.domaininterface.AttributeInterface;
+import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.AbstractContainmentControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.ui.util.ControlsUtility;
+import edu.wustl.common.util.Utility;
+import edu.wustl.common.util.global.CommonServiceLocator;
 
 /**
  * @author kunal_kamble
  * This class has utility methods on the data value map that are used for manipulating the map.
  */
+
 public class DataValueMapUtility
 {
 
@@ -204,6 +231,214 @@ public class DataValueMapUtility
 			rootValueMap.remove(assocation);
 		}
 
+	}
+
+	/**
+	 *  Returned the attribute to value map for insertion.
+	 * @param category Category for which attribute id map is required.
+	 * @return id To Attribute Map
+	 */
+	public static Map<Long, BaseAbstractAttributeInterface> retriveIdToAttributeMap(
+			CategoryInterface category)
+	{
+		CategoryEntityInterface categoryEntity = category.getRootCategoryElement();
+		Map<Long, BaseAbstractAttributeInterface> categoryIdAttributeMap =
+						new HashMap<Long, BaseAbstractAttributeInterface>();
+		populateIdToAttrMapForCategory(categoryIdAttributeMap, categoryEntity);
+
+		return categoryIdAttributeMap;
+
+	}
+
+	/**
+	 * Generate flattered map for category.
+	 * @param map id To Attribute Map.
+	 * @param categoryEntity category for which flattered map is required.
+	 */
+	private static void populateIdToAttrMapForCategory(
+			Map<Long, BaseAbstractAttributeInterface> map, CategoryEntityInterface categoryEntity)
+	{
+		Collection<CategoryAttributeInterface> categoryAttrCollection = categoryEntity
+				.getCategoryAttributeCollection();
+		for (CategoryAttributeInterface catAttr : categoryAttrCollection)
+		{
+			if (!catAttr.getIsRelatedAttribute())
+			{
+				if (catAttr.getAbstractAttribute() instanceof Association)
+				{
+				  AssociationInterface association = (AssociationInterface) catAttr
+							.getAbstractAttribute();
+
+				  map.put(association.getId(), association);
+
+				  Collection<AbstractAttributeInterface> multiselectAttrColl =
+					EntityManagerUtil.filterSystemAttributes
+					(association.getTargetEntity().getAllAbstractAttributes());
+				  Iterator<AbstractAttributeInterface> muultiSelectAttIterator=
+					  multiselectAttrColl.iterator();
+
+					while (muultiSelectAttIterator.hasNext())
+					{
+					  AttributeInterface attribute
+						= (AttributeInterface) muultiSelectAttIterator.next();
+					  map.put(attribute.getId(), attribute);
+					}
+				}
+				else
+				{
+					map.put(catAttr.getId(), catAttr);
+				}
+			}
+		}
+		processCatgeoryAssocitaionCollection(map, categoryEntity.getCategoryAssociationCollection());
+
+	}
+
+	/**
+	 * Process category association to generate flattered map.
+	 * @param map id to attribute map.
+	 * @param catAssoCollection category association collection of category.
+	 */
+	private static void processCatgeoryAssocitaionCollection(
+			Map<Long, BaseAbstractAttributeInterface> map,
+			Collection<CategoryAssociationInterface> catAssoCollection)
+	{
+		CategoryEntityInterface targetCategoryEntity = null;
+		for (CategoryAssociationInterface categoryAssociation : catAssoCollection)
+		{
+
+			targetCategoryEntity = categoryAssociation.getTargetCategoryEntity();
+			if (targetCategoryEntity != null)
+			{
+				map.put(categoryAssociation.getId(), categoryAssociation);
+				populateIdToAttrMapForCategory(map, targetCategoryEntity);
+			}
+		}
+	}
+
+	/**
+	 * Returned the attribute to value map for insertion.
+	 * @param dataValue id to value map.
+	 * @param idToAttributeMap id to attribute map.
+	 * @return map BaseAbstractAttributeInterface to value map.
+	 * @throws DynamicExtensionsSystemException thrown if attribute not found
+	 *  for any id of idToAttributeMap.
+	 * @throws ParseException thrown if date could not be parsed.
+	 */
+	public static Map<BaseAbstractAttributeInterface, Object> getAttributeToValueMap(
+			final Map<Long, Object> dataValue,
+			Map<Long, BaseAbstractAttributeInterface> idToAttributeMap)
+			throws DynamicExtensionsSystemException, ParseException
+	{
+		Map<BaseAbstractAttributeInterface, Object> attributeToValueMap=
+						new HashMap<BaseAbstractAttributeInterface, Object>();
+		Set<java.util.Map.Entry<Long, Object>> dataValueEntrySet = dataValue.entrySet();
+		BaseAbstractAttributeInterface attributeInterface = null;
+
+		for (Map.Entry<Long, Object> datavalueEntry : dataValueEntrySet)
+		{
+			attributeInterface = idToAttributeMap.get(datavalueEntry.getKey());
+			if (attributeInterface != null)
+			{
+				setValuesToMap(idToAttributeMap, attributeToValueMap, attributeInterface,
+						datavalueEntry);
+			}
+			else
+			{
+				throw new DynamicExtensionsSystemException("Invalid attribute identifier.");
+			}
+		}
+		return attributeToValueMap;
+	}
+
+	/**
+	 * Set values in data value map.
+	 * @param idToAttributeMap id to attribute map.
+	 * @param attributeToValueMap attribute to value map.
+	 * @param attributeInterface attribute for which values to be set.
+	 * @param datavalueEntry Entry set of id to value map.
+	 * @throws DynamicExtensionsSystemException thrown if attribute not found
+	 *  for any id of idToAttributeMap.
+	 * @throws ParseException thrown if date could not be parsed.
+	 */
+	private static void setValuesToMap(Map<Long, BaseAbstractAttributeInterface> idToAttributeMap,
+			Map<BaseAbstractAttributeInterface, Object> attributeToValueMap,
+			BaseAbstractAttributeInterface attributeInterface,
+			Map.Entry<Long, Object> datavalueEntry) throws DynamicExtensionsSystemException,
+			ParseException
+	{
+		if (datavalueEntry.getValue() instanceof List)
+		{
+			setValueForAssociation(idToAttributeMap, attributeToValueMap, attributeInterface,
+					datavalueEntry);
+		}
+		else
+		{
+			setattributevalueToMap(attributeToValueMap, attributeInterface, datavalueEntry);
+		}
+	}
+
+	/**
+	 * Set value to associations.
+	 * @param idToAttributeMap id to attribute map.
+	 * @param attributeToValueMap attribute to value map.
+	 * @param attributeInterface attribute for which values to be set.
+	 * @param datavalueEntry Entry set of id to value map.
+	 * @throws DynamicExtensionsSystemException thrown if attribute not found
+	 *  for any id of idToAttributeMap.
+	 * @throws ParseException thrown if date could not be parsed.
+	 */
+	private static void setValueForAssociation(
+			Map<Long, BaseAbstractAttributeInterface> idToAttributeMap,
+			Map<BaseAbstractAttributeInterface, Object> attributeToValueMap,
+			BaseAbstractAttributeInterface attributeInterface,
+			Map.Entry<Long, Object> datavalueEntry) throws DynamicExtensionsSystemException,
+			ParseException
+	{
+		List<Map<Long, Object>> dataValueList;
+		List<Map<BaseAbstractAttributeInterface, Object>> newListValueList =
+				 new ArrayList<Map<BaseAbstractAttributeInterface, Object>>();
+		dataValueList = (List<Map<Long, Object>>) datavalueEntry.getValue();
+		Iterator<Map<Long, Object>> dataValueListIterator = dataValueList.iterator();
+		while (dataValueListIterator.hasNext())
+		{
+			Map<Long, Object> newDataValueMap = dataValueListIterator.next();
+			Map<BaseAbstractAttributeInterface, Object> associationMap = getAttributeToValueMap(
+					newDataValueMap, idToAttributeMap);
+			newListValueList.add(associationMap);
+
+		}
+		attributeToValueMap.put(attributeInterface, newListValueList);
+	}
+
+	/**
+	 * Set value to attribute interface.
+	 * @param attributeToValueMap attribute to value map.
+	 * @param attributeInterface attribute for which values to be set.
+	 * @param datavalueEntry Entry set of id to value map.
+	 */
+	private static void setattributevalueToMap(
+			Map<BaseAbstractAttributeInterface, Object> attributeToValueMap,
+			BaseAbstractAttributeInterface attributeInterface,
+			Map.Entry<Long, Object> datavalueEntry)
+	{
+		if (datavalueEntry.getValue() instanceof java.util.Date)
+		{
+
+			String dateFormate = ((DateAttributeTypeInformation) (
+					(AttributeInterface) (
+							(CategoryAttributeInterface) attributeInterface)
+					.getAbstractAttribute()).getAttributeTypeInformation()).getFormat();
+			String format = DynamicExtensionsUtility.getDateFormat(dateFormate);
+			SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.getDefault());
+			String data = formatter.format((Date) datavalueEntry.getValue());
+
+			attributeToValueMap.put(attributeInterface, data);
+		}
+		else
+		{
+			attributeToValueMap.put(attributeInterface, datavalueEntry.getValue());
+		}
 	}
 
 	/**

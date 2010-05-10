@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Map.Entry;
-
+import java.text.ParseException;
 import edu.common.dynamicextensions.DEIntegration.DEIntegration;
 import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
 import edu.common.dynamicextensions.domain.AbstractAttribute;
@@ -45,6 +45,7 @@ import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.CategoryGenerationUtil;
+import edu.common.dynamicextensions.util.DataValueMapUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.FormulaCalculator;
 import edu.common.dynamicextensions.util.global.DEConstants;
@@ -374,6 +375,24 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		}
 
 		return recordIds;
+	}
+	/* (non-Javadoc)
+	 * @see edu.common.dynamicextensions.entitymanager.CategoryManagerInterface#insertData(java.lang.Long, java.util.Map)
+	 */
+	public Long insertData(final Long categoryId,
+			final Map<Long, Object> dataValue)
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException, ParseException
+	{
+		CategoryInterface category=categoryManager.getCategoryById(categoryId); 
+		
+		Map<Long, BaseAbstractAttributeInterface> idToAttributeMap=DataValueMapUtility.retriveIdToAttributeMap(category);
+		Map<BaseAbstractAttributeInterface,Object> attributeToValueMap=DataValueMapUtility.getAttributeToValueMap(dataValue,idToAttributeMap);
+		Long recordId=insertData(category,attributeToValueMap);
+		Long recordIdentifier = categoryManager.getEntityRecordIdByRootCategoryEntityRecordId( 
+				recordId, category.getRootCategoryElement() 
+                                .getTableProperties().getName());
+		
+	   return recordIdentifier;
 	}
 
 	/**
