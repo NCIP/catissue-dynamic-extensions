@@ -247,6 +247,20 @@
               />
         </set>
 
+        <property
+            name="isCacheable"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="IS_CACHEABLE"
+        />
+		<property
+            name="isCacheable"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="IS_CACHEABLE"
+        />
         </joined-subclass>
         <joined-subclass
             name="edu.common.dynamicextensions.domain.BaseAbstractAttribute"
@@ -460,7 +474,6 @@
             outer-join="auto"
             update="true"
             insert="true"
-            lazy="false"
             column="TARGET_ENTITY_ID"
         />
 
@@ -471,7 +484,6 @@
             outer-join="auto"
             update="true"
             insert="true"
-            lazy="false"
             column="SOURCE_ROLE_ID"
         />
 
@@ -590,16 +602,15 @@
               />
         </set>
 
-		<property
+        <many-to-one
             name="abstractAttribute"
-            column="ABSTRACT_ATTRIBUTE_ID">
-	       <type name="edu.wustl.common.hibernate.CanonicalFormType">
-				<param name="canonical-form-provider">
-					edu.wustl.metadata.hibernate.AttributeCanonicalFormProvider
-				</param>
-			</type>
-		</property>
-
+            class="edu.common.dynamicextensions.domain.AbstractAttribute"
+            cascade="save-update"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="ABSTRACT_ATTRIBUTE_ID"
+        />
 
         <many-to-one
             name="categoryEntity"
@@ -1187,16 +1198,16 @@
                   class="edu.common.dynamicextensions.domain.CategoryEntity"
               />
         </set>
-		<property
-            name="entity"
-            column="ENTITY_ID">
-	       <type name="edu.wustl.common.hibernate.CanonicalFormType">
-				<param name="canonical-form-provider">
-					edu.wustl.metadata.hibernate.EntityCanonicalFormProvider
-				</param>
-			</type>
-		</property>
 
+        <many-to-one
+            name="entity"
+            class="edu.common.dynamicextensions.domain.Entity"
+            cascade="save-update"
+            outer-join="auto"
+            update="true"
+            insert="true"
+            column="ENTITY_ID"
+        />
 
         <set
             name="pathCollection"

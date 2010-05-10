@@ -1907,7 +1907,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			Object oldStaticEntity = cloner.clone(staticEntity);
 			Object dynamicEntity = hibernateDAO.retrieveById(tmpPackageName + "."
 					+ association.getTargetEntity().getName(), tgtEntRecId);
-			Object oldDynamicEntity = cloner.clone(staticEntity);
+			Object oldDynamicEntity = cloner.clone(dynamicEntity);
 
 			Set<Object> containedObjects = (Set<Object>) invokeGetterMethod(
 					staticEntity.getClass(),

@@ -17,7 +17,9 @@ import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
@@ -65,6 +67,11 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 * List of all the categories loaded in caB2B local database.
 	 */
 	protected List<Category> categories = new ArrayList<Category>(0);
+
+	/**
+	 * Set of all the DyanamicExtensions categories loaded in the database.
+	 */
+	protected List<CategoryInterface> deCategories = new ArrayList<CategoryInterface>();
 
 	/**
 	 * Set of all the entity groups loaded as metadata in caB2B.
@@ -194,6 +201,64 @@ public abstract class AbstractEntityCache implements IEntityCache
 
 		}
 		LOGGER.info("Initializing cache DONE");
+	}
+
+	/**
+	 * Loads cacheable categories to cache
+	 */
+	public final synchronized void loadCategories()
+	{
+		try
+		{
+			HibernateDAO hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
+			deCategories = DynamicExtensionUtility.getAllCacheableCategories(hibernateDAO);
+			addCategoriesToCache(deCategories);
+		}
+		catch (final DAOException e)
+		{
+			LOGGER.error("Error while Creating EntityCache. Error: " + e.getMessage());
+			throw new RuntimeException("Exception encountered while creating EntityCache!!", e);
+		}
+		catch (DynamicExtensionsSystemException e)
+		{
+			LOGGER.error("Error while Creating EntityCache. Error: " + e.getMessage());
+			throw new RuntimeException("Exception encountered while creating EntityCache!!", e);
+		}
+	}
+
+	/**
+	 * Initializes the data structures by processing container & entity group one by one at a time.
+	 * @param categoryList list of containers to be cached.
+	 * @param entityGroups list of system generated entity groups to be cached.
+	 */
+	private void addCategoriesToCache(final Collection<CategoryInterface> categoryList)
+	{
+		for (final CategoryInterface category : categoryList)
+		{
+			createCategoryEntityCache(category.getRootCategoryElement());
+		}
+	}
+
+	/**
+	 * It will add the categoryEntity & there containers to the cache.
+	 * It will then recursively call the same method for the child category Entities.
+	 * @param categoryEntity
+	 */
+	private void createCategoryEntityCache(final CategoryEntityInterface categoryEntity)
+	{
+		for (final Object container : categoryEntity.getContainerCollection())
+		{
+			final ContainerInterface containerInterface = (ContainerInterface) container;
+			addContainerToCache(containerInterface);
+		}
+		for (final CategoryAssociationInterface categoryAssociation : categoryEntity
+				.getCategoryAssociationCollection())
+		{
+			final CategoryEntityInterface targetCategoryEntity = categoryAssociation
+					.getTargetCategoryEntity();
+			createCategoryEntityCache(targetCategoryEntity);
+
+		}
 	}
 
 	/**
@@ -712,13 +777,13 @@ public abstract class AbstractEntityCache implements IEntityCache
 		}
 		catch (DynamicExtensionsSystemException e)
 		{
-			throw new DynamicExtensionsCacheException(
-					"Exception encounter while fetching the category" + identifier, e);
+			throw new RuntimeException("Exception encounter while fetching the category"
+					+ identifier, e);
 		}
 		if (container == null)
 		{
-			throw new DynamicExtensionsCacheException(
-					"container with given id is not present in cache : " + identifier);
+			throw new RuntimeException("container with given id is not present in cache : "
+					+ identifier);
 		}
 		return container;
 	}
@@ -794,5 +859,22 @@ public abstract class AbstractEntityCache implements IEntityCache
 				}
 			}
 		}
+	}
+
+	/**
+	 * This method will add the given category to cache.
+	 * @param category category to be added.
+	 */
+	public synchronized void addCategoryToCache(final CategoryInterface category)
+	{
+		if (deCategories.contains(category))
+		{
+			LOGGER.info("adding category to cache" + category);
+			deCategories.remove(category);
+			deCategories.add(category);
+			createCategoryEntityCache(category.getRootCategoryElement());
+			LOGGER.info("adding category to cache done");
+		}
+
 	}
 }

@@ -50,4 +50,14 @@ public interface CategoryInterface extends AbstractMetadataInterface
 	void addRelatedAttributeCategoryEntity(CategoryEntityInterface categoryEntity);
 
 	void removeRelatedAttributeCategoryEntity(CategoryEntityInterface categoryEntity);
+
+	/**
+	 * @return true if category is to be cached
+	 */
+	public Boolean getIsCacheable();
+
+	/**
+	 * @param isCacheable true if category is to be cached
+	 */
+	public void setIsCacheable(Boolean isCacheable);
 }

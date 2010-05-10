@@ -733,6 +733,23 @@ public final class DynamicExtensionUtility
 	}
 
 	/**
+	 * It will retrieve all the cacheable categories present in the dataBase.
+	 * @param hibernateDAO hibernateDAO
+	 * @return List Of the categories present in the DB.
+	 * @throws DAOException
+	 */
+	public static List<CategoryInterface> getAllCacheableCategories(HibernateDAO hibernateDAO)
+			throws DAOException
+	{
+		Logger.out.info("Loading cacheable categories ");
+		List<CategoryInterface> categoryList = new ArrayList<CategoryInterface>();
+		categoryList = hibernateDAO.retrieve(CategoryInterface.class.getName(), "isCacheable",
+				Boolean.TRUE);
+		Logger.out.info("Loading cacheable categories finished");
+		return categoryList;
+	}
+
+	/**
 	 * It will retrieve Identifier of all the categories present in the
 	 * dataBase.
 	 *

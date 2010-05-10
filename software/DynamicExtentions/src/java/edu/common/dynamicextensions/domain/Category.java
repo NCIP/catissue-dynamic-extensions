@@ -25,11 +25,17 @@ public class Category extends AbstractMetadata implements CategoryInterface
 	 * User id
 	 */
 	protected Long userId;
-	
+
 	/**
 	 * rootCategoryElement.
 	 */
 	protected CategoryEntity rootCategoryElement;
+
+
+	/**
+	 * true if category is to be cached
+	 */
+	private Boolean isCacheable = false;
 
 	/**
 	 *
@@ -37,22 +43,22 @@ public class Category extends AbstractMetadata implements CategoryInterface
 	protected Collection<CategoryEntityInterface> relatedAttributeCategoryEntityCollection = new HashSet<CategoryEntityInterface>();
 
 	/**
-     * 
-     * @return
-     * @hibernate.property name="userId" type="long" length="19" column="USER_ID" 
-     */
+	 *
+	 * @return
+	 * @hibernate.property name="userId" type="long" length="19" column="USER_ID"
+	 */
 	public Long getUserId() {
         return userId;
     }
 
-    /**
-     * 
-     * @param userId
-     */
+	/**
+	 *
+	 * @param userId
+	 */
 	public void setUserId(Long userId) {
         this.userId = userId;
     }
-	
+
 	/**
 	 * @hibernate.many-to-one column="ROOT_CATEGORY_ELEMENT" cascade="all" class="edu.common.dynamicextensions.domain.CategoryEntity"
 	 * @return the rootCategoryElement.
@@ -156,6 +162,23 @@ public class Category extends AbstractMetadata implements CategoryInterface
 	public void removeRelatedAttributeCategoryEntity(CategoryEntityInterface categoryEntity)
 	{
 		relatedAttributeCategoryEntityCollection.remove(categoryEntity);
+	}
+
+	/**
+	 * @hibernate.property name="isCacheable" type="boolean" column="IS_CACHEABLE"
+	 * @return true if category is to be cached
+	 */
+	public Boolean getIsCacheable()
+	{
+		return isCacheable;
+	}
+
+	/**
+	 * @param isCacheable true if category is to be cached
+	 */
+	public void setIsCacheable(Boolean isCacheable)
+	{
+		this.isCacheable = isCacheable;
 	}
 
 }

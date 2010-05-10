@@ -1,0 +1,1 @@
+alter table dyextn_category add (IS_CACHEABLE number(1) default 0);
