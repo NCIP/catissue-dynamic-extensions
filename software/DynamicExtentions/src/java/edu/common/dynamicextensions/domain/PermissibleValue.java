@@ -16,24 +16,26 @@ import edu.common.dynamicextensions.domaininterface.SkipLogicAttributeInterface;
  * @hibernate.class table="DYEXTN_PERMISSIBLE_VALUE"
  *
  */
-public abstract class PermissibleValue extends DynamicExtensionBaseDomainObject
+public abstract class PermissibleValue extends DynamicExtensionBaseDomainObject // NOPMD
 		implements
 			PermissibleValueInterface
 {
 
 	/**
-	 *
-	 */
+     * The description.
+     */
 	protected String description;
-	/**
-	 * Semantic property collection.
-	 */
 
-	protected Collection<SemanticPropertyInterface> semanticPropertyCollection = new HashSet<SemanticPropertyInterface>();
+    /**
+     * Semantic property collection.
+     */
+    protected Collection<SemanticPropertyInterface> semanticPropertyCollection =
+        new HashSet<SemanticPropertyInterface>();
 	/**
 	 * Collection of category attributes.
 	 */
-	protected Collection<SkipLogicAttributeInterface> dependentSkipLogicAttributes = new HashSet<SkipLogicAttributeInterface>();
+	protected Collection<SkipLogicAttributeInterface> dependentSkipLogicAttributes =
+	    new HashSet<SkipLogicAttributeInterface>();
 
 	/**
 	 * @hibernate.property name="description" type="string" column="DESCRIPTION"
@@ -127,9 +129,9 @@ public abstract class PermissibleValue extends DynamicExtensionBaseDomainObject
 		}
 	}
 
-	/**
-	 * @see edu.common.dynamicextensions.domaininterface.AbstractMetadataInterface#getOrderedSemanticPropertyCollection()
-	 */
+    /**
+     * @see edu.common.dynamicextensions.domaininterface.AbstractMetadataInterface#getOrderedSemanticPropertyCollection()
+     */
 	public List<SemanticPropertyInterface> getOrderedSemanticPropertyCollection()
 	{
 		List<SemanticPropertyInterface> semanticPropertyList = new ArrayList<SemanticPropertyInterface>();
