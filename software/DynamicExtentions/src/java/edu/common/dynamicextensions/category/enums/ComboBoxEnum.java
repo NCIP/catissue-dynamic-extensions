@@ -10,7 +10,7 @@ public enum ComboBoxEnum {
 
 		public String getControlProperty(ComboBox control)
 		{
-			String isOrderedString = null;
+			String isOrderedString = null; // NOPMD by gaurav_sawant
 			UserDefinedDEInterface userDefinedDEInterface = (UserDefinedDEInterface) (((AttributeMetadataInterface) control
 					.getBaseAbstractAttribute()).getDataElement());
 			Boolean isOrdered2 = userDefinedDEInterface.getIsOrdered();
