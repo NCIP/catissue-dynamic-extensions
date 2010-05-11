@@ -7,9 +7,9 @@ import java.io.Serializable;
  * @version 1.0
  * @created 28-Dec-2006 2:01:13 AM
  * @hibernate.joined-subclass table="CATEGORIAL_CLASS"
- * @hibernate.joined-subclass-key column="ID" 
+ * @hibernate.joined-subclass-key column="ID"
  */
-public class CategorialClass
+public class CategorialClass // NOPMD by gaurav_sawant
 		extends
 			AbstractCategorialClass<CategorialAttribute, Category, CategorialClass>
 		implements
