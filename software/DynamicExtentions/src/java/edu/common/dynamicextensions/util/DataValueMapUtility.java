@@ -13,17 +13,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-
-import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry.Entry;
-
-import edu.common.dynamicextensions.domain.AbstractAttribute;
 import edu.common.dynamicextensions.domain.Association;
-import edu.common.dynamicextensions.domain.Attribute;
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
-import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
@@ -34,15 +28,16 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.ui.util.ControlsUtility;
-import edu.wustl.common.util.Utility;
-import edu.wustl.common.util.global.CommonServiceLocator;
 
 /**
  * @author kunal_kamble
  * This class has utility methods on the data value map that are used for manipulating the map.
  */
 
+/**
+ * @author pathik_sheth
+ *
+ */
 public class DataValueMapUtility
 {
 
@@ -62,59 +57,82 @@ public class DataValueMapUtility
 		{
 			if (control instanceof AbstractContainmentControlInterface)
 			{
-				AbstractContainmentControlInterface abstractContainmentControl = (AbstractContainmentControlInterface) control;
-				if (rootValueMap.get(abstractContainmentControl.getBaseAbstractAttribute()) != null
-						&& rootValueMap.get(abstractContainmentControl.getBaseAbstractAttribute()) instanceof List)
-				{
-					List<Map<BaseAbstractAttributeInterface, Object>> list = (List<Map<BaseAbstractAttributeInterface, Object>>) rootValueMap
-							.get(abstractContainmentControl.getBaseAbstractAttribute());
-					for (Map<BaseAbstractAttributeInterface, Object> map : list)
-					{
-						modifyDataValueMap(map, abstractContainmentControl.getContainer(), purpose);
-					}
-				}
-				else
-				{
-					if (rootValueMap.get(abstractContainmentControl.getBaseAbstractAttribute()) != null)
-					{
-						modifyDataValueMap(
-								(Map<BaseAbstractAttributeInterface, Object>) rootValueMap
-										.get(abstractContainmentControl.getBaseAbstractAttribute()),
-								abstractContainmentControl.getContainer(), purpose);
-					}
-				}
+				modifyMapForContainmentControl(rootValueMap, purpose, control);
 			}
 		}
 
 		if (rootContainerInterface.getChildContainerCollection() != null
 				&& !rootContainerInterface.getChildContainerCollection().isEmpty())
 		{
-			for (ContainerInterface containerInterface : rootContainerInterface
-					.getChildContainerCollection())
+			modifyValueMapForChildContainers(rootValueMap, rootContainerInterface, purpose);
+		}
+	}
+	
+	/**
+	 * Modify data value map for child containers.
+	 * @param rootValueMap data value map.
+	 * @param rootContainerInterface root category.
+	 * @param purpose purpose of populating the data value map.
+	 */
+	private static void modifyValueMapForChildContainers(
+			Map<BaseAbstractAttributeInterface, Object> rootValueMap,
+			ContainerInterface rootContainerInterface, String purpose)
+	{
+		for (ContainerInterface containerInterface : rootContainerInterface
+				.getChildContainerCollection())
+		{
+			if (rootValueMap != null)
 			{
-				if (rootValueMap != null)
+
+				if (FOR_DATA_LOADING.equals(purpose))
+				{
+					updateMap(rootContainerInterface.getAbstractEntity().getAssociation(
+							containerInterface.getAbstractEntity()), rootValueMap);
+				}
+				else if (FOR_DATA_STORING.equals(purpose))
 				{
 
-					if (FOR_DATA_LOADING.equals(purpose))
-					{
-						updateMap(rootContainerInterface.getAbstractEntity().getAssociation(
-								containerInterface.getAbstractEntity()), rootValueMap);
-					}
-					else if (FOR_DATA_STORING.equals(purpose))
-					{
-
-						updateMap(rootContainerInterface.getAbstractEntity().getAssociation(
-								containerInterface.getAbstractEntity()), rootValueMap,
-								containerInterface);
-					}
+					updateMap(rootContainerInterface.getAbstractEntity().getAssociation(
+							containerInterface.getAbstractEntity()), rootValueMap,
+							containerInterface);
 				}
 			}
 		}
 	}
+	
+	/**
+	 * Modify data value map for containment control.
+	 * @param rootValueMap root category. 
+	 * @param purpose purpose of populating the data value map.
+	 * @param control control for which data value map is being populated.
+	 */
+	private static void modifyMapForContainmentControl(
+			Map<BaseAbstractAttributeInterface, Object> rootValueMap, String purpose,
+			ControlInterface control)
+	{
+		AbstractContainmentControlInterface abstractContainmentControl = (AbstractContainmentControlInterface) control;
+		if (rootValueMap.get(abstractContainmentControl.getBaseAbstractAttribute()) instanceof List)
+		{
+			List<Map<BaseAbstractAttributeInterface, Object>> list = (List<Map<BaseAbstractAttributeInterface, Object>>) rootValueMap
+					.get(abstractContainmentControl.getBaseAbstractAttribute());
+			for (Map<BaseAbstractAttributeInterface, Object> map : list)
+			{
+				modifyDataValueMap(map, abstractContainmentControl.getContainer(), purpose);
+			}
+		}
+		else if (rootValueMap.get(abstractContainmentControl.getBaseAbstractAttribute()) != null)
+		{		
+				modifyDataValueMap(
+						(Map<BaseAbstractAttributeInterface, Object>) rootValueMap
+								.get(abstractContainmentControl.getBaseAbstractAttribute()),
+						abstractContainmentControl.getContainer(), purpose);
+		}
+	}
 
 	/**
-	 * This method update the value map generated by the manager classes. This transformation of map is required
-	 * for the display of controls of the different container that are under the same display label
+	 * This method update the value map generated by the manager classes.
+	 * This transformation of map is required for the display of controls of
+	 * the different container that are under the same display label.
 	 * @param rootValueMap
 	 * @param rootContainerInterface
 	 */
@@ -205,18 +223,7 @@ public class DataValueMapUtility
 		{
 			if (rootValueMap.get(assocation) instanceof List)
 			{
-				if (!((List<Map<BaseAbstractAttributeInterface, Object>>) rootValueMap
-						.get(assocation)).isEmpty())
-				{
-					List<Map<BaseAbstractAttributeInterface, Object>> list = (List<Map<BaseAbstractAttributeInterface, Object>>) rootValueMap
-							.get(assocation);
-					Map<BaseAbstractAttributeInterface, Object> map = (Map<BaseAbstractAttributeInterface, Object>) list
-							.get(0);
-					for (BaseAbstractAttributeInterface abstractAttribute : map.keySet())
-					{
-						rootValueMap.put(abstractAttribute, map.get(abstractAttribute));
-					}
-				}
+				setValueForAssosiation(assocation, rootValueMap);
 			}
 			else
 			{
@@ -230,6 +237,23 @@ public class DataValueMapUtility
 			rootValueMap.remove(assocation);
 		}
 
+	}
+
+	private static void setValueForAssosiation(BaseAbstractAttributeInterface assocation,
+			Map<BaseAbstractAttributeInterface, Object> rootValueMap)
+	{
+		if (!((List<Map<BaseAbstractAttributeInterface, Object>>) rootValueMap
+				.get(assocation)).isEmpty())
+		{
+			List<Map<BaseAbstractAttributeInterface, Object>> list = (List<Map<BaseAbstractAttributeInterface, Object>>) rootValueMap
+					.get(assocation);
+			Map<BaseAbstractAttributeInterface, Object> map = (Map<BaseAbstractAttributeInterface, Object>) list
+					.get(0);
+			for (BaseAbstractAttributeInterface abstractAttribute : map.keySet())
+			{
+				rootValueMap.put(abstractAttribute, map.get(abstractAttribute));
+			}
+		}
 	}
 
 	/**
@@ -302,11 +326,10 @@ public class DataValueMapUtility
 			Map<Long, BaseAbstractAttributeInterface> map,
 			Collection<CategoryAssociationInterface> catAssoCollection)
 	{
-		CategoryEntityInterface targetCategoryEntity = null;
 		for (CategoryAssociationInterface categoryAssociation : catAssoCollection)
 		{
 
-			targetCategoryEntity = categoryAssociation.getTargetCategoryEntity();
+			CategoryEntityInterface targetCategoryEntity = categoryAssociation.getTargetCategoryEntity();
 			if (targetCategoryEntity != null)
 			{
 				map.put(categoryAssociation.getId(), categoryAssociation);
@@ -332,19 +355,18 @@ public class DataValueMapUtility
 		Map<BaseAbstractAttributeInterface, Object> attributeToValueMap=
 						new HashMap<BaseAbstractAttributeInterface, Object>();
 		Set<java.util.Map.Entry<Long, Object>> dataValueEntrySet = dataValue.entrySet();
-		BaseAbstractAttributeInterface attributeInterface = null;
 
 		for (Map.Entry<Long, Object> datavalueEntry : dataValueEntrySet)
 		{
-			attributeInterface = idToAttributeMap.get(datavalueEntry.getKey());
-			if (attributeInterface != null)
+			BaseAbstractAttributeInterface attributeInterface = idToAttributeMap.get(datavalueEntry.getKey());
+			if (attributeInterface == null)
 			{
-				setValuesToMap(idToAttributeMap, attributeToValueMap, attributeInterface,
-						datavalueEntry);
+				throw new DynamicExtensionsSystemException("Invalid attribute identifier.");
 			}
 			else
 			{
-				throw new DynamicExtensionsSystemException("Invalid attribute identifier.");
+				setValuesToMap(idToAttributeMap, attributeToValueMap, attributeInterface,
+						datavalueEntry);
 			}
 		}
 		return attributeToValueMap;
