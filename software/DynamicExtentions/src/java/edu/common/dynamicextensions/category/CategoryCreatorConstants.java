@@ -1,7 +1,10 @@
 package edu.common.dynamicextensions.category;
 
 
-public class CategoryCreatorConstants
+/**
+ * The Class CategoryCreatorConstants.
+ */
+public class CategoryCreatorConstants // NOPMD by gaurav_sawant
 {
 	/**
 	 * This constant is a param name which specifies to save only metadate.
