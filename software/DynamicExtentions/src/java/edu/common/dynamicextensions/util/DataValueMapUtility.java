@@ -13,7 +13,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.antcontrib.logic.Throw;
 
 import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry.Entry;
 
