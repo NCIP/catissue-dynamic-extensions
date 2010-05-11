@@ -1,4 +1,3 @@
-
 package edu.common.dynamicextensions.domain.databaseproperties;
 
 import edu.common.dynamicextensions.domaininterface.databaseproperties.ColumnPropertiesInterface;
@@ -9,7 +8,8 @@ import edu.common.dynamicextensions.domaininterface.databaseproperties.ColumnPro
  * @hibernate.joined-subclass table="DYEXTN_COLUMN_PROPERTIES"
  * @hibernate.joined-subclass-key column="IDENTIFIER"
  */
-public class ColumnProperties extends DatabaseProperties implements ColumnPropertiesInterface
+public class ColumnProperties extends DatabaseProperties implements // NOPMD by gaurav_sawant
+        ColumnPropertiesInterface
 {
 
 }
