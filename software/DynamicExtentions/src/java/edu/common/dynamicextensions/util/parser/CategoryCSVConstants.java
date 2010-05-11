@@ -1,12 +1,14 @@
 
 package edu.common.dynamicextensions.util.parser;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author kunal_kamble
- * This interface defines all the keywords used in the
- * csv file used for the category creation.
+ * The Class CategoryCSVConstants.
+ *
+ * @author kunal_kamble This interface defines all the keywords used in the csv
+ *         file used for the category creation.
  */
-public class CategoryCSVConstants
+public class CategoryCSVConstants // NOPMD by gaurav_sawant
 {
 
 	/**
@@ -44,6 +46,9 @@ public class CategoryCSVConstants
 	 */
 	public static final String RANGE = "range";
 
+	/**
+     * The Constant DATE_RANGE.
+     */
 	public static final String DATE_RANGE = "dateRange";
 
 	/**
@@ -77,50 +82,63 @@ public class CategoryCSVConstants
 	public static final String DATE = "date";
 
 	/**
-	 * This keyword used to define the label for the form
-	 */
+     * This keyword used to define the label for the form.
+     */
 	public static final String DISPLAY_LABLE = "Display_Label";
 
 	/**
-	 * This keyword used to define the label for the form
-	 */
+     * This keyword used to define the label for the form.
+     */
 	public static final String SINGLE = "single";
 
 	/**
-	 * This keyword used to define the label for the form
-	 */
+     * This keyword used to define the label for the form.
+     */
 	public static final String MULTILINE = "multiline";
 
 	/**
-	 * This keyword is used to specify whether to override permissible values
-	 */
+     * This keyword is used to specify whether to override permissible values.
+     */
 	public static final String OVERRIDE_PV = "override_pv";
 
 	/**
-	 * This keyword used to define the label for the form
-	 */
+     * This keyword used to define the label for the form.
+     */
 	public static final String RELATED_ATTIBUTE = "RelatedAttribute:";
+
 	/**
-	 * This keyword used to define the label for the form
-	 */
+     * This keyword used to define the label for the form.
+     */
 	public static final String SKIP_LOGIC_ATTIBUTE = "SkipLogicAttribute:";
 
+	/**
+     * The Constant INSTANCE.
+     */
 	public static final String INSTANCE = "instance:";
 
 	/**
-	 * default value of the attribute
-	 */
+     * default value of the attribute.
+     */
 	public static final String DEFAULT_VALUE = "defaultValue";
 
 	/**
-	 * DE Error messages file
-	 */
+     * DE Error messages file.
+     */
 	public static final String DYEXTN_ERROR_MESSAGES_FILE = "DynamicExtensionsErrorsMessages";
 
+	/**
+     * The Constant TEXT_AREA.
+     */
 	public static final String TEXT_AREA = "textArea";
 
+	/**
+     * The Constant SEPARATOR.
+     */
 	public static final String SEPARATOR = "separator";
 
+	/**
+     * The Constant COMMON_OPTIONS.
+     */
 	public static final String COMMON_OPTIONS = "commonOptions";
 }
 
