@@ -2969,8 +2969,8 @@ function setJQueryParameters(controlId)
 						{
 							fileId = jsonResponse.uploadedFile[0].uploadedFileId;
 							contentType = jsonResponse.uploadedFile[0].contentType;
-							var imageSrc = "/images/uIEnhancementImages/error-green.gif";
-							var deleteImageSrc = "/images/de/deleteIcon.jpg";
+							var imageSrc = "./images/uIEnhancementImages/error-green.gif";
+							var deleteImageSrc = "./images/de/deleteIcon.jpg";
 
 							htmlComponent = "<input type='text' disabled name='" +controlId+ "'_1 id='" +controlId+ "_1' value='" +file+ "'/>&nbsp;&nbsp;";
 							htmlComponent = htmlComponent + "<img src='" +imageSrc+ "' />&nbsp;&nbsp;";
