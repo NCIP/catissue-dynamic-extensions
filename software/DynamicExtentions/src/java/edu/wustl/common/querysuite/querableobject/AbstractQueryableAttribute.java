@@ -23,9 +23,9 @@ public abstract class AbstractQueryableAttribute implements QueryableAttributeIn
 	 */
 	public boolean equals(Object queryableAttribute)
 	{
-		boolean isEqual = false;
+		boolean isEqual = false; // NOPMD by gaurav_sawant
 		if (queryableAttribute instanceof QueryableAttributeInterface &&
-				((QueryableAttributeInterface) queryableAttribute).getId().equals(this.getId()))
+				((QueryableAttributeInterface) queryableAttribute).getId().equals(getId()))
 		{
 			isEqual = true;
 		}
