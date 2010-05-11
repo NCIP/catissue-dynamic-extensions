@@ -1439,9 +1439,9 @@ function addRow(containerId)
 
     var newRow = table.insertRow(-1);
     if(counter%2==0)
-	{
-		newRow.className="td_color_f0f2f6";
-	}
+  	{
+  		newRow.className="td_color_f0f2f6";
+  	}
 	else
 	{
 		newRow.className="formField_withoutBorder";
@@ -1608,6 +1608,9 @@ function removeCheckedRow(containerId)
 function ignoreResponseHandler(str)
 {
 }
+
+// Re-factored the entire method as it was very difficult to understand
+// Changes by Gaurav Mehta
 function setDefaultValues(tableId, obj, containerId)
 {
 	var children = obj.childNodes;
@@ -1625,113 +1628,10 @@ function setDefaultValues(tableId, obj, containerId)
 		{
 			childObjectName = childObject.id;
 		}
-		if (childObjectName != null && childObjectName.indexOf('_') != -1)
+
+		if(childObjectName != null && (childObjectName.indexOf('_div') != -1 || childObjectName.indexOf('_button') != -1))
 		{
-			if (childObjectName.indexOf(')') != -1)
-			{
-				childObjectName = childObjectName.substring(0, childObjectName
-						.indexOf(')'));
-				i++;
-				// In case of control having multiple options, setting str
-				// only once
-				if (i == 1)
-				{
-					str = childObjectName + "_" + rowIndex;
-				}
-				str = str + ")";
-			}
-			else if (childObjectName.indexOf('_div') != -1)
-			{
-				if (childObject.hasChildNodes)
-				{
-					childObject = childObject.childNodes[0];
-					childObjectName = childObject.name;
-					if (childObjectName == null && childObject.id != null
-						&& childObject.id != "auto_complete_dropdown"
-							&& childObject.id.indexOf('slcalcodControl') == -1)
-					{
-						childObjectName = childObject.id;
-					}
-					if (childObjectName != null
-							&& childObjectName.indexOf('_') != -1)
-					{
-						if (childObjectName.indexOf(')') != -1)
-						{
-							childObjectName = childObjectName.substring(0,
-									childObjectName.indexOf(')'));
-							i++;
-							// In case of control having multiple options,
-							// setting str
-							// only once
-							if (i == 1)
-							{
-								str = childObjectName + "_" + rowIndex;
-							}
-							str = str + ")";
-						}
-						else
-						{
-							i++;
-							// In case of control having multiple options,
-							// setting str
-							// only once
-							if (i == 1) {
-								str = childObjectName + "_" + rowIndex;
-							}
-						}
-						obj.innerHTML = replaceAll(obj.innerHTML,
-								childObjectName, str);
-					}
-					if ("auto_complete_dropdown" == childObject.id)
-					{
-						var childNodes2 = childObject.childNodes;
-
-						var oldName = childNodes2[2].childNodes[0].childNodes[0].name;
-						var newName = oldName + "_" + rowIndex;
-						var newScript = replaceAll(childNodes2[1].innerHTML,
-								oldName, newName);
-
-						var div = document.createElement("DIV");
-						div.id = oldName + "_Outer_div";
-						div.name= oldName + "_Outer_div";
-
-						var divObject = document.createElement("DIV");
-						divObject.id = oldName + "_div";
-						divObject.name= oldName + "_div";
-						divObject.appendChild(childNodes2[2].childNodes[0]);
-						div.appendChild(divObject);
-
-						var inputSkipLogicControl = document.createElement("INPUT");
-						inputSkipLogicControl.type = "hidden";
-						inputSkipLogicControl.id = "skipLogicControl";
-						inputSkipLogicControl.name= "skipLogicControl";
-						inputSkipLogicControl.value= divObject.name;
-						divObject.appendChild(inputSkipLogicControl);
-
-						var inputComboScript = document.createElement("INPUT");
-						inputComboScript.type = "hidden";
-						inputComboScript.id = "skipLogicControlScript";
-						inputComboScript.name= "skipLogicControlScript";
-						inputComboScript.value= "comboScript_" + oldName;
-						divObject.appendChild(inputComboScript);
-
-						obj.innerHTML = replaceAll(div.innerHTML,
-								oldName, newName);
-						eval(newScript);
-					}
-					continue;
-				}
-			}
-			else
-			{
-				i++;
-				// In case of control having multiple options, setting str
-				// only once
-				if (i == 1) {
-					str = childObjectName + "_" + rowIndex;
-				}
-			}
-			obj.innerHTML = replaceAll(obj.innerHTML, childObjectName, str);
+			initializeDefaultValue(childObjectName,childObject,obj,i,rowIndex);
 		}
 		if ("auto_complete_dropdown" == childObject.id)
 		{
@@ -1752,6 +1652,97 @@ function setDefaultValues(tableId, obj, containerId)
 	}
 	return obj;
 }
+
+function initializeDefaultValue(childObjectName,childObject,obj,i,rowIndex)
+{
+	if (childObject.hasChildNodes)
+	{
+		childObject = childObject.childNodes[0];
+		childObjectName = childObject.name;
+		if (childObjectName == null && childObject.id != null
+			&& childObject.id != "auto_complete_dropdown"
+				&& childObject.id.indexOf('slcalcodControl') == -1)
+		{
+			childObjectName = childObject.id;
+		}
+		assignControlNames(childObjectName,obj,i,rowIndex);
+		checkForAutoComplete(childObject);
+	}
+}
+
+function assignControlNames(childObjectName,obj,i,rowIndex)
+{
+	if (childObjectName != null && childObjectName.indexOf('_') != -1)
+	{
+		if (childObjectName.indexOf(')') != -1)
+		{
+			childObjectName = childObjectName.substring(0, childObjectName
+					.indexOf(')'));
+			i++;
+			// In case of control having multiple options, setting str
+			// only once
+			if (i == 1)
+			{
+				str = childObjectName + "_" + rowIndex;
+			}
+			str = str + ")";
+		}
+		else
+		{
+			i++;
+			// In case of control having multiple options,
+			// setting str
+			// only once
+			if (i == 1) {
+				str = childObjectName + "_" + rowIndex;
+			}
+		}
+		obj.innerHTML = replaceAll(obj.innerHTML,childObjectName, str);
+	}
+}
+
+function checkForAutoComplete(childObject)
+{
+	if ("auto_complete_dropdown" == childObject.id)
+	{
+		var childNodes2 = childObject.childNodes;
+
+		var oldName = childNodes2[2].childNodes[0].childNodes[0].name;
+		var newName = oldName + "_" + rowIndex;
+		var newScript = replaceAll(childNodes2[1].innerHTML,
+				oldName, newName);
+
+		var div = document.createElement("DIV");
+		div.id = oldName + "_Outer_div";
+		div.name= oldName + "_Outer_div";
+
+		var divObject = document.createElement("DIV");
+		divObject.id = oldName + "_div";
+		divObject.name= oldName + "_div";
+		divObject.appendChild(childNodes2[2].childNodes[0]);
+		div.appendChild(divObject);
+
+		var inputSkipLogicControl = document.createElement("INPUT");
+		inputSkipLogicControl.type = "hidden";
+		inputSkipLogicControl.id = "skipLogicControl";
+		inputSkipLogicControl.name= "skipLogicControl";
+		inputSkipLogicControl.value= divObject.name;
+		divObject.appendChild(inputSkipLogicControl);
+
+		var inputComboScript = document.createElement("INPUT");
+		inputComboScript.type = "hidden";
+		inputComboScript.id = "skipLogicControlScript";
+		inputComboScript.name= "skipLogicControlScript";
+		inputComboScript.value= "comboScript_" + oldName;
+		divObject.appendChild(inputComboScript);
+
+		obj.innerHTML = replaceAll(div.innerHTML,
+				oldName, newName);
+		eval(newScript);
+	}
+}
+
+
 function replaceAll(inputString, regExpr, newString)
 {
     var outputStr = "";
@@ -2949,7 +2940,7 @@ function setJQueryParameters(controlId)
 			 onSubmit : function(file,extension)
 					{
           var submitButton = document.getElementById('btnDESubmit');
-						var imageSrc = "/images/de/waiting.gif";
+						var imageSrc = "./images/de/waiting.gif";
 						var buttonName = controlId + "_button";
 						var spanElement = document.getElementById(buttonName);
 						var htmlComponent = spanElement.innerHTML;
