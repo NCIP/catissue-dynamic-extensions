@@ -21,7 +21,7 @@ import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class GroupProcessor extends BaseDynamicExtensionsProcessor
+public final class GroupProcessor extends BaseDynamicExtensionsProcessor
 {
 
 	/**

@@ -1,7 +1,7 @@
 package edu.wustl.cab2b.server.path;
 
 /**
- * Enumeration to represents possible value which column "ASSOCIATION.ASSOCIATION_TYPE" can take.  
+ * Enumeration to represents possible value which column "ASSOCIATION.ASSOCIATION_TYPE" can take.
  * @author Chandrakant Talele
  */
 public enum AssociationType {
@@ -20,16 +20,27 @@ public enum AssociationType {
     }
 
     /**
-     * @param value Get type based in integer value
+     * Gets the type.
+     *
+     * @param value
+     *            Get type based in integer value
      * @return Enumeration
      */
-    public static AssociationType getType(int value) {
-        if (value == 1) {
-            return AssociationType.INTER_MODEL_ASSOCIATION;
+    public static AssociationType getType(int value)
+    {
+        AssociationType retType = null; // NOPMD by gaurav_sawant
+        if (value == 1)
+        {
+            retType = AssociationType.INTER_MODEL_ASSOCIATION; // NOPMD by gaurav_sawant
         }
-        if (value == 2) {
-            return AssociationType.INTRA_MODEL_ASSOCIATION;
+        if (value == 2)
+        {
+            retType = AssociationType.INTRA_MODEL_ASSOCIATION;
         }
-        throw new IllegalArgumentException();
+        else
+        {
+            throw new IllegalArgumentException();
+        }
+        return retType;
     }
 }

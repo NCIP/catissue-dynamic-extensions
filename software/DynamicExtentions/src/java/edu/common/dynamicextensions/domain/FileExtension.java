@@ -17,13 +17,13 @@ public class FileExtension extends DynamicExtensionBaseDomainObject
 	 */
 	public Long getId()
 	{
-		return this.id;
+		return id;
 	}
 
 	/**
 	 * allowed file extension for the attribute.
 	 */
-	private String fileExtension;
+	private String fileExtension; // NOPMD by gaurav_sawant
 
 	/**
 	 * @return Returns the fileExtension.

@@ -7,26 +7,35 @@ import edu.common.dynamicextensions.domaininterface.AbstractMetadataInterface;
 import edu.wustl.common.hibernate.CanonicalFormProvider;
 
 public abstract class AbstractMetadataCanonicalFormProvider<T extends AbstractMetadataInterface>
-        implements
-            CanonicalFormProvider<T, Long> {
+        implements CanonicalFormProvider<T, Long>
+{
 
-    public final boolean equals(T object1, T object2) {
-        if (object1 == null && object2 == null) {
-            return true;
+    public final boolean equals(T object1, T object2)
+    {
+        boolean equals;
+        if (object1 == null && object2 == null)
+        {
+            equals = true;
         }
-        // TODO check this
-        return object1.equals(object2);
+        else
+        {
+            equals = object1.equals(object2);
+        }
+        return equals;
     }
 
-    public final T nullSafeFromCanonicalForm(Long entityId) {
+    public final T nullSafeFromCanonicalForm(Long entityId)
+    {
         return entityId == null ? null : getObjectFromEntityCache(entityId);
     }
 
-    public final Long nullSafeToCanonicalForm(T abstractMetadataObj) {
+    public final Long nullSafeToCanonicalForm(T abstractMetadataObj)
+    {
         return abstractMetadataObj == null ? null : abstractMetadataObj.getId();
     }
 
-    public final NullableType canonicalFormType() {
+    public final NullableType canonicalFormType()
+    {
         return Hibernate.LONG;
     }
 
