@@ -38,17 +38,25 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
  * @author pathik_sheth
  *
  */
-public class DataValueMapUtility
+public final class DataValueMapUtility
 {
 
 	private static final String FOR_DATA_LOADING = "forDataLoading";
 	private static final String FOR_DATA_STORING = "forDataStoring";
 
 	/**
+	 * Private constructor with no argument.
+	 */
+	private DataValueMapUtility() {
+		//Empty constructor.
+	}
+	
+	/**
 	 * @param rootValueMap
 	 * @param rootContainerInterface
 	 * @param purpose
 	 */
+	
 	private static void modifyDataValueMap(
 			Map<BaseAbstractAttributeInterface, Object> rootValueMap,
 			ContainerInterface rootContainerInterface, String purpose)
@@ -352,7 +360,7 @@ public class DataValueMapUtility
 			Map<Long, BaseAbstractAttributeInterface> idToAttributeMap)
 			throws DynamicExtensionsSystemException, ParseException
 	{
-		Map<BaseAbstractAttributeInterface, Object> attributeToValueMap=
+		Map<BaseAbstractAttributeInterface, Object> attributeToValueMap= // NOPMD by gaurav_sawant
 						new HashMap<BaseAbstractAttributeInterface, Object>();
 		Set<java.util.Map.Entry<Long, Object>> dataValueEntrySet = dataValue.entrySet();
 
