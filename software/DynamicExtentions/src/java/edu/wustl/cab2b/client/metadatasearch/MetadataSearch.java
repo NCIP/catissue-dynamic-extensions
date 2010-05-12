@@ -81,8 +81,8 @@ public class MetadataSearch
 				matchedClass = searchConceptCode(searchString, searchTarget);
 				break;
 			default :
-            throw new CheckedException("Search target does not exist : "
-                    + Arrays.toString(searchTarget));
+				throw new CheckedException("Search target does not exist : "
+						+ Arrays.toString(searchTarget));
 		}
 		matchedClass.setEntityCollection(matchedClass.getSortedEntityCollection());
 
@@ -115,28 +115,20 @@ public class MetadataSearch
 					entityCollection = createSearchEntity(searchString);
 					matchedClass = entityCache.getEntityOnEntityParameters(entityCollection);
 					resultantMatchedClass = createResultClass(resultantMatchedClass, matchedClass);
-					matchedClass = entityCache.getCategories(entityCollection);
-					resultantMatchedClass = createResultClass(resultantMatchedClass, matchedClass);
 					break;
 				case Constants.CLASS_WITH_DESCRIPTION :
 					entityCollection = createSearchEntityWithDesc(searchString);
 					matchedClass = entityCache.getEntityOnEntityParameters(entityCollection);
-					resultantMatchedClass = createResultClass(resultantMatchedClass, matchedClass);
-					matchedClass = entityCache.getCategories(entityCollection);
 					resultantMatchedClass = createResultClass(resultantMatchedClass, matchedClass);
 					break;
 				case Constants.ATTRIBUTE :
 					attributeCollection = createSearchAttribute(searchString);
 					matchedClass = entityCache.getEntityOnAttributeParameters(attributeCollection);
 					resultantMatchedClass = createResultClass(resultantMatchedClass, matchedClass);
-					matchedClass = entityCache.getCategoriesAttributes(attributeCollection);
-					resultantMatchedClass = createResultClass(resultantMatchedClass, matchedClass);
 					break;
 				case Constants.ATTRIBUTE_WITH_DESCRIPTION :
 					attributeCollection = createSearchAttributeWithDesc(searchString);
 					matchedClass = entityCache.getEntityOnAttributeParameters(attributeCollection);
-					resultantMatchedClass = createResultClass(resultantMatchedClass, matchedClass);
-					matchedClass = entityCache.getCategoriesAttributes(attributeCollection);
 					resultantMatchedClass = createResultClass(resultantMatchedClass, matchedClass);
 					break;
 				case Constants.PERMISSIBLEVALUE :
@@ -342,8 +334,8 @@ public class MetadataSearch
 					resultantMatchedClass = createResultClass(resultantMatchedClass, matchedClass);
 					break;
 				default :
-                throw new CheckedException("Search target does not exist : "
-                        + Arrays.toString(searchTarget));
+					throw new CheckedException("Search target does not exist : "
+							+ Arrays.toString(searchTarget));
 			}
 		}
 		return resultantMatchedClass;

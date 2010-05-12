@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -62,8 +61,6 @@ import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.cab2b.common.errorcodes.ErrorCodeConstants;
 import edu.wustl.cab2b.common.exception.RuntimeException;
 import edu.wustl.cab2b.common.queryengine.ICab2bQuery;
-import edu.wustl.cab2b.common.queryengine.result.IQueryResult;
-import edu.wustl.cab2b.common.queryengine.result.IRecord;
 import edu.wustl.common.querysuite.metadata.associations.IAssociation;
 import edu.wustl.common.querysuite.metadata.path.IPath;
 import edu.wustl.common.querysuite.queryobject.DataType;
@@ -501,27 +498,6 @@ public class Utility implements EntityManagerExceptionConstantsInterface
 		List<AttributeInterface> attributes = new ArrayList<AttributeInterface>(inputAttributeSet);
 		Collections.sort(attributes, new AttributeInterfaceComparator());
 		return attributes;
-	}
-
-	/**
-	 * @param queryResult
-	 *            Query result to process.
-	 * @return List of attributes from query result
-	 */
-	public static List<AttributeInterface> getAttributeList(IQueryResult<IRecord> queryResult)
-	{
-		Map<String, List<IRecord>> allRecords = queryResult.getRecords();
-		List<AttributeInterface> attributeList = new ArrayList<AttributeInterface>();
-		for (List<IRecord> recordList : allRecords.values())
-		{
-			if (!recordList.isEmpty())
-			{
-				IRecord record = recordList.get(0);
-				attributeList = getAttributeList(record.getAttributes());
-				break;
-			}
-		}
-		return attributeList;
 	}
 
 	/**

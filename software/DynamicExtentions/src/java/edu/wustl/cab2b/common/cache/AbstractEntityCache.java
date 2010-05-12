@@ -39,7 +39,6 @@ import edu.wustl.cab2b.common.beans.MatchedClassEntry;
 import edu.wustl.cab2b.common.exception.RuntimeException;
 import edu.wustl.cab2b.common.util.Utility;
 import edu.wustl.cab2b.server.util.DynamicExtensionUtility;
-import edu.wustl.common.querysuite.metadata.category.Category;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.exception.DAOException;
 
@@ -61,11 +60,6 @@ public abstract class AbstractEntityCache implements IEntityCache
 
 	private static final Logger LOGGER = edu.wustl.common.util.logger.Logger
 			.getLogger(AbstractEntityCache.class);
-
-	/**
-	 * List of all the categories loaded in caB2B local database.
-	 */
-	protected List<Category> categories = new ArrayList<Category>(0);
 
 	/**
 	 * Set of all the DyanamicExtensions categories loaded in the database.

@@ -51,24 +51,6 @@ public interface IEntityCache
 			Collection<PermissibleValueInterface> PVCollection);
 
 	/**
-	* Returns the Entity objects whose source classes fields match with the respective not null
-	* fields in the passed entity object.
-	* @param entity The entity object.
-	* @return the Entity objects whose source classes fields match with the respective not null
-	* fields in the passed entity object.
-	*/
-	MatchedClass getCategories(Collection<EntityInterface> entityCollection);
-
-	/**
-	 * Returns the Entity objects whose attributes's source classes fields match with the respective not null
-	 * fields in the passed entity object.
-	 * @param entity The entity object.
-	 * @return the Entity objects whose attributes's source classes fields match with the respective not null
-	 * fields in the passed entity object.
-	 */
-	MatchedClass getCategoriesAttributes(Collection<AttributeInterface> attributeCollection);
-
-	/**
 	 * This method adds entity and its other details like associaion and permissible values into the cache.
 	 *
 	 * @param entity entity to add
