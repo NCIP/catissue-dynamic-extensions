@@ -4,6 +4,8 @@ package edu.common.dynamicextensions.util;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import au.com.bytecode.opencsv.CSVReader;
@@ -11,6 +13,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 
 /**
  * This class is used for category related ant tasks
@@ -24,6 +27,11 @@ public class CategoryUtil
 	 */
 	private JDBCDAO jdbcdao;
 
+	private final List<String> categoryNameList = new ArrayList<String>();
+
+	/** The Constant LOGGER. */
+	private static final Logger LOGGER = Logger.getCommonLogger(CategoryUtil.class);
+
 	/**
 	 * @param categoriesFilePath csv file containing category names
 	 * @param isCacheble 1 = true, 0=false
@@ -32,24 +40,36 @@ public class CategoryUtil
 	private void markCategoriesCacheable(String categoriesFilePath, int isCacheble)
 			throws DynamicExtensionsSystemException
 	{
-		StringBuffer formList = new StringBuffer();
 		try
 		{
 			CSVReader csvReader = new CSVReader(new FileReader(categoriesFilePath));
 			String[] line = csvReader.readNext();
 
-			for (String string : line)
-			{
-				formList.append('\'');
-				formList.append(string);
-				formList.append("',");
-
-			}
-			formList.replace(formList.length() - 1, formList.length(), "");
 			jdbcdao = DynamicExtensionsUtility.getJDBCDAO();
-			String idList = getCategoryIds(formList);
-			jdbcdao.executeUpdate("update dyextn_category set IS_CACHEABLE=" + isCacheble
-					+ " where identifier in (" + idList + ")");
+			String categoryIdList = getCategoryIdList(line);
+			if (categoryIdList.length() != 0)
+			{
+				StringBuffer updateQuery = new StringBuffer(
+						"update dyextn_category set IS_CACHEABLE=");
+				updateQuery.append(isCacheble);
+				updateQuery.append(" where identifier in (");
+				updateQuery.append(categoryIdList);
+				updateQuery.append(')');
+
+				jdbcdao.executeUpdate(updateQuery.toString());
+
+				for (String category : categoryNameList)
+				{
+					if (isCacheble == 0)
+					{
+						LOGGER.info("Category " + category + " removed from caching");
+					}
+					else
+					{
+						LOGGER.info("Category " + category + " marked for caching");
+					}
+				}
+			}
 			jdbcdao.commit();
 			jdbcdao.closeSession();
 
@@ -66,37 +86,73 @@ public class CategoryUtil
 		}
 		catch (DAOException e)
 		{
-			throw new DynamicExtensionsSystemException("Error executing query "
-					+ "update dyextn_category set IS_CACHEABLE=1 where identifier in ("
-					+ formList.toString() + ")", e);
-
+			throw new DynamicExtensionsSystemException(
+					"Error occured while marking categories for caching", e);
 		}
 	}
 
 	/**
-	 * @param categoryNameList category name list
+	 * Gets the category id list.
+	 *
+	 * @param line the line
+	 *
+	 * @return the category id list
+	 *
+	 * @throws DAOException the DAO exception
+	 */
+	private String getCategoryIdList(String[] line) throws DAOException
+	{
+		StringBuffer categoryIdList = new StringBuffer();
+		for (String string : line)
+		{
+
+			String value = getCategoryIdFromDatabase(string);
+			if (value != null)
+			{
+				categoryIdList.append('\'');
+				categoryIdList.append(value);
+				categoryIdList.append("',");
+			}
+		}
+		if (categoryIdList.length() != 0)
+		{
+			categoryIdList.replace(categoryIdList.length() - 1, categoryIdList.length(), "");
+		}
+		return categoryIdList.toString();
+	}
+
+	/**
+	 * @param categoryName category name list
 	 * @return category id list
 	 * @throws DAOException if could error occurred in executing query
 	 */
-	private String getCategoryIds(StringBuffer categoryNameList) throws DAOException
+	@SuppressWarnings("unchecked")
+	private String getCategoryIdFromDatabase(String categoryName) throws DAOException
 	{
-		List<List<Object>> list = jdbcdao
-				.executeQuery("select t1.identifier from dyextn_abstract_metadata t1,dyextn_category t2 "
-						+ "where name in ("
-						+ categoryNameList.toString()
-						+ ") and t1.identifier=t2.identifier");
+		String idList = null;
 
-		StringBuffer idList = new StringBuffer();
-		for (List<Object> id : list)
+		StringBuffer selectQuery = new StringBuffer(
+				"select t1.identifier from dyextn_abstract_metadata t1,dyextn_category t2 where name in (?) and t1.identifier=t2.identifier");
+
+		ColumnValueBean nameColValueBean = new ColumnValueBean("NAME", categoryName);
+		List<ColumnValueBean> colValueBean = new LinkedList<ColumnValueBean>();
+		colValueBean.add(nameColValueBean);
+
+		List<List<Object>> list = jdbcdao.executeQuery(selectQuery.toString(), colValueBean);
+
+		if (list.size() == 0)
 		{
-			idList.append('\'');
-			idList.append(id.get(0).toString());
-			idList.append("',");
-
+			LOGGER.info("Category " + categoryName + " is not present in database");
 		}
-		idList.replace(idList.length() - 1, idList.length(), "");
-
-		return idList.toString();
+		else
+		{
+			for (List<Object> id : list)
+			{
+				idList = id.get(0).toString();
+				categoryNameList.add(categoryName);
+			}
+		}
+		return idList;
 	}
 
 	/**
@@ -105,7 +161,7 @@ public class CategoryUtil
 	 */
 	public static void main(String[] args) throws DynamicExtensionsSystemException
 	{
-		/*args = new String[]{"src/resources/csv/cacheableCategories.csv"};*/
+		//args = new String[]{"src/resources/csv/cacheableCategories.csv"};
 		if (args.length < 1)
 		{
 			throw new RuntimeException("Please provide category file path.");
@@ -127,7 +183,7 @@ public class CategoryUtil
 		{
 			categoryUtil.markCategoriesCacheable(args[0], isCacheble);
 		}
-		Logger.out.info("Categories marked successfully.");
+		LOGGER.info("Categories marked successfully.");
 
 	}
 }
