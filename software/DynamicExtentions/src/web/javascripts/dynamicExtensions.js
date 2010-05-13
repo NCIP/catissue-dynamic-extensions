@@ -2766,7 +2766,9 @@ function paster(response)
 	{
 		numCombosInPastedData = (matches.length)/2;
 	}
-	var errorString = reponseList[1];
+	var errorCountList = reponseList[1].split("~RowsCopied");;
+	var errorString = errorCountList[0];
+	noOfRecordsCopied = errorCountList[1];
 	//PRINT ERRORS IF ANY
 	printErrors(errorString);
 	//ERROR PRINTING FINISHED
@@ -2817,14 +2819,15 @@ function paster(response)
 	}
 	else
 	{
-		var tbody = document.createElement('tbody');
-		existingTable.appendChild(tbody);
-		tbody.innerHTML = generatedHTML;
+		if(parseInt(noOfRecordsCopied)>0)
+		{
+			var tbody = document.createElement('tbody');
+			existingTable.appendChild(tbody);
+			tbody.innerHTML = generatedHTML;
+		}
 	}
-
-
 	var rowCount_t = document.getElementById(conatinerId+"_rowCount").value * 1;
-	document.getElementById(conatinerId+"_rowCount").value = rowCount_t+noOfRecordsCopied;
+	document.getElementById(conatinerId+"_rowCount").value = parseInt(rowCount_t)+parseInt(noOfRecordsCopied);
 	executeCombos();
 
 }

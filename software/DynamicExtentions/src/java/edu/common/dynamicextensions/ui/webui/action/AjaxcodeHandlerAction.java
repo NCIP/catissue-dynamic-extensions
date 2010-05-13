@@ -40,7 +40,6 @@ import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.entitymanager.EntityManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.exception.DynamicExtensionsValidationException;
 import edu.common.dynamicextensions.processor.GroupProcessor;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
@@ -314,11 +313,10 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 			final Collection<ControlInterface> controlCollection = container.getControlCollection();
 			for (final ControlInterface control : controlCollection)
 			{
-			    Logger.out.info("[" + control.getSequenceNumber() + "] = [" + control.getCaption()
-			            + "]");
+				Logger.out.info("[" + control.getSequenceNumber() + "] = [" + control.getCaption()
+						+ "]");
 			}
 		}
-
 
 		return "";
 	}
@@ -803,43 +801,100 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 		final StringBuffer returnString = new StringBuffer();
 		String clipboardData = request.getParameter(DEConstants.CLIP_BOARD_DATA);
 		clipboardData = clipboardData.replace("\r", "");
-		int rwoIndex = Integer.parseInt(request.getParameter(DEConstants.INDEX));
-		final String[] records = clipboardData.split(DEConstants.COMMA);
+		int rowsCopied = 0;
 		final Set<String> errorList = new HashSet<String>();
-		ContainerInterface containerInterface = null;
-		try
+		if (!"".equals(clipboardData.trim()))
 		{
-			containerInterface = DynamicExtensionsUtility.getContainerByIdentifier(request
-					.getParameter(DEConstants.CONTAINER_ID));
-			setContainerParameters(containerInterface, request);
-			final List<ControlInterface> list = containerInterface
-					.getAllControlsUnderSameDisplayLabel();
+			final String[] records = clipboardData.split(DEConstants.COMMA);
 
-			for (final String record : records)
+			ContainerInterface containerInterface = null;
+			try
 			{
-				String[] cols = record.split("\t");
-				rwoIndex = generateRow(returnString, rwoIndex, cols, errorList, containerInterface,
-						list);
+				Map<String, ContainerInterface> containerMap = (Map<String, ContainerInterface>) request
+						.getSession().getAttribute(WebUIManagerConstants.CONTAINER_MAP);
+				containerInterface = containerMap.get(request
+						.getParameter(DEConstants.CONTAINER_ID));
+				if (containerInterface == null)
+				{
+					containerInterface = DynamicExtensionsUtility.getContainerByIdentifier(request
+							.getParameter(DEConstants.CONTAINER_ID));
+				}
+				setContainerParameters(containerInterface, request);
+				final List<ControlInterface> list = containerInterface
+						.getAllControlsUnderSameDisplayLabel();
+				int rwoIndex = Integer.parseInt(request.getParameter(DEConstants.INDEX));
+
+				rowsCopied = generateRows(records, returnString, rwoIndex, errorList,
+						containerInterface, list);
+			}
+			catch (final Exception e)
+			{
+				Logger.out.error(e.getMessage());
+			}
+			finally
+			{
+				if (containerInterface != null)
+				{
+					resetContainerParameters(containerInterface);
+				}
 			}
 
-		}
-		catch (final Exception e)
-		{
-			Logger.out.error(e.getMessage());
-		}
-		finally
-		{
-			if (containerInterface != null)
-			{
-				resetContainerParameters(containerInterface);
-			}
 		}
 		returnString.append("~ErrorList");
 		if (!errorList.isEmpty())
 		{
 			returnString.append(errorList);
 		}
+		returnString.append("~RowsCopied").append(rowsCopied);
 		return returnString.toString();
+	}
+
+	/**
+	 * This method will create the html & update the data value map for the number of rows copied.
+	 * If the complete row is empty then it will not add the row to the map.
+	 * @param records array of the contents copied.
+	 * @param returnString it contains generated html for the added rows.
+	 * @param rwoIndex it adds the new row at thid index
+	 * @param errorList errors are added in this list.
+	 * @param containerInterface container for which to add the record.
+	 * @param list list of contained containers.
+	 * @return number of rows copied.
+	 * @throws DynamicExtensionsSystemException exception.
+	 * @throws DynamicExtensionsApplicationException exception.
+	 */
+	private int generateRows(String[] records, StringBuffer returnString, int rwoIndex,
+			Set<String> errorList, ContainerInterface containerInterface,
+			List<ControlInterface> list) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
+	{
+		int rowsCopied = 0;
+		for (final String record : records)
+		{
+			String[] cols = record.split("\t");
+			if ((cols != null) && (cols.length > 0))
+			{
+				final Map<BaseAbstractAttributeInterface, Object> rowValueMap = new HashMap<BaseAbstractAttributeInterface, Object>();
+				int columnCounter = 0;
+				for (final ControlInterface control : list)
+				{
+					if ((columnCounter < cols.length)
+							&& !(control.getBaseAbstractAttribute() instanceof AssociationMetadataInterface))
+					{
+						rowValueMap.put(control.getBaseAbstractAttribute(), cols[columnCounter++]);
+					}
+				}
+				errorList.addAll(ValidatorUtil.validateEntity(rowValueMap, new ArrayList<String>(),
+						containerInterface));
+				updateMapForskipLogic(containerInterface, rowValueMap, rwoIndex);
+
+				containerInterface.setContainerValueMap(rowValueMap);
+				returnString.append(UserInterfaceiUtility.getContainerHTMLAsARow(
+						containerInterface, rwoIndex, null, containerInterface));
+				rwoIndex++;
+				rowsCopied++;
+			}
+		}
+		return rowsCopied;
 	}
 
 	/**
@@ -862,47 +917,6 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	{
 		containerInterface.setAjaxRequest(false);
 		containerInterface.setRequest(null);
-	}
-
-	/**
-	 * @param returnString
-	 * @param rwoIndex
-	 * @param cols
-	 * @param errorList
-	 * @param containerInterface
-	 * @param list
-	 * @return
-	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsValidationException
-	 * @throws DynamicExtensionsApplicationException
-	 */
-	private int generateRow(final StringBuffer returnString, int rwoIndex, final String[] cols,
-			final Set<String> errorList, final ContainerInterface containerInterface,
-			final List<ControlInterface> list) throws DynamicExtensionsSystemException,
-			DynamicExtensionsValidationException, DynamicExtensionsApplicationException
-	{
-		if ((cols != null) && (cols.length > 0))
-		{
-			final Map<BaseAbstractAttributeInterface, Object> rowValueMap = new HashMap<BaseAbstractAttributeInterface, Object>();
-			int columnCounter = 0;
-			for (final ControlInterface control : list)
-			{
-				if ((columnCounter < cols.length)
-						&& !(control.getBaseAbstractAttribute() instanceof AssociationMetadataInterface))
-				{
-					rowValueMap.put(control.getBaseAbstractAttribute(), cols[columnCounter++]);
-				}
-			}
-			errorList.addAll(ValidatorUtil.validateEntity(rowValueMap, new ArrayList<String>(),
-					containerInterface));
-			updateMapForskipLogic(containerInterface, rowValueMap, rwoIndex);
-
-			containerInterface.setContainerValueMap(rowValueMap);
-			returnString.append(UserInterfaceiUtility.getContainerHTMLAsARow(containerInterface,
-					rwoIndex, null, containerInterface));
-			rwoIndex++;
-		}
-		return rwoIndex;
 	}
 
 	/**
