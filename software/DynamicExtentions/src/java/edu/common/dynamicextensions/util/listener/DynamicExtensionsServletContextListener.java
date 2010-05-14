@@ -8,6 +8,7 @@ import javax.servlet.ServletContextListener;
 
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.Variables;
+import edu.common.dynamicextensions.validation.DateValidator;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.exception.ErrorKey;
@@ -40,11 +41,8 @@ public class DynamicExtensionsServletContextListener implements ServletContextLi
 			Logger.out.error(ex.getMessage(), ex);
 		}
 
-
-		String propDirPath=sce.getServletContext().getRealPath("WEB-INF")
-		+ System.getProperty("file.separator") + "classes";
-
-
+		String propDirPath = sce.getServletContext().getRealPath("WEB-INF")
+				+ System.getProperty("file.separator") + "classes";
 
 		/**
 		 * Configuring the Logger class so that it can be utilized by
@@ -62,21 +60,22 @@ public class DynamicExtensionsServletContextListener implements ServletContextLi
 			Logger.out.error(ex.getMessage(), ex);
 		}
 		String resourceBundleKey = sce.getServletContext().getInitParameter(
-		"ResourceBundleParamName");
-		if(resourceBundleKey==null || resourceBundleKey.trim().equals(""))
+				"ResourceBundleParamName");
+		if (resourceBundleKey == null || resourceBundleKey.trim().equals(""))
 		{
-			resourceBundleKey="resourcebundleclass";
+			resourceBundleKey = "resourcebundleclass";
 		}
 		/**
 		 * Getting Application Properties file path
 		 */
-		String applicationResourcesPath = propDirPath+ System.getProperty("file.separator")
-				+ sce.getServletContext().getInitParameter(resourceBundleKey)+".properties";
+		String applicationResourcesPath = propDirPath + System.getProperty("file.separator")
+				+ sce.getServletContext().getInitParameter(resourceBundleKey) + ".properties";
 		/**
 		 * Initializing ApplicationProperties with the class
 		 * corresponding to resource bundle of the application
 		 */
-		ApplicationProperties.initBundle(sce.getServletContext().getInitParameter(resourceBundleKey));
+		ApplicationProperties.initBundle(sce.getServletContext()
+				.getInitParameter(resourceBundleKey));
 
 		/**
 		 * Getting and storing Home path for the application
@@ -108,8 +107,8 @@ public class DynamicExtensionsServletContextListener implements ServletContextLi
 		//QueryBizLogic.initializeQueryData();
 
 		DynamicExtensionsUtility.initialiseApplicationVariables();
-		DynamicExtensionsUtility.validateGivenDatePatterns();
 		DynamicExtensionsUtility.initialiseApplicationInfo();
+		DateValidator.validateGivenDatePatterns();
 		Logger.out.info("DynamicExtensionsServletContextListener before Initialising the Cache.");
 		EntityCache.getInstance();
 		Logger.out.info("DynamicExtensionsServletContextListener after Initialising the Cache.");

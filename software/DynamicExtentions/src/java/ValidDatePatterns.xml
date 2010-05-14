@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <valid_pattern>
-	<pattern >dd-MM-yyyy</pattern>
-	<pattern >dd/MM/yyyy</pattern>
-	<pattern >dd-MM-yyyy HH:mm</pattern>
-	<pattern >dd/MM/yyyy HH:mm</pattern>
-	<pattern >MM-dd-yyyy</pattern>
-	<pattern >MM/dd/yyyy</pattern>
-	<pattern >MM-dd-yyyy HH:mm</pattern>
-	<pattern >MM/dd/yyyy HH:mm</pattern>
-	<pattern >MM-yyyy</pattern>
-	<pattern >MM/yyyy</pattern>
-	<pattern >yyyy</pattern>
+	<pattern regex="[0-9]{2}-[0-9]{2}-[0-9]{4}">dd-MM-yyyy</pattern>
+	<pattern regex="[0-9]{2}/[0-9]{2}/[0-9]{4}">dd/MM/yyyy</pattern>
+	<pattern regex="[0-9]{2}-[0-9]{2}-[0-9]{4} [0-9]{2}:[0-9]{2}">dd-MM-yyyy HH:mm</pattern>
+	<pattern regex="[0-9]{2}/[0-9]{2}/[0-9]{4} [0-9]{2}:[0-9]{2}">dd/MM/yyyy HH:mm</pattern>
+	<pattern regex="[0-9]{2}-[0-9]{2}-[0-9]{4}">MM-dd-yyyy</pattern>
+	<pattern regex="[0-9]{2}/[0-9]{2}/[0-9]{4}">MM/dd/yyyy</pattern>
+	<pattern regex="[0-9]{2}-[0-9]{2}-[0-9]{4} [0-9]{2}:[0-9]{2}">MM-dd-yyyy HH:mm</pattern>
+	<pattern regex="[0-9]{2}/[0-9]{2}/[0-9]{4} [0-9]{2}:[0-9]{2}">MM/dd/yyyy HH:mm</pattern>
+	<pattern regex="[0-9]{2}-[0-9]{4}">MM-yyyy</pattern>
+	<pattern regex="[0-9]{2}/[0-9]{4}">MM/yyyy</pattern>
+	<pattern regex="[0-9]{4}">yyyy</pattern>
 </valid_pattern>

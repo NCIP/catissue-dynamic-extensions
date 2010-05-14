@@ -39,12 +39,13 @@ import java.util.regex.Pattern;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import edu.common.dynamicextensions.bizlogic.BizLogicFactory;
 import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
@@ -450,10 +451,13 @@ public class DynamicExtensionsUtility
 			}
 			else if (controlInterface.getBaseAbstractAttribute() != null)
 			{
-				if (controlInterface.getBaseAbstractAttribute().getId() != null)
+				if (controlInterface.getBaseAbstractAttribute().getId() == null)
 				{
-					if (controlInterface.getBaseAbstractAttribute().equals(
-							attributeMetadataInterface))
+					if (controlInterface.getParentContainer().getAbstractEntity().getName() != null
+							&& controlInterface.getParentContainer().getAbstractEntity().getName()
+									.equals(categoryEntityName)
+							&& controlInterface.getBaseAbstractAttribute().getName().equals(
+									attributeMetadataInterface.getName()))
 					{
 						control = controlInterface;
 						break;
@@ -461,11 +465,8 @@ public class DynamicExtensionsUtility
 				}
 				else
 				{
-					if (controlInterface.getParentContainer().getAbstractEntity().getName() != null
-							&& controlInterface.getParentContainer().getAbstractEntity().getName()
-									.equals(categoryEntityName)
-							&& controlInterface.getBaseAbstractAttribute().getName().equals(
-									attributeMetadataInterface.getName()))
+					if (controlInterface.getBaseAbstractAttribute().equals(
+							attributeMetadataInterface))
 					{
 						control = controlInterface;
 						break;
@@ -488,7 +489,7 @@ public class DynamicExtensionsUtility
 	{
 		ControlInterface control = null;
 		Collection<ControlInterface> controlCollection = containerInterface
-				.getAllControlsUnderSameDisplayLabel();;
+				.getAllControlsUnderSameDisplayLabel();
 		for (ControlInterface controlInterface : controlCollection)
 		{
 			if (controlInterface instanceof AbstractContainmentControlInterface)
@@ -977,7 +978,7 @@ public class DynamicExtensionsUtility
 		 */
 		final String VALIDCHARSREGEX = "[^\\\\/:*?\"<>&;|']*";
 
-		if (name == null || name.trim().length() == 0 || !name.matches(VALIDCHARSREGEX))
+		if (name == null || "".equals(name.trim()) || !name.matches(VALIDCHARSREGEX))
 		{
 			throw new DynamicExtensionsApplicationException("Object name invalid", null,
 					EntityManagerExceptionConstantsInterface.DYEXTN_A_003);
@@ -1153,7 +1154,7 @@ public class DynamicExtensionsUtility
 	public static boolean isCheckBoxChecked(String value)
 	{
 		boolean isChecked = false;
-		if ((value != null && value.trim().length() > 0)
+		if ((value != null && !"".equals(value.trim()))
 				&& (value.equals("1") || value.equals("true")))
 		{
 			isChecked = true;
@@ -1184,7 +1185,7 @@ public class DynamicExtensionsUtility
 	public static String getCheckboxSelectionValue(String value)
 	{
 		String checkboxValue = "";
-		if (value != null && value.trim().length() > 0
+		if (value != null && !"".equals(value.trim())
 				&& value.equalsIgnoreCase(getValueForCheckBox(true)))
 		{
 			checkboxValue = "checked";
@@ -1325,7 +1326,7 @@ public class DynamicExtensionsUtility
 		DefaultBizLogic defaultBizLogic = BizLogicFactory.getDefaultBizLogic();
 		defaultBizLogic.setAppName(DynamicExtensionDAO.getInstance().getAppName());
 
-		if (caption == null || caption.trim().length() == 0)
+		if (caption == null || "".equals(caption.trim()))
 		{
 			return null;
 		}
@@ -1903,17 +1904,17 @@ public class DynamicExtensionsUtility
 	}
 
 	/**
-     * This method used to replace escape characters such as single and double
-     * quote.
-     *
-     * @param str
-     *            the str
-     * @param one
-     *            the one
-     * @param another
-     *            the another
-     * @return the string
-     */
+	 * This method used to replace escape characters such as single and double
+	 * quote.
+	 *
+	 * @param str
+	 *            the str
+	 * @param one
+	 *            the one
+	 * @param another
+	 *            the another
+	 * @return the string
+	 */
 	public static String replaceUtil(String str, String one, String another)
 	{
 		if (str == null)
@@ -2623,61 +2624,39 @@ public class DynamicExtensionsUtility
 	}
 
 	/**
-	 * It will read the ValidDatePatterns.XML & verify that the date patterns
-	 * specified in the ApplicationResources.properties Files is in the given patterns.
-	 * else will throw the Exception.
-	 */
-	public static void validateGivenDatePatterns()
-	{
-		DynamicExtensionsUtility utility = new DynamicExtensionsUtility();
-		List<String> validDatePatternList = utility.getAllValidDatePatterns();
-
-		if (!(validDatePatternList.contains(ProcessorConstants.DATE_ONLY_FORMAT)
-				&& validDatePatternList.contains(ProcessorConstants.DATE_TIME_FORMAT)
-				&& validDatePatternList.contains(ProcessorConstants.MONTH_YEAR_FORMAT) && validDatePatternList
-				.contains(ProcessorConstants.YEAR_ONLY_FORMAT)))
-		{
-			throw new RuntimeException(
-					"Invalid date pattern specified in the Application resource file");
-		}
-
-	}
-
-	/**
 	 * It will return the List of all  valid Patterns specified in the ValidDatePatterns.xml
 	 * @return List of datePatterns.
 	 */
-	public List<String> getAllValidDatePatterns()
+	public static Map<String, String> getAllValidDatePatterns()
 	{
-		List<String> validDatePatternList = new ArrayList<String>();
-		SAXReader saxReader = new SAXReader();
+		Map<String, String> validDatePatternMap = new HashMap<String, String>();
 
-		InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(
-				"ValidDatePatterns.xml");
-
-		Document document = null;
-
+		InputStream inputStream = DynamicExtensionsUtility.class.getClassLoader()
+				.getResourceAsStream("ValidDatePatterns.xml");
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try
 		{
-			document = saxReader.read(inputStream);
-
-			Element datePatternsElement = document.getRootElement();
-			Iterator patternIterator = datePatternsElement.elementIterator("pattern");
-
-			Element primitiveAttributeElement = null;
-
-			while (patternIterator.hasNext())
+			Document doc = dbf.newDocumentBuilder().parse(inputStream);
+			NodeList nodeList = doc.getElementsByTagName("pattern");
+			for (int s = 0; s < nodeList.getLength(); s++)
 			{
-				primitiveAttributeElement = (Element) patternIterator.next();
-				validDatePatternList.add(primitiveAttributeElement.getText());
+				Node firstNode = nodeList.item(s);
 
+				if (firstNode.getNodeType() == Node.ELEMENT_NODE)
+				{
+					NamedNodeMap attributeMap = firstNode.getAttributes();
+					Node attributeNode = attributeMap.getNamedItem("regex");
+					String regex = attributeNode.getNodeValue();
+					NodeList fstNm = firstNode.getChildNodes();
+					validDatePatternMap.put(fstNm.item(0).getNodeValue(), regex);
+				}
 			}
 		}
-		catch (DocumentException documentException)
+		catch (Exception exception)
 		{
-			throw new RuntimeException(documentException.getMessage());
+			throw new RuntimeException(exception.getMessage(), exception);
 		}
-		return validDatePatternList;
+		return validDatePatternMap;
 	}
 
 	/**
