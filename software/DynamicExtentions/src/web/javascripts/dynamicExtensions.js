@@ -1611,6 +1611,7 @@ function ignoreResponseHandler(str)
 
 // Re-factored the entire method as it was very difficult to understand
 // Changes by Gaurav Mehta
+//Modified By Suhas Khot,    Date:-13 May 2010
 function setDefaultValues(tableId, obj, containerId)
 {
 	var children = obj.childNodes;
@@ -1622,6 +1623,8 @@ function setDefaultValues(tableId, obj, containerId)
 	{
 		var childObject = children[j];
 		childObjectName = childObject.name;
+
+		//For calender and other controls
 		if (childObjectName == null && childObject.id != null
 				&& childObject.id != "auto_complete_dropdown"
 					&& childObject.id.indexOf('slcalcodControl') == -1)
@@ -1629,10 +1632,11 @@ function setDefaultValues(tableId, obj, containerId)
 			childObjectName = childObject.id;
 		}
 
-		if(childObjectName != null && (childObjectName.indexOf('_div') != -1 || childObjectName.indexOf('_button') != -1))
+		if(childObjectName != null && childObjectName.indexOf('_') != -1)
 		{
-			initializeDefaultValue(childObjectName,childObject,obj,i,rowIndex);
+			initializeDefaultValue(childObjectName,childObject,obj,i,rowIndex,true);
 		}
+		//For Combobox
 		if ("auto_complete_dropdown" == childObject.id)
 		{
 			var childNodes2 = childObject.childNodes;
@@ -1645,6 +1649,7 @@ function setDefaultValues(tableId, obj, containerId)
 
 			eval(newScript);
 		}
+		//Only in case of delete checkbox in addrow
 		if("deleteRow" == childObjectName)
 		{
 			childObject.id = "checkBox_" + containerId + "_" + rowIndex;
@@ -1653,50 +1658,49 @@ function setDefaultValues(tableId, obj, containerId)
 	return obj;
 }
 
-function initializeDefaultValue(childObjectName,childObject,obj,i,rowIndex)
+function initializeDefaultValue(childObjectName,childObject,obj,i,rowIndex, isFromMain)
 {
-	if (childObject.hasChildNodes)
+	if (childObjectName.indexOf(')') != -1)
 	{
-		childObject = childObject.childNodes[0];
-		childObjectName = childObject.name;
-		if (childObjectName == null && childObject.id != null
-			&& childObject.id != "auto_complete_dropdown"
-				&& childObject.id.indexOf('slcalcodControl') == -1)
+		childObjectName = childObjectName.substring(0, childObjectName
+				.indexOf(')'));
+		i++;
+		if (i == 1)
 		{
-			childObjectName = childObject.id;
+			str = childObjectName + "_" + rowIndex;
 		}
-		assignControlNames(childObjectName,obj,i,rowIndex);
-		checkForAutoComplete(childObject);
+		str = str + ")";
 	}
-}
-
-function assignControlNames(childObjectName,obj,i,rowIndex)
-{
-	if (childObjectName != null && childObjectName.indexOf('_') != -1)
+	else if (isFromMain == true && (childObjectName.indexOf('_div') != -1  || childObjectName.indexOf('_button') != -1))
 	{
-		if (childObjectName.indexOf(')') != -1)
+		if (childObject.hasChildNodes)
 		{
-			childObjectName = childObjectName.substring(0, childObjectName
-					.indexOf(')'));
-			i++;
-			// In case of control having multiple options, setting str
-			// only once
-			if (i == 1)
+			childObject = childObject.childNodes[0];
+			childObjectName = childObject.name;
+			if (childObjectName == null && childObject.id != null
+				&& childObject.id != "auto_complete_dropdown"
+					&& childObject.id.indexOf('slcalcodControl') == -1)
 			{
-				str = childObjectName + "_" + rowIndex;
+				childObjectName = childObject.id;
 			}
-			str = str + ")";
-		}
-		else
-		{
-			i++;
-			// In case of control having multiple options,
-			// setting str
-			// only once
-			if (i == 1) {
-				str = childObjectName + "_" + rowIndex;
+			if (childObjectName != null
+							&& childObjectName.indexOf('_') != -1)
+			{
+				initializeDefaultValue(childObjectName,childObject,obj,i,rowIndex, false)
 			}
+			checkForAutoComplete(childObject);
+			//continue;
 		}
+	}
+	else
+	{
+		i++;
+		if (i == 1) {
+			str = childObjectName + "_" + rowIndex;
+		}
+	}
+	if(isFromMain == true)
+	{
 		obj.innerHTML = replaceAll(obj.innerHTML,childObjectName, str);
 	}
 }
@@ -2968,7 +2972,7 @@ function setJQueryParameters(controlId)
 
 							htmlComponent = "<input type='text' disabled name='" +controlId+ "'_1 id='" +controlId+ "_1' value='" +file+ "'/>&nbsp;&nbsp;";
 							htmlComponent = htmlComponent + "<img src='" +imageSrc+ "' />&nbsp;&nbsp;";
-							htmlComponent = htmlComponent + "<img src='" +deleteImageSrc+ "' style='cursor:pointer' onClick='updateFileControl(" +controlId+ ");' />";
+							htmlComponent = htmlComponent + "<img src='" +deleteImageSrc+ "' style='cursor:pointer' onClick='updateFileControl(\"" +controlId+ "\");' />";
 							htmlComponent = htmlComponent + "<input type='hidden' name='" +controlId+ "' id='" +controlId+ "' value='" +fileId+ "'/>";
 							htmlComponent = htmlComponent + "<input type='hidden' name='" +controlId+ "_hidden' id='" +controlId+ "_hidden' value='" +file+ "'/>";
 							htmlComponent = htmlComponent + "<input type='hidden' name='" +controlId+ "_contentType' id='" +controlId+ "_contentType' value='" +contentType+ "'/>";
