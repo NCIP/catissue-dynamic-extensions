@@ -548,6 +548,11 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			//Insert record for static entity record object
 			hibernateDAO.insert(recordEntry);
 
+			if (hibernateDAO != null)
+			{
+				hibernateDAO.commit();
+				DynamicExtensionsUtility.closeDAO(hibernateDAO);
+			}
 			//get Id for inserted record entry
 			Long staticEntityRecId = recordEntry.getId();
 
@@ -574,11 +579,6 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				manager.associateEntityRecords(asntInterface, staticEntityRecId, recordId);
 			}
 
-			if (hibernateDAO != null)
-			{
-				hibernateDAO.commit();
-				DynamicExtensionsUtility.closeDAO(hibernateDAO);
-			}
 		}
 		catch (Exception e)
 		{
