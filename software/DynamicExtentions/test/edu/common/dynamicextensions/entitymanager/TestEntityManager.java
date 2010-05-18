@@ -2482,7 +2482,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			{
 				System.out.println("Inserting record for entity " + entity);
 				Map<BaseAbstractAttributeInterface, Object> dataValueMap = mapGenerator
-						.createDataValueMapForEntity(entity, 1);
+						.createDataValueMapForEntity(entity, 0);
 				Map map = dataValueMap;
 				List<String> errorList = new ArrayList<String>();
 				ValidatorUtil.validateEntity(dataValueMap, errorList, container);
@@ -2538,7 +2538,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			{
 				System.out.println("Inserting record for " + entity.getName());
 				Map<BaseAbstractAttributeInterface, Object> dataValueMap = mapGenerator
-						.createDataValueMapForEntity(entity, 1);
+						.createDataValueMapForEntity(entity, 0);
 				Map map = dataValueMap;
 				long recordId = entityManager.insertData(entity, map, null, null);
 				System.out.println("Record inserted succesfully for " + entity + " recordId "
@@ -2583,7 +2583,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			{
 				System.out.println("Validating record for entity " + entity);
 				Map<BaseAbstractAttributeInterface, Object> dataValueMap = mapGenerator
-						.createDataValueMapForEntity(entity, 1);
+						.createDataValueMapForEntity(entity, 0);
 				List<String> errorList = new ArrayList<String>();
 				ValidatorUtil.validateEntity(dataValueMap, errorList, container);
 				if (errorList.isEmpty())
