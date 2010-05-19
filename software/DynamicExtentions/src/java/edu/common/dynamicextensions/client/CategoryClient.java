@@ -1,20 +1,14 @@
 
-package edu.common.dynamicextensions.category;
+package edu.common.dynamicextensions.client;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.DirOperationsUtility;
 import edu.common.dynamicextensions.util.ZipUtility;
 import edu.common.dynamicextensions.utility.HTTPSConnection;
-import edu.wustl.common.util.logger.Logger;
-import edu.wustl.common.util.logger.LoggerConfig;
 
 /**
  * This class is used to create category by using ant task, which will not require to
@@ -24,18 +18,9 @@ import edu.wustl.common.util.logger.LoggerConfig;
  * @author pavan_kalantri
  *
  */
-public class CategoryCreator
+public class CategoryClient extends AbstractClient
 {
 
-	static
-	{
-		LoggerConfig.configureLogger(System.getProperty("user.dir"));
-	}
-
-	private static final Logger LOGGER = Logger.getCommonLogger(CategoryCreator.class);
-
-	private static File zipFile;
-	private static URL serverUrl;
 	private static boolean isMetadataOnly = false;
 
 	/**
@@ -47,49 +32,8 @@ public class CategoryCreator
 	 */
 	public static void main(String[] args)
 	{
-		CategoryCreator refresher = new CategoryCreator();
-		refresher.createCategory(args);
-	}
-
-	/**
-	 * This method will initiate the category creation on server so that server restart is not needed to
-	 * refresh the Entity Cache.
-	 * @param args The list of arguments this method expects is as follows.
-	 * args[0]=Zip file Path, args[1] =file path which contains categories to be created,
-	 * args[2] =Application Url on which category creation should be triggered
-	 * args[3] = is persist metadata only.
-	 */
-	public void createCategory(String[] args)
-	{
-		HTTPSConnection httpsConnection = HTTPSConnection.getInstance();
-		try
-		{
-			// trust all the https connections
-			httpsConnection.acceptAllHttpsConnections();
-			// Initialize all instance variables
-			initializeResources(args);
-
-			// open the servlet connection
-			URLConnection servletConnection = httpsConnection.openServletConnection(serverUrl);
-
-			// upload the Zip file to server
-			httpsConnection.uploadFileToServer(servletConnection, zipFile);
-
-			// read the response from server
-			httpsConnection.processResponse(servletConnection);
-		}
-		catch (IOException e)
-		{
-			LOGGER.error("Exception : " + e.getLocalizedMessage());
-			LOGGER.info("For more information please check :/log/dynamicExtentionsError.log");
-			LOGGER.debug("Exception occured is as follows : ", e);
-		}
-		catch (DynamicExtensionsSystemException e)
-		{
-			LOGGER.error("Exception : " + e.getLocalizedMessage());
-			LOGGER.info("For more information please check :/log/dynamicExtentionsError.log");
-			LOGGER.debug("Exception occured is as follows : ", e);
-		}
+		CategoryClient refresher = new CategoryClient();
+		refresher.execute(args);
 	}
 
 	/**
@@ -100,16 +44,16 @@ public class CategoryCreator
 	 * @throws IOException
 	 * @throws Exception
 	 */
-	private void initializeResources(String[] args) throws DynamicExtensionsSystemException,
+	protected void initializeResources(String[] args) throws DynamicExtensionsSystemException,
 			IOException
 	{
 		try
 		{
-			validate(args);
 			//validate size of the folder is less than 500MB
 			DirOperationsUtility.validateFolderSizeForUpload(args[0], 500000000L);
 			zipFile = ZipUtility.zipFolder(args[0], "tempCategoryDir.zip");
-			String url = getCorrectedApplicationURL(args[1]) + "/CreateCategoryAction.do?";
+			String url = HTTPSConnection.getCorrectedApplicationURL(args[1])
+					+ "/CreateCategoryAction.do?";
 			String catFilename = "";
 			if (args.length > 2 && !"".equals(args[2].trim()))
 			{
@@ -123,27 +67,6 @@ public class CategoryCreator
 		{
 			throw new DynamicExtensionsSystemException("Please provide correct ApplicationURL", e);
 		}
-	}
-
-	/**
-	 * @param appUrl
-	 * @return
-	 * @throws DynamicExtensionsSystemException
-	 */
-	private String getCorrectedApplicationURL(String appUrl)
-			throws DynamicExtensionsSystemException
-	{
-		if (appUrl.contains("\\"))
-		{
-			throw new DynamicExtensionsSystemException("In Application.url replace '\\' with '/'.");
-		}
-		if ('/' == appUrl.charAt(appUrl.length() - 1))
-		{
-			appUrl = appUrl.substring(0, appUrl.length() - 1);
-
-		}
-		return appUrl;
-
 	}
 
 	/**
@@ -162,7 +85,7 @@ public class CategoryCreator
 	 * @param args arguments
 	 * @throws DynamicExtensionsSystemException exception
 	 */
-	private static void validate(String args[]) throws DynamicExtensionsSystemException
+	protected void validate(String args[]) throws DynamicExtensionsSystemException
 	{
 		if (args.length == 0)
 		{
@@ -172,63 +95,16 @@ public class CategoryCreator
 		{
 			throw new DynamicExtensionsSystemException("Please specify the AppplicationURL.");
 		}
-		if (args[0] != null && args[0].trim().length() == 0)
+		boolean isPathUnvailable = (args[0] != null && args[0].trim().length() == 0);
+		if (isPathUnvailable)
 		{
 			throw new DynamicExtensionsSystemException("Please specify category files folder path.");
 		}
-		if (args[1] != null && args[1].trim().length() == 0)
+		boolean isUrlUnavailable = (args[1] != null && args[1].trim().length() == 0);
+		if (isUrlUnavailable)
 		{
 			throw new DynamicExtensionsSystemException("Please specify the  AppplicationURL.");
 		}
-	}
-
-	/**
-	 * This method will read the names of the category files mentioned in the file "categoryListFileName"
-	 * given in the arguments & create a string of category file names separated with the '!=!' token.
-	 * @param listCatFileName name of the file in which category files path are mentioned.
-	 * @return the string formed from category file names with'!=!' in between.
-	 * @throws DynamicExtensionsSystemException Exception.
-	 * @throws IOException Exception.
-	 */
-	private String getCategoryFilenameString(String listCatFileName)
-			throws DynamicExtensionsSystemException, IOException
-	{
-		File objFile = new File(listCatFileName);
-		BufferedReader bufRdr = null;
-		StringBuffer catFileNameString = new StringBuffer();
-		if (objFile.exists())
-		{
-			try
-			{
-				bufRdr = new BufferedReader(new FileReader(objFile));
-				String line = bufRdr.readLine();
-				//read each line of text file
-				while (line != null)
-				{
-					catFileNameString.append(line.trim()).append(
-							CategoryCreatorConstants.CAT_FILE_NAME_SEPARATOR);
-					line = bufRdr.readLine();
-				}
-			}
-			catch (IOException e)
-			{
-				throw new DynamicExtensionsSystemException("Can not read from file "
-						+ listCatFileName, e);
-			}
-			finally
-			{
-				if (bufRdr != null)
-				{
-					bufRdr.close();
-				}
-			}
-		}
-		else
-		{
-			throw new DynamicExtensionsSystemException("Category names file not found at "
-					+ listCatFileName);
-		}
-		return catFileNameString.toString();
 	}
 
 	/**

@@ -28,7 +28,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import edu.common.dynamicextensions.category.CategoryCreator;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
@@ -46,7 +45,7 @@ public class XMLUtil
 		LoggerConfig.configureLogger(System.getProperty("user.dir"));
 	}
 
-	private static final Logger LOGGER = Logger.getCommonLogger(CategoryCreator.class);
+	private static final Logger LOGGER = Logger.getCommonLogger(XMLUtil.class);
 
 	/**
 	 * for writing merged file

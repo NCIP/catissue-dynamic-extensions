@@ -22,11 +22,11 @@ import org.apache.struts.action.ActionMapping;
 import org.owasp.stinger.Stinger;
 import org.owasp.stinger.rules.RuleSet;
 
+import edu.common.dynamicextensions.client.PermissibleValuesClient;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.CategoryGenerationUtil;
 import edu.common.dynamicextensions.util.DirOperationsUtility;
 import edu.common.dynamicextensions.util.DownloadUtility;
-import edu.common.dynamicextensions.util.parser.DynamicallyImportPermissibleValues;
 import edu.common.dynamicextensions.util.parser.ImportPermissibleValues;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.util.global.CommonServiceLocator;
@@ -133,7 +133,7 @@ public class ImportPVAction extends BaseDynamicExtensionsAction
 			throws DynamicExtensionsSystemException
 	{
 		List<String> fileNameList;
-		String fileName = request.getParameter(DynamicallyImportPermissibleValues.pvFileName);
+		String fileName = request.getParameter(PermissibleValuesClient.pvFileName);
 
 		if (fileName == null || "".equals(fileName.trim()))
 		{

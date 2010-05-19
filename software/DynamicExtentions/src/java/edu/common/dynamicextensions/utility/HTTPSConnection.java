@@ -18,7 +18,7 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 
-import edu.common.dynamicextensions.category.CategoryCreator.DerivedTrustManager;
+import edu.common.dynamicextensions.client.CategoryClient.DerivedTrustManager;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.util.logger.Logger;
 
@@ -136,35 +136,52 @@ public final class HTTPSConnection
 	public void uploadFileToServer(URLConnection servletConnection, File file) throws IOException,
 			DynamicExtensionsSystemException
 	{
-		byte[] buffer = new byte[1024];
-		BufferedInputStream csvReader = new BufferedInputStream(new FileInputStream(file));
-		BufferedOutputStream servletWriter = getServletWriter(servletConnection);
-		try
+		if (file != null)
 		{
-			int len = csvReader.read(buffer);
-			while (len >= 0)
-			{
-				servletWriter.write(buffer, 0, len);
-				len = csvReader.read(buffer);
-			}
-			servletWriter.flush();
-		}
-		catch (IOException e)
-		{
-			throw new DynamicExtensionsSystemException("Exception occured while uploading file", e);
-		}
-		finally
-		{
-			if (servletWriter != null)
-			{
-				servletWriter.close();
-			}
-			if (csvReader != null)
-			{
-				csvReader.close();
-			}
 
+			BufferedInputStream csvReader = new BufferedInputStream(new FileInputStream(file));
+			BufferedOutputStream servletWriter = getServletWriter(servletConnection);
+			try
+			{
+				copyFileContents(csvReader, servletWriter);
+			}
+			catch (IOException e)
+			{
+				throw new DynamicExtensionsSystemException(
+						"Exception occured while uploading file", e);
+			}
+			finally
+			{
+				if (servletWriter != null)
+				{
+					servletWriter.close();
+				}
+				if (csvReader != null)
+				{
+					csvReader.close();
+				}
+
+			}
 		}
+	}
+
+	/**
+	 * This method will read the contents from csvReader & writes it to the servletWriter.
+	 * @param csvReader reader
+	 * @param servletWriter writter
+	 * @throws IOException exception.
+	 */
+	private void copyFileContents(BufferedInputStream csvReader, BufferedOutputStream servletWriter)
+			throws IOException
+	{
+		byte[] buffer = new byte[1024];
+		int len = csvReader.read(buffer);
+		while (len >= 0)
+		{
+			servletWriter.write(buffer, 0, len);
+			len = csvReader.read(buffer);
+		}
+		servletWriter.flush();
 	}
 
 	/**
@@ -289,4 +306,25 @@ public final class HTTPSConnection
 			return true;
 		}
 	};
+
+	/**
+	 * @param appUrl
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 */
+	public static String getCorrectedApplicationURL(String appUrl)
+			throws DynamicExtensionsSystemException
+	{
+		if (appUrl.contains("\\"))
+		{
+			throw new DynamicExtensionsSystemException("In Application.url replace '\\' with '/'.");
+		}
+		if ('/' == appUrl.charAt(appUrl.length() - 1))
+		{
+			appUrl = appUrl.substring(0, appUrl.length() - 1);
+
+		}
+		return appUrl;
+
+	}
 }

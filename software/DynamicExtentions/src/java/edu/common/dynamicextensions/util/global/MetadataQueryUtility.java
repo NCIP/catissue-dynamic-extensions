@@ -18,7 +18,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import edu.common.dynamicextensions.category.CategoryCreator;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.util.logger.Logger;
@@ -77,7 +76,7 @@ public class MetadataQueryUtility
 	/**
 	 * For logging
 	 */
-	private static final Logger LOGGER = Logger.getCommonLogger(CategoryCreator.class);
+	private static final Logger LOGGER = Logger.getCommonLogger(MetadataQueryUtility.class);
 
 	/**
 	 * @return paramValueList paramValueList
@@ -123,7 +122,6 @@ public class MetadataQueryUtility
 		init(queryName);
 		jdbcdao = DynamicExtensionsUtility.getJDBCDAO();
 	}
-
 
 	/**
 	 * @param args

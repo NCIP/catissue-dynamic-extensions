@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import edu.common.dynamicextensions.category.CategoryCreator;
+import edu.common.dynamicextensions.client.CategoryClient;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
@@ -54,7 +54,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			String[] args = {CATEGORY_FILE_DIR, APPLICATIONURL};//, TEST_MODEL_DIR + "/catNames.txt"};
-			CategoryCreator.main(args);
+			CategoryClient.main(args);
 			System.out.println("done categoryCreation");
 			assertAllCategoriesCreatedInDir(CATEGORY_FILE_DIR);
 
@@ -75,7 +75,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			String[] args = {CATEGORY_FILE_DIR, APPLICATIONURL, TEST_MODEL_DIR + "/catNames2.txt"};
-			CategoryCreator.main(args);
+			CategoryClient.main(args);
 			System.out.println("done categoryCreation");
 			assertAllCategoriesCreatedInFile(TEST_MODEL_DIR + "/catNames2.txt");
 		}

@@ -2676,4 +2676,24 @@ public class DynamicExtensionsUtility
 		return escapeStringValue;
 	}
 
+	/**
+	 * This method will populate all the category entities associated with
+	 * the categoryEntity in the given paramater categoryEntityList.
+	 * @param categoryEntityList list of categroy entities to be populated in.
+	 * @param categoryEntity category entity who's all associated categroy entities to be added in the list.
+	 */
+	public static void populateAllCategoryEntityList(
+			List<CategoryEntityInterface> categoryEntityList, CategoryEntityInterface categoryEntity)
+	{
+		if (categoryEntity != null)
+		{
+			categoryEntityList.add(categoryEntity);
+			for (CategoryEntityInterface categoryEntityInterface : categoryEntity
+					.getChildCategories())
+			{
+				populateAllCategoryEntityList(categoryEntityList, categoryEntityInterface);
+			}
+		}
+	}
+
 }

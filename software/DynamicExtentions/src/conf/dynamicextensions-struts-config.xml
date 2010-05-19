@@ -233,6 +233,12 @@ PUBLIC
 		scope="request">
 		</action>
 
+	<action path="/CreateCategoryMetadataAction"
+		type="edu.common.dynamicextensions.ui.webui.action.CategoryMetadataAction"
+		validate="false"
+		scope="request">
+		</action>
+
 		<action path="/ImportPVAction"
 		type="edu.common.dynamicextensions.ui.webui.action.ImportPVAction"
 		validate="false"

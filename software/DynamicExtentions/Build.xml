@@ -197,6 +197,7 @@
 				<include name="**/dynamicextensions/utility/**/*.*" />
 				<include name="**/dynamicextensions/validation/**/*.*" />
 				<include name="**/dynamicextensions/category/**/*.*" />
+				<include name="**/dynamicextensions/client/**/*.*" />
 				<include name="**/common/util/**/*.*" />
 				<include name="**/dynamicextensions/bizlogic/**/*.class" />
 				<include name="**/dynamicextensions/host/**/*.*" />
@@ -978,7 +979,7 @@
 			<antcall target="import.caTissueCoreModel"/>
 			<antcall target="import.GeneconnectModel"/>
 			<antcall target="deploy" />
-			
+
 			<ant target="run_junit" />
 			<ant antfile="src/conf/cobertura.xml" target="coverage.report" >
 				<property name="jboss.home.dir" value="${jboss.home.dir}" />
@@ -1263,8 +1264,7 @@
 					<include name="**/dynamicextensions/util/ZipUtility.class" />
 					<include name="**/dynamicextensions/util/DirOperationsUtility.class" />
 					<include name="**/dynamicextensions/utility/*.class" />
-					<include name="**/dynamicextensions/category/**.class" />
-					<include name="**/dynamicextensions/util/parser/DynamicallyImportPermissibleValues.class" />
+					<include name="**/dynamicextensions/client/**.class" />
 				</fileset>
 				<manifest>
 					<section name="${DynamicExtensions.jar.details}">

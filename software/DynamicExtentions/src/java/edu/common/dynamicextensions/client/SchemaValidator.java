@@ -1,5 +1,5 @@
 
-package edu.common.dynamicextensions.category;
+package edu.common.dynamicextensions.client;
 
 import java.io.File;
 import java.io.IOException;

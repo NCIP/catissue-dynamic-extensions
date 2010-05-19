@@ -12,6 +12,7 @@ import junit.framework.TestCase;
 
 import org.xml.sax.SAXException;
 
+import edu.common.dynamicextensions.client.XMLToCSV;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.util.logger.Logger;
 

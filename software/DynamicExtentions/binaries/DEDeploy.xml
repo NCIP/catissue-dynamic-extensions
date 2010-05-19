@@ -585,7 +585,7 @@
 		</replace>
 		<echo message="Creating Categories" />
 
-		<java classname="edu.common.dynamicextensions.category.XMLToCSV" fork="true" maxmemory="1024M">
+		<java classname="edu.common.dynamicextensions.client.XMLToCSV" fork="true" maxmemory="1024M">
 			<arg value="${categoryXmlFile}" />
 			<arg value="${categoryCsvFileDir}" />
 			<arg value="${categorySchemaFile}" />
@@ -613,12 +613,35 @@
 			<replacefilter token="@@jbosshome@@" value="." />
 		</replace>
 		<echo message="Creating Categories" />
-		<java classname="edu.common.dynamicextensions.category.CategoryCreator" fork="true" maxmemory="1024M">
+		<java classname="edu.common.dynamicextensions.client.CategoryClient" fork="true" maxmemory="1024M">
 			<arg value="${categoryFileDir}" />
 			<arg value="${Application.url}" />
 			<arg value="${categoryFormNamesFile}" />
 			<arg value="${isPersistMetadataOnly}" />
 
+			<classpath>
+				<fileset dir="${de.temp.dir}">
+					<include name="*.jar" />
+					<exclude name="uml-1.3.jar" />
+				</fileset>
+			</classpath>
+		</java>
+	</target>
+
+	<property name="categoryName" value=" " />
+	<target name="create_category_metadata_file" description="Target used to create the Category">
+		<delete dir="${de.temp.dir}" failonerror="no" />
+		<mkdir dir="${de.temp.dir}" />
+		<unzip src="clientFormCreator.zip" dest="${de.temp.dir}" overwrite="true" />
+		<copy file="./${de.temp.dir}/log4j.properties.template" tofile="./log4j.properties" overwrite="true" />
+		<mkdir dir="./log" />
+		<replace file="./log4j.properties">
+			<replacefilter token="@@jbosshome@@" value="." />
+		</replace>
+		<echo message="Creating Categories Metadata File" />
+		<java classname="edu.common.dynamicextensions.client.CategoryMetadataClient" fork="true" maxmemory="1024M">
+			<arg value="${categoryName}" />
+			<arg value="${Application.url}" />
 			<classpath>
 				<fileset dir="${de.temp.dir}">
 					<include name="*.jar" />
@@ -661,7 +684,7 @@
 			<replacefilter token="@@jbosshome@@" value="." />
 		</replace>
 		<echo message="Importing Permissible Values" />
-		<java classname="edu.common.dynamicextensions.util.parser.DynamicallyImportPermissibleValues" fork="true" maxmemory="1024M">
+		<java classname="edu.common.dynamicextensions.client.PermissibleValuesClient" fork="true" maxmemory="1024M">
 			<arg value="${permissibleValuesFile}" />
 			<arg value="${pv.dir}" />
 			<arg value="${Application.url}" />

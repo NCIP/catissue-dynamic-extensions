@@ -20,7 +20,7 @@ import org.apache.struts.action.ActionMapping;
 import org.owasp.stinger.Stinger;
 import org.owasp.stinger.rules.RuleSet;
 
-import edu.common.dynamicextensions.category.CategoryCreatorConstants;
+import edu.common.dynamicextensions.client.CategoryCreatorConstants;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;

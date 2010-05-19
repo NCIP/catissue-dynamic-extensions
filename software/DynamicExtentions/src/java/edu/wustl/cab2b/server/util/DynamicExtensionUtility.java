@@ -59,7 +59,6 @@ import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.DBTypes;
 import edu.wustl.dao.util.NamedQueryParam;
-
 import gov.nih.nci.cagrid.metadata.common.SemanticMetadata;
 
 /**
@@ -743,8 +742,8 @@ public final class DynamicExtensionUtility
 			throws DAOException
 	{
 		Logger.out.info("Loading cacheable categories ");
-        List<CategoryInterface> categoryList = hibernateDAO.retrieve(
-                CategoryInterface.class.getName(), "isCacheable", Boolean.TRUE);
+		List<CategoryInterface> categoryList = hibernateDAO.retrieve(CategoryInterface.class
+				.getName(), "isCacheable", Boolean.TRUE);
 		Logger.out.info("Loading cacheable categories finished");
 		return categoryList;
 	}
@@ -901,4 +900,5 @@ public final class DynamicExtensionUtility
 		clone.setMinimumCardinality(role.getMinimumCardinality());
 		return clone;
 	}
+
 }

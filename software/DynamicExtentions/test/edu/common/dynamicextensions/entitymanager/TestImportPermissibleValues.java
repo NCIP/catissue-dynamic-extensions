@@ -1,8 +1,8 @@
 
 package edu.common.dynamicextensions.entitymanager;
 
+import edu.common.dynamicextensions.client.PermissibleValuesClient;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
-import edu.common.dynamicextensions.util.parser.DynamicallyImportPermissibleValues;
 
 /**
  *
@@ -21,7 +21,7 @@ public class TestImportPermissibleValues extends DynamicExtensionsBaseTestCase
 		{
 			String[] parameters = {"CPUML/TestModels/TestModel_withTags/edited/TestModel_pv.csv",
 					"CPUML", APPLICATIONURL};
-			DynamicallyImportPermissibleValues.main(parameters);
+			PermissibleValuesClient.main(parameters);
 		}
 		catch (Exception e)
 		{

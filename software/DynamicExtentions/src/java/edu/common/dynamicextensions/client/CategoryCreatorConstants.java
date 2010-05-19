@@ -1,4 +1,4 @@
-package edu.common.dynamicextensions.category;
+package edu.common.dynamicextensions.client;
 
 
 /**
