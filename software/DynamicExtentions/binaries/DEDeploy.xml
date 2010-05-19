@@ -628,7 +628,6 @@
 		</java>
 	</target>
 
-	<property name="categoryName" value=" " />
 	<target name="create_category_metadata_file" description="Target used to create the Category">
 		<delete dir="${de.temp.dir}" failonerror="no" />
 		<mkdir dir="${de.temp.dir}" />
@@ -640,7 +639,7 @@
 		</replace>
 		<echo message="Creating Categories Metadata File" />
 		<java classname="edu.common.dynamicextensions.client.CategoryMetadataClient" fork="true" maxmemory="1024M">
-			<arg value="${categoryName}" />
+			<arg value="${categoryFormNamesFile}" />
 			<arg value="${Application.url}" />
 			<classpath>
 				<fileset dir="${de.temp.dir}">
