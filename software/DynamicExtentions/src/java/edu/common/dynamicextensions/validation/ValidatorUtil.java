@@ -20,6 +20,7 @@ import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ComboBoxInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.EnumeratedControlInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleParameterInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
@@ -50,13 +51,12 @@ public class ValidatorUtil
 	 */
 	public static List<String> validateEntity(
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
-			List<String> listOfError, ContainerInterface containerInterface)
+			List<String> listOfError, ContainerInterface containerInterface, boolean validateNLevel)
 			throws DynamicExtensionsSystemException, DynamicExtensionsValidationException
 	{
-		List<String> errorList = listOfError;
-		if (errorList == null)
+		if (listOfError == null)
 		{
-			errorList = new ArrayList<String>();
+			listOfError = new ArrayList<String>();
 		}
 		Set<Map.Entry<BaseAbstractAttributeInterface, Object>> attributeSet = attributeValueMap
 				.entrySet();
@@ -64,69 +64,107 @@ public class ValidatorUtil
 		{
 			for (Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode : attributeSet)
 			{
+
 				BaseAbstractAttributeInterface abstractAttribute = attributeValueNode.getKey();
-				if (abstractAttribute instanceof AttributeMetadataInterface)
+				ControlInterface control = DynamicExtensionsUtility.getControlForAbstractAttribute(
+						(AttributeMetadataInterface) abstractAttribute, containerInterface);
+				if (abstractAttribute instanceof AttributeMetadataInterface && control != null)
 				{
-					ControlInterface control = DynamicExtensionsUtility
-							.getControlForAbstractAttribute(
-									(AttributeMetadataInterface) abstractAttribute,
-									containerInterface);
-					if (control != null)
-					{
-						errorList.addAll(validateAttributes(attributeValueNode,
+					listOfError.addAll(validateAttributes(attributeValueNode,
 								DynamicExtensionsUtility.replaceHTMLSpecialCharacters(control
 										.getCaption())));
-						if (control instanceof ComboBoxInterface)
-						{
-							boolean isValuePresent = false;
-							for (PermissibleValueInterface permissibleValue : ((UserDefinedDE) ((AttributeMetadataInterface) abstractAttribute)
-									.getAttributeTypeInformation().getDataElement())
-									.getPermissibleValueCollection())
-							{
-								//								System.out.println(permissibleValue.getValueAsObject().toString());
-								if (permissibleValue.getValueAsObject().toString().equals(
-										attributeValueNode.getValue()))
-								{
-									isValuePresent = true;
-									break;
-								}
-							}
-							if ((attributeValueNode.getValue() != null)
-									&& "".equals(attributeValueNode.getValue().toString()))
-							{
-								isValuePresent = true;
-							}
-							if (!isValuePresent)
-							{
-								errorList
-										.add("Please Enter valid permissible value for attribute "
-												+ DynamicExtensionsUtility
-														.replaceHTMLSpecialCharacters(control
-																.getCaption()));
-							}
-						}
-					}
+						checkForPermissibleValue(listOfError, control, abstractAttribute,
+								attributeValueNode);
 				}
 				else if (abstractAttribute instanceof AssociationMetadataInterface)
 				{
-
-					AssociationMetadataInterface associationInterface = (AssociationMetadataInterface) abstractAttribute;
-					if (AssociationType.CONTAINTMENT.equals(associationInterface
-							.getAssociationType()))
-					{
-						List<Map<BaseAbstractAttributeInterface, Object>> valueObject = (List<Map<BaseAbstractAttributeInterface, Object>>) attributeValueMap
-								.get(abstractAttribute);
-						for (Map<BaseAbstractAttributeInterface, Object> subAttributeValueMap : valueObject)
-						{
-							errorList.addAll(validateEntityAttributes(subAttributeValueMap,
-									getContainerForAbstractAttribute(associationInterface)));
-						}
-					}
+					validateAssociationData(attributeValueMap, listOfError, abstractAttribute,
+							control, validateNLevel);
 				}
 			}
 		}
 
-		return errorList;
+		return listOfError;
+	}
+
+	/**
+	 * Method performs the validation for the Association data.
+	 * @param attributeValueMap  Value map for which validation will be performed.
+	 * @param errorList List of errors.
+	 * @param abstractAttribute Attribute interface for validation.
+	 * @param control Control to get container for validation.
+	 * @param validateNLevel whether need to perform for N level or restrict it to 
+	 * two level.
+	 * @throws DynamicExtensionsSystemException Throws when there is system exception.
+	 * @throws DynamicExtensionsValidationException Thrown when there is an error in
+	 * dynamic extension process.
+	 */
+	private static void validateAssociationData(
+			Map<BaseAbstractAttributeInterface, Object> attributeValueMap, List<String> errorList,
+			BaseAbstractAttributeInterface abstractAttribute, ControlInterface control,
+			boolean validateNLevel) throws DynamicExtensionsSystemException,
+			DynamicExtensionsValidationException
+	{
+		AssociationMetadataInterface associationInterface = (AssociationMetadataInterface) abstractAttribute;
+
+		if (AssociationType.CONTAINTMENT.equals(associationInterface.getAssociationType()))
+		{
+			List<Map<BaseAbstractAttributeInterface, Object>> valueObject = (List<Map<BaseAbstractAttributeInterface, Object>>) attributeValueMap
+					.get(abstractAttribute);
+			for (Map<BaseAbstractAttributeInterface, Object> subAttributeValueMap : valueObject)
+			{
+				if (validateNLevel)
+				{
+					validateEntity(subAttributeValueMap, errorList, control.getParentContainer(),
+							validateNLevel);
+				}
+				else
+				{
+					errorList.addAll(validateEntityAttributes(subAttributeValueMap,
+							getContainerForAbstractAttribute(associationInterface)));
+				}
+			}
+
+		}
+	}
+
+	/**
+	 * Validate whether values is permissible or not.
+	 * @param errorList List of errors.
+	 * @param control Control for which validation need to performed.
+	 * @param abstractAttribute Attribute for validation.
+	 * @param attributeValueNode Value provided for insertion.
+	 */
+	public static void checkForPermissibleValue(List<String> errorList, ControlInterface control,
+			BaseAbstractAttributeInterface abstractAttribute,
+			Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode)
+	{
+		if (control instanceof EnumeratedControlInterface)
+		{
+			boolean isValuePresent = false;
+			for (PermissibleValueInterface permissibleValue : ((UserDefinedDE) ((AttributeMetadataInterface) abstractAttribute)
+					.getDataElement()).getPermissibleValueCollection())
+			{
+				//								System.out.println(permissibleValue.getValueAsObject().toString());
+				if (permissibleValue.getValueAsObject().toString().equals(
+						attributeValueNode.getValue()))
+				{
+					isValuePresent = true;
+					break;
+				}
+			}
+			if ((attributeValueNode.getValue() != null)
+					&& "".equals(attributeValueNode.getValue().toString()))
+			{
+				isValuePresent = true;
+			}
+			if (!isValuePresent)
+			{
+				errorList.add("Please Enter valid permissible value for attribute "
+						+ DynamicExtensionsUtility.replaceHTMLSpecialCharacters(control
+								.getCaption()));
+			}
+		}
 	}
 
 	/**

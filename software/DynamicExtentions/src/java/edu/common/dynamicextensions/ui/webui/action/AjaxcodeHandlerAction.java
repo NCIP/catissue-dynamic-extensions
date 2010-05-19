@@ -884,7 +884,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 					}
 				}
 				errorList.addAll(ValidatorUtil.validateEntity(rowValueMap, new ArrayList<String>(),
-						containerInterface));
+						containerInterface,false));
 				updateMapForskipLogic(containerInterface, rowValueMap, rwoIndex);
 
 				containerInterface.setContainerValueMap(rowValueMap);

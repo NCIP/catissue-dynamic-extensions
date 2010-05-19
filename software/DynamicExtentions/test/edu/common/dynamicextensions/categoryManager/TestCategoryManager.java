@@ -407,7 +407,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 				List<String> errorList = new ArrayList<String>();
 				ValidatorUtil.validateEntity(dataValue, errorList,
 						(ContainerInterface) rootCatEntity.getContainerCollection().iterator()
-								.next());
+								.next(),true);
 				if (errorList.isEmpty())
 				{
 					System.out.println("Record validated succesfully for category "

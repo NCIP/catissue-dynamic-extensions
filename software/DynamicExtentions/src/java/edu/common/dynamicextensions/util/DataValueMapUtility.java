@@ -290,7 +290,7 @@ public final class DataValueMapUtility
 			Map<Long, BaseAbstractAttributeInterface> map, CategoryEntityInterface categoryEntity)
 	{
 		Collection<CategoryAttributeInterface> categoryAttrCollection = categoryEntity
-				.getCategoryAttributeCollection();
+				.getAllCategoryAttributes();
 		for (CategoryAttributeInterface catAttr : categoryAttrCollection)
 		{
 			if (!catAttr.getIsRelatedAttribute())

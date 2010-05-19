@@ -400,7 +400,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 		valueMap = generateAttributeValueMap(containerInterface, request, dataEntryForm, "",
 				valueMap, true, errorList);
 
-		errorList = ValidatorUtil.validateEntity(valueMap, errorList, containerInterface);
+		errorList = ValidatorUtil.validateEntity(valueMap, errorList, containerInterface,false);
 		AbstractEntityInterface abstractEntityInterface = containerInterface.getAbstractEntity();
 		if (abstractEntityInterface instanceof CategoryEntityInterface)
 		{

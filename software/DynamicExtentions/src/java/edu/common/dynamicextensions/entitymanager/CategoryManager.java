@@ -42,6 +42,7 @@ import edu.common.dynamicextensions.domaininterface.PathInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.SemanticPropertyInterface;
 import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.CategoryGenerationUtil;
@@ -50,6 +51,7 @@ import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.FormulaCalculator;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.ErrorConstants;
+import edu.common.dynamicextensions.validation.ValidatorUtil;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
@@ -383,15 +385,31 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			final Map<Long, Object> dataValue)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException, ParseException
 	{
+		Long recordIdentifier =null;
 		CategoryInterface category=categoryManager.getCategoryById(categoryId); 
-		
+		ContainerInterface containerInterface=(ContainerInterface)category.getRootCategoryElement().getContainerCollection().toArray()[0];
+		                         
 		Map<Long, BaseAbstractAttributeInterface> idToAttributeMap=DataValueMapUtility.retriveIdToAttributeMap(category);
 		Map<BaseAbstractAttributeInterface,Object> attributeToValueMap=DataValueMapUtility.getAttributeToValueMap(dataValue,idToAttributeMap);
-		Long recordId=insertData(category,attributeToValueMap);
-		Long recordIdentifier = categoryManager.getEntityRecordIdByRootCategoryEntityRecordId( 
+		List<String> errorList=ValidatorUtil.validateEntity(attributeToValueMap,new ArrayList<String>(),containerInterface,true);
+		if(errorList.isEmpty())
+		{	
+			Long recordId=insertData(category,attributeToValueMap);
+			recordIdentifier = categoryManager.getEntityRecordIdByRootCategoryEntityRecordId( 
 				recordId, category.getRootCategoryElement() 
                                 .getTableProperties().getName());
-		
+		}
+		else
+		{
+			StringBuffer buffer=new StringBuffer();
+			int count=1;
+		    Iterator<String> errorListIterator=errorList.iterator();
+			while(errorListIterator.hasNext())
+			{
+				buffer.append(count).append(")").append(errorListIterator.next());count++;
+			}
+			throw new DynamicExtensionsApplicationException(buffer.toString());
+		}
 	   return recordIdentifier;
 	}
 
