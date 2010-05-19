@@ -66,7 +66,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	 * @throws DynamicExtensionsSystemException if HTMLComponentName() fails.
 	 */
 	public String generateEditModeHTML(ContainerInterface container)
-			throws DynamicExtensionsSystemException
+	throws DynamicExtensionsSystemException
 	{
 		String defaultValue = getDefaultValueForControl();
 		int columnSize = 0;
@@ -83,7 +83,11 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		}
 		String htmlComponentName = getHTMLComponentName();
 		StringBuffer sourceHtmlComponentValues = null;
-		if (getSourceSkipControl() != null)
+		if (getSourceSkipControl() == null)
+		{
+			sourceHtmlComponentValues = new StringBuffer('~');
+		}
+		else
 		{
 			sourceHtmlComponentValues = new StringBuffer();
 			List<String> sourceControlValues = getSourceSkipControl().getValueAsStrings();
@@ -95,10 +99,6 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					sourceHtmlComponentValues.append('~');
 				}
 			}
-		}
-		else
-		{
-			sourceHtmlComponentValues = new StringBuffer('~');
 		}
 		String parentContainerId = "";
 		if (getParentContainer() != null && getParentContainer().getId() != null)
@@ -113,7 +113,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		if (getIsSkipLogicTargetControl() || getParentContainer().isAjaxRequest())
 		{
 			htmlString += "<div id='" + getHTMLComponentName() + "_div' name='"
-					+ getHTMLComponentName() + "_div'>";
+			+ getHTMLComponentName() + "_div'>";
 		}
 		/* Bug Id:9030
 		 * textComponent is the name of the text box.
@@ -129,66 +129,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 							.equals(getDataEntryOperation())))
 			{
 				htmlString += "<script defer='defer'>Ext.onReady(function(){ "
-						+ "var myUrl= \"DEComboDataAction.do?controlId="
-						+ identifier
-						+ "~containerIdentifier="
-						+ parentContainerId
-						+ "~sourceControlValues="
-						+ URLEncoder.encode(sourceHtmlComponentValues.toString(), "utf-8")
-						+ "~attributeName="
-						+ attributeName
-						+ "\";"
-						+ "var ds = new Ext.data.Store({"
-						+ "proxy: new Ext.data.HttpProxy({url: myUrl}),"
-						+ "reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, "
-						+ "[{name: 'id', mapping: 'id'},{name: 'excerpt', mapping: 'field'}])});"
-						+ "var combo = new Ext.form.ComboBox({store: ds,"
-						+ "hiddenName: '"
-						+ textComponent
-						+ "',displayField:'excerpt',valueField: 'id',"
-						+ "typeAhead: 'false',pageSize:15,forceSelection: 'true',queryParam : 'query',"
-						+ "mode: 'remote',triggerAction: 'all',minChars : 3,queryDelay:500,lazyInit:true"
-						+ isDisabled
-						+ ",emptyText:\""
-						+ defaultValue
-						+ "\",valueNotFoundText:'',"
-						+ "selectOnFocus:'true',applyTo: '"
-						+ htmlComponentName
-						+ "'});combo.on(\"select\", function() {"
-						+ (isSkipLogic
-								? "getSkipLogicControl('" + htmlComponentName + "','" + identifier
-										+ "','" + parentContainerId + "');isDataChanged();"
-								: "isDataChanged();")
-						+ "}), combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"210\");combo.innerList.setStyle(\"width\", \"210\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});";
-
-				htmlString = htmlString
-						+ "ds.on('load',function(){if (this.getAt(0) != null && this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50;} else {combo.typeAheadDelay=60000}});";
-
-				htmlString = htmlString + "});</script>";
-			}
-			htmlString += "<div id='auto_complete_dropdown'>"
-					+ "<input type='text' onmouseover=\"showToolTip('"
-					+ htmlComponentName
-					+ "')\" id='"
-					+ htmlComponentName
-					+ "' "
-					+ " name='"
-					+ htmlComponentName
-					+ "' value =\""
-					+ defaultValue
-					+ "\" "
-					+ "' style='width:"
-					+ (columnSize > 0 ? (columnSize + 1) : (Constants.DEFAULT_COLUMN_SIZE + 1))
-					+ "ex' size='"
-					+ (columnSize > 0 ? columnSize : Constants.DEFAULT_COLUMN_SIZE)
-					+ "'/>"
-					+ "<div id='comboScript_"
-					+ getHTMLComponentName()
-					+ "' name='comboScript_"
-					+ getHTMLComponentName()
-					+ "' style='display:none'>"
-					+ "Ext.onReady(function(){ "
-					+ "var myUrl=\"DEComboDataAction.do?controlId="
+					+ "var myUrl= \"DEComboDataAction.do?controlId="
 					+ identifier
 					+ "~containerIdentifier="
 					+ parentContainerId
@@ -196,7 +137,8 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					+ URLEncoder.encode(sourceHtmlComponentValues.toString(), "utf-8")
 					+ "~attributeName="
 					+ attributeName
-					+ "\";var ds = new Ext.data.Store({"
+					+ "\";"
+					+ "var ds = new Ext.data.Store({"
 					+ "proxy: new Ext.data.HttpProxy({url: myUrl}),"
 					+ "reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, "
 					+ "[{name: 'id', mapping: 'id'},{name: 'excerpt', mapping: 'field'}])});"
@@ -216,27 +158,85 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					+ (isSkipLogic
 							? "getSkipLogicControl('" + htmlComponentName + "','" + identifier
 									+ "','" + parentContainerId + "');isDataChanged();"
-							: "isDataChanged();")
-					+ "}), combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"210\");combo.innerList.setStyle(\"width\", \"210\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});"
-					+ "ds.on('load',function(){if (this.getAt(0) != null) {if (this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50} else {combo.typeAheadDelay=60000}}});"
-					+ "});"
-					+ "</div>"
-					+ "<div name=\"comboHtml\" style='display:none'>"
-					+ "<div>"
-					+ "<input type='text' onmouseover=\"showToolTip('"
-					+ htmlComponentName
-					+ "')\" id='"
-					+ htmlComponentName
-					+ "' "
-					+ " name='"
-					+ htmlComponentName
-					+ "' value =\""
-					+ defaultValue
-					+ "\" style='width:"
-					+ (columnSize > 0 ? (columnSize + 1) : (Constants.DEFAULT_COLUMN_SIZE + 1))
-					+ "ex' size='"
-					+ (columnSize > 0 ? columnSize : Constants.DEFAULT_COLUMN_SIZE)
-					+ "' class='font_bl_nor' />" + "</div>" + "</div>" + "</div>";
+									: "isDataChanged();")
+									+ "}), combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"210\");combo.innerList.setStyle(\"width\", \"210\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});";
+
+				htmlString = htmlString
+				+ "ds.on('load',function(){if (this.getAt(0) != null && this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50;} else {combo.typeAheadDelay=60000}});";
+
+				htmlString = htmlString + "});</script>";
+			}
+			htmlString += "<div id='auto_complete_dropdown'>"
+				+ "<input type='text' onmouseover=\"showToolTip('"
+				+ htmlComponentName
+				+ "')\" id='"
+				+ htmlComponentName
+				+ "' "
+				+ " name='"
+				+ htmlComponentName
+				+ "' value =\""
+				+ defaultValue
+				+ "\" "
+				+ "' style='width:"
+				+ (columnSize > 0 ? (columnSize + 1) : (Constants.DEFAULT_COLUMN_SIZE + 1))
+				+ "ex' size='"
+				+ (columnSize > 0 ? columnSize : Constants.DEFAULT_COLUMN_SIZE)
+				+ "'/>"
+				+ "<div id='comboScript_"
+				+ getHTMLComponentName()
+				+ "' name='comboScript_"
+				+ getHTMLComponentName()
+				+ "' style='display:none'>"
+				+ "Ext.onReady(function(){ "
+				+ "var myUrl=\"DEComboDataAction.do?controlId="
+				+ identifier
+				+ "~containerIdentifier="
+				+ parentContainerId
+				+ "~sourceControlValues="
+				+ URLEncoder.encode(sourceHtmlComponentValues.toString(), "utf-8")
+				+ "~attributeName="
+				+ attributeName
+				+ "\";var ds = new Ext.data.Store({"
+				+ "proxy: new Ext.data.HttpProxy({url: myUrl}),"
+				+ "reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, "
+				+ "[{name: 'id', mapping: 'id'},{name: 'excerpt', mapping: 'field'}])});"
+				+ "var combo = new Ext.form.ComboBox({store: ds,"
+				+ "hiddenName: '"
+				+ textComponent
+				+ "',displayField:'excerpt',valueField: 'id',"
+				+ "typeAhead: 'false',pageSize:15,forceSelection: 'true',queryParam : 'query',"
+				+ "mode: 'remote',triggerAction: 'all',minChars : 3,queryDelay:500,lazyInit:true"
+				+ isDisabled
+				+ ",emptyText:\""
+				+ defaultValue
+				+ "\",valueNotFoundText:'',"
+				+ "selectOnFocus:'true',applyTo: '"
+				+ htmlComponentName
+				+ "'});combo.on(\"select\", function() {"
+				+ (isSkipLogic
+						? "getSkipLogicControl('" + htmlComponentName + "','" + identifier
+								+ "','" + parentContainerId + "');isDataChanged();"
+								: "isDataChanged();")
+								+ "}), combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"210\");combo.innerList.setStyle(\"width\", \"210\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});"
+								+ "ds.on('load',function(){if (this.getAt(0) != null) {if (this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50} else {combo.typeAheadDelay=60000}}});"
+								+ "});"
+								+ "</div>"
+								+ "<div name=\"comboHtml\" style='display:none'>"
+								+ "<div>"
+								+ "<input type='text' onmouseover=\"showToolTip('"
+								+ htmlComponentName
+								+ "')\" id='"
+								+ htmlComponentName
+								+ "' "
+								+ " name='"
+								+ htmlComponentName
+								+ "' value =\""
+								+ defaultValue
+								+ "\" style='width:"
+								+ (columnSize > 0 ? (columnSize + 1) : (Constants.DEFAULT_COLUMN_SIZE + 1))
+								+ "ex' size='"
+								+ (columnSize > 0 ? columnSize : Constants.DEFAULT_COLUMN_SIZE)
+								+ "' class='font_bl_nor' />" + "</div>" + "</div>" + "</div>";
 		}
 		catch (UnsupportedEncodingException e)
 		{
@@ -245,10 +245,10 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		if (getIsSkipLogicTargetControl() || getParentContainer().isAjaxRequest())
 		{
 			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
-					+ getHTMLComponentName()
-					+ "_div' />"
-					+ "<input type='hidden' name='skipLogicControlScript' id='skipLogicControlScript' value = 'comboScript_"
-					+ getHTMLComponentName() + "' />";
+				+ getHTMLComponentName()
+				+ "_div' />"
+				+ "<input type='hidden' name='skipLogicControlScript' id='skipLogicControlScript' value = 'comboScript_"
+				+ getHTMLComponentName() + "' />";
 			htmlString += "</div>";
 		}
 		return htmlString;
@@ -273,7 +273,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	}
 
 	protected String generateViewModeHTML(ContainerInterface container)
-			throws DynamicExtensionsSystemException
+	throws DynamicExtensionsSystemException
 	{
 		String htmlString = "&nbsp;";
 
@@ -312,8 +312,8 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				if (nameValueBean.getValue().equals(defaultValue))
 				{
 					htmlString = "<span class='font_bl_s'> "
-							+ DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean
-									.getName()) + "</span>";
+						+ DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean
+								.getName()) + "</span>";
 					break;
 				}
 			}
@@ -339,7 +339,11 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					value = getAttibuteMetadataInterface().getDefaultValue();
 				}
 			}
-			if (value != null)
+			if (value == null)
+			{
+				defaultValue = "";
+			}
+			else
 			{
 				if (value instanceof String)
 				{
@@ -353,10 +357,6 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 						defaultValue = valueList.get(0).toString();
 					}
 				}
-			}
-			else
-			{
-				defaultValue = "";
 			}
 		}
 		else
@@ -410,7 +410,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	private boolean isInvalidValue(String value)
 	{
 		List<NameValueBean> nameValueBeans = ControlsUtility
-				.getListOfPermissibleValues(getAttibuteMetadataInterface());
+		.getListOfPermissibleValues(getAttibuteMetadataInterface());
 		boolean isInavlidVaue = true;
 		for (NameValueBean bean : nameValueBeans)
 		{
