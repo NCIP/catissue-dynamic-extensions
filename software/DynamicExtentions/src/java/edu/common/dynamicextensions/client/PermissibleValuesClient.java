@@ -19,12 +19,19 @@ import edu.common.dynamicextensions.utility.HTTPSConnection;
 public class PermissibleValuesClient extends AbstractClient
 {
 
+	/**
+	 * Constant
+	 */
 	public static String pvFileName = "pvFileName";
 
+	/**
+	 * Constant
+	 */
 	public static String startFolder = "startFolder";
 
 	/**
-	 * @param args
+	 * amin method
+	 * @param args arguments array.
 	 */
 	public static void main(String[] args)
 	{
@@ -32,6 +39,14 @@ public class PermissibleValuesClient extends AbstractClient
 		dynamicPVImport.execute(args);
 	}
 
+	/**
+	 * It will validate all the necessary parameters are provided & are valid.
+	 * If all are valid it will also intialize all the instance variables also.
+	 * @param args the arguments which are to be validated & initialize instance varibles from
+	 * these arguments
+	 * @throws IOException exception
+	 * @throws Exception exception
+	 */
 	protected void initializeResources(String[] args) throws DynamicExtensionsSystemException,
 			IOException
 	{
@@ -60,11 +75,12 @@ public class PermissibleValuesClient extends AbstractClient
 	}
 
 	/**
-	 * It will validate weather the correct number of arguments are passed or not & then throw exception accordingly.
+	 * It will validate weather the correct number of arguments are passed or
+	 * not & then throw exception accordingly.
 	 * @param args arguments
 	 * @throws DynamicExtensionsSystemException exception
 	 */
-	protected void validate(String args[]) throws DynamicExtensionsSystemException
+	protected void validate(String[] args) throws DynamicExtensionsSystemException
 	{
 		if (args.length == 0)
 		{

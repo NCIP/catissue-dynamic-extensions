@@ -51,6 +51,9 @@ public class CategoryMetadataAction extends BaseDynamicExtensionsAction
 	{
 		LoggerConfig.configureLogger(System.getProperty("user.dir"));
 	}
+	/**
+	 * logger.
+	 */
 	private static final Logger LOGGER = Logger.getCommonLogger(CategoryMetadataAction.class);
 
 	/**
@@ -60,6 +63,7 @@ public class CategoryMetadataAction extends BaseDynamicExtensionsAction
 	 * @param form action form
 	 * @param request request object
 	 * @param response response object
+	 * @return ActionForward action forward null.
 	 */
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -84,9 +88,9 @@ public class CategoryMetadataAction extends BaseDynamicExtensionsAction
 	}
 
 	/**
-	 * This method will write the metadata informationn of the category with name given in
-	 * catName parameter to the given metadataFile.
-	 * @param catName category name whose metadata needed.
+	 * This method will write the metadata information of the category with name given in
+	 * catNameList parameter to the given metadataFile.
+	 * @param catNameList category name whose metadata needed.
 	 * @param metadataFile file to which the metadata should be written.
 	 * @throws IOException exception.
 	 * @throws DynamicExtensionsSystemException exception.
@@ -155,8 +159,9 @@ public class CategoryMetadataAction extends BaseDynamicExtensionsAction
 			boolean isControlPresent = false;
 			for (ControlInterface catAttributeControl : container.getAllControls())
 			{
-				if (!(catAttributeControl instanceof AbstractContainmentControlInterface)
-						&& catAttributeControl.getBaseAbstractAttribute() != null)
+				boolean isValidControl = !(catAttributeControl instanceof AbstractContainmentControlInterface)
+						&& catAttributeControl.getBaseAbstractAttribute() != null;
+				if (isValidControl)
 				{
 					writter.newLine();
 					writter.write(container.getCaption());
@@ -186,8 +191,8 @@ public class CategoryMetadataAction extends BaseDynamicExtensionsAction
 	/**
 	 * It will write the headers to the writter.
 	 * @param writter writtter.
-	 * @param categoryName
-	 * @param category
+	 * @param categoryName name of the category
+	 * @param category category.
 	 * @throws IOException exception.
 	 */
 	private void writeHeaderInfo(BufferedWriter writter, String categoryName,

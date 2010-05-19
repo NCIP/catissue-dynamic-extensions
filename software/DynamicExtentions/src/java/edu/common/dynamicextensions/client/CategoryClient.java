@@ -21,6 +21,9 @@ import edu.common.dynamicextensions.utility.HTTPSConnection;
 public class CategoryClient extends AbstractClient
 {
 
+	/**
+	 * Specifies weather the Category should be saved in metadata only.
+	 */
 	private static boolean isMetadataOnly = false;
 
 	/**
@@ -41,8 +44,8 @@ public class CategoryClient extends AbstractClient
 	 * If all are valid it will also intialize all the instance variables also
 	 * @param args the arguments which are to be validated & initialize instance varibles from
 	 * these arguments
-	 * @throws IOException
-	 * @throws Exception
+	 * @throws IOException exception
+	 * @throws Exception exception
 	 */
 	protected void initializeResources(String[] args) throws DynamicExtensionsSystemException,
 			IOException
@@ -81,11 +84,12 @@ public class CategoryClient extends AbstractClient
 	}
 
 	/**
-	 * It will validate weather the correct number of arguments are passed or not & then throw exception accordingly.
+	 * It will validate weather the correct number of arguments are passed or not & then throw
+	 * exception accordingly.
 	 * @param args arguments
 	 * @throws DynamicExtensionsSystemException exception
 	 */
-	protected void validate(String args[]) throws DynamicExtensionsSystemException
+	protected void validate(String[] args) throws DynamicExtensionsSystemException
 	{
 		if (args.length == 0)
 		{

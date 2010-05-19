@@ -14,14 +14,19 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsValidationExcepti
 public class RequiredValidator implements ValidatorRuleInterface
 {
 
-	/** 
+	/**
 	 * @see edu.common.dynamicextensions.validation.ValidatorRuleInterface#validate(edu.common.dynamicextensions.domaininterface.AttributeInterface, java.lang.Object, java.util.Map)
 	 * @throws DynamicExtensionsValidationException
 	 */
 	public boolean validate(AttributeMetadataInterface attribute, Object valueObject,
 			Map parameterMap, String controlCaption) throws DynamicExtensionsValidationException
 	{
-		if (valueObject != null)
+		if (valueObject == null)
+		{
+			throw new DynamicExtensionsValidationException("Validation failed", null,
+					"dynExtn.validation.RequiredValidator", controlCaption);
+		}
+		else
 		{
 			if (valueObject instanceof List)
 			{
@@ -34,14 +39,9 @@ public class RequiredValidator implements ValidatorRuleInterface
 			}
 			else if (valueObject instanceof String && ((String) valueObject).trim().equals(""))
 			{
-					throw new DynamicExtensionsValidationException("Validation failed", null,
-							"dynExtn.validation.RequiredValidator", controlCaption);
+				throw new DynamicExtensionsValidationException("Validation failed", null,
+						"dynExtn.validation.RequiredValidator", controlCaption);
 			}
-		}
-		else
-		{
-			throw new DynamicExtensionsValidationException("Validation failed", null,
-					"dynExtn.validation.RequiredValidator", controlCaption);
 		}
 
 		return true;

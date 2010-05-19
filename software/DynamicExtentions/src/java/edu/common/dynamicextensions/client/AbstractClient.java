@@ -29,9 +29,19 @@ public abstract class AbstractClient
 		LoggerConfig.configureLogger(System.getProperty("user.dir"));
 	}
 
+	/**
+	 * logger for information.
+	 */
 	protected static final Logger LOGGER = Logger.getCommonLogger(AbstractClient.class);
 
+	/**
+	 * Zip file which shoyld be uploaded
+	 */
 	protected File zipFile;
+
+	/**
+	 * Server URl to which to connect.
+	 */
 	protected URL serverUrl;
 
 	/**
@@ -86,11 +96,12 @@ public abstract class AbstractClient
 			throws DynamicExtensionsSystemException, IOException;
 
 	/**
-	 * It will validate weather the correct number of arguments are passed or not & then throw exception accordingly.
+	 * It will validate weather the correct number of arguments are passed or not & then
+	 * throw exception accordingly.
 	 * @param args arguments
 	 * @throws DynamicExtensionsSystemException exception
 	 */
-	protected abstract void validate(String args[]) throws DynamicExtensionsSystemException;
+	protected abstract void validate(String[] args) throws DynamicExtensionsSystemException;
 
 	/**
 	 * This method will process the response recieved from the server .
@@ -105,8 +116,9 @@ public abstract class AbstractClient
 	}
 
 	/**
-	 * This method will read the names of the category files mentioned in the file "categoryListFileName"
-	 * given in the arguments & create a string of category file names separated with the '!=!' token.
+	 * This method will read the names of the category files mentioned in the
+	 * file "categoryListFileName" given in the arguments & create a string of category file
+	 * names separated with the '!=!' token.
 	 * @param listCatFileName name of the file in which category files path are mentioned.
 	 * @return the string formed from category file names with'!=!' in between.
 	 * @throws DynamicExtensionsSystemException Exception.

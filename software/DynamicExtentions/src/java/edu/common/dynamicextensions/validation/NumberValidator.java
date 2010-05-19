@@ -43,8 +43,6 @@ public class NumberValidator implements ValidatorRuleInterface
 			throws DynamicExtensionsValidationException, DataTypeFactoryInitializationException
 	{
 		boolean isValid = true;
-		AttributeTypeInformationInterface attributeTypeInformation = attribute
-				.getAttributeTypeInformation();
 
 		String value = (String) valueObject;
 		if (value != null)
@@ -66,9 +64,10 @@ public class NumberValidator implements ValidatorRuleInterface
 			}
 			catch (DataTypeFactoryInitializationException e)
 			{
-				throw new DataTypeFactoryInitializationException(e.getMessage(),e);
+				throw new DataTypeFactoryInitializationException(e.getMessage(), e);
 			}
-
+			AttributeTypeInformationInterface attributeTypeInformation = attribute
+					.getAttributeTypeInformation();
 			if (attributeTypeInformation != null)
 			{
 				try
@@ -274,7 +273,7 @@ public class NumberValidator implements ValidatorRuleInterface
 	public void validatePrecisionAndScale(DataTypeFactory dataTypeFactory, String value,
 			String controlCaption, String dataType) throws DynamicExtensionsValidationException
 	{
-		DataTypeInformation dataTypeInfoObject = (DataTypeInformation) dataTypeFactory
+		DataTypeInformation dataTypeInfoObject = dataTypeFactory
 				.getDataTypePrecisionScaleInformation(dataType);
 
 		if (value != null && dataTypeInfoObject != null)
@@ -353,21 +352,19 @@ public class NumberValidator implements ValidatorRuleInterface
 			AttributeTypeInformationInterface attributeTypeInformation, String controlCaption,
 			String value) throws DynamicExtensionsValidationException
 	{
-		int decimalPlaces = ((NumericAttributeTypeInformation) attributeTypeInformation)
-				.getDecimalPlaces();
 
 		if (value != null && value.contains("."))
 		{
-				int decimalPointIndex = value.indexOf('.');
-				String stringAfterDecimalPoint = value.substring(decimalPointIndex + 1, value
-						.length());
-
-				if (stringAfterDecimalPoint.length() > decimalPlaces)
-				{
-					reportInvalidInput(controlCaption, "Number of digits after decimal point",
-							"precision (" + decimalPlaces + ")",
-							"dynExtn.validation.Number.numberOfDigitsExceedsPrecision");
-				}
+			int decimalPointIndex = value.indexOf('.');
+			String stringAfterDecimalPoint = value.substring(decimalPointIndex + 1, value.length());
+			int decimalPlaces = ((NumericAttributeTypeInformation) attributeTypeInformation)
+					.getDecimalPlaces();
+			if (stringAfterDecimalPoint.length() > decimalPlaces)
+			{
+				reportInvalidInput(controlCaption, "Number of digits after decimal point",
+						"precision (" + decimalPlaces + ")",
+						"dynExtn.validation.Number.numberOfDigitsExceedsPrecision");
+			}
 		}
 	}
 

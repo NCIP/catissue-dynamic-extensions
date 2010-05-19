@@ -25,7 +25,7 @@ public class CategoryMetadataClient extends AbstractClient
 {
 
 	/**
-	 * This will initiate the process
+	 * This will initiate the process.
 	 * @param args arguments array
 	 */
 	public static void main(String[] args)
@@ -74,11 +74,11 @@ public class CategoryMetadataClient extends AbstractClient
 	}
 
 	/**
-	 * This method will read the byte from inputStream & writes it to the outputStream
-	 * @param inputStream stream from where to read the contents
+	 * This method will read the byte from inputStream & writes it to the outputStream.
+	 * @param inputStream stream from where to read the contents.
 	 * @param outputStream stream to which the contents should be written.
-	 * @throws IOException
-	 * @throws DynamicExtensionsSystemException
+	 * @throws IOException exception.
+	 * @throws DynamicExtensionsSystemException exception.
 	 */
 	private void copyContents(BufferedInputStream inputStream, BufferedOutputStream outputStream)
 			throws IOException, DynamicExtensionsSystemException
@@ -105,8 +105,8 @@ public class CategoryMetadataClient extends AbstractClient
 	/**
 	 * This method will intialize all the instance variables required.
 	 * @param args the arguments which are to be used for initialize instance varibles
-	 * @throws IOException exception.
-	 * @throws Exception exception.
+	 * @throws IOException exception
+	 * @throws DynamicExtensionsSystemException exception.
 	 */
 	protected void initializeResources(String[] args) throws DynamicExtensionsSystemException,
 			IOException
@@ -130,7 +130,7 @@ public class CategoryMetadataClient extends AbstractClient
 	 * @param args arguments
 	 * @throws DynamicExtensionsSystemException exception
 	 */
-	protected void validate(String args[]) throws DynamicExtensionsSystemException
+	protected void validate(String[] args) throws DynamicExtensionsSystemException
 	{
 		if (args.length == 0)
 		{

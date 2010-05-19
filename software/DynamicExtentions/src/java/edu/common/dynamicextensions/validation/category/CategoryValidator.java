@@ -157,7 +157,7 @@ public class CategoryValidator
 	public static void checkRangeAgainstAttributeValueRange(AttributeInterface attribute,
 			Map<String, Object> rules) throws DynamicExtensionsSystemException, ParseException
 	{
-		Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
+
 		if (attribute == null)
 		{
 			throw new DynamicExtensionsSystemException(ApplicationProperties
@@ -168,7 +168,7 @@ public class CategoryValidator
 		if (!rules.isEmpty())
 		{
 			Map<String, Object> catMinMaxValues = null;
-
+			Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
 			if (rules.containsKey(CategoryCSVConstants.DATE_RANGE))
 			{
 				catMinMaxValues = (Map<String, Object>) rules.get(CategoryCSVConstants.DATE_RANGE);
@@ -304,9 +304,9 @@ public class CategoryValidator
 			try
 			{
 				// Fix to support different date formats in DE :Pavan.
-				catAttrValue = getRuleDateInAttributeDateFormat(catAttrValue, attribute
+				String dateFormat = getRuleDateInAttributeDateFormat(catAttrValue, attribute
 						.getAttributeTypeInformation(), attribute.getName());
-				dateRangeValidator.validate((AttributeMetadataInterface) attribute, catAttrValue,
+				dateRangeValidator.validate((AttributeMetadataInterface) attribute, dateFormat,
 						values, attribute.getName());
 			}
 			catch (DynamicExtensionsValidationException e)
@@ -348,9 +348,9 @@ public class CategoryValidator
 		}
 		try
 		{
-			Date catAttDate = null;
 			catAttrValue = catAttrValue.replace('/', '-');
-			catAttDate = Utility.parseDate(catAttrValue, ProcessorConstants.SQL_DATE_ONLY_FORMAT);
+			Date catAttDate = Utility.parseDate(catAttrValue,
+					ProcessorConstants.SQL_DATE_ONLY_FORMAT);
 			SimpleDateFormat simpleDateFormatter = new SimpleDateFormat(
 					ProcessorConstants.DATE_ONLY_FORMAT, CommonServiceLocator.getInstance()
 							.getDefaultLocale());
@@ -687,10 +687,10 @@ public class CategoryValidator
 	private static void validateCategoryAttributeRangeValues(String minValue, String maxValue,
 			AttributeInterface attribute) throws DynamicExtensionsSystemException
 	{
-		AttributeTypeInformationInterface attrTypeInfo = attribute.getAttributeTypeInformation();
-
 		if (minValue != null && maxValue != null)
 		{
+			AttributeTypeInformationInterface attrTypeInfo = attribute
+					.getAttributeTypeInformation();
 			if (attrTypeInfo instanceof NumericAttributeTypeInformation)
 			{
 				if (!DynamicExtensionsUtility.isNumeric(minValue)
@@ -733,14 +733,14 @@ public class CategoryValidator
 	 */
 	public void validateQuotes(String[] line) throws DynamicExtensionsSystemException
 	{
-		String errorMessage = getErrorMessageStart() + " Missing qoute(\").";
 		if (line != null)
 		{
 			for (String string : line)
 			{
 				if (string.contains("\n"))
 				{
-					throw new DynamicExtensionsSystemException(errorMessage);
+					throw new DynamicExtensionsSystemException(getErrorMessageStart()
+							+ " Missing qoute(\").");
 				}
 			}
 

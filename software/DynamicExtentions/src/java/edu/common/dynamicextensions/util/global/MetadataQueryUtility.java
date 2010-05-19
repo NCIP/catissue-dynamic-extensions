@@ -74,7 +74,7 @@ public class MetadataQueryUtility
 	}
 
 	/**
-	 * For logging
+	 * For logging.
 	 */
 	private static final Logger LOGGER = Logger.getCommonLogger(MetadataQueryUtility.class);
 

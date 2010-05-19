@@ -14,7 +14,6 @@ import java.util.Map;
 import edu.common.dynamicextensions.domain.StringAttributeTypeInformation;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
-import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsValidationException;
 
 /**
@@ -41,48 +40,49 @@ public class CharacterSetValidator implements ValidatorRuleInterface
 		//skipped in that case.
 		if (valueObject instanceof List)
 		{
-			return true;
+			isValid = true;
 		}
-		if (valueObject != null)
+		else if (valueObject != null)
 		{
 			String value = (String) valueObject;
 			if (attributeTypeInformation instanceof StringAttributeTypeInformation)
 			{
 				ArrayList<String> placeHolders = new ArrayList<String>();
 
-				isValid = validateISOCharacterSet(value,placeHolders,controlCaption);
+				isValid = validateISOCharacterSet(value, placeHolders, controlCaption);
 			}
 		}
 
 		return isValid;
 	}
+
 	/**
-	 *
-	 * @param value
-	 * @param errorList
-	 * @return
-	 * @throws DynamicExtensionsSystemException
+	 * validated weather the value contains valid Iso characters or not.
+	 * @param value value to be verify
+	 * @param placeHolders place holders
+	 * @return true if valid characters are used else false.
+	 * @throws DynamicExtensionsValidationException exception.
 	 */
-	public boolean validateISOCharacterSet(String value,
-			ArrayList<String> placeHolders, String controlCaption)
-			throws DynamicExtensionsValidationException
+	public boolean validateISOCharacterSet(String value, List<String> placeHolders,
+			String controlCaption) throws DynamicExtensionsValidationException
 
 	{
 		BufferedReader reader = new BufferedReader(new StringReader(value));
-		int character = 0;
 		try
 		{
-			while ((character = reader.read()) != -1)
+			int character = reader.read();
+			while (character != -1)
 			{
-				if ((character < 32 && character != 9 && character != 10 && character != 13)
-                        || (character > 126 && character < 160)
-                        || character > 255)
+				boolean isValidCharSet = ((character < 32 && character != 9 && character != 10 && character != 13)
+						|| (character > 126 && character < 160) || character > 255);
+				if (isValidCharSet)
 				{
 					placeHolders.add(controlCaption);
 					placeHolders.add(String.valueOf((char) character));
 					throw new DynamicExtensionsValidationException("Validation failed", null,
 							"dynExtn.validation.characterSet", placeHolders);
 				}
+				character = reader.read();
 			}
 		}
 		catch (IOException e)

@@ -25,14 +25,14 @@ public class UniqueValidator implements ValidatorRuleInterface
 	/**
 	 * @see edu.common.dynamicextensions.validation.ValidatorRuleInterface#validate(edu.common.dynamicextensions.domaininterface.AttributeInterface, java.lang.Object, java.util.Map)
 	 * @throws DynamicExtensionsValidationException
-	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public boolean validate(AttributeMetadataInterface attribute, Object valueObject,
 			Map<String, String> parameterMap, String controlCaption)
 			throws DynamicExtensionsSystemException, DynamicExtensionsValidationException
 	{
 		boolean isValid = true;
-		List<String> placeHolders = new ArrayList<String>();
+
 		AttributeTypeInformationInterface attributeTypeInformation = attribute
 				.getAttributeTypeInformation();
 		if (attributeTypeInformation instanceof DoubleAttributeTypeInformation
@@ -41,12 +41,13 @@ public class UniqueValidator implements ValidatorRuleInterface
 				|| attributeTypeInformation instanceof ShortAttributeTypeInformation
 				|| attributeTypeInformation instanceof FloatAttributeTypeInformation)
 		{
-			// Check for the validity of the number 
+			// Check for the validity of the number
 			NumberValidator numberValidator = new NumberValidator();
 			numberValidator.validate(attribute, valueObject, parameterMap, controlCaption);
 		}
 		if (attribute.isValuePresent(valueObject))
 		{
+			List<String> placeHolders = new ArrayList<String>();
 			placeHolders.add(controlCaption);
 			placeHolders.add((String) valueObject);
 			throw new DynamicExtensionsValidationException("Validation failed", null,

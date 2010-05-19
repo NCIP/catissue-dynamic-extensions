@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package edu.common.dynamicextensions.validation;
@@ -15,7 +15,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsValidationExcepti
 
 /**
  * TextLengthValidator Class validates the text as per the text length defined for that Control during its creation.
- * If the no text length is provided or the text lenght is zero, no validation checks are made.   
+ * If the no text length is provided or the text lenght is zero, no validation checks are made.
  * @author chetan_patil
  */
 public class TextLengthValidator implements ValidatorRuleInterface
@@ -29,23 +29,22 @@ public class TextLengthValidator implements ValidatorRuleInterface
 			throws DynamicExtensionsValidationException
 	{
 		boolean isValid = false;
-		AttributeTypeInformationInterface attributeTypeInformation = attribute
-				.getAttributeTypeInformation();
 
-		//If control of type TextField is changed to the 
-		//ListBox while creating category. These validations should be 
-		//skipped in that case. 
+		//If control of type TextField is changed to the
+		//ListBox while creating category. These validations should be
+		//skipped in that case.
 		if (valueObject instanceof List)
 		{
-			return true;
+			isValid = true;
 		}
-		if (valueObject != null)
+		else if (valueObject != null)
 		{
-			String value = (String) valueObject;
+
+			AttributeTypeInformationInterface attributeTypeInformation = attribute
+					.getAttributeTypeInformation();
 			if (attributeTypeInformation instanceof StringAttributeTypeInformation)
 			{
-				ArrayList<String> placeHolders = new ArrayList<String>();
-
+				String value = (String) valueObject;
 				StringAttributeTypeInformation stringAttributeTypeInformation = (StringAttributeTypeInformation) attributeTypeInformation;
 				Integer size = stringAttributeTypeInformation.getSize();
 				Integer length = value.length();
@@ -59,6 +58,7 @@ public class TextLengthValidator implements ValidatorRuleInterface
 				//skip the maxlength validation if maxlength for the text field is not defined
 				if ((size > 0) && length > size)
 				{
+					ArrayList<String> placeHolders = new ArrayList<String>();
 					placeHolders.add(controlCaption);
 					placeHolders.add(Long.toString(size));
 					throw new DynamicExtensionsValidationException("Validation failed", null,

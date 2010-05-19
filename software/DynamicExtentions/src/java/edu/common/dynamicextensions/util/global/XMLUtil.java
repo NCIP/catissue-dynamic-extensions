@@ -45,10 +45,13 @@ public class XMLUtil
 		LoggerConfig.configureLogger(System.getProperty("user.dir"));
 	}
 
+	/**
+	 * logger.
+	 */
 	private static final Logger LOGGER = Logger.getCommonLogger(XMLUtil.class);
 
 	/**
-	 * for writing merged file
+	 * for writing merged file.
 	 */
 	private static PrintWriter printWriter;
 

@@ -308,9 +308,10 @@ public final class HTTPSConnection
 	};
 
 	/**
-	 * @param appUrl
-	 * @return
-	 * @throws DynamicExtensionsSystemException
+	 * this method will remove the one '/' if there are two in the end.
+	 * @param appUrl url to correct.
+	 * @return corrected url.
+	 * @throws DynamicExtensionsSystemException exception.
 	 */
 	public static String getCorrectedApplicationURL(String appUrl)
 			throws DynamicExtensionsSystemException

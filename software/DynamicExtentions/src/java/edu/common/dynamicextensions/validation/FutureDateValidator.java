@@ -58,13 +58,14 @@ public class FutureDateValidator implements ValidatorRuleInterface
 	{
 		AttributeTypeInformationInterface attributeTypeInformation = attribute
 				.getAttributeTypeInformation();
-
-		if (((valueObject != null) && (!((String) valueObject).trim().equals("")))
-				&& ((attributeTypeInformation != null) && (attributeTypeInformation instanceof DateAttributeTypeInformation)))
+		boolean isValidValue = ((valueObject != null) && (!((String) valueObject).trim().equals("")))
+				&& ((attributeTypeInformation != null) && (attributeTypeInformation instanceof DateAttributeTypeInformation));
+		if (isValidValue)
 		{
 			Date inputDate = null;
 			DateAttributeTypeInformation dateAttributeTypeInformation = (DateAttributeTypeInformation) attributeTypeInformation;
-			String dateFormat = DynamicExtensionsUtility.getDateFormat(dateAttributeTypeInformation.getFormat());
+			String dateFormat = DynamicExtensionsUtility.getDateFormat(dateAttributeTypeInformation
+					.getFormat());
 			String value = (String) valueObject;
 			try
 			{
@@ -75,7 +76,8 @@ public class FutureDateValidator implements ValidatorRuleInterface
 			}
 			catch (ParseException parseException)
 			{
-				ValidatorUtil.reportInvalidInput(controlCaption, "today's date.", "dynExtn.validation.Date.MinDate");
+				ValidatorUtil.reportInvalidInput(controlCaption, "today's date.",
+						"dynExtn.validation.Date.MinDate");
 			}
 
 			reportInvalidDate(inputDate, controlCaption);

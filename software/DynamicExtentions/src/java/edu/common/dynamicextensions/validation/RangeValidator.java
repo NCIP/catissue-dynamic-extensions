@@ -19,8 +19,8 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsValidationExcepti
 import edu.common.dynamicextensions.ui.util.Constants;
 
 /**
- * This Class validates the range of the numeric data entered by the user. It checks whether the value entered is between the 
- * specified range. The extreme values of the range are obtained from the RuleParameter of the Rule instance. 
+ * This Class validates the range of the numeric data entered by the user. It checks whether the value entered is between the
+ * specified range. The extreme values of the range are obtained from the RuleParameter of the Rule instance.
  * @author chetan_patil
  * @version 1.0
  */
@@ -29,13 +29,13 @@ public class RangeValidator implements ValidatorRuleInterface
 
 	/**
 	 * This method implements the validate method of the ValidatorRuleInterface.
-	 * This method validates the numeric data entered by the user against the maximum and the 
+	 * This method validates the numeric data entered by the user against the maximum and the
 	 * minimum values of the rule.
 	 * @param attribute the Attribute whose corresponding value is to be verified.
 	 * @param valueObject the value entered by the user.
 	 * @param parameterMap the parameters of the Rule.
-	 * @throws DynamicExtensionsValidationException if the value is not following the range Rule. 
-	 * @throws DataTypeFactoryInitializationException 
+	 * @throws DynamicExtensionsValidationException if the value is not following the range Rule.
+	 * @throws DataTypeFactoryInitializationException
 	 */
 	public boolean validate(AttributeMetadataInterface attribute, Object valueObject,
 			Map<String, String> parameterMap, String controlCaption)
@@ -43,49 +43,48 @@ public class RangeValidator implements ValidatorRuleInterface
 	{
 		boolean valid = true;
 
-		/* Check for the validity of the number */
-		NumberValidator numberValidator = new NumberValidator();
-		//Quick fix 
+		//Quick fix
 		if (valueObject != null)
-		{
+		{/* Check for the validity of the number */
+			NumberValidator numberValidator = new NumberValidator();
 			numberValidator.validate(attribute, valueObject, parameterMap, controlCaption);
 		}
 
 		/* Check for the validity of the range of the number against the predefined range*/
 		if (valueObject != null && !((String) valueObject).trim().equals(""))
 		{
-				AttributeTypeInformationInterface attributeTypeInformation = attribute
-						.getAttributeTypeInformation();
+			AttributeTypeInformationInterface attributeTypeInformation = attribute
+					.getAttributeTypeInformation();
 
-				if (attributeTypeInformation != null)
+			if (attributeTypeInformation != null)
+			{
+				String value = (String) valueObject;
+
+				Set<Map.Entry<String, String>> parameterSet = parameterMap.entrySet();
+				for (Map.Entry<String, String> parameter : parameterSet)
 				{
-					String value = (String) valueObject;
-
-					Set<Map.Entry<String, String>> parameterSet = parameterMap.entrySet();
-					for (Map.Entry<String, String> parameter : parameterSet)
+					if (attributeTypeInformation instanceof LongAttributeTypeInformation)
 					{
-						if (attributeTypeInformation instanceof LongAttributeTypeInformation)
-						{
-							checkLongValidation(parameter, controlCaption, value);
-						}
-						else if (attributeTypeInformation instanceof IntegerAttributeTypeInformation)
-						{
-							checkIntegerValidation(parameter, controlCaption, value);
-						}
-						else if (attributeTypeInformation instanceof ShortAttributeTypeInformation)
-						{
-							checkShortValidation(parameter, controlCaption, value);
-						}
-						else if (attributeTypeInformation instanceof DoubleAttributeTypeInformation)
-						{
-							checkDoubleValidation(parameter, controlCaption, value);
-						}
-						else if (attributeTypeInformation instanceof FloatAttributeTypeInformation)
-						{
-							checkFloatValidation(parameter, controlCaption, value);
-						}
+						checkLongValidation(parameter, controlCaption, value);
+					}
+					else if (attributeTypeInformation instanceof IntegerAttributeTypeInformation)
+					{
+						checkIntegerValidation(parameter, controlCaption, value);
+					}
+					else if (attributeTypeInformation instanceof ShortAttributeTypeInformation)
+					{
+						checkShortValidation(parameter, controlCaption, value);
+					}
+					else if (attributeTypeInformation instanceof DoubleAttributeTypeInformation)
+					{
+						checkDoubleValidation(parameter, controlCaption, value);
+					}
+					else if (attributeTypeInformation instanceof FloatAttributeTypeInformation)
+					{
+						checkFloatValidation(parameter, controlCaption, value);
 					}
 				}
+			}
 		}
 
 		return valid;
@@ -93,7 +92,7 @@ public class RangeValidator implements ValidatorRuleInterface
 
 	/**
 	 * This method verifies if the number is a proper Long value or not.
-	 * @param parameter the parameter of the rule in form of <ParameterName, Value> pair. 
+	 * @param parameter the parameter of the rule in form of <ParameterName, Value> pair.
 	 * @param attributeName the name of the Attribute.
 	 * @param value the value to be verified.
 	 * @throws DynamicExtensionsValidationException
@@ -104,15 +103,17 @@ public class RangeValidator implements ValidatorRuleInterface
 		String parameterName = parameter.getKey();
 		String parameterValue = parameter.getValue();
 
-		if (parameterName.equals(Constants.MIN_VALUE) && Long.parseLong(value) < Long.parseLong(parameterValue))
+		if (parameterName.equals(Constants.MIN_VALUE)
+				&& Long.parseLong(value) < Long.parseLong(parameterValue))
 		{
-				reportOutOfRangeInput(controlCaption, parameterValue,
-						"dynExtn.validation.Range.Minimum");
+			reportOutOfRangeInput(controlCaption, parameterValue,
+					"dynExtn.validation.Range.Minimum");
 		}
-		else if (parameterName.equals(Constants.MAX_VALUE) && Long.parseLong(value) > Long.parseLong(parameterValue))
+		else if (parameterName.equals(Constants.MAX_VALUE)
+				&& Long.parseLong(value) > Long.parseLong(parameterValue))
 		{
-				reportOutOfRangeInput(controlCaption, parameterValue,
-						"dynExtn.validation.Range.Maximum");
+			reportOutOfRangeInput(controlCaption, parameterValue,
+					"dynExtn.validation.Range.Maximum");
 		}
 	}
 
@@ -136,10 +137,11 @@ public class RangeValidator implements ValidatorRuleInterface
 						"dynExtn.validation.Range.Minimum");
 			}
 		}
-		else if (parameterName.equals(Constants.MAX_VALUE) && Integer.parseInt(value) > Integer.parseInt(parameterValue))
+		else if (parameterName.equals(Constants.MAX_VALUE)
+				&& Integer.parseInt(value) > Integer.parseInt(parameterValue))
 		{
-				reportOutOfRangeInput(controlCaption, parameterValue,
-						"dynExtn.validation.Range.Maximum");
+			reportOutOfRangeInput(controlCaption, parameterValue,
+					"dynExtn.validation.Range.Maximum");
 		}
 	}
 
@@ -166,8 +168,8 @@ public class RangeValidator implements ValidatorRuleInterface
 		else if (parameterName.equals(Constants.MAX_VALUE)
 				&& Short.parseShort(value) > Short.parseShort(parameterValue))
 		{
-				reportOutOfRangeInput(controlCaption, parameterValue,
-						"dynExtn.validation.Range.Maximum");
+			reportOutOfRangeInput(controlCaption, parameterValue,
+					"dynExtn.validation.Range.Maximum");
 		}
 	}
 
@@ -183,15 +185,17 @@ public class RangeValidator implements ValidatorRuleInterface
 		String parameterName = parameter.getKey();
 		String parameterValue = parameter.getValue();
 
-		if (parameterName.equals(Constants.MIN_VALUE) && Double.parseDouble(value) < Double.parseDouble(parameterValue))
+		if (parameterName.equals(Constants.MIN_VALUE)
+				&& Double.parseDouble(value) < Double.parseDouble(parameterValue))
 		{
-				reportOutOfRangeInput(controlCaption, parameterValue,
-						"dynExtn.validation.Range.Minimum");
+			reportOutOfRangeInput(controlCaption, parameterValue,
+					"dynExtn.validation.Range.Minimum");
 		}
-		else if (parameterName.equals(Constants.MAX_VALUE) && Double.parseDouble(value) > Double.parseDouble(parameterValue))
+		else if (parameterName.equals(Constants.MAX_VALUE)
+				&& Double.parseDouble(value) > Double.parseDouble(parameterValue))
 		{
-				reportOutOfRangeInput(controlCaption, parameterValue,
-						"dynExtn.validation.Range.Maximum");
+			reportOutOfRangeInput(controlCaption, parameterValue,
+					"dynExtn.validation.Range.Maximum");
 		}
 	}
 
@@ -215,10 +219,11 @@ public class RangeValidator implements ValidatorRuleInterface
 						"dynExtn.validation.Range.Minimum");
 			}
 		}
-		else if (parameterName.equals(Constants.MAX_VALUE) && Float.parseFloat(value) > Float.parseFloat(parameterValue))
+		else if (parameterName.equals(Constants.MAX_VALUE)
+				&& Float.parseFloat(value) > Float.parseFloat(parameterValue))
 		{
-				reportOutOfRangeInput(controlCaption, parameterValue,
-						"dynExtn.validation.Range.Maximum");
+			reportOutOfRangeInput(controlCaption, parameterValue,
+					"dynExtn.validation.Range.Maximum");
 		}
 	}
 
