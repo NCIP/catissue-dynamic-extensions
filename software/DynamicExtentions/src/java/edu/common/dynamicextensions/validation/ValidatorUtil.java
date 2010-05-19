@@ -85,13 +85,8 @@ public class ValidatorUtil
 				{
 					AssociationMetadataInterface associationInterface = (AssociationMetadataInterface) abstractAttribute;
 
-					ControlInterface control = DynamicExtensionsUtility
-					.getControlForAbstractAttribute(
-							(AttributeMetadataInterface) associationInterface,
-							containerInterface);
-
 					validateAssociationData(attributeValueMap, listOfError, abstractAttribute,
-							control, validateNLevel);
+							getContainerForAbstractAttribute(associationInterface), validateNLevel);
 				}
 			}
 		}
@@ -113,7 +108,7 @@ public class ValidatorUtil
 	 */
 	private static void validateAssociationData(
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap, List<String> errorList,
-			BaseAbstractAttributeInterface abstractAttribute, ControlInterface control,
+			BaseAbstractAttributeInterface abstractAttribute, ContainerInterface containerInterface,
 			boolean validateNLevel) throws DynamicExtensionsSystemException,
 			DynamicExtensionsValidationException
 			{
@@ -127,13 +122,13 @@ public class ValidatorUtil
 			{
 				if (validateNLevel)
 				{
-					validateEntity(subAttributeValueMap, errorList, control.getParentContainer(),
+					validateEntity(subAttributeValueMap, errorList, containerInterface,
 							validateNLevel);
 				}
 				else
 				{
 					errorList.addAll(validateEntityAttributes(subAttributeValueMap,
-							getContainerForAbstractAttribute(associationInterface)));
+							containerInterface));
 				}
 			}
 
