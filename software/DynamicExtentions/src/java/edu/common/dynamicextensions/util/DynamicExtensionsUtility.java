@@ -1523,7 +1523,7 @@ public class DynamicExtensionsUtility
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public static void getUnsavedCategoryEntityList(CategoryEntityInterface categoryEntity,
-			HashMap<String, CategoryEntityInterface> objCategoryMap)
+			Map<String, CategoryEntityInterface> objCategoryMap)
 			throws DynamicExtensionsSystemException
 	{
 		if (categoryEntity != null)
@@ -1578,7 +1578,7 @@ public class DynamicExtensionsUtility
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public static void getSavedCategoryEntityList(CategoryEntityInterface categoryEntity,
-			HashMap<String, CategoryEntityInterface> objCategoryMap)
+			Map<String, CategoryEntityInterface> objCategoryMap)
 			throws DynamicExtensionsSystemException
 	{
 		if (categoryEntity != null)
@@ -1773,6 +1773,11 @@ public class DynamicExtensionsUtility
 		ConstraintPropertiesInterface constraintProperties = association.getConstraintProperties();
 		EntityInterface srcEntity = association.getEntity();
 		EntityInterface tgtEntity = association.getTargetEntity();
+		if (srcEntity == null || tgtEntity == null)
+		{
+			throw new DynamicExtensionsSystemException(
+					"Please set source & target entity of the association");
+		}
 		DomainObjectFactory factory = DomainObjectFactory.getInstance();
 		Collection<ConstraintKeyPropertiesInterface> srcCnstrKeyPropColl;
 		Collection<ConstraintKeyPropertiesInterface> tgtCnstrKeyPropColl;
@@ -1853,11 +1858,7 @@ public class DynamicExtensionsUtility
 
 			}
 		}
-		catch (NullPointerException e)
-		{
-			throw new DynamicExtensionsSystemException(
-					"Please set source & target entity of the association", e);
-		}
+
 		catch (NoSuchElementException e)
 		{
 			throw new DynamicExtensionsSystemException(
@@ -2104,7 +2105,7 @@ public class DynamicExtensionsUtility
 	 * @param mainContainer
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	private static void checkIfEntityPreExists(EntityGroupInterface entityGroup, String caption,
+	public static void checkIfEntityPreExists(EntityGroupInterface entityGroup, String caption,
 			ContainerInterface mainContainer) throws DynamicExtensionsApplicationException
 	{
 		if (mainContainer != null && mainContainer.getCaption().equals(caption))
