@@ -890,11 +890,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			newObject = createObjectForClass(className);
 
 			// If empty, insert row with only identifier column value.
-			Set uiColumnSet = dataValue.keySet();
-			Iterator uiColumnSetIter = uiColumnSet.iterator();
-			while (uiColumnSetIter.hasNext())
+			for (Entry<AbstractAttributeInterface, Object> dataValueEntry : dataValue.entrySet())
 			{
-				AbstractAttribute attribute = (AbstractAttribute) uiColumnSetIter.next();
+				AbstractAttribute attribute = (AbstractAttribute) dataValueEntry.getKey();
 
 				if (attribute instanceof AssociationInterface)
 				{
@@ -904,7 +902,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 					String baseEntClassName = packageName + "." + baseEntity.getName();
 					EntityInterface targetEntity = association.getTargetEntity();
 
-					Object value = dataValue.get(attribute);
+					Object value = dataValueEntry.getValue();
 
 					List<Map> listOfMapsForContainedEntity = (List) value;
 					for (Map valueMapForContainedEntity : listOfMapsForContainedEntity)
@@ -972,11 +970,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 				dataValue = new HashMap();
 			}
 
-			Set uiColumnSet = dataValue.keySet();
-			Iterator uiColumnSetIter = uiColumnSet.iterator();
-			while (uiColumnSetIter.hasNext())
+			for (Entry<AbstractAttributeInterface, Object> dataValueEntry : dataValue.entrySet())
 			{
-				AbstractAttribute attribute = (AbstractAttribute) uiColumnSetIter.next();
+				AbstractAttribute attribute = (AbstractAttribute) dataValueEntry.getKey();
 
 				if (attribute instanceof AssociationInterface)
 				{
@@ -1011,7 +1007,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 
 					Set<Object> objectsToBeRetained = new HashSet<Object>();
 
-					Object value = dataValue.get(attribute);
+					Object value = dataValueEntry.getValue();
 					List<Map> listOfMapsForContainedEntity = (List) value;
 
 					for (Map valueMapForContainedEntity : listOfMapsForContainedEntity)

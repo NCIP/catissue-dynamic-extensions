@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.domain.CategoryEntity;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
@@ -645,10 +646,11 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 			Map<AssociationInterface, String> multiselectMigartionScripts)
 	{
 		List<String> multiSelMigrationQueries = new ArrayList<String>();
-		for (AssociationInterface association : multiselectMigartionScripts.keySet())
+		for (Entry<AssociationInterface, String> entryObject : multiselectMigartionScripts
+				.entrySet())
 		{
-			String query = changeTgtEntityConstraintKeyPropertiesInQuery(association,
-					multiselectMigartionScripts.get(association));
+			String query = changeTgtEntityConstraintKeyPropertiesInQuery(entryObject.getKey(),
+					entryObject.getValue());
 			multiSelMigrationQueries.add(query);
 		}
 

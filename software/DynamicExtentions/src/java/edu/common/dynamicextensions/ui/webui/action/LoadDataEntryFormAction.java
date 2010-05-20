@@ -4,11 +4,11 @@ package edu.common.dynamicextensions.ui.webui.action;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -397,12 +397,9 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 			final Set<AttributeInterface> processedAttributes)
 	{
 		// If the value is 1.48 and precision entered for it is 3, make it appear as 1.480
-		final Set<BaseAbstractAttributeInterface> recordMapKeySet = recordMap.keySet();
-		final Iterator<BaseAbstractAttributeInterface> iter = recordMapKeySet.iterator();
-
-		while (iter.hasNext())
+		for (Entry<BaseAbstractAttributeInterface, Object> entryObject : recordMap.entrySet())
 		{
-			final Object object = iter.next();
+			BaseAbstractAttributeInterface object = entryObject.getKey();
 
 			if (object instanceof AttributeInterface)
 			{
@@ -423,14 +420,14 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 					}
 					final int decimalPlaces = ((NumericAttributeTypeInformation) attributeTypeInformation)
 							.getDecimalPlaces();
-					String value = (String) recordMap.get(currentAttribute);
+					String value = (String) entryObject.getValue();
 					if (value.contains(".") && !value.contains("E"))
 					{
 						final int placesAfterDecimal = value.length() - (value.indexOf('.') + 1);
 
 						if (placesAfterDecimal != decimalPlaces)
 						{
-						    StringBuilder val = new StringBuilder(value);
+							StringBuilder val = new StringBuilder(value);
 							for (int j = decimalPlaces; j > placesAfterDecimal; j--)
 							{
 								val.append("0");
@@ -464,11 +461,11 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 				if (association.getAssociationType() != null)
 				{
 					final String associationType = association.getAssociationType().getValue();
-					if ((associationType != null) && (recordMap.get(object) != null)
+					if ((associationType != null) && (entryObject.getValue() != null)
 							&& associationType.equals(AssociationType.CONTAINTMENT.getValue()))
 					{
-						final List<Map<BaseAbstractAttributeInterface, Object>> innerRecordsList = (List<Map<BaseAbstractAttributeInterface, Object>>) recordMap
-								.get(object);
+						final List<Map<BaseAbstractAttributeInterface, Object>> innerRecordsList = (List<Map<BaseAbstractAttributeInterface, Object>>) entryObject
+								.getValue();
 						for (final Map<BaseAbstractAttributeInterface, Object> innerMap : innerRecordsList)
 						{
 							addPrecisionZeroes(innerMap, processedAttributes);
