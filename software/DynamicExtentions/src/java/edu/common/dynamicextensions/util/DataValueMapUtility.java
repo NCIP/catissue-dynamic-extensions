@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.domain.Association;
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
@@ -47,16 +48,17 @@ public final class DataValueMapUtility
 	/**
 	 * Private constructor with no argument.
 	 */
-	private DataValueMapUtility() {
+	private DataValueMapUtility()
+	{
 		//Empty constructor.
 	}
-	
+
 	/**
 	 * @param rootValueMap
 	 * @param rootContainerInterface
 	 * @param purpose
 	 */
-	
+
 	private static void modifyDataValueMap(
 			Map<BaseAbstractAttributeInterface, Object> rootValueMap,
 			ContainerInterface rootContainerInterface, String purpose)
@@ -75,7 +77,7 @@ public final class DataValueMapUtility
 			modifyValueMapForChildContainers(rootValueMap, rootContainerInterface, purpose);
 		}
 	}
-	
+
 	/**
 	 * Modify data value map for child containers.
 	 * @param rootValueMap data value map.
@@ -107,10 +109,10 @@ public final class DataValueMapUtility
 			}
 		}
 	}
-	
+
 	/**
 	 * Modify data value map for containment control.
-	 * @param rootValueMap root category. 
+	 * @param rootValueMap root category.
 	 * @param purpose purpose of populating the data value map.
 	 * @param control control for which data value map is being populated.
 	 */
@@ -129,11 +131,10 @@ public final class DataValueMapUtility
 			}
 		}
 		else if (rootValueMap.get(abstractContainmentControl.getBaseAbstractAttribute()) != null)
-		{		
-				modifyDataValueMap(
-						(Map<BaseAbstractAttributeInterface, Object>) rootValueMap
-								.get(abstractContainmentControl.getBaseAbstractAttribute()),
-						abstractContainmentControl.getContainer(), purpose);
+		{
+			modifyDataValueMap((Map<BaseAbstractAttributeInterface, Object>) rootValueMap
+					.get(abstractContainmentControl.getBaseAbstractAttribute()),
+					abstractContainmentControl.getContainer(), purpose);
 		}
 	}
 
@@ -250,16 +251,15 @@ public final class DataValueMapUtility
 	private static void setValueForAssosiation(BaseAbstractAttributeInterface assocation,
 			Map<BaseAbstractAttributeInterface, Object> rootValueMap)
 	{
-		if (!((List<Map<BaseAbstractAttributeInterface, Object>>) rootValueMap
-				.get(assocation)).isEmpty())
+		if (!((List<Map<BaseAbstractAttributeInterface, Object>>) rootValueMap.get(assocation))
+				.isEmpty())
 		{
 			List<Map<BaseAbstractAttributeInterface, Object>> list = (List<Map<BaseAbstractAttributeInterface, Object>>) rootValueMap
 					.get(assocation);
-			Map<BaseAbstractAttributeInterface, Object> map = (Map<BaseAbstractAttributeInterface, Object>) list
-					.get(0);
-			for (BaseAbstractAttributeInterface abstractAttribute : map.keySet())
+			Map<BaseAbstractAttributeInterface, Object> map = list.get(0);
+			for (Entry<BaseAbstractAttributeInterface, Object> entryObject : map.entrySet())
 			{
-				rootValueMap.put(abstractAttribute, map.get(abstractAttribute));
+				rootValueMap.put(entryObject.getKey(), entryObject.getValue());
 			}
 		}
 	}
@@ -273,8 +273,7 @@ public final class DataValueMapUtility
 			CategoryInterface category)
 	{
 		CategoryEntityInterface categoryEntity = category.getRootCategoryElement();
-		Map<Long, BaseAbstractAttributeInterface> categoryIdAttributeMap =
-						new HashMap<Long, BaseAbstractAttributeInterface>();
+		Map<Long, BaseAbstractAttributeInterface> categoryIdAttributeMap = new HashMap<Long, BaseAbstractAttributeInterface>();
 		populateIdToAttrMapForCategory(categoryIdAttributeMap, categoryEntity);
 
 		return categoryIdAttributeMap;
@@ -297,22 +296,22 @@ public final class DataValueMapUtility
 			{
 				if (catAttr.getAbstractAttribute() instanceof Association)
 				{
-				  AssociationInterface association = (AssociationInterface) catAttr
+					AssociationInterface association = (AssociationInterface) catAttr
 							.getAbstractAttribute();
 
-				  map.put(association.getId(), association);
+					map.put(association.getId(), association);
 
-				  Collection<AbstractAttributeInterface> multiselectAttrColl =
-					EntityManagerUtil.filterSystemAttributes
-					(association.getTargetEntity().getAllAbstractAttributes());
-				  Iterator<AbstractAttributeInterface> muultiSelectAttIterator=
-					  multiselectAttrColl.iterator();
+					Collection<AbstractAttributeInterface> multiselectAttrColl = EntityManagerUtil
+							.filterSystemAttributes(association.getTargetEntity()
+									.getAllAbstractAttributes());
+					Iterator<AbstractAttributeInterface> muultiSelectAttIterator = multiselectAttrColl
+							.iterator();
 
 					while (muultiSelectAttIterator.hasNext())
 					{
-					  AttributeInterface attribute
-						= (AttributeInterface) muultiSelectAttIterator.next();
-					  map.put(attribute.getId(), attribute);
+						AttributeInterface attribute = (AttributeInterface) muultiSelectAttIterator
+								.next();
+						map.put(attribute.getId(), attribute);
 					}
 				}
 				else
@@ -337,7 +336,8 @@ public final class DataValueMapUtility
 		for (CategoryAssociationInterface categoryAssociation : catAssoCollection)
 		{
 
-			CategoryEntityInterface targetCategoryEntity = categoryAssociation.getTargetCategoryEntity();
+			CategoryEntityInterface targetCategoryEntity = categoryAssociation
+					.getTargetCategoryEntity();
 			if (targetCategoryEntity != null)
 			{
 				map.put(categoryAssociation.getId(), categoryAssociation);
@@ -360,13 +360,14 @@ public final class DataValueMapUtility
 			Map<Long, BaseAbstractAttributeInterface> idToAttributeMap)
 			throws DynamicExtensionsSystemException, ParseException
 	{
-		Map<BaseAbstractAttributeInterface, Object> attributeToValueMap= // NOPMD by gaurav_sawant
-						new HashMap<BaseAbstractAttributeInterface, Object>();
+		Map<BaseAbstractAttributeInterface, Object> attributeToValueMap = // NOPMD by gaurav_sawant
+		new HashMap<BaseAbstractAttributeInterface, Object>();
 		Set<java.util.Map.Entry<Long, Object>> dataValueEntrySet = dataValue.entrySet();
 
 		for (Map.Entry<Long, Object> datavalueEntry : dataValueEntrySet)
 		{
-			BaseAbstractAttributeInterface attributeInterface = idToAttributeMap.get(datavalueEntry.getKey());
+			BaseAbstractAttributeInterface attributeInterface = idToAttributeMap.get(datavalueEntry
+					.getKey());
 			if (attributeInterface == null)
 			{
 				throw new DynamicExtensionsSystemException("Invalid attribute identifier.");
@@ -425,8 +426,7 @@ public final class DataValueMapUtility
 			ParseException
 	{
 		List<Map<Long, Object>> dataValueList;
-		List<Map<BaseAbstractAttributeInterface, Object>> newListValueList =
-				 new ArrayList<Map<BaseAbstractAttributeInterface, Object>>();
+		List<Map<BaseAbstractAttributeInterface, Object>> newListValueList = new ArrayList<Map<BaseAbstractAttributeInterface, Object>>();
 		dataValueList = (List<Map<Long, Object>>) datavalueEntry.getValue();
 		Iterator<Map<Long, Object>> dataValueListIterator = dataValueList.iterator();
 		while (dataValueListIterator.hasNext())
@@ -454,9 +454,7 @@ public final class DataValueMapUtility
 		if (datavalueEntry.getValue() instanceof java.util.Date)
 		{
 
-			String dateFormate = ((DateAttributeTypeInformation) (
-					(AttributeInterface) (
-							(CategoryAttributeInterface) attributeInterface)
+			String dateFormate = ((DateAttributeTypeInformation) ((AttributeInterface) ((CategoryAttributeInterface) attributeInterface)
 					.getAbstractAttribute()).getAttributeTypeInformation()).getFormat();
 			String format = DynamicExtensionsUtility.getDateFormat(dateFormate);
 			SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.getDefault());

@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.domain.CategoryAssociation;
 import edu.common.dynamicextensions.domain.CategoryAttribute;
@@ -200,7 +201,6 @@ public class CategoryHelper implements CategoryHelperInterface
 		}
 	}
 
-
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.util.CategoryHelperInterface#createOrUpdateCategoryEntityAndContainer(edu.common.dynamicextensions.domaininterface.EntityInterface, java.lang.String, edu.common.dynamicextensions.domaininterface.CategoryInterface, java.lang.String[])
 	 */
@@ -337,14 +337,11 @@ public class CategoryHelper implements CategoryHelperInterface
 	{
 		if ((rulesMap != null) && !rulesMap.isEmpty())
 		{
-			Iterator<String> rulesIterator = rulesMap.keySet().iterator();
-
-			while (rulesIterator.hasNext())
+			for (Entry<String, Object> entryObject : rulesMap.entrySet())
 			{
-				Object obj = rulesIterator.next();
+				String ruleName = entryObject.getKey();
 				RuleInterface rule = null;
 				DomainObjectFactory factory = DomainObjectFactory.getInstance();
-				String ruleName = obj.toString();
 
 				if (ruleName.equalsIgnoreCase(CategoryCSVConstants.UNIQUE)
 						|| ruleName.equalsIgnoreCase(CategoryCSVConstants.REQUIRED))
@@ -356,7 +353,7 @@ public class CategoryHelper implements CategoryHelperInterface
 				else if (ruleName.equalsIgnoreCase(CategoryCSVConstants.RANGE)
 						|| ruleName.equalsIgnoreCase(CategoryCSVConstants.DATE_RANGE))
 				{
-					Map<String, Object> valuesMap = (Map<String, Object>) rulesMap.get(obj);
+					Map<String, Object> valuesMap = (Map<String, Object>) entryObject.getValue();
 
 					rule = factory.createRule();
 					rule.setName(ruleName);
@@ -1080,8 +1077,9 @@ public class CategoryHelper implements CategoryHelperInterface
 			{
 				return;
 			}
-			for (String optionString : options.keySet())
+			for (Entry<String, String> entryObject : options.entrySet())
 			{
+				String optionString = entryObject.getKey();
 				String methodName = CategoryConstants.SET + optionString;
 
 				Class[] types = getParameterType(methodName, dyextnBaseDomainObject);
@@ -1095,7 +1093,7 @@ public class CategoryHelper implements CategoryHelperInterface
 							+ optionString);
 				}
 				List<Object> values = new ArrayList<Object>();
-				values.add(getFormattedValues(types[0], options.get(optionString)));
+				values.add(getFormattedValues(types[0], entryObject.getValue()));
 
 				Method method;
 
@@ -1173,9 +1171,8 @@ public class CategoryHelper implements CategoryHelperInterface
 	 * @throws NoSuchMethodException
 	 * @throws InvocationTargetException
 	 */
-	private Object getFormattedValues(Class type, String string) throws
-			NoSuchMethodException, InstantiationException, IllegalAccessException,
-			InvocationTargetException
+	private Object getFormattedValues(Class type, String string) throws NoSuchMethodException,
+			InstantiationException, IllegalAccessException, InvocationTargetException
 	{
 		Method method = type.getMethod("valueOf", new Class[]{String.class});
 		return method.invoke(type, new Object[]{string});
@@ -1666,16 +1663,14 @@ public class CategoryHelper implements CategoryHelperInterface
 		List<PermissibleValueInterface> permissibleValues = new ArrayList<PermissibleValueInterface>();
 		if (desiredPermissibleValues != null)
 		{
-			Set<String> permissibleValuString = desiredPermissibleValues.keySet();
-
-			for (String value : permissibleValuString)
+			for (Entry<String, Collection<SemanticPropertyInterface>> entryObject : desiredPermissibleValues
+					.entrySet())
 			{
 				PermissibleValue permissibleValueInterface = (PermissibleValue) attributeTypeInformation
 						.getPermissibleValueForString(DynamicExtensionsUtility
-								.getEscapedStringValue(value));
+								.getEscapedStringValue(entryObject.getKey()));
 
-				permissibleValueInterface.setSemanticPropertyCollection(desiredPermissibleValues
-						.get(value));
+				permissibleValueInterface.setSemanticPropertyCollection(entryObject.getValue());
 
 				permissibleValues.add(permissibleValueInterface);
 			}

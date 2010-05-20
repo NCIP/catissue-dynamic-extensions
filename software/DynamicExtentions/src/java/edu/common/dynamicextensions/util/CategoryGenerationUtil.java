@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.domain.CategoryEntity;
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
@@ -49,35 +49,35 @@ public class CategoryGenerationUtil
 {
 
 	/**
-     * The category helper.
-     */
+	 * The category helper.
+	 */
 	public static CategoryHelperInterface categoryHelper = new CategoryHelper();
 
 	/**
-     * This method returns the entity from the entity group.
-     *
-     * @param entityName
-     *            the entity name
-     * @param entityGroup
-     *            the entity group
-     * @return the entity
-     * @return
-     */
+	 * This method returns the entity from the entity group.
+	 *
+	 * @param entityName
+	 *            the entity name
+	 * @param entityGroup
+	 *            the entity group
+	 * @return the entity
+	 * @return
+	 */
 	public static EntityInterface getEntity(String entityName, EntityGroupInterface entityGroup)
 	{
 		return entityGroup.getEntityByName(entityName);
 	}
 
 	/**
-     * Returns the multiplicity in number for the give string.
-     *
-     * @param multiplicity
-     *            the multiplicity
-     * @return the multiplicity in numbers
-     * @throws DynamicExtensionsSystemException
-     *             the dynamic extensions system exception
-     * @return
-     */
+	 * Returns the multiplicity in number for the give string.
+	 *
+	 * @param multiplicity
+	 *            the multiplicity
+	 * @return the multiplicity in numbers
+	 * @throws DynamicExtensionsSystemException
+	 *             the dynamic extensions system exception
+	 * @return
+	 */
 	public static int getMultiplicityInNumbers(String multiplicity)
 			throws DynamicExtensionsSystemException
 	{
@@ -100,25 +100,25 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * Sets the root category entity for the category.
-     *
-     * @param category
-     *            the category
-     * @param rootContainerObject
-     *            the root container object
-     * @param containerCollection
-     *            the container collection
-     * @param paths
-     *            the paths
-     * @param absolutePath
-     *            the absolute path
-     * @param containerNameInstanceMap
-     *            the container name instance map
-     * @throws DynamicExtensionsSystemException
-     *             the dynamic extensions system exception
-     * @throws DynamicExtensionsApplicationException
-     *             the dynamic extensions application exception
-     */
+	 * Sets the root category entity for the category.
+	 *
+	 * @param category
+	 *            the category
+	 * @param rootContainerObject
+	 *            the root container object
+	 * @param containerCollection
+	 *            the container collection
+	 * @param paths
+	 *            the paths
+	 * @param absolutePath
+	 *            the absolute path
+	 * @param containerNameInstanceMap
+	 *            the container name instance map
+	 * @throws DynamicExtensionsSystemException
+	 *             the dynamic extensions system exception
+	 * @throws DynamicExtensionsApplicationException
+	 *             the dynamic extensions application exception
+	 */
 	public static void setRootContainer(CategoryInterface category,
 			ContainerInterface rootContainerObject, List<ContainerInterface> containerCollection,
 			Map<String, List<AssociationInterface>> paths, Map<String, List<String>> absolutePath,
@@ -139,10 +139,10 @@ public class CategoryGenerationUtil
 
 		CategoryHelperInterface categoryHelper = new CategoryHelper();
 
-		for (String entityName : absolutePath.keySet())
+		for (Entry<String, List<String>> entryObject : absolutePath.entrySet())
 		{
-
-			if (absolutePath.get(entityName).size() == 1 && rootContainer != null)
+			String entityName = entryObject.getKey();
+			if (entryObject.getValue().size() == 1 && rootContainer != null)
 			{
 				CategoryEntityInterface categoryEntityInterface = (CategoryEntityInterface) rootContainer
 						.getAbstractEntity();
@@ -221,16 +221,16 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * Returns the container having container caption as one passed to this
-     * method.
-     *
-     * @param containerCollection
-     *            the container collection
-     * @param containerCaption
-     *            the container caption
-     * @return the container
-     * @return
-     */
+	 * Returns the container having container caption as one passed to this
+	 * method.
+	 *
+	 * @param containerCollection
+	 *            the container collection
+	 * @param containerCaption
+	 *            the container caption
+	 * @return the container
+	 * @return
+	 */
 	public static ContainerInterface getContainer(List<ContainerInterface> containerCollection,
 			String containerCaption)
 	{
@@ -248,15 +248,15 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * Gets the container with entity name.
-     *
-     * @param containerCollection
-     *            the container collection
-     * @param entityName
-     *            the entity name
-     * @return the container with entity name
-     * @return
-     */
+	 * Gets the container with entity name.
+	 *
+	 * @param containerCollection
+	 *            the container collection
+	 * @param entityName
+	 *            the entity name
+	 * @return the container with entity name
+	 * @return
+	 */
 	public static ContainerInterface getContainerWithEntityName(
 			List<ContainerInterface> containerCollection, String entityName)
 	{
@@ -276,15 +276,15 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * Returns the container with given category entity name.
-     *
-     * @param containerCollection
-     *            the container collection
-     * @param categoryEntityName
-     *            the category entity name
-     * @return the container with category entity name
-     * @return
-     */
+	 * Returns the container with given category entity name.
+	 *
+	 * @param containerCollection
+	 *            the container collection
+	 * @param categoryEntityName
+	 *            the category entity name
+	 * @return the container with category entity name
+	 * @return
+	 */
 	public static ContainerInterface getContainerWithCategoryEntityName(
 			List<ContainerInterface> containerCollection, String categoryEntityName)
 	{
@@ -303,28 +303,26 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * Gets the association list.
-     *
-     * @param paths
-     *            the paths
-     * @param entityGroup
-     *            the entity group
-     * @return the association list
-     * @throws DynamicExtensionsSystemException
-     *             the dynamic extensions system exception
-     */
+	 * Gets the association list.
+	 *
+	 * @param paths
+	 *            the paths
+	 * @param entityGroup
+	 *            the entity group
+	 * @return the association list
+	 * @throws DynamicExtensionsSystemException
+	 *             the dynamic extensions system exception
+	 */
 	public static Map<String, List<AssociationInterface>> getAssociationList(
 			Map<String, List<String>> paths, EntityGroupInterface entityGroup)
 			throws DynamicExtensionsSystemException
 	{
 		Map<String, List<AssociationInterface>> entityPaths = new HashMap<String, List<AssociationInterface>>();
 
-		Set<String> entitiesNames = paths.keySet();
-		for (String entityName : entitiesNames)
+		for (Entry<String, List<String>> entryObject : paths.entrySet())
 		{
 			// Path stored is from the root.
-			List<String> pathsForEntity = paths.get(entityName);
-
+			List<String> pathsForEntity = entryObject.getValue();
 			List<AssociationInterface> associations = new ArrayList<AssociationInterface>();
 			Iterator<String> entNamesIter = pathsForEntity.iterator();
 
@@ -333,26 +331,24 @@ public class CategoryGenerationUtil
 
 			EntityInterface sourceEntity = entityGroup
 					.getEntityByName(getEntityNameExcludingAssociationRoleName(srcEntityName));
-            CategoryValidator.checkForNullRefernce(sourceEntity,
-                    "ERROR IN DEFINING PATH FOR THE ENTITY " + entityName
-                            + ": ENTITY WITH NAME " + srcEntityName
-                            + " DOES NOT EXIST");
+			String entityName = entryObject.getKey();
+			CategoryValidator.checkForNullRefernce(sourceEntity,
+					"ERROR IN DEFINING PATH FOR THE ENTITY " + entityName
+							+ ": ENTITY WITH NAME " + srcEntityName + " DOES NOT EXIST");
 
 			while (entNamesIter.hasNext())
 			{
 				String targetEntityName = entNamesIter.next();
 				int size = associations.size();
-                EntityInterface targetEntity = entityGroup
-                        .getEntityByName(getEntityNameExcludingAssociationRoleName(
-                                targetEntityName));
+				EntityInterface targetEntity = entityGroup
+						.getEntityByName(getEntityNameExcludingAssociationRoleName(targetEntityName));
 				addAssociation(sourceEntity, targetEntity, associationRoleName, associations);
 
 				// Add all parent entity associations also to the list.
 				EntityInterface parentEntity = sourceEntity.getParentEntity();
 				while (parentEntity != null)
 				{
-                    addAssociation(parentEntity, targetEntity,
-                            associationRoleName, associations);
+					addAssociation(parentEntity, targetEntity, associationRoleName, associations);
 
 					parentEntity = parentEntity.getParentEntity();
 				}
@@ -386,17 +382,17 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * Adds the association.
-     *
-     * @param sourceEntity
-     *            the source entity
-     * @param targetEntity
-     *            the target entity
-     * @param associationRoleName
-     *            the association role name
-     * @param associations
-     *            the associations
-     */
+	 * Adds the association.
+	 *
+	 * @param sourceEntity
+	 *            the source entity
+	 * @param targetEntity
+	 *            the target entity
+	 * @param associationRoleName
+	 *            the association role name
+	 * @param associations
+	 *            the associations
+	 */
 	private static void addAssociation(EntityInterface sourceEntity, EntityInterface targetEntity,
 			String associationRoleName, List<AssociationInterface> associations)
 	{
@@ -404,10 +400,8 @@ public class CategoryGenerationUtil
 		{
 			if (association.getTargetEntity().equals(targetEntity))
 			{
-                if (associationRoleName != null
-                        && associationRoleName.length() > 0
-                        && associationRoleName.equals(association
-                                .getTargetRole().getName()))
+				if (associationRoleName != null && associationRoleName.length() > 0
+						&& associationRoleName.equals(association.getTargetRole().getName()))
 				{
 					associations.add(association);
 					break;
@@ -422,13 +416,13 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * Gets the entity name excluding association role name.
-     *
-     * @param entityName
-     *            the entity name
-     * @return the entity name excluding association role name
-     * @return
-     */
+	 * Gets the entity name excluding association role name.
+	 *
+	 * @param entityName
+	 *            the entity name
+	 * @return the entity name excluding association role name
+	 * @return
+	 */
 	public static String getEntityNameExcludingAssociationRoleName(String entityName)
 	{
 		String newEntityName = entityName;
@@ -441,13 +435,13 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * Gets the association role name.
-     *
-     * @param entityName
-     *            the entity name
-     * @return the association role name
-     * @return
-     */
+	 * Gets the association role name.
+	 *
+	 * @param entityName
+	 *            the entity name
+	 * @return the association role name
+	 * @return
+	 */
 	public static String getAssociationRoleName(String entityName)
 	{
 		String associationRoleName = "";
@@ -460,13 +454,13 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * Gets the full association role name.
-     *
-     * @param entityName
-     *            the entity name
-     * @return the full association role name
-     * @return
-     */
+	 * Gets the full association role name.
+	 *
+	 * @param entityName
+	 *            the entity name
+	 * @return the full association role name
+	 * @return
+	 */
 	public static String getFullAssociationRoleName(String entityName)
 	{
 		String associationRoleName = "";
@@ -479,15 +473,15 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * This method gets the relative path.
-     *
-     * @param entityNameList
-     *            ordered entities names in the path
-     * @param pathMap
-     *            the path map
-     * @return the relative path
-     * @return
-     */
+	 * This method gets the relative path.
+	 *
+	 * @param entityNameList
+	 *            ordered entities names in the path
+	 * @param pathMap
+	 *            the path map
+	 * @return the relative path
+	 * @return
+	 */
 	public static List<String> getRelativePath(List<String> entityNameList,
 			Map<String, List<String>> pathMap)
 	{
@@ -513,15 +507,15 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * Returns the entity group used for careting this category.
-     *
-     * @param category
-     *            the category
-     * @param entityGroupName
-     *            the entity group name
-     * @return the entity group
-     * @return
-     */
+	 * Returns the entity group used for careting this category.
+	 *
+	 * @param category
+	 *            the category
+	 * @param entityGroupName
+	 *            the entity group name
+	 * @return the entity group
+	 * @return
+	 */
 	public static EntityGroupInterface getEntityGroup(CategoryInterface category,
 			String entityGroupName)
 	{
@@ -537,13 +531,13 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * This method finds the main category entity.
-     *
-     * @param categoryPaths
-     *            the category paths
-     * @return the main category entity name
-     * @return
-     */
+	 * This method finds the main category entity.
+	 *
+	 * @param categoryPaths
+	 *            the category paths
+	 * @return the main category entity name
+	 * @return
+	 */
 	public static String getMainCategoryEntityName(String[] categoryPaths)
 	{
 		int minNumOfCategoryEntityNames = categoryPaths[0].split("->").length;
@@ -573,13 +567,13 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * category names in CSV are of format <entity_name>[instance_Number].
-     *
-     * @param categoryNameInCSV
-     *            the category name in csv
-     * @return the entity name
-     * @return
-     */
+	 * category names in CSV are of format <entity_name>[instance_Number].
+	 *
+	 * @param categoryNameInCSV
+	 *            the category name in csv
+	 * @return the entity name
+	 * @return
+	 */
 	public static String getEntityName(String categoryNameInCSV)
 	{
 		return getEntityNameExcludingAssociationRoleName(categoryNameInCSV.substring(0,
@@ -587,13 +581,13 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * category names in CSV are of format <entity_name>[instance_Number].
-     *
-     * @param categoryEntityInstancePath
-     *            the category entity instance path
-     * @return the entity name for association map
-     * @return
-     */
+	 * category names in CSV are of format <entity_name>[instance_Number].
+	 *
+	 * @param categoryEntityInstancePath
+	 *            the category entity instance path
+	 * @return the entity name for association map
+	 * @return
+	 */
 	public static String getEntityNameForAssociationMap(String categoryEntityInstancePath)
 	{
 		StringBuffer entityNameForAssociationMap = new StringBuffer();
@@ -608,13 +602,13 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * category names in CSV are of format <entity_name>[instance_Number].
-     *
-     * @param categoryEntityInstancePath
-     *            the category entity instance path
-     * @return the category entity name
-     * @return
-     */
+	 * category names in CSV are of format <entity_name>[instance_Number].
+	 *
+	 * @param categoryEntityInstancePath
+	 *            the category entity instance path
+	 * @return the category entity name
+	 * @return
+	 */
 	public static String getCategoryEntityName(String categoryEntityInstancePath)
 	{
 		StringBuffer entityNameForAssociationMap = new StringBuffer();
@@ -653,13 +647,13 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * category names in CSV are of format <entity_name>[instance_Number].
-     *
-     * @param categoryEntityInstancePath
-     *            the category entity instance path
-     * @return the entity name from category entity instance path
-     * @return
-     */
+	 * category names in CSV are of format <entity_name>[instance_Number].
+	 *
+	 * @param categoryEntityInstancePath
+	 *            the category entity instance path
+	 * @return the entity name from category entity instance path
+	 * @return
+	 */
 	public static String getEntityNameFromCategoryEntityInstancePath(
 			String categoryEntityInstancePath)
 	{
@@ -674,13 +668,13 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * category names in CSV are of format <entity_name>[instance_Number].
-     *
-     * @param assoList
-     *            the asso list
-     * @return the entity from entity association map
-     * @return
-     */
+	 * category names in CSV are of format <entity_name>[instance_Number].
+	 *
+	 * @param assoList
+	 *            the asso list
+	 * @return the entity from entity association map
+	 * @return
+	 */
 	public static EntityInterface getEntityFromEntityAssociationMap(
 			List<AssociationInterface> assoList)
 	{
@@ -694,19 +688,19 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * Sets the default value for calculated attributes.
-     *
-     * @param category
-     *            the category
-     * @param rootCatEntity
-     *            the root cat entity
-     * @param lineNumber
-     *            the line number
-     * @throws DynamicExtensionsApplicationException
-     *             the dynamic extensions application exception
-     * @throws DynamicExtensionsSystemException
-     *             the dynamic extensions system exception
-     */
+	 * Sets the default value for calculated attributes.
+	 *
+	 * @param category
+	 *            the category
+	 * @param rootCatEntity
+	 *            the root cat entity
+	 * @param lineNumber
+	 *            the line number
+	 * @throws DynamicExtensionsApplicationException
+	 *             the dynamic extensions application exception
+	 * @throws DynamicExtensionsSystemException
+	 *             the dynamic extensions system exception
+	 */
 	public static void setDefaultValueForCalculatedAttributes(CategoryInterface category,
 			CategoryEntityInterface rootCatEntity, Long lineNumber)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
@@ -740,21 +734,21 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * Gets the category attribute.
-     *
-     * @param entityName
-     *            the entity name
-     * @param instanceNumber
-     *            the instance number
-     * @param attributeName
-     *            the attribute name
-     * @param rootCatEntity
-     *            the root cat entity
-     * @param attributes
-     *            the attributes
-     * @return the category attribute
-     * @return
-     */
+	 * Gets the category attribute.
+	 *
+	 * @param entityName
+	 *            the entity name
+	 * @param instanceNumber
+	 *            the instance number
+	 * @param attributeName
+	 *            the attribute name
+	 * @param rootCatEntity
+	 *            the root cat entity
+	 * @param attributes
+	 *            the attributes
+	 * @return the category attribute
+	 * @return
+	 */
 	public static void getCategoryAttribute(String entityName, Long instanceNumber,
 			String attributeName, CategoryEntityInterface rootCatEntity,
 			List<CategoryAttributeInterface> attributes)
@@ -789,17 +783,17 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * setDefaultValueforCalculatedAttributes.
-     *
-     * @param categoryAttribute
-     *            the category attribute
-     * @param categoryInterface
-     *            the category interface
-     * @throws DynamicExtensionsApplicationException
-     *             the dynamic extensions application exception
-     * @throws DynamicExtensionsSystemException
-     *             the dynamic extensions system exception
-     */
+	 * setDefaultValueforCalculatedAttributes.
+	 *
+	 * @param categoryAttribute
+	 *            the category attribute
+	 * @param categoryInterface
+	 *            the category interface
+	 * @throws DynamicExtensionsApplicationException
+	 *             the dynamic extensions application exception
+	 * @throws DynamicExtensionsSystemException
+	 *             the dynamic extensions system exception
+	 */
 	private static void setDefaultValue(CategoryAttributeInterface categoryAttribute,
 			CategoryInterface categoryInterface) throws DynamicExtensionsApplicationException,
 			DynamicExtensionsSystemException
@@ -885,18 +879,18 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * category names in CSV are of format <entity_name>[instance_Number] This
-     * method will generate category entity names according to the path.
-     *
-     * @param categoryEntityInstancePath
-     *            the category entity instance path
-     * @param entityNameAssociationMap
-     *            the entity name association map
-     * @return the category entity name
-     * @throws DynamicExtensionsSystemException
-     *             the dynamic extensions system exception
-     * @return
-     */
+	 * category names in CSV are of format <entity_name>[instance_Number] This
+	 * method will generate category entity names according to the path.
+	 *
+	 * @param categoryEntityInstancePath
+	 *            the category entity instance path
+	 * @param entityNameAssociationMap
+	 *            the entity name association map
+	 * @return the category entity name
+	 * @throws DynamicExtensionsSystemException
+	 *             the dynamic extensions system exception
+	 * @return
+	 */
 	public static String getCategoryEntityName(String categoryEntityInstancePath,
 			Map<String, List<AssociationInterface>> entityNameAssociationMap)
 			throws DynamicExtensionsSystemException
@@ -946,13 +940,13 @@ public class CategoryGenerationUtil
 	}
 
 	/**
-     * Format instance.
-     *
-     * @param insatnce
-     *            the insatnce
-     * @return the object
-     * @return
-     */
+	 * Format instance.
+	 *
+	 * @param insatnce
+	 *            the insatnce
+	 * @return the object
+	 * @return
+	 */
 	private static Object formatInstance(Long insatnce)
 	{
 		StringBuffer categoryEntityName = new StringBuffer();
@@ -1173,7 +1167,6 @@ public class CategoryGenerationUtil
 							categoryFileParser.closeResources();
 						}
 					}
-
 
 				}
 			}
