@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import org.owasp.stinger.Stinger;
 
@@ -153,12 +153,12 @@ public class ImportPermissibleValues
 							presentPVs.add(permissibleValue.getValueAsObject().toString());
 						}
 
-						Set<String> pvListKeySet = pvList.keySet();
-						for (String string : pvListKeySet)
+						for (Entry<String, Collection<SemanticPropertyInterface>> entryObject : pvList
+								.entrySet())
 						{
-							if (!presentPVs.contains(string))
+							if (!presentPVs.contains(entryObject.getKey()))
 							{
-								finalPVs.put(string, pvList.get(string));
+								finalPVs.put(entryObject.getKey(), entryObject.getValue());
 							}
 						}
 						presentPVs.clear();

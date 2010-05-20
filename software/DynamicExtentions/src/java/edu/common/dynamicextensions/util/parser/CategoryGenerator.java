@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.owasp.stinger.Stinger;
 
@@ -523,13 +524,12 @@ public class CategoryGenerator
 			final String entityName)
 	{
 		String categoryEntityName = null;
-		for (final String name : categoryEntityNameInstanceMap.keySet())
+		for (Entry<String, String> entryObject : categoryEntityNameInstanceMap.entrySet())
 		{
 			if (entityName.equals(CategoryGenerationUtil
-					.getEntityNameFromCategoryEntityInstancePath(categoryEntityNameInstanceMap
-							.get(name))))
+					.getEntityNameFromCategoryEntityInstancePath(entryObject.getValue())))
 			{
-				categoryEntityName = name;
+				categoryEntityName = entryObject.getKey();
 			}
 		}
 		return categoryEntityName;
