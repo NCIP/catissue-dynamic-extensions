@@ -10,7 +10,9 @@ import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.AbstractContainmentControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.entitymanager.CategoryManager;
 import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
@@ -69,6 +71,7 @@ public class LoadDataEntryFormProcessor
 
 		if (valueMap != null && !valueMap.isEmpty())
 		{
+			cleanContainer(containerInterface);
 			containerInterface.setContainerValueMap(valueMap);
 		}
 		List processedContainersList = new ArrayList<ContainerInterface>();
@@ -95,6 +98,23 @@ public class LoadDataEntryFormProcessor
 			dataEntryForm.setRecordIdentifier(recordIdentifier);
 		}
 		return containerInterface;
+	}
+
+	/**
+	 * This method clears the value maps attached to the child containers
+	 * @param containerInterface container object
+	 */
+	private void cleanContainer(ContainerInterface containerInterface)
+	{
+		for (ControlInterface controlInterface : containerInterface.getControlCollection())
+		{
+			if (controlInterface instanceof AbstractContainmentControlInterface)
+			{
+				((AbstractContainmentControlInterface) controlInterface)
+						.getContainer()
+						.setContainerValueMap(new HashMap<BaseAbstractAttributeInterface, Object>());
+			}
+		}
 	}
 
 	/**
