@@ -514,5 +514,34 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 		return categoryList;
 	}
-
+	public void testInsertDataForAllCategoriesForBO()
+	{
+		Map<CategoryInterface, Exception> failedCatVsException = new HashMap<CategoryInterface, Exception>();
+		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
+		List<CategoryInterface> categoryList = getAllCategories();
+		for (CategoryInterface category : categoryList)
+		{
+			try
+			{
+				System.out.println("testInsertDataForAllCategoriesForBO:Inserting record for "
+						+ category.getName());
+				Map<Long, Object> dataValue;
+				CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
+				dataValue = mapGenerator.createIdToValueMapForCategory(rootCatEntity, 0);
+				long recordId = categoryManager.insertData(category.getId(), dataValue);
+				System.out
+						.println("testInsertDataForAllCategoriesForBO: Record inserted succesfully for "
+								+ category.getName() + " RecordId " + recordId);
+			}
+			catch (Exception e)
+			{
+				System.out
+						.println("testInsertDataForAllCategoriesForBO: Record Insertion failed for Category "
+								+ category.getName());
+				failedCatVsException.put(category, e);
+			}
+		}
+		printFailedCategoryReport(failedCatVsException,
+				"testInsertDataForAllCategoriesForBO: Record Insertion failed for Category ");
+	}
 }

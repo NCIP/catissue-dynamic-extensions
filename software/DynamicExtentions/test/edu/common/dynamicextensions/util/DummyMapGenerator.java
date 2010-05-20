@@ -23,15 +23,21 @@ import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.FileAttributeRecordValue;
 import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.StringAttributeTypeInformation;
+import edu.common.dynamicextensions.domain.UserDefinedDE;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
+import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.NumericTypeInformationInterface;
+import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.EnumeratedControlInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleParameterInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
@@ -74,6 +80,8 @@ public class DummyMapGenerator
 			DynamicExtensionsSystemException
 	{
 		Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
+		ContainerInterface containerInterface = (ContainerInterface) rootCatEntity
+				.getContainerCollection().toArray()[0];
 		for (CategoryAttributeInterface catAtt : rootCatEntity.getAllCategoryAttributes())
 		{
 			// put the different value for diff attribute type
@@ -81,7 +89,7 @@ public class DummyMapGenerator
 					&& !catAtt.getIsRelatedAttribute())
 			{
 				AttributeInterface attribute = (AttributeInterface) catAtt.getAbstractAttribute();
-				updateDataMap(dataValue, catAtt, attribute, mapStrategry);
+				updateDataMap(dataValue, catAtt, attribute, mapStrategry, containerInterface);
 			}
 			else if (!catAtt.getIsRelatedAttribute())
 			{
@@ -96,7 +104,7 @@ public class DummyMapGenerator
 				for (int i = 0; i < 2; i++)
 				{
 					updateDataMap(multiSelectDataValue, multiselectAttr, multiselectAttr,
-							mapStrategry);
+							mapStrategry, containerInterface);
 				}
 				List multiselctValueList = new ArrayList();
 				multiselctValueList.add(multiSelectDataValue);
@@ -119,35 +127,52 @@ public class DummyMapGenerator
 	}
 
 	private void updateDataMap(Map dataValue, BaseAbstractAttributeInterface catAtt,
-			AttributeInterface attribute, int mapStrategry) throws ParseException,
-			DynamicExtensionsSystemException
+			AttributeInterface attribute, int mapStrategry, ContainerInterface containerInterface)
+			throws ParseException, DynamicExtensionsSystemException
 	{
-		if (attribute.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
+		ControlInterface control = DynamicExtensionsUtility.getControlForAbstractAttribute(
+				(AttributeMetadataInterface) catAtt, containerInterface);
+		if (control instanceof EnumeratedControlInterface)
 		{
-
-			String value = getDateValueForAttribute(catAtt, mapStrategry);
-			dataValue.put(catAtt, value);
-		}
-		else if (attribute.getAttributeTypeInformation() instanceof NumericTypeInformationInterface)
-		{
-			String value = getNumericValueForAttribute(catAtt, mapStrategry);
-			dataValue.put(catAtt, value);
-		}
-		else if (attribute.getAttributeTypeInformation() instanceof BooleanAttributeTypeInformation)
-		{
-			dataValue.put(catAtt, "true");
-		}
-		else if (attribute.getAttributeTypeInformation() instanceof StringAttributeTypeInformation)
-		{
-			dataValue.put(catAtt, "test");
-		}
-		else if (attribute.getAttributeTypeInformation() instanceof FileAttributeTypeInformation)
-		{
-			dataValue.put(catAtt, getFileRecordValueForAttribute());
+			AttributeMetadataInterface attributeInterface = (AttributeMetadataInterface) catAtt;
+			if (attributeInterface.getDataElement() != null)
+			{
+				for (PermissibleValueInterface permissibleValue : ((UserDefinedDE) ((AttributeMetadataInterface) catAtt)
+						.getDataElement()).getPermissibleValueCollection())
+				{
+					dataValue.put(catAtt, permissibleValue.getValueAsObject().toString());
+				}
+			}
 		}
 		else
 		{
-			dataValue.put(catAtt, "test String for other data type");
+			if (attribute.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
+			{
+
+				String value = getDateValueForAttribute(catAtt, mapStrategry);
+				dataValue.put(catAtt, value);
+			}
+			else if (attribute.getAttributeTypeInformation() instanceof NumericTypeInformationInterface)
+			{
+				String value = getNumericValueForAttribute(catAtt, mapStrategry);
+				dataValue.put(catAtt, value);
+			}
+			else if (attribute.getAttributeTypeInformation() instanceof BooleanAttributeTypeInformation)
+			{
+				dataValue.put(catAtt, "true");
+			}
+			else if (attribute.getAttributeTypeInformation() instanceof StringAttributeTypeInformation)
+			{
+				dataValue.put(catAtt, "test");
+			}
+			else if (attribute.getAttributeTypeInformation() instanceof FileAttributeTypeInformation)
+			{
+				dataValue.put(catAtt, getFileRecordValueForAttribute());
+			}
+			else
+			{
+				dataValue.put(catAtt, "test String for other data type");
+			}
 		}
 	}
 
@@ -204,13 +229,15 @@ public class DummyMapGenerator
 			DynamicExtensionsSystemException
 	{
 		Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
+		ContainerInterface containerInterface = (ContainerInterface) rootEntity
+				.getContainerCollection().toArray()[0];
 		for (AbstractAttributeInterface abstractAttribute : rootEntity.getAllAttributes())
 		{
 			// put the different value for diff attribute type
 			if (abstractAttribute instanceof AttributeInterface)
 			{
 				AttributeInterface attribute = (AttributeInterface) abstractAttribute;
-				updateDataMap(dataValue, attribute, attribute, mapStrategry);
+				updateDataMap(dataValue, attribute, attribute, mapStrategry, containerInterface);
 
 			}
 		}
@@ -472,5 +499,126 @@ public class DummyMapGenerator
 			}
 		}
 
+	}
+
+	/**
+	 * This method will create the Data Value map(Id to value map) for the Given Category Entity .
+	 * It will put some hard coded values for the different attributes as follows.
+	 * Date Attribute  = current date,
+	 * Numeric Attribute = 15
+	 * Boolean attribute = true.
+	 * String attribute  = test String.
+	 * other attribute = test String for other data type
+	 * If the range is specified on the attribute then depending on the mapStrategry varible the values will
+	 * be put.
+	 * e.g if mapStrategry = 0 then min range value is used.
+	 * if mapStrategry < 0 then value less than min range value is used.
+	 * if mapStrategry > 0 then value greater than max range value is used
+	 * @param rootCatEntity the root category entity for which to generate the map
+	 * @param mapStrategry map generation strategy
+	 * @return generated map.
+	 * @throws ParseException
+	 * @throws DynamicExtensionsSystemException
+	 */
+	public Map<Long, Object> createIdToValueMapForCategory(CategoryEntityInterface rootCatEntity,
+			int mapStrategry) throws ParseException, DynamicExtensionsSystemException
+	{
+		Map<Long, Object> dataValue = new HashMap<Long, Object>();
+		ContainerInterface containerInterface = (ContainerInterface) rootCatEntity
+				.getContainerCollection().toArray()[0];
+		for (CategoryAttributeInterface catAtt : rootCatEntity.getAllCategoryAttributes())
+		{
+			// put the different value for diff attribute type
+			if (catAtt.getAbstractAttribute() instanceof AttributeInterface
+					&& !catAtt.getIsRelatedAttribute())
+			{
+				AttributeInterface attribute = (AttributeInterface) catAtt.getAbstractAttribute();
+				updateDataMapForIdValue(dataValue, catAtt, attribute, mapStrategry,
+						containerInterface);
+			}
+			else if (!catAtt.getIsRelatedAttribute())
+			{
+				//multiselect case.
+				AssociationInterface association = (AssociationInterface) catAtt
+						.getAbstractAttribute();
+				AttributeInterface multiselectAttr = (AttributeInterface) EntityManagerUtil
+						.filterSystemAttributes(
+								association.getTargetEntity().getAllAbstractAttributes())
+						.iterator().next();
+				Map<Long, Object> multiSelectDataValue = new HashMap<Long, Object>();
+				for (int i = 0; i < 2; i++)
+				{
+					updateDataMapForIdValue(multiSelectDataValue, multiselectAttr, multiselectAttr,
+							mapStrategry, containerInterface);
+				}
+				List multiselctValueList = new ArrayList();
+				multiselctValueList.add(multiSelectDataValue);
+				dataValue.put(catAtt.getId(), multiselctValueList);
+			}
+		}
+		for (CategoryAssociationInterface catAssociation : rootCatEntity
+				.getCategoryAssociationCollection())
+		{
+			List dataList = new ArrayList();
+			CategoryEntityInterface targetCaEntity = catAssociation.getTargetCategoryEntity();
+			dataList.add(createIdToValueMapForCategory(targetCaEntity, mapStrategry));
+			if (targetCaEntity.getNumberOfEntries().equals(-1))
+			{
+				dataList.add(createIdToValueMapForCategory(targetCaEntity, mapStrategry));
+			}
+			dataValue.put(catAssociation.getId(), dataList);
+		}
+		return dataValue;
+	}
+
+	private void updateDataMapForIdValue(Map<Long, Object> dataValue,
+			BaseAbstractAttributeInterface catAtt, AttributeInterface attribute, int mapStrategry,
+			ContainerInterface containerInterface) throws ParseException,
+			DynamicExtensionsSystemException
+	{
+		ControlInterface control = DynamicExtensionsUtility.getControlForAbstractAttribute(
+				(AttributeMetadataInterface) catAtt, containerInterface);
+		if (control instanceof EnumeratedControlInterface)
+		{
+			AttributeMetadataInterface attributeInterface = (AttributeMetadataInterface) catAtt;
+			if (attributeInterface.getDataElement() != null)
+			{
+				for (PermissibleValueInterface permissibleValue : ((UserDefinedDE) ((AttributeMetadataInterface) catAtt)
+						.getDataElement()).getPermissibleValueCollection())
+				{
+					dataValue.put(catAtt.getId(), permissibleValue.getValueAsObject().toString());
+				}
+			}
+		}
+		else
+		{
+			if (attribute.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
+			{
+
+				String value = getDateValueForAttribute(catAtt, mapStrategry);
+				dataValue.put(catAtt.getId(), value);
+			}
+			else if (attribute.getAttributeTypeInformation() instanceof NumericTypeInformationInterface)
+			{
+				String value = getNumericValueForAttribute(catAtt, mapStrategry);
+				dataValue.put(catAtt.getId(), value);
+			}
+			else if (attribute.getAttributeTypeInformation() instanceof BooleanAttributeTypeInformation)
+			{
+				dataValue.put(catAtt.getId(), "true");
+			}
+			else if (attribute.getAttributeTypeInformation() instanceof StringAttributeTypeInformation)
+			{
+				dataValue.put(catAtt.getId(), "test");
+			}
+			else if (attribute.getAttributeTypeInformation() instanceof FileAttributeTypeInformation)
+			{
+				dataValue.put(catAtt.getId(), getFileRecordValueForAttribute());
+			}
+			else
+			{
+				dataValue.put(catAtt.getId(), "test String for other data type");
+			}
+		}
 	}
 }
