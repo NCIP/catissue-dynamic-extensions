@@ -64,6 +64,7 @@ import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.validation.ValidatorUtil;
 import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.exception.DAOException;
 
 /**
  * It populates the Attribute values entered in the dynamically generated controls.
@@ -753,6 +754,11 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
                     throw new DynamicExtensionsSystemException(
                             "Error while fetching file from Database", e);
                 }
+				catch (DAOException e)
+				{
+					throw new DynamicExtensionsSystemException(
+                            "Error while fetching file from Database", e);
+				}
 			}
 		}
 		else if (control instanceof ComboBoxInterface)

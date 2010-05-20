@@ -93,10 +93,11 @@ public class UploadFileToDB extends BaseDynamicExtensionsAction
 	 * @param identifier the identifier
 	 * @param responseList the response list
 	 * @param contentType the content type
+	 * @throws DynamicExtensionsSystemException
 	 *
 	 */
 	private void updateResponse(HttpServletResponse response, long identifier,
-			List<JSONObject> responseList, String contentType)
+			List<JSONObject> responseList, String contentType) throws DynamicExtensionsSystemException
 	{
 		try
 		{
@@ -110,12 +111,12 @@ public class UploadFileToDB extends BaseDynamicExtensionsAction
 		catch (IOException e)
 		{
 			LOGGER.info("Error occured while writing response object");
-			new DynamicExtensionsSystemException("Exception occured while uploading file.", e);
+			throw new DynamicExtensionsSystemException("Exception occured while uploading file.", e);
 		}
 		catch (JSONException e)
 		{
 			LOGGER.info("Error occured while writing JSON object in response");
-			new DynamicExtensionsSystemException("Exception occured while uploading file.", e);
+			throw new DynamicExtensionsSystemException("Exception occured while uploading file.", e);
 		}
 	}
 }

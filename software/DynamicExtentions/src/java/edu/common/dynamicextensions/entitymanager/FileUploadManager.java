@@ -133,9 +133,10 @@ public class FileUploadManager implements DynamicExtensionsQueryBuilderConstants
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 * @throws SQLException
+	 * @throws DAOException
 	 */
 	public byte[] getFilefromDatabase(long identifier) throws DynamicExtensionsSystemException,
-			SQLException
+			SQLException, DAOException
 	{
 		ResultSet resultSet = null;
 		Blob fileValue = null;
@@ -172,10 +173,11 @@ public class FileUploadManager implements DynamicExtensionsQueryBuilderConstants
 		catch (DAOException e)
 		{
 			LOGGER.info("Error occured while retrieving file database.", e);
-			new DynamicExtensionsSystemException(e.getMessage());
+			throw new DynamicExtensionsSystemException(e.getMessage());
 		}
 		finally
 		{
+			jdbcDao.closeStatement(resultSet);
 			resultSet.close();
 			DynamicExtensionsUtility.closeDAO(jdbcDao);
 		}
