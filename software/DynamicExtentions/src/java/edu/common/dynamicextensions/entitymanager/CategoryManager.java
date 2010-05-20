@@ -3213,6 +3213,11 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				break;
 			}
 		}
+		if (hookAssociation == null)
+		{
+			throw new DynamicExtensionsSystemException(entity.getName()
+					+ " is not hooked with the given static entity id" + recordEntryStaticId);
+		}
 		String hookColName = hookAssociation.getConstraintProperties()
 				.getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties().getName();
 		String query = "select " + hookColName + " from " + entity.getTableProperties().getName()

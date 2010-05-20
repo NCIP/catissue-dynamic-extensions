@@ -34,32 +34,32 @@ import edu.wustl.dao.exception.DAOException;
 public class RemovePVValues
 {
 
-    /**
-     * The Constant STR_DELSTRCONPV.
-     */
-    private static final String STR_DELSTRCONPV = "delete from DYEXTN_STRING_CONCEPT_VALUE" +
-    		" where identifier=";
+	/**
+	 * The Constant STR_DELSTRCONPV.
+	 */
+	private static final String STR_DELSTRCONPV = "delete from DYEXTN_STRING_CONCEPT_VALUE"
+			+ " where identifier=";
 
-    /**
-     * The Constant STR_DELPV.
-     */
-    private static final String STR_DELPV = "delete from DYEXTN_PERMISSIBLE_VALUE  where identifier=";
+	/**
+	 * The Constant STR_DELPV.
+	 */
+	private static final String STR_DELPV = "delete from DYEXTN_PERMISSIBLE_VALUE  where identifier=";
 
-    /**
-     * The Constant STR_USRDEFDEREL.
-     */
-    private static final String STR_USRDEFDEREL = "delete from DYEXTN_USERDEF_DE_VALUE_REL " +
-    		"where PERMISSIBLE_VALUE_ID=";
+	/**
+	 * The Constant STR_USRDEFDEREL.
+	 */
+	private static final String STR_USRDEFDEREL = "delete from DYEXTN_USERDEF_DE_VALUE_REL "
+			+ "where PERMISSIBLE_VALUE_ID=";
 
-    /**
-     * The Constant STR_USRDEFDE.
-     */
-    private static final String STR_USRDEFDE = "delete from DYEXTN_USERDEFINED_DE where identifier=";
+	/**
+	 * The Constant STR_USRDEFDE.
+	 */
+	private static final String STR_USRDEFDE = "delete from DYEXTN_USERDEFINED_DE where identifier=";
 
-    /**
-     * The Constant STR_DATAELE.
-     */
-    private static final String STR_DATAELE = "delete from DYEXTN_DATA_ELEMENT where identifier=";
+	/**
+	 * The Constant STR_DATAELE.
+	 */
+	private static final String STR_DATAELE = "delete from DYEXTN_DATA_ELEMENT where identifier=";
 
 	static
 	{
@@ -67,11 +67,11 @@ public class RemovePVValues
 	}
 
 	/**
-     * main method.
-     *
-     * @param args
-     *            command line arguments
-     */
+	 * main method.
+	 *
+	 * @param args
+	 *            command line arguments
+	 */
 	public static void main(String[] args)
 	{
 
@@ -80,11 +80,11 @@ public class RemovePVValues
 	}
 
 	/**
-     * Removes the.
-     *
-     * @param args
-     *            the args
-     */
+	 * Removes the.
+	 *
+	 * @param args
+	 *            the args
+	 */
 	private void remove(String[] args)
 	{
 		if (args != null)
@@ -107,81 +107,76 @@ public class RemovePVValues
 	}
 
 	/**
-     * Removes the pv.
-     *
-     * @param entitygroupName
-     *            the entitygroup name
-     * @param entityName
-     *            the entity name
-     * @param attributeName
-     *            the attribute name
-     * @param filePath
-     *            the file path
-     * @throws DynamicExtensionsSystemException
-     *             the dynamic extensions system exception
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
-     */
+	 * Removes the pv.
+	 *
+	 * @param entitygroupName
+	 *            the entitygroup name
+	 * @param entityName
+	 *            the entity name
+	 * @param attributeName
+	 *            the attribute name
+	 * @param filePath
+	 *            the file path
+	 * @throws DynamicExtensionsSystemException
+	 *             the dynamic extensions system exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	private void removePV(String entitygroupName, String entityName, String attributeName,
 			String filePath) throws DynamicExtensionsSystemException, IOException
-    {
+	{
 
-        EntityManagerInterface entityManager = EntityManager.getInstance();
-        Long entityGroupId = entityManager.getEntityGroupId(entitygroupName);
-        Long entityId = entityManager.getEntityId(entityName, entityGroupId);
-        Long attributeId = entityManager
-                .getAttributeId(attributeName, entityId);
-        Long dataElementId = entityManager.getAttributeTypeInformation(
-                attributeId).getDataElement().getId();
-        AttributeTypeInformationInterface attrTypeInfo = entityManager
-                .getAttributeTypeInformation(attributeId);
-        UserDefinedDEInterface userDefinedDE = (UserDefinedDEInterface) attrTypeInfo
-                .getDataElement();
-        List<String> delPVList = getDeletePVList(filePath);
+		EntityManagerInterface entityManager = EntityManager.getInstance();
+		Long entityGroupId = entityManager.getEntityGroupId(entitygroupName);
+		Long entityId = entityManager.getEntityId(entityName, entityGroupId);
+		Long attributeId = entityManager.getAttributeId(attributeName, entityId);
+		Long dataElementId = entityManager.getAttributeTypeInformation(attributeId)
+				.getDataElement().getId();
+		AttributeTypeInformationInterface attrTypeInfo = entityManager
+				.getAttributeTypeInformation(attributeId);
+		UserDefinedDEInterface userDefinedDE = (UserDefinedDEInterface) attrTypeInfo
+				.getDataElement();
+		List<String> delPVList = getDeletePVList(filePath);
 
-        Logger.out.info("The total no. of PVs to be deleted :"
-                + delPVList.size());
-        Collection<PermissibleValueInterface> prevPVValues = userDefinedDE
-                .getPermissibleValueCollection();
+		Logger.out.info("The total no. of PVs to be deleted :" + delPVList.size());
+		Collection<PermissibleValueInterface> prevPVValues = userDefinedDE
+				.getPermissibleValueCollection();
 
-        List<String> sqlList = addToSQLList(filePath, userDefinedDE,
-                delPVList, prevPVValues);
-        if ("none".equals(filePath))
-        {
-            // Also remove UserdefinedDE and data element
-            sqlList.add(STR_USRDEFDE + userDefinedDE.getId());
-            sqlList.add(STR_DATAELE + userDefinedDE.getId());
+		List<String> sqlList = addToSQLList(filePath, userDefinedDE, delPVList, prevPVValues);
+		if ("none".equals(filePath))
+		{
+			// Also remove UserdefinedDE and data element
+			sqlList.add(STR_USRDEFDE + userDefinedDE.getId());
+			sqlList.add(STR_DATAELE + userDefinedDE.getId());
 
-        }
-        Logger.out.info("Removing PV values from" + entitygroupName
-                + " entityGroupId: " + entityGroupId);
-        Logger.out.info("entityName: " + entityName + " entityId: " + entityId);
-        Logger.out.info("attributeName: " + attributeName + " attributeId: "
-                + attributeId);
-        Logger.out.info("dataElementId: " + dataElementId);
-        executeSQL(sqlList);
-        Logger.out.info("Removed PVs successfully");
+		}
+		Logger.out.info("Removing PV values from" + entitygroupName + " entityGroupId: "
+				+ entityGroupId);
+		Logger.out.info("entityName: " + entityName + " entityId: " + entityId);
+		Logger.out.info("attributeName: " + attributeName + " attributeId: " + attributeId);
+		Logger.out.info("dataElementId: " + dataElementId);
+		executeSQL(sqlList);
+		Logger.out.info("Removed PVs successfully");
 
-    }
+	}
 
-    /**
-     * Adds the to sql list.
-     *
-     * @param filePath
-     *            the file path
-     * @param userDefinedDE
-     *            the user defined de
-     * @param delPVList
-     *            the del pv list
-     * @param prevPVValues
-     *            the prev pv values
-     * @return the list
-     */
-    private List<String> addToSQLList(String filePath,
-            UserDefinedDEInterface userDefinedDE, List<String> delPVList,
-            Collection<PermissibleValueInterface> prevPVValues)
-    {
-        List<String> sqlList = new ArrayList<String>();
+	/**
+	 * Adds the to sql list.
+	 *
+	 * @param filePath
+	 *            the file path
+	 * @param userDefinedDE
+	 *            the user defined de
+	 * @param delPVList
+	 *            the del pv list
+	 * @param prevPVValues
+	 *            the prev pv values
+	 * @return the list
+	 */
+	private List<String> addToSQLList(String filePath, UserDefinedDEInterface userDefinedDE,
+			List<String> delPVList, Collection<PermissibleValueInterface> prevPVValues)
+	{
+		List<String> sqlList = new ArrayList<String>();
 		for (PermissibleValueInterface permissibleValue : prevPVValues)
 		{
 			for (String delPVValue : delPVList)
@@ -208,53 +203,59 @@ public class RemovePVValues
 			}
 
 		}
-        return sqlList;
-    }
+		return sqlList;
+	}
 
-    /**
-     * Gets the delete pv list.
-     *
-     * @param filePath
-     *            the file path
-     * @return the delete pv list
-     * @throws DynamicExtensionsSystemException
-     *             the dynamic extensions system exception
-     * @throws FileNotFoundException
-     *             the file not found exception
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
-     */
-    private List<String> getDeletePVList(String filePath)
-            throws DynamicExtensionsSystemException, FileNotFoundException,
-            IOException
-    {
-        ArrayList<String> delPVList = new ArrayList<String>();
+	/**
+	 * Gets the delete pv list.
+	 *
+	 * @param filePath
+	 *            the file path
+	 * @return the delete pv list
+	 * @throws DynamicExtensionsSystemException
+	 *             the dynamic extensions system exception
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	private List<String> getDeletePVList(String filePath) throws DynamicExtensionsSystemException,
+			FileNotFoundException, IOException
+	{
+		ArrayList<String> delPVList = new ArrayList<String>();
 		if (!"none".equals(filePath))
 		{
 			validateFileExist(filePath);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(
 					filePath)));
-			String line = null; // NOPMD by gaurav_sawant on 5/6/10 7:39 PM
-			while ((line = reader.readLine()) != null) // NOPMD by gaurav_sawant on 5/6/10 7:39 PM
+			try
 			{
-			  //skip the line if it is blank
-				if (line != null && line.trim().length() != 0)// NOPMD by gaurav_sawant on 5/6/10 7:40 PM
+				String line = null; // NOPMD by gaurav_sawant on 5/6/10 7:39 PM
+				while ((line = reader.readLine()) != null) // NOPMD by gaurav_sawant on 5/6/10 7:39 PM
 				{
-					delPVList.add(line);
+					//skip the line if it is blank
+					if (line != null && line.trim().length() != 0)// NOPMD by gaurav_sawant on 5/6/10 7:40 PM
+					{
+						delPVList.add(line);
+					}
 				}
 			}
+			finally
+			{
+				reader.close();
+			}
 		}
-        return delPVList;
-    }
+		return delPVList;
+	}
 
 	/**
-     * Execute sql.
-     *
-     * @param sqlList
-     *            the sql list
-     * @throws DynamicExtensionsSystemException
-     *             the dynamic extensions system exception
-     */
+	 * Execute sql.
+	 *
+	 * @param sqlList
+	 *            the sql list
+	 * @throws DynamicExtensionsSystemException
+	 *             the dynamic extensions system exception
+	 */
 	private void executeSQL(List<String> sqlList) throws DynamicExtensionsSystemException
 	{
 		JDBCDAO jdbcdao = null; // NOPMD by gaurav_sawant on 5/6/10 7:39 PM
@@ -280,13 +281,13 @@ public class RemovePVValues
 	}
 
 	/**
-     * Validate file exist.
-     *
-     * @param filePath
-     *            the file path
-     * @throws DynamicExtensionsSystemException
-     *             the dynamic extensions system exception
-     */
+	 * Validate file exist.
+	 *
+	 * @param filePath
+	 *            the file path
+	 * @throws DynamicExtensionsSystemException
+	 *             the dynamic extensions system exception
+	 */
 	private static void validateFileExist(String filePath) throws DynamicExtensionsSystemException
 	{
 		if (filePath != null)
@@ -295,9 +296,8 @@ public class RemovePVValues
 			File objFile = new File(filePath);
 			if (!objFile.exists())
 			{
-                throw new DynamicExtensionsSystemException(
-                        "Please verify that form definition file exist at path: "
-                                + filePath);
+				throw new DynamicExtensionsSystemException(
+						"Please verify that form definition file exist at path: " + filePath);
 			}
 		}
 	}

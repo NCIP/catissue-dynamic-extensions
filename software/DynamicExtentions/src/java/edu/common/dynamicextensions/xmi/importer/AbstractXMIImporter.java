@@ -177,7 +177,7 @@ public abstract class AbstractXMIImporter
 			generateValidationLogs();
 			if (!XMIImportValidator.errorList.isEmpty())
 			{
-				if(xmiConfiguration.isValidateXMI())
+				if (xmiConfiguration.isValidateXMI())
 				{
 					throw new RuntimeException(e);
 				}
@@ -989,18 +989,24 @@ public abstract class AbstractXMIImporter
 
 		BufferedReader bufRdr = new BufferedReader(new FileReader(file));
 		String line = bufRdr.readLine();
-
-		//read each line of text file
-		while (line != null)
+		try
 		{
-			StringTokenizer stringTokenizer = new StringTokenizer(line, ",");
-			while (stringTokenizer.hasMoreTokens())
+			//read each line of text file
+			while (line != null)
 			{
-				//get next token and store it in the array
-				containerNames.add(stringTokenizer.nextToken());
-			}
+				StringTokenizer stringTokenizer = new StringTokenizer(line, ",");
+				while (stringTokenizer.hasMoreTokens())
+				{
+					//get next token and store it in the array
+					containerNames.add(stringTokenizer.nextToken());
+				}
 
-			line = bufRdr.readLine();
+				line = bufRdr.readLine();
+			}
+		}
+		finally
+		{
+			bufRdr.close();
 		}
 		return containerNames;
 	}
