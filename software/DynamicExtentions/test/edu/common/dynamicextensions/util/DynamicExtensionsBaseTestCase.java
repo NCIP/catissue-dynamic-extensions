@@ -52,6 +52,7 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	protected final static String XMI_FILE_PATH = "./src/resources/xmi/";
 	protected final static String CSV_FILE_PATH = "./src/resources/csv/";
 	protected final static String PV_FILE_PATH = "./src/resources/pvs/";
+	protected final static String RESOURCE_DIR_PATH = "./src/resources/";
 	protected final static String EDITED_XMI_FILE_PATH = "./src/resources/edited_xmi/";
 	protected final static String JBOSS_PATH = "http://10.88.199.44:46210/dynamicExtensions";
 	protected final static String TEST_ENTITYGROUP_NAME = "test";

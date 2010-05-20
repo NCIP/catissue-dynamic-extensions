@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.client.CategoryClient;
+import edu.common.dynamicextensions.client.CategoryMetadataClient;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
@@ -78,6 +79,31 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			CategoryClient.main(args);
 			System.out.println("done categoryCreation");
 			assertAllCategoriesCreatedInFile(TEST_MODEL_DIR + "/catNames2.txt");
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail();
+		}
+	}
+
+	/**
+	 * This test case will create the csv file which
+	 * contains the Conatiner name & container identifier's used for bulk operations.
+	 * Test case will fail if metadata file does not exists after completing.
+	 */
+	public void testCreateCategoryMetadataFile()
+	{
+		try
+		{
+			String[] args = {RESOURCE_DIR_PATH + "categoryNamesMetadata.txt", APPLICATIONURL};
+			CategoryMetadataClient.main(args);
+			System.out.println("done category metadata Creation");
+			File recievedFile = new File("catMetadataFile.csv");
+			if (!recievedFile.exists())
+			{
+				fail("catMetadataFile.csv does not exist.");
+			}
 		}
 		catch (Exception e)
 		{
@@ -407,7 +433,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 				List<String> errorList = new ArrayList<String>();
 				ValidatorUtil.validateEntity(dataValue, errorList,
 						(ContainerInterface) rootCatEntity.getContainerCollection().iterator()
-								.next(),true);
+								.next(), true);
 				if (errorList.isEmpty())
 				{
 					System.out.println("Record validated succesfully for category "
