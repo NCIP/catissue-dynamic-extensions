@@ -40,7 +40,7 @@ public class DatePicker extends Control implements DatePickerInterface
 	 */
 	private static final long serialVersionUID = 1L;
 	private String dateValueType = null;
-	private final String dateFormatString = "Date format : ";
+	private final static String DATE_FORMAT_STRING = "Date format : ";
 
 	/**
 	 * Show Calendar icon on UI
@@ -183,7 +183,7 @@ public class DatePicker extends Control implements DatePickerInterface
 						+ htmlComponentName
 						+ "', event, 1900, 2020);\" href=\"javascript://\">"
 						+ "&nbsp;<IMG alt=\""
-						+ dateFormatString
+						+ DATE_FORMAT_STRING
 						+ " ["
 						+ ProcessorConstants.DATE_ONLY_FORMAT
 						+ "]\" src=\"images/de/calendar.gif\" border=0 /></A>"
@@ -257,7 +257,7 @@ public class DatePicker extends Control implements DatePickerInterface
 						+ htmlComponentName
 						+ "', event, 1900, 2020);\" href=\"javascript://\">"
 						+ "&nbsp;<IMG alt=\""
-						+ dateFormatString
+						+ DATE_FORMAT_STRING
 						+ " ["
 						+ ProcessorConstants.DATE_TIME_FORMAT
 						+ "]\" src=\"images/de/calendar.gif\" border=0 />&nbsp;</A>"
@@ -334,7 +334,7 @@ public class DatePicker extends Control implements DatePickerInterface
 						+ "', 'dataEntryForm', '"
 						+ htmlComponentName
 						+ "', event, 1900, 2020);\" href=\"javascript://\">&nbsp;<IMG alt=\""
-						+ dateFormatString
+						+ DATE_FORMAT_STRING
 						+ "["
 						+ ProcessorConstants.MONTH_YEAR_FORMAT
 						+ "]\" src=\"images/de/calendar.gif\" border=0 />&nbsp;</A>"
@@ -406,7 +406,7 @@ public class DatePicker extends Control implements DatePickerInterface
 						+ "', 'dataEntryForm', '"
 						+ htmlComponentName
 						+ "', event, 1900, 2020);\" href=\"javascript://\">&nbsp;<IMG alt=\""
-						+ dateFormatString
+						+ DATE_FORMAT_STRING
 						+ " ["
 						+ ProcessorConstants.YEAR_ONLY_FORMAT
 						+ "]\" src=\"images/de/calendar.gif\" border=0 />&nbsp;</A>"
@@ -581,6 +581,5 @@ public class DatePicker extends Control implements DatePickerInterface
 
 		return uiProperties;
 	}
-
 
 }
