@@ -281,31 +281,39 @@ public class XMLToCSVConverter
 		String txInstance = null;
 		int length = childNodes.getLength();
 
+		Node instance = null;
+		Node dependentNode = null;
 		for (int i = 0; i < length; i++)
 		{
 			Node item = childNodes.item(i);
 			if (item.getNodeName().equals(INSTANCE))
 			{
-				appendToStringBuilder(newLine);
-				appendToStringBuilder("instance:");
-				txInstance = txInstance(item);
-				
-				appendToStringBuilder(","+txInstance);
-				
-				appendToStringBuilder(newLine);
-			}
-			else if (item.getNodeName().equals(ATTRIBUTE))
-			{
-				appendToStringBuilder(txInstance + ":");
-				txSkipLogicAttribute(item);
+				instance = item;
 			}
 			else if (item.getNodeName().equals(DEPENDENT_ATTRIBUTE))
 			{
-				appendToStringBuilder(",dependentAttribute~");
-				txSkipLogicDependent(item);
+				dependentNode = item;
 			}
 		}
 
+		for (int i = 0; i < length; i++)
+		{
+			Node item = childNodes.item(i);
+			if (item.getNodeName().equals(ATTRIBUTE))
+			{
+				appendToStringBuilder(newLine);
+				appendToStringBuilder("instance:");
+				txInstance = txInstance(instance);
+				appendToStringBuilder(",");
+				appendToStringBuilder(txInstance);
+				appendToStringBuilder(newLine);
+				appendToStringBuilder(txInstance + ":");
+				txSkipLogicAttribute(item);
+				appendToStringBuilder(",dependentAttribute~");
+				txSkipLogicDependent(dependentNode);
+				appendToStringBuilder(newLine);
+			}
+		}
 	}
 
 	/**
@@ -347,20 +355,21 @@ public class XMLToCSVConverter
 		NamedNodeMap attributes = item.getAttributes();
 		Node attributeName = attributes.getNamedItem("attributeName");
 		appendToStringBuilder(":" + attributeName.getNodeValue());
-		
+
 		Node attributeName1 = attributes.getNamedItem("isSelectiveReadOnly");
 		Node attributeName2 = attributes.getNamedItem("isShowHide");
-		
-		if(attributeName1.getNodeValue().equals("true") || attributeName2.getNodeValue().equals("true"))
+
+		if (attributeName1.getNodeValue().equals("true")
+				|| attributeName2.getNodeValue().equals("true"))
 		{
 			appendToStringBuilder(",options~");
-			
-			if(attributeName1.getNodeValue().equals("true"))
+
+			if (attributeName1.getNodeValue().equals("true"))
 				appendToStringBuilder("IsSelectiveReadOnly" + ":" + attributeName1.getNodeValue());
 			else if (attributeName2.getNodeValue().equals("true"))
 				appendToStringBuilder("IsShowHide" + ":" + attributeName2.getNodeValue());
 		}
-		
+
 		Node subset = getSubset(item);
 
 		if (subset != null)
