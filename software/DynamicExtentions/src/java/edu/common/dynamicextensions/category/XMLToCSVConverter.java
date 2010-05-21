@@ -746,7 +746,7 @@ public class XMLToCSVConverter
 		else if ("defaultValue".equals(nodeValue))
 		{
 			final Node valueNode = controlProperties.getNamedItem(VALUE);
-			permValueOptionsString = ",defaultValue=" + valueNode.getNodeValue();
+			defaultValueString = ",defaultValue=" + valueNode.getNodeValue();
 		}
 		else
 		{
