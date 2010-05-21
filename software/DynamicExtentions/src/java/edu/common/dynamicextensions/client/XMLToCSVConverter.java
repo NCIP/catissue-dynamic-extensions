@@ -1,5 +1,5 @@
 
-package edu.common.dynamicextensions.category;
+package edu.common.dynamicextensions.client;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -20,7 +20,6 @@ import org.xml.sax.SAXException;
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class XMLToCSVConverter.
  *
@@ -289,9 +288,9 @@ public class XMLToCSVConverter
 				appendToStringBuilder(newLine);
 				appendToStringBuilder("instance:");
 				txInstance = txInstance(item);
-				
-				appendToStringBuilder(","+txInstance);
-				
+
+				appendToStringBuilder("," + txInstance);
+
 				appendToStringBuilder(newLine);
 			}
 			else if (item.getNodeName().equals(ATTRIBUTE))
@@ -347,20 +346,21 @@ public class XMLToCSVConverter
 		NamedNodeMap attributes = item.getAttributes();
 		Node attributeName = attributes.getNamedItem("attributeName");
 		appendToStringBuilder(":" + attributeName.getNodeValue());
-		
+
 		Node attributeName1 = attributes.getNamedItem("isSelectiveReadOnly");
 		Node attributeName2 = attributes.getNamedItem("isShowHide");
-		
-		if(attributeName1.getNodeValue().equals("true") || attributeName2.getNodeValue().equals("true"))
+
+		if (attributeName1.getNodeValue().equals("true")
+				|| attributeName2.getNodeValue().equals("true"))
 		{
 			appendToStringBuilder(",options~");
-			
-			if(attributeName1.getNodeValue().equals("true"))
+
+			if (attributeName1.getNodeValue().equals("true"))
 				appendToStringBuilder("IsSelectiveReadOnly" + ":" + attributeName1.getNodeValue());
 			else if (attributeName2.getNodeValue().equals("true"))
 				appendToStringBuilder("IsShowHide" + ":" + attributeName2.getNodeValue());
 		}
-		
+
 		Node subset = getSubset(item);
 
 		if (subset != null)
