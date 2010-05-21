@@ -1188,8 +1188,8 @@
 
 		<!-- DE release target start -->
 		<target name="de.release" depends="create_dynamic_extensions_zip,build.formCreator.zip">
-			<copy file="binaries/dynamicExtensions.zip" todir="${de_release_dir}" overwrite="true" />
-			<copy file="binaries/DynamicExtensionsInterface/dynamicExtensions.jar" todir="${de_release_dir}" overwrite="true" />
+			<copy file="binaries/dynamicextensions.zip" todir="${de_release_dir}" overwrite="true" />
+			<copy file="binaries/DynamicExtensionsInterface/DynamicExtensions.jar" todir="${de_release_dir}" overwrite="true" />
 			<copy file="binaries/clientFormCreator.zip" todir="${de_release_dir}" overwrite="true" />
 			<copy file="binaries/DEDeploy.xml" todir="${de_release_dir}" overwrite="true" />
 		</target>
