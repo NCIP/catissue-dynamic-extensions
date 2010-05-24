@@ -77,10 +77,11 @@ public class DownloadFileAction extends HttpServlet
 			ByteArrayInputStream byteStream = new ByteArrayInputStream(filedata);
 			BufferedInputStream bufStream = new BufferedInputStream(byteStream);
 			ServletOutputStream responseOutputStream = res.getOutputStream();
-			int data;
-			while ((data = bufStream.read()) != -1)
+			int data = bufStream.read();
+			while (data != -1)
 			{
 				responseOutputStream.write(data);
+				data = bufStream.read();
 			}
 
 			bufStream.close();

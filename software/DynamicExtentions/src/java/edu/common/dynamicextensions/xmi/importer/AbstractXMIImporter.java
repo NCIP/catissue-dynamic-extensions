@@ -179,12 +179,9 @@ public abstract class AbstractXMIImporter
 			isImportSuccess = false;
 
 			generateValidationLogs();
-			if (!XMIImportValidator.errorList.isEmpty())
+			if (!XMIImportValidator.errorList.isEmpty() && xmiConfiguration.isValidateXMI())
 			{
-				if (xmiConfiguration.isValidateXMI())
-				{
-					throw new RuntimeException(e);
-				}
+				throw new RuntimeException(e);
 			}
 		}
 		finally

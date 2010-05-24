@@ -450,8 +450,8 @@ public class Container extends DynamicExtensionBaseDomainObject
 			containerHTML.append(getRequiredFieldIndicatior());
 			containerHTML.append("&nbsp;</span><span class='font_gr_s'>");
 			containerHTML.append(getRequiredFieldWarningMessage());
-			containerHTML.append("</span></td></tr>");
-			containerHTML.append("<tr><td height='5'/></tr>");
+			containerHTML.append("</span></td></tr><tr><td height='5'/></tr>");
+
 		}
 		else
 		{
@@ -839,12 +839,11 @@ public class Container extends DynamicExtensionBaseDomainObject
 
 		for (final ControlInterface cntrl : controlCollection)
 		{
-			if ((cntrl.getSequenceNumber() != null) && cntrl.getSequenceNumber().equals(xPosition))
+			if ((cntrl.getSequenceNumber() != null) && cntrl.getSequenceNumber().equals(xPosition)
+					&& (cntrl.getSequenceNumber() != null)
+					&& cntrl.getYPosition().equals(yPosition))
 			{
-				if ((cntrl.getSequenceNumber() != null) && cntrl.getYPosition().equals(yPosition))
-				{
-					control = cntrl;
-				}
+				control = cntrl;
 			}
 		}
 

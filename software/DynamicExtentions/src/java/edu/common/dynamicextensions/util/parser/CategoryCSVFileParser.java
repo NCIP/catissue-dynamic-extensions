@@ -336,8 +336,8 @@ public class CategoryCSVFileParser extends CategoryFileParser
 			{
 				BufferedReader reader = new BufferedReader(new InputStreamReader(
 						new FileInputStream(filePath)));
-				String line = null;
-				while ((line = reader.readLine()) != null)
+				String line = reader.readLine();
+				while (line != null)
 				{
 					if (line != null && line.trim().length() != 0)//skip the line if it is blank
 					{
@@ -382,6 +382,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 									semanticPropertyCollection);
 						}
 					}
+					line = reader.readLine();
 				}
 			}
 			catch (FileNotFoundException e)

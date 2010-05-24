@@ -411,7 +411,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			Iterator<String> errorListIterator = errorList.iterator();
 			while (errorListIterator.hasNext())
 			{
-				buffer.append(count).append(")").append(errorListIterator.next());
+				buffer.append(count).append(')').append(errorListIterator.next());
 				count++;
 			}
 			throw new DynamicExtensionsApplicationException(buffer.toString());

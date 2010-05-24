@@ -42,14 +42,17 @@ import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
  * @author chetan_patil
  */
 
-public final class UserInterfaceiUtility {
+public final class UserInterfaceiUtility
+{
+
 	/** The user utility. */
 	private UserInterfaceiUtility userUtility = null;
 
 	/**
 	 * Instantiates a new user interface utility.
 	 */
-	private UserInterfaceiUtility() {
+	private UserInterfaceiUtility()
+	{
 
 	}
 
@@ -58,8 +61,10 @@ public final class UserInterfaceiUtility {
 	 *
 	 * @return single instance of UserInterfaceiUtility
 	 */
-	public UserInterfaceiUtility getInstance() {
-		if (userUtility == null) {
+	public UserInterfaceiUtility getInstance()
+	{
+		if (userUtility == null)
+		{
 			userUtility = new UserInterfaceiUtility();
 		}
 		return userUtility;
@@ -78,14 +83,15 @@ public final class UserInterfaceiUtility {
 	 * @throws DynamicExtensionsSystemException the dynamic extensions
 	 *  system exception
 	 */
-	public static String generateHTMLforGrid(ContainerInterface subContainer
-			, List<Map<BaseAbstractAttributeInterface, Object>> valueMaps
-			, String dataEntryOperation, ContainerInterface mainContainer)
-			throws DynamicExtensionsSystemException {
+	public static String generateHTMLforGrid(ContainerInterface subContainer,
+			List<Map<BaseAbstractAttributeInterface, Object>> valueMaps, String dataEntryOperation,
+			ContainerInterface mainContainer) throws DynamicExtensionsSystemException
+	{
 		StringBuffer htmlForGrid = new StringBuffer(1066);
 
 		int rowCount = 0;
-		if (valueMaps != null) {
+		if (valueMaps != null)
+		{
 			rowCount = valueMaps.size();
 		}
 
@@ -95,14 +101,13 @@ public final class UserInterfaceiUtility {
 		// Do not sort the controls list;it jumbles up the attributes order.
 		//Collections.sort(controlsList);
 
-		htmlForGrid.append("<tr width='100%'><td colspan='3'"
-				+ "<div style='display:none' id='");
+		htmlForGrid.append("<tr width='100%'><td colspan='3'" + "<div style='display:none' id='");
 		htmlForGrid.append(subContainer.getId());
 		htmlForGrid.append("_substitutionDiv'><table>");
 		//empty hashmap to generate hidden row
 		subContainer.setContainerValueMap(new HashMap<BaseAbstractAttributeInterface, Object>());
-		htmlForGrid.append(getContainerHTMLAsARow(subContainer, -1,
-				dataEntryOperation, mainContainer));
+		htmlForGrid.append(getContainerHTMLAsARow(subContainer, -1, dataEntryOperation,
+				mainContainer));
 		htmlForGrid.append("</table></div><input type='hidden' name='");
 
 		htmlForGrid.append(subContainer.getId());
@@ -111,30 +116,30 @@ public final class UserInterfaceiUtility {
 		htmlForGrid.append("_rowCount' value='");
 		htmlForGrid.append(rowCount);
 		htmlForGrid.append("'/> </td></tr><tr width='100%'> <td "
-		+ "class='formFieldContainer_withoutBorder' colspan='100'"
-		+ " align='center'> <table cellpadding='3' cellspacing='0' "
-		+ "align='center' width='100%'>");
+				+ "class='formFieldContainer_withoutBorder' colspan='100'"
+				+ " align='center'> <table cellpadding='3' cellspacing='0' "
+				+ "align='center' width='100%'>");
 
-		if (subContainer.getAddCaption()) {
-			htmlForGrid
-			.append("<tr width='100%'><td class='td_color_6e81a6' "
+		if (subContainer.getAddCaption())
+		{
+			htmlForGrid.append("<tr width='100%'><td class='td_color_6e81a6' "
 					+ "colspan='3' align='left'>");
-			htmlForGrid.append(((AbstractEntity) subContainer.
-				getAbstractEntity()).getCapitalizedName
-				(DynamicExtensionsUtility.replaceHTMLSpecialCharacters(
-							subContainer.getCaption())));
+			htmlForGrid.append(((AbstractEntity) subContainer.getAbstractEntity())
+					.getCapitalizedName(DynamicExtensionsUtility
+							.replaceHTMLSpecialCharacters(subContainer.getCaption())));
 			htmlForGrid.append("</td></tr>");
 		}
 
-		htmlForGrid.append("<tr> <td width='59'><input type='button' "
-				+ "style='border: 0px; background-image: "
-				+ "url(images/de/b_paste.gif);height: 20px; width: 59px;'"
-				+ "align='middle'  id='paste_"
-				+ subContainer.getId() + "' "
-				+ "onclick='pasteData(\"" + subContainer.getId()
-				+ "\",\"many\")'/> </td><td class='formField_withoutBorder'"
-				+ " style='background-color:#E3E2E7;' width='100%'>&nbsp;</td>"
-				+ "</tr> <tr width='100%'><td colspan='3' width='100%'>");
+		htmlForGrid
+				.append("<tr> <td width='59'><input type='button' style='border: 0px; background-image:  ");
+		htmlForGrid.append("url(images/de/b_paste.gif);height: 20px; width: 59px;'");
+		htmlForGrid.append("align='middle'  id='paste_");
+		htmlForGrid.append(subContainer.getId()).append("' ");
+		htmlForGrid.append("onclick='pasteData(\"");
+		htmlForGrid.append(subContainer.getId());
+		htmlForGrid.append("\",\"many\")'/> </td><td class='formField_withoutBorder' ");
+		htmlForGrid.append(" style='background-color:#E3E2E7;' width='100%'>&nbsp;</td>");
+		htmlForGrid.append("</tr> <tr width='100%'><td colspan='3' width='100%'>");
 
 		// For category attribute controls, if heading and/or notes are specified, then
 		// render the UI that displays heading followed by notes for particular
@@ -209,7 +214,7 @@ public final class UserInterfaceiUtility {
 			}
 		}
 
-		htmlForGrid.append("</table>" + "<div id='wrapper_div_");
+		htmlForGrid.append("</table> <div id='wrapper_div_");
 		htmlForGrid.append(subContainer.getId());
 		htmlForGrid.append("' > &nbsp;</div>");
 
@@ -300,7 +305,6 @@ public final class UserInterfaceiUtility {
 		valueMaps.push(valueMap);
 	}
 
-
 	/**
 	 * Removes the container info.
 	 *
@@ -318,23 +322,19 @@ public final class UserInterfaceiUtility {
 	 * Clear container stack.
 	 * @param request the request
 	 */
-	public static void clearContainerStack(final HttpServletRequest request) {
-		ContainerInterface container = (ContainerInterface) CacheManager.
-					getObjectFromCache(request,
-						DEConstants.CONTAINER_INTERFACE);
-		if (container != null && container.getId() != null) {
-			request.setAttribute("containerIdentifier",
-							container.getId().toString());
+	public static void clearContainerStack(final HttpServletRequest request)
+	{
+		ContainerInterface container = (ContainerInterface) CacheManager.getObjectFromCache(
+				request, DEConstants.CONTAINER_INTERFACE);
+		if (container != null && container.getId() != null)
+		{
+			request.setAttribute("containerIdentifier", container.getId().toString());
 		}
 
-		CacheManager.addObjectToCache(request,
-				DEConstants.CONTAINER_STACK, null);
-		CacheManager.addObjectToCache(request,
-				DEConstants.VALUE_MAP_STACK, null);
-		CacheManager.addObjectToCache(request,
-				DEConstants.CONTAINER_INTERFACE, null);
-		CacheManager.addObjectToCache(request, "rootRecordIdentifier",
-				null);
+		CacheManager.addObjectToCache(request, DEConstants.CONTAINER_STACK, null);
+		CacheManager.addObjectToCache(request, DEConstants.VALUE_MAP_STACK, null);
+		CacheManager.addObjectToCache(request, DEConstants.CONTAINER_INTERFACE, null);
+		CacheManager.addObjectToCache(request, "rootRecordIdentifier", null);
 	}
 
 	/**
@@ -372,7 +372,8 @@ public final class UserInterfaceiUtility {
 		contHtmlAsARow.append(rowClass);
 		contHtmlAsARow.append("'><td width='1%'>");
 
-		if (container.getMode().equals("edit")) {
+		if (container.getMode().equals("edit"))
+		{
 			contHtmlAsARow.append("<input type='checkbox' name='deleteRow' value='' "
 					+ "id='checkBox_");
 			contHtmlAsARow.append(container.getId());
@@ -380,14 +381,16 @@ public final class UserInterfaceiUtility {
 			contHtmlAsARow.append(rowId);
 			contHtmlAsARow.append("'/>");
 		}
-		else {
+		else
+		{
 			contHtmlAsARow.append("&nbsp;");
 		}
 
 		contHtmlAsARow.append("</td>");
-		for (ControlInterface control : controls) {
-			generateHTMLforControl(rowId, dataEntryOperation, mainContainer,
-					contHtmlAsARow, values, containerValues, control);
+		for (ControlInterface control : controls)
+		{
+			generateHTMLforControl(rowId, dataEntryOperation, mainContainer, contHtmlAsARow,
+					values, containerValues, control);
 		}
 
 		contHtmlAsARow.append("</tr>");
@@ -408,12 +411,10 @@ public final class UserInterfaceiUtility {
 	 *
 	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
 	 */
-	private static void generateHTMLforControl(int rowId,
-			String dataEntryOperation,ContainerInterface mainContainer,
-			StringBuffer contHtmlAsARow, List<Object> values,
+	private static void generateHTMLforControl(int rowId, String dataEntryOperation,
+			ContainerInterface mainContainer, StringBuffer contHtmlAsARow, List<Object> values,
 			Map<BaseAbstractAttributeInterface, Object> containerValues,
-			final ControlInterface control)
-			throws DynamicExtensionsSystemException
+			final ControlInterface control) throws DynamicExtensionsSystemException
 	{
 		if (control.getIsSkipLogicTargetControl())
 		{
@@ -425,15 +426,13 @@ public final class UserInterfaceiUtility {
 
 		if (control instanceof AbstractContainmentControlInterface)
 		{
-			controlHTML = ((AbstractContainmentControlInterface) control).
-			generateLinkHTML();
+			controlHTML = ((AbstractContainmentControlInterface) control).generateLinkHTML();
 		}
 		else
 		{
 			if (containerValues != null)
 			{
-				Object value = containerValues.get(control.
-						getBaseAbstractAttribute());
+				Object value = containerValues.get(control.getBaseAbstractAttribute());
 				control.setValue(value);
 			}
 			controlHTML = control.generateHTML(mainContainer);

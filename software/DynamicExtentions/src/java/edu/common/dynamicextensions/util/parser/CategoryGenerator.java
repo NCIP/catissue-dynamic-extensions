@@ -881,32 +881,31 @@ public class CategoryGenerator
 					// value must be specified
 					CategoryAttributeInterface attribute = (CategoryAttributeInterface) targetControl
 							.getAttibuteMetadataInterface();
-					if (((targetControl.getIsReadOnly() != null) && targetControl.getIsReadOnly()))
+					if (((targetControl.getIsReadOnly() != null) && targetControl.getIsReadOnly())
+							&& attribute.getDefaultValue() == null)
 					{
-						if (attribute.getDefaultValue() == null)
-						{
-							throw new DynamicExtensionsSystemException(ApplicationProperties
-									.getValue(CategoryConstants.CREATE_CAT_FAILS)
-									+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-									+ categoryFileParser.getLineNumber()
-									+ " "
-									+ ApplicationProperties.getValue("mandatoryDValueForRO")
-									+ targetAttributeName);
-						}
+
+						throw new DynamicExtensionsSystemException(ApplicationProperties
+								.getValue(CategoryConstants.CREATE_CAT_FAILS)
+								+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
+								+ categoryFileParser.getLineNumber()
+								+ " "
+								+ ApplicationProperties.getValue("mandatoryDValueForRO")
+								+ targetAttributeName);
+
 					}
 					if ((targetControl.getIsCalculated() != null)
-							&& targetControl.getIsCalculated())
+							&& targetControl.getIsCalculated() && attribute.getFormula() == null)
 					{
-						if (attribute.getFormula() == null)
-						{
-							throw new DynamicExtensionsSystemException(ApplicationProperties
-									.getValue(CategoryConstants.CREATE_CAT_FAILS)
-									+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-									+ categoryFileParser.getLineNumber()
-									+ " "
-									+ ApplicationProperties.getValue("mandatoryDValueForRO")
-									+ targetAttributeName);
-						}
+
+						throw new DynamicExtensionsSystemException(ApplicationProperties
+								.getValue(CategoryConstants.CREATE_CAT_FAILS)
+								+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
+								+ categoryFileParser.getLineNumber()
+								+ " "
+								+ ApplicationProperties.getValue("mandatoryDValueForRO")
+								+ targetAttributeName);
+
 					}
 				}
 				else

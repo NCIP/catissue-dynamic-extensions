@@ -395,8 +395,8 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		{
 			if (getIsSkipLogicTargetControl())
 			{
-				controlHTML.append("</tr><tr><td width='100%' colspan='3' align='left'><div ");
-				controlHTML.append("id='" + getHTMLComponentName() + "_row_div_heading' name='"
+				controlHTML.append("</tr><tr><td width='100%' colspan='3' align='left'><div id='");
+				controlHTML.append(getHTMLComponentName() + "_row_div_heading' name='"
 						+ getHTMLComponentName() + "_row_div_heading' ");
 				controlHTML.append((getIsSkipLogicShowHideTargetControl()
 						? "style='display:none'>"
@@ -542,7 +542,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 					+ "_" + parentContainer.getId() + "_" + getSequenceNumber());
 			if (yPosition != null)
 			{
-				htmlComponentName.append("_").append(getYPosition());
+				htmlComponentName.append('_').append(getYPosition());
 			}
 		}
 

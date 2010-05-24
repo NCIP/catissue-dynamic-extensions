@@ -89,7 +89,7 @@ public class UploadFileAction extends BaseDynamicExtensionsAction
 						rowsStrings[i] = tempRowString.toString();
 					}
 					rowsStrings[i] = rowNos++ + ",," + rowsStrings[i];
-					returnXML.append(rowsStrings[i]).append("|");
+					returnXML.append(rowsStrings[i]).append('|');
 				}
 			}
 

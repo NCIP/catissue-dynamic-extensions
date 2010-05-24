@@ -39,15 +39,13 @@ public class PathObject implements Serializable
 					&& pathObject.getSourceEntity().getId() != null
 					&& pathObject.getTargetEntity().getId() != null && sourceEntity != null
 					&& targetEntity != null && sourceEntity.getId() != null
-					&& targetEntity.getId() != null)
+					&& targetEntity.getId() != null
+					&& (sourceEntity.getId().compareTo(pathObject.getSourceEntity().getId()) == 0)
+					&& (targetEntity.getId().compareTo(pathObject.getTargetEntity().getId()) == 0))
 			{
 
-				if ((sourceEntity.getId().compareTo(pathObject.getSourceEntity().getId()) == 0)
-						&& (targetEntity.getId().compareTo(pathObject.getTargetEntity().getId()) == 0))
-				{
+				equals = true;
 
-					equals = true;
-				}
 			}
 		}
 		return equals;
