@@ -9,10 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import edu.common.dynamicextensions.domain.PermissibleValue;
 import edu.common.dynamicextensions.domain.UserDefinedDE;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationMetadataInterface;
+import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
+import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
@@ -63,7 +66,6 @@ public class ValidatorUtil
 		{
 			for (Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode : attributeSet)
 			{
-
 				BaseAbstractAttributeInterface abstractAttribute = attributeValueNode.getKey();
 
 				if (abstractAttribute instanceof AttributeMetadataInterface)
@@ -141,18 +143,30 @@ public class ValidatorUtil
 	 * @param control Control for which validation need to performed.
 	 * @param abstractAttribute Attribute for validation.
 	 * @param attributeValueNode Value provided for insertion.
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public static void checkForPermissibleValue(List<String> errorList, ControlInterface control,
 			BaseAbstractAttributeInterface abstractAttribute,
 			Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode)
+			throws DynamicExtensionsSystemException
 	{
 		if (control instanceof EnumeratedControlInterface)
 		{
-			AttributeMetadataInterface attributeMetadataInterface = (AttributeMetadataInterface) abstractAttribute;
+			AttributeMetadataInterface attributeMetadataInterface =
+							(AttributeMetadataInterface) abstractAttribute;
 			if (attributeMetadataInterface.getDataElement() != null)
 			{
-				boolean isValuePresent = isValidPermissibleValue(attributeValueNode,
-						attributeMetadataInterface);
+				boolean isValuePresent = false;
+				try
+				{
+					isValuePresent = isValidPermissibleValue(attributeValueNode,
+							attributeMetadataInterface);
+				}
+				catch (ParseException e)
+				{
+					throw new DynamicExtensionsSystemException(
+							"Exception while validating permissible value.", e);
+				}
 				if (!isValuePresent)
 				{
 					errorList.add("Please Enter valid permissible value for attribute "
@@ -169,21 +183,38 @@ public class ValidatorUtil
 	 * @param attributeValueNode node
 	 * @param attributeMetadataInterface attribute
 	 * @return true if value is valid else false.
+	 * @throws ParseException
 	 */
 	private static boolean isValidPermissibleValue(
 			Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode,
-			AttributeMetadataInterface attributeMetadataInterface)
+			AttributeMetadataInterface attributeMetadataInterface) throws ParseException
 	{
 		boolean isValuePresent = false;
-		for (PermissibleValueInterface permissibleValue : ((UserDefinedDE) attributeMetadataInterface
-				.getDataElement()).getPermissibleValueCollection())
-		{
 
-			if (permissibleValue.getValueAsObject().toString()
-					.equals(attributeValueNode.getValue()))
+
+		if (attributeValueNode.getValue() instanceof ArrayList)
+
+		{
+				CategoryAttributeInterface attribute = (CategoryAttributeInterface)attributeMetadataInterface;
+				AttributeInterface attributeInterface=getMultiselectAtrribute((AssociationInterface)attribute.getAbstractAttribute());
+				AttributeTypeInformationInterface attributeTypeInformation = attributeInterface
+				.getAttributeTypeInformation();
+				List<PermissibleValueInterface> enteredAttributeValueList = getAttributeValueList(
+						attributeValueNode, attributeTypeInformation);
+				isValuePresent = validatePVForMulstiSelect(enteredAttributeValueList,
+						attributeMetadataInterface);
+		}
+		else
+		{
+			Collection<PermissibleValueInterface> permissibleValue = ((UserDefinedDE) attributeMetadataInterface
+					.getDataElement()).getPermissibleValueCollection();
+			AttributeTypeInformationInterface attributeTypeInformation = attributeMetadataInterface
+			.getAttributeTypeInformation();
+			PermissibleValue permissibleValueInterface = (PermissibleValue) attributeTypeInformation
+					.getPermissibleValueForString(attributeValueNode.getValue().toString());
+			if (permissibleValue.contains(permissibleValueInterface))
 			{
 				isValuePresent = true;
-				break;
 			}
 		}
 		if ((attributeValueNode.getValue() != null)
@@ -192,6 +223,70 @@ public class ValidatorUtil
 			isValuePresent = true;
 		}
 		return isValuePresent;
+	}
+	/**
+	 * Get multi-select attribute from the given association.
+	 * @param association Association for which multi select attributes
+	 * need to be retrieve.
+	 * @return AttributeInterface Multi-select attribute.
+	 */
+	public static AttributeInterface getMultiselectAtrribute(AssociationInterface association)
+	{
+		AttributeInterface multiselectAttribute = null;
+
+		for(AttributeInterface attributeInterface: association.getTargetEntity()
+				.getAttributeCollection())
+		{
+			if(attributeInterface.getName().contains("CollectionAttribute"))
+			{
+				multiselectAttribute = attributeInterface;
+			}
+		}
+		return multiselectAttribute;
+	}
+	/**
+	 * Validate whether entered values are permissible or not for multi-select.
+	 * @param enteredAttributeValueList List of entered values.
+	 * @param attributeMetadataInterface Attribute metadata interface to retrieve
+	 * permissible value.
+	 * @return true if all value entered are permissible or return false.
+	 */
+	private static boolean validatePVForMulstiSelect(
+			List<PermissibleValueInterface> enteredAttributeValueList,
+			AttributeMetadataInterface attributeMetadataInterface)
+	{
+		boolean isAllValuePresent = false;
+		if (((UserDefinedDE) attributeMetadataInterface.getDataElement())
+				.getPermissibleValueCollection().containsAll(enteredAttributeValueList))
+		{
+			isAllValuePresent = true;
+		}
+
+		return isAllValuePresent;
+	}
+
+	/**
+	 * Retrieve list of permissible value as list of PermissibleValueInterface entered by user.
+	 * @param attributeValueNode List of values entered by user.
+	 * @param attributeTypeInformation  convert object value to string.
+	 * @throws ParseException throws by attributeTypeInformation.
+	 * @return List of PermissibleValueInterface.
+	 */
+	private static List<PermissibleValueInterface> getAttributeValueList(
+			Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode,
+			AttributeTypeInformationInterface attributeTypeInformation) throws ParseException
+	{
+		ArrayList<Map<BaseAbstractAttributeInterface, Object>> attributeValue =
+					(ArrayList<Map<BaseAbstractAttributeInterface, Object>>) attributeValueNode
+				.getValue();
+		List<PermissibleValueInterface> attributeValueList = new ArrayList<PermissibleValueInterface>();
+		for (Map<BaseAbstractAttributeInterface, Object> attributeValueMap : attributeValue)
+		{
+			attributeValueList.add(attributeTypeInformation
+					.getPermissibleValueForString(attributeValueMap.values().toArray()[0]
+							.toString()));
+		}
+		return attributeValueList;
 	}
 
 	/**
@@ -245,28 +340,42 @@ public class ValidatorUtil
 
 		Set<Map.Entry<BaseAbstractAttributeInterface, Object>> attributeSet = attributeValueMap
 				.entrySet();
-		if ((attributeSet == null) || attributeSet.isEmpty())
+		if ((attributeSet != null) && !attributeSet.isEmpty())
 		{
-			return errorList;
-		}
-
-		for (Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode : attributeSet)
-		{
-			BaseAbstractAttributeInterface abstractAttribute = attributeValueNode.getKey();
-			if (abstractAttribute instanceof AttributeMetadataInterface)
+			for (Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode : attributeSet)
 			{
-				ControlInterface control = DynamicExtensionsUtility.getControlForAbstractAttribute(
-						(AttributeMetadataInterface) abstractAttribute, containerInterface);
-				if ((control != null) && (control.getBaseAbstractAttribute() != null))
-				{
-					errorList.addAll(validateAttributes(attributeValueNode,
-							DynamicExtensionsUtility.replaceHTMLSpecialCharacters(control
-									.getCaption())));
-				}
+				validateAttributeMetaData(containerInterface, errorList, attributeValueNode);
 			}
 		}
 
 		return errorList;
+	}
+
+	/**
+	 * This method validates AttributeMetadataInterface attributes.
+	 * @param containerInterface ContainerInterface to retrieve the control.
+	 * @param errorList List of all errors.
+	 * @param attributeValueNode Values entered for the attribute.
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsValidationException
+	 */
+	private static void validateAttributeMetaData(ContainerInterface containerInterface,
+			List<String> errorList,
+			Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode)
+			throws DynamicExtensionsSystemException, DynamicExtensionsValidationException
+	{
+		BaseAbstractAttributeInterface abstractAttribute = attributeValueNode.getKey();
+		if (abstractAttribute instanceof AttributeMetadataInterface)
+		{
+			ControlInterface control = DynamicExtensionsUtility.getControlForAbstractAttribute(
+					(AttributeMetadataInterface) abstractAttribute, containerInterface);
+			if ((control != null) && (control.getBaseAbstractAttribute() != null))
+			{
+				errorList.addAll(validateAttributes(attributeValueNode,
+						DynamicExtensionsUtility.replaceHTMLSpecialCharacters(control
+								.getCaption())));
+			}
+		}
 	}
 
 	/**
@@ -284,61 +393,99 @@ public class ValidatorUtil
 		List<String> errorList = new ArrayList<String>();
 
 		BaseAbstractAttributeInterface abstractAttribute = attributeValueNode.getKey();
-		AttributeMetadataInterface attribute = (AttributeMetadataInterface) abstractAttribute;
+
 		//Bug: 9778 : modified to get explicit and implicit rules also in case of CategoryAttribute.
 		//Reviewer: Rajesh Patil
 		Collection<RuleInterface> attributeRuleCollection = getRuleCollection(abstractAttribute);
 		if ((attributeRuleCollection != null) && !attributeRuleCollection.isEmpty())
 		{
-			Long recordId = attribute.getId();
-			String errorMessage = null;
+
 			for (RuleInterface rule : attributeRuleCollection)
 			{
+				AttributeMetadataInterface attribute = (AttributeMetadataInterface) abstractAttribute;
 				String ruleName = rule.getName();
-				if (!"unique".equals(ruleName))
+				if ("unique".equals(ruleName))
 				{
-					Object valueObject = attributeValueNode.getValue();
-					if (valueObject instanceof List)
-					{
-						valueObject = ((List) valueObject).get(0);
 
-					}
-					Map<String, String> parameterMap = getParamMap(rule);
-					try
-					{
-						checkValidation(attribute, valueObject, rule, parameterMap, controlCaption);
-					}
-					catch (DynamicExtensionsValidationException e)
-					{
-						errorMessage = ApplicationProperties.getValue(e.getErrorCode(), e
-								.getPlaceHolderList());
-						errorList.add(errorMessage);
-					}
+					Long recordId = attribute.getId();
+					checkForUniqueValue(attributeValueNode, controlCaption, errorList, attribute,
+							recordId);
 				}
 				else
 				{
-					Object valueObject = attributeValueNode.getValue();
-					if (valueObject instanceof List)
-					{
-						valueObject = ((List) valueObject).get(0);
-
-					}
-					try
-					{
-						checkUniqueValidationForAttribute(attribute, valueObject, recordId,
-								controlCaption);
-					}
-					catch (DynamicExtensionsValidationException e)
-					{
-						errorMessage = ApplicationProperties.getValue(e.getErrorCode(), e
-								.getPlaceHolderList());
-						errorList.add(errorMessage);
-					}
+					checkNonUniqueValueValidation(attributeValueNode, controlCaption, errorList,
+							attribute, rule);
 				}
 			}
 		}
 
 		return errorList;
+	}
+
+	/**
+	 * Validate value for non unique rules.
+	 * @param attributeValueNode value entered for the attribute.
+	 * @param controlCaption Caption of the control.
+	 * @param errorList List of error.
+	 * @param attribute Attribute for which validation to perform.
+	 * @param rule Rules which needs to be validate.
+	 * @throws DynamicExtensionsSystemException
+	 */
+	private static void checkNonUniqueValueValidation(
+			Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode,
+			String controlCaption, List<String> errorList, AttributeMetadataInterface attribute,
+			RuleInterface rule) throws DynamicExtensionsSystemException
+	{
+		String errorMessage;
+		Object valueObject = attributeValueNode.getValue();
+		if (valueObject instanceof List)
+		{
+			valueObject = ((List) valueObject).get(0);
+		}
+		Map<String, String> parameterMap = getParamMap(rule);
+		try
+		{
+			checkValidation(attribute, valueObject, rule, parameterMap, controlCaption);
+		}
+		catch (DynamicExtensionsValidationException e)
+		{
+			errorMessage = ApplicationProperties.getValue(e.getErrorCode(), e
+					.getPlaceHolderList());
+			errorList.add(errorMessage);
+		}
+	}
+
+	/**
+	 * Will check for Unique value validation for the attribute.
+	 * @param attributeValueNode value entered for the attribute.
+	 * @param controlCaption Caption of the control.
+	 * @param errorList List of error.
+	 * @param attribute Attribute for which validation to perform.
+	 * @param recordId
+	 * @throws DynamicExtensionsSystemException
+	 */
+	private static void checkForUniqueValue(
+			Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode,
+			String controlCaption, List<String> errorList, AttributeMetadataInterface attribute,
+			Long recordId) throws DynamicExtensionsSystemException
+	{
+		String errorMessage;
+		Object valueObject = attributeValueNode.getValue();
+		if (valueObject instanceof List)
+		{
+			valueObject = ((List) valueObject).get(0);
+		}
+		try
+		{
+			checkUniqueValidationForAttribute(attribute, valueObject, recordId,
+					controlCaption);
+		}
+		catch (DynamicExtensionsValidationException e)
+		{
+			errorMessage = ApplicationProperties.getValue(e.getErrorCode(), e
+					.getPlaceHolderList());
+			errorList.add(errorMessage);
+		}
 	}
 
 	/**
