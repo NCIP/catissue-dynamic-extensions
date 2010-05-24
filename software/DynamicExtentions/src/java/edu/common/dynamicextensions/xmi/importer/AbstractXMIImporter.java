@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -32,6 +33,7 @@ import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.RoleInterface;
 import edu.common.dynamicextensions.domaininterface.databaseproperties.ConstraintPropertiesInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
+import edu.common.dynamicextensions.entitymanager.AbstractMetadataManager;
 import edu.common.dynamicextensions.entitymanager.DynamicExtensionBaseQueryBuilder;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
@@ -59,6 +61,8 @@ import edu.wustl.dao.DAO;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.DBTypes;
+import edu.wustl.dao.util.NamedQueryParam;
 
 /**
  * This class is used for importing the Dynamic Models using the DE.
@@ -386,6 +390,7 @@ public abstract class AbstractXMIImporter
 		intitializeInstanceVaribles(args);
 		xmiConfiguration = getXMIConfigurationObject();
 		domainModelName = getDomainModelName(fileName);
+		validatePackageName();
 		if (hookEntityName.equalsIgnoreCase("None"))
 		{
 			xmiConfiguration.setEntityGroupSystemGenerated(true);
@@ -400,6 +405,27 @@ public abstract class AbstractXMIImporter
 		rep.beginTrans(true);
 		intializeDao();
 		loggAllInstanceVariables();
+	}
+
+	/**
+	 * @throws DynamicExtensionsSystemException if problem occurred in executing HQL
+	 * @throws DynamicExtensionsApplicationException if entity group names does not matches
+	 */
+	private void validatePackageName() throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
+	{
+		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
+		substParams.put("0", new NamedQueryParam(DBTypes.STRING, packageName));
+
+		List<String> names = new ArrayList<String>(AbstractMetadataManager.executeHQL(
+				"getEntityGroupNameByPackageName", substParams));
+		if (!names.isEmpty() && !domainModelName.equals(names.get(0)))
+		{
+			throw new DynamicExtensionsApplicationException("Chnage the package name, model "
+					+ names.get(0)
+					+ " has the same package name.");
+		}
+
 	}
 
 	/**
