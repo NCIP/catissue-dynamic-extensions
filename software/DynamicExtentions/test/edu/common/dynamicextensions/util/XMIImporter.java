@@ -55,7 +55,6 @@ public class XMIImporter extends AbstractXMIImporter
 				DynamicExtensionsApplicationException
 		{
 
-			AssociationInterface deAsssociation =null;
 			Collection<AssociationInterface> associations = null;
 			EntityManagerInterface entityManager = EntityManager.getInstance();
 			Long recordEtryEntity = entityManager.getEntityId("edu.wustl.catissuecore.domain.RecordEntry");
