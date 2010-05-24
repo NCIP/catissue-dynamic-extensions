@@ -421,7 +421,7 @@ public abstract class AbstractXMIImporter
 				"getEntityGroupNameByPackageName", substParams));
 		if (!names.isEmpty() && !domainModelName.equals(names.get(0)))
 		{
-			throw new DynamicExtensionsApplicationException("Chnage the package name, model "
+			throw new DynamicExtensionsApplicationException("Change the package name, model "
 					+ names.get(0)
 					+ " has the same package name.");
 		}
