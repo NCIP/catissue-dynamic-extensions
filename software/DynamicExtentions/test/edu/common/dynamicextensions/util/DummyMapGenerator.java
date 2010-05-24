@@ -24,7 +24,7 @@ import edu.common.dynamicextensions.domain.FileAttributeRecordValue;
 import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.StringAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.UserDefinedDE;
-import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
+import edu.common.dynamicextensions.domain.userinterface.AbstractContainmentControl;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
@@ -82,56 +82,61 @@ public class DummyMapGenerator
 		Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
 		ContainerInterface containerInterface = (ContainerInterface) rootCatEntity
 				.getContainerCollection().toArray()[0];
-		for (CategoryAttributeInterface catAtt : rootCatEntity.getAllCategoryAttributes())
+		for (ControlInterface control : containerInterface.getAllControls())
 		{
-			// put the different value for diff attribute type
-			if (catAtt.getAbstractAttribute() instanceof AttributeInterface
-					&& !catAtt.getIsRelatedAttribute())
-			{
-				AttributeInterface attribute = (AttributeInterface) catAtt.getAbstractAttribute();
-				updateDataMap(dataValue, catAtt, attribute, mapStrategry, containerInterface);
-			}
-			else if (!catAtt.getIsRelatedAttribute())
-			{
-				//multiselect case.
-				AssociationInterface association = (AssociationInterface) catAtt
-						.getAbstractAttribute();
-				AttributeInterface multiselectAttr = (AttributeInterface) EntityManagerUtil
-						.filterSystemAttributes(
-								association.getTargetEntity().getAllAbstractAttributes())
-						.iterator().next();
-				Map<BaseAbstractAttributeInterface, Object> multiSelectDataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
-				for (int i = 0; i < 2; i++)
-				{
-					updateDataMap(multiSelectDataValue, multiselectAttr, multiselectAttr,
-							mapStrategry, containerInterface);
-				}
-				List multiselctValueList = new ArrayList();
-				multiselctValueList.add(multiSelectDataValue);
-				dataValue.put(catAtt, multiselctValueList);
-			}
-		}
-		for (CategoryAssociationInterface catAssociation : rootCatEntity
-				.getCategoryAssociationCollection())
-		{
-			List dataList = new ArrayList();
-			CategoryEntityInterface targetCaEntity = catAssociation.getTargetCategoryEntity();
-			dataList.add(createDataValueMapForCategory(targetCaEntity, mapStrategry));
-			if (targetCaEntity.getNumberOfEntries().equals(-1))
-			{
+			if (control instanceof AbstractContainmentControl)
+			{// category assiciation.
+				CategoryAssociationInterface catAssociation = (CategoryAssociationInterface) control
+						.getBaseAbstractAttribute();
+				List dataList = new ArrayList();
+				CategoryEntityInterface targetCaEntity = catAssociation.getTargetCategoryEntity();
 				dataList.add(createDataValueMapForCategory(targetCaEntity, mapStrategry));
+				if (targetCaEntity.getNumberOfEntries().equals(-1))
+				{
+					dataList.add(createDataValueMapForCategory(targetCaEntity, mapStrategry));
+				}
+				dataValue.put(catAssociation, dataList);
 			}
-			dataValue.put(catAssociation, dataList);
+			else if (control.getBaseAbstractAttribute() != null)
+			{
+				CategoryAttributeInterface catAttribute = (CategoryAttributeInterface) control
+						.getBaseAbstractAttribute();
+				if (catAttribute.getAbstractAttribute() instanceof AttributeInterface
+						&& !catAttribute.getIsRelatedAttribute())
+				{// normal attribute
+					AttributeInterface attribute = (AttributeInterface) catAttribute
+							.getAbstractAttribute();
+					updateDataMap(dataValue, catAttribute, attribute, mapStrategry, control);
+				}
+				else if (catAttribute.getAbstractAttribute() instanceof AssociationInterface)
+				{// multiselect attribute
+					AssociationInterface association = (AssociationInterface) catAttribute
+							.getAbstractAttribute();
+					AttributeInterface multiselectAttr = (AttributeInterface) EntityManagerUtil
+							.filterSystemAttributes(
+									association.getTargetEntity().getAllAbstractAttributes())
+							.iterator().next();
+					Map<BaseAbstractAttributeInterface, Object> multiSelectDataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
+					for (int i = 0; i < 2; i++)
+					{
+						updateDataMap(multiSelectDataValue, multiselectAttr, multiselectAttr,
+								mapStrategry, control);
+					}
+					List multiselctValueList = new ArrayList();
+					multiselctValueList.add(multiSelectDataValue);
+					dataValue.put(catAttribute, multiselctValueList);
+				}
+
+			}
+
 		}
 		return dataValue;
 	}
 
 	private void updateDataMap(Map dataValue, BaseAbstractAttributeInterface catAtt,
-			AttributeInterface attribute, int mapStrategry, ContainerInterface containerInterface)
+			AttributeInterface attribute, int mapStrategry, ControlInterface control)
 			throws ParseException, DynamicExtensionsSystemException
 	{
-		ControlInterface control = DynamicExtensionsUtility.getControlForAbstractAttribute(
-				(AttributeMetadataInterface) catAtt, containerInterface);
 		if (control instanceof EnumeratedControlInterface)
 		{
 			AttributeMetadataInterface attributeInterface = (AttributeMetadataInterface) catAtt;
@@ -231,27 +236,54 @@ public class DummyMapGenerator
 		Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
 		ContainerInterface containerInterface = (ContainerInterface) rootEntity
 				.getContainerCollection().toArray()[0];
-		for (AbstractAttributeInterface abstractAttribute : rootEntity.getAllAttributes())
+		for (ControlInterface control : containerInterface.getAllControls())
 		{
-			// put the different value for diff attribute type
-			if (abstractAttribute instanceof AttributeInterface)
-			{
-				AttributeInterface attribute = (AttributeInterface) abstractAttribute;
-				updateDataMap(dataValue, attribute, attribute, mapStrategry, containerInterface);
-
-			}
-		}
-		for (AssociationInterface association : rootEntity.getAllAssociations())
-		{
-			List dataList = new ArrayList();
-			EntityInterface targetCaEntity = association.getTargetEntity();
-			dataList.add(createDataValueMapForEntity(targetCaEntity, mapStrategry));
-			if (association.getTargetRole().getMaximumCardinality().equals(
-					DEConstants.Cardinality.MANY.getValue()))
-			{
+			if (control instanceof AbstractContainmentControl)
+			{//association
+				List dataList = new ArrayList();
+				AssociationInterface association = (AssociationInterface) control
+						.getBaseAbstractAttribute();
+				EntityInterface targetCaEntity = association.getTargetEntity();
 				dataList.add(createDataValueMapForEntity(targetCaEntity, mapStrategry));
+				if (association.getTargetRole().getMaximumCardinality().equals(
+						DEConstants.Cardinality.MANY.getValue()))
+				{
+					dataList.add(createDataValueMapForEntity(targetCaEntity, mapStrategry));
+				}
+				dataValue.put(association, dataList);
 			}
-			dataValue.put(association, dataList);
+			else if (control.getBaseAbstractAttribute() != null)
+			{
+				if (control.getBaseAbstractAttribute() instanceof AssociationInterface)
+				{// multiselect case.
+
+					List dataList = new ArrayList();
+					AssociationInterface association = (AssociationInterface) control
+							.getBaseAbstractAttribute();
+					AttributeInterface attribute = (AttributeInterface) EntityManagerUtil
+							.filterSystemAttributes(
+									association.getTargetEntity().getAllAbstractAttributes())
+							.iterator().next();
+					Map<BaseAbstractAttributeInterface, Object> muliselectDataValueMap = new HashMap<BaseAbstractAttributeInterface, Object>();
+					updateDataMap(muliselectDataValueMap, attribute, attribute, mapStrategry,
+							control);
+					dataList.add(muliselectDataValueMap);
+					// 2nd value selected
+					Map<BaseAbstractAttributeInterface, Object> otherMuliselectDataValueMap = new HashMap<BaseAbstractAttributeInterface, Object>();
+					updateDataMap(otherMuliselectDataValueMap, attribute, attribute, mapStrategry,
+							control);
+					dataList.add(otherMuliselectDataValueMap);
+					dataValue.put(association, dataList);
+
+				}
+				else
+				{// normal attribute
+					AttributeInterface attribute = (AttributeInterface) control
+							.getBaseAbstractAttribute();
+					updateDataMap(dataValue, attribute, attribute, mapStrategry, control);
+				}
+			}
+
 		}
 		return dataValue;
 	}
