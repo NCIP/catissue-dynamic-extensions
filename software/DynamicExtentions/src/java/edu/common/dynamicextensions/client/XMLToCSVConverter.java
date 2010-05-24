@@ -1,5 +1,5 @@
 
-package edu.common.dynamicextensions.client;
+package edu.common.dynamicextensions.category;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -20,6 +20,7 @@ import org.xml.sax.SAXException;
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class XMLToCSVConverter.
  *
@@ -280,31 +281,39 @@ public class XMLToCSVConverter
 		String txInstance = null;
 		int length = childNodes.getLength();
 
+		Node instance = null;
+		Node dependentNode = null;
 		for (int i = 0; i < length; i++)
 		{
 			Node item = childNodes.item(i);
 			if (item.getNodeName().equals(INSTANCE))
 			{
-				appendToStringBuilder(newLine);
-				appendToStringBuilder("instance:");
-				txInstance = txInstance(item);
-
-				appendToStringBuilder("," + txInstance);
-
-				appendToStringBuilder(newLine);
-			}
-			else if (item.getNodeName().equals(ATTRIBUTE))
-			{
-				appendToStringBuilder(txInstance + ":");
-				txSkipLogicAttribute(item);
+				instance = item;
 			}
 			else if (item.getNodeName().equals(DEPENDENT_ATTRIBUTE))
 			{
-				appendToStringBuilder(",dependentAttribute~");
-				txSkipLogicDependent(item);
+				dependentNode = item;
 			}
 		}
 
+		for (int i = 0; i < length; i++)
+		{
+			Node item = childNodes.item(i);
+			if (item.getNodeName().equals(ATTRIBUTE))
+			{
+				appendToStringBuilder(newLine);
+				appendToStringBuilder("instance:");
+				txInstance = txInstance(instance);
+				appendToStringBuilder(",");
+				appendToStringBuilder(txInstance);
+				appendToStringBuilder(newLine);
+				appendToStringBuilder(txInstance + ":");
+				txSkipLogicAttribute(item);
+				appendToStringBuilder(",dependentAttribute~");
+				txSkipLogicDependent(dependentNode);
+				appendToStringBuilder(newLine);
+			}
+		}
 	}
 
 	/**
