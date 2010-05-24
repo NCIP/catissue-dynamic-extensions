@@ -1,0 +1,33 @@
+TestCase72
+TestCase71
+TestCase70
+TestCase68
+TestCase66
+TestCase65
+TestCase64
+TestCase63
+TestCasse62
+TestCase61
+TestCase60
+TestCase59
+TestCase58
+TestCase57
+TestCase56
+TestCase54
+TestCase53
+TestCase52
+TestCase51
+TestCase50
+TestCase49
+TestCase48
+TestCase41
+TestCase41_negative
+Calculated Attributes For Automation
+Calculated attribute multiple times
+Multiline subcategory calculated attributes from same class visible RA
+Skip logic for Automation
+Category Single Line For Automation
+Form Multiselect Add Details
+Test Category_Lab Information
+Category_Pathology Reports
+Test Category Radiation Therapy
