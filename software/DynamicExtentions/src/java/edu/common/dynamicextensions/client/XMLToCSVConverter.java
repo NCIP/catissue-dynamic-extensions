@@ -1,5 +1,5 @@
 
-package edu.common.dynamicextensions.category;
+package edu.common.dynamicextensions.client;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -201,11 +201,11 @@ public class XMLToCSVConverter
 			final NamedNodeMap formDefinitionProperties = item.getAttributes();
 
 			final Node formDefinitionName = formDefinitionProperties
-					.getNamedItem(FORM_DEFINITION_NAME);
+			.getNamedItem(FORM_DEFINITION_NAME);
 			appendToStringBuilder(formDefinitionName.getNodeValue() + newLine + newLine);
 
 			final Node entityGroupNameNode = formDefinitionProperties
-					.getNamedItem(ENTITY_GROUP_NAME);
+			.getNamedItem(ENTITY_GROUP_NAME);
 			entityGroupName = entityGroupNameNode.getNodeValue();
 			appendToStringBuilder(entityGroupName + newLine + newLine);
 
@@ -352,6 +352,7 @@ public class XMLToCSVConverter
 	 */
 	private void txSkipLogicDependentAttribute(Node item) throws DOMException, IOException
 	{
+		final String TRUE = "true";
 		NamedNodeMap attributes = item.getAttributes();
 		Node attributeName = attributes.getNamedItem("attributeName");
 		appendToStringBuilder(":" + attributeName.getNodeValue());
@@ -359,15 +360,19 @@ public class XMLToCSVConverter
 		Node attributeName1 = attributes.getNamedItem("isSelectiveReadOnly");
 		Node attributeName2 = attributes.getNamedItem("isShowHide");
 
-		if (attributeName1.getNodeValue().equals("true")
-				|| attributeName2.getNodeValue().equals("true"))
+		if (attributeName1.getNodeValue().equals(TRUE)
+				|| attributeName2.getNodeValue().equals(TRUE))
 		{
 			appendToStringBuilder(",options~");
 
-			if (attributeName1.getNodeValue().equals("true"))
+			if (attributeName1.getNodeValue().equals(TRUE))
+			{
 				appendToStringBuilder("IsSelectiveReadOnly" + ":" + attributeName1.getNodeValue());
-			else if (attributeName2.getNodeValue().equals("true"))
+			}
+			else if (attributeName2.getNodeValue().equals(TRUE))
+			{
 				appendToStringBuilder("IsShowHide" + ":" + attributeName2.getNodeValue());
+			}
 		}
 
 		Node subset = getSubset(item);
@@ -650,7 +655,7 @@ public class XMLToCSVConverter
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private void appendUIProperty(final Node item2, final String nodeName) throws DOMException,
-			IOException
+	IOException
 	{
 		if (nodeName.equals(UI_PROPERTY))
 		{
@@ -810,7 +815,7 @@ public class XMLToCSVConverter
 	 */
 	private void txRAInRequiredCSVOrder(final Node instanceNode, final Node uiPropertyNode,
 			final NamedNodeMap attributes) throws IOException, DOMException
-	{
+			{
 		if (instanceNode != null)
 		{
 			txInstances(instanceNode);
@@ -831,5 +836,5 @@ public class XMLToCSVConverter
 			isFirstUIProperty = false;
 			txUIProperties(uiPropertyNode);
 		}
-	}
+			}
 }
