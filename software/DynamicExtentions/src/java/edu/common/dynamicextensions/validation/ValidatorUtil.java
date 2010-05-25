@@ -80,7 +80,7 @@ public class ValidatorUtil
 								DynamicExtensionsUtility.replaceHTMLSpecialCharacters(control
 										.getCaption())));
 						checkForPermissibleValue(listOfError, control, abstractAttribute,
-								attributeValueNode);
+								attributeValueNode.getValue());
 					}
 				}
 				else if (abstractAttribute instanceof AssociationMetadataInterface)
@@ -142,24 +142,22 @@ public class ValidatorUtil
 	 * @param errorList List of errors.
 	 * @param control Control for which validation need to performed.
 	 * @param abstractAttribute Attribute for validation.
-	 * @param attributeValueNode Value provided for insertion.
+	 * @param attributeValue Value provided for insertion.
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public static void checkForPermissibleValue(List<String> errorList, ControlInterface control,
-			BaseAbstractAttributeInterface abstractAttribute,
-			Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode)
+			BaseAbstractAttributeInterface abstractAttribute, Object attributeValue)
 			throws DynamicExtensionsSystemException
 	{
 		if (control instanceof EnumeratedControlInterface)
 		{
-			AttributeMetadataInterface attributeMetadataInterface =
-							(AttributeMetadataInterface) abstractAttribute;
+			AttributeMetadataInterface attributeMetadataInterface = (AttributeMetadataInterface) abstractAttribute;
 			if (attributeMetadataInterface.getDataElement() != null)
 			{
 				boolean isValuePresent = false;
 				try
 				{
-					isValuePresent = isValidPermissibleValue(attributeValueNode,
+					isValuePresent = isValidPermissibleValue(attributeValue,
 							attributeMetadataInterface);
 				}
 				catch (ParseException e)
@@ -180,50 +178,48 @@ public class ValidatorUtil
 	/**
 	 * This method will check whether the entered value is contained in the defined
 	 * permissible value list of that attribute.
-	 * @param attributeValueNode node
+	 * @param attributeValue value given for insertion
 	 * @param attributeMetadataInterface attribute
 	 * @return true if value is valid else false.
 	 * @throws ParseException
 	 */
-	private static boolean isValidPermissibleValue(
-			Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode,
+	private static boolean isValidPermissibleValue(Object attributeValue,
 			AttributeMetadataInterface attributeMetadataInterface) throws ParseException
 	{
 		boolean isValuePresent = false;
 
-
-		if (attributeValueNode.getValue() instanceof ArrayList)
-
-		{
-				CategoryAttributeInterface attribute = (CategoryAttributeInterface)attributeMetadataInterface;
-				AttributeInterface attributeInterface=getMultiselectAtrribute((AssociationInterface)attribute.getAbstractAttribute());
-				AttributeTypeInformationInterface attributeTypeInformation = attributeInterface
-				.getAttributeTypeInformation();
-				List<PermissibleValueInterface> enteredAttributeValueList = getAttributeValueList(
-						attributeValueNode, attributeTypeInformation);
-				isValuePresent = validatePVForMulstiSelect(enteredAttributeValueList,
-						attributeMetadataInterface);
+		if (attributeValue instanceof ArrayList)
+		{//multiselect case
+			CategoryAttributeInterface attribute = (CategoryAttributeInterface) attributeMetadataInterface;
+			AttributeInterface attributeInterface = getMultiselectAtrribute((AssociationInterface) attribute
+					.getAbstractAttribute());
+			AttributeTypeInformationInterface attributeTypeInformation = attributeInterface
+					.getAttributeTypeInformation();
+			List<PermissibleValueInterface> enteredAttributeValueList = getAttributeValueList(
+					attributeValue, attributeTypeInformation);
+			isValuePresent = validatePVForMulstiSelect(enteredAttributeValueList,
+					attributeMetadataInterface);
 		}
 		else
 		{
 			Collection<PermissibleValueInterface> permissibleValue = ((UserDefinedDE) attributeMetadataInterface
 					.getDataElement()).getPermissibleValueCollection();
 			AttributeTypeInformationInterface attributeTypeInformation = attributeMetadataInterface
-			.getAttributeTypeInformation();
+					.getAttributeTypeInformation();
 			PermissibleValue permissibleValueInterface = (PermissibleValue) attributeTypeInformation
-					.getPermissibleValueForString(attributeValueNode.getValue().toString());
+					.getPermissibleValueForString(attributeValue.toString());
 			if (permissibleValue.contains(permissibleValueInterface))
 			{
 				isValuePresent = true;
 			}
 		}
-		if ((attributeValueNode.getValue() != null)
-				&& "".equals(attributeValueNode.getValue().toString()))
+		if ((attributeValue != null) && "".equals(attributeValue.toString()))
 		{
 			isValuePresent = true;
 		}
 		return isValuePresent;
 	}
+
 	/**
 	 * Get multi-select attribute from the given association.
 	 * @param association Association for which multi select attributes
@@ -234,16 +230,18 @@ public class ValidatorUtil
 	{
 		AttributeInterface multiselectAttribute = null;
 
-		for(AttributeInterface attributeInterface: association.getTargetEntity()
+		for (AttributeInterface attributeInterface : association.getTargetEntity()
 				.getAttributeCollection())
 		{
-			if(attributeInterface.getName().contains("CollectionAttribute"))
+			if (attributeInterface.getName().contains(DEConstants.COLLECTIONATTRIBUTE))
 			{
 				multiselectAttribute = attributeInterface;
+				break;
 			}
 		}
 		return multiselectAttribute;
 	}
+
 	/**
 	 * Validate whether entered values are permissible or not for multi-select.
 	 * @param enteredAttributeValueList List of entered values.
@@ -267,26 +265,23 @@ public class ValidatorUtil
 
 	/**
 	 * Retrieve list of permissible value as list of PermissibleValueInterface entered by user.
-	 * @param attributeValueNode List of values entered by user.
+	 * @param attributeValue values entered by user.
 	 * @param attributeTypeInformation  convert object value to string.
 	 * @throws ParseException throws by attributeTypeInformation.
 	 * @return List of PermissibleValueInterface.
 	 */
-	private static List<PermissibleValueInterface> getAttributeValueList(
-			Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode,
+	private static List<PermissibleValueInterface> getAttributeValueList(Object attributeValue,
 			AttributeTypeInformationInterface attributeTypeInformation) throws ParseException
 	{
-		ArrayList<Map<BaseAbstractAttributeInterface, Object>> attributeValue =
-					(ArrayList<Map<BaseAbstractAttributeInterface, Object>>) attributeValueNode
-				.getValue();
-		List<PermissibleValueInterface> attributeValueList = new ArrayList<PermissibleValueInterface>();
-		for (Map<BaseAbstractAttributeInterface, Object> attributeValueMap : attributeValue)
+		ArrayList<Map<BaseAbstractAttributeInterface, Object>> attributeValueList = (ArrayList<Map<BaseAbstractAttributeInterface, Object>>) attributeValue;
+		List<PermissibleValueInterface> updatedAttributeValueList = new ArrayList<PermissibleValueInterface>();
+		for (Map<BaseAbstractAttributeInterface, Object> attributeValueMap : attributeValueList)
 		{
-			attributeValueList.add(attributeTypeInformation
+			updatedAttributeValueList.add(attributeTypeInformation
 					.getPermissibleValueForString(attributeValueMap.values().toArray()[0]
 							.toString()));
 		}
-		return attributeValueList;
+		return updatedAttributeValueList;
 	}
 
 	/**
@@ -371,9 +366,8 @@ public class ValidatorUtil
 					(AttributeMetadataInterface) abstractAttribute, containerInterface);
 			if ((control != null) && (control.getBaseAbstractAttribute() != null))
 			{
-				errorList.addAll(validateAttributes(attributeValueNode,
-						DynamicExtensionsUtility.replaceHTMLSpecialCharacters(control
-								.getCaption())));
+				errorList.addAll(validateAttributes(attributeValueNode, DynamicExtensionsUtility
+						.replaceHTMLSpecialCharacters(control.getCaption())));
 			}
 		}
 	}
@@ -449,8 +443,7 @@ public class ValidatorUtil
 		}
 		catch (DynamicExtensionsValidationException e)
 		{
-			errorMessage = ApplicationProperties.getValue(e.getErrorCode(), e
-					.getPlaceHolderList());
+			errorMessage = ApplicationProperties.getValue(e.getErrorCode(), e.getPlaceHolderList());
 			errorList.add(errorMessage);
 		}
 	}
@@ -477,13 +470,11 @@ public class ValidatorUtil
 		}
 		try
 		{
-			checkUniqueValidationForAttribute(attribute, valueObject, recordId,
-					controlCaption);
+			checkUniqueValidationForAttribute(attribute, valueObject, recordId, controlCaption);
 		}
 		catch (DynamicExtensionsValidationException e)
 		{
-			errorMessage = ApplicationProperties.getValue(e.getErrorCode(), e
-					.getPlaceHolderList());
+			errorMessage = ApplicationProperties.getValue(e.getErrorCode(), e.getPlaceHolderList());
 			errorList.add(errorMessage);
 		}
 	}
