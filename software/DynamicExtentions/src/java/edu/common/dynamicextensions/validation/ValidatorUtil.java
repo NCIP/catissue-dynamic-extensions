@@ -255,7 +255,8 @@ public class ValidatorUtil
 	{
 		boolean isAllValuePresent = false;
 		if (((UserDefinedDE) attributeMetadataInterface.getDataElement())
-				.getPermissibleValueCollection().containsAll(enteredAttributeValueList))
+				.getPermissibleValueCollection().containsAll(enteredAttributeValueList)
+				|| enteredAttributeValueList.isEmpty())
 		{
 			isAllValuePresent = true;
 		}
@@ -277,9 +278,12 @@ public class ValidatorUtil
 		List<PermissibleValueInterface> updatedAttributeValueList = new ArrayList<PermissibleValueInterface>();
 		for (Map<BaseAbstractAttributeInterface, Object> attributeValueMap : attributeValueList)
 		{
-			updatedAttributeValueList.add(attributeTypeInformation
-					.getPermissibleValueForString(attributeValueMap.values().toArray()[0]
-							.toString()));
+			if (!attributeValueMap.values().isEmpty())
+			{
+				updatedAttributeValueList.add(attributeTypeInformation
+						.getPermissibleValueForString(attributeValueMap.values().toArray()[0]
+								.toString()));
+			}
 		}
 		return updatedAttributeValueList;
 	}
