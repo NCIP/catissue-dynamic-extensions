@@ -22,7 +22,7 @@ public class TreeData
 	private String folder = "/images/de";
 	private static final String COLOR = "navy";
 	private final TreeNodesList nodes;
-	private final String target = "";
+	private final static String target = "";
 	private String buf = "";
 	private String nodeClickedFunction = null;
 
