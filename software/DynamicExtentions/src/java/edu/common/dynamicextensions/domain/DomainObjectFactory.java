@@ -883,8 +883,7 @@ public class DomainObjectFactory
 	 */
 	public CalculatedAttributeInterface createCalculatedAttribute()
 	{
-		CalculatedAttribute calculatedAttribute = new CalculatedAttribute();
-		return calculatedAttribute;
+		return new CalculatedAttribute();
 	}
 
 	/**

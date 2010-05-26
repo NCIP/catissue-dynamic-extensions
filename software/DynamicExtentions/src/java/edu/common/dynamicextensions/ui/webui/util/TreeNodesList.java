@@ -7,7 +7,7 @@ import java.util.List;
 public class TreeNodesList
 {
 
-	private List childNodeList = null;
+	private final List childNodeList;
 	private int length = 0;
 
 	/**

@@ -248,7 +248,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 			if (oldControlsCollection != null)
 			{
 				final Integer[] sequenceNumbers = DynamicExtensionsUtility.convertToIntegerArray(
-						controlsSeqNumbers, ProcessorConstants.CONTROLS_SEQUENCE_NUMBER_SEPARATOR);
+						controlsSeqNumbers, ProcessorConstants.CONTROLS_SEQ_NUMBER_SEPARATOR);
 				final ControlInterface[] oldControls = oldControlsCollection
 						.toArray(new ControlInterface[oldControlsCollection.size()]);
 

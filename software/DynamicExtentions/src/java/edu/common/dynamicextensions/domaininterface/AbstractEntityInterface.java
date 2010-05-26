@@ -34,7 +34,7 @@ public interface AbstractEntityInterface extends AbstractMetadataInterface
 	void setContainerCollection(Collection containerCollection);
 
 	/**
-	 * 
+	 *
 	 * @param containerInterface
 	 */
 	void addContainer(ContainerInterface containerInterface);
@@ -50,13 +50,13 @@ public interface AbstractEntityInterface extends AbstractMetadataInterface
 	void removeAllAttributes();
 
 	/**
-	 * 
-	 * @return ConstraintProperties 
+	 *
+	 * @return ConstraintProperties
 	 */
 	ConstraintPropertiesInterface getConstraintProperties();
 
 	/**
-	 * 
+	 *
 	 * @param constraintProperties
 	 */
 	void setConsraintProperties(ConstraintPropertiesInterface constraintProperties);
@@ -65,5 +65,5 @@ public interface AbstractEntityInterface extends AbstractMetadataInterface
 	 * @param targetEntity
 	 * @return
 	 */
-	public AssociationMetadataInterface getAssociation(AbstractEntityInterface targetEntity);
+	AssociationMetadataInterface getAssociation(AbstractEntityInterface targetEntity);
 }

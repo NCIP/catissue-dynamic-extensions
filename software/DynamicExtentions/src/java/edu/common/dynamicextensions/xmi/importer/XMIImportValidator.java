@@ -233,8 +233,8 @@ public class XMIImportValidator
 		Set<String> attributeCollection = entityNameVsAttributeNames.get(sourceEntityName);
 		validateName(umlAssociationName, "Association", sourceEntityName, targetEntityName);
 		validateAssociationName(attributeCollection, umlAssociationName, sourceEntityName);
-		validateAssociationNameInParent(entityNameVsAttributeNames, umlAssociationName, sourceEntityName,
-				parentIdVsChildrenIds, umlClassIdVsEntity);
+		validateAssociationNameInParent(entityNameVsAttributeNames, umlAssociationName,
+				sourceEntityName, parentIdVsChildrenIds, umlClassIdVsEntity);
 		validateCardinality(sourceRole, targetRole, sourceEntityName, targetEntityName);
 	}
 
@@ -260,7 +260,7 @@ public class XMIImportValidator
 				if (childName.equalsIgnoreCase(childEntityName))
 				{
 					String parentName = umlClassIdVsEntity.get(entry.getKey()).getName();
-					if ((parentName != null) && (parentName.trim().length() > 0))
+					if (parentName != null && !"".equals(parentName.trim()))
 					{
 						Set<String> attributeCollection = entityNameVsAttributeNames
 								.get(parentName);
@@ -285,7 +285,7 @@ public class XMIImportValidator
 			throws DynamicExtensionsSystemException
 	{
 		if ((attributeCollection != null) && !attributeCollection.isEmpty()
-				&& (umlAssociationName != null) && (umlAssociationName.trim().length() > 0))
+				&& (umlAssociationName != null) && (!"".equals(umlAssociationName.trim())))
 		{
 			for (String attributeName : attributeCollection)
 			{
@@ -421,8 +421,8 @@ public class XMIImportValidator
 	 * @param artifact
 	 * @param artifactDetails
 	 */
-	public static void validateNameForSpecialCharacterAndNumericStart(String name,
-			String artifact, String artifactDetails)
+	public static void validateNameForSpecialCharacterAndNumericStart(String name, String artifact,
+			String artifactDetails)
 	{
 		if (name.matches(ApplicationProperties.getValue("regEx.SpecialCharacters")))
 		{

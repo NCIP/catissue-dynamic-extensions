@@ -82,7 +82,8 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 	 * @return HTML code for MultiselectCheckBox Control.
 	 * @throws DynamicExtensionsSystemException
 	 */
-	protected String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateEditModeHTML(ContainerInterface container)
+			throws DynamicExtensionsSystemException
 	{
 		String htmlString = "";
 		List<NameValueBean> nameValueBeans = null;
@@ -145,13 +146,17 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 							+ " checked"
 							+ disabled
 							+ " onchange='isDataChanged();' ondblclick=\"changeValueForAllCheckBoxes(this);"
-							+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
-									+ "','" + identifier + "','" + parentContainerId + "');" : "")
+							+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName + "','"
+									+ identifier + "','" + parentContainerId + "');" : "")
 							+ "\" onclick=\"changeValueForMultiSelectCheckBox(this);"
-							+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
-									+ "','" + identifier + "','" + parentContainerId + "');" : "")
+							+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName + "','"
+									+ identifier + "','" + parentContainerId + "');" : "")
 							+ "\" /><img src='images/de/spacer.gif' width='2' height='2'>"
-							+ "<label for=\"" + htmlComponentName + "\">" + DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean.getName())
+							+ "<label for=\""
+							+ htmlComponentName
+							+ "\">"
+							+ DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean
+									.getName())
 							+ "</label> <img src='images/de/spacer.gif' width='3' height='3'>";
 				}
 				else
@@ -173,11 +178,11 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 							+ nameValueBean.getValue()
 							+ "'"
 							+ " onchange='isDataChanged();' ondblclick=\"changeValueForAllCheckBoxes(this);"
-							+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
-									+ "','" + identifier + "','" + parentContainerId + "');" : "")
+							+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName + "','"
+									+ identifier + "','" + parentContainerId + "');" : "")
 							+ "\" onclick=\"changeValueForMultiSelectCheckBox(this);"
-							+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
-									+ "','" + identifier + "','" + parentContainerId + "');" : "")
+							+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName + "','"
+									+ identifier + "','" + parentContainerId + "');" : "")
 							+ "\" /><img src='images/de/spacer.gif' width='2' height='2'>"
 							+ "<label for=\"" + htmlComponentName + "\">" + nameValueBean.getName()
 							+ "</label> <img src='images/de/spacer.gif' width='3' height='3'>";
@@ -198,7 +203,8 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 	 * @return HTML code for MultiselectCheckBox Control.
 	 * @throws DynamicExtensionsSystemException
 	 */
-	protected String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(ContainerInterface container)
+			throws DynamicExtensionsSystemException
 	{
 		List<String> selectedOptions = new ArrayList<String>();
 
@@ -292,7 +298,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 					{
 						defaultValue = attrMetadataInterface.getDefaultValue();
 					}
-					if (defaultValue != null && defaultValue.trim().length() != 0)
+					if (defaultValue != null && !"".equals(defaultValue.trim()))
 					{
 						values.add(defaultValue);
 					}
@@ -331,6 +337,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 		}
 		return associationInterface;
 	}
+
 	/**
 	 *
 	 */

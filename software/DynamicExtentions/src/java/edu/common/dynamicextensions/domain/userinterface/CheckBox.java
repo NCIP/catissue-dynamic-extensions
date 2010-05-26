@@ -15,6 +15,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.global.DEConstants;
 
 /**
  * @author chetan patil
@@ -34,18 +35,19 @@ public class CheckBox extends Control implements CheckBoxInterface
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domain.userinterface.Control#generateEditModeHTML()
 	 */
-	protected String generateEditModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateEditModeHTML(ContainerInterface container)
+			throws DynamicExtensionsSystemException
 	{
 		String checked = getDefaultValueForControl();
 		String parentContainerId = "";
-		if (this.getParentContainer() != null && this.getParentContainer().getId() != null)
+		if (getParentContainer() != null && getParentContainer().getId() != null)
 		{
-			parentContainerId = this.getParentContainer().getId().toString();
+			parentContainerId = getParentContainer().getId().toString();
 		}
 		String identifier = "";
-		if (this.getId() != null)
+		if (getId() != null)
 		{
-			identifier = this.getId().toString();
+			identifier = getId().toString();
 		}
 		String htmlString = "";
 		if (getIsSkipLogicTargetControl())
@@ -55,38 +57,58 @@ public class CheckBox extends Control implements CheckBoxInterface
 		}
 		String disabled = "";
 		//		If control is defined as readonly through category CSV file,make it Disabled
-		if ((this.isReadOnly != null && getIsReadOnly()) || (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly))
+		if ((isReadOnly != null && getIsReadOnly())
+				|| (isSkipLogicReadOnly != null && isSkipLogicReadOnly))
 		{
 			disabled = ProcessorConstants.DISABLED;
 		}
 
 		String htmlComponentName = getHTMLComponentName();
-		if (checked != null && (checked.equalsIgnoreCase("true") || checked.equals("1")|| checked.equals("y") || checked.equals("yes")))
+		if (checked != null
+				&& (checked.equalsIgnoreCase("true") || checked.equals("1") || checked.equals("y") || checked
+						.equals("yes")))
 		{
-			htmlString += "<input type='checkbox' class='" + this.cssClass + "' name='"
-					+ htmlComponentName + "' checkedValue='"
-					+ DynamicExtensionsUtility.getValueForCheckBox(true) + "' uncheckedValue='"
-					+ DynamicExtensionsUtility.getValueForCheckBox(false) + "'" + "value='"
-					+ DynamicExtensionsUtility.getValueForCheckBox(true) + "' " + "id='"
-					+ htmlComponentName + "'" + "checked" + disabled
+			htmlString += "<input type='checkbox' class='"
+					+ cssClass
+					+ "' name='"
+					+ htmlComponentName
+					+ "' checkedValue='"
+					+ DynamicExtensionsUtility.getValueForCheckBox(true)
+					+ "' uncheckedValue='"
+					+ DynamicExtensionsUtility.getValueForCheckBox(false)
+					+ "'"
+					+ "value='"
+					+ DynamicExtensionsUtility.getValueForCheckBox(true)
+					+ "' "
+					+ "id='"
+					+ htmlComponentName
+					+ "'"
+					+ "checked"
+					+ disabled
 					+ " onchange=\"isDataChanged();\" onclick=\"changeValueForCheckBox(this);"
-					+ (this.isSkipLogic ? "getSkipLogicControl('"
-							+ htmlComponentName + "','" + identifier + "','"
-							+ parentContainerId + "');" : "") + "\">";
+					+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName + "','"
+							+ identifier + "','" + parentContainerId + "');" : "") + "\">";
 		}
 		else
 		{
-			htmlString += "<input type='checkbox' class='" + this.cssClass + "' name='"
-					+ htmlComponentName + "' checkedValue='"
-					+ DynamicExtensionsUtility.getValueForCheckBox(true) + "' uncheckedValue='"
-					+ DynamicExtensionsUtility.getValueForCheckBox(false) + "'" + "value='"
-					+ DynamicExtensionsUtility.getValueForCheckBox(false) + "' " + disabled
+			htmlString += "<input type='checkbox' class='"
+					+ cssClass
+					+ "' name='"
+					+ htmlComponentName
+					+ "' checkedValue='"
+					+ DynamicExtensionsUtility.getValueForCheckBox(true)
+					+ "' uncheckedValue='"
+					+ DynamicExtensionsUtility.getValueForCheckBox(false)
+					+ "'"
+					+ "value='"
+					+ DynamicExtensionsUtility.getValueForCheckBox(false)
+					+ "' "
+					+ disabled
 					+ "id='"
 					+ htmlComponentName
 					+ "' onchange=\"isDataChanged();\" onclick=\"changeValueForCheckBox(this);"
-					+ (this.isSkipLogic ? "getSkipLogicControl('"
-							+ htmlComponentName + "','" + identifier + "','"
-							+ parentContainerId + "');" : "") + "\">";
+					+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName + "','"
+							+ identifier + "','" + parentContainerId + "');" : "") + "\">";
 		}
 		if (getIsSkipLogicTargetControl())
 		{
@@ -100,12 +122,13 @@ public class CheckBox extends Control implements CheckBoxInterface
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domain.userinterface.Control#generateViewModeHTML()
 	 */
-	protected String generateViewModeHTML(ContainerInterface container) throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(ContainerInterface container)
+			throws DynamicExtensionsSystemException
 	{
 		String htmlString = "&nbsp;";
 		if (value != null)
 		{
-			String checked = (String) this.value;
+			String checked = (String) value;
 			htmlString = "<input type='checkbox' class='" + cssClass + "' "
 					+ DynamicExtensionsUtility.getCheckboxSelectionValue(checked) + " disabled>";
 		}
@@ -139,18 +162,19 @@ public class CheckBox extends Control implements CheckBoxInterface
 		// TODO Auto-generated method stub
 
 	}
+
 	/**
 	 *
 	 * @return
 	 */
 	private String getDefaultValueForControl()
 	{
-		String defaultValue = String.valueOf(this.value);
+		String defaultValue = String.valueOf(value);
 		if (!getIsSkipLogicDefaultValue())
 		{
-			if (this.value == null)
+			if (value == null)
 			{
-				defaultValue = this.getAttibuteMetadataInterface().getDefaultValue();
+				defaultValue = getAttibuteMetadataInterface().getDefaultValue();
 			}
 		}
 		else
@@ -162,6 +186,7 @@ public class CheckBox extends Control implements CheckBoxInterface
 		}
 		return defaultValue;
 	}
+
 	/**
 	 *
 	 * @param selectedPermissibleValues
@@ -173,13 +198,15 @@ public class CheckBox extends Control implements CheckBoxInterface
 	{
 		List<SkipLogicAttributeInterface> skipLogicAttributes = new ArrayList<SkipLogicAttributeInterface>();
 		String checked = getDefaultValueForControl();
-		if (checked.equalsIgnoreCase("true") || checked.equals("1")|| checked.equals("y") || checked.equals("yes"))
+		if (DEConstants.TRUE.equalsIgnoreCase(checked) || "1".equals(checked)
+				|| "y".equals(checked) || "yes".equals(checked))
 		{
 			skipLogicAttributes.addAll(ControlsUtility
 					.getSkipLogicAttributesForCheckBox(attributeMetadataInterface));
 		}
 		return skipLogicAttributes;
 	}
+
 	/**
 	 *
 	 * @param selectedPermissibleValues
@@ -191,13 +218,15 @@ public class CheckBox extends Control implements CheckBoxInterface
 	{
 		List<SkipLogicAttributeInterface> skipLogicAttributes = new ArrayList<SkipLogicAttributeInterface>();
 		String checked = getDefaultValueForControl();
-		if (!checked.equalsIgnoreCase("true") && !checked.equals("1") && !checked.equals("y") && !checked.equals("yes"))
+		if (!DEConstants.TRUE.equalsIgnoreCase(checked) && !"1".equals(checked)
+				&& !"y".equals(checked) && !"yes".equals(checked))
 		{
 			skipLogicAttributes.addAll(ControlsUtility
 					.getSkipLogicAttributesForCheckBox(attributeMetadataInterface));
 		}
 		return skipLogicAttributes;
 	}
+
 	/**
 	 *
 	 */
@@ -205,6 +234,7 @@ public class CheckBox extends Control implements CheckBoxInterface
 	{
 		setSkipLogicControlValues(null);
 	}
+
 	/**
 	 *
 	 */
@@ -217,10 +247,11 @@ public class CheckBox extends Control implements CheckBoxInterface
 		}
 		if (values != null)
 		{
-			controlList = getSkipLogicControls(null,values);
+			controlList = getSkipLogicControls(null, values);
 		}
 		return controlList;
 	}
+
 	/**
 	 *
 	 */

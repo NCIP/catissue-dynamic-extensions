@@ -50,12 +50,12 @@ public class FileUploadManager implements DynamicExtensionsQueryBuilderConstants
 		catch (DAOException e)
 		{
 			LOGGER.info("Error occured while connecting to database.", e);
-			throw new DynamicExtensionsSystemException(e.getMessage());
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
 		}
 		catch (SQLException e)
 		{
 			LOGGER.info("Error occured while fetching results from database.", e);
-			throw new DynamicExtensionsSystemException(e.getMessage());
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
 		}
 		return identifier;
 	}
@@ -107,8 +107,7 @@ public class FileUploadManager implements DynamicExtensionsQueryBuilderConstants
 		return colValBeanList;
 	}
 
-	public void deleteRecord(long identifier)
-			throws DynamicExtensionsSystemException
+	public void deleteRecord(long identifier) throws DynamicExtensionsSystemException
 	{
 		JDBCDAO jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
 
@@ -173,7 +172,7 @@ public class FileUploadManager implements DynamicExtensionsQueryBuilderConstants
 		catch (DAOException e)
 		{
 			LOGGER.info("Error occured while retrieving file database.", e);
-			throw new DynamicExtensionsSystemException(e.getMessage());
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
 		}
 		finally
 		{

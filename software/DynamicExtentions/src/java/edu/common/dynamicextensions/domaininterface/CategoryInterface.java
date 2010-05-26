@@ -28,16 +28,19 @@ public interface CategoryInterface extends AbstractMetadataInterface
 	 * @return
 	 */
 	Collection<CategoryEntityInterface> getRelatedAttributeCategoryEntityCollection();
+
 	/**
 	 *
 	 * @return
 	 */
 	Long getUserId();
+
 	/**
 	 * To associate user with the study
 	 * @param userId
 	 */
 	void setUserId(Long userId);
+
 	/**
 	 * @param relatedAttributeCategoryEntityCollection
 	 */
@@ -54,10 +57,10 @@ public interface CategoryInterface extends AbstractMetadataInterface
 	/**
 	 * @return true if category is to be cached
 	 */
-	public Boolean getIsCacheable();
+	Boolean getIsCacheable();
 
 	/**
 	 * @param isCacheable true if category is to be cached
 	 */
-	public void setIsCacheable(Boolean isCacheable);
+	void setIsCacheable(Boolean isCacheable);
 }

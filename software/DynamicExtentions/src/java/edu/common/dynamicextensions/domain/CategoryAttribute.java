@@ -112,6 +112,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	 * Collection of category attributes.
 	 */
 	protected Collection<SkipLogicAttributeInterface> dependentSkipLogicAttributes = new HashSet<SkipLogicAttributeInterface>();
+
 	/**
 	 * This method returns the Collection of Column Properties of the Attribute.
 	 * @hibernate.set name="columnPropertiesCollection" table="DYEXTN_COLUMN_PROPERTIES" cascade="all" inverse="false" lazy="false"
@@ -164,7 +165,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 		{
 			columnPropertiesCollection.clear();
 		}
-		this.columnPropertiesCollection.add(columnProperties);
+		columnPropertiesCollection.add(columnProperties);
 	}
 
 	/**
@@ -220,7 +221,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 		{
 			dataElementCollection = new HashSet();
 		}
-		this.dataElementCollection.add(dataElementInterface);
+		dataElementCollection.add(dataElementInterface);
 	}
 
 	/**
@@ -259,7 +260,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	 */
 	public void setAbstractAttribute(AbstractAttributeInterface attribute)
 	{
-		this.abstractAttribute = attribute;
+		abstractAttribute = attribute;
 	}
 
 	/**
@@ -280,7 +281,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	{
 		if (categoryEntityInterface != null)
 		{
-			this.categoryEntity = categoryEntityInterface;
+			categoryEntity = categoryEntityInterface;
 		}
 	}
 
@@ -305,6 +306,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	{
 		this.defaultPermissibleValuesCollection = defaultPermissibleValuesCollection;
 	}
+
 	/**
 	 *
 	 * @return
@@ -321,6 +323,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 		}
 		return permissibleValueInterface;
 	}
+
 	/**
 	 * @hibernate.set name="skipLogicpermissibleValuesCollection" table="DYEXTN_PERMISSIBLE_VALUE"
 	 * cascade="all-delete-orphan" inverse="false" lazy="false"
@@ -342,6 +345,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	{
 		this.skipLogicpermissibleValuesCollection = skipLogicpermissibleValuesCollection;
 	}
+
 	/**
 	 * @param sourceEntity
 	 */
@@ -351,8 +355,9 @@ public class CategoryAttribute extends BaseAbstractAttribute
 		{
 			skipLogicpermissibleValuesCollection = new HashSet<PermissibleValueInterface>();
 		}
-		this.skipLogicpermissibleValuesCollection.add(permissibleValue);
+		skipLogicpermissibleValuesCollection.add(permissibleValue);
 	}
+
 	/**
 	 * @param sourceEntity
 	 */
@@ -360,9 +365,10 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	{
 		if (skipLogicpermissibleValuesCollection != null)
 		{
-			this.skipLogicpermissibleValuesCollection.clear();
+			skipLogicpermissibleValuesCollection.clear();
 		}
 	}
+
 	/**
 	 *
 	 * @return
@@ -377,7 +383,8 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	 * @param permissibleValue
 	 * @return
 	 */
-	public PermissibleValueInterface getSkipLogicPermissibleValue(PermissibleValueInterface permissibleValue)
+	public PermissibleValueInterface getSkipLogicPermissibleValue(
+			PermissibleValueInterface permissibleValue)
 	{
 		PermissibleValueInterface permissibleValueInterface = null;
 		if (skipLogicpermissibleValuesCollection != null
@@ -394,6 +401,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 		}
 		return permissibleValueInterface;
 	}
+
 	/**
 	 * @hibernate.set name="formulaCollection" table="DYEXTN_FORMULA"
 	 * cascade="all-delete-orphan" inverse="false" lazy="false"
@@ -414,6 +422,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	{
 		this.formulaCollection = formulaCollection;
 	}
+
 	/**
 	 * @hibernate.set name="calculatedAttributeCollection" table="DYEXTN_CATEGORY_ATTRIBUTE"
 	 * cascade="all-delete-orphan" inverse="false" lazy="false"
@@ -426,6 +435,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	{
 		return calculatedAttributeCollection;
 	}
+
 	/**
 	 *
 	 * @param calculatedAttributeCollection
@@ -435,6 +445,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	{
 		this.calculatedAttributeCollection = calculatedAttributeCollection;
 	}
+
 	/**
 	 * @hibernate.set name="calculatedCategoryAttributeCollection" table="DYEXTN_CATEGORY_ATTRIBUTE"
 	 * cascade="all-delete-orphan" inverse="false" lazy="false"
@@ -447,6 +458,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	{
 		return calculatedDependentCategoryAttributes;
 	}
+
 	/**
 	 *
 	 * @param calculatedDependentCategoryAttributes
@@ -456,17 +468,20 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	{
 		this.calculatedDependentCategoryAttributes = calculatedDependentCategoryAttributes;
 	}
+
 	/**
 	 *
 	 */
-	public void addCalculatedDependentCategoryAttribute(CategoryAttributeInterface categoryAttributeInterface)
+	public void addCalculatedDependentCategoryAttribute(
+			CategoryAttributeInterface categoryAttributeInterface)
 	{
-		if (this.calculatedDependentCategoryAttributes == null)
+		if (calculatedDependentCategoryAttributes == null)
 		{
-			this.calculatedDependentCategoryAttributes = new HashSet<CategoryAttributeInterface>();
+			calculatedDependentCategoryAttributes = new HashSet<CategoryAttributeInterface>();
 		}
-		this.calculatedDependentCategoryAttributes.add(categoryAttributeInterface);
+		calculatedDependentCategoryAttributes.add(categoryAttributeInterface);
 	}
+
 	/**
 	 * @hibernate.set name="calculatedCategoryAttributeCollection" table="DYEXTN_CALCULATED_ATTRIBUTE"
 	 * cascade="all-delete-orphan" inverse="false" lazy="false"
@@ -479,6 +494,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	{
 		return calculatedCategoryAttributeCollection;
 	}
+
 	/**
 	 *
 	 * @param calculatedCategoryAttributeCollection
@@ -488,17 +504,20 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	{
 		this.calculatedCategoryAttributeCollection = calculatedCategoryAttributeCollection;
 	}
+
 	/**
 	 *
 	 */
-	public void addCalculatedCategoryAttribute(CalculatedAttributeInterface calculatedAttributeInterface)
+	public void addCalculatedCategoryAttribute(
+			CalculatedAttributeInterface calculatedAttributeInterface)
 	{
-		if (this.calculatedCategoryAttributeCollection == null)
+		if (calculatedCategoryAttributeCollection == null)
 		{
-			this.calculatedCategoryAttributeCollection = new HashSet<CalculatedAttributeInterface>();
+			calculatedCategoryAttributeCollection = new HashSet<CalculatedAttributeInterface>();
 		}
-		this.calculatedCategoryAttributeCollection.add(calculatedAttributeInterface);
+		calculatedCategoryAttributeCollection.add(calculatedAttributeInterface);
 	}
+
 	/**
 	 * This method removes all Calculated Category Attributes.
 	 */
@@ -506,6 +525,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	{
 		calculatedCategoryAttributeCollection.clear();
 	}
+
 	/**
 	 * This method return the default value for the category attribute if set otherwise
 	 * return the default value for the original attribute
@@ -543,10 +563,10 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	private String getDefaultValueForAbstractAttribute()
 	{
 		String defaultValue = null;
-		AbstractAttributeInterface attribute = this.abstractAttribute;
+		AbstractAttributeInterface attribute = abstractAttribute;
 		if (attribute instanceof Attribute)
 		{
-			defaultValue = ((AttributeMetadataInterface) this.abstractAttribute).getDefaultValue();
+			defaultValue = ((AttributeMetadataInterface) abstractAttribute).getDefaultValue();
 		}
 		return defaultValue;
 	}
@@ -568,8 +588,9 @@ public class CategoryAttribute extends BaseAbstractAttribute
 			defaultPermissibleValuesCollection.remove(iterator.next());
 		}
 
-		this.defaultPermissibleValuesCollection.add(permissibleValue);
+		defaultPermissibleValuesCollection.add(permissibleValue);
 	}
+
 	/**
 	 *
 	 * @param formulaInterface
@@ -580,16 +601,15 @@ public class CategoryAttribute extends BaseAbstractAttribute
 		{
 			formulaCollection = new HashSet<FormulaInterface>();
 		}
-		if (formulaCollection != null
-				&& !formulaCollection.isEmpty())
+		if (formulaCollection != null && !formulaCollection.isEmpty())
 		{
-			Iterator<FormulaInterface> iterator = formulaCollection
-					.iterator();
+			Iterator<FormulaInterface> iterator = formulaCollection.iterator();
 			formulaCollection.remove(iterator.next());
 		}
 
-		this.formulaCollection.add(formulaInterface);
+		formulaCollection.add(formulaInterface);
 	}
+
 	/**
 	 * This method return the formula.
 	 * @return
@@ -597,21 +617,20 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	public FormulaInterface getFormula()
 	{
 		FormulaInterface formula = null;
-		if (formulaCollection != null
-				&& !formulaCollection.isEmpty())
+		if (formulaCollection != null && !formulaCollection.isEmpty())
 		{
-			Iterator<FormulaInterface> iterator = formulaCollection
-					.iterator();
+			Iterator<FormulaInterface> iterator = formulaCollection.iterator();
 			formula = iterator.next();
 		}
 		return formula;
 	}
+
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface#getMaxSize()
 	 */
 	public int getMaxSize()
 	{
-		return ((AttributeMetadataInterface) this.abstractAttribute).getMaxSize();
+		return ((AttributeMetadataInterface) abstractAttribute).getMaxSize();
 	}
 
 	/* (non-Javadoc)
@@ -619,7 +638,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	 */
 	public String getMeasurementUnit()
 	{
-		return ((AttributeMetadataInterface) this.abstractAttribute).getMeasurementUnit();
+		return ((AttributeMetadataInterface) abstractAttribute).getMeasurementUnit();
 	}
 
 	/* (non-Javadoc)
@@ -627,12 +646,12 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	 */
 	public int getDecimalPlaces()
 	{
-		return ((AttributeMetadataInterface) this.abstractAttribute).getDecimalPlaces();
+		return ((AttributeMetadataInterface) abstractAttribute).getDecimalPlaces();
 	}
 
 	public AttributeTypeInformationInterface getAttributeTypeInformation()
 	{
-		return ((AttributeMetadataInterface) this.abstractAttribute).getAttributeTypeInformation();
+		return ((AttributeMetadataInterface) abstractAttribute).getAttributeTypeInformation();
 	}
 
 	/**
@@ -666,6 +685,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	{
 		this.isRelatedAttribute = isRelatedAttribute;
 	}
+
 	/**
 	* @hibernate.property name="isCalculated" type="boolean" column="IS_CAL_ATTRIBUTE"
 	*/
@@ -673,14 +693,16 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	{
 		return isCalculated;
 	}
+
 	/**
 	 *
 	 * @param isCalculatedAttribute
 	 */
 	public void setIsCalculated(Boolean isCalculatedAttribute)
 	{
-		this.isCalculated = isCalculatedAttribute;
+		isCalculated = isCalculatedAttribute;
 	}
+
 	/**
 	 * @hibernate.property name="isSourceForCalculatedAttribute" type="boolean" column="IS_SRC_FOR_CAL_ATTR"
 	 * @return Returns the isHidden.
@@ -689,15 +711,16 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	{
 		return isSourceForCalculatedAttribute;
 	}
+
 	/**
 	 *
 	 * @param isSourceForCalculatedAttribute
 	 */
-	public void setIsSourceForCalculatedAttribute(
-			Boolean isSourceForCalculatedAttribute)
+	public void setIsSourceForCalculatedAttribute(Boolean isSourceForCalculatedAttribute)
 	{
 		this.isSourceForCalculatedAttribute = isSourceForCalculatedAttribute;
 	}
+
 	/**
 	* @hibernate.property name="isSkipLogic" type="boolean" column="IS_SKIP_LOGIC"
 	*/
@@ -705,6 +728,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	{
 		return isSkipLogic;
 	}
+
 	/**
 	 *
 	 * @param isSkipLogic
@@ -719,8 +743,9 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	 */
 	public boolean isValuePresent(Object value) throws DynamicExtensionsSystemException
 	{
-		return ((AttributeMetadataInterface) this.getAbstractAttribute()).isValuePresent(value);
+		return ((AttributeMetadataInterface) getAbstractAttribute()).isValuePresent(value);
 	}
+
 	/**
 	 * @hibernate.set name="dependentSkipLogicAttributes" table="DYEXTN_SKIP_LOGIC_ATTRIBUTE"
 	 * cascade="all-delete-orphan" inverse="false" lazy="false"
@@ -733,6 +758,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	{
 		return dependentSkipLogicAttributes;
 	}
+
 	/**
 	 *
 	 * @param dependentSkipLogicAttributes
@@ -742,11 +768,13 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	{
 		this.dependentSkipLogicAttributes = dependentSkipLogicAttributes;
 	}
+
 	/**
 	 * This method adds a skip logic attribute.
 	 * @param skipLogicAttributeInterface
 	 */
-	public void addDependentSkipLogicAttribute(SkipLogicAttributeInterface skipLogicAttributeInterface)
+	public void addDependentSkipLogicAttribute(
+			SkipLogicAttributeInterface skipLogicAttributeInterface)
 	{
 		if (dependentSkipLogicAttributes == null)
 		{
@@ -754,11 +782,13 @@ public class CategoryAttribute extends BaseAbstractAttribute
 		}
 		dependentSkipLogicAttributes.add(skipLogicAttributeInterface);
 	}
+
 	/**
 	 * This method removes a SkipLogic Attribute.
 	 * @param skipLogicAttributeInterface.
 	 */
-	public void removeDependentSkipLogicAttribute(SkipLogicAttributeInterface skipLogicAttributeInterface)
+	public void removeDependentSkipLogicAttribute(
+			SkipLogicAttributeInterface skipLogicAttributeInterface)
 	{
 		if ((dependentSkipLogicAttributes != null)
 				&& (dependentSkipLogicAttributes.contains(skipLogicAttributeInterface)))
@@ -783,8 +813,8 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	 */
 	public AttributeInterface getAttribute()
 	{
-		AttributeInterface attribute = (AttributeInterface) this.getAbstractAttribute();
-		return attribute;
+		return (AttributeInterface) getAbstractAttribute();
+
 	}
 
 }

@@ -274,8 +274,14 @@ public class CategoryCSVFileParser extends CategoryFileParser
 				String permiValue = "";
 				Collection<SemanticPropertyInterface> semanticPropertyCollection = null;
 
-				if (indexOfConceptCodeStart != -1)
-				{//Concept code is present
+				if (indexOfConceptCodeStart == -1)
+				{//Concept Code not defined
+					permiValue = pv;
+					pvStringLength = pvStringLength + permiValue.length();
+				}
+				else
+				{
+					//Concept code is present
 					semanticPropertyCollection = new HashSet<SemanticPropertyInterface>();
 					permiValue = pv.substring(0, indexOfConceptCodeStart);
 					pvStringLength = pvStringLength + permiValue.length();
@@ -311,12 +317,6 @@ public class CategoryCSVFileParser extends CategoryFileParser
 						semanticPropertyCollection.add(semanticProperty);
 					}
 				}
-				else
-				{//Concept Code not defined
-					permiValue = pv;
-					pvStringLength = pvStringLength + permiValue.length();
-
-				}
 				validateStringForStinger(permiValue);
 				if (!"".equals(permiValue.trim()))
 				{
@@ -339,7 +339,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 				String line = reader.readLine();
 				while (line != null)
 				{
-					if (line != null && line.trim().length() != 0)//skip the line if it is blank
+					if (!"".equals(line.trim()))//skip the line if it is blank
 					{
 						Collection<SemanticPropertyInterface> semanticPropertyCollection = null;
 						String pvString = line.trim();
@@ -483,13 +483,14 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	 */
 	public boolean hasDisplayLable()
 	{
+		boolean iaLablePresent = false;
 		Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
 		if (readLine()[0].trim().toLowerCase().startsWith(
 				CategoryCSVConstants.DISPLAY_LABLE.toLowerCase(locale)))
 		{
-			return true;
+			iaLablePresent = true;
 		}
-		return false;
+		return iaLablePresent;
 	}
 
 	/**

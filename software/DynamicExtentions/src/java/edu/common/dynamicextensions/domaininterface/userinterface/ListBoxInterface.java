@@ -1,24 +1,23 @@
 
 package edu.common.dynamicextensions.domaininterface.userinterface;
 
-
 /**
  * ListBoxInterface stores necessary information for generating ListBox control on
  * dynamically generated user interface.
  * @author geetika_bangard
  */
-public interface ListBoxInterface extends SelectInterface,MultiSelectInterface
+public interface ListBoxInterface extends SelectInterface, MultiSelectInterface
 {
-	
+
 	/**
 	 * @return
 	 */
-	public Boolean getIsUsingAutoCompleteDropdown();
-	
+	Boolean getIsUsingAutoCompleteDropdown();
+
 	/**
 	 * @param isUsingAutoCompleteDropdown
 	 */
-	public void setIsUsingAutoCompleteDropdown(Boolean isUsingAutoCompleteDropdown);
+	void setIsUsingAutoCompleteDropdown(Boolean isUsingAutoCompleteDropdown);
 
 	/**
 	 * This method returns the Number of rows to be displayed on the UI for ListBox.

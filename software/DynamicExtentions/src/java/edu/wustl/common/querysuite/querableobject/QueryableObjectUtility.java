@@ -352,7 +352,7 @@ public class QueryableObjectUtility
 		catch (DynamicExtensionsSystemException e)
 		{
 			throw new RuntimeException("Error while fetching Category Attribute With id"
-					+ identifier);
+					+ identifier, e);
 		}
 		return catAttr;
 	}

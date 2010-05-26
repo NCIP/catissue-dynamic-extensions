@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package edu.common.dynamicextensions.dao.impl;
@@ -13,7 +13,6 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.HibernateDAO;
-import edu.wustl.dao.exception.DAOException;
 
 /**
  * This class is a used to set different parameter like application name,
@@ -88,6 +87,7 @@ public final class DynamicExtensionDAO
 	{
 		appName = props.getProperty("app.name");
 	}
+
 	/**
 	 * This method adds the DE object.
 	 * @param object Object
@@ -96,7 +96,7 @@ public final class DynamicExtensionDAO
 	 * @throws DynamicExtensionsSystemException DynamicExtensionsSystemException
 	 */
 	public Object insertData(Object object) throws DynamicExtensionsApplicationException,
-	DynamicExtensionsSystemException
+			DynamicExtensionsSystemException
 	{
 		HibernateDAO hibernateDAO = null;
 		try
@@ -115,6 +115,7 @@ public final class DynamicExtensionDAO
 		}
 		return object;
 	}
+
 	/**
 	 * This method updates the DE object.
 	 * @param object Object
@@ -123,7 +124,7 @@ public final class DynamicExtensionDAO
 	 * @throws DynamicExtensionsSystemException DynamicExtensionsSystemException
 	 */
 	public Object updateData(Object object) throws DynamicExtensionsApplicationException,
-	DynamicExtensionsSystemException
+			DynamicExtensionsSystemException
 	{
 		HibernateDAO hibernateDAO = null;
 		try

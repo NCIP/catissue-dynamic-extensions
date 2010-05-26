@@ -27,10 +27,10 @@ public interface ComboBoxInterface extends SelectInterface
 	 * @hibernate.property name="columns" type="integer" column="NO_OF_COLUMNS"
 	 * @return Returns the columns.
 	 */
-	public Integer getColumns();
+	Integer getColumns();
 
 	/**
 	 * @param columns The columns to set.
 	 */
-	public void setColumns(Integer columns);
+	void setColumns(Integer columns);
 }

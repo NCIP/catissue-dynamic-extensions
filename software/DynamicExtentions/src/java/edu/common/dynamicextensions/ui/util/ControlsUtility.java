@@ -1076,7 +1076,7 @@ public class ControlsUtility
 		{
 			ControlInterface control;
 			Integer[] sequenceNumbers = DynamicExtensionsUtility.convertToIntegerArray(
-					controlsSequenceNumbers, ProcessorConstants.CONTROLS_SEQUENCE_NUMBER_SEPARATOR);
+					controlsSequenceNumbers, ProcessorConstants.CONTROLS_SEQ_NUMBER_SEPARATOR);
 			if (sequenceNumbers != null)
 			{
 				for (int i = 0; i < sequenceNumbers.length; i++)

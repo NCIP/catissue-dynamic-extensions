@@ -31,8 +31,8 @@ public final class ControlConfigurationsFactory
 {
 
 	private static ControlConfigurationsFactory configurationFactory = null;
-	private Map controlsConfigurationMap = null;
-	private Map<String, RuleConfigurationObject> rulesConfigurationMap = null;
+	private final Map controlsConfigurationMap;
+	private final Map<String, RuleConfigurationObject> rulesConfigurationMap;
 
 	/**
 	 * private constructor for ControlConfigurationsFactory.

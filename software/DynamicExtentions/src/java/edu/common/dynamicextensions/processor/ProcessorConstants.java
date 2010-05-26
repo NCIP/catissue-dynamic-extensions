@@ -107,7 +107,7 @@ public class ProcessorConstants
 
 	// Separator for specifying file formats.
 	public static final String FILE_FORMATS_SEPARATOR = ",";
-	public static final String CONTROLS_SEQUENCE_NUMBER_SEPARATOR = ",";
+	public static final String CONTROLS_SEQ_NUMBER_SEPARATOR = ",";
 
 	// DEFAULT VALUE CONSTANTS.
 	// Default value for create entity as new/from existing.

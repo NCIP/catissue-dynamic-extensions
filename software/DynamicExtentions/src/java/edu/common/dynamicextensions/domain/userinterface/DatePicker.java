@@ -151,7 +151,7 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ "' title='Calendar ["
 					+ ProcessorConstants.DATE_ONLY_FORMAT
 					+ "]' value='"
-					+ ((defaultValue != null && defaultValue.trim().length() > 0)
+					+ ((defaultValue != null && !"".equals(defaultValue.trim()))
 							? defaultValue
 							: ProcessorConstants.DATE_ONLY_FORMAT)
 					+ "'"
@@ -164,7 +164,7 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ ProcessorConstants.DATE_ONLY_FORMAT
 					+ "');\""
 					+ " style=\"color:"
-					+ ((defaultValue != null && defaultValue.trim().length() > 0)
+					+ ((defaultValue != null && !"".equals(defaultValue.trim()))
 							? "black;\""
 							: "#A9A9A9;\"") + "/>";
 			if (getShowCalendar())
@@ -225,7 +225,7 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ "' title='Calendar ["
 					+ ProcessorConstants.DATE_TIME_FORMAT
 					+ "]' value='"
-					+ ((defaultValue != null && defaultValue.trim().length() > 0)
+					+ ((defaultValue != null && !"".equals(defaultValue.trim()))
 							? defaultValue
 							: ProcessorConstants.DATE_TIME_FORMAT)
 					+ "'"
@@ -238,7 +238,7 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ ProcessorConstants.DATE_TIME_FORMAT
 					+ "');\""
 					+ " style=\"color:"
-					+ ((defaultValue != null && defaultValue.trim().length() > 0)
+					+ ((defaultValue != null && !"".equals(defaultValue.trim()))
 							? "black;\""
 							: "#A9A9A9;\"") + "/>";
 			if (getShowCalendar())
@@ -303,7 +303,7 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ "' title='Calender ["
 					+ ProcessorConstants.MONTH_YEAR_FORMAT
 					+ "]' value='"
-					+ ((defaultValue != null && defaultValue.trim().length() > 0)
+					+ ((defaultValue != null && !"".equals(defaultValue.trim()))
 							? defaultValue
 							: ProcessorConstants.MONTH_YEAR_FORMAT)
 					+ "'"
@@ -316,7 +316,7 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ ProcessorConstants.MONTH_YEAR_FORMAT
 					+ "');\""
 					+ " style=\"color:"
-					+ ((defaultValue != null && defaultValue.trim().length() > 0)
+					+ ((defaultValue != null && !"".equals(defaultValue.trim()))
 							? "black;\""
 							: "#A9A9A9;\"") + "/>";
 			if (getShowCalendar())
@@ -375,7 +375,7 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ "' title='["
 					+ ProcessorConstants.YEAR_ONLY_FORMAT
 					+ "]' value='"
-					+ ((defaultValue != null && defaultValue.trim().length() > 0)
+					+ ((defaultValue != null && !"".equals(defaultValue.trim()))
 							? defaultValue
 							: ProcessorConstants.YEAR_ONLY_FORMAT)
 					+ "'"
@@ -388,7 +388,7 @@ public class DatePicker extends Control implements DatePickerInterface
 					+ ProcessorConstants.YEAR_ONLY_FORMAT
 					+ "');\""
 					+ " style=\"color:"
-					+ ((defaultValue != null && defaultValue.trim().length() > 0)
+					+ ((defaultValue != null && !"".equals(defaultValue.trim()))
 							? "black;\""
 							: "#A9A9A9;\"") + "/>";
 			if (getShowCalendar())

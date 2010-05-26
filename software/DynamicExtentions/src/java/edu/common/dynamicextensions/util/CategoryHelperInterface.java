@@ -41,7 +41,8 @@ public interface CategoryHelperInterface
 		TEXT_FIELD_CONTROL("textField"), LIST_BOX_CONTROL("listBox"), DATE_PICKER_CONTROL(
 				"datePicker"), FILE_UPLOAD_CONTROL("fileUpload"), RADIO_BUTTON_CONTROL(
 				"radioButton"), TEXT_AREA_CONTROL("textArea"), CHECK_BOX_CONTROL("checkBox"), COMBO_BOX_CONTROL(
-				"comboBox"), LABEL_CONTROL("label"), MULTISELECT_CHECKBOX_CONTROL("multiselectCheckBox");
+				"comboBox"), LABEL_CONTROL("label"), MULTISELECT_CHECKBOX_CONTROL(
+				"multiselectCheckBox");
 
 		String value;
 
@@ -285,7 +286,8 @@ public interface CategoryHelperInterface
 	 * @param categoryEntityName
 	 * @return
 	 */
-	public abstract Long getInsatnce(String categoryEntityName);
+	Long getInsatnce(String categoryEntityName);
+
 	/**
 	 *
 	 * @param permissibleValueCollection
@@ -293,8 +295,8 @@ public interface CategoryHelperInterface
 	 * @return
 	 */
 	PermissibleValueInterface getPermissibleValue(
-			Collection<PermissibleValueInterface> permissibleValueCollection,
-			String value);
+			Collection<PermissibleValueInterface> permissibleValueCollection, String value);
+
 	/**
 	 *
 	 * @param attributeName
@@ -306,15 +308,10 @@ public interface CategoryHelperInterface
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	List<PermissibleValueInterface> createPermissibleValuesList(
-			String attributeName,
-			String entityName,
-			SkipLogicAttributeInterface skipLogicAttributeInterface,
-			Long lineNo,
-			Map<String, Collection<SemanticPropertyInterface>> desiredPermissibleValues)
-			throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException;
-
+	List<PermissibleValueInterface> createPermissibleValuesList(String attributeName,
+			String entityName, SkipLogicAttributeInterface skipLogicAttributeInterface,
+			Long lineNo, Map<String, Collection<SemanticPropertyInterface>> desiredPermissibleValues)
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException;
 
 	/**
 	 * This method will release the lock on the category so that other users can use it

@@ -145,20 +145,23 @@ public interface ContainerInterface extends DynamicExtensionBaseDomainObjectInte
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException
 	 */
-	String generateContainerHTML(String caption,String dataEntryOperation) throws DynamicExtensionsSystemException;
+	String generateContainerHTML(String caption, String dataEntryOperation)
+			throws DynamicExtensionsSystemException;
 
 	/**
 	 * @param caption
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException
 	 */
-	String generateControlsHTML(String caption,String dataEntryOperation,ContainerInterface container) throws DynamicExtensionsSystemException;
+	String generateControlsHTML(String caption, String dataEntryOperation,
+			ContainerInterface container) throws DynamicExtensionsSystemException;
 
 	/**
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 */
-	String generateControlsHTMLAsGrid(List<Map<BaseAbstractAttributeInterface, Object>> valueMap,String dataEntryOperation,ContainerInterface container)
+	String generateControlsHTMLAsGrid(List<Map<BaseAbstractAttributeInterface, Object>> valueMap,
+			String dataEntryOperation, ContainerInterface container)
 			throws DynamicExtensionsSystemException;
 
 	/**
@@ -248,51 +251,52 @@ public interface ContainerInterface extends DynamicExtensionBaseDomainObjectInte
 	/**
 	 * @return
 	 */
-	public boolean isAjaxRequest();
+	boolean isAjaxRequest();
 
 	/**
 	 * @param isAjaxRequest
 	 */
-	public void setAjaxRequest(boolean isAjaxRequest);
+	void setAjaxRequest(boolean isAjaxRequest);
 
 	/**
 	 * @param request the request to set
 	 */
-	public void setRequest(HttpServletRequest request);
+	void setRequest(HttpServletRequest request);
 
 	/**
 	 * @return the request
 	 */
-	public HttpServletRequest getRequest();
-
+	HttpServletRequest getRequest();
 
 	/**
 	 * @return true if required field warning has to be shown
 	 */
-	public Boolean isShowRequiredFieldWarningMessage();
+	Boolean isShowRequiredFieldWarningMessage();
 
 	/**
 	 * @param showRequiredFieldWarningMessage the showRequiredFieldWarningMessage to set
 	 */
-	public void setShowRequiredFieldWarningMessage(Boolean showRequiredFieldWarningMessage);
+	void setShowRequiredFieldWarningMessage(Boolean showRequiredFieldWarningMessage);
+
 	/**
 	 *
 	 * @return
 	 */
-	public boolean isAllControlsSkipLogicTargetControlsForShowHide();
+	boolean isAllControlsSkipLogicTargetControlsForShowHide();
 
 	/**
 	 * @param set previous page data value map
 	 */
-	public void setPreviousValueMap(Map<BaseAbstractAttributeInterface, Object> peek);
+	void setPreviousValueMap(Map<BaseAbstractAttributeInterface, Object> peek);
 
 	/**
 	 * @return previous page data value map
 	 */
-	public Map<BaseAbstractAttributeInterface, Object> getPreviousValueMap();
+	Map<BaseAbstractAttributeInterface, Object> getPreviousValueMap();
+
 	/**
 	 *
 	 * @return
 	 */
-	public boolean getIsSourceCalculatedAttributes();
+	boolean getIsSourceCalculatedAttributes();
 }
