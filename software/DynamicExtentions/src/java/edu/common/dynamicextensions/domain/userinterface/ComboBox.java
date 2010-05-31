@@ -121,7 +121,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		 * combo box to default value.
 		 */
 		String textComponent = "combo" + htmlComponentName;
-		String attributeName = ((Control) this).getCaption();
+		String attributeName = this.getBaseAbstractAttribute().getName();
 		try
 		{
 			if ((!getParentContainer().isAjaxRequest())

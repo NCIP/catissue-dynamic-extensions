@@ -232,7 +232,8 @@ public class ListBox extends SelectControl implements ListBoxInterface
 				multSelWithAutoCmpltHTML.append("<div id='" + getHTMLComponentName()
 						+ "_div' name='" + getHTMLComponentName() + "_div'>");
 			}
-			String attributeName = ((Control) this).getCaption();
+
+			String attributeName = this.getBaseAbstractAttribute().getName();
 			multSelWithAutoCmpltHTML
 					.append("<script defer='defer'>Ext.onReady(function(){var myUrl= \"DEComboDataAction.do?controlId= "
 							+ identifier
