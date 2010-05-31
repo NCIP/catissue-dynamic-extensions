@@ -20,7 +20,6 @@ import org.xml.sax.SAXException;
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class XMLToCSVConverter.
  *
@@ -84,7 +83,10 @@ public class XMLToCSVConverter
 	private static final String FORM_NAME = "name";
 
 	/** The Constant SKIP_LOGIC. */
-	private static final String SKIP_LOGIC = "SkipLogicAttribute";
+	private static final String SKIP_LOGIC = "SkipLogic";
+
+	/** The Constant SKIP_LOGIC ATTRIBUTE. */
+	private static final String SKIP_LOGIC_ATTRIBUTE = "SkipLogicAttribute";
 
 	/** The Constant RELATED_ATTRIBUTE. */
 	private static final String RELATED_ATTRIBUTE = "RelatedAttribute";
@@ -256,7 +258,7 @@ public class XMLToCSVConverter
 	 */
 	private void txSkiplogic(Node item) throws IOException
 	{
-		appendToStringBuilder(SKIP_LOGIC + "Attribute"+":" + newLine);
+		appendToStringBuilder(SKIP_LOGIC_ATTRIBUTE + ":" + newLine);
 		NodeList controllingAttributes = item.getChildNodes();
 
 		int length = controllingAttributes.getLength();
