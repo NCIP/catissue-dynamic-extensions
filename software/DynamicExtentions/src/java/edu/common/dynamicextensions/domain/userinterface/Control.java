@@ -862,10 +862,9 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 				ContainerInterface targetContainerInterface = DynamicExtensionsUtility
 						.getContainerForAbstractEntity(skipLogicAttributeInterface
 								.getTargetSkipLogicAttribute().getCategoryEntity());
-				ControlInterface targetControl = DynamicExtensionsUtility
-						.getControlForAbstractAttribute(
-								(AttributeMetadataInterface) skipLogicAttributeInterface
-										.getTargetSkipLogicAttribute(), targetContainerInterface);
+				ControlInterface targetControl = getSkipLogicTargetControl(
+						skipLogicAttributeInterface, targetContainerInterface);
+
 				if (targetControl.getIsSelectiveReadOnly())
 				{
 					targetControl.setIsSkipLogicReadOnly(Boolean.TRUE);
@@ -886,10 +885,9 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 				ContainerInterface targetContainerInterface = DynamicExtensionsUtility
 						.getContainerForAbstractEntity(skipLogicAttributeInterface
 								.getTargetSkipLogicAttribute().getCategoryEntity());
-				ControlInterface targetControl = DynamicExtensionsUtility
-						.getControlForAbstractAttribute(
-								(AttributeMetadataInterface) skipLogicAttributeInterface
-										.getTargetSkipLogicAttribute(), targetContainerInterface);
+				ControlInterface targetControl = getSkipLogicTargetControl(
+						skipLogicAttributeInterface, targetContainerInterface);
+
 				targetControl.setIsSkipLogicDefaultValue(Boolean.TRUE);
 				targetControl.setIsSkipLogicReadOnly(Boolean.FALSE);
 				targetControl.setIsSkipLogicShowHideTargetControl(Boolean.FALSE);
@@ -911,6 +909,37 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 			}
 		}
 		return skipLogicControls;
+	}
+
+	/**
+	 * @param skipLogicAttributeInterface
+	 * @param targetContainerInterface
+	 * @return
+	 */
+	private ControlInterface getSkipLogicTargetControl(
+			SkipLogicAttributeInterface skipLogicAttributeInterface,
+			ContainerInterface targetContainerInterface)
+	{
+		ControlInterface targetControl = DynamicExtensionsUtility.getControlForAbstractAttribute(
+				(AttributeMetadataInterface) skipLogicAttributeInterface
+						.getTargetSkipLogicAttribute(), targetContainerInterface);
+
+		if (targetControl == null)
+		{
+			Collection<ControlInterface> controlCollection = targetContainerInterface
+					.getAllControlsUnderSameDisplayLabel();
+			for (ControlInterface controlInterface : controlCollection)
+			{
+				if (controlInterface.getSourceSkipControl() != null
+						&& controlInterface.getSourceSkipControl().getBaseAbstractAttribute()
+								.getName().equals(this.getBaseAbstractAttribute().getName()))
+				{
+					targetControl = controlInterface;
+					break;
+				}
+			}
+		}
+		return targetControl;
 	}
 
 	/**
