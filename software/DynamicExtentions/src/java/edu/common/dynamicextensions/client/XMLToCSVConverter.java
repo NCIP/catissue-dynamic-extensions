@@ -84,7 +84,7 @@ public class XMLToCSVConverter
 	private static final String FORM_NAME = "name";
 
 	/** The Constant SKIP_LOGIC. */
-	private static final String SKIP_LOGIC = "SkipLogic";
+	private static final String SKIP_LOGIC = "SkipLogicAttribute";
 
 	/** The Constant RELATED_ATTRIBUTE. */
 	private static final String RELATED_ATTRIBUTE = "RelatedAttribute";
@@ -256,7 +256,7 @@ public class XMLToCSVConverter
 	 */
 	private void txSkiplogic(Node item) throws IOException
 	{
-		appendToStringBuilder(SKIP_LOGIC + ":" + newLine);
+		appendToStringBuilder(SKIP_LOGIC + "Attribute"+":" + newLine);
 		NodeList controllingAttributes = item.getChildNodes();
 
 		int length = controllingAttributes.getLength();
@@ -381,10 +381,10 @@ public class XMLToCSVConverter
 		{
 			NamedNodeMap attributes2 = subset.getAttributes();
 			Node permissibleValueFile = attributes2.getNamedItem(PERMISSIBLE_VALUE_FILE);
-			appendToStringBuilder(",Permissible_Values~");
-			String readPermissibleValues = readPermissibleValues(permissibleValueFile
-					.getNodeValue());
-			appendToStringBuilder(readPermissibleValues);
+			appendToStringBuilder(",Permissible_Values_File~");
+			//	String readPermissibleValues = readPermissibleValues(permissibleValueFile
+			//			.getNodeValue());
+			appendToStringBuilder(permissibleValueFile.getNodeValue());
 		}
 	}
 
