@@ -136,6 +136,8 @@ public class XMLToCSVConverter
 
 	private transient boolean isSecondUIProperty;
 
+	private transient String outputDir;
+
 	/**
 	 * Instantiates a new xML to csv converter.
 	 *
@@ -151,6 +153,7 @@ public class XMLToCSVConverter
 		writer = new BufferedWriter(new FileWriter(csvFile));
 		inputSource = new InputSource(new FileReader(xmlFile));
 		stringBuilder = new StringBuilder();
+		outputDir = csvFile.getParent();
 	}
 
 	/**
@@ -369,11 +372,11 @@ public class XMLToCSVConverter
 
 			if (attributeName1.getNodeValue().equals(TRUE))
 			{
-				appendToStringBuilder("IsSelectiveReadOnly" + ":" + attributeName1.getNodeValue());
+				appendToStringBuilder("IsSelectiveReadOnly" + "=" + attributeName1.getNodeValue());
 			}
 			else if (attributeName2.getNodeValue().equals(TRUE))
 			{
-				appendToStringBuilder("IsShowHide" + ":" + attributeName2.getNodeValue());
+				appendToStringBuilder("IsShowHide" + "=" + attributeName2.getNodeValue());
 			}
 		}
 
@@ -384,8 +387,8 @@ public class XMLToCSVConverter
 			NamedNodeMap attributes2 = subset.getAttributes();
 			Node permissibleValueFile = attributes2.getNamedItem(PERMISSIBLE_VALUE_FILE);
 			appendToStringBuilder(",Permissible_Values_File~");
-			//	String readPermissibleValues = readPermissibleValues(permissibleValueFile
-			//			.getNodeValue());
+			appendToStringBuilder(outputDir == null ? "" : outputDir);
+			readPermissibleValues(permissibleValueFile.getNodeValue());
 			appendToStringBuilder(permissibleValueFile.getNodeValue());
 		}
 	}
@@ -395,20 +398,21 @@ public class XMLToCSVConverter
 	 *
 	 * @param nodeValue the node value
 	 *
-	 * @return the string
-	 *
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private String readPermissibleValues(String nodeValue) throws IOException
+	private void readPermissibleValues(String nodeValue) throws IOException
 	{
 		StringBuilder permissibleValues = new StringBuilder();
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(nodeValue));
+		final FileWriter pvWriter = new FileWriter(outputDir
+				+ nodeValue.substring(nodeValue.lastIndexOf(File.separator)));
 		try
 		{
 			String readLine = bufferedReader.readLine();
 			permissibleValues.append(readLine);
 			while (readLine != null)
 			{
+				pvWriter.write(readLine + newLine);
 				permissibleValues.append(":" + readLine);
 				readLine = bufferedReader.readLine();
 			}
@@ -416,8 +420,8 @@ public class XMLToCSVConverter
 		finally
 		{
 			bufferedReader.close();
+			pvWriter.close();
 		}
-		return permissibleValues.toString();
 	}
 
 	/**
