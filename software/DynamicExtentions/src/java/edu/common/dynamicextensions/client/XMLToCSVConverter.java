@@ -136,6 +136,8 @@ public class XMLToCSVConverter
 
 	private transient boolean isSecondUIProperty;
 
+	private transient String inputDir;
+
 	private transient String outputDir;
 
 	/**
@@ -153,6 +155,7 @@ public class XMLToCSVConverter
 		writer = new BufferedWriter(new FileWriter(csvFile));
 		inputSource = new InputSource(new FileReader(xmlFile));
 		stringBuilder = new StringBuilder();
+		inputDir = xmlFile.getParent();
 		outputDir = csvFile.getParent();
 	}
 
@@ -387,7 +390,8 @@ public class XMLToCSVConverter
 			NamedNodeMap attributes2 = subset.getAttributes();
 			Node permissibleValueFile = attributes2.getNamedItem(PERMISSIBLE_VALUE_FILE);
 			appendToStringBuilder(",Permissible_Values_File~");
-			appendToStringBuilder(outputDir == null ? "" : outputDir);
+			outputDir = outputDir == null ? "" : outputDir + File.separator;
+			appendToStringBuilder(outputDir);
 			readPermissibleValues(permissibleValueFile.getNodeValue());
 			appendToStringBuilder(permissibleValueFile.getNodeValue());
 		}
@@ -403,9 +407,9 @@ public class XMLToCSVConverter
 	private void readPermissibleValues(String nodeValue) throws IOException
 	{
 		StringBuilder permissibleValues = new StringBuilder();
-		BufferedReader bufferedReader = new BufferedReader(new FileReader(nodeValue));
-		final FileWriter pvWriter = new FileWriter(outputDir
-				+ nodeValue.substring(nodeValue.lastIndexOf(File.separator)));
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(inputDir + File.separator
+				+ nodeValue));
+		final FileWriter pvWriter = new FileWriter(outputDir + File.separator + nodeValue);
 		try
 		{
 			String readLine = bufferedReader.readLine();
