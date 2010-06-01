@@ -1635,6 +1635,7 @@ function setDefaultValues(tableId, obj, containerId)
 		if(childObjectName != null && childObjectName.indexOf('_') != -1)
 		{
 			initializeDefaultValue(childObjectName,childObject,obj,i,rowIndex,true);
+			break;
 		}
 		//For Combobox
 		if ("auto_complete_dropdown" == childObject.id)
