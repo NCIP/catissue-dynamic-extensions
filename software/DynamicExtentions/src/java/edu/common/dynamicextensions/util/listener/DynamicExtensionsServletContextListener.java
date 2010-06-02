@@ -111,6 +111,7 @@ public class DynamicExtensionsServletContextListener implements ServletContextLi
 		DateValidator.validateGivenDatePatterns();
 		Logger.out.info("DynamicExtensionsServletContextListener before Initialising the Cache.");
 		EntityCache.getInstance();
+		EntityCache.getInstance().loadCategories();
 		Logger.out.info("DynamicExtensionsServletContextListener after Initialising the Cache.");
 	}
 
