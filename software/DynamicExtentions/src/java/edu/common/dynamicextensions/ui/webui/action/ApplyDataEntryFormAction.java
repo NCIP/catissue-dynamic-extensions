@@ -772,7 +772,7 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 			{
 				value = ((AttributeMetadataInterface) abstractAttribute).getDefaultValue();
 			}
-			attributeValue = value;
+			attributeValue = DynamicExtensionsUtility.getEscapedStringValue(value);
 			attributeValueMap.put(abstractAttribute, attributeValue);
 		}
 
