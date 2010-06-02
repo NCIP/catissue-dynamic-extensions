@@ -396,10 +396,10 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 			}
 		}
 		defaultValue = DynamicExtensionsUtility.getUnEscapedStringValue(defaultValue);
-		if (defaultValue.contains("'"))
+		/*if (defaultValue.contains("'"))
 		{
 			defaultValue = defaultValue.replace("'", "\\'");
-		}
+		}*/
 		return defaultValue;
 	}
 
