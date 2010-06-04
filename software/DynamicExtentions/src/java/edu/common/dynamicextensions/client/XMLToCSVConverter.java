@@ -1,4 +1,3 @@
-
 package edu.common.dynamicextensions.client;
 
 import java.io.BufferedReader;
@@ -22,11 +21,10 @@ import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 /**
  * The Class XMLToCSVConverter.
- *
+ * 
  * @author rajesh_vyas
  */
-public class XMLToCSVConverter
-{
+public class XMLToCSVConverter {
 
 	/** The Constant SHOW2. */
 	private static final String SHOW2 = "show";
@@ -38,13 +36,14 @@ public class XMLToCSVConverter
 	private static final String PERMISSIBLE_VALUE_FILE = "permissibleValueFile";
 
 	/** The Constant SKIP_LOGIC_ATTRIBUTE. */
-	//private static final String SKIP_LOGIC_ATTRIBUTE = "SkipLogicAttribute";
+	// private static final String SKIP_LOGIC_ATTRIBUTE = "SkipLogicAttribute";
 
 	/** The Constant DEPENDENT_ATTRIBUTE. */
 	private static final String DEPENDENT_ATTRIBUTE = "DependentAttribute";
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getLogger(XMLToCSVConverter.class.getName());
+	private static final Logger LOGGER = Logger
+			.getLogger(XMLToCSVConverter.class.getName());
 
 	/** The Constant CAPTION2. */
 	private static final String CAPTION2 = "caption";
@@ -103,6 +102,12 @@ public class XMLToCSVConverter
 	/** The Constant FORM_DEFINITION. */
 	private static final String FORM_DEFINITION = "FormDefinition";
 
+	/** The Constant for Header. */
+	private static String HEADING = "Heading";
+
+	/** The Constant for Notes. */
+	private static String NOTES = "Notes";
+
 	/** The document. */
 	private transient Document document;
 
@@ -113,7 +118,8 @@ public class XMLToCSVConverter
 	private transient final InputSource inputSource;
 
 	/** The new line. */
-	private transient final String newLine = System.getProperty("line.separator");
+	private transient final String newLine = System
+			.getProperty("line.separator");
 
 	/** The string builder. */
 	private transient final StringBuilder stringBuilder;
@@ -142,14 +148,17 @@ public class XMLToCSVConverter
 
 	/**
 	 * Instantiates a new xML to csv converter.
-	 *
-	 * @param xmlFile the xml file
-	 * @param csvFile the csv file
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param xmlFile
+	 *            the xml file
+	 * @param csvFile
+	 *            the csv file
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	public XMLToCSVConverter(final File xmlFile, final File csvFile) throws IOException
-	{
+	public XMLToCSVConverter(final File xmlFile, final File csvFile)
+			throws IOException {
 		LOGGER.info("XML file:" + xmlFile.getAbsolutePath());
 		LOGGER.info("CSV file:" + csvFile.getAbsolutePath());
 		writer = new BufferedWriter(new FileWriter(csvFile));
@@ -161,59 +170,58 @@ public class XMLToCSVConverter
 
 	/**
 	 * Tx xml.
-	 *
-	 * @throws SAXException the SAX exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @throws SAXException
+	 *             the SAX exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	public void txXML() throws SAXException, IOException
-	{
+	public void txXML() throws SAXException, IOException {
 		final DOMParser domParser = new DOMParser();
-		try
-		{
+		try {
 			domParser.parse(inputSource);
 			document = domParser.getDocument();
 			txFormDefinition();
 			writer.write(stringBuilder.toString());
-		}
-		finally
-		{
+		} finally {
 			writer.close();
 		}
 	}
 
 	/**
 	 * Append to string builder.
-	 *
-	 * @param stringToBeAppend the string to be append
+	 * 
+	 * @param stringToBeAppend
+	 *            the string to be append
 	 */
-	private void appendToStringBuilder(String stringToBeAppend)
-	{
+	private void appendToStringBuilder(String stringToBeAppend) {
 		LOGGER.debug("Appending: " + stringToBeAppend);
 		stringBuilder.append(stringToBeAppend);
 	}
 
 	/**
 	 * Tx form definition.
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	private void txFormDefinition() throws IOException
-	{
-		final NodeList formDefinitionTag = document.getElementsByTagName(FORM_DEFINITION);
+	private void txFormDefinition() throws IOException {
+		final NodeList formDefinitionTag = document
+				.getElementsByTagName(FORM_DEFINITION);
 		final int length = formDefinitionTag.getLength();
 
-		for (int i = 0; i < length; i++)
-		{
+		for (int i = 0; i < length; i++) {
 			final Node item = formDefinitionTag.item(i);
 			appendToStringBuilder("Form_Definition" + newLine + newLine);
 			final NamedNodeMap formDefinitionProperties = item.getAttributes();
 
 			final Node formDefinitionName = formDefinitionProperties
-			.getNamedItem(FORM_DEFINITION_NAME);
-			appendToStringBuilder(formDefinitionName.getNodeValue() + newLine + newLine);
+					.getNamedItem(FORM_DEFINITION_NAME);
+			appendToStringBuilder(formDefinitionName.getNodeValue() + newLine
+					+ newLine);
 
 			final Node entityGroupNameNode = formDefinitionProperties
-			.getNamedItem(ENTITY_GROUP_NAME);
+					.getNamedItem(ENTITY_GROUP_NAME);
 			entityGroupName = entityGroupNameNode.getNodeValue();
 			appendToStringBuilder(entityGroupName + newLine + newLine);
 
@@ -223,33 +231,28 @@ public class XMLToCSVConverter
 
 	/**
 	 * Tx form definition children.
-	 *
-	 * @param item the item
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param item
+	 *            the item
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	private void txFormDefinitionChildren(final Node item) throws IOException
-	{
+	private void txFormDefinitionChildren(final Node item) throws IOException {
 		final NodeList childNodes = item.getChildNodes();
 
 		final int length2 = childNodes.getLength();
 
-		for (int j = 0; j < length2; j++)
-		{
+		for (int j = 0; j < length2; j++) {
 
 			final Node item2 = childNodes.item(j);
 			final String nodeName = item2.getNodeName();
 
-			if (nodeName.equals(FORM))
-			{
+			if (nodeName.equals(FORM)) {
 				txForm(item2);
-			}
-			else if (nodeName.equals(SKIP_LOGIC))
-			{
+			} else if (nodeName.equals(SKIP_LOGIC)) {
 				txSkiplogic(item2);
-			}
-			else if (nodeName.equals(RELATED_ATTRIBUTE))
-			{
+			} else if (nodeName.equals(RELATED_ATTRIBUTE)) {
 				txRelatedAttributes(item2);
 			}
 		}
@@ -257,20 +260,20 @@ public class XMLToCSVConverter
 
 	/**
 	 * Tx skiplogic.
-	 *
-	 * @param item the item
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param item
+	 *            the item
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	private void txSkiplogic(Node item) throws IOException
-	{
+	private void txSkiplogic(Node item) throws IOException {
 		appendToStringBuilder(SKIP_LOGIC_ATTRIBUTE + ":" + newLine);
 		NodeList controllingAttributes = item.getChildNodes();
 
 		int length = controllingAttributes.getLength();
 
-		for (int i = 0; i < length; i++)
-		{
+		for (int i = 0; i < length; i++) {
 			Node controllingAttributeNode = controllingAttributes.item(i);
 			processControllingAttribute(controllingAttributeNode);
 		}
@@ -278,37 +281,33 @@ public class XMLToCSVConverter
 
 	/**
 	 * Process controlling attribute.
-	 *
-	 * @param controllingAttributeNode the controlling attribute node
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param controllingAttributeNode
+	 *            the controlling attribute node
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	private void processControllingAttribute(Node controllingAttributeNode) throws IOException
-	{
+	private void processControllingAttribute(Node controllingAttributeNode)
+			throws IOException {
 		NodeList childNodes = controllingAttributeNode.getChildNodes();
 		String txInstance = null;
 		int length = childNodes.getLength();
 
 		Node instance = null;
 		Node dependentNode = null;
-		for (int i = 0; i < length; i++)
-		{
+		for (int i = 0; i < length; i++) {
 			Node item = childNodes.item(i);
-			if (item.getNodeName().equals(INSTANCE))
-			{
+			if (item.getNodeName().equals(INSTANCE)) {
 				instance = item;
-			}
-			else if (item.getNodeName().equals(DEPENDENT_ATTRIBUTE))
-			{
+			} else if (item.getNodeName().equals(DEPENDENT_ATTRIBUTE)) {
 				dependentNode = item;
 			}
 		}
 
-		for (int i = 0; i < length; i++)
-		{
+		for (int i = 0; i < length; i++) {
 			Node item = childNodes.item(i);
-			if (item.getNodeName().equals(ATTRIBUTE))
-			{
+			if (item.getNodeName().equals(ATTRIBUTE)) {
 				appendToStringBuilder(newLine);
 				appendToStringBuilder("instance:");
 				txInstance = txInstance(instance);
@@ -326,25 +325,23 @@ public class XMLToCSVConverter
 
 	/**
 	 * Tx skip logic dependent.
-	 *
-	 * @param dependentAttributeNode the dependent attribute node
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param dependentAttributeNode
+	 *            the dependent attribute node
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	private void txSkipLogicDependent(Node dependentAttributeNode) throws IOException
-	{
+	private void txSkipLogicDependent(Node dependentAttributeNode)
+			throws IOException {
 		NodeList childNodes = dependentAttributeNode.getChildNodes();
 
 		int length = childNodes.getLength();
-		for (int i = 0; i < length; i++)
-		{
+		for (int i = 0; i < length; i++) {
 			Node item = childNodes.item(i);
-			if (item.getNodeName().equals(INSTANCE))
-			{
+			if (item.getNodeName().equals(INSTANCE)) {
 				txInstance(item);
-			}
-			else if (item.getNodeName().equals(ATTRIBUTE))
-			{
+			} else if (item.getNodeName().equals(ATTRIBUTE)) {
 				txSkipLogicDependentAttribute(item);
 			}
 		}
@@ -352,14 +349,17 @@ public class XMLToCSVConverter
 
 	/**
 	 * Tx skip logic dependent attribute.
-	 *
-	 * @param item the item
-	 *
-	 * @throws DOMException the DOM exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param item
+	 *            the item
+	 * 
+	 * @throws DOMException
+	 *             the DOM exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	private void txSkipLogicDependentAttribute(Node item) throws DOMException, IOException
-	{
+	private void txSkipLogicDependentAttribute(Node item) throws DOMException,
+			IOException {
 		final String TRUE = "true";
 		NamedNodeMap attributes = item.getAttributes();
 		Node attributeName = attributes.getNamedItem("attributeName");
@@ -369,26 +369,24 @@ public class XMLToCSVConverter
 		Node attributeName2 = attributes.getNamedItem("isShowHide");
 
 		if (attributeName1.getNodeValue().equals(TRUE)
-				|| attributeName2.getNodeValue().equals(TRUE))
-		{
+				|| attributeName2.getNodeValue().equals(TRUE)) {
 			appendToStringBuilder(",options~");
 
-			if (attributeName1.getNodeValue().equals(TRUE))
-			{
-				appendToStringBuilder("IsSelectiveReadOnly" + "=" + attributeName1.getNodeValue());
-			}
-			else if (attributeName2.getNodeValue().equals(TRUE))
-			{
-				appendToStringBuilder("IsShowHide" + "=" + attributeName2.getNodeValue());
+			if (attributeName1.getNodeValue().equals(TRUE)) {
+				appendToStringBuilder("IsSelectiveReadOnly" + "="
+						+ attributeName1.getNodeValue());
+			} else if (attributeName2.getNodeValue().equals(TRUE)) {
+				appendToStringBuilder("IsShowHide" + "="
+						+ attributeName2.getNodeValue());
 			}
 		}
 
 		Node subset = getSubset(item);
 
-		if (subset != null)
-		{
+		if (subset != null) {
 			NamedNodeMap attributes2 = subset.getAttributes();
-			Node permissibleValueFile = attributes2.getNamedItem(PERMISSIBLE_VALUE_FILE);
+			Node permissibleValueFile = attributes2
+					.getNamedItem(PERMISSIBLE_VALUE_FILE);
 			appendToStringBuilder(",Permissible_Values_File~");
 			outputDir = outputDir == null ? "" : outputDir + File.separator;
 			appendToStringBuilder(outputDir);
@@ -399,30 +397,28 @@ public class XMLToCSVConverter
 
 	/**
 	 * Read permissible values.
-	 *
-	 * @param nodeValue the node value
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param nodeValue
+	 *            the node value
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	private void readPermissibleValues(String nodeValue) throws IOException
-	{
+	private void readPermissibleValues(String nodeValue) throws IOException {
 		StringBuilder permissibleValues = new StringBuilder();
-		BufferedReader bufferedReader = new BufferedReader(new FileReader(inputDir + File.separator
-				+ nodeValue));
-		final FileWriter pvWriter = new FileWriter(outputDir + File.separator + nodeValue);
-		try
-		{
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(
+				inputDir + File.separator + nodeValue));
+		final FileWriter pvWriter = new FileWriter(outputDir + File.separator
+				+ nodeValue);
+		try {
 			String readLine = bufferedReader.readLine();
 			permissibleValues.append(readLine);
-			while (readLine != null)
-			{
+			while (readLine != null) {
 				pvWriter.write(readLine + newLine);
 				permissibleValues.append(":" + readLine);
 				readLine = bufferedReader.readLine();
 			}
-		}
-		finally
-		{
+		} finally {
 			bufferedReader.close();
 			pvWriter.close();
 		}
@@ -430,22 +426,20 @@ public class XMLToCSVConverter
 
 	/**
 	 * Gets the subset.
-	 *
-	 * @param item the item
-	 *
+	 * 
+	 * @param item
+	 *            the item
+	 * 
 	 * @return the subset
 	 */
-	private Node getSubset(Node item)
-	{
+	private Node getSubset(Node item) {
 		Node subset = null;
 		NodeList childNodes = item.getChildNodes();
 		int length = childNodes.getLength();
 
-		for (int i = 0; i < length; i++)
-		{
+		for (int i = 0; i < length; i++) {
 			Node item2 = childNodes.item(i);
-			if (item2.getNodeName().equals("subset"))
-			{
+			if (item2.getNodeName().equals("subset")) {
 				subset = item2;
 			}
 		}
@@ -454,67 +448,60 @@ public class XMLToCSVConverter
 
 	/**
 	 * Tx skip logic attribute.
-	 *
-	 * @param skipLogicAttribute the skip logic attribute
+	 * 
+	 * @param skipLogicAttribute
+	 *            the skip logic attribute
 	 */
-	private void txSkipLogicAttribute(Node skipLogicAttribute)
-	{
+	private void txSkipLogicAttribute(Node skipLogicAttribute) {
 		NamedNodeMap attributes = skipLogicAttribute.getAttributes();
 		Node attributeName = attributes.getNamedItem(ATTRIBUTE_NAME);
 		Node value = attributes.getNamedItem(VALUE);
-		appendToStringBuilder(attributeName.getNodeValue() + ":" + value.getNodeValue());
-		/*else
-		{
-			Node subset = skipLogicAttribute.getFirstChild();
-			if (subset != null)
-			{
-				NamedNodeMap skipLogicAttributeSubset = subset.getAttributes();
-
-				Node permissibleValueFileAttribute = skipLogicAttributeSubset
-						.getNamedItem(PERMISSIBLE_VALUE_FILE);
-				String permissibleFileLocation = permissibleValueFileAttribute.getNodeValue();
-				appendToStringBuilder(permissibleFileLocation);
-			}
-		}*/
+		appendToStringBuilder(attributeName.getNodeValue() + ":"
+				+ value.getNodeValue());
+		/*
+		 * else { Node subset = skipLogicAttribute.getFirstChild(); if (subset
+		 * != null) { NamedNodeMap skipLogicAttributeSubset =
+		 * subset.getAttributes();
+		 * 
+		 * Node permissibleValueFileAttribute = skipLogicAttributeSubset
+		 * .getNamedItem(PERMISSIBLE_VALUE_FILE); String permissibleFileLocation
+		 * = permissibleValueFileAttribute.getNodeValue();
+		 * appendToStringBuilder(permissibleFileLocation); } }
+		 */
 	}
 
 	/**
 	 * Tx form.
-	 *
-	 * @param item the item
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param item
+	 *            the item
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	private void txForm(final Node item) throws IOException
-	{
+	private void txForm(final Node item) throws IOException {
 
 		final NamedNodeMap formProperties = item.getAttributes();
 
 		final Node formName = formProperties.getNamedItem(FORM_NAME);
 		final Node show = formProperties.getNamedItem(SHOW2);
 
-		appendToStringBuilder(DISPLAY_LABEL + formName.getNodeValue() + ", show="
-				+ show.getNodeValue() + newLine);
+		appendToStringBuilder(DISPLAY_LABEL + formName.getNodeValue()
+				+ ", show=" + show.getNodeValue() + newLine);
 
 		final NodeList childNodes = item.getChildNodes();
 
 		final int length = childNodes.getLength();
 
-		for (int i = 0; i < length; i++)
-		{
+		for (int i = 0; i < length; i++) {
 			final Node item2 = childNodes.item(i);
 			final String nodeName = item2.getNodeName();
 
-			if (nodeName.equals(INSTANCES))
-			{
+			if (nodeName.equals(INSTANCES)) {
 				txInstances(item2);
-			}
-			else if (nodeName.equals(ATTRIBUTE))
-			{
+			} else if (nodeName.equals(ATTRIBUTE)) {
 				txAttribute(item2);
-			}
-			else if (nodeName.equals(SINGLE_LINE_DISPLAY))
-			{
+			} else if (nodeName.equals(SINGLE_LINE_DISPLAY)) {
 				txSingleLineDisplay(item2);
 			}
 		}
@@ -523,23 +510,22 @@ public class XMLToCSVConverter
 
 	/**
 	 * Tx single line display.
-	 *
-	 * @param item the item
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param item
+	 *            the item
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	private void txSingleLineDisplay(final Node item) throws IOException
-	{
+	private void txSingleLineDisplay(final Node item) throws IOException {
 		final NodeList childNodes = item.getChildNodes();
 		final int length = childNodes.getLength();
 		appendToStringBuilder("SingleLineDisplay:start" + newLine);
-		for (int i = 0; i < length; i++)
-		{
+		for (int i = 0; i < length; i++) {
 			final Node item2 = childNodes.item(i);
 
 			final String nodeName = item2.getNodeName();
-			if (nodeName.equals(ATTRIBUTE))
-			{
+			if (nodeName.equals(ATTRIBUTE)) {
 				txAttribute(item2);
 			}
 		}
@@ -548,25 +534,24 @@ public class XMLToCSVConverter
 
 	/**
 	 * Tx instances.
-	 *
-	 * @param item2 the item2
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param item2
+	 *            the item2
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	private void txInstances(final Node item2) throws IOException
-	{
+	private void txInstances(final Node item2) throws IOException {
 		appendToStringBuilder("instance:");
 
 		final NodeList childNodes = item2.getChildNodes();
 		final int length = childNodes.getLength();
 
-		for (int i = 0; i < length; i++)
-		{
+		for (int i = 0; i < length; i++) {
 			final Node item = childNodes.item(i);
 			final String nodeName = item.getNodeName();
 
-			if (nodeName.equals(INSTANCE))
-			{
+			if (nodeName.equals(INSTANCE)) {
 				txInstance(item);
 				appendToStringBuilder(newLine);
 			}
@@ -575,15 +560,16 @@ public class XMLToCSVConverter
 
 	/**
 	 * Tx instance.
-	 *
-	 * @param item2 the item2
-	 *
+	 * 
+	 * @param item2
+	 *            the item2
+	 * 
 	 * @return the string
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	private String txInstance(final Node item2) throws IOException
-	{
+	private String txInstance(final Node item2) throws IOException {
 		final String instance = item2.getFirstChild().getNodeValue();
 		appendMainContainer(instance);
 		appendToStringBuilder(instance);
@@ -593,40 +579,55 @@ public class XMLToCSVConverter
 
 	/**
 	 * Append main container.
-	 *
-	 * @param instance the instance
+	 * 
+	 * @param instance
+	 *            the instance
 	 */
-	private void appendMainContainer(final String instance)
-	{
-		if (mainContainer == null)
-		{
+	private void appendMainContainer(final String instance) {
+		if (mainContainer == null) {
 			mainContainer = instance.substring(0, instance.lastIndexOf('['));
-			int lastIndexOfentityGroupName = stringBuilder.lastIndexOf(newLine + entityGroupName
-					+ newLine)
+			int lastIndexOfentityGroupName = stringBuilder.lastIndexOf(newLine
+					+ entityGroupName + newLine)
 					+ entityGroupName.length() + 2;
-			stringBuilder.insert(lastIndexOfentityGroupName, newLine + mainContainer + "~"
-					+ mainContainer);
+			stringBuilder.insert(lastIndexOfentityGroupName, newLine
+					+ mainContainer + "~" + mainContainer);
 		}
 	}
 
 	/**
 	 * Tx attribute.
-	 *
-	 * @param item the item
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param item
+	 *            the item
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	private void txAttribute(final Node item) throws IOException
-	{
+	private void txAttribute(final Node item) throws IOException {
 
-		//boolean isFirstUIProperty = false;
+		// boolean isFirstUIProperty = false;
+		final NodeList childNodes = item.getChildNodes();
 
+		final int length = childNodes.getLength();
+
+		for (int i = 0; i < length; i++) {
+			final Node item1 = childNodes.item(i);
+			final String nodeName = item1.getNodeName();
+
+			if (nodeName.equals(HEADING)) {
+				appendHeading(item1, nodeName);
+			}
+			if (nodeName.equals(NOTES)) {
+				appendNotes(item1, nodeName);
+			}
+		}
 		final NamedNodeMap controlProperties = item.getAttributes();
 
 		final Node className = controlProperties.getNamedItem(CLASS_NAME);
 		appendToStringBuilder(className.getNodeValue() + ":");
 
-		final Node attributeName = controlProperties.getNamedItem(ATTRIBUTE_NAME);
+		final Node attributeName = controlProperties
+				.getNamedItem(ATTRIBUTE_NAME);
 		appendToStringBuilder(attributeName.getNodeValue() + ",");
 
 		final Node uiControlName = controlProperties.getNamedItem(UI_CONTROL);
@@ -635,56 +636,104 @@ public class XMLToCSVConverter
 		final Node controlCaption = controlProperties.getNamedItem(CAPTION2);
 		appendToStringBuilder(controlCaption.getNodeValue());
 
-		final NodeList childNodes = item.getChildNodes();
-
-		final int length = childNodes.getLength();
-
-		for (int j = 0; j < length; j++)
-		{
+		for (int j = 0; j < length; j++) {
 			final Node item2 = childNodes.item(j);
 			final String nodeName = item2.getNodeName();
 
 			appendUIProperty(item2, nodeName);
 		}
-		//isFirstUIProperty = false;
+		// isFirstUIProperty = false;
 		isSecondUIProperty = false;
 		appendSeparators();
 		appendToStringBuilder(newLine);
 	}
 
 	/**
-	 * Append ui property.
-	 *
-	 * @param isFirstUIProperty the is first ui property
-	 * @param item2 the item2
-	 * @param nodeName the node name
-	 *
-	 * @return true, if append ui property
-	 *
-	 * @throws DOMException the DOM exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * Append Notes.
+	 * 
+	 * @param nodeName
+	 * @param item
+	 * @throws DOMException
+	 *             the DOM exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	private void appendUIProperty(final Node item2, final String nodeName) throws DOMException,
-	IOException
-	{
-		if (nodeName.equals(UI_PROPERTY))
-		{
+	private void appendNotes(final Node item, final String nodeName)
+			throws DOMException, IOException {
+
+		NodeList childNodes = item.getChildNodes();
+
+		final int childNodesLength = childNodes.getLength();
+
+		for (int i = 0; i < childNodesLength; i++) {
+
+			final Node item1 = childNodes.item(i);
+			final String childNodeName = item1.getNodeName();
+
+			if (childNodeName.equals("Note")) {
+				String childNodeValue = item1.getFirstChild().getNodeValue();
+				appendToStringBuilder("NOTE~" + childNodeValue);
+				appendToStringBuilder(newLine);
+			}
+
+		}
+
+	}
+
+	/**
+	 * Append Heading.
+	 * 
+	 * @param nodeName
+	 * @param item
+	 * @throws DOMException
+	 *             the DOM exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	private void appendHeading(final Node item, final String nodeName)
+			throws DOMException, IOException {
+		final String headingValue = item.getFirstChild().getNodeValue();
+		appendToStringBuilder("HEADING~" + headingValue);
+		appendToStringBuilder(newLine);
+
+	}
+
+	/**
+	 * Append ui property.
+	 * 
+	 * @param isFirstUIProperty
+	 *            the is first ui property
+	 * @param item2
+	 *            the item2
+	 * @param nodeName
+	 *            the node name
+	 * 
+	 * @return true, if append ui property
+	 * 
+	 * @throws DOMException
+	 *             the DOM exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	private void appendUIProperty(final Node item2, final String nodeName)
+			throws DOMException, IOException {
+		if (nodeName.equals(UI_PROPERTY)) {
 			txUIProperties(item2);
 		}
 	}
 
 	/**
 	 * Append separators.
-	 *
-	 * @param isFirstUIProperty the is first ui property
+	 * 
+	 * @param isFirstUIProperty
+	 *            the is first ui property
 	 */
-	private void appendSeparators()
-	{
-		//remove last ":"
+	private void appendSeparators() {
+		// remove last ":"
 		char charAt = stringBuilder.charAt(stringBuilder.length() - 1);
-		if (charAt == ':')
-		{
-			stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length());
+		if (charAt == ':') {
+			stringBuilder.delete(stringBuilder.length() - 1, stringBuilder
+					.length());
 		}
 		appendRequiredString();
 		appendPermValueString();
@@ -694,10 +743,8 @@ public class XMLToCSVConverter
 	/**
 	 *
 	 */
-	private void appendRequiredString()
-	{
-		if (rulesRequiredString != null)
-		{
+	private void appendRequiredString() {
+		if (rulesRequiredString != null) {
 			String localRequiredString = rulesRequiredString;
 			rulesRequiredString = null;
 			appendToStringBuilder(localRequiredString);
@@ -707,10 +754,8 @@ public class XMLToCSVConverter
 	/**
 	 *
 	 */
-	private void appendDefaultValueString()
-	{
-		if (defaultValueString != null)
-		{
+	private void appendDefaultValueString() {
+		if (defaultValueString != null) {
 			String localDefaultValueString = defaultValueString;
 			defaultValueString = null;
 			appendToStringBuilder(localDefaultValueString);
@@ -720,10 +765,8 @@ public class XMLToCSVConverter
 	/**
 	 *
 	 */
-	private void appendPermValueString()
-	{
-		if (permValueOptionsString != null)
-		{
+	private void appendPermValueString() {
+		if (permValueOptionsString != null) {
 			String localPermValueOptionsString = permValueOptionsString;
 			permValueOptionsString = null;
 			appendToStringBuilder(localPermValueOptionsString);
@@ -732,16 +775,18 @@ public class XMLToCSVConverter
 
 	/**
 	 * Tx ui properties.
-	 *
-	 * @param item the item
-	 *
-	 * @throws DOMException the DOM exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param item
+	 *            the item
+	 * 
+	 * @throws DOMException
+	 *             the DOM exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	private void txUIProperties(final Node item) throws DOMException, IOException
-	{
-		if (!isFirstUIProperty)
-		{
+	private void txUIProperties(final Node item) throws DOMException,
+			IOException {
+		if (!isFirstUIProperty) {
 			isFirstUIProperty = true;
 		}
 		final NamedNodeMap controlProperties = item.getAttributes();
@@ -749,24 +794,18 @@ public class XMLToCSVConverter
 		final Node keyNode = controlProperties.getNamedItem(KEY);
 		String nodeValue = keyNode.getNodeValue();
 
-		if ("required".equals(nodeValue))
-		{
+		if ("required".equals(nodeValue)) {
 			rulesRequiredString = ",Rules~required";
-		}
-		else if ("IsOrdered".equals(nodeValue))
-		{
+		} else if ("IsOrdered".equals(nodeValue)) {
 			final Node valueNode = controlProperties.getNamedItem(VALUE);
-			permValueOptionsString = ",PermVal_Options~IsOrdered=" + valueNode.getNodeValue();
-		}
-		else if ("defaultValue".equals(nodeValue))
-		{
+			permValueOptionsString = ",PermVal_Options~IsOrdered="
+					+ valueNode.getNodeValue();
+		} else if ("defaultValue".equals(nodeValue)) {
 			final Node valueNode = controlProperties.getNamedItem(VALUE);
-			permValueOptionsString = ",defaultValue=" + valueNode.getNodeValue();
-		}
-		else
-		{
-			if (isFirstUIProperty && !isSecondUIProperty)
-			{
+			permValueOptionsString = ",defaultValue="
+					+ valueNode.getNodeValue();
+		} else {
+			if (isFirstUIProperty && !isSecondUIProperty) {
 				appendToStringBuilder(",options~");
 				isSecondUIProperty = true;
 			}
@@ -779,13 +818,14 @@ public class XMLToCSVConverter
 
 	/**
 	 * Tx related attributes.
-	 *
-	 * @param item the item
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param item
+	 *            the item
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
-	private void txRelatedAttributes(final Node item) throws IOException
-	{
+	private void txRelatedAttributes(final Node item) throws IOException {
 		Node instanceNode = null;
 		Node uiPropertyNode = null;
 		appendToStringBuilder("RelatedAttribute:" + newLine);
@@ -795,17 +835,14 @@ public class XMLToCSVConverter
 		final NodeList childNodes = item.getChildNodes();
 		final int length2 = childNodes.getLength();
 
-		for (int i = 0; i < length2; i++)
-		{
+		for (int i = 0; i < length2; i++) {
 			final Node item3 = childNodes.item(i);
 			final String nodeName = item3.getNodeName();
 
-			if (nodeName.equals(INSTANCES))
-			{
+			if (nodeName.equals(INSTANCES)) {
 				instanceNode = item3;
 			}
-			if (nodeName.equals(UI_PROPERTY))
-			{
+			if (nodeName.equals(UI_PROPERTY)) {
 				uiPropertyNode = item3;
 			}
 		}
@@ -815,19 +852,23 @@ public class XMLToCSVConverter
 
 	/**
 	 * Tx ra in required csv order.
-	 *
-	 * @param instanceNode the instance node
-	 * @param uiPropertyNode the ui property node
-	 * @param attributes the attributes
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws DOMException the DOM exception
+	 * 
+	 * @param instanceNode
+	 *            the instance node
+	 * @param uiPropertyNode
+	 *            the ui property node
+	 * @param attributes
+	 *            the attributes
+	 * 
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 * @throws DOMException
+	 *             the DOM exception
 	 */
-	private void txRAInRequiredCSVOrder(final Node instanceNode, final Node uiPropertyNode,
-			final NamedNodeMap attributes) throws IOException, DOMException
-			{
-		if (instanceNode != null)
-		{
+	private void txRAInRequiredCSVOrder(final Node instanceNode,
+			final Node uiPropertyNode, final NamedNodeMap attributes)
+			throws IOException, DOMException {
+		if (instanceNode != null) {
 			txInstances(instanceNode);
 		}
 
@@ -840,11 +881,10 @@ public class XMLToCSVConverter
 		final Node relatedAttributeValue = attributes.getNamedItem(VALUE);
 		appendToStringBuilder(relatedAttributeValue.getNodeValue());
 
-		if (uiPropertyNode != null)
-		{
+		if (uiPropertyNode != null) {
 			appendToStringBuilder(",options~");
 			isFirstUIProperty = false;
 			txUIProperties(uiPropertyNode);
 		}
-			}
+	}
 }
