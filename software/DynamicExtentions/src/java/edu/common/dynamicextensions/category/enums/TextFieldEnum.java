@@ -1,7 +1,16 @@
 
 package edu.common.dynamicextensions.category.enums;
 
+import java.util.Collection;
+import java.util.HashSet;
+
+import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.userinterface.TextField;
+import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterface;
+import edu.common.dynamicextensions.domaininterface.validationrules.RuleParameterInterface;
+import edu.common.dynamicextensions.util.parser.CategoryCSVConstants;
 
 public enum TextFieldEnum {
 
@@ -72,6 +81,108 @@ public enum TextFieldEnum {
 		public void setControlProperty(TextField control, String propertyToBeSet)
 		{
 			control.setColumns(Integer.valueOf(propertyToBeSet));
+		}
+	},
+	MAX("Max") {
+
+		/**
+		 * Returns String representation of max value for a control.
+		 */
+		public String getControlProperty(TextField control)
+		{
+			String max = null;
+			Collection<RuleInterface> rules = ((CategoryAttributeInterface) control
+					.getBaseAbstractAttribute()).getAbstractAttribute().getRuleCollection();
+			for (RuleInterface rule : rules)
+			{
+				if (rule.getName().equals(CategoryCSVConstants.RANGE))
+				{
+					Collection<RuleParameterInterface> ruleParameterCollection = rule
+							.getRuleParameterCollection();
+					for (RuleParameterInterface ruleParameter : ruleParameterCollection)
+					{
+						if (CategoryCSVConstants.MAX.equals(ruleParameter.getName()))
+						{
+							max = ruleParameter.getValue();
+						}
+					}
+				}
+			}
+			return max;
+		}
+
+		/**
+		 * Sets String representation of max value for a control.
+		 */
+		public void setControlProperty(TextField control, String propertyToBeSet)
+		{
+			RuleInterface rule = DomainObjectFactory.getInstance().createRule();
+			rule.setName(CategoryCSVConstants.RANGE);
+			Collection<RuleParameterInterface> ruleParameterCollection = new HashSet<RuleParameterInterface>();
+			RuleParameterInterface ruleParameter = DomainObjectFactory.getInstance()
+					.createRuleParameter();
+			ruleParameter.setName(CategoryCSVConstants.MAX);
+			ruleParameter.setValue(propertyToBeSet);
+			ruleParameterCollection.add(ruleParameter);
+			rule.setRuleParameterCollection(ruleParameterCollection);
+			AbstractAttributeInterface attribute = ((CategoryAttributeInterface) control
+					.getBaseAbstractAttribute()).getAbstractAttribute();
+			Collection<RuleInterface> rules = attribute.getRuleCollection() == null
+					? new HashSet<RuleInterface>()
+					: attribute.getRuleCollection();
+			rules.add(rule);
+			attribute.setRuleCollection(rules);
+		}
+	},
+	MIN("Min") {
+
+		/**
+		 * Returns String representation of min value for a control.
+		 */
+		public String getControlProperty(TextField control)
+		{
+			String min = null;
+			Collection<RuleInterface> rules = ((CategoryAttributeInterface) control
+					.getBaseAbstractAttribute()).getRuleCollection();
+			for (RuleInterface rule : rules)
+			{
+				if (rule.getName().equals(CategoryCSVConstants.RANGE))
+				{
+					Collection<RuleParameterInterface> ruleParameterCollection = rule
+							.getRuleParameterCollection();
+					for (RuleParameterInterface ruleParameter : ruleParameterCollection)
+					{
+						if (CategoryCSVConstants.MIN.equals(ruleParameter.getName()))
+						{
+							min = ruleParameter.getValue();
+						}
+					}
+				}
+			}
+			return min;
+		}
+
+		/**
+		 * Sets String representation of min value for a control.
+		 */
+		public void setControlProperty(TextField control, String propertyToBeSet)
+		{
+			RuleInterface rule = DomainObjectFactory.getInstance().createRule();
+			rule.setName(CategoryCSVConstants.RANGE);
+			Collection<RuleParameterInterface> ruleParameterCollection = new HashSet<RuleParameterInterface>();
+			RuleParameterInterface ruleParameter = DomainObjectFactory.getInstance()
+					.createRuleParameter();
+			ruleParameter.setName(CategoryCSVConstants.MIN);
+			ruleParameter.setValue(propertyToBeSet);
+			ruleParameterCollection.add(ruleParameter);
+			rule.setRuleParameterCollection(ruleParameterCollection);
+			AbstractAttributeInterface attribute = ((CategoryAttributeInterface) control
+					.getBaseAbstractAttribute()).getAbstractAttribute();
+			Collection<RuleInterface> rules = attribute.getRuleCollection() == null
+					? new HashSet<RuleInterface>()
+					: attribute.getRuleCollection();
+			rules.add(rule);
+			attribute.setRuleCollection(rules);
 		}
 	};
 
