@@ -104,10 +104,10 @@ public class XMLToCSVConverter
 	private static final String FORM_DEFINITION = "FormDefinition";
 
 	/** The Constant for Header. */
-	private static String HEADING = "Heading";
+	private static final String HEADING = "Heading";
 
 	/** The Constant for Notes. */
-	private static String NOTES = "Notes";
+	private static final String NOTES = "Notes";
 
 	/** The document. */
 	private transient Document document;
@@ -604,11 +604,11 @@ public class XMLToCSVConverter
 
 			if (nodeName.equals(HEADING))
 			{
-				appendHeading(item1, nodeName);
+				appendHeading(item1);
 			}
 			if (nodeName.equals(NOTES))
 			{
-				appendNotes(item1, nodeName);
+				appendNotes(item1);
 			}
 		}
 		final NamedNodeMap controlProperties = item.getAttributes();
@@ -645,7 +645,7 @@ public class XMLToCSVConverter
 	 * @throws DOMException the DOM exception
 	 * @throws IOException  Signals that an I/O exception has occurred.
 	 */
-	private void appendNotes(final Node item, final String nodeName) throws DOMException,
+	private void appendNotes(final Node item) throws DOMException,
 			IOException
 	{
 
@@ -678,7 +678,7 @@ public class XMLToCSVConverter
 	 * @throws DOMException  the DOM exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void appendHeading(final Node item, final String nodeName) throws DOMException,
+	private void appendHeading(final Node item) throws DOMException,
 			IOException
 	{
 		final String headingValue = item.getFirstChild().getNodeValue();
