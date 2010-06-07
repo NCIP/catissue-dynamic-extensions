@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.apache.log4j.Logger;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -111,19 +112,19 @@ public class XMLToCSVConverter
 	private transient Document document;
 
 	/** The writer. */
-	private final transient  Writer writer;
+	private final transient Writer writer;
 
 	/** The input source. */
-	private final transient  InputSource inputSource;
+	private final transient InputSource inputSource;
 
 	/** The new line. */
-	private final transient  String newLine = System.getProperty("line.separator");
+	private final transient String newLine = System.getProperty("line.separator");
 
 	/** The string builder. */
-	private final transient  StringBuilder stringBuilder;
+	private final transient StringBuilder stringBuilder;
 
 	/** The rules required string. */
-	private transient String rulesRequiredString;
+	private transient String rulesString;
 
 	/** The rules required string. */
 	private transient String defaultValueString;
@@ -151,7 +152,7 @@ public class XMLToCSVConverter
 
 	/**
 	 * Instantiates a new xML to csv converter.
-     * @param xmlFile  the xml file 
+	 * @param xmlFile  the xml file
 	 * @param csvFile  the csv file
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
@@ -456,7 +457,7 @@ public class XMLToCSVConverter
 		 * else { Node subset = skipLogicAttribute.getFirstChild(); if (subset
 		 * != null) { NamedNodeMap skipLogicAttributeSubset =
 		 * subset.getAttributes();
-    	 * Node permissibleValueFileAttribute = skipLogicAttributeSubset
+		 * Node permissibleValueFileAttribute = skipLogicAttributeSubset
 		 * .getNamedItem(PERMISSIBLE_VALUE_FILE); String permissibleFileLocation
 		 * = permissibleValueFileAttribute.getNodeValue();
 		 * appendToStringBuilder(permissibleFileLocation); } }
@@ -689,7 +690,7 @@ public class XMLToCSVConverter
 	 * @throws DOMException the DOM exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void appendUIProperty(final Node item2, final String nodeName) throws	IOException
+	private void appendUIProperty(final Node item2, final String nodeName) throws IOException
 	{
 		if (nodeName.equals(UI_PROPERTY))
 		{
@@ -708,7 +709,7 @@ public class XMLToCSVConverter
 		{
 			stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length());
 		}
-		appendRequiredString();
+		appendRulesString();
 		appendPermValueString();
 		appendDefaultValueString();
 	}
@@ -716,12 +717,12 @@ public class XMLToCSVConverter
 	/**
 	 * Append RequiredString
 	 */
-	private void appendRequiredString()
+	private void appendRulesString()
 	{
-		if (rulesRequiredString != null)
+		if (rulesString != null)
 		{
-			String localRequiredString = rulesRequiredString;
-			rulesRequiredString = null;
+			String localRequiredString = rulesString;
+			rulesString = null;
 			appendToStringBuilder(localRequiredString);
 		}
 	}
@@ -758,7 +759,7 @@ public class XMLToCSVConverter
 	 * @throws DOMException  the DOM exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void txUIProperties(final Node item) throws IOException
+	private void txUIProperties(final Node item) throws DOMException, IOException
 	{
 		if (!isFirstUIProperty)
 		{
@@ -769,9 +770,24 @@ public class XMLToCSVConverter
 		final Node keyNode = controlProperties.getNamedItem(KEY);
 		String nodeValue = keyNode.getNodeValue();
 
-		if ("required".equals(nodeValue))
+		boolean isRequiredRuleDefined = rulesString != null && rulesString.indexOf("required") >= 0;
+		boolean isMaxRuleDefined = rulesString != null && rulesString.indexOf("max") >= 0;
+		if ("Min".equals(nodeValue))
 		{
-			rulesRequiredString = ",Rules~required";
+			rulesString += (isMaxRuleDefined ? "&min=" : (isRequiredRuleDefined
+					? ":range-min="
+					: ",Rules~min="))
+					+ controlProperties.getNamedItem(VALUE).getNodeValue();
+		}
+		else if ("Max".equals(nodeValue))
+		{
+			rulesString += (isRequiredRuleDefined ? ":range-max=" : ",Rules~max=")
+					+ controlProperties.getNamedItem(VALUE).getNodeValue();
+		}
+		else if ("required".equals(nodeValue))
+		{
+			isRequiredRuleDefined = true;
+			rulesString = ",Rules~required";
 		}
 		else if ("IsOrdered".equals(nodeValue))
 		{
