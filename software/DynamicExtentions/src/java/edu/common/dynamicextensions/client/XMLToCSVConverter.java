@@ -113,16 +113,16 @@ public class XMLToCSVConverter
 	private transient Document document;
 
 	/** The writer. */
-	private transient final Writer writer;
+	private final transient  Writer writer;
 
 	/** The input source. */
-	private transient final InputSource inputSource;
+	private final transient  InputSource inputSource;
 
 	/** The new line. */
-	private transient final String newLine = System.getProperty("line.separator");
+	private final transient  String newLine = System.getProperty("line.separator");
 
 	/** The string builder. */
-	private transient final StringBuilder stringBuilder;
+	private final transient  StringBuilder stringBuilder;
 
 	/** The rules required string. */
 	private transient String rulesRequiredString;
@@ -351,7 +351,7 @@ public class XMLToCSVConverter
 	 * @throws DOMException  the DOM exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void txSkipLogicDependentAttribute(Node item) throws DOMException, IOException
+	private void txSkipLogicDependentAttribute(Node item) throws IOException
 	{
 		final String TRUE = "true";
 		NamedNodeMap attributes = item.getAttributes();
@@ -640,13 +640,11 @@ public class XMLToCSVConverter
 
 	/**
 	 * Append Notes.
-	 * @param nodeName
 	 * @param item
 	 * @throws DOMException the DOM exception
 	 * @throws IOException  Signals that an I/O exception has occurred.
 	 */
-	private void appendNotes(final Node item) throws DOMException,
-			IOException
+	private void appendNotes(final Node item) throws IOException
 	{
 
 		NodeList childNodes = item.getChildNodes();
@@ -672,14 +670,11 @@ public class XMLToCSVConverter
 
 	/**
 	 * Append Heading.
-	 * 
-	 * @param nodeName
 	 * @param item
 	 * @throws DOMException  the DOM exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void appendHeading(final Node item) throws DOMException,
-			IOException
+	private void appendHeading(final Node item) throws IOException
 	{
 		final String headingValue = item.getFirstChild().getNodeValue();
 		appendToStringBuilder("HEADING~" + headingValue);
@@ -690,22 +685,17 @@ public class XMLToCSVConverter
 	/**
 	 * Append ui property.
 	 * 
-	 * @param isFirstUIProperty
-	 *            the is first ui property
 	 * @param item2
 	 *            the item2
 	 * @param nodeName
 	 *            the node name
-	 * 
-	 * @return true, if append ui property
 	 * 
 	 * @throws DOMException
 	 *             the DOM exception
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	private void appendUIProperty(final Node item2, final String nodeName) throws DOMException,
-			IOException
+	private void appendUIProperty(final Node item2, final String nodeName) throws	IOException
 	{
 		if (nodeName.equals(UI_PROPERTY))
 		{
@@ -715,7 +705,6 @@ public class XMLToCSVConverter
 
 	/**
 	 * Append separators.
-	 * @param isFirstUIProperty the is first ui property
 	 */
 	private void appendSeparators()
 	{
@@ -780,7 +769,7 @@ public class XMLToCSVConverter
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	private void txUIProperties(final Node item) throws DOMException, IOException
+	private void txUIProperties(final Node item) throws IOException
 	{
 		if (!isFirstUIProperty)
 		{
@@ -865,7 +854,7 @@ public class XMLToCSVConverter
 	 * @throws DOMException  the DOM exception
 	 */
 	private void txRAInRequiredCSVOrder(final Node instanceNode, final Node uiPropertyNode,
-			final NamedNodeMap attributes) throws IOException, DOMException
+			final NamedNodeMap attributes) throws IOException
 	{
 		if (instanceNode != null)
 		{
