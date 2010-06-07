@@ -43,7 +43,7 @@ public class XMLToCSVConverter {
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger
-			.getLogger(XMLToCSVConverter.class.getName());
+	.getLogger(XMLToCSVConverter.class.getName());
 
 	/** The Constant CAPTION2. */
 	private static final String CAPTION2 = "caption";
@@ -119,7 +119,7 @@ public class XMLToCSVConverter {
 
 	/** The new line. */
 	private transient final String newLine = System
-			.getProperty("line.separator");
+	.getProperty("line.separator");
 
 	/** The string builder. */
 	private transient final StringBuilder stringBuilder;
@@ -158,7 +158,7 @@ public class XMLToCSVConverter {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public XMLToCSVConverter(final File xmlFile, final File csvFile)
-			throws IOException {
+	throws IOException {
 		LOGGER.info("XML file:" + xmlFile.getAbsolutePath());
 		LOGGER.info("CSV file:" + csvFile.getAbsolutePath());
 		writer = new BufferedWriter(new FileWriter(csvFile));
@@ -207,7 +207,7 @@ public class XMLToCSVConverter {
 	 */
 	private void txFormDefinition() throws IOException {
 		final NodeList formDefinitionTag = document
-				.getElementsByTagName(FORM_DEFINITION);
+		.getElementsByTagName(FORM_DEFINITION);
 		final int length = formDefinitionTag.getLength();
 
 		for (int i = 0; i < length; i++) {
@@ -216,12 +216,12 @@ public class XMLToCSVConverter {
 			final NamedNodeMap formDefinitionProperties = item.getAttributes();
 
 			final Node formDefinitionName = formDefinitionProperties
-					.getNamedItem(FORM_DEFINITION_NAME);
+			.getNamedItem(FORM_DEFINITION_NAME);
 			appendToStringBuilder(formDefinitionName.getNodeValue() + newLine
 					+ newLine);
 
 			final Node entityGroupNameNode = formDefinitionProperties
-					.getNamedItem(ENTITY_GROUP_NAME);
+			.getNamedItem(ENTITY_GROUP_NAME);
 			entityGroupName = entityGroupNameNode.getNodeValue();
 			appendToStringBuilder(entityGroupName + newLine + newLine);
 
@@ -289,7 +289,7 @@ public class XMLToCSVConverter {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	private void processControllingAttribute(Node controllingAttributeNode)
-			throws IOException {
+	throws IOException {
 		NodeList childNodes = controllingAttributeNode.getChildNodes();
 		String txInstance = null;
 		int length = childNodes.getLength();
@@ -333,7 +333,7 @@ public class XMLToCSVConverter {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	private void txSkipLogicDependent(Node dependentAttributeNode)
-			throws IOException {
+	throws IOException {
 		NodeList childNodes = dependentAttributeNode.getChildNodes();
 
 		int length = childNodes.getLength();
@@ -359,7 +359,7 @@ public class XMLToCSVConverter {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	private void txSkipLogicDependentAttribute(Node item) throws DOMException,
-			IOException {
+	IOException {
 		final String TRUE = "true";
 		NamedNodeMap attributes = item.getAttributes();
 		Node attributeName = attributes.getNamedItem("attributeName");
@@ -386,7 +386,7 @@ public class XMLToCSVConverter {
 		if (subset != null) {
 			NamedNodeMap attributes2 = subset.getAttributes();
 			Node permissibleValueFile = attributes2
-					.getNamedItem(PERMISSIBLE_VALUE_FILE);
+			.getNamedItem(PERMISSIBLE_VALUE_FILE);
 			appendToStringBuilder(",Permissible_Values_File~");
 			outputDir = outputDir == null ? "" : outputDir + File.separator;
 			appendToStringBuilder(outputDir);
@@ -627,7 +627,7 @@ public class XMLToCSVConverter {
 		appendToStringBuilder(className.getNodeValue() + ":");
 
 		final Node attributeName = controlProperties
-				.getNamedItem(ATTRIBUTE_NAME);
+		.getNamedItem(ATTRIBUTE_NAME);
 		appendToStringBuilder(attributeName.getNodeValue() + ",");
 
 		final Node uiControlName = controlProperties.getNamedItem(UI_CONTROL);
@@ -659,7 +659,7 @@ public class XMLToCSVConverter {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	private void appendNotes(final Node item, final String nodeName)
-			throws DOMException, IOException {
+	throws DOMException, IOException {
 
 		NodeList childNodes = item.getChildNodes();
 
@@ -691,7 +691,7 @@ public class XMLToCSVConverter {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	private void appendHeading(final Node item, final String nodeName)
-			throws DOMException, IOException {
+	throws DOMException, IOException {
 		final String headingValue = item.getFirstChild().getNodeValue();
 		appendToStringBuilder("HEADING~" + headingValue);
 		appendToStringBuilder(newLine);
@@ -716,7 +716,7 @@ public class XMLToCSVConverter {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	private void appendUIProperty(final Node item2, final String nodeName)
-			throws DOMException, IOException {
+	throws DOMException, IOException {
 		if (nodeName.equals(UI_PROPERTY)) {
 			txUIProperties(item2);
 		}
@@ -785,7 +785,7 @@ public class XMLToCSVConverter {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	private void txUIProperties(final Node item) throws DOMException,
-			IOException {
+	IOException {
 		if (!isFirstUIProperty) {
 			isFirstUIProperty = true;
 		}
@@ -799,11 +799,11 @@ public class XMLToCSVConverter {
 		} else if ("IsOrdered".equals(nodeValue)) {
 			final Node valueNode = controlProperties.getNamedItem(VALUE);
 			permValueOptionsString = ",PermVal_Options~IsOrdered="
-					+ valueNode.getNodeValue();
+				+ valueNode.getNodeValue();
 		} else if ("defaultValue".equals(nodeValue)) {
 			final Node valueNode = controlProperties.getNamedItem(VALUE);
 			permValueOptionsString = ",defaultValue="
-					+ valueNode.getNodeValue();
+				+ valueNode.getNodeValue();
 		} else {
 			if (isFirstUIProperty && !isSecondUIProperty) {
 				appendToStringBuilder(",options~");
@@ -867,7 +867,7 @@ public class XMLToCSVConverter {
 	 */
 	private void txRAInRequiredCSVOrder(final Node instanceNode,
 			final Node uiPropertyNode, final NamedNodeMap attributes)
-			throws IOException, DOMException {
+	throws IOException, DOMException {
 		if (instanceNode != null) {
 			txInstances(instanceNode);
 		}
