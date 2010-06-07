@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.apache.log4j.Logger;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -22,7 +21,6 @@ import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 /**
  * The Class XMLToCSVConverter.
- * 
  * @author rajesh_vyas
  */
 public class XMLToCSVConverter
@@ -136,20 +134,24 @@ public class XMLToCSVConverter
 	/** The entity group name. */
 	private transient String entityGroupName;
 
+	/** The permissible Value Options String */
 	private transient String permValueOptionsString;
 
+	/** The First UI Property*/
 	private transient boolean isFirstUIProperty;
 
+	/**The Second UI Property*/
 	private transient boolean isSecondUIProperty;
 
+	/** The input Directory*/
 	private transient String inputDir;
 
+	/** The output Directory*/
 	private transient String outputDir;
 
 	/**
 	 * Instantiates a new xML to csv converter.
-	 * 
-	 * @param xmlFile  the xml file 
+     * @param xmlFile  the xml file 
 	 * @param csvFile  the csv file
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
@@ -166,7 +168,6 @@ public class XMLToCSVConverter
 
 	/**
 	 * Tx xml.
-	 * 
 	 * @throws SAXException the SAX exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
@@ -455,8 +456,7 @@ public class XMLToCSVConverter
 		 * else { Node subset = skipLogicAttribute.getFirstChild(); if (subset
 		 * != null) { NamedNodeMap skipLogicAttributeSubset =
 		 * subset.getAttributes();
-		 * 
-		 * Node permissibleValueFileAttribute = skipLogicAttributeSubset
+    	 * Node permissibleValueFileAttribute = skipLogicAttributeSubset
 		 * .getNamedItem(PERMISSIBLE_VALUE_FILE); String permissibleFileLocation
 		 * = permissibleValueFileAttribute.getNodeValue();
 		 * appendToStringBuilder(permissibleFileLocation); } }
@@ -684,16 +684,10 @@ public class XMLToCSVConverter
 
 	/**
 	 * Append ui property.
-	 * 
-	 * @param item2
-	 *            the item2
-	 * @param nodeName
-	 *            the node name
-	 * 
-	 * @throws DOMException
-	 *             the DOM exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param item2 the item2
+	 * @param nodeName the node name
+	 * @throws DOMException the DOM exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private void appendUIProperty(final Node item2, final String nodeName) throws	IOException
 	{
@@ -720,7 +714,7 @@ public class XMLToCSVConverter
 	}
 
 	/**
-	 *
+	 * Append RequiredString
 	 */
 	private void appendRequiredString()
 	{
@@ -733,7 +727,7 @@ public class XMLToCSVConverter
 	}
 
 	/**
-	 *
+	 * Append DefaultValue
 	 */
 	private void appendDefaultValueString()
 	{
@@ -746,7 +740,7 @@ public class XMLToCSVConverter
 	}
 
 	/**
-	 *
+	 * Append  PermValue
 	 */
 	private void appendPermValueString()
 	{
@@ -760,14 +754,9 @@ public class XMLToCSVConverter
 
 	/**
 	 * Tx ui properties.
-	 * 
-	 * @param item
-	 *            the item
-	 * 
-	 * @throws DOMException
-	 *             the DOM exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param item  the item
+	 * @throws DOMException  the DOM exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private void txUIProperties(final Node item) throws IOException
 	{
@@ -810,9 +799,7 @@ public class XMLToCSVConverter
 
 	/**
 	 * Tx related attributes.
-	 * 
 	 * @param item  the item
-	 * 
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private void txRelatedAttributes(final Node item) throws IOException
@@ -846,7 +833,6 @@ public class XMLToCSVConverter
 
 	/**
 	 * Tx ra in required csv order.
-	 * 
 	 * @param instanceNode the instance node
 	 * @param uiPropertyNode the ui property node
 	 * @param attributes the attributes
