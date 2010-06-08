@@ -37,12 +37,12 @@ public abstract class AbstractClient
 	/**
 	 * Zip file which shoyld be uploaded
 	 */
-	protected File zipFile;
+	protected transient File zipFile;
 
 	/**
 	 * Server URl to which to connect.
 	 */
-	protected URL serverUrl;
+	protected transient URL serverUrl;
 
 	/**
 	 * This method will initiate the task on server by the URl specified.
