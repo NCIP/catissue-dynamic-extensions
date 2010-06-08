@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.domain.Association;
+import edu.common.dynamicextensions.domain.CategoryEntityRecord;
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
@@ -243,9 +244,26 @@ public final class DataValueMapUtility
 					rootValueMap.put(abstractAttribute, rootValueMap.get(abstractAttribute));
 				}
 			}
-			rootValueMap.remove(assocation);
+			cleanMap((List<Map<BaseAbstractAttributeInterface, Object>>) rootValueMap.get(assocation));
 		}
+	}
 
+	private static void cleanMap(List<Map<BaseAbstractAttributeInterface, Object>> rootValueMap)
+	{
+		Iterator<Map<BaseAbstractAttributeInterface, Object>> valueMapIterator = rootValueMap.iterator();
+		while(valueMapIterator.hasNext())
+		{
+			Map<BaseAbstractAttributeInterface, Object> valueMap = valueMapIterator.next();
+			Iterator<BaseAbstractAttributeInterface> values = valueMap.keySet().iterator();
+			while(values.hasNext())
+			{
+				BaseAbstractAttributeInterface attribute = values.next();
+				if(!(attribute instanceof CategoryEntityRecord))
+				{
+					values.remove();
+				}
+			}
+		}
 	}
 
 	private static void setValueForAssosiation(BaseAbstractAttributeInterface assocation,

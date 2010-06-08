@@ -20,6 +20,7 @@ import edu.common.dynamicextensions.domain.AbstractEntity;
 import edu.common.dynamicextensions.domain.BaseAbstractAttribute;
 import edu.common.dynamicextensions.domain.FileAttributeRecordValue;
 import edu.common.dynamicextensions.domain.userinterface.AbstractContainmentControl;
+import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
@@ -71,12 +72,13 @@ public final class UserInterfaceiUtility
 	}
 
 	/**
-	 * Generate htm lfor grid.
+	 * Generate html for grid.
 	 *
 	 * @param subContainer the sub container
 	 * @param valueMaps the value maps
 	 * @param dataEntryOperation the data entry operation
 	 * @param mainContainer the main container
+	 * @param isPasteEnable
 	 *
 	 * @return the string
 	 *
@@ -84,8 +86,9 @@ public final class UserInterfaceiUtility
 	 *  system exception
 	 */
 	public static String generateHTMLforGrid(ContainerInterface subContainer,
-			List<Map<BaseAbstractAttributeInterface, Object>> valueMaps, String dataEntryOperation,
-			ContainerInterface mainContainer) throws DynamicExtensionsSystemException
+			List<Map<BaseAbstractAttributeInterface, Object>> valueMaps,
+			String dataEntryOperation, ContainerInterface mainContainer) 
+			throws DynamicExtensionsSystemException
 	{
 		StringBuffer htmlForGrid = new StringBuffer(1066);
 
@@ -131,7 +134,7 @@ public final class UserInterfaceiUtility
 		}
 
 		htmlForGrid
-				.append("<tr> <td width='59'><input type='button' style='border: 0px; background-image:  ");
+				.append("<tr> <td width='59'><input type='button' style='border: 0px; background-image: ");
 		htmlForGrid.append("url(images/de/b_paste.gif);height: 20px; width: 59px;'");
 		htmlForGrid.append("align='middle'  id='paste_");
 		htmlForGrid.append(subContainer.getId()).append("' ");
@@ -140,7 +143,7 @@ public final class UserInterfaceiUtility
 		htmlForGrid.append("\",\"many\")'/> </td><td class='formField_withoutBorder' ");
 		htmlForGrid.append(" style='background-color:#E3E2E7;' width='100%'>&nbsp;</td>");
 		htmlForGrid.append("</tr> <tr width='100%'><td colspan='3' width='100%'>");
-
+		
 		// For category attribute controls, if heading and/or notes are specified, then
 		// render the UI that displays heading followed by notes for particular
 		// category attribute controls.
@@ -207,7 +210,7 @@ public final class UserInterfaceiUtility
 			int index = 1;
 			for (Map<BaseAbstractAttributeInterface, Object> rowValueMap : valueMaps)
 			{
-				subContainer.setContainerValueMap(rowValueMap);
+				setContainerValueMap(subContainer, rowValueMap);
 				htmlForGrid.append(getContainerHTMLAsARow(subContainer, index, dataEntryOperation,
 						mainContainer));
 				index++;
@@ -250,6 +253,32 @@ public final class UserInterfaceiUtility
 		htmlForGrid.append("</td></tr>");
 
 		return htmlForGrid.toString();
+	}
+
+	/**
+	 * Sets the container value map of child containers of the given container.
+	 *
+	 * @param container the container
+	 * @param rowValueMap the row value map
+	 */
+	@SuppressWarnings("unchecked")
+	public static void setContainerValueMap(ContainerInterface container,
+			Map<BaseAbstractAttributeInterface, Object> rowValueMap)
+	{
+		container.setContainerValueMap(rowValueMap);
+		for (ContainerInterface childContainer : container.getChildContainerCollection())
+		{
+			AbstractEntityInterface abstractEntity = childContainer.getAbstractEntity();
+			AssociationMetadataInterface association = container.getAbstractEntity()
+					.getAssociation(abstractEntity);
+			List<Map<BaseAbstractAttributeInterface, Object>> dataValueMap = (List<Map<BaseAbstractAttributeInterface, Object>>)
+					rowValueMap.get(association);
+			if(dataValueMap!= null && !dataValueMap.isEmpty())
+			{
+				Map<BaseAbstractAttributeInterface, Object> valueMap = dataValueMap.get(0);
+				childContainer.setContainerValueMap(valueMap);
+			}
+		}
 	}
 
 	/**

@@ -135,6 +135,7 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 				DataValueMapUtility.updateDataValueMapDataLoading(valueMapStack.peek(),
 						containerStack.peek());
 			}
+			UserInterfaceiUtility.setContainerValueMap(containerStack.peek(), valueMapStack.peek());
 			updateContainerMap(request, containerInterface);
 			updateApplicationErrorMsgs(request, dataEntryForm);
 			return mapping.findForward("Success");

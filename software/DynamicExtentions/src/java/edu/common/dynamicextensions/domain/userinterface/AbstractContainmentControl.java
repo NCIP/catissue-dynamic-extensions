@@ -56,7 +56,7 @@ public abstract class AbstractContainmentControl extends Control
 			{
 				Map<BaseAbstractAttributeInterface, Object> displayContainerValueMap = ((List<Map<BaseAbstractAttributeInterface, Object>>) value)
 						.get(0);
-				containerInterface.setContainerValueMap(displayContainerValueMap);
+				UserInterfaceiUtility.setContainerValueMap(containerInterface,displayContainerValueMap);
 			}
 			this.getContainer().setShowAssociationControlsAsLink(true);
 			subContainerHTML = containerInterface.generateControlsHTML(null,
@@ -131,5 +131,4 @@ public abstract class AbstractContainmentControl extends Control
 	{
 		this.container = container;
 	}
-
 }
