@@ -145,7 +145,7 @@ public class XMLToCSVConverter
 	private transient boolean isSecondUIProperty;
 
 	/** The input Directory*/
-	private transient String inputDir;
+	private final transient String inputDir;
 
 	/** The output Directory*/
 	private transient String outputDir;
@@ -658,7 +658,7 @@ public class XMLToCSVConverter
 			final Node item1 = childNodes.item(i);
 			final String childNodeName = item1.getNodeName();
 
-			if (childNodeName.equals("Note"))
+			if ("Note".equals(childNodeName))
 			{
 				String childNodeValue = item1.getFirstChild().getNodeValue();
 				appendToStringBuilder("NOTE~" + childNodeValue);
