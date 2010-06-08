@@ -221,7 +221,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					+ "ds.on('load',function(){if (this.getAt(0) != null) {if (this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50} else {combo.typeAheadDelay=60000}}});"
 					+ "});"
 					+ "</div>"
-					+ "<div name=\"comboHtml\" style='display:none'>"
+					+ "<div name=\"comboHtml\" id=\"comboHtml\" style='display:none'>"
 					+ "<div>"
 					+ "<input type='text' onmouseover=\"showToolTip('"
 					+ htmlComponentName

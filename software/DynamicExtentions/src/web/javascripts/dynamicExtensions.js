@@ -1641,14 +1641,21 @@ function setDefaultValues(tableId, obj, containerId)
 		if ("auto_complete_dropdown" == childObject.id)
 		{
 			var childNodes2 = childObject.childNodes;
-			var oldName = childNodes2[2].childNodes[0].childNodes[0].name;
-			var newName = oldName + "_" + rowIndex;
-			var newScript = replaceAll(childNodes2[1].innerHTML,
-					oldName, newName);
-			obj.innerHTML = replaceAll(childNodes2[2].innerHTML,
-								oldName, newName);
-
-			eval(newScript);
+			for(i=0;i<childNodes2.length;i++)
+			{
+//				alert(childNodes2[i].id);
+				if(childNodes2[i].id == 'comboHtml')
+				{
+					var oldName = childNodes2[i].childNodes[0].childNodes[0].name;
+					var newName = oldName + "_" + rowIndex;
+					var newScript = replaceAll(childNodes2[i-1].innerHTML,
+							oldName, newName);
+					obj.innerHTML = replaceAll(childNodes2[i].innerHTML,
+										oldName, newName);
+					eval(newScript);
+					break;
+				}
+			}
 		}
 		//Only in case of delete checkbox in addrow
 		if("deleteRow" == childObjectName)
