@@ -55,7 +55,7 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 	 */
 	public ActionForward execute(final ActionMapping mapping, final ActionForm form,
 			final HttpServletRequest request, final HttpServletResponse response)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		final DataEntryForm dataEntryForm = (DataEntryForm) form;
 		try
@@ -64,14 +64,14 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 			final ContainerInterface containerInterface = getContainerInterface(request);
 
 			String recordId = request.getParameter("recordIdentifier");
-			if ((recordId != null) && !recordId.equals(""))
+			if (recordId != null && !recordId.equals(""))
 			{
 				CacheManager.addObjectToCache(request, "rootRecordIdentifier", recordId);
 			}
 			else
 			{
 				recordId = (String) CacheManager
-						.getObjectFromCache(request, "rootRecordIdentifier");
+				.getObjectFromCache(request, "rootRecordIdentifier");
 				if (recordId == null)
 				{
 					recordId = "";
@@ -79,13 +79,13 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 			}
 
 			final LoadDataEntryFormProcessor loadDataEntryFormProcessor = LoadDataEntryFormProcessor
-					.getInstance();
+			.getInstance();
 			final Map<BaseAbstractAttributeInterface, Object> recordMap = loadDataEntryFormProcessor
-					.getValueMapFromRecordId(containerInterface.getAbstractEntity(), recordId);
+			.getValueMapFromRecordId(containerInterface.getAbstractEntity(), recordId);
 			Stack<ContainerInterface> containerStack = (Stack<ContainerInterface>) CacheManager
-					.getObjectFromCache(request, DEConstants.CONTAINER_STACK);
+			.getObjectFromCache(request, DEConstants.CONTAINER_STACK);
 			Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack = (Stack<Map<BaseAbstractAttributeInterface, Object>>) CacheManager
-					.getObjectFromCache(request, DEConstants.VALUE_MAP_STACK);
+			.getObjectFromCache(request, DEConstants.VALUE_MAP_STACK);
 
 			Stack<Long> scrollTopStack = (Stack<Long>) CacheManager.getObjectFromCache(request,
 					DEConstants.SCROLL_TOP_STACK);
@@ -98,7 +98,7 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 				CacheManager.addObjectToCache(request, DEConstants.VALUE_MAP_STACK, valueMapStack);
 				scrollTopStack = new Stack<Long>();
 				CacheManager
-						.addObjectToCache(request, DEConstants.SCROLL_TOP_STACK, scrollTopStack);
+				.addObjectToCache(request, DEConstants.SCROLL_TOP_STACK, scrollTopStack);
 				updateScrollTop(request, scrollTopStack);
 				UserInterfaceiUtility.addContainerInfo(containerStack, containerInterface,
 						valueMapStack, recordMap);
@@ -112,10 +112,10 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 			addPrecisionZeroes(recordMap, attributes);
 			updateStacks(request, dataEntryForm, containerStack, valueMapStack, scrollTopStack);
 
-			if ((!containerStack.isEmpty()) && (!valueMapStack.isEmpty()))
+			if (!containerStack.isEmpty() && !valueMapStack.isEmpty())
 			{
 				String mode = request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME);
-				if ((mode == null) || !mode.equals(""))
+				if (mode == null || !mode.equals(""))
 				{
 					mode = dataEntryForm.getMode();
 				}
@@ -130,7 +130,7 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 			{
 				clearFormValues(dataEntryForm);
 			}
-			if ((valueMapStack.peek() != null) && !valueMapStack.peek().isEmpty())
+			if (valueMapStack.peek() != null && !valueMapStack.peek().isEmpty())
 			{
 				DataValueMapUtility.updateDataValueMapDataLoading(valueMapStack.peek(),
 						containerStack.peek());
@@ -138,7 +138,9 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 			UserInterfaceiUtility.setContainerValueMap(containerStack.peek(), valueMapStack.peek());
 			updateContainerMap(request, containerInterface);
 			updateApplicationErrorMsgs(request, dataEntryForm);
-			return mapping.findForward("Success");
+			return mapping.findForward(request.getParameter("treePreview") == null
+					? "Success"
+							: "treePreview");
 		}
 		catch (DynamicExtensionsCacheException cacheException)
 		{
@@ -194,7 +196,7 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 			if (controlInterface instanceof AbstractContainmentControl)
 			{
 				ContainerInterface container = ((AbstractContainmentControl) controlInterface)
-						.getContainer();
+				.getContainer();
 				addContainersToMap(containerMap, container);
 				containerMap.put(container.getId().toString(), container);
 			}
@@ -208,10 +210,10 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 	}
 
 	/**
-	* This method update scroll top value
-	* @param request HttpServletRequest
-	* @param scrollTopStack scroll stack
-	*/
+	 * This method update scroll top value
+	 * @param request HttpServletRequest
+	 * @param scrollTopStack scroll stack
+	 */
 	private void updateScrollTop(final HttpServletRequest request, Stack<Long> scrollTopStack)
 	{
 		Long scrollTop = 0L;
@@ -232,7 +234,7 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 	{
 		String identifier = "";
 		identifier = request.getParameter("containerIdentifier");
-		if ((identifier == null) || identifier.equals(""))
+		if (identifier == null || identifier.equals(""))
 		{
 			identifier = (String) request.getAttribute("containerIdentifier");
 		}
@@ -257,8 +259,8 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 	private void cacheCallBackURL(final HttpServletRequest request)
 	{
 		final String callBackURL = request
-				.getParameter(WebUIManagerConstants.CALLBACK_URL_PARAM_NAME);
-		if ((callBackURL != null) && !callBackURL.equals(""))
+		.getParameter(WebUIManagerConstants.CALLBACK_URL_PARAM_NAME);
+		if (callBackURL != null && !callBackURL.equals(""))
 		{
 			final String userId = request.getParameter(WebUIManagerConstants.USER_ID);
 			CacheManager.clearCache(request);
@@ -268,19 +270,19 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 	}
 
 	/**
-	*
-	* @param request
-	* @return
-	* @throws DynamicExtensionsSystemException
-	* @throws DynamicExtensionsApplicationException
-	*/
+	 *
+	 * @param request
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
+	 */
 	private ContainerInterface getContainerInterface(final HttpServletRequest request)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		ContainerInterface containerInterface = (ContainerInterface) CacheManager
-				.getObjectFromCache(request, DEConstants.CONTAINER_INTERFACE);
+		.getObjectFromCache(request, DEConstants.CONTAINER_INTERFACE);
 		final String containerIdentifier = getContainerId(request);
-		if ((containerIdentifier != null) || (containerInterface == null))
+		if (containerIdentifier != null || containerInterface == null)
 		{
 			UserInterfaceiUtility.clearContainerStack(request);
 
@@ -329,21 +331,21 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 	{
 		final String dataEntryOperation = dataEntryForm.getDataEntryOperation();
 		Long scrollPos = 0L;
-		if ((dataEntryOperation != null) && dataEntryOperation.equalsIgnoreCase("insertChildData")
-				&& (dataEntryForm.getErrorList().isEmpty()))
+		if (dataEntryOperation != null && dataEntryOperation.equalsIgnoreCase("insertChildData")
+				&& dataEntryForm.getErrorList().isEmpty())
 		{
 			request.setAttribute(DEConstants.SCROLL_POSITION, scrollPos);
 			updateScrollTop(request, scrollTopStack);
 			final String childContainerId = dataEntryForm.getChildContainerId();
 			final AbstractContainmentControlInterface associationControl = UserInterfaceiUtility
-					.getAssociationControl(containerStack.peek(), childContainerId);
+			.getAssociationControl(containerStack.peek(), childContainerId);
 
 			final Map<BaseAbstractAttributeInterface, Object> containerValueMap = valueMapStack
-					.peek();
+			.peek();
 			final AssociationMetadataInterface association = (AssociationMetadataInterface) associationControl
-					.getBaseAbstractAttribute();
+			.getBaseAbstractAttribute();
 			final List<Map<BaseAbstractAttributeInterface, Object>> childContainerValueMapList = (List<Map<BaseAbstractAttributeInterface, Object>>) containerValueMap
-					.get(association);
+			.get(association);
 
 			Map<BaseAbstractAttributeInterface, Object> childContainerValueMap;
 			if (associationControl.isCardinalityOneToMany())
@@ -360,15 +362,15 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 			UserInterfaceiUtility.addContainerInfo(containerStack, childContainer, valueMapStack,
 					childContainerValueMap);
 		}
-		else if ((dataEntryOperation != null)
+		else if (dataEntryOperation != null
 				&& dataEntryOperation.equalsIgnoreCase("insertParentData"))
 		{
 			scrollPos = scrollTopStack.peek();
 			request.setAttribute(DEConstants.SCROLL_POSITION, scrollPos);
 			final List<String> errorList = dataEntryForm.getErrorList();
-			if (((errorList != null) && (errorList.isEmpty()))
-					&& (((containerStack != null) && !(containerStack.isEmpty())) && ((valueMapStack != null) && !(valueMapStack
-							.isEmpty()))))
+			if (errorList != null && errorList.isEmpty()
+					&& containerStack != null && !containerStack.isEmpty() && valueMapStack != null && !valueMapStack
+					.isEmpty())
 			{
 				UserInterfaceiUtility.removeContainerInfo(containerStack, valueMapStack);
 				removeScrollInfo(scrollTopStack, errorList);
@@ -377,13 +379,13 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 	}
 
 	/**
-	* @param scrollTopStack
-	* @param errorList
-	*/
+	 * @param scrollTopStack
+	 * @param errorList
+	 */
 	public static void removeScrollInfo(Stack<Long> scrollTopStack, final List<String> errorList)
 	{
-		if (((errorList != null) && (errorList.isEmpty()))
-				&& ((scrollTopStack != null) && !(scrollTopStack.isEmpty())))
+		if (errorList != null && errorList.isEmpty()
+				&& scrollTopStack != null && !scrollTopStack.isEmpty())
 		{
 			scrollTopStack.pop();
 		}
@@ -407,20 +409,18 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 				final AttributeInterface currentAttribute = (AttributeInterface) object;
 
 				final AttributeTypeInformationInterface attributeTypeInformation = currentAttribute
-						.getAttributeTypeInformation();
+				.getAttributeTypeInformation();
 
 				if (attributeTypeInformation instanceof NumericAttributeTypeInformation)
 				{
 					if (processedAttributes.contains(currentAttribute))
-					{
 						return;
-					}
 					else
 					{
 						processedAttributes.add(currentAttribute);
 					}
 					final int decimalPlaces = ((NumericAttributeTypeInformation) attributeTypeInformation)
-							.getDecimalPlaces();
+					.getDecimalPlaces();
 					String value = (String) entryObject.getValue();
 					if (value.contains(".") && !value.contains("E"))
 					{
@@ -439,8 +439,8 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 					}
 					else
 					{
-						if (((attributeTypeInformation instanceof DoubleAttributeTypeInformation) || (attributeTypeInformation instanceof FloatAttributeTypeInformation))
-								&& ((value.length() != 0) && !value.contains("E")))
+						if ((attributeTypeInformation instanceof DoubleAttributeTypeInformation || attributeTypeInformation instanceof FloatAttributeTypeInformation)
+								&& value.length() != 0 && !value.contains("E"))
 						{
 							if (decimalPlaces != 0)
 							{
@@ -462,11 +462,11 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 				if (association.getAssociationType() != null)
 				{
 					final String associationType = association.getAssociationType().getValue();
-					if ((associationType != null) && (entryObject.getValue() != null)
+					if (associationType != null && entryObject.getValue() != null
 							&& associationType.equals(AssociationType.CONTAINTMENT.getValue()))
 					{
 						final List<Map<BaseAbstractAttributeInterface, Object>> innerRecordsList = (List<Map<BaseAbstractAttributeInterface, Object>>) entryObject
-								.getValue();
+						.getValue();
 						for (final Map<BaseAbstractAttributeInterface, Object> innerMap : innerRecordsList)
 						{
 							addPrecisionZeroes(innerMap, processedAttributes);
