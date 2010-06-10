@@ -86,9 +86,8 @@ public final class UserInterfaceiUtility
 	 *  system exception
 	 */
 	public static String generateHTMLforGrid(ContainerInterface subContainer,
-			List<Map<BaseAbstractAttributeInterface, Object>> valueMaps,
-			String dataEntryOperation, ContainerInterface mainContainer) 
-			throws DynamicExtensionsSystemException
+			List<Map<BaseAbstractAttributeInterface, Object>> valueMaps, String dataEntryOperation,
+			ContainerInterface mainContainer) throws DynamicExtensionsSystemException
 	{
 		StringBuffer htmlForGrid = new StringBuffer(1066);
 
@@ -143,7 +142,7 @@ public final class UserInterfaceiUtility
 		htmlForGrid.append("\",\"many\")'/> </td><td class='formField_withoutBorder' ");
 		htmlForGrid.append(" style='background-color:#E3E2E7;' width='100%'>&nbsp;</td>");
 		htmlForGrid.append("</tr> <tr width='100%'><td colspan='3' width='100%'>");
-		
+
 		// For category attribute controls, if heading and/or notes are specified, then
 		// render the UI that displays heading followed by notes for particular
 		// category attribute controls.
@@ -271,9 +270,9 @@ public final class UserInterfaceiUtility
 			AbstractEntityInterface abstractEntity = childContainer.getAbstractEntity();
 			AssociationMetadataInterface association = container.getAbstractEntity()
 					.getAssociation(abstractEntity);
-			List<Map<BaseAbstractAttributeInterface, Object>> dataValueMap = (List<Map<BaseAbstractAttributeInterface, Object>>)
-					rowValueMap.get(association);
-			if(dataValueMap!= null && !dataValueMap.isEmpty())
+			List<Map<BaseAbstractAttributeInterface, Object>> dataValueMap = (List<Map<BaseAbstractAttributeInterface, Object>>) rowValueMap
+					.get(association);
+			if (dataValueMap != null && !dataValueMap.isEmpty())
 			{
 				Map<BaseAbstractAttributeInterface, Object> valueMap = dataValueMap.get(0);
 				childContainer.setContainerValueMap(valueMap);
@@ -472,8 +471,7 @@ public final class UserInterfaceiUtility
 				controlHTML = controlHTML.replaceAll(oldName, newName);
 			}
 		}
-
-		contHtmlAsARow.append("<td valign='middle' NOWRAP='true'>");
+		contHtmlAsARow.append("<td valign='middle' style='overflow:scroll' NOWRAP='true'>");
 		contHtmlAsARow.append(controlHTML.replaceAll("style='float:left'", ""));
 		contHtmlAsARow.append("</td>");
 	}
