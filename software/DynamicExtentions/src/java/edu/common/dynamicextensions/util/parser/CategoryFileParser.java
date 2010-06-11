@@ -50,8 +50,9 @@ public abstract class CategoryFileParser extends FileReader
 	 * @return false if end of category file
 	 * otherwise reads the next line.
 	 * @throws IOException
+	 * @throws DynamicExtensionsSystemException if problem in reading line
 	 */
-	public abstract boolean readNext() throws IOException;
+	public abstract boolean readNext() throws IOException, DynamicExtensionsSystemException;
 
 	/**
 	 * @return category name
@@ -250,8 +251,9 @@ public abstract class CategoryFileParser extends FileReader
 	/**
 	 * @return
 	 * @throws IOException
+	 * @throws DynamicExtensionsSystemException if problem in reading line
 	 */
-	public abstract boolean isSingleLineDisplayStarted() throws IOException;
+	public abstract boolean isSingleLineDisplayStarted() throws IOException, DynamicExtensionsSystemException;
 
 	/**
 	 * @return
@@ -289,14 +291,16 @@ public abstract class CategoryFileParser extends FileReader
 	 * This method will verify weather the file to which this parser
 	 * object pointing is actually a category file or not.
 	 * @return true if the file is category file.
+	 * @throws DynamicExtensionsSystemException if problem reading line
 	 */
-	public abstract boolean isCategoryFile() throws IOException;
+	public abstract boolean isCategoryFile() throws IOException, DynamicExtensionsSystemException;
 
 	/**
 	 * This method will verify weather the file to which this parser
 	 * object pointing is actually a category file or not.
 	 * @return true if the file is category file.
+	 * @throws DynamicExtensionsSystemException if problem in reading line
 	 */
-	public abstract boolean isPVFile() throws IOException;
+	public abstract boolean isPVFile() throws IOException, DynamicExtensionsSystemException;
 
 }

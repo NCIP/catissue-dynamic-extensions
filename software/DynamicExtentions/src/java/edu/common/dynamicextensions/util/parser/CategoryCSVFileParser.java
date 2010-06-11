@@ -76,8 +76,9 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	 * @param reader
 	 * @return
 	 * @throws IOException
+	 * @throws DynamicExtensionsSystemException if line contains the \n
 	 */
-	public boolean readNext() throws IOException
+	public boolean readNext() throws IOException, DynamicExtensionsSystemException
 	{
 		//To skip the blank lines
 		boolean flag = true;
@@ -87,9 +88,16 @@ public class CategoryCSVFileParser extends CategoryFileParser
 			lineNumber++;
 			if (line[0].length() != 0 && !line[0].startsWith("##"))
 			{
+				if(line[0].contains("\n"))
+				{
+					throw new DynamicExtensionsSystemException(ApplicationProperties
+							.getValue(CategoryConstants.MISSING_QUOTES)+" "
+							+ lineNumber);
+				}
 				break;
 			}
 			line = reader.readNext();
+
 		}
 
 		if (line == null)
@@ -668,8 +676,9 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	/**
 	 * @return showCaption
 	 * @throws IOException
+	 * @throws DynamicExtensionsSystemException problem reading the line
 	 */
-	public boolean isOverridePermissibleValues() throws IOException
+	public boolean isOverridePermissibleValues() throws IOException, DynamicExtensionsSystemException
 	{
 		boolean flag = false;
 		if (CategoryCSVConstants.OVERRIDE_PV.equals(readLine()[0].split("=")[0].trim()))
@@ -832,7 +841,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	}
 
 	@Override
-	public boolean isSingleLineDisplayStarted() throws IOException
+	public boolean isSingleLineDisplayStarted() throws IOException, DynamicExtensionsSystemException
 	{
 		if (readLine().length > 0
 				&& readLine()[0].equalsIgnoreCase(CategoryConstants.SINGLE_LINE_DISPLAY_START))
@@ -947,8 +956,9 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	 * This method will verify weather the file to which this parser
 	 * object pointing is actually a category file or not.
 	 * @return true if the file is category file.
+	 * @throws DynamicExtensionsSystemException problem reading the line
 	 */
-	public boolean isCategoryFile() throws IOException
+	public boolean isCategoryFile() throws IOException, DynamicExtensionsSystemException
 	{
 		boolean isCategory = false;
 		if (readNext() && hasFormDefination())
@@ -958,7 +968,8 @@ public class CategoryCSVFileParser extends CategoryFileParser
 		return isCategory;
 	}
 
-	public boolean isPVFile() throws IOException
+	@Override
+	public boolean isPVFile() throws IOException, DynamicExtensionsSystemException
 	{
 		boolean isPVFile = false;
 		if (readNext() && hasEntityGroup())

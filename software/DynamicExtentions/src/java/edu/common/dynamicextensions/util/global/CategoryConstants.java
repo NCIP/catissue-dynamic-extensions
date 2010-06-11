@@ -84,4 +84,6 @@ public class CategoryConstants
 
 	public final static String ALL = "all";
 
+	public final static String MISSING_QUOTES = "dynExyn.validation.category.missingQuotes";
+
 }
