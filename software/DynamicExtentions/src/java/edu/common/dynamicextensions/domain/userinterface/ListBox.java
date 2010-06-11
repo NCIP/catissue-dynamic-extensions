@@ -252,7 +252,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 			multSelWithAutoCmpltHTML.append("<br><table border=\"0\" width=\"100%\">\n");
 			multSelWithAutoCmpltHTML.append("\t<tr>\n");
 			multSelWithAutoCmpltHTML
-					.append("\t\t<td width=\"35%\" class=\"black_ar_new\" valign=\"TOP\">\n");
+					.append("\t\t<td width=\"35%\" class=\"black_ar_new\" style='overflow:scroll' valign=\"TOP\">\n");
 			multSelWithAutoCmpltHTML.append("\t\t\t<input type='text' id='" + coordId + "' name='"
 					+ coordId + "' value =' ' size='20'/>\n");
 			multSelWithAutoCmpltHTML.append("\t\t</td>\n\n");
