@@ -47,7 +47,6 @@ public class FileUploadControl extends Control implements FileUploadInterface
 				.getAbstractEntity().getId(), parentContainer.getAbstractEntity().getName());
 
 		htmlString = htmlString + "<span id='" + controlname + "_button'>";
-		System.out.println("");
 		if (value != null && value != "")
 		{
 			Long recordId = (Long) parentContainer.getContainerValueMap().get(entityRecord);
@@ -61,7 +60,6 @@ public class FileUploadControl extends Control implements FileUploadInterface
 			htmlString += "</A>&nbsp;&nbsp;";
 			htmlString = htmlString + "<img src='images/de/deleteIcon.jpg' style='cursor:pointer' title='Delete File' onClick='updateFileControl(\"" +controlname +"\");' />";
 			htmlString = htmlString + "<input type='hidden' id='" +controlname +"_hidden' name='" +controlname +"_hidden' value='hidden'/>";
-			System.out.println("");
 		}
 		else
 		{
