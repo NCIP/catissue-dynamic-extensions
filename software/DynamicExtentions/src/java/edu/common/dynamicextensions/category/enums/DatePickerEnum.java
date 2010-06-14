@@ -33,7 +33,7 @@ public enum DatePickerEnum {
 	RANGEMAX("range-max") {
 
 		/**
-		 * Returns String representation of Range max Rule. 
+		 * Returns String representation of Range max Rule.
 		 */
 		public String getControlProperty(DatePicker control)
 		{
@@ -57,7 +57,7 @@ public enum DatePickerEnum {
 	ALLOWFUTUREDATE("allowfuturedate") {
 
 		/**
-		 * Returns String representation of rule Allow future date. 
+		 * Returns String representation of rule Allow future date.
 		 */
 		public String getControlProperty(DatePicker control)
 		{
@@ -72,7 +72,7 @@ public enum DatePickerEnum {
 		}
 
 		/**
-		 * Sets rule Allow future date. 
+		 * Sets rule Allow future date.
 		 */
 		public void setControlProperty(DatePicker control, String propertyToBeSet)
 		{
@@ -98,7 +98,7 @@ public enum DatePickerEnum {
 		return name;
 	}
 
-	public static DatePickerEnum getValue(String nameToBeFound)
+	/*public static DatePickerEnum getValue(String nameToBeFound)
 	{
 		DatePickerEnum[] propertyTypes = DatePickerEnum.values();
 		for (DatePickerEnum propertyType : propertyTypes)
@@ -108,5 +108,5 @@ public enum DatePickerEnum {
 			}
 		}
 		throw new IllegalArgumentException(nameToBeFound + ": is not a valid property");
-	}
+	}*/
 }
