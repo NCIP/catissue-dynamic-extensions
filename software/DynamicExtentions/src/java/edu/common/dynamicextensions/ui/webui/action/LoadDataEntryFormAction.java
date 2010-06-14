@@ -424,7 +424,9 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 				if (attributeTypeInformation instanceof NumericAttributeTypeInformation)
 				{
 					if (processedAttributes.contains(currentAttribute))
+					{
 						return;
+					}
 					else
 					{
 						processedAttributes.add(currentAttribute);
