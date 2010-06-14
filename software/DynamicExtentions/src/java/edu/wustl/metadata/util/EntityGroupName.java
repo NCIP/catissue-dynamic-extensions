@@ -26,10 +26,10 @@ public class EntityGroupName
 {
 
 	/** The Constant $_EXCLUDE_ENTITYGROUP. */
-	private static final String $_EXCLUDE_ENTITYGROUP = "${exclude.entitygroup},";
+	private static final String _EXCLUDE_ENTITYGROUP = "${exclude.entitygroup},";
 
 	/** The Constant $_INCLUDE_ENTITYGROUP. */
-	private static final String $_INCLUDE_ENTITYGROUP = "${include.entitygroup},";
+	private static final String _INCLUDE_ENTITYGROUP = "${include.entitygroup},";
 
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getLogger(EntityGroupName.class);
@@ -99,7 +99,7 @@ public class EntityGroupName
 			final List<String> allEntGrpNames)
 	{
 		final String entityGroupsList = validateEntityGroupNames(includeEntityGroups, allEntGrpNames);
-		if (!$_INCLUDE_ENTITYGROUP.equalsIgnoreCase(entityGroupsList))
+		if (!_INCLUDE_ENTITYGROUP.equalsIgnoreCase(entityGroupsList))
 		{
 			final StringTokenizer tokens = new StringTokenizer(entityGroupsList, ",");
 			if (tokens.countTokens() != 0)
@@ -122,7 +122,7 @@ public class EntityGroupName
 	private void filterEntityGroupsToBeRemoved(final String tobeRemovedEntityGroups,
 			final List<String> allEntGrpNames)
 	{
-		if (!$_EXCLUDE_ENTITYGROUP.equalsIgnoreCase(tobeRemovedEntityGroups))
+		if (!_EXCLUDE_ENTITYGROUP.equalsIgnoreCase(tobeRemovedEntityGroups))
 		{
 			final StringTokenizer tokens = new StringTokenizer(tobeRemovedEntityGroups, ",");
 			while (tokens.hasMoreTokens())
