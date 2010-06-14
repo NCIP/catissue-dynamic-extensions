@@ -140,7 +140,7 @@ public class CategoryUtil
 
 		List<List<Object>> list = jdbcdao.executeQuery(selectQuery.toString(), colValueBean);
 
-		if (list.size() == 0)
+		if (list.isEmpty())
 		{
 			LOGGER.info("Category " + categoryName + " is not present in database");
 		}

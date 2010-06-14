@@ -134,7 +134,7 @@ public class TreeNode<T> implements Serializable
      */
     public boolean isLeaf()
     {
-        return (children == null) || (children.size() == 0);
+        return (children == null) || (children.isEmpty());
     }
 
     /**
