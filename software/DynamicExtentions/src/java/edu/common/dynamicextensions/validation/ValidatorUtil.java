@@ -187,8 +187,11 @@ public class ValidatorUtil
 			AttributeMetadataInterface attributeMetadataInterface) throws ParseException
 	{
 		boolean isValuePresent = false;
-
-		if (attributeValue instanceof ArrayList)
+		if ((attributeValue == null) || "".equals(attributeValue.toString()))
+		{
+			isValuePresent = true;
+		}
+		else if (attributeValue instanceof ArrayList)
 		{//multiselect case
 			CategoryAttributeInterface attribute = (CategoryAttributeInterface) attributeMetadataInterface;
 			AttributeInterface attributeInterface = getMultiselectAtrribute((AssociationInterface) attribute
@@ -213,10 +216,7 @@ public class ValidatorUtil
 				isValuePresent = true;
 			}
 		}
-		if ((attributeValue != null) && "".equals(attributeValue.toString()))
-		{
-			isValuePresent = true;
-		}
+
 		return isValuePresent;
 	}
 
