@@ -121,7 +121,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		 * combo box to default value.
 		 */
 		String textComponent = "combo" + htmlComponentName;
-		String attributeName = this.getBaseAbstractAttribute().getName();
+		String attributeName = getBaseAbstractAttribute().getName();
 		try
 		{
 			if ((!getParentContainer().isAjaxRequest())
@@ -150,6 +150,8 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 						+ "mode: 'remote',triggerAction: 'all',minChars : 3,queryDelay:500,lazyInit:true"
 						+ isDisabled
 						+ ",emptyText:\""
+						+ defaultValue
+						+ "\",hiddenValue:\""
 						+ defaultValue
 						+ "\",valueNotFoundText:'',"
 						+ "selectOnFocus:'true',applyTo: '"
@@ -208,6 +210,8 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					+ "mode: 'remote',triggerAction: 'all',minChars : 3,queryDelay:500,lazyInit:true"
 					+ isDisabled
 					+ ",emptyText:\""
+					+ defaultValue
+					+ "\",hiddenValue:\""
 					+ defaultValue
 					+ "\",valueNotFoundText:'',"
 					+ "selectOnFocus:'true',applyTo: '"
