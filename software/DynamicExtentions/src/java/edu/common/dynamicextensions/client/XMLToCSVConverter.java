@@ -214,11 +214,11 @@ public class XMLToCSVConverter
 			final NamedNodeMap formDefinitionProperties = item.getAttributes();
 
 			final Node formDefinitionName = formDefinitionProperties
-			.getNamedItem(FORM_DEFINITION_NAME);
+					.getNamedItem(FORM_DEFINITION_NAME);
 			appendToStringBuilder(formDefinitionName.getNodeValue() + newLine + newLine);
 
 			final Node entityGroupNameNode = formDefinitionProperties
-			.getNamedItem(ENTITY_GROUP_NAME);
+					.getNamedItem(ENTITY_GROUP_NAME);
 			entityGroupName = entityGroupNameNode.getNodeValue();
 			appendToStringBuilder(entityGroupName + newLine + newLine);
 
@@ -774,23 +774,23 @@ public class XMLToCSVConverter
 		boolean isMaxRuleDefined = rulesString != null && rulesString.indexOf("max") >= 0;
 		if ("Min".equals(nodeValue))
 		{
-			if(rulesString==null)
+			if (rulesString == null)
 			{
-				rulesString="";
+				rulesString = "";
 			}
 			rulesString += (isMaxRuleDefined ? "&min=" : isRequiredRuleDefined
 					? ":range-min="
-							: ",Rules~range-min=")
-							+ controlProperties.getNamedItem(VALUE).getNodeValue();
+					: ",Rules~range-min=")
+					+ controlProperties.getNamedItem(VALUE).getNodeValue();
 		}
 		else if ("Max".equals(nodeValue))
 		{
-			if(rulesString==null)
+			if (rulesString == null)
 			{
-				rulesString="";
+				rulesString = "";
 			}
 			rulesString += (isRequiredRuleDefined ? ":range-max=" : ",Rules~range-max=")
-			+ controlProperties.getNamedItem(VALUE).getNodeValue();
+					+ controlProperties.getNamedItem(VALUE).getNodeValue();
 		}
 		else if ("required".equals(nodeValue))
 		{
@@ -805,7 +805,7 @@ public class XMLToCSVConverter
 		else if ("defaultValue".equals(nodeValue))
 		{
 			final Node valueNode = controlProperties.getNamedItem(VALUE);
-			permValueOptionsString = ",defaultValue=" + valueNode.getNodeValue();
+			defaultValueString = ",defaultValue=" + valueNode.getNodeValue();
 		}
 		else
 		{
@@ -865,7 +865,7 @@ public class XMLToCSVConverter
 	 */
 	private void txRAInRequiredCSVOrder(final Node instanceNode, final Node uiPropertyNode,
 			final NamedNodeMap attributes) throws IOException
-			{
+	{
 		if (instanceNode != null)
 		{
 			txInstances(instanceNode);
@@ -886,5 +886,5 @@ public class XMLToCSVConverter
 			isFirstUIProperty = false;
 			txUIProperties(uiPropertyNode);
 		}
-			}
+	}
 }
