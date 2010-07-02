@@ -17,6 +17,7 @@ import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInte
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.RoleInterface;
+import edu.common.dynamicextensions.entitymanager.AbstractMetadataManager;
 import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterface;
 import edu.common.dynamicextensions.exception.DataTypeFactoryInitializationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
@@ -29,6 +30,8 @@ import edu.common.dynamicextensions.validation.DateRangeValidator;
 import edu.common.dynamicextensions.validation.RangeValidator;
 import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.query.generator.DBTypes;
+import edu.wustl.dao.util.NamedQueryParam;
 
 /**
  * @author falguni_sachde
@@ -475,6 +478,27 @@ public class XMIImportValidator
 			{
 				associationNames.add(association.getName());
 			}
+		}
+	}
+
+	/**
+	 * @param packageName package name
+	 * @param domainModelName domainModelName
+	 * @throws DynamicExtensionsSystemException if problem occurred in executing HQL
+	 * @throws DynamicExtensionsApplicationException if entity group names does not matches
+	 */
+	public static void validatePackageName(String packageName, String domainModelName)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
+		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
+		substParams.put("0", new NamedQueryParam(DBTypes.STRING, packageName));
+
+		List<String> names = new ArrayList<String>(AbstractMetadataManager.executeHQL(
+				"getEntityGroupNameByPackageName", substParams));
+		if (!names.isEmpty() && !domainModelName.equals(names.get(0)))
+		{
+			errorList.add("Change the package name, model " + names.get(0)
+					+ " has the same package name.");
 		}
 	}
 }
