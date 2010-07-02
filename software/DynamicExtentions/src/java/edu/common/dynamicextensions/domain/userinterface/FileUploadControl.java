@@ -27,53 +27,103 @@ public class FileUploadControl extends Control implements FileUploadInterface
 	private Integer columns = null;
 
 	/**
-	 * @return
+	 * This methods generates the HTML for FIle type of attribute
+	 * @return HTML in string form
 	 * @throws DynamicExtensionsSystemException
 	 */
 	protected String generateEditModeHTML(ContainerInterface container)
 			throws DynamicExtensionsSystemException
 	{
-		String htmlString = "";
+		StringBuffer htmlString = new StringBuffer(210);
 		String controlname = getHTMLComponentName();
 
 		if (getIsSkipLogicTargetControl())
 		{
-			htmlString += "<div id='" + controlname + "_div' name='" + controlname + "_div'>";
+			htmlString.append("<div id='");
+			htmlString.append(controlname);
+			htmlString.append("_div' name='");
+			htmlString.append(controlname);
+			htmlString.append("_div'>");
 		}
 
 		ApplicationProperties.initBundle("ApplicationResources");
-		Container parentContainer = getParentContainer();
-		final CategoryEntityRecord entityRecord = new CategoryEntityRecord(parentContainer
-				.getAbstractEntity().getId(), parentContainer.getAbstractEntity().getName());
+		htmlString.append("<span id='").append(controlname).append("_button'>");
 
-		htmlString = htmlString + "<span id='" + controlname + "_button'>";
-		if (value != null && value != "")
+		if (value == null || value.equals(""))
 		{
-			Long recordId = (Long) parentContainer.getContainerValueMap().get(entityRecord);
-			htmlString = htmlString + "<input type='text' disabled name='" + controlname + "'_1 id='" + controlname + "_1' value='" + value + "'/>&nbsp;&nbsp;";
-			htmlString += "<A onclick='appendRecordId(this);' href='/dynamicExtensions/DownloadFileAction?attributeIdentifier="
-				+ baseAbstractAttribute.getId() + "&recordIdentifier="
-				+ recordId
-				+ "'>";
-				//+ value + "</A>";
-			htmlString = htmlString + "<img src='images/de/download.bmp' title='Download File'/>";
-			htmlString += "</A>&nbsp;&nbsp;";
-			htmlString = htmlString + "<img src='images/de/deleteIcon.jpg' style='cursor:pointer' title='Delete File' onClick='updateFileControl(\"" +controlname +"\");' />";
-			htmlString = htmlString + "<input type='hidden' id='" +controlname +"_hidden' name='" +controlname +"_hidden' value='hidden'/>";
+			htmlString.append("<input onchange='isDataChanged();' type=\"file\" name='").append(
+					controlname);
+			htmlString.append("' id=\"").append(controlname).append("\"'/>");
 		}
 		else
 		{
-			htmlString = htmlString + "<input onchange='isDataChanged();' type=\"file\" "
-					+ "name='" + controlname + "' " + "id=\"" + controlname + "\"'/>";
+			generateHTMLForFileControl(htmlString, controlname);
 		}
-		htmlString = htmlString + "</span>";
+		htmlString.append("</span>");
 		if (getIsSkipLogicTargetControl())
 		{
-			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
-					+ controlname + "_div' />";
-			htmlString += "</div>";
+			htmlString
+					.append("<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '");
+			htmlString.append(controlname).append("_div' /></div>");
 		}
-		return htmlString;
+		return htmlString.toString();
+	}
+
+	/**
+	 * This method generates HTML for file attribute
+	 * @param htmlString
+	 * @param controlname
+	 */
+	private void generateHTMLForFileControl(StringBuffer htmlString, String controlname)
+	{
+		Container parentContainer = getParentContainer();
+		final CategoryEntityRecord entityRecord = new CategoryEntityRecord(parentContainer
+				.getAbstractEntity().getId(), parentContainer.getAbstractEntity().getName());
+		final Long recordId = (Long) parentContainer.getContainerValueMap().get(entityRecord);
+
+		htmlString.append("<input type='text' disabled name='").append(controlname).append(
+				"'_1 id='").append(controlname);
+		htmlString.append("_1' value='").append(value).append("'/>&nbsp;&nbsp;");
+
+		// Refer Bug # 17326
+		generateHTMLBasedOnRecordId(recordId, htmlString);
+
+		htmlString.append("<img src='images/de/deleteIcon.jpg' style='cursor:pointer' title='Delete File' onClick='updateFileControl(\"");
+		htmlString.append(controlname).append("\");' /><input type='hidden' id='");
+		htmlString.append(controlname).append("_hidden' name='");
+		htmlString.append(controlname).append("_hidden' value='hidden'/>");
+	}
+
+	/**
+	 * Generate html based on record id.
+	 *
+	 * @param recordId the record id
+	 * @param htmlString the html string
+	 */
+	private void generateHTMLBasedOnRecordId(Long recordId, StringBuffer htmlString)
+	{
+		/** This is the case when file attribute is present in multiple levels in a form
+		 *  In this case when file is uploaded for upper level and then sub level is traversed
+		 *  then upper level form opens in edit mode. Although the control has value, since
+		 *  the form is not yet submitted, recordId is null. Hence Download option is not to be
+		 *  provided.
+		 */
+		if (recordId == null)
+		{
+			htmlString
+					.append("<img src='images/uIEnhancementImages/error-green.gif' title='File uploaded'/>");
+		}
+		else
+		{
+			htmlString
+					.append("<A onclick='appendRecordId(this);' href='/dynamicExtensions/DownloadFileAction?attributeIdentifier=");
+			htmlString.append(baseAbstractAttribute.getId());
+			htmlString.append("&recordIdentifier=");
+			htmlString.append(recordId);
+			htmlString
+					.append("'><img src='images/de/download.bmp' title='Download File'/> </A>&nbsp;&nbsp;");
+		}
+
 	}
 
 	/**
@@ -108,27 +158,33 @@ public class FileUploadControl extends Control implements FileUploadInterface
 	}
 
 	/**
-	 *
+	 * (non-Javadoc).
+	 * @return the checks if is enumerated control
+	 * @see edu.common.dynamicextensions.domain.userinterface.Control#getIsEnumeratedControl()
 	 */
+	public boolean getIsEnumeratedControl()
+	{
+		return false;
+	}
+
+	/**
+	 * (non-Javadoc).
+	 * @return the value as strings
+	 * @see edu.common.dynamicextensions.domain.userinterface.Control#getValueAsStrings()
+	 */
+	@Override
 	public List<String> getValueAsStrings()
 	{
 		return null;
 	}
 
 	/**
+	 * This method is not used in this context.
 	 *
+	 * @param listOfValues the list of values
 	 */
 	public void setValueAsStrings(List<String> listOfValues)
 	{
-		// TODO Auto-generated method stub
-
-	}
-
-	/**
-	 *
-	 */
-	public boolean getIsEnumeratedControl()
-	{
-		return false;
+		// TODO
 	}
 }
