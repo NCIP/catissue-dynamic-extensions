@@ -1696,7 +1696,7 @@ function initializeDefaultValue(childObjectName,childObject,obj,i,rowIndex, isFr
 			{
 				initializeDefaultValue(childObjectName,childObject,obj,i,rowIndex, false)
 			}
-			checkForAutoComplete(childObject);
+			checkForAutoComplete(childObject,obj,rowIndex);
 			//continue;
 		}
 	}
@@ -1713,7 +1713,7 @@ function initializeDefaultValue(childObjectName,childObject,obj,i,rowIndex, isFr
 	}
 }
 
-function checkForAutoComplete(childObject)
+function checkForAutoComplete(childObject,obj,rowIndex)
 {
 	if ("auto_complete_dropdown" == childObject.id)
 	{

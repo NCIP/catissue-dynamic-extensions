@@ -3652,7 +3652,6 @@ a.x-menu-item {
     overflow:auto;
     position:relative; /* for calculating scroll offsets */
     zoom:1;
-    overflow-x:hidden;
 }
 
 .x-combo-list-hd {

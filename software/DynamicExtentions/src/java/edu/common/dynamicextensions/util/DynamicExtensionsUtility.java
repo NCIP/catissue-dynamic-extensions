@@ -415,8 +415,8 @@ public class DynamicExtensionsUtility
 			}
 			else if (controlInterface.getBaseAbstractAttribute() != null
 					&& controlInterface.getBaseAbstractAttribute().getId() != null
-					&& controlInterface.getBaseAbstractAttribute().equals(
-							attributeMetadataInterface))
+					&& attributeMetadataInterface.equals(controlInterface
+							.getBaseAbstractAttribute()))
 			{
 				control = controlInterface;
 				break;

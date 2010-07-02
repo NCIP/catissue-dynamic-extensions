@@ -153,7 +153,9 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 						+ defaultValue
 						+ "\",hiddenValue:\""
 						+ defaultValue
-						+ "\",valueNotFoundText:'',"
+						+ "\","
+						+ "tpl: '<tpl for=\".\"><div title=\"{excerpt}\" class=\"x-combo-list-item\">{excerpt}</div></tpl>',"
+						+ "valueNotFoundText:'',"
 						+ "selectOnFocus:'true',applyTo: '"
 						+ htmlComponentName
 						+ "'});combo.on(\"select\", function() {"
@@ -161,7 +163,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 								? "getSkipLogicControl('" + htmlComponentName + "','" + identifier
 										+ "','" + parentContainerId + "');isDataChanged();"
 								: "isDataChanged();")
-						+ "}), combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"210\");combo.innerList.setStyle(\"width\", \"210\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});";
+						+ "}), combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7 || Ext.isSafari){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});";
 
 				htmlString = htmlString
 						+ "ds.on('load',function(){if (this.getAt(0) != null && this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50;} else {combo.typeAheadDelay=60000}});";
@@ -213,6 +215,8 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					+ defaultValue
 					+ "\",hiddenValue:\""
 					+ defaultValue
+					+ "\",width:\""
+					+ 80
 					+ "\",valueNotFoundText:'',"
 					+ "selectOnFocus:'true',applyTo: '"
 					+ htmlComponentName
@@ -221,7 +225,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 							? "getSkipLogicControl('" + htmlComponentName + "','" + identifier
 									+ "','" + parentContainerId + "');isDataChanged();"
 							: "isDataChanged();")
-					+ "}), combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"210\");combo.innerList.setStyle(\"width\", \"210\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});"
+					+ "}), combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7 || Ext.isSafari){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});"
 					+ "ds.on('load',function(){if (this.getAt(0) != null) {if (this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50} else {combo.typeAheadDelay=60000}}});"
 					+ "});"
 					+ "</div>"
