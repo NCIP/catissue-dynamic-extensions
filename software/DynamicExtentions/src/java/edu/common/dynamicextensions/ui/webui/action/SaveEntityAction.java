@@ -23,6 +23,7 @@ import edu.common.dynamicextensions.ui.webui.actionform.ControlsForm;
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManager;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
+import edu.common.dynamicextensions.util.MetaDataIntegrator;
 import edu.common.dynamicextensions.util.global.DEConstants;
 
 /**
@@ -58,14 +59,15 @@ public class SaveEntityAction extends BaseDynamicExtensionsAction
 				ControlsUtility.reinitializeSequenceNumbers(currentContainerInterface
 						.getControlCollection(), controlsForm.getControlsSequenceNumbers());
 			}
-
-			String formName = "";
+				String formName = "";
 			((EntityInterface) containerInterface.getAbstractEntity()).getEntityGroup()
 					.addMainContainer(containerInterface);
 			EntityGroupManager.getInstance().persistEntityGroup(
 					((EntityInterface) containerInterface.getAbstractEntity()).getEntityGroup());
 
-			if (containerInterface.getAbstractEntity() != null)
+			addHooking((String) request.getSession().getAttribute("selectedStaticEntityId" ), containerInterface);
+
+			if ((containerInterface != null) && (containerInterface.getAbstractEntity() != null))
 			{
 				formName = containerInterface.getAbstractEntity().getName();
 			}
@@ -98,6 +100,22 @@ public class SaveEntityAction extends BaseDynamicExtensionsAction
 		}
 		return actionForward;
 	}
+
+
+
+	/**
+	 * @param staticEntityId
+	 * @param containerInterface
+	 */
+	private void addHooking(String staticEntityId,
+			ContainerInterface containerInterface) {
+
+		MetaDataIntegrator associateHookEntityUtil= new MetaDataIntegrator();
+		associateHookEntityUtil.associateWithHokkEntity(
+				containerInterface.getId(), staticEntityId);
+	}
+
+
 
 	/**
 	 * Get messages for successful save of entity
