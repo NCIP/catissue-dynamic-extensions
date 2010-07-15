@@ -364,5 +364,16 @@ public class XMIUtilities
 		}
 		return entity;
 	}
+	public static XMIConfiguration getXMIConfigurationObject()
+	{
+		XMIConfiguration xmiConfiguration = XMIConfiguration.getInstance();
+		xmiConfiguration.setEntityGroupSystemGenerated(false);
+		xmiConfiguration.setCreateTable(true);
+		xmiConfiguration.setAddIdAttr(true);
+		xmiConfiguration.setAddColumnForInherianceInChild(false);
+		xmiConfiguration.setAddInheritedAttribute(false);
+		xmiConfiguration.setValidateXMI(true);
+		return xmiConfiguration;
+	}
 
 }

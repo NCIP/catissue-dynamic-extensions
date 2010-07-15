@@ -88,6 +88,7 @@ import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterfac
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleParameterInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.IdGeneratorUtil;
+import edu.common.dynamicextensions.util.global.DEConstants.AssociationDirection;
 import edu.common.dynamicextensions.util.parser.CategoryCSVFileParser;
 import edu.common.dynamicextensions.util.parser.CategoryFileParser;
 
@@ -978,4 +979,27 @@ public class DomainObjectFactory
 		}
 		return categoryFileParser;
 	}
+	/**
+	 * It will create a new association & then set its name etc by using the given parameter.
+	 * @param targetEntity target entity of the association
+	 * @param assonDirectn direction of association
+	 * @param assoName name of association
+	 * @param sourceRole source role
+	 * @param targetRole target role
+	 * @return association object
+	 * @throws DynamicExtensionsSystemException exception.
+	 */
+	public AssociationInterface getAssociation(EntityInterface targetEntity,
+			AssociationDirection assonDirectn, String assoName, RoleInterface sourceRole,
+			RoleInterface targetRole) throws DynamicExtensionsSystemException
+	{
+		AssociationInterface association = DomainObjectFactory.getInstance().createAssociation();
+		association.setTargetEntity(targetEntity);
+		association.setAssociationDirection(assonDirectn);
+		association.setName(assoName);
+		association.setSourceRole(sourceRole);
+		association.setTargetRole(targetRole);
+		return association;
+	}
+
 }

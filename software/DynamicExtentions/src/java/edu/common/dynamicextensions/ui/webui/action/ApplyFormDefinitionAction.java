@@ -35,8 +35,11 @@ import edu.common.dynamicextensions.ui.webui.util.CacheManager;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManager;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
+import edu.common.dynamicextensions.util.MetaDataIntegrator;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.wustl.common.exception.BizLogicException;
+import edu.wustl.dao.exception.DAOException;
 
 /**
  * This Action class handles two situations ,
@@ -101,9 +104,10 @@ public class ApplyFormDefinitionAction extends BaseDynamicExtensionsAction
 			}
 
 			target = findForwardTarget(operation);
+			String callbackURL = null;
 			if (target.equals(DEConstants.SHOW_DYEXTN_HOMEPAGE))
 			{
-				String callbackURL = redirectCallbackURL(request, WebUIManagerConstants.SUCCESS);
+				callbackURL = redirectCallbackURL(request, WebUIManagerConstants.SUCCESS);
 				if (callbackURL != null && !callbackURL.equals(""))
 				{
 					response.sendRedirect(callbackURL);
@@ -132,19 +136,31 @@ public class ApplyFormDefinitionAction extends BaseDynamicExtensionsAction
 	 * @param request
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
+	 * @throws BizLogicException
+	 * @throws DAOException
 	 */
 	private void saveContainer(HttpServletRequest request)
-			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException, DAOException, BizLogicException
 	{
 		ContainerProcessor containerProcessor = ContainerProcessor.getInstance();
-
-		//ContainerInterface currentContainer = WebUIManager.getCurrentContainer(request);
 		ContainerInterface currentContainer = (ContainerInterface) CacheManager.getObjectFromCache(
 				request, DEConstants.CONTAINER_INTERFACE);
 		if (currentContainer != null)
 		{
 			containerProcessor.saveContainer(currentContainer);
+			addHooking(this.getStaticEntityIdForLinking(request), currentContainer);
+
 		}
+	}
+
+	private void addHooking(String hookingEntityId,
+			ContainerInterface currentContainer) {
+		MetaDataIntegrator associateHookEntityUtil= new MetaDataIntegrator();
+
+
+
+		associateHookEntityUtil.associateWithHokkEntity(
+				currentContainer.getId(), hookingEntityId);
 	}
 
 	/**
@@ -200,11 +216,12 @@ public class ApplyFormDefinitionAction extends BaseDynamicExtensionsAction
 
 			//Update Associations
 			//Get parent container
+			ContainerInterface parentContainer = null;
 			String parentContainerName = formDefinitionForm.getCurrentContainerName();
 			if (parentContainerName != null)
 			{
-				ContainerInterface parentContainer = (ContainerInterface) CacheManager
-						.getObjectFromCache(request, parentContainerName);
+				parentContainer = (ContainerInterface) CacheManager.getObjectFromCache(request,
+						parentContainerName);
 				updateAssociation(parentContainer, currentContainer, formDefinitionForm);
 			}
 		}
@@ -224,24 +241,25 @@ public class ApplyFormDefinitionAction extends BaseDynamicExtensionsAction
 		if (parentContainer != null && childContainer != null && childContainer.getId() != null)
 		{
 
-			AbstractContainmentControlInterface containmentAssociationControl = UserInterfaceiUtility
-					.getAssociationControl(parentContainer, childContainer.getId().toString());
+				AbstractContainmentControlInterface containmentAssociationControl = UserInterfaceiUtility
+						.getAssociationControl(parentContainer, childContainer.getId().toString());
 
-			if (containmentAssociationControl != null)
-			{
-				containmentAssociationControl.setCaption(childContainer.getCaption());
-				AbstractAttributeInterface abstractAttributeInterface = (AbstractAttributeInterface) containmentAssociationControl
-						.getBaseAbstractAttribute();
-				if ((abstractAttributeInterface != null)
-						&& (abstractAttributeInterface instanceof AssociationInterface))
+				if (containmentAssociationControl != null)
 				{
-					AssociationInterface association = (AssociationInterface) abstractAttributeInterface;
-					ApplyFormDefinitionProcessor applyFormDefinitionProcessor = ApplyFormDefinitionProcessor
-							.getInstance();
-					applyFormDefinitionProcessor.associateEntity(association, parentContainer,
-							childContainer, formDefinitionForm);
+					containmentAssociationControl.setCaption(childContainer.getCaption());
+					AssociationInterface association = null;
+					AbstractAttributeInterface abstractAttributeInterface = (AbstractAttributeInterface) containmentAssociationControl
+							.getBaseAbstractAttribute();
+					if ((abstractAttributeInterface != null)
+							&& (abstractAttributeInterface instanceof AssociationInterface))
+					{
+						association = (AssociationInterface) abstractAttributeInterface;
+						ApplyFormDefinitionProcessor applyFormDefinitionProcessor = ApplyFormDefinitionProcessor
+								.getInstance();
+						association = applyFormDefinitionProcessor.associateEntity(association,
+								parentContainer, childContainer, formDefinitionForm);
+					}
 				}
-			}
 
 		}
 	}
@@ -284,8 +302,8 @@ public class ApplyFormDefinitionAction extends BaseDynamicExtensionsAction
 		{
 			//if new entity is created, set its container id in form and container interface in cache.
 			applyFormDefinitionProcessor.associateParentGroupToNewEntity(subFormContainer,
-					mainFormContainer);
-			updateCacheReferences(request, subFormContainer);
+						mainFormContainer);
+				updateCacheReferences(request, subFormContainer);
 		}
 	}
 
@@ -316,6 +334,10 @@ public class ApplyFormDefinitionAction extends BaseDynamicExtensionsAction
 			}
 			isValidSubForm(association, traversedAssocioations);
 		}
+		else
+		{
+			return;
+		}
 	}
 
 	/**
@@ -338,13 +360,11 @@ public class ApplyFormDefinitionAction extends BaseDynamicExtensionsAction
 	 */
 	private boolean isNewEnityCreated(FormDefinitionForm formDefinitionForm)
 	{
-		boolean isNewEntity = false;
-		if (formDefinitionForm != null
-				&& ProcessorConstants.CREATE_AS_NEW.equals(formDefinitionForm.getCreateAs()))
+		if (formDefinitionForm != null && ProcessorConstants.CREATE_AS_NEW.equals(formDefinitionForm.getCreateAs()))
 		{
-			isNewEntity = true;
+			return true;
 		}
-		return isNewEntity;
+		return false;
 	}
 
 	/**
@@ -370,11 +390,62 @@ public class ApplyFormDefinitionAction extends BaseDynamicExtensionsAction
 		container = applyFormDefinitionProcessor.addEntityToContainer(container,
 				formDefinitionForm, entityGroup);
 
+		/*Collection<EntityInterface>   entityCollection=entityGroup.getEntityCollection();
+		for (EntityInterface entityInterface : entityCollection) {
+			List<ContainerInterface> mainContainerList = new ArrayList<ContainerInterface>();
+			Collection<ContainerInterface> mainContainerColl= entityInterface.getContainerCollection();
+			mainContainerList.addAll(mainContainerColl);
+			AssociateHookEntityUtil associateHookEntityUtil= new AssociateHookEntityUtil();
+			final String staticEntityId =getStaticEntityIdForLinking( request );
+			final String appName = DynamicExtensionDAO.getInstance().getAppName();
+			DAO dao = null;
+			EntityInterface staticEntity= null;
+			try {
+				dao = DAOConfigFactory.getInstance().getDAOFactory( appName ).getDAO();
+				dao.openSession( null );
+
+				staticEntity = (EntityInterface) dao.retrieveById( Entity.class.getName(),
+						Long.valueOf( staticEntityId ) );
+			} catch (DAOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+
+			DynamicQueryList dynamicQueryList= new DynamicQueryList();
+			String hookEntityName = staticEntity.getName() ;
+			try {
+				associateHookEntityUtil.integrateWithHookEntity(hookEntityName,null, dynamicQueryList,mainContainerList, false);
+			} catch (DAOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (BizLogicException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			finally{
+				try {
+					dao.closeSession();
+				} catch (DAOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+
+		}
+*/
 		updateCacheReferences(request, container);
 		if (CacheManager.getObjectFromCache(request, DEConstants.CONTAINER_INTERFACE) == null)
 		{
 			CacheManager.addObjectToCache(request, DEConstants.CONTAINER_INTERFACE, container);
 		}
+	}
+
+	private String getStaticEntityIdForLinking(HttpServletRequest request) {
+		final String staticEntityId = (String) request.getSession().getAttribute(
+				"selectedStaticEntityId" );
+		return staticEntityId;
 	}
 
 	/**

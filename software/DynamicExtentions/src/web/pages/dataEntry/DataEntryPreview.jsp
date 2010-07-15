@@ -61,7 +61,7 @@
 						<bean:message key="app.title.MainPageTitle" />
 					</td>
 				</tr>
-		 
+
 				<tr valign="top"  height='94%'>
 					<td>
 						<table valign="top" align='left' width='100%' height='100%' cellspacing="0" cellpadding="0" class="tbBordersAllbordersBlack" >
@@ -80,7 +80,7 @@
 								</td>
 								<td width="50%" class="tabMenuSeparator" colspan="3">&nbsp;</td>
 							</tr>
-												
+
 							<tr valign="top">
 								<td colspan="7">
 									<table align='center' width='100%'>
@@ -92,14 +92,14 @@
 									</table>
 								</td>
 							</tr>
-							
+
 							<tr  height='57%'>
 								<td valign="top" colspan="7">
 									<table cellpadding="4" cellspacing="5" border="0" align='center'>
 										<tr height="5"></tr>
 										<tr>
 											<td align='right'>
-												<input type="image" src="<%=request.getContextPath()%>/images/de/b_back.gif" width="62" height="21" align="middle" onClick="showParentContainerInsertDataPage()"/>												
+												<input type="image" src="<%=request.getContextPath()%>/images/de/b_back.gif" width="62" height="21" align="middle" onClick="showParentContainerInsertDataPage()"/>
 											</td>
 										</tr>
 									</table>

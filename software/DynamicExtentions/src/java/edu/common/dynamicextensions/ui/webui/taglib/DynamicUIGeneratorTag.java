@@ -92,8 +92,12 @@ public class DynamicUIGeneratorTag extends TagSupport
 		{
 			final String caption = (String) pageContext.getSession()
 			.getAttribute("OverrideCaption");
-			this.container.setShowRequiredFieldWarningMessage(Boolean.valueOf(pageContext
+			if(pageContext
+					.getSession().getAttribute("mandatory_Message")!=null)
+			{
+				this.container.setShowRequiredFieldWarningMessage(Boolean.valueOf(pageContext
 					.getSession().getAttribute("mandatory_Message").toString()));
+			}
 			final String operation = pageContext.getRequest().getParameter("dataEntryOperation");
 			final JspWriter out = pageContext.getOut();
 			container.setPreviousValueMap(previousDataMap);

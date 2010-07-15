@@ -39,32 +39,34 @@ public class PackageName {
             }
 
             final EntityGroupInterface entityGroups = entityManager.getEntityGroupByName(entityName);
-            final EntityInterface entity = entityGroups.getEntityCollection().iterator().next();
-            final  Set<TaggedValueInterface> taggedValues = (Set<TaggedValueInterface>) entity.getEntityGroup().getTaggedValueCollection();
+            if(!entityGroups.getEntityCollection().isEmpty()){
+	            final EntityInterface entity = entityGroups.getEntityCollection().iterator().next();
+	            final  Set<TaggedValueInterface> taggedValues = (Set<TaggedValueInterface>) entity.getEntityGroup().getTaggedValueCollection();
 
-            final Iterator<TaggedValueInterface> taggedValuesIter = taggedValues.iterator();
-            while (taggedValuesIter.hasNext()) {
-                final TaggedValueInterface taggedValue = taggedValuesIter.next();
-                if (taggedValue.getKey().equals("PackageName")) {
-                    packageName = taggedValue.getValue();
-                    break;
-                }
+	            final Iterator<TaggedValueInterface> taggedValuesIter = taggedValues.iterator();
+	            while (taggedValuesIter.hasNext()) {
+	                final TaggedValueInterface taggedValue = taggedValuesIter.next();
+	                if (taggedValue.getKey().equals("PackageName")) {
+	                    packageName = taggedValue.getValue();
+	                    break;
+	                }
+	            }
+	            final int start = packageName.lastIndexOf('.');
+	            String packageEntityName = packageName;
+	            if (start != -1) {
+	                packageEntityName = packageName.substring(packageName.lastIndexOf('.') + 1, packageName.length());
+
+	                final StringBuffer tempPackageName = new StringBuffer(
+	                        packageName.substring(0, packageName.indexOf('.') + 1));
+	                packageName = packageName.substring(packageName.indexOf('.') + 1, packageName.length());
+	                if (packageName.indexOf('.') != -1) {
+	                    tempPackageName.append(packageName.substring(0, packageName.indexOf('.')));
+	                }
+	                packageName = tempPackageName.toString().replace('.', '/');
+	            }
+
+	            writeToFile(directoryPath, packageName, entityName, packageEntityName);
             }
-            final int start = packageName.lastIndexOf('.');
-            String packageEntityName = packageName;
-            if (start != -1) {
-                packageEntityName = packageName.substring(packageName.lastIndexOf('.') + 1, packageName.length());
-
-                final StringBuffer tempPackageName = new StringBuffer(
-                        packageName.substring(0, packageName.indexOf('.') + 1));
-                packageName = packageName.substring(packageName.indexOf('.') + 1, packageName.length());
-                if (packageName.indexOf('.') != -1) {
-                    tempPackageName.append(packageName.substring(0, packageName.indexOf('.')));
-                }
-                packageName = tempPackageName.toString().replace('.', '/');
-            }
-
-            writeToFile(directoryPath, packageName, entityName, packageEntityName);
         } catch (DynamicExtensionsSystemException e) {
             throw new RuntimeException("Error while retriving Entity Group", e);
         } catch (DynamicExtensionsApplicationException e) {

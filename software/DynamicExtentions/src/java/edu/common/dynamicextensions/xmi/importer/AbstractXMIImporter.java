@@ -8,13 +8,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
 import java.util.StringTokenizer;
 
 import javax.jmi.model.ModelPackage;
@@ -33,22 +29,20 @@ import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.RoleInterface;
 import edu.common.dynamicextensions.domaininterface.databaseproperties.ConstraintPropertiesInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
-import edu.common.dynamicextensions.entitymanager.AbstractMetadataManager;
-import edu.common.dynamicextensions.entitymanager.DynamicExtensionBaseQueryBuilder;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
-import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.entitymanager.QueryBuilderFactory;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.util.QueryIntegrator;
+import edu.common.dynamicextensions.util.MetaDataIntegrator;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.SaveEntityGroupAndDETablesUtil;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationDirection;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.common.dynamicextensions.xmi.AnnotationUtil;
 import edu.common.dynamicextensions.xmi.DynamicQueryList;
-import edu.common.dynamicextensions.xmi.PathObject;
-import edu.common.dynamicextensions.xmi.UpdateCSRToEntityPath;
 import edu.common.dynamicextensions.xmi.XMIConfiguration;
 import edu.common.dynamicextensions.xmi.XMIConstants;
 import edu.common.dynamicextensions.xmi.XMIUtilities;
@@ -57,12 +51,9 @@ import edu.common.dynamicextensions.xmi.exporter.XMIExporterUtility;
 import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
-import edu.wustl.dao.DAO;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
-import edu.wustl.dao.query.generator.DBTypes;
-import edu.wustl.dao.util.NamedQueryParam;
 
 /**
  * This class is used for importing the Dynamic Models using the DE.
@@ -110,8 +101,6 @@ public abstract class AbstractXMIImporter
 	private HibernateDAO hibernatedao = null;
 	private JDBCDAO jdbcdao = null;
 	private String domainModelName = "";
-	private static final String TIME_TAKEN = "  Time taken  = ";
-
 	/**
 	 * Step 1  : initialize all resources
 	 * Step 2: Process XMI
@@ -149,23 +138,29 @@ public abstract class AbstractXMIImporter
 			generateLogForProcessXMI(processXMIStartTime, isEditedXmi);
 			long assoWithHEstartTime = System.currentTimeMillis();
 			//Step 3: associate with hook entity.
-			integrateWithHookEntity(hibernatedao, dynamicQueryList, mainContainerList, isEditedXmi);
+			MetaDataIntegrator associateHookEntityUtil= new MetaDataIntegrator();
+			associateHookEntityUtil.integrateWithHookEntity(hookEntityName, hibernatedao, dynamicQueryList, mainContainerList, isEditedXmi);
+			//integrateWithHookEntity(hibernatedao, dynamicQueryList, mainContainerList, isEditedXmi);
 			//step 4: commit model & create DE Tables
-			LOGGER.info("Now Creating DE Tables....");
+			/*LOGGER.info("Now Creating DE Tables....");
 			if (hibernatedao != null)
 			{
-				createDETablesAndSaveEntityGroup(multiselectMigartionScripts, dynamicQueryList);
-			}
-			generateLogForHooking(assoWithHEstartTime);
+				createDETablesAndSaveEntityGroup(hibernatedao,multiselectMigartionScripts, dynamicQueryList);
+			}*/
+			SaveEntityGroupAndDETablesUtil saveGroupandDETablesUtil = new SaveEntityGroupAndDETablesUtil();
+			saveGroupandDETablesUtil.createDETablesAndSaveEntityGroup(hibernatedao, multiselectMigartionScripts, dynamicQueryList);
+			XMIImporterUtil.generateLogForHooking(assoWithHEstartTime);
 			long csrStartTime = System.currentTimeMillis();
 
 			//step 5: add Query paths.
-			if (addQueryPaths)
+		/*	if (addQueryPaths)
 			{
 				LOGGER.info("Now Adding Query Paths ....");
-				addQueryPathsForConatiners(hibernatedao, jdbcdao, isEntGrpSysGented,
+				addQueryPathsForConatiners(hookEntityName,hibernatedao, jdbcdao, isEntGrpSysGented,
 						mainContainerList);
-			}
+			}*/
+			QueryIntegrator queryPaths= new QueryIntegrator();
+			queryPaths.addQueryPaths(addQueryPaths, hookEntityName, hibernatedao, jdbcdao, isEditedXmi, mainContainerList);
 			jdbcdao.commit();
 			//step 6: associate with clinical study.
 			LOGGER.info("Now associating the clinical study to the main Containers");
@@ -262,7 +257,7 @@ public abstract class AbstractXMIImporter
 		LOGGER.info("#############################################");
 		LOGGER.info("  IMPORT_XMI --> TASK : EXPORT_XMI_FOR_CACORE");
 		LOGGER.info("  -----------------------------------------");
-		LOGGER.info(TIME_TAKEN + ((totalTime / 1000) / 60) + " minutes "
+		LOGGER.info(DEConstants.TIME_TAKEN + ((totalTime / 1000) / 60) + " minutes "
 				+ ((totalTime / 1000) % 60) + " seconds");
 		LOGGER.info("#############################################");
 	}
@@ -282,7 +277,7 @@ public abstract class AbstractXMIImporter
 		LOGGER.info("#############################################");
 		LOGGER.info("  IMPORT_XMI --> TASK : ADD QUERY PATHS");
 		LOGGER.info("  -----------------------------------------");
-		LOGGER.info(TIME_TAKEN + ((totalTime / 1000) / 60) + " minutes "
+		LOGGER.info(DEConstants.TIME_TAKEN + ((totalTime / 1000) / 60) + " minutes "
 				+ ((totalTime / 1000) % 60) + " seconds");
 		LOGGER.info("#############################################");
 		LOGGER.info(" ");
@@ -301,30 +296,9 @@ public abstract class AbstractXMIImporter
 		LOGGER.info("#############################################");
 		LOGGER.info("  IMPORT_XMI -->TOTAL TIME");
 		LOGGER.info("  -----------------------------------------");
-		LOGGER.info(TIME_TAKEN + ((totalTime / 1000) / 60) + " minutes "
+		LOGGER.info(DEConstants.TIME_TAKEN + ((totalTime / 1000) / 60) + " minutes "
 				+ ((totalTime / 1000) % 60) + " seconds");
 		LOGGER.info("#############################################");
-		LOGGER.info(" ");
-		LOGGER.info(" ");
-	}
-
-	/**
-	 * It will create the logg statements for timing required for Hooking with the static entity.
-	 * @param assoWithHEstartTime start time of the hooking
-	 */
-	private void generateLogForHooking(long assoWithHEstartTime)
-	{
-		long assoWithHEendTime = System.currentTimeMillis();
-		long assoWithHEtotalTime = assoWithHEendTime - assoWithHEstartTime;
-		LOGGER.info(" ");
-		LOGGER.info(" ");
-		LOGGER.info("######################################################################");
-		LOGGER.info("  IMPORT_XMI --> TASK : ASSOCIATE WITH HOOK ENTITY & CREATE DE TABLES");
-		LOGGER.info("  ------------------------------------------------------------------");
-		LOGGER.info(TIME_TAKEN + ((assoWithHEtotalTime / 1000) / 60) + " minutes "
-				+ ((assoWithHEtotalTime / 1000) % 60) + " seconds");
-		LOGGER.info("######################################################################");
-		LOGGER.info(" ");
 		LOGGER.info(" ");
 		LOGGER.info(" ");
 	}
@@ -518,235 +492,6 @@ public abstract class AbstractXMIImporter
 		XMIUtilities.cleanUpRepository(storageFileName);
 	}
 
-	/**
-	 * It will hook all the mainContainers with the Provided Hook entity.
-	 * @param hibernatedao dao used for retrieving the hook entity.
-	 * @param dynamicQueryList query list in which to add the Queries for adding the association column
-	 * @param mainContainerList main containers which should be hooked.
-	 * @param isEditedXmi is it the edit xmi case.
-	 * @throws DAOException exception
-	 * @throws DynamicExtensionsSystemException exception
-	 * @throws BizLogicException exception
-	 * @throws DynamicExtensionsApplicationException exception.
-	 */
-	private void integrateWithHookEntity(HibernateDAO hibernatedao,
-			DynamicQueryList dynamicQueryList, List<ContainerInterface> mainContainerList,
-			boolean isEditedXmi) throws DAOException, DynamicExtensionsSystemException,
-			BizLogicException, DynamicExtensionsApplicationException
-	{
-		if (!hookEntityName.equalsIgnoreCase("None"))
-		{
-			// For CLINPORTAL, there is only one hook entity object i.e. RECORD ENTRY
-			//LOGGER.info("Number of main containers = " + mainContainerList.size());
-			LOGGER.info(" ");
-			LOGGER.info("Now associating with hook entity -> " + hookEntityName + "....");
-			LOGGER.info(" ");
-			DynamicQueryList queryList = associateHookEntity(mainContainerList, isEditedXmi,
-					hibernatedao);
-			if (queryList != null)
-			{
-				dynamicQueryList.getQueryList().addAll(queryList.getQueryList());
-				dynamicQueryList.getRevQueryList().addAll(queryList.getRevQueryList());
-			}
-		}
-	}
-
-	/**
-	 * It will add the Query paths for all the Entities & if addQueryPahs argument was
-	 * true then it will add the currated paths from clinicalStudyRegistration to mainConatainers.
-	 * @param hibernatedao dao used for retrieving the ids of entities.
-	 * @param jdbcdao dao used to insert the path.
-	 * @param isEntGrpSysGented specifies weather the entityGroup is system generated or not.
-	 * @param mainContainerList list of main containers for which the paths to be added.
-	 * @throws DynamicExtensionsSystemException exception
-	 * @throws DynamicExtensionsApplicationException exception
-	 * @throws BizLogicException exception
-	 * @throws DAOException exception
-	 */
-	private void addQueryPathsForConatiners(HibernateDAO hibernatedao, JDBCDAO jdbcdao,
-			boolean isEntGrpSysGented, List<ContainerInterface> mainContainerList)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
-			BizLogicException, DAOException
-	{
-		if (hookEntityName.equalsIgnoreCase("None"))
-		{
-			LOGGER.info("Main Container list size " + mainContainerList.size());
-			Set<PathObject> processedPathList = new HashSet<PathObject>();
-			AnnotationUtil.setHookEntityId(null);
-			addQueryPathsWithoutHookEntity(jdbcdao, isEntGrpSysGented, mainContainerList,
-					processedPathList);
-
-		}
-		else
-		{
-			EntityInterface staticEntity = XMIUtilities.getStaticEntity(hookEntityName,
-					hibernatedao);
-			for (ContainerInterface mainContainer : mainContainerList)
-			{
-				AnnotationUtil.addNewPathsForExistingMainContainers(staticEntity,
-						((EntityInterface) mainContainer.getAbstractEntity()), true, jdbcdao,
-						staticEntity);
-			}
-
-		}
-
-		LOGGER.info("Now adding CSR query paths for entities....");
-		List<AssociationInterface> associationList = getAssociationListForCurratedPath(hibernatedao);
-		UpdateCSRToEntityPath.addCuratedPathsFromToAllEntities(associationList, xmiConfiguration
-				.getNewEntitiesIds());
-
-	}
-
-	/**
-	 * It will add the Query paths for which no hook entity is specified.
-	 * @param jdbcdao dao used to insert the path.
-	 * @param isEntGrpSysGented specifies weather the entityGroup is system generated or not.
-	 * @param mainContainerList list of main containers for which the paths to be added.
-	 * @param processedPathList list of the paths which are already added.
-	 * @throws BizLogicException exception
-	 * @throws DynamicExtensionsSystemException exception.
-	 */
-	private void addQueryPathsWithoutHookEntity(JDBCDAO jdbcdao, boolean isEntGrpSysGented,
-			List<ContainerInterface> mainContainerList, Set<PathObject> processedPathList)
-			throws BizLogicException, DynamicExtensionsSystemException
-	{
-		for (ContainerInterface mainContainer : mainContainerList)
-		{
-			AnnotationUtil.addQueryPathsForAllAssociatedEntities(((EntityInterface) mainContainer
-					.getAbstractEntity()), null, null, processedPathList, isEntGrpSysGented,
-					jdbcdao);
-		}
-
-		// Following will add Parent Entity's association paths to child Entity also.
-		for (ContainerInterface mainContainer : mainContainerList)
-		{
-			AnnotationUtil.addInheritancePathforSystemGenerated(((EntityInterface) mainContainer
-					.getAbstractEntity()));
-		}
-	}
-
-	/**
-	 * It will execute all the queries present in the dynamicQueryList object &
-	 * multiselectMigartionScripts then will commit the hibernatedao.
-	 * If some problem occurs during this then it will roll back the dao &
-	 * also execute the revrese queries present in the dynamicQueryList.
-	 * @param multiselectMigartionScripts queries to be fired to migrate multiselect attribute.
-	 * @param dynamicQueryList queries to be fired to create all DE tables.
-	 * @throws DynamicExtensionsSystemException exception.
-	 */
-	private void createDETablesAndSaveEntityGroup(
-			Map<AssociationInterface, String> multiselectMigartionScripts,
-			DynamicQueryList dynamicQueryList) throws DynamicExtensionsSystemException
-	{
-		Stack<String> rlbkQryStack = new Stack<String>();
-		try
-		{
-			DynamicExtensionBaseQueryBuilder queryBuilder = QueryBuilderFactory.getQueryBuilder();
-			if (dynamicQueryList != null)
-			{
-				queryBuilder.executeQueries(dynamicQueryList.getQueryList(), dynamicQueryList
-						.getRevQueryList(), rlbkQryStack);
-			}
-			hibernatedao.commit();
-		}
-		catch (Exception e)
-		{
-			rollbackQueries(rlbkQryStack, e, hibernatedao);
-			throw new DynamicExtensionsSystemException(e.getMessage(), e);
-		}
-		// Execute data migration scripts for attributes that were changed from a normal attribute to
-		// a multiselect attribute.
-		List<String> multiSelMigrationQueries = EntityManagerUtil
-				.updateSqlScriptToMigrateOldDataForMultiselectAttribute(multiselectMigartionScripts);
-		XMIImporterUtil.executeDML(multiSelMigrationQueries);
-
-	}
-
-	/**
-	 * It will call rollback on the provided DAO & then will execute the
-	 * Queries which are present int the revQryStack to restore the original state.
-	 * @param revQryStack stack which contains the Queries to be fired to restore the state.
-	 * @param exception exception occurred because of which rollback is called.
-	 * @param dao dao which is to be rollback.
-	 * @throws DynamicExtensionsSystemException exception
-	 */
-	protected void rollbackQueries(Stack<String> revQryStack, Exception exception, DAO dao)
-			throws DynamicExtensionsSystemException
-	{
-		String message = "";
-		rollbackDao(dao);
-		if (revQryStack != null && !revQryStack.isEmpty())
-		{
-			JDBCDAO jdbcDao = null;
-			try
-			{
-				jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-				executeQuriesInStack(revQryStack, jdbcDao);
-				jdbcDao.commit();
-			}
-			catch (DAOException exc)
-			{
-				message = exc.getMessage();
-				//logFatalError(exc, abstrMetadata);
-			}
-			finally
-			{
-
-				DynamicExtensionsUtility.closeDAO(jdbcDao);
-				//logDebug("rollbackQueries", DynamicExtensionsUtility.getStackTrace(exception));
-				DynamicExtensionsSystemException xception = new DynamicExtensionsSystemException(
-						message, exception);
-
-				//xception.setErrorCode(DYEXTN_S_000);
-				throw xception;
-			}
-		}
-	}
-
-	/**
-	 * It will execute all the Queries present into the stack using the provided dao
-	 * @param revQryStack which contains queries
-	 * @param jdbcDao dao
-	 * @throws DynamicExtensionsSystemException exception.
-	 */
-	private void executeQuriesInStack(Stack<String> revQryStack, JDBCDAO jdbcDao)
-			throws DynamicExtensionsSystemException
-	{
-		while (!revQryStack.empty())
-		{
-			String query = revQryStack.pop();
-			try
-			{
-				jdbcDao.executeUpdate(query);
-			}
-			catch (DAOException e)
-			{
-				throw new DynamicExtensionsSystemException(
-						"Exception occured while executing rollback queries.", e);
-			}
-		}
-	}
-
-	/**
-	 * It will call rollback on the given dao.
-	 * @param dao dao which is to be rollbacked.
-	 * @throws DynamicExtensionsSystemException exception.
-	 */
-	private void rollbackDao(DAO dao) throws DynamicExtensionsSystemException
-	{
-		if (dao != null)
-		{
-			try
-			{
-				dao.rollback();
-			}
-			catch (DAOException excep)
-			{
-				throw new DynamicExtensionsSystemException("Not able to rollback the transaction.",
-						excep);
-			}
-		}
-	}
 
 	/**
 	 * It will return the name of the domain model. i.e. it will return the name of the file

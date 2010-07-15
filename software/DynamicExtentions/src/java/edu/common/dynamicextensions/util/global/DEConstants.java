@@ -149,6 +149,8 @@ public class DEConstants
 
 	public static final String APPLICATION_ERROR_MSGS = "ApplicationErrorMsgs";
 
+	public static final String TIME_TAKEN = "  Time taken  = ";
+
 	public enum Cardinality {
 		ZERO(0), ONE(1), MANY(100);
 

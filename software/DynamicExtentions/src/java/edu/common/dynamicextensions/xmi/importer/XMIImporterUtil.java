@@ -9,7 +9,9 @@ import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.SemanticPropertyInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.xmi.XMIConfiguration;
+import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
 import gov.nih.nci.cagrid.metadata.common.SemanticMetadata;
@@ -17,6 +19,7 @@ import gov.nih.nci.cagrid.metadata.common.SemanticMetadata;
 public class XMIImporterUtil
 {
 
+	private static final Logger LOGGER = Logger.getCommonLogger(XMIImporterUtil.class);
 	/**
 	* Stores the SemanticMetadata to the owner which can be class or attribute
 	* @param owner EntityInterface OR AttributeInterface
@@ -103,4 +106,25 @@ public class XMIImporterUtil
 			}
 		}
 	}
+	/**
+	 * It will create the logg statements for timing required for Hooking with the static entity.
+	 * @param assoWithHEstartTime start time of the hooking
+	 */
+	public static void generateLogForHooking(long assoWithHEstartTime)
+	{
+		long assoWithHEendTime = System.currentTimeMillis();
+		long assoWithHEtotalTime = assoWithHEendTime - assoWithHEstartTime;
+		LOGGER.info(" ");
+		LOGGER.info(" ");
+		LOGGER.info("######################################################################");
+		LOGGER.info("  IMPORT_XMI --> TASK : ASSOCIATE WITH HOOK ENTITY & CREATE DE TABLES");
+		LOGGER.info("  ------------------------------------------------------------------");
+		LOGGER.info(DEConstants.TIME_TAKEN + ((assoWithHEtotalTime / 1000) / 60) + " minutes "
+				+ ((assoWithHEtotalTime / 1000) % 60) + " seconds");
+		LOGGER.info("######################################################################");
+		LOGGER.info(" ");
+		LOGGER.info(" ");
+		LOGGER.info(" ");
+	}
+
 }
