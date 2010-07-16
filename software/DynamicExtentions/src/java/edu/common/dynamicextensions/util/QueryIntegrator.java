@@ -1,15 +1,21 @@
 package edu.common.dynamicextensions.util;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
+import edu.common.dynamicextensions.entitymanager.EntityManager;
+import edu.common.dynamicextensions.entitymanager.EntityManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.xmi.AnnotationUtil;
 import edu.common.dynamicextensions.xmi.PathObject;
+import edu.common.dynamicextensions.xmi.UpdateCSRToEntityPath;
 import edu.common.dynamicextensions.xmi.XMIUtilities;
 import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.util.logger.Logger;
@@ -56,12 +62,13 @@ public class QueryIntegrator {
 							jdbcdao, mainContainerList);
 
 				}
-/*
+
 				LOGGER.info("Now adding CSR query paths for entities....");
-				List<AssociationInterface> associationList = getAssociationListForCurratedPath(hibernatedao);
+				List<AssociationInterface> associationList = getAssociationListForCurratedPath(hookEntityName,
+						hibernatedao);
 				UpdateCSRToEntityPath.addCuratedPathsFromToAllEntities(associationList,XMIUtilities.getXMIConfigurationObject()
 						.getNewEntitiesIds());
-*/			}
+			}
 	}
 
 	/**
@@ -116,26 +123,75 @@ public class QueryIntegrator {
 					.getAbstractEntity()));
 		}
 	}
-/*	protected List<AssociationInterface> getAssociationListForCurratedPath(
-			HibernateDAO hibernatedao) throws DynamicExtensionsSystemException,
+	protected List<AssociationInterface> getAssociationListForCurratedPath(
+			String hookEntityName, HibernateDAO hibernatedao) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
 
+		List<AssociationInterface> associationList = new ArrayList<AssociationInterface>();
+		EntityManagerInterface entityManager = EntityManager.getInstance();
+
+
+		String srcEntityName= null;
+
+		if(hookEntityName.equals("edu.wustl.catissuecore.domain.deintegration.ParticipantRecordEntry")){
+			srcEntityName="edu.wustl.catissuecore.domain.Participant";
+		}
+		else if(hookEntityName.equals("edu.wustl.catissuecore.domain.deintegration.SCGRecordEntry")){
+			srcEntityName="edu.wustl.catissuecore.domain.SpecimenCollectionGroup";
+		}
+		else {
+			srcEntityName="edu.wustl.catissuecore.domain.Specimen";
+		}
+		long srcEntityId = entityManager.getEntityId(srcEntityName);
+		long hookEntityId = entityManager.getEntityId(hookEntityName);
+		AssociationInterface recordEntryAssociation = getAssociationByTargetRole(srcEntityId,hookEntityId,
+				 "recordEntryCollection", hibernatedao);
+		if (recordEntryAssociation == null)
+		{
+			throw new DynamicExtensionsApplicationException(
+					"Associations For Currated Path Not Found");
+		}
+		associationList.add(recordEntryAssociation);
+		return associationList;
+	}
+
+	/**
+	 * It will search the DE association whose source & target entity is as given in parameters &
+	 * target role of the association also as given. else will return null
+	 * @param srcEntityId source entity id of association
+	 * @param tgtEntityId target entity id of association
+	 * @param targetRoleName target role of association
+	 * @param hibernatedao dao used for retrieving the association.
+	 * @return the found association
+	 * @throws DynamicExtensionsSystemException exception
+	 * @throws DynamicExtensionsApplicationException exception
+	 */
+	private static AssociationInterface getAssociationByTargetRole(Long srcEntityId,
+			Long tgtEntityId, String targetRoleName, HibernateDAO hibernatedao)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
+		AssociationInterface deAsssociation = null;
 		Collection<AssociationInterface> associations = null;
 		EntityManagerInterface entityManager = EntityManager.getInstance();
-		Long recordEtryEntity = entityManager.getEntityId("edu.wustl.catissuecore.domain.RecordEntry");
-		Long eventVisitEntry = entityManager.getEntityId("edu.wustl.catissuecore.domain.EventVisit");
+
 		if (hibernatedao == null)
 		{
-			associations = entityManager.getAssociations(eventVisitEntry,recordEtryEntity);
+			associations = entityManager.getAssociations(srcEntityId, tgtEntityId);
 		}
 		else
 		{
-			associations = entityManager.getAssociations(eventVisitEntry, recordEtryEntity, hibernatedao);
+			associations = entityManager.getAssociations(srcEntityId, tgtEntityId, hibernatedao);
 		}
 
-		ArrayList<AssociationInterface> associationList = new ArrayList<AssociationInterface>();
-		associationList.addAll(associations);
-		return associationList;
-	}*/
+		for (AssociationInterface association : associations)
+		{
+			if (association.getTargetRole().getName().equalsIgnoreCase(targetRoleName))
+			{
+				deAsssociation = association;
+				break;
+			}
+		}
+		return deAsssociation;
+	}
 }

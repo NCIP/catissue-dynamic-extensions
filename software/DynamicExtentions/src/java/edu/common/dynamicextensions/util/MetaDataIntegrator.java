@@ -81,9 +81,9 @@ public class MetaDataIntegrator {
 			hibernatedao.commit();
 			//TODO
 			//step 5: add Query paths.
-			/*AddQueryPaths queryPaths= new AddQueryPaths();
-			queryPaths.addQueryPathsForConatiners(true, hookEntityName, hibernatedao, jdbcdao, false, mainContainerList);
-			 */
+			QueryIntegrator queryPaths= new QueryIntegrator();
+			queryPaths.addQueryPaths(true, hookingEntityName, hibernatedao, jdbcdao, false, mainContainerList);
+
 
 		jdbcdao.commit();
 
