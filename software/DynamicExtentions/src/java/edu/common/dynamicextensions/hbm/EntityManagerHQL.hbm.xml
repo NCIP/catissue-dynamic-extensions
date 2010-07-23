@@ -343,4 +343,12 @@
         from  edu.common.dynamicextensions.domain.CategoryAttribute catAttribute
         where catAttribute.isCalculated = true
 	</query>
+
+	<query name="getEntityGroupNameByPackageName">
+		select eg.longName
+		from edu.common.dynamicextensions.domain.EntityGroup eg
+           		where eg.taggedValueCollection.key='PackageName'
+           		and eg.taggedValueCollection.value=?
+
+	</query>
 </hibernate-mapping>

@@ -149,6 +149,7 @@ public abstract class AbstractXMIImporter
 			}*/
 			SaveEntityGroupAndDETablesUtil saveGroupandDETablesUtil = new SaveEntityGroupAndDETablesUtil();
 			saveGroupandDETablesUtil.createDETablesAndSaveEntityGroup(hibernatedao, multiselectMigartionScripts, dynamicQueryList);
+			hibernatedao.commit();
 			XMIImporterUtil.generateLogForHooking(assoWithHEstartTime);
 			long csrStartTime = System.currentTimeMillis();
 

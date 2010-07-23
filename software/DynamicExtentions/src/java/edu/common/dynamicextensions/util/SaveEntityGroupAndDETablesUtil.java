@@ -47,7 +47,6 @@ public class SaveEntityGroupAndDETablesUtil {
 				.updateSqlScriptToMigrateOldDataForMultiselectAttribute(multiselectMigartionScripts);
 				XMIImporterUtil.executeDML(multiSelMigrationQueries);
 			}
-
 		}
 
 	}
@@ -64,7 +63,6 @@ public class SaveEntityGroupAndDETablesUtil {
 			queryBuilder.executeQueries(dynamicQueryList.getQueryList(), dynamicQueryList
 					.getRevQueryList(), rlbkQryStack);
 		}
-		//hibernatedao.commit();
 	}
 	catch (Exception e)
 	{

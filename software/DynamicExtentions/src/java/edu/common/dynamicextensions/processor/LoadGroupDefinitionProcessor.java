@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.entitymanager.EntityManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
@@ -44,7 +45,7 @@ public class LoadGroupDefinitionProcessor extends BaseDynamicExtensionsProcessor
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public void loadGroupDetails(EntityGroupInterface entityGroup, GroupUIBeanInterface groupUIBean)
+	public void loadGroupDetails(Long hookEntityId,EntityGroupInterface entityGroup, GroupUIBeanInterface groupUIBean)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		if (groupUIBean != null)
@@ -64,23 +65,26 @@ public class LoadGroupDefinitionProcessor extends BaseDynamicExtensionsProcessor
 			{
 				groupUIBean.setCreateGroupAs(ProcessorConstants.DEFAULT_GROUP_CREATEAS);
 			}
-			groupUIBean.setGroupList(populateGroupList());
+			groupUIBean.setGroupList(populateGroupList(hookEntityId));
 		}
 	}
 
 	/**
 	 *
+	 * @param hookEntityId
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	public List populateGroupList() throws DynamicExtensionsSystemException,
+	public List populateGroupList(Long hookEntityId) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
 		EntityManagerInterface entityManagerInterface = EntityManager.getInstance();
 		Collection entityGroupCollection = entityManagerInterface
 				.getAllEntityGroupBeans();
 		List<NameValueBean> groupList = new ArrayList<NameValueBean>(entityGroupCollection);
+		Collection<ContainerInterface> containerColl=EntityManager.getInstance()
+			.getDynamicEntitiesContainerIdFromHookEntity(hookEntityId);
 
 		//		Iterator entityGroupIterator = entityGroupCollection.iterator();
 		//		EntityGroupInterface entityGroupInterface;
