@@ -87,7 +87,9 @@ public class LoadGroupDefinitionAction extends BaseDynamicExtensionsAction
 
 		LoadGroupDefinitionProcessor loadGroupDefinitionProcessor = LoadGroupDefinitionProcessor
 				.getInstance();
-		loadGroupDefinitionProcessor.loadGroupDetails(entityGroup, groupForm);
+		 String staticEntityId  =(String) request.getSession().getAttribute(
+				 "selectedStaticEntityId" );
+		loadGroupDefinitionProcessor.loadGroupDetails(Long.valueOf(staticEntityId),entityGroup, groupForm);
 	}
 
 }
