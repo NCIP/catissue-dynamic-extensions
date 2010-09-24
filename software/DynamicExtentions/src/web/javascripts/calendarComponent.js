@@ -401,6 +401,7 @@ function printCal(id,day1, day2, day3, day4, day5, day6, day7, first, month1, mo
     calendar +='</div>';
 //  calendar +='<div id="caljour" style="position:absolute; left:0px; top:45px; width:253; height:130; z-index:10;"></div>';
     calendar +='<div id="caljour'+id+'" style="z-index:10;"></div>';
+    calendar +='</div>';
 
     if(document.getElementById('slcalcod' + id))
     {

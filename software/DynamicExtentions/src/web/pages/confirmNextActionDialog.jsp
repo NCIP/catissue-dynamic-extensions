@@ -11,7 +11,7 @@
 		<title>Dynamic Extensions</title>
 		 <script language="javascript" src="<%= request.getContextPath()%>/javascripts/de/dynamicExtensions.js"></script>
 	</head>
-	<body onload = 'setContextParameter('<%=request.getContextPath()%>')';>
+	<body onload = "setContextParameter('<%=request.getContextPath()%>')";>
 		<html:form styleId = "controlsForm" action="/LoadFormControlsAction" >
 			<font color="red" ><html:errors/></font>
 			<table border="0" width="100%" height="100%" >

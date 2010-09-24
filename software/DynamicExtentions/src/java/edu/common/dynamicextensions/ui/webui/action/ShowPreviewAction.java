@@ -35,7 +35,10 @@ public class ShowPreviewAction extends BaseDynamicExtensionsAction
 		{
 			ControlsUtility.reinitializeSequenceNumbers(containerInterface.getControlCollection(),
 					controlsForm.getControlsSequenceNumbers());
+			ControlsUtility.updateSequencesOfBaseContainers(containerInterface, 1);
+
 		}
+
 		return mapping.findForward("loadFormPreviewAction");
 	}
 

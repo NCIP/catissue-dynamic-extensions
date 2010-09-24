@@ -172,6 +172,8 @@ public class XMIImportProcessor
 
 	private final Map<String, Set<String>> entityNameVsAttributeNames = new HashMap<String, Set<String>>();
 
+	XMIImportValidator xmiImportValidator = new XMIImportValidator();
+
 	/**
 	 *
 	 * @return
@@ -207,6 +209,11 @@ public class XMIImportProcessor
 		this.xmiConfigurationObject = xmiConfigurationObject;
 	}
 
+	public XMIImportValidator getXmiImportValidator() {
+		return xmiImportValidator;
+	}
+
+
 	/**
 	 * It will import the given xmi & create the DynamicExtensions Accordingly.
 	 * If hibernateDao is passed as argument then it will only save the model using that DAO & will return the
@@ -224,6 +231,7 @@ public class XMIImportProcessor
 			final String packageName, final List<String> containerNames,
 			final HibernateDAO... hibernatedao) throws Exception
 	{
+
 		final List<UmlClass> umlClassColl = new ArrayList<UmlClass>();
 		final List<UmlAssociation> umlAssociationColl = new ArrayList<UmlAssociation>();
 		final List<Generalization> umlGeneralisationColl = new ArrayList<Generalization>();
@@ -233,7 +241,8 @@ public class XMIImportProcessor
 			throw new DynamicExtensionsSystemException(
 					"Please set the XMIConfiguration object first ");
 		}
-
+		//validate package name
+		xmiImportValidator.validatePackageName(packageName,entityGroupName);
 		// process for uml model
 		processUmlPackage(umlPackage, packageName, umlClassColl, umlAssociationColl,
 				umlGeneralisationColl);
@@ -262,7 +271,7 @@ public class XMIImportProcessor
 		//Creating entities and entity group.
 		for (final UmlClass umlClass : umlClassColl)
 		{
-			XMIImportValidator.validateClassName(umlClass.getName(), umlClass.getName());
+			xmiImportValidator.validateClassName(umlClass.getName(), umlClass.getName());
 			if (xmiConfigurationObject.isEntityGroupSystemGenerated()
 					&& !umlClass.getName().startsWith(
 							xmiConfigurationObject.getDefaultPackagePrefix())
@@ -374,7 +383,7 @@ public class XMIImportProcessor
 			final EntityInterface entity = umlClassIdVsEntity.get(umlClass.refMofId());
 
 			// check if entity has duplicate association names
-			XMIImportValidator.validateDuplicateAssociationName(entity);
+			xmiImportValidator.validateDuplicateAssociationName(entity);
 			//In memory operation
 			createContainer(entity);
 			//to retrieve primary key properties of the attribute of entity
@@ -391,9 +400,9 @@ public class XMIImportProcessor
 				xmiConfigurationObject.getDefaultPackagePrefix());
 
 		Logger.out.info("Checking for validation errors...........");
-		Logger.out.info("Errorlist Size..." + XMIImportValidator.errorList.size()
+		Logger.out.info("Errorlist Size..." + xmiImportValidator.getErrorList().size()
 				+ "   Validate XMI..." + xmiConfigurationObject.isValidateXMI());
-		if (!XMIImportValidator.errorList.isEmpty() && xmiConfigurationObject.isValidateXMI())
+		if (!xmiImportValidator.getErrorList().isEmpty() && xmiConfigurationObject.isValidateXMI())
 		{
 			throw new DynamicExtensionsSystemException(
 					"XMI need to be fixed for proper caCore generation. "
@@ -613,7 +622,7 @@ public class XMIImportProcessor
 					}
 					else
 					{
-						XMIImportValidator.validateDataTypeForPrimaryKey(primaryAttribute);
+						xmiImportValidator.validateDataTypeForPrimaryKey(primaryAttribute);
 						primaryAttribute.setIsPrimaryKey(true);
 						entity.addPrimaryKeyAttribute(primaryAttribute);
 					}
@@ -1135,7 +1144,7 @@ public class XMIImportProcessor
 				final Attribute att = (Attribute) object;
 				createAttribute(att, entity);
 				attributeNames.add(att.getName());
-				XMIImportValidator.validateName(att.getName(), "Attribute", entity.getName(), null);
+				xmiImportValidator.validateName(att.getName(), "Attribute", entity.getName(), null);
 			}
 		}
 		if (xmiConfigurationObject.isAddInheritedAttribute())
@@ -1622,13 +1631,13 @@ public class XMIImportProcessor
 		final EntityInterface tgtEntity = umlClassIdVsEntity.get(tgtId);
 		final Multiplicity srcMultiplicity = sourceAssociationEnd.getMultiplicity();
 		final String sourceRoleName = sourceAssociationEnd.getName();
-		XMIImportValidator.validateName(sourceRoleName, "Source Role", srcEntity.getName(),
+		xmiImportValidator.validateName(sourceRoleName, "Source Role", srcEntity.getName(),
 				tgtEntity.getName());
 		final RoleInterface sourceRole = getRole(srcMultiplicity, sourceRoleName, sourceAssoTypeTV);
 
 		final Multiplicity tgtMultiplicity = targetAssociationEnd.getMultiplicity();
 		final String tgtRoleName = targetAssociationEnd.getName();
-		XMIImportValidator.validateName(tgtRoleName, "Target Role", srcEntity.getName(), tgtEntity
+		xmiImportValidator.validateName(tgtRoleName, "Target Role", srcEntity.getName(), tgtEntity
 				.getName());
 		final RoleInterface targetRole = getRole(tgtMultiplicity, tgtRoleName,
 				destinationAssoTypeTV);
@@ -1637,7 +1646,7 @@ public class XMIImportProcessor
 		final Collection<AssociationInterface> existingAssociationColl = srcEntity
 				.getAssociationCollection();
 
-		XMIImportValidator.validateAssociations(entityNameVsAttributeNames, umlAssociation
+		xmiImportValidator.validateAssociations(entityNameVsAttributeNames, umlAssociation
 				.getName(), srcEntity.getName(), tgtEntity.getName(), parentIdVsChildrenIds,
 				umlClassIdVsEntity, sourceRole, targetRole);
 
@@ -3521,7 +3530,7 @@ public class XMIImportProcessor
 			//rendering and the while firing the query.
 			if (xmiConfigurationObject.isCreateTable())
 			{
-				XMIImportValidator.validateForCycleInEntityGroup(entityGroup);
+				xmiImportValidator.validateForCycleInEntityGroup(entityGroup);
 			}
 
 			//Do not create database table if entity group is system generated or the isCreateTable is set to false explicitly

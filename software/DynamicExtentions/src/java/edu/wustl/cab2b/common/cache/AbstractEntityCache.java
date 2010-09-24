@@ -271,6 +271,40 @@ public abstract class AbstractEntityCache implements IEntityCache
 		}
 	}
 
+	public void updateEntityGroup(final EntityGroupInterface entityGroup)
+	{
+
+		Collection<EntityGroupInterface> entityGroups =getAllEntityGroupToUpdate(entityGroup);
+		for(EntityGroupInterface group : entityGroups)
+		{
+		if(cab2bEntityGroups.contains(group))
+		{
+			cab2bEntityGroups.remove(group);
+		}
+		cab2bEntityGroups.add(group);
+		for (final EntityInterface entity : group.getEntityCollection())
+		{
+			addEntityToCache(entity);
+		}
+		}
+	}
+
+	private Collection<EntityGroupInterface> getAllEntityGroupToUpdate(
+			final EntityGroupInterface entityGroup) {
+		Collection<EntityGroupInterface> entityGroups = new HashSet<EntityGroupInterface>();
+		entityGroups.add(entityGroup);
+		for(EntityInterface hookEntity :entityGroup.getEntityCollection())
+		{
+			for(AssociationInterface association : hookEntity.getAssociationCollection())
+			{
+				if(!association.getTargetEntity().getEntityGroup().equals(entityGroup))
+				{
+					entityGroups.add(association.getTargetEntity().getEntityGroup());
+				}
+			}
+		}
+		return entityGroups;
+	}
 	/**
 	 * It will clear all the in memory maps
 	 */

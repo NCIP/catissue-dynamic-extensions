@@ -9,6 +9,8 @@ package edu.common.dynamicextensions.domain.userinterface;
 import java.util.List;
 
 import edu.common.dynamicextensions.domain.CategoryEntityRecord;
+import edu.common.dynamicextensions.domain.EntityRecord;
+import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.FileUploadInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
@@ -77,9 +79,8 @@ public class FileUploadControl extends Control implements FileUploadInterface
 	private void generateHTMLForFileControl(StringBuffer htmlString, String controlname)
 	{
 		Container parentContainer = getParentContainer();
-		final CategoryEntityRecord entityRecord = new CategoryEntityRecord(parentContainer
-				.getAbstractEntity().getId(), parentContainer.getAbstractEntity().getName());
-		final Long recordId = (Long) parentContainer.getContainerValueMap().get(entityRecord);
+		Long recordId;
+		recordId = getRecordId(parentContainer);
 
 		htmlString.append("<input type='text' disabled name='").append(controlname).append(
 				"'_1 id='").append(controlname);
@@ -88,10 +89,28 @@ public class FileUploadControl extends Control implements FileUploadInterface
 		// Refer Bug # 17326
 		generateHTMLBasedOnRecordId(recordId, htmlString);
 
-		htmlString.append("<img src='images/de/deleteIcon.jpg' style='cursor:pointer' title='Delete File' onClick='updateFileControl(\"");
+		htmlString
+				.append("<img src='images/de/deleteIcon.jpg' style='cursor:pointer' title='Delete File' onClick='updateFileControl(\"");
 		htmlString.append(controlname).append("\");' /><input type='hidden' id='");
 		htmlString.append(controlname).append("_hidden' name='");
 		htmlString.append(controlname).append("_hidden' value='hidden'/>");
+	}
+
+	private Long getRecordId(Container parentContainer)
+	{
+		Long recordId;
+		if (parentContainer.getAbstractEntity() instanceof CategoryEntityInterface)
+		{
+			final CategoryEntityRecord entityRecord = new CategoryEntityRecord(parentContainer
+					.getAbstractEntity().getId(), parentContainer.getAbstractEntity().getName());
+			recordId = (Long) parentContainer.getContainerValueMap().get(entityRecord);
+		}
+		else
+		{
+			final EntityRecord entityRecord = new EntityRecord();
+			recordId = (Long) parentContainer.getContainerValueMap().get(entityRecord);
+		}
+		return recordId;
 	}
 
 	/**

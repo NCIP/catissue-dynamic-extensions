@@ -8,7 +8,6 @@ import java.util.List;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.userinterface.Container;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
-import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.RoleInterface;
 import edu.common.dynamicextensions.domaininterface.databaseproperties.ConstraintPropertiesInterface;
@@ -23,7 +22,6 @@ import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.common.dynamicextensions.xmi.AnnotationUtil;
 import edu.common.dynamicextensions.xmi.DynamicQueryList;
 import edu.common.dynamicextensions.xmi.XMIUtilities;
-import edu.common.dynamicextensions.xmi.importer.XMIImportValidator;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.util.logger.Logger;
@@ -42,6 +40,11 @@ public class MetaDataIntegrator {
 	private static final Logger LOGGER = Logger.getCommonLogger(MetaDataIntegrator.class);
 	private JDBCDAO jdbcdao = null;
 	private HibernateDAO hibernatedao = null;
+	EntityInterface hookEntity=null;
+
+	public EntityInterface getHookEntity() {
+		return hookEntity;
+	}
 
 	/**
 	 * It will create the instances of the hibernate & jdbc DAOs for furthure use.
@@ -56,11 +59,10 @@ public class MetaDataIntegrator {
 	}
 
 	public void associateWithHokkEntity(
-			Long containerInterfaceId, String hookingEntityId)
+			Long containerInterfaceId, String hookingEntityId, List<Long> newEntitiesId)
 			 {
 
 		try{
-
 			intializeDao();
 			String hookingEntityName= getHookingEntityName(hookingEntityId);
 			//ContainerInterface containerInterface = EntityCache.getInstance().getContainerById(containerInterfaceId);
@@ -71,8 +73,9 @@ public class MetaDataIntegrator {
 
 			DynamicQueryList dynamicQueryList= new DynamicQueryList();
 
+			boolean isEdit=checkIsEdit(containerInterface);
 			//Step 3: associate with hook entity.
-			integrateWithHookEntity(hookingEntityName,hibernatedao, dynamicQueryList,mainContainerList, false);
+			integrateWithHookEntity(hookingEntityName,hibernatedao, dynamicQueryList,mainContainerList,isEdit);
 			//step 4: commit model & create DE Tables
 
 			SaveEntityGroupAndDETablesUtil saveGroupandDETablesUtil = new SaveEntityGroupAndDETablesUtil();
@@ -82,6 +85,11 @@ public class MetaDataIntegrator {
 			//TODO
 			//step 5: add Query paths.
 			QueryIntegrator queryPaths= new QueryIntegrator();
+			if(newEntitiesId!=null && !newEntitiesId.isEmpty()){
+				List<Long> newEntities=XMIUtilities.getXMIConfigurationObject()
+				.getNewEntitiesIds();
+				newEntities.addAll(newEntitiesId);
+			}
 			queryPaths.addQueryPaths(true, hookingEntityName, hibernatedao, jdbcdao, false, mainContainerList);
 
 
@@ -104,6 +112,20 @@ public class MetaDataIntegrator {
 		{
 			closeResources();
 		}
+	}
+
+	private boolean checkIsEdit(ContainerInterface containerInterface) {
+
+		boolean isEdit;
+		if(containerInterface.getAbstractEntity().getId()==null)
+		{
+			isEdit=false;
+		}
+		else
+		{
+			isEdit=true;
+		}
+		return  isEdit;
 	}
 	/**
 	 * It will close daos.
@@ -185,7 +207,7 @@ public class MetaDataIntegrator {
 	{
 		//hooked with the record Entry
 		DynamicQueryList queryList = null;
-		EntityInterface hookEntity = XMIUtilities.getStaticEntity(hookEntityName, hibernatedao);
+		hookEntity = XMIUtilities.getStaticEntity(hookEntityName, hibernatedao);
 		if (isEditedXmi)
 		{//Edit Case
 			List<ContainerInterface> newContainers = new ArrayList<ContainerInterface>();
@@ -348,18 +370,6 @@ public class MetaDataIntegrator {
 		return role;
 	}
 
-	public DynamicQueryList associateEntity(List<ContainerInterface>  mainContainerList,
-			final String hookEntityName)
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException, DAOException, BizLogicException {
-
-		DynamicQueryList dynamicQueryList= new DynamicQueryList();
-
-			MetaDataIntegrator associateHookEntityUtil= new MetaDataIntegrator();
-
-			associateHookEntityUtil.integrateWithHookEntity(hookEntityName,null, dynamicQueryList,mainContainerList, false);
-		return dynamicQueryList;
-	}
 	/**
 	 * @param hookingEntityId
 	 * @return
@@ -398,31 +408,5 @@ public class MetaDataIntegrator {
 		return hookingEntityName;
 	}
 
-	//TODO
-	public List<String>  validateContainer( ContainerInterface containerInterface)
-	throws DynamicExtensionsSystemException {
-		//start validation
-		Collection<AttributeInterface> attributeColl=((EntityInterface)containerInterface.getAbstractEntity()).getAttributeCollection();
-		if(attributeColl!=null){
-			for (AttributeInterface attributeInterface : attributeColl) {
 
-				XMIImportValidator.validateName(attributeInterface.getName(), "Attribute", containerInterface.getAbstractEntity().getName(), null);
-			}
-		}
-
-		XMIImportValidator.validateClassName(containerInterface.getAbstractEntity().getName(), containerInterface.getAbstractEntity().getName());
-		if (!XMIImportValidator.errorList.isEmpty())
-		{
-			/*ActionErrors actionErrors = new ActionErrors();
-			actionErrors.add(ActionErrors.GLOBAL_MESSAGE, new ActionMessage(
-					"app.entitySaveSuccessMessage", XMIImportValidator.errorList));
-			saveErrors(request, actionErrors);*/
-			throw new DynamicExtensionsSystemException(
-					"XMI need to be fixed for proper caCore generation. "
-							+ "Please check the logs.");
-		}
-		return  XMIImportValidator.errorList;
-
-		//end validation
-	}
 }

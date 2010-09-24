@@ -158,7 +158,7 @@ public class ControlsForm extends CommonControlModel
 					&& (attributeDefaultValue == null || !DynamicExtensionsUtility.isDateValid(
 							dateFormat, attributeDefaultValue)))
 			{
-				errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("errors.date.format",
+				errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("errors.invaild.date.format",
 						ApplicationProperties.getValue("eav.att.DefaultValue")));
 			}
 		}
@@ -194,15 +194,17 @@ public class ControlsForm extends CommonControlModel
 				{
 					if ((!DynamicExtensionsUtility.isDateValid(dateFormat, min)))
 					{
-						errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("errors.date.format",
-								ApplicationProperties.getValue("eav.att.Minimum")));
+						errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+								"errors.invaild.date.format", ApplicationProperties
+										.getValue("eav.att.Minimum")));
 						isValid = false;
 					}
 
 					if ((!DynamicExtensionsUtility.isDateValid(dateFormat, max)))
 					{
-						errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("errors.date.format",
-								ApplicationProperties.getValue("eav.att.Maximum")));
+						errors.add(ActionErrors.GLOBAL_ERROR, new ActionError(
+								"errors.invaild.date.format", ApplicationProperties
+										.getValue("eav.att.Maximum")));
 						isValid = false;
 					}
 

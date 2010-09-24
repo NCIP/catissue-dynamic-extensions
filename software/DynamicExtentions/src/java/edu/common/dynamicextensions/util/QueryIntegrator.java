@@ -34,6 +34,7 @@ public class QueryIntegrator {
 	 * @param jdbcdao dao used to insert the path.
 	 * @param isEntGrpSysGented specifies weather the entityGroup is system generated or not.
 	 * @param mainContainerList list of main containers for which the paths to be added.
+	 * @param newEntitiesId
 	 * @throws DynamicExtensionsSystemException exception
 	 * @throws DynamicExtensionsApplicationException exception
 	 * @throws BizLogicException exception

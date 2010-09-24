@@ -147,22 +147,47 @@ public class ApplyFormDefinitionAction extends BaseDynamicExtensionsAction
 				request, DEConstants.CONTAINER_INTERFACE);
 		if (currentContainer != null)
 		{
+			EntityGroupInterface entityGroup = ((EntityInterface) currentContainer
+					.getAbstractEntity()).getEntityGroup();
+			List<EntityInterface> newEntities =	new ArrayList<EntityInterface>();
+			getNewEntitiesName(newEntities,entityGroup);
+
 			containerProcessor.saveContainer(currentContainer);
-			addHooking(this.getStaticEntityIdForLinking(request), currentContainer);
+			List<Long> newEntitiesId =new ArrayList<Long>();
+			getNewEntitiesIds(newEntitiesId,newEntities);
+			addHooking(this.getStaticEntityIdForLinking(request), currentContainer,newEntitiesId);
 
 		}
 	}
 
 	private void addHooking(String hookingEntityId,
-			ContainerInterface currentContainer) {
+			ContainerInterface currentContainer, List<Long> newEntitiesId) {
 		MetaDataIntegrator associateHookEntityUtil= new MetaDataIntegrator();
 
 
 
 		associateHookEntityUtil.associateWithHokkEntity(
-				currentContainer.getId(), hookingEntityId);
+				currentContainer.getId(), hookingEntityId,newEntitiesId);
 	}
 
+	private void getNewEntitiesIds(List<Long> newEntitiesIds,List<EntityInterface> newEntities) {
+
+		for (EntityInterface entity : newEntities) {
+
+				newEntitiesIds.add(entity.getId());
+
+		}
+	}
+
+
+
+	private void getNewEntitiesName(List<EntityInterface> newEntities,EntityGroupInterface entityGroupInterface) {
+		for (EntityInterface entity : entityGroupInterface.getEntityCollection()) {
+			if(entity.getId()==null){
+				newEntities.add(entity);
+			}
+		}
+	}
 	/**
 	 * @param mapping
 	 * @param operation

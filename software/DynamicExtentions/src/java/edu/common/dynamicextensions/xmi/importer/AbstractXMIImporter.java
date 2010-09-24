@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -33,9 +32,9 @@ import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.entitymanager.QueryBuilderFactory;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.util.QueryIntegrator;
-import edu.common.dynamicextensions.util.MetaDataIntegrator;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.MetaDataIntegrator;
+import edu.common.dynamicextensions.util.QueryIntegrator;
 import edu.common.dynamicextensions.util.SaveEntityGroupAndDETablesUtil;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationDirection;
@@ -92,15 +91,15 @@ public abstract class AbstractXMIImporter
 	private String packageName = "";
 	private String pathCsvFileName = "";
 	private String coRecObjCsvFName = "";
-
 	private String hookEntityName = "";
-	private EntityInterface hookEntity;
 	private boolean addQueryPaths = true;
 	private boolean isEntGrpSysGented = false;
 	private boolean isGenerateCacore = true;
 	private HibernateDAO hibernatedao = null;
 	private JDBCDAO jdbcdao = null;
 	private String domainModelName = "";
+	XMIImportValidator xmiImportValidator= null;
+	MetaDataIntegrator metaDataIntegrator= new MetaDataIntegrator();
 	/**
 	 * Step 1  : initialize all resources
 	 * Step 2: Process XMI
@@ -116,6 +115,7 @@ public abstract class AbstractXMIImporter
 		FileInputStream fileInput = null;
 		List<ContainerInterface> mainContainerList = null;
 		boolean isImportSuccess = true;
+
 		try
 		{ //step 1: Initialize Resources
 			long processStartTime = System.currentTimeMillis();
@@ -127,6 +127,7 @@ public abstract class AbstractXMIImporter
 			//step 2: Process XMI
 			XMIImportProcessor xmiImportProcessor = new XMIImportProcessor();
 			xmiImportProcessor.setXmiConfigurationObject(xmiConfiguration);
+			xmiImportValidator=xmiImportProcessor.getXmiImportValidator();
 			long processXMIStartTime = System.currentTimeMillis();
 			DynamicQueryList dynamicQueryList = xmiImportProcessor.processXmi(uml, domainModelName,
 					packageName, containerNames, hibernatedao);
@@ -138,8 +139,8 @@ public abstract class AbstractXMIImporter
 			generateLogForProcessXMI(processXMIStartTime, isEditedXmi);
 			long assoWithHEstartTime = System.currentTimeMillis();
 			//Step 3: associate with hook entity.
-			MetaDataIntegrator associateHookEntityUtil= new MetaDataIntegrator();
-			associateHookEntityUtil.integrateWithHookEntity(hookEntityName, hibernatedao, dynamicQueryList, mainContainerList, isEditedXmi);
+
+			metaDataIntegrator.integrateWithHookEntity(hookEntityName, hibernatedao, dynamicQueryList, mainContainerList, isEditedXmi);
 			//integrateWithHookEntity(hibernatedao, dynamicQueryList, mainContainerList, isEditedXmi);
 			//step 4: commit model & create DE Tables
 			/*LOGGER.info("Now Creating DE Tables....");
@@ -162,6 +163,7 @@ public abstract class AbstractXMIImporter
 			}*/
 			QueryIntegrator queryPaths= new QueryIntegrator();
 			queryPaths.addQueryPaths(addQueryPaths, hookEntityName, hibernatedao, jdbcdao, isEditedXmi, mainContainerList);
+			System.out.println("**********done with addQueryPaths");
 			jdbcdao.commit();
 			//step 6: associate with clinical study.
 			LOGGER.info("Now associating the clinical study to the main Containers");
@@ -173,9 +175,8 @@ public abstract class AbstractXMIImporter
 		{
 			LOGGER.fatal("Fatal error reading XMI!!", e);
 			isImportSuccess = false;
-
 			generateValidationLogs();
-			if (!XMIImportValidator.errorList.isEmpty() && xmiConfiguration.isValidateXMI())
+			if (!xmiImportValidator.getErrorList().isEmpty() && xmiConfiguration.isValidateXMI())
 			{
 				throw new RuntimeException(e);
 			}
@@ -195,12 +196,12 @@ public abstract class AbstractXMIImporter
 	 */
 	private void generateValidationLogs()
 	{
-		if (!XMIImportValidator.errorList.isEmpty())
+		if (!xmiImportValidator.getErrorList().isEmpty())
 		{
 			LOGGER.error("==========================================");
 			LOGGER.error("Following ERRORS encountered in the XMI: ");
 			LOGGER.error("==========================================");
-			for (String error : XMIImportValidator.errorList)
+			for (String error : xmiImportValidator.getErrorList())
 			{
 				LOGGER.error(error);
 			}
@@ -225,9 +226,9 @@ public abstract class AbstractXMIImporter
 			{
 				EntityGroupInterface entityGroup = ((EntityInterface) mainContainerList.get(0)
 						.getAbstractEntity()).getEntityGroup();
-				if (hookEntity != null)
+				if (metaDataIntegrator.getHookEntity()!= null)
 				{
-					XMIExporterUtility.addHookEntitiesToGroup(hookEntity, entityGroup);
+					XMIExporterUtility.addHookEntitiesToGroup(metaDataIntegrator.getHookEntity(), entityGroup);
 				}
 				XMIExporter exporter = new XMIExporter();
 				String exportedXmiFilePath = "./temp_deaudit_related_files/temp_exported_xmi/";
@@ -362,7 +363,8 @@ public abstract class AbstractXMIImporter
 		intitializeInstanceVaribles(args);
 		xmiConfiguration = getXMIConfigurationObject();
 		domainModelName = getDomainModelName(fileName);
-		XMIImportValidator.validatePackageName(packageName,domainModelName);
+		/*XMIImportValidator xmiImportValidator = new XMIImportValidator();
+		xmiImportValidator.validatePackageName(packageName,domainModelName);*/
 		if (hookEntityName.equalsIgnoreCase("None"))
 		{
 			xmiConfiguration.setEntityGroupSystemGenerated(true);
@@ -517,81 +519,6 @@ public abstract class AbstractXMIImporter
 		return modelName;
 	}
 
-	/**
-	 * It will add the association between the provided hook entity & all the maincontainers.
-	 * @param mainContainerList main container list.
-	 * @param hookentity hook entity name
-	 * @param isEditedXmi is edit xmi
-	 * @param hibernatedao dao used to retrieve the hook entity
-	 * @return the query list to add column .
-	 * @throws DAOException exception.
-	 * @throws DynamicExtensionsSystemException exception.
-	 * @throws BizLogicException exception.
-	 * @throws DynamicExtensionsApplicationException exception.
-	 */
-	private DynamicQueryList associateHookEntity(List<ContainerInterface> mainContainerList,
-			boolean isEditedXmi, HibernateDAO hibernatedao) throws DAOException,
-			DynamicExtensionsSystemException, BizLogicException,
-			DynamicExtensionsApplicationException
-	{
-		//hooked with the record Entry
-		DynamicQueryList queryList = null;
-		hookEntity = XMIUtilities.getStaticEntity(hookEntityName, hibernatedao);
-		if (isEditedXmi)
-		{//Edit Case
-			List<ContainerInterface> newContainers = new ArrayList<ContainerInterface>();
-			List<ContainerInterface> existingContainers = new ArrayList<ContainerInterface>();
-			separateNewAndExistingContainers(mainContainerList, hookEntity, newContainers,
-					existingContainers);
-			if (!newContainers.isEmpty())
-			{
-				queryList = addNewIntegrationObjects(hookEntity, newContainers, hibernatedao);
-			}
-		}
-		else
-		{//Add Case
-			queryList = addNewIntegrationObjects(hookEntity, mainContainerList, hibernatedao);
-		}
-		return queryList;
-
-	}
-
-	/**
-	 * It will separate the containers in new containers list & existing main container list
-	 * according to weather they are already associated with hook entity or not.
-	 * @param mainContainerList containers which are to be separated.
-	 * @param staticEntity static entity.
-	 * @param newContainers list in which the new containers are populated
-	 * @param existingContainers list in which the existing containers are populated
-	 */
-	private void separateNewAndExistingContainers(List<ContainerInterface> mainContainerList,
-			EntityInterface staticEntity, List<ContainerInterface> newContainers,
-			List<ContainerInterface> existingContainers)
-	{
-		for (ContainerInterface mainContainer : mainContainerList)
-		{
-			boolean isAssonPresent = false;
-			EntityInterface entity = (EntityInterface) mainContainer.getAbstractEntity();
-			Collection<AssociationInterface> allAssociations = staticEntity.getAllAssociations();
-			for (AssociationInterface association : allAssociations)
-			{
-				if (association.getTargetEntity().getId().compareTo(entity.getId()) == 0)
-				{
-					isAssonPresent = true;
-					break;
-				}
-			}
-			if (isAssonPresent)
-			{
-				existingContainers.add(mainContainer);
-			}
-			else
-			{
-				newContainers.add(mainContainer);
-			}
-
-		}
-	}
 
 	/**
 	 * It will add the new association between static entity & each of the main containers entity.

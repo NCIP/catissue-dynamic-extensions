@@ -75,4 +75,7 @@ public interface EntityManagerExceptionConstantsInterface
 
 	// Exception constant in case of opening a session to save the container.
 	String DYEXTN_S_003 = "DYEXTN_S_003";
+
+	// Exception constant in case of setting the same error message as the exception has.
+	String DYEXTN_A_021 = "DYEXTN_A_021";
 }

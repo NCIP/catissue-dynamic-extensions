@@ -75,22 +75,25 @@ public class ApplyFormControlsProcessor extends BaseDynamicExtensionsProcessor
 			}
 			ControlsUtility.reinitializeSequenceNumbers(container.getControlCollection(),
 					controlUIBean.getControlsSequenceNumbers());
-
+			//Set Name of the attribute in controlsForm.
+			//It is not accepted from UI. It has to be derived from caption
+			String attributeName = deriveAttributeNameFromCaption(controlUIBean.getCaption());
 			//Add new control
 			if (controlOperation.equalsIgnoreCase(ProcessorConstants.OPERATION_ADD))
 			{
-				//Set Name of the attribute in controlsForm.
-				//It is not accepted from UI. It has to be derived from caption
-				String attributeName = deriveAttributeNameFromCaption(controlUIBean.getCaption());
-
 				//Validate attribute name
-				DynamicExtensionsUtility.validateName(attributeName);
 				DynamicExtensionsUtility.validateDuplicateNamesWithinEntity(entity, attributeName);
 				controlUIBean.setName(attributeName);
 
 				//Create Attribute
-				abstractAttribute = attributeProcessor.createAndPopulateAttribute(controlUIBean
-						.getUserSelectedTool(), attrUIBean, entityGroup);
+				/*	abstractAttribute = attributeProcessor.createAndPopulateAttribute(controlUIBean
+							.getUserSelectedTool(), attrUIBean, entityGroup);
+				*/
+				abstractAttribute = attributeProcessor.createAttribute(controlUIBean
+						.getUserSelectedTool(), attrUIBean);
+				abstractAttribute.setEntity(entity);
+				attributeProcessor.populateAttribute(controlUIBean.getUserSelectedTool(),
+						abstractAttribute, attrUIBean, entityGroup);
 
 				//Set permissible values
 				setPermissibleValues(attributeProcessor, abstractAttribute, controlUIBean,
@@ -127,8 +130,7 @@ public class ApplyFormControlsProcessor extends BaseDynamicExtensionsProcessor
 			else if (controlOperation.equalsIgnoreCase(ProcessorConstants.OPERATION_EDIT))
 			{
 				//Set Name of the attribute in controlsForm.
-				//It is not accepted from UI. It has to be derived from caption
-				String attributeName = deriveAttributeNameFromCaption(controlUIBean.getCaption());
+
 				controlUIBean.setName(attributeName);
 				//Get the control from container
 				String selectedControlSeqNumber = controlUIBean.getSelectedControlId();

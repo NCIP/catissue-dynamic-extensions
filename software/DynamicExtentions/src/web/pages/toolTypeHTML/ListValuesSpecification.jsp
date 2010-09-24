@@ -30,7 +30,7 @@
 		optionGrid.setSerializableColumns("true,true,true,true");
 		optionGrid.enableMultiselect(true);
 		optionGrid.init();
-		
+
 		var csvStringObj = document.getElementById('csvString');
 		if(csvStringObj!=null && csvStringObj.value!="")
 		{
@@ -41,14 +41,14 @@
 			loadOptionGridData();
 		}
 	}
-	
+
 	function reloadOptionGrid(csvStringObj)
 	{
 		var csvString = csvStringObj.value;
 		optionGrid.setCSVDelimiter("\t");
 		optionGrid.loadCSVString(csvString);
 		optionGrid.setCSVDelimiter(",");
-		
+
 		var attributeDefaultValue = document.getElementById('attributeDefaultValue').value;
 		var itemIds = optionGrid.getAllItemIds(",");
 		if(itemIds != null)
@@ -70,7 +70,7 @@
 			}
 		}
 	}
-	
+
 	function loadOptionGridData()
 	{
 		var attributeDefaultValue = document.getElementById('attributeDefaultValue').value;
@@ -87,7 +87,7 @@
 						String optionName = optionValueObject.getOptionName();
 						String optionConceptCode = optionValueObject.getOptionConceptCode();
 						String optionDescription = optionValueObject.getOptionDescription();
-					
+
 						String gridContentStr = "," + optionName + "," + optionConceptCode + "," + optionDescription;
 						%>
 							rowId = <%=i%> + "";
@@ -106,22 +106,22 @@
     function uploadValues()
 	{
 		var fileName = document.getElementById('csvFile').value;
-		if(fileName != null || fileName != "")
+		if(fileName != null && fileName != "")
 		{
 			var controlsForm = document.getElementById('controlsForm');
 			var rowNos = optionGrid.getRowsNum();
-	
+
 			var div = document.createElement('DIV');
 			div.id = 'tempDiv';
 	        div.innerHTML = '<iframe style="display:none" src="about:blank" id="tempIframe" name="tempIframe" onload="updateOptionGrid()"></iframe>';
 	        document.body.appendChild(div);
-	
+
 			controlsForm.action = "UploadFileAction.do?totalRows=" + rowNos;
 			controlsForm.target = "tempIframe";
 			controlsForm.submit();
 		}
 	}
-	
+
 	function updateOptionGrid()
 	{
 		var iframe = document.getElementById('tempIframe');
@@ -147,7 +147,7 @@
 		var xmlContent = '';
 		if (iframe.contentDocument)
 		{
-			xmlContent = iframe.contentDocument.body.innerHTML; 
+			xmlContent = iframe.contentDocument.body.innerHTML;
 		}
 		else if (iframe.contentWindow)
 		{

@@ -33,9 +33,11 @@
 		<div id="<%= divName%>" style="display:none">
 			<table summary="" cellpadding="3" cellspacing="0" align = 'left' width='100%'>
 			<%
+
 				Iterator rulesIter = listofRules.iterator();
 				while(rulesIter.hasNext())
 				{
+
 					RuleConfigurationObject ruleObject = (RuleConfigurationObject)rulesIter.next();
 					String ruleLabel = ruleObject.getDisplayLabel();
 					String ruleName = ruleObject.getRuleName();
@@ -61,7 +63,7 @@
 		 						<html:multibox  styleId = 'tempValidationRules' property='tempValidationRules' value="<%= ruleName%>" onclick="ruleSelected(this)">
 									<bean:message key="<%= ruleLabel%>"/>
 								</html:multibox>
-								<bean:message key="<%= ruleLabel%>"/>							
+								<bean:message key="<%= ruleLabel%>"/>
 						<%
 							}
 							else
@@ -86,6 +88,8 @@
 								<td class="formRequiredNoticeWithoutBorder" width="30%">&nbsp;</td>
 								<td class="formFieldWithoutBorder">
 								<%
+									int i=1;
+
 									Iterator paramsIter = params.iterator();
 									while(paramsIter.hasNext())
 									{
@@ -99,14 +103,19 @@
 											if(controlName.equalsIgnoreCase("DateControl"))
 											{
 												String divId = "temp_slcalcod" + paramName;
+												String dateformat="dateFormat_"+i;
+
 										%>
-											<html:text styleId="<%=tempParamName%>" styleClass="formFieldSized5" maxlength="100" size="60" property="<%=tempParamName%>" readonly="true"/>
-											<A onclick="showCalendar('<%=tempParamName%>',<%=DynamicExtensionsUtility.getCurrentYear()%>,<%=DynamicExtensionsUtility.getCurrentMonth()%>,<%=DynamicExtensionsUtility.getCurrentDay()%>,'MM-dd-yyyy','controlsForm','<%=tempParamName%>',event,1900,2020);" href="javascript://">
+											<html:text styleId="<%=tempParamName%>" styleClass="formFieldSized5" maxlength="100" size="60" property="<%=tempParamName%>" />
+										<!--	<A onclick="showCalendar('<%=tempParamName%>',<%=DynamicExtensionsUtility.getCurrentYear()%>,<%=DynamicExtensionsUtility.getCurrentMonth()%>,<%=DynamicExtensionsUtility.getCurrentDay()%>,'MM-dd-yyyy','controlsForm','<%=tempParamName%>',event,1900,2020);" href="javascript://">
 												<IMG alt="This is a Calendar" src="<%=request.getContextPath()%>/images/de/calendar.gif" border=0>
 											</A>
+										-->
 											<div id=<%=divId%> style="Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px">
-												<SCRIPT>printCalendar('<%=tempParamName%>',<%=DynamicExtensionsUtility.getCurrentDay()%>,<%=DynamicExtensionsUtility.getCurrentMonth()%>,<%=DynamicExtensionsUtility.getCurrentYear()%>);</SCRIPT>
-											</div>
+											<!--	<SCRIPT>printCalendar('<%=tempParamName%>',<%=DynamicExtensionsUtility.getCurrentDay()%>,<%=DynamicExtensionsUtility.getCurrentMonth()%>,<%=DynamicExtensionsUtility.getCurrentYear()%>);</SCRIPT>
+											-->
+											</div><label id="<%=dateformat%>"
+											class="formFieldWithoutBorder">[MM-DD-YYYY]&nbsp;</label>
 										<%
 											} //end if(controlName.equalsIgnoreCase("DateControl"))
 											else
@@ -117,6 +126,7 @@
 											}
 										%>
 								<%
+												i=i+1;
 									} // end while(paramsIter.hasNext())
 								%>
 								</td>
@@ -126,6 +136,8 @@
 					%>
 	 		<%
 	 				isFirst = false;
+
+
 	 			} // while(rulesIter.hasNext())
 	 		%>
 			</table>

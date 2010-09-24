@@ -77,7 +77,8 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		String isDisabled = "";
 		String htmlString = "";
 		if ((isReadOnly != null && isReadOnly)
-				|| (isSkipLogicReadOnly != null && isSkipLogicReadOnly))
+				|| (isSkipLogicReadOnly != null && isSkipLogicReadOnly) || getId() == null
+				|| container.getId() == null)
 		{
 			isDisabled = ",disabled:'" + ProcessorConstants.TRUE + "'";
 		}
@@ -166,7 +167,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 						+ "}), combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7 || Ext.isSafari){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});";
 
 				htmlString = htmlString
-					//	+ "ds.on('load',function(){if (this.getAt(0) != null && this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50;} else {combo.typeAheadDelay=60000}});";
+				//	+ "ds.on('load',function(){if (this.getAt(0) != null && this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50;} else {combo.typeAheadDelay=60000}});";
 						+ "ds.on('load',function(storeObj){var count = storeObj.find('id',combo.emptyText);if(count!=-1){var tempVal = combo.emptyText;combo.reset();combo.setValue(tempVal);combo.emptyText='';}if (this.getAt(0) != null && this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50;} else {combo.typeAheadDelay=60000}});";
 				System.out.println("");
 

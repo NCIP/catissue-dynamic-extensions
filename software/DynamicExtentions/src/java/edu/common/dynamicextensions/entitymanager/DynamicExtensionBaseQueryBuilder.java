@@ -2575,23 +2575,26 @@ public class DynamicExtensionBaseQueryBuilder
 		try
 		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			Iterator<String> revQryIter = revQueries.iterator();
-
-			if (queries != null && !queries.isEmpty())
+			if(revQueries!=null)
 			{
-				Iterator<String> queryIter = queries.iterator();
-				while (queryIter.hasNext())
+				Iterator<String> revQryIter = revQueries.iterator();
+
+				if (queries != null && !queries.isEmpty())
 				{
-					String query = queryIter.next();
-					Logger.out.info("Query: " + query);
-					jdbcDao.executeUpdate(query);
-					if (revQryIter.hasNext())
+					Iterator<String> queryIter = queries.iterator();
+					while (queryIter.hasNext())
 					{
-						rlbkQryStack.push(revQryIter.next());
+						String query = queryIter.next();
+						Logger.out.info("Query: " + query);
+						jdbcDao.executeUpdate(query);
+						if (revQryIter.hasNext())
+						{
+							rlbkQryStack.push(revQryIter.next());
+						}
 					}
 				}
+				jdbcDao.commit();
 			}
-			jdbcDao.commit();
 		}
 		catch (DAOException e)
 		{

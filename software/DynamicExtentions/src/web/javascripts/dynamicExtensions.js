@@ -2668,10 +2668,13 @@ function insertBreadCrumbForSubFormResponse(responseXML)
 
 function isDataChanged()
 {
-	document.getElementById('isDirty').value = true;
-	if(document.getElementById('isShowInDiv').value == 'false')
+	if(document.getElementById('isDirty')!=null)
 	{
-		document.getElementById('isDirty').value = false;
+		document.getElementById('isDirty').value = true;
+		if(document.getElementById('isShowInDiv').value == 'false')
+		{
+			document.getElementById('isDirty').value = false;
+		}
 	}
 }
 
@@ -2995,4 +2998,39 @@ function setJQueryParameters(controlId)
 						}
 					}
 		});
+}
+function setDateTimeControlFormatCaption(value)
+{
+	if(value=="DateOnly")
+	{
+		setDateFormat("[MM-DD-YYYY]&nbsp;");
+
+	}
+	else if(value=="DateAndTime")
+	{
+		setDateFormat("[MM-DD-YYYY HH:mm]&nbsp;");
+
+	}
+	else if(value=="MonthAndYear")
+	{
+		setDateFormat("[MM-YYYY]&nbsp;");
+
+	}
+	else
+	{
+		setDateFormat("[YYYY]&nbsp;");
+
+	}
+
+}
+
+function setDateFormat(format)
+{
+	for(var i=0;i<3;i++)
+		{
+
+			document.getElementById("dateFormat_"+i).innerHTML=format;
+		}
+
+
 }

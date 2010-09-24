@@ -758,34 +758,38 @@ public final class ControlConfigurationsFactory
 		Map<String, List<RuleConfigurationObject>> rulesMap = new HashMap<String, List<RuleConfigurationObject>>();
 		ControlsConfigurationObject ccf = (ControlsConfigurationObject) controlsConfigurationMap
 				.get(controlName);
-		List dataTypes = ccf.getDataTypesList();
-		Iterator iter1 = null;
-		Iterator iter = dataTypes.iterator();
-		while (iter.hasNext())
+		if (ccf != null)
 		{
-			String dataType = ((NameValueBean) iter.next()).getName();
-			List rules = getExplicitRules(controlName, dataType);
-			iter1 = rules.iterator();
-			List<RuleConfigurationObject> ruleObjects = new ArrayList<RuleConfigurationObject>();
+			List dataTypes = ccf.getDataTypesList();
+			Iterator iter1 = null;
+			Iterator iter = dataTypes.iterator();
+			while (iter.hasNext())
+			{
+				String dataType = ((NameValueBean) iter.next()).getName();
+				List rules = getExplicitRules(controlName, dataType);
+				iter1 = rules.iterator();
+				List<RuleConfigurationObject> ruleObjects = new ArrayList<RuleConfigurationObject>();
+				while (iter1.hasNext())
+				{
+
+					String ruleName = (String) iter1.next();
+					ruleObjects.add(getRuleObject(ruleName));
+
+				}
+				rulesMap.put(dataType, ruleObjects);
+			}
+
+			List commonRules = getCommonExplicitRules(controlName);
+			iter1 = commonRules.iterator();
+			List<RuleConfigurationObject> commonRuleObjects = new ArrayList<RuleConfigurationObject>();
 			while (iter1.hasNext())
 			{
-
 				String ruleName = (String) iter1.next();
-				ruleObjects.add(getRuleObject(ruleName));
-
+				commonRuleObjects.add(getRuleObject(ruleName));
 			}
-			rulesMap.put(dataType, ruleObjects);
-		}
 
-		List commonRules = getCommonExplicitRules(controlName);
-		iter1 = commonRules.iterator();
-		List<RuleConfigurationObject> commonRuleObjects = new ArrayList<RuleConfigurationObject>();
-		while (iter1.hasNext())
-		{
-			String ruleName = (String) iter1.next();
-			commonRuleObjects.add(getRuleObject(ruleName));
+			rulesMap.put("commons", commonRuleObjects);
 		}
-		rulesMap.put("commons", commonRuleObjects);
 		return rulesMap;
 	}
 

@@ -61,7 +61,8 @@ public class LoadFormControlsAction extends BaseDynamicExtensionsAction
 
 				ControlsUtility.reinitializeSequenceNumbers(containerInterface
 						.getControlCollection(), controlsForm.getControlsSequenceNumbers());
-				Logger.out.debug("Loading form controls for [" + containerInterface.getCaption() + "]");
+				Logger.out.debug("Loading form controls for [" + containerInterface.getCaption()
+						+ "]");
 			}
 			LoadFormControlsProcessor loadFormControlsProcessor = LoadFormControlsProcessor
 					.getInstance();
@@ -80,6 +81,11 @@ public class LoadFormControlsAction extends BaseDynamicExtensionsAction
 			}
 			else
 			{
+				if (ProcessorConstants.LISTBOX_CONTROL.equalsIgnoreCase(controlsForm
+						.getUserSelectedTool()))
+				{
+					controlsForm.setUserSelectedTool(ProcessorConstants.COMBOBOX_CONTROL);
+				}
 				loadFormControlsProcessor.loadFormControls(controlsForm, containerInterface);
 				request.setAttribute("controlsList", controlsForm.getChildList());
 				actionForwardString = DEConstants.SHOW_BUILD_FORM_JSP;

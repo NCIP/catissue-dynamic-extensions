@@ -70,25 +70,30 @@
 
 			function loadGridData()
 			{
+
 				<%
 					if(controlInformationObjectList1!=null)
 					{
 						int noOfControls = controlInformationObjectList1.size();
+						System.out.println("noOfControls="+noOfControls);
 						for(int i=0;i<noOfControls;i++)
-						{
-							ControlInformationObject controlInformationObj = (ControlInformationObject)controlInformationObjectList1.get(i);
+						{ %>
+
+							<%ControlInformationObject controlInformationObj = (ControlInformationObject)controlInformationObjectList1.get(i);
 							if(controlInformationObj!=null)
 							{
 								String identifier = controlInformationObj.getIdentifier();
 								String gridContentStr = " ,"  + controlInformationObj.getControlName() + " ," + controlInformationObj.getControlType();
 								%>
-									mygrid.addRow(<%=identifier%>,'<%=gridContentStr%>');
+									mygrid.addRow(<%=identifier%>,'<%=gridContentStr%>',<%=identifier%>);
 								<%
 							}
 						}
 					}
 				%>
 			}
+
+
 		</script>
 	</head>
 
@@ -114,15 +119,26 @@
 
 
 	<!-- Main HTML Code -->
-  	<body onload="initBuildForm('<%=request.getContextPath()%>');initGridView()">
+  	<body onload="initBuildForm('<%=request.getContextPath()%>');">
 		<html:form styleId="controlsForm" action="/LoadFormControlsAction" method="post" enctype="multipart/form-data">
+
+					<font style=" font-family:arial,helvetica,verdana,sans-serif;
+			  font-size:0.7em;
+			  color:red;" colspan="2">
+						<bean:message  key="Warning" />&nbsp;<bean:message  key="form.creation.message" />
+					</font>
+
 			<font color="red"><html:errors/></font>
 
 			<%
 	  	    	int generator = 0;
 	  	    %>
 			<table valign='top' style='border-right:0px' border='0' align='right' width='100%' height="100%" cellspacing="0" cellpadding="0">
+
+
 				<!-- Main Page heading -->
+
+
 		        <tr style="border-bottom:0px" height="5%">
 		        	<td class="tbBordersAllbordersNone">&nbsp;</td>
 		         	<td class="formFieldNoBorders">
@@ -246,13 +262,9 @@
 																	</tr>
 																</thead>
 																<tbody>
-																	<tr height="100%" valign="top">
-																		<td align="center">
-																			<% if (request.getHeader("User-Agent").indexOf("Safari") == -1) { %>
-																			<div id="gridbox" width="100%" height="100%" align="center" style="background-color:white;overflow:hidden"/>
-																			<% } else { %>
-																			<div id="gridbox" width="100%" height="500px" align="center" style="background-color:white;overflow:hidden"/>
-																			<% } %>
+																	<tr height="100%">
+																		<td valign="top" height="100%" width="100%">
+																			<div id='gridbox' width='100%' height="100%" style='overflow: hidden'></div>
 																		</td>
 																	</tr>
 																</tbody>
@@ -326,5 +338,6 @@
 			<input type="hidden" name="controlsSequenceNumbers" id="controlsSequenceNumbers"/>
 			<input type="hidden" id="checkAttribute" name="checkAttribute" value=""/>
 	  	</html:form>
+<script>		initGridView();</script>
   	</body>
 </html>

@@ -33,6 +33,13 @@
 		<input type="hidden" id="groupOperation" name="groupOperation" value=""/>
 
 	        <table valign="top" align='right' width='100%' height="100%" border='0' cellspacing="0" cellpadding="0" >
+			<tr  width ="100%"  >
+					<td style=" font-family:arial,helvetica,verdana,sans-serif;
+			  font-size:0.7em;
+			  color:red;">
+						<bean:message  key="Warning" />&nbsp;<bean:message  key="form.creation.message" />
+					</td>
+			</tr>
 		    	<!-- Main Page heading -->
 		        <tr valign="top" style = "border-bottom:0px" height="4%">
 		         	<td style="border-left:0px;border-bottom:0px" class="formFieldNoBorders" >
@@ -128,7 +135,7 @@
 				</tr>
 			</table>
 			<div id="NewGroupDiv" style="display:none">
-				<table valign="top" cellspacing="0" cellpadding="4" width="100%" height='100%'>
+				<table valign="top" cellspacing="0" cellpadding="4" width="100%" height='100%' border="0">
 					<tr valign="top" class="rowWithBottomPadding">
 						<td class="formRequiredNoticeWithoutBorder" width="2%">*</td>
 						<td class="formRequiredLabelWithoutBorder" width="12%">
@@ -138,10 +145,23 @@
 						</td>
 						<td class="formFieldWithoutBorder">
 							<html:text styleClass="formDateSized" styleId="tempgroupNameText" property="tempgroupNameText" />
+
 						</td>
 					</tr>
 
 					<tr valign="top" class="rowWithBottomPadding">
+						<td valign="top" class="formRequiredNoticeWithoutBorder" width="2%" >&nbsp;</td>
+						<td valign="top" class="formRequiredLabelWithoutBorder" width="12%">&nbsp;</td>
+						<td valign="top">
+								<font class="validationmessageblack"><bean:message key="group.title"/></font>&nbsp;
+								<font class="validationmessageblue"><bean:message key="errors.group.validation"/></font>
+						</td>
+
+					</tr>
+
+
+
+					<tr valign="bottom" class="rowWithBottomPadding">
 						<td class="formRequiredNoticeWithoutBorder" width="2%" >&nbsp;</td>
 						<td class="formRequiredLabelWithoutBorder" width="12%">
 							<label for="groupDescription">

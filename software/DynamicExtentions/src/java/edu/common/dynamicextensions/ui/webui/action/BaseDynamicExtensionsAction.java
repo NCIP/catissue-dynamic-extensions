@@ -30,7 +30,7 @@ public class BaseDynamicExtensionsAction extends DispatchAction
 	 * In case of DynamicExtensionsSystemException , errorsList will be empty.
 	 * @param throwable exception reference
 	 * @param <String>errorMessagesList list of error messages
-	 * @return boolean flag to determine whether this is a systemexception or an applicationException 
+	 * @return boolean flag to determine whether this is a systemexception or an applicationException
 	 */
 	private boolean handleException(Throwable throwable, List<ActionError> errorMessagesList)
 	{
@@ -42,7 +42,7 @@ public class BaseDynamicExtensionsAction extends DispatchAction
 		{
 			DynamicExtensionsApplicationException appException = (DynamicExtensionsApplicationException) throwable;
 			String errorCode = appException.getErrorCode();
-			errorMessagesList.add(new ActionError(errorCode, appException.getPlaceHolderList()));
+			errorMessagesList.add(new ActionError(errorCode, appException.getMessage()));
 
 		}
 		else if (throwable instanceof DynamicExtensionsSystemException)
@@ -56,9 +56,9 @@ public class BaseDynamicExtensionsAction extends DispatchAction
 	}
 
 	/**
-	 * 
+	 *
 	 * @param errorList List<String> list of error messages
-	 * @return ActionErrors list of error messages 
+	 * @return ActionErrors list of error messages
 	 */
 	private ActionErrors getErrorMessages(List<ActionError> errorList)
 	{
@@ -76,8 +76,8 @@ public class BaseDynamicExtensionsAction extends DispatchAction
 	}
 
 	/**
-	 * 
-	 * @param exception Exception e 
+	 *
+	 * @param exception Exception e
 	 * @param request HttpServletRequest request
 	 */
 	protected String catchException(Exception exception, HttpServletRequest request)

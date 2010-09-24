@@ -26,19 +26,19 @@
 						<bean:message key="eav.att.Format"/> :
 					</td>
 					<td class="formFieldWithoutBorder">
-						<html:radio styleId = 'format' property="format" value="<%=ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY%>" onclick="setDateTimeControl('false', value)">
+						<html:radio styleId = 'format' property="format" value="<%=ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY%>" onclick="setDateTimeControlFormatCaption(value)">
 							<bean:message key="eav.att.DateFormatDateOnlyTitle"/>
 						</html:radio>
 
-						<html:radio styleId = 'format' property="format"  value="<%=ProcessorConstants.DATE_FORMAT_OPTION_DATEANDTIME%>" onclick="setDateTimeControl('true', value)">
+						<html:radio styleId = 'format' property="format"  value="<%=ProcessorConstants.DATE_FORMAT_OPTION_DATEANDTIME%>" onclick="setDateTimeControlFormatCaption(value)">
 							<bean:message key="eav.att.DateFormatDateAndTimeTitle"/>
 						</html:radio>
-						
-						<html:radio styleId = 'format' property="format" value="MonthAndYear" onclick="setDateTimeControl('false', value)">
+
+						<html:radio styleId = 'format' property="format" value="MonthAndYear" onclick="setDateTimeControlFormatCaption( value)">
 							Date (Month & Year)
 						</html:radio>
 
-						<html:radio styleId = 'format' property="format" value="YearOnly" onclick="setDateTimeControl('false', value)">
+						<html:radio styleId = 'format' property="format" value="YearOnly" onclick="setDateTimeControlFormatCaption(value)">
 							Date (Year only)
 						</html:radio>
 					</td>
@@ -65,13 +65,14 @@
 					<td class="formRequiredNoticeWithoutBorder" width="2%">&nbsp;</td>
 					<td class="formRequiredLabelWithoutBorder" width="30%">&nbsp;</td>
 					<td>
-						<html:text styleId='attributeDefaultValue' property='attributeDefaultValue' styleClass="formFieldVerySmallSized" maxlength="100" size="60" readonly="true"/>
-						<A onclick="showCalendar('attributeDefaultValue',<%=DynamicExtensionsUtility.getCurrentYear()%>,<%=DynamicExtensionsUtility.getCurrentMonth()%>,<%=DynamicExtensionsUtility.getCurrentDay()%>,'MM-dd-yyyy','controlsForm','attributeDefaultValue',event,1900,2020);" href="javascript://">
+						<html:text styleId='attributeDefaultValue' property='attributeDefaultValue' styleClass="formFieldVerySmallSized" maxlength="100" size="60"/>
+						<!--<A onclick="showCalendar('attributeDefaultValue',<%=DynamicExtensionsUtility.getCurrentYear()%>,<%=DynamicExtensionsUtility.getCurrentMonth()%>,<%=DynamicExtensionsUtility.getCurrentDay()%>,'MM-dd-yyyy','controlsForm','attributeDefaultValue',event,1900,2020);" href="javascript://">
 							<IMG alt="This is a Calendar" src="<%=request.getContextPath()%>/images/de/calendar.gif" border=0>
 						</A>
+						-->
 						<DIV id=slcalcodattributeDefaultValue style="Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px">
-							<SCRIPT>printCalendar('attributeDefaultValue', <%=DynamicExtensionsUtility.getCurrentDay()%>,<%=DynamicExtensionsUtility.getCurrentMonth()%>,<%=DynamicExtensionsUtility.getCurrentYear()%>);</SCRIPT>
-						</DIV><label class="formFieldWithoutBorder">[MM-DD-YYYY]&nbsp;</label>
+							<!--<SCRIPT>printCalendar('attributeDefaultValue', <%=DynamicExtensionsUtility.getCurrentDay()%>,<%=DynamicExtensionsUtility.getCurrentMonth()%>,<%=DynamicExtensionsUtility.getCurrentYear()%>);</SCRIPT>-->
+						</DIV><label id="dateFormat_0" class="formFieldWithoutBorder">[MM-DD-YYYY]&nbsp;</label>
 					</td>
 				</tr>
 			</table>

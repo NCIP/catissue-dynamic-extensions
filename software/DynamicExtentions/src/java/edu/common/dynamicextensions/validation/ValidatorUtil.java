@@ -658,10 +658,11 @@ public class ValidatorUtil
 		{
 			try
 			{
+				String sqlDateFormat = getSqlDateFormat(attributeUIBeanInformationIntf.getFormat());
 				Utility.parseDate(attributeUIBeanInformationIntf.getMax(),
-						ProcessorConstants.SQL_DATE_ONLY_FORMAT);
+						sqlDateFormat);
 				Utility.parseDate(attributeUIBeanInformationIntf.getMin(),
-						ProcessorConstants.SQL_DATE_ONLY_FORMAT);
+						sqlDateFormat);
 			}
 			catch (ParseException exception)
 			{
@@ -671,5 +672,28 @@ public class ValidatorUtil
 			}
 		}
 
+	}
+
+	private static String getSqlDateFormat(
+			String dateFormat) {
+
+		String sqlDateFormat=null;
+		if(dateFormat.equalsIgnoreCase(ProcessorConstants.DATE_FORMAT_OPTION_YEARONLY))
+		{
+			sqlDateFormat=ProcessorConstants.YEAR_ONLY_FORMAT;
+		}
+		else if(dateFormat.equalsIgnoreCase(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY))
+		{
+			sqlDateFormat=ProcessorConstants.SQL_DATE_ONLY_FORMAT;
+		}
+		else if(dateFormat.equalsIgnoreCase(ProcessorConstants.DATE_FORMAT_OPTION_MONTHANDYEAR))
+		{
+			sqlDateFormat=ProcessorConstants.MONTH_YEAR_FORMAT;
+		}
+		else
+		{
+			sqlDateFormat=ProcessorConstants.SQL_DATE_TIME_FORMAT;
+		}
+		return sqlDateFormat;
 	}
 }

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import edu.common.dynamicextensions.domain.Entity;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
@@ -21,6 +20,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerInterface;
+import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.util.logger.Logger;
@@ -41,6 +41,7 @@ public class XMIExporterUtility
 		LoggerConfig.configureLogger(System.getProperty("user.dir"));
 	}
 	private static final Logger LOGGER = Logger.getCommonLogger(XMIExporterUtility.class);
+
 	/**
 	 * @param hookEntityName
 	 * @param entityGroup
@@ -89,29 +90,13 @@ public class XMIExporterUtility
 	{
 		//For XMI : add only id , name and table properties
 		final EntityInterface xmiEntity = new Entity();
-		xmiEntity.setName(getHookEntityName(srcEntity.getName()));
+		xmiEntity.setName(EntityManagerUtil.getHookEntityName(srcEntity.getName()));
 		xmiEntity.setDescription(srcEntity.getDescription());
 		xmiEntity.setTableProperties(srcEntity.getTableProperties());
 		xmiEntity.setId(srcEntity.getId());
 		xmiEntity.addAttribute(getIdAttribute(srcEntity));
 		//	xmiEntity.addAssociation(getHookEntityAssociation(srcEntity,targetEntity));
 		return xmiEntity;
-	}
-
-	/**
-	 * @param name
-	 * @return
-	 */
-	private static String getHookEntityName(final String name)
-	{
-		//Return last token from name
-		String hookEntityname = null;
-		final StringTokenizer strTokenizer = new StringTokenizer(name, ".");
-		while (strTokenizer.hasMoreElements())
-		{
-			hookEntityname = strTokenizer.nextToken();
-		}
-		return hookEntityname;
 	}
 
 	/**
@@ -131,10 +116,12 @@ public class XMIExporterUtility
 		{
 			if (staticAssociation.getTargetEntity().equals(targetEntity))
 			{
-				final String srcEntityName = getHookEntityName(srcEntity.getName());
+				final String srcEntityName = EntityManagerUtil.getHookEntityName(srcEntity
+						.getName());
 				//Change name of association
 				staticAssociation.setName("Assoc_" + srcEntityName + "_" + targetEntity.getName());
-				staticAssociation.getSourceRole().setName(srcEntityName);
+				staticAssociation.getSourceRole().setName(
+						EntityManagerUtil.getHookAssociationSrcRoleName(srcEntity, targetEntity));
 				staticAssociation.getTargetRole().setName(targetEntity.getName() + "Collection");
 				association = staticAssociation;
 				break;

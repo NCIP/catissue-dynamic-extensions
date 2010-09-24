@@ -101,6 +101,7 @@ import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.common.dynamicextensions.util.global.DEConstants.InheritanceStrategy;
 import edu.common.dynamicextensions.xmi.XMIConfiguration;
 import edu.common.dynamicextensions.xmi.XMIConstants;
+import edu.common.dynamicextensions.xmi.importer.XMIImportValidator;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.bizlogic.DefaultBizLogic;
@@ -951,17 +952,28 @@ public class DynamicExtensionsUtility
 	public static void validateDuplicateNamesWithinEntity(EntityInterface entity,
 			String attributeName) throws DynamicExtensionsApplicationException
 	{
+
 		Collection<AbstractAttributeInterface> collection = entity.getAbstractAttributeCollection();
 		if (collection != null && !collection.isEmpty())
 		{
 			for (AbstractAttributeInterface attribute : collection)
 			{
+
 				if (attribute.getName().equals(attributeName))
 				{
+
 					throw new DynamicExtensionsApplicationException(
 							"Attribute names should be unique for the entity ", null,
 							EntityManagerExceptionConstantsInterface.DYEXTN_A_006);
 
+				}
+				XMIImportValidator xmiImportValidator = new XMIImportValidator();
+				xmiImportValidator.validateName(attributeName, "Attribute", entity.getName(), null);
+				if (!xmiImportValidator.getErrorList().isEmpty())
+				{
+					throw new DynamicExtensionsApplicationException(xmiImportValidator
+							.getErrorList().get(0), null,
+							EntityManagerExceptionConstantsInterface.DYEXTN_A_021);
 				}
 			}
 		}
@@ -1665,8 +1677,14 @@ public class DynamicExtensionsUtility
 			throws DynamicExtensionsSystemException
 	{
 		DomainObjectFactory factory = DomainObjectFactory.getInstance();
-		Collection<ConstraintKeyPropertiesInterface> cnstrKeyProp = childEntity
-				.getConstraintProperties().getSrcEntityConstraintKeyPropertiesCollection();
+		ConstraintPropertiesInterface constraintProperties = childEntity.getConstraintProperties();
+		if (constraintProperties == null)
+		{
+			constraintProperties = factory.createConstraintPropertiesForInheritance();
+			childEntity.setConsraintProperties(constraintProperties);
+		}
+		Collection<ConstraintKeyPropertiesInterface> cnstrKeyProp = constraintProperties
+				.getSrcEntityConstraintKeyPropertiesCollection();
 		ConstraintKeyPropertiesInterface primaryCnstrKeyProp = null;
 		cnstrKeyProp.clear();
 		if (parentEntity == null)
@@ -2036,7 +2054,13 @@ public class DynamicExtensionsUtility
 			throw new DynamicExtensionsApplicationException("Null entity group!", null,
 					"Entity group is null!");
 		}
-
+		XMIImportValidator xmiImportValidator = new XMIImportValidator();
+		xmiImportValidator.validateClassName(formName, formName);
+		if (!xmiImportValidator.getErrorList().isEmpty())
+		{
+			throw new DynamicExtensionsApplicationException(xmiImportValidator.getErrorList()
+					.get(0), null, EntityManagerExceptionConstantsInterface.DYEXTN_A_021);
+		}
 		if (container == null || container.getId() == null)
 		{
 			if (container == null)

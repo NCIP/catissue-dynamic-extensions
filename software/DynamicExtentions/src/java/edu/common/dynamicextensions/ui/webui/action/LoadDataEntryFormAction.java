@@ -33,6 +33,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.LoadDataEntryFormProcessor;
+import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
@@ -302,6 +303,9 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 					.toString());
 			containerInterface.getContainerValueMap().clear();
 			DynamicExtensionsUtility.cleanContainerControlsValue(containerInterface);
+
+			int sequence = 1;
+			ControlsUtility.updateSequencesOfBaseContainers(containerInterface, sequence);
 
 			CacheManager.addObjectToCache(request, DEConstants.CONTAINER_INTERFACE,
 					containerInterface);

@@ -350,20 +350,21 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 			associationIntf.setTargetEntity(targetEntity);
 			associationIntf.setAssociationDirection(AssociationDirection.SRC_DESTINATION);
 			associationIntf.setName(attributeUIBeanInformationIntf.getName());
-			associationIntf.setSourceRole(EntityManagerUtil.getRole(AssociationType.ASSOCIATION,
-					null, Cardinality.ONE, Cardinality.ONE));
+			associationIntf.setSourceRole(EntityManagerUtil
+					.getRole(AssociationType.ASSOCIATION,  associationIntf.getEntity().getName(), Cardinality.ONE,
+							Cardinality.ONE));
 			if ((userSelectedControlName != null)
 					&& (userSelectedControlName.equals(ProcessorConstants.LISTBOX_CONTROL)))
 			{
 				associationIntf.setTargetRole(EntityManagerUtil.getRole(
-						AssociationType.ASSOCIATION, targetEntity.getName(), Cardinality.ONE,
-						Cardinality.MANY));
+						AssociationType.ASSOCIATION, targetEntity.getName(),
+						Cardinality.ONE, Cardinality.MANY));
 			}
 			else
 			{
 				associationIntf.setTargetRole(EntityManagerUtil.getRole(
-						AssociationType.ASSOCIATION, targetEntity.getName(), Cardinality.ONE,
-						Cardinality.ONE));
+						AssociationType.ASSOCIATION, targetEntity.getName(),
+						Cardinality.ONE, Cardinality.ONE));
 			}
 		}
 
@@ -1906,7 +1907,7 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 		}
 		else
 		{
-			String dateFormat = format;
+			String dateFormat = DynamicExtensionsUtility.getDateFormat(format);
 			String defaultValue = Utility.parseDateToString((Date) datAttributeInformation
 					.getDefaultValue().getValueAsObject(), dateFormat);
 			attributeUIBeanInformationIntf.setAttributeDefaultValue(defaultValue);

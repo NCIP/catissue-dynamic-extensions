@@ -16,6 +16,18 @@
 					<html:text styleClass="formDateSized" maxlength="100" size="60" styleId='caption' property="caption" />
 				</td>
 			</tr>
+
+			<tr valign="top">
+				<td  class="formRequiredNoticeWithoutBorder" width="2%">&nbsp;</td>
+				<td class="formRequiredLabelWithoutBorder" width="20%">
+					&nbsp;
+				</td>
+				<td>
+				<font class="validationmessageblack"><bean:message key="label"/></font>
+					&nbsp;<font class="validationmessageblue"><bean:message key="errors.label.validation"/></font>
+				</td>
+			</tr>
+
 			<tr valign="top">
 				<td class="formRequiredNoticeWithoutBorder" width="2%">&nbsp;</td>
 				<td class="formRequiredLabelWithoutBorder" width="20%">

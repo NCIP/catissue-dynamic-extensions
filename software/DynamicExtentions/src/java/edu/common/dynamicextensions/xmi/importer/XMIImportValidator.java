@@ -43,7 +43,16 @@ public class XMIImportValidator
 	/**
 	 * List to maintain the validation errors
 	 */
-	public static List<String> errorList = new ArrayList<String>();
+	public  List<String> errorList = new ArrayList<String>();
+
+	public List<String> getErrorList() {
+		return errorList;
+	}
+
+	public void setErrorList(List<String> errorList) {
+		this.errorList = errorList;
+	}
+
 	static
 	{
 		ApplicationProperties.initBundle("ApplicationResources");
@@ -197,7 +206,7 @@ public class XMIImportValidator
 	 * @return
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	public static boolean validateDataTypeForPrimaryKey(AttributeInterface primaryAttribute)
+	public  boolean validateDataTypeForPrimaryKey(AttributeInterface primaryAttribute)
 			throws DynamicExtensionsApplicationException
 	{
 		AttributeTypeInformationInterface attrInfo = primaryAttribute.getAttributeTypeInformation();
@@ -207,7 +216,7 @@ public class XMIImportValidator
 				|| EntityManagerConstantsInterface.BOOLEAN_ATTRIBUTE_TYPE.equals(attributeDataType)
 				|| EntityManagerConstantsInterface.OBJECT_ATTRIBUTE_TYPE.equals(attributeDataType))
 		{
-			errorList.add("Data Type of the primaryKey Attribute " + primaryAttribute.getName()
+			this.errorList.add("Data Type of the primaryKey Attribute " + primaryAttribute.getName()
 					+ " is not acceptable for " + primaryAttribute.getEntity().getName());
 		}
 
@@ -226,7 +235,7 @@ public class XMIImportValidator
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public static void validateAssociations(Map<String, Set<String>> entityNameVsAttributeNames,
+	public  void validateAssociations(Map<String, Set<String>> entityNameVsAttributeNames,
 			String umlAssociationName, String sourceEntityName, String targetEntityName,
 			Map<String, List<String>> parentIdVsChildrenIds,
 			Map<String, EntityInterface> umlClassIdVsEntity, RoleInterface sourceRole,
@@ -249,7 +258,7 @@ public class XMIImportValidator
 	 * @param umlClassIdVsEntity Map of uml class and entity
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private static void validateAssociationNameInParent(
+	private  void validateAssociationNameInParent(
 			Map<String, Set<String>> entityNameVsAttributeNames, String umlAssociationName,
 			String childEntityName, Map<String, List<String>> parentIdVsChildrenIds,
 			Map<String, EntityInterface> umlClassIdVsEntity)
@@ -283,7 +292,7 @@ public class XMIImportValidator
 	 * @param entityName Name of entity
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private static void validateAssociationName(Set<String> attributeCollection,
+	private void validateAssociationName(Set<String> attributeCollection,
 			String umlAssociationName, String sourceEntityName)
 			throws DynamicExtensionsSystemException
 	{
@@ -294,7 +303,7 @@ public class XMIImportValidator
 			{
 				if (umlAssociationName.equalsIgnoreCase(attributeName))
 				{
-					errorList.add("Association name and attribute name cannot be same. "
+					this.errorList.add("Association name and attribute name cannot be same. "
 							+ "[Entity name:" + sourceEntityName + ", Attribute name:"
 							+ attributeName + "]");
 				}
@@ -307,7 +316,7 @@ public class XMIImportValidator
 	 * @param sourceEntityCollection
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private static void checkForCycleStartsAtEntity(EntityInterface entityInterface,
+	private  void checkForCycleStartsAtEntity(EntityInterface entityInterface,
 			List<String> sourceEntityCollection) throws DynamicExtensionsSystemException
 	{
 		for (AssociationInterface associationInterface : entityInterface.getAssociationCollection())
@@ -357,7 +366,7 @@ public class XMIImportValidator
 	 * @param entityGroupInterface
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public static void validateForCycleInEntityGroup(EntityGroupInterface entityGroupInterface)
+	public  void validateForCycleInEntityGroup(EntityGroupInterface entityGroupInterface)
 			throws DynamicExtensionsSystemException
 	{
 
@@ -377,7 +386,7 @@ public class XMIImportValidator
 	 * @param sourceEntityName
 	 * @param targetEntityName
 	 */
-	public static void validateName(String name, String artifact, String sourceEntityName,
+	public  void validateName(String name, String artifact, String sourceEntityName,
 			String targetEntityName)
 	{
 		String artifactDetails = " [Entity:" + sourceEntityName + ", " + artifact + ":" + name
@@ -407,7 +416,7 @@ public class XMIImportValidator
 	 * @param name
 	 * @param entityName
 	 */
-	public static void validateClassName(String name, String entityName)
+	public  void validateClassName(String name, String entityName)
 	{
 		String artifactDetails = " [Entity:" + entityName + "]";
 		if (!name.matches(ApplicationProperties.getValue("regEx.StartWIthUpperCase")))
@@ -424,7 +433,7 @@ public class XMIImportValidator
 	 * @param artifact
 	 * @param artifactDetails
 	 */
-	public static void validateNameForSpecialCharacterAndNumericStart(String name, String artifact,
+	public  void validateNameForSpecialCharacterAndNumericStart(String name, String artifact,
 			String artifactDetails)
 	{
 		if (name.matches(ApplicationProperties.getValue("regEx.SpecialCharacters")))
@@ -444,7 +453,7 @@ public class XMIImportValidator
 	 * @param sourceEntityName
 	 * @param targetEntityName
 	 */
-	public static void validateCardinality(RoleInterface sourceRole, RoleInterface targetRole,
+	public  void validateCardinality(RoleInterface sourceRole, RoleInterface targetRole,
 			String sourceEntityName, String targetEntityName)
 	{
 		String sourceMaxCardinality = sourceRole.getMaximumCardinality().name();
@@ -463,7 +472,7 @@ public class XMIImportValidator
 	 * Check if the associations from a class have same names
 	 * @param entity
 	 */
-	public static void validateDuplicateAssociationName(EntityInterface entity)
+	public  void validateDuplicateAssociationName(EntityInterface entity)
 	{
 		Collection<AssociationInterface> assoCollection = entity.getAssociationCollection();
 		List<String> associationNames = new ArrayList<String>();
@@ -487,7 +496,7 @@ public class XMIImportValidator
 	 * @throws DynamicExtensionsSystemException if problem occurred in executing HQL
 	 * @throws DynamicExtensionsApplicationException if entity group names does not matches
 	 */
-	public static void validatePackageName(String packageName, String domainModelName)
+	public  void validatePackageName(String packageName, String domainModelName)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();

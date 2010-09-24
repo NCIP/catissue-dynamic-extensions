@@ -1644,3 +1644,27 @@ padding: 0;
   color:#000000; /* constant: black */
   text-align:left;
 }
+
+.validationmessageblue{ /* for the form elements themselves and with a constant width (on elements) */
+  font-family:arial,helvetica,verdana,sans-serif;
+  color:  blue ;
+  font-size:0.7em;
+  text-align:left;
+  vertical-align:text-top;
+   padding-left:0.0;
+   padding-top:0.0;
+         padding-bottom:1.0;
+}
+
+.validationmessageblack{ /* for the required form labels without border*/
+  font-family:arial,helvetica,verdana,sans-serif;
+  font-size:0.7em;
+  font-weight:bold;
+  color:#000000; /* constant: black	*/
+  text-align:left;
+  vertical-align:text-top;
+  text-align: top;
+   padding-left:0.0;
+   padding-top:0.0;
+      padding-bottom:1.0;
+}

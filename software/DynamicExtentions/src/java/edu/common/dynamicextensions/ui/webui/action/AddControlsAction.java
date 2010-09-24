@@ -39,6 +39,7 @@ public class AddControlsAction extends BaseDynamicExtensionsAction
 			HttpServletRequest request, HttpServletResponse response)
 	{
 		//Get controls form
+		String actionForwardString ;
 		ControlsForm controlsForm = (ControlsForm) form;
 		try
 		{
@@ -54,14 +55,14 @@ public class AddControlsAction extends BaseDynamicExtensionsAction
 			//Ashish - Changes done for XMI Edited XMI Import
 			applyFormControlsProcessor.addControlToForm(containerInterface, controlsForm,
 					controlsForm, entityGroup);
-
 			ActionForward actionForward = mapping.findForward(DEConstants.SUCCESS);
-			response.sendRedirect(request.getContextPath() + actionForward.getPath());
+			response.sendRedirect(request.getContextPath() +(String)actionForward.getPath());
 			return null;
+
 		}
 		catch (Exception e)
 		{
-			String actionForwardString = catchException(e, request);
+			actionForwardString= catchException(e, request);
 			if ((actionForwardString == null) || (actionForwardString.equals("")))
 			{
 				return mapping.getInputForward();

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.domain.CategoryEntity;
@@ -701,4 +702,36 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 		return isChanged;
 	}
 
+	/**
+	 * This method will create the source role name for the association which
+	 * is to be added in the model between the  given two entities.
+	 * @param srcEntity source entity of association.
+	 * @param targetEntity target entity of association.
+	 * @return association role name.
+	 */
+	public static String getHookAssociationSrcRoleName(EntityInterface srcEntity,
+			EntityInterface targetEntity)
+	{
+		String srcEntityname = getHookEntityName(srcEntity.getName());
+		String tgtEntityName = getHookEntityName(targetEntity.getName());
+		return srcEntityname + "_" + tgtEntityName;
+
+	}
+
+	/**
+	 * this method will return the name of the entity by removing its package name.
+	 * @param name name of the entity.
+	 * @return trimmed name.
+	 */
+	public static String getHookEntityName(final String name)
+	{
+		//Return last token from name
+		String hookEntityname = null;
+		final StringTokenizer strTokenizer = new StringTokenizer(name, ".");
+		while (strTokenizer.hasMoreElements())
+		{
+			hookEntityname = strTokenizer.nextToken();
+		}
+		return hookEntityname;
+	}
 }

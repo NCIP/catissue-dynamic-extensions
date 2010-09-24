@@ -6,6 +6,9 @@
 
 package edu.common.dynamicextensions.ui.webui.action;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,6 +18,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 
+import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.entitymanager.EntityGroupManager;
@@ -25,6 +29,7 @@ import edu.common.dynamicextensions.ui.webui.util.WebUIManager;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.MetaDataIntegrator;
 import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.wustl.cab2b.server.cache.EntityCache;
 
 /**
  * @author preeti_munot
@@ -60,12 +65,19 @@ public class SaveEntityAction extends BaseDynamicExtensionsAction
 						.getControlCollection(), controlsForm.getControlsSequenceNumbers());
 			}
 				String formName = "";
+				EntityGroupInterface  entityGroupInterface= ((EntityInterface) containerInterface.getAbstractEntity()).getEntityGroup();
+				List<EntityInterface> newEntities =	new ArrayList<EntityInterface>();
+					getNewEntitiesName(newEntities,entityGroupInterface);
 			((EntityInterface) containerInterface.getAbstractEntity()).getEntityGroup()
 					.addMainContainer(containerInterface);
 			EntityGroupManager.getInstance().persistEntityGroup(
-					((EntityInterface) containerInterface.getAbstractEntity()).getEntityGroup());
+					entityGroupInterface);
+			EntityCache.getInstance().updateEntityGroup(entityGroupInterface);
 
-			addHooking((String) request.getSession().getAttribute("selectedStaticEntityId" ), containerInterface);
+			List<Long> newEntitiesId =new ArrayList<Long>();
+				getNewEntitiesIds(newEntitiesId,newEntities);
+
+			addHooking((String) request.getSession().getAttribute("selectedStaticEntityId" ), containerInterface,newEntitiesId);
 
 			if ((containerInterface != null) && (containerInterface.getAbstractEntity() != null))
 			{
@@ -103,16 +115,37 @@ public class SaveEntityAction extends BaseDynamicExtensionsAction
 
 
 
+	private void getNewEntitiesIds(List<Long> newEntitiesIds,List<EntityInterface> newEntities) {
+
+		for (EntityInterface entity : newEntities) {
+
+				newEntitiesIds.add(entity.getId());
+
+		}
+	}
+
+	private void getNewEntitiesName(List<EntityInterface> newEntities,EntityGroupInterface entityGroupInterface) {
+		for (EntityInterface entity : entityGroupInterface.getEntityCollection()) {
+			if(entity.getId()==null){
+				newEntities.add(entity);
+			}
+		}
+	}
+
+
+
 	/**
 	 * @param staticEntityId
 	 * @param containerInterface
+	 * @param newEntitiesId
 	 */
 	private void addHooking(String staticEntityId,
-			ContainerInterface containerInterface) {
+			ContainerInterface containerInterface, List<Long> newEntitiesId) {
 
 		MetaDataIntegrator associateHookEntityUtil= new MetaDataIntegrator();
 		associateHookEntityUtil.associateWithHokkEntity(
-				containerInterface.getId(), staticEntityId);
+				containerInterface.getId(), staticEntityId,newEntitiesId);
+		EntityCache.getInstance().updateEntityGroup(associateHookEntityUtil.getHookEntity().getEntityGroup());
 	}
 
 

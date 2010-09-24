@@ -26,6 +26,7 @@ import edu.common.dynamicextensions.domain.Attribute;
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.Entity;
 import edu.common.dynamicextensions.domain.EntityGroup;
+import edu.common.dynamicextensions.domain.EntityRecord;
 import edu.common.dynamicextensions.domain.FileAttributeRecordValue;
 import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.ObjectAttributeTypeInformation;
@@ -1138,7 +1139,6 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			DynamicExtensionsApplicationException
 	{
 		Map<AbstractAttributeInterface, Object> recordValues = new HashMap<AbstractAttributeInterface, Object>();
-
 		Collection attributes = entity.getAttributeCollection();
 		attributes = entityManagerUtil.filterSystemAttributes(attributes);
 
@@ -1195,6 +1195,8 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 				queryDataList.add(new ColumnValueBean(IDENTIFIER, recordId));
 				recordValues.putAll(getAttributeValues(selColNames, query.toString(),
 						queryDataList, colNames, dao));
+				EntityRecord record = new EntityRecord();
+				recordValues.put(record, recordId);
 			}
 		}
 		catch (DAOException e)
@@ -1904,7 +1906,8 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			Object dynamicEntity = hibernateDAO.retrieveById(tmpPackageName + "."
 					+ association.getTargetEntity().getName(), tgtEntRecId);
 			Object oldDynamicEntity = cloner.clone(dynamicEntity);
-
+			String sourceRoleName = EntityManagerUtil.getHookAssociationSrcRoleName(association
+					.getEntity(), association.getTargetEntity());
 			Set<Object> containedObjects = (Set<Object>) invokeGetterMethod(
 					staticEntity.getClass(),
 					association.getTargetEntity().getName() + "Collection", staticEntity);
@@ -1912,10 +1915,8 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			invokeSetterMethod(staticEntity.getClass(), association.getTargetEntity().getName()
 					+ "Collection", Class.forName("java.util.Collection"), staticEntity,
 					containedObjects);
-
-			invokeSetterMethod(dynamicEntity.getClass(), association.getEntity().getName()
-					.substring(association.getEntity().getName().lastIndexOf(".") + 1),
-					staticEntity.getClass(), dynamicEntity, staticEntity);
+			invokeSetterMethod(dynamicEntity.getClass(), sourceRoleName, staticEntity.getClass(),
+					dynamicEntity, staticEntity);
 
 			hibernateDAO.update(dynamicEntity, oldDynamicEntity);
 			hibernateDAO.update(staticEntity, oldStaticEntity);

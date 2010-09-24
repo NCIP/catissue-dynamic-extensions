@@ -73,11 +73,17 @@
 		<html:form styleId="formDefinitionForm" action="/ApplyFormDefinitionAction">
 			<c:set var="groupName" value="${formDefinitionForm.groupName}"/>
 			<jsp:useBean id="groupName" type="java.lang.String"/>
-
 			<c:set var="formList" value="${formDefinitionForm.formList}"/>
 			<jsp:useBean id="formList" type="java.util.List"/>
 
-			<table border='1' valign="top" align='right' width='100%' height="100%" cellspacing="0" cellpadding="0">
+			<table border='0' valign="top" align='right' width='100%' height="100%" cellspacing="0" cellpadding="0">
+			<tr  width ="100%"  >
+					<td style=" font-family:arial,helvetica,verdana,sans-serif;
+			  font-size:0.7em;
+			  color:red;">
+						<bean:message  key="Warning" />&nbsp;<bean:message  key="form.creation.message" />
+					</td>
+			</tr>
 			<!-- Main Page heading -->
 				<tr style = "border-bottom:0px" height="3%">
 					<td style="border-left:0px;border-bottom:0px" class="formFieldNoBorders">
@@ -145,9 +151,8 @@
 															<bean:message key="app.requiredMessage"/>
 														</td>
 													</tr>
-													<tr valign="top" height='4%'>
-														<td class="formMessage" colspan="3">&nbsp;</td>
-													</tr>
+
+
 													<tr valign="top" height='2%'>
 														<td class="formMessage" colspan="3">
 															<font color="red" ><html:errors/></font>
@@ -160,8 +165,25 @@
 														</td>
 														<td class="formFieldWithoutBorder" >
 															<html:text styleClass="formDateSized"  maxlength="100" size="60"  styleId= 'formName' property="formName" />
+
+														&nbsp;
+
 														</td>
 													</tr>
+
+													<tr valign="top" height="4%">
+														<td class="formRequiredNoticeWithoutBorder" width="2%">&nbsp;</td>
+															<td class="formRequiredLabelWithoutBorder" width="20%">&nbsp;
+															</td>
+														<td align="left">
+
+															<font class="validationmessageblack"><bean:message key="form.title"/></font>
+															&nbsp;<font class="validationmessageblue"><bean:message key="errors.entity.validation"/></font>
+
+														</td>
+													</tr>
+
+
 													<tr valign="top" height='4%'>
 														<td class="formRequiredNoticeWithoutBorder" width="2%" >&nbsp;</td>
 														<td class="formRequiredLabelWithoutBorder" width="20%">
