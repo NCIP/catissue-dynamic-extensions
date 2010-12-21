@@ -1,5 +1,0 @@
-property1=db
-    property2=internal
-    property3=c:/apps/DynamicExtentions-webapp/jboss-4.2.2.GA
-    property4=${tomcat.home}
-    
