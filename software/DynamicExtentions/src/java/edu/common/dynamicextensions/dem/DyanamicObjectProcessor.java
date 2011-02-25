@@ -997,4 +997,16 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager{
 					ErrorConstants.ERROR_ENCNTR_INSERTING_REC, e);
 		}
 	}
+	public void executeQuery(List<FileQueryBean> queryListForFile,List<FileQueryBean> fileRecordQueryList) throws DAOException, DynamicExtensionsSystemException
+	{
+		if (hibernateDAO == null)
+		{
+			hibernateDAO.commit();
+			executeFileRecordQueryList(queryListForFile);
+		}
+		else
+		{
+			fileRecordQueryList.addAll(queryListForFile);
+		}
+	}
 }

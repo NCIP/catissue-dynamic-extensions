@@ -51,6 +51,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterfa
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.AssociationTreeObject;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
@@ -612,32 +613,14 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put(WebUIManagerConstants.ENTITY, entity);
 			map.put(WebUIManagerConstants.DATA_VALUE_MAP, dataValue);
+			map.put(WebUIManagerConstants.FILE_RECORD_QUERY_LIST, fileRecordQueryList);
 			client.setServerUrl(new URL(Variables.jbossUrl+entity.getEntityGroup().getName()+"/"));
 			client.setParamaterObjectMap(map);
 			client.execute(null);
-			identifier = (Long)client.getObject();
+			Map<String, Object> returnedMap=(Map<String, Object>)client.getObject();
+			identifier = (Long)returnedMap.get(DEConstants.IDENTIFIER);
+			fileRecordQueryList=(List<FileQueryBean>) returnedMap.get(WebUIManagerConstants.FILE_RECORD_QUERY_LIST);
 
-			FileAttributesClient fileAttributesClient = new FileAttributesClient();
-			Map<String, Object> fileAttributesHandlerMap = new HashMap<String, Object>();
-			fileAttributesHandlerMap.put(WebUIManagerConstants.ENTITY, entity);
-			fileAttributesHandlerMap.put(WebUIManagerConstants.DATA_VALUE_MAP, dataValue);
-			fileAttributesHandlerMap.put("object", client.getObject());
-			fileAttributesClient.setServerUrl(new URL(Variables.jbossUrl+entity.getEntityGroup().getName()+"/"));
-			fileAttributesClient.setParamaterObjectMap(map);
-			fileAttributesClient.execute(null);
-
-			List<FileQueryBean> queryListForFile =(List<FileQueryBean>)fileAttributesClient.getObject();
-			/*List<FileQueryBean> queryListForFile = getQueryListForFileAttributes(dataValue, entity,
-					client.getObject());*/
-			if (hibernateDao == null)
-			{
-				hibernateDAO.commit();
-				executeFileRecordQueryList(queryListForFile);
-			}
-			else
-			{
-				fileRecordQueryList.addAll(queryListForFile);
-			}
 		}
 		catch (Exception e)
 		{

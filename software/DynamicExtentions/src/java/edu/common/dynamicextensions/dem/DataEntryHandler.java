@@ -2,6 +2,9 @@
 package edu.common.dynamicextensions.dem;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -10,14 +13,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
+import edu.common.dynamicextensions.entitymanager.AbstractBaseMetadataManager;
+import edu.common.dynamicextensions.entitymanager.FileQueryBean;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.dao.exception.DAOException;
 
 public class DataEntryHandler extends AbstractHandler
 {
 
-	private DyanamicObjectProcessor dyanamicObjectProcessor;
+	private final DyanamicObjectProcessor dyanamicObjectProcessor;
 
 	public DataEntryHandler() throws DAOException
 	{
@@ -77,11 +83,37 @@ public class DataEntryHandler extends AbstractHandler
 
 			Object object = dyanamicObjectProcessor.createObject(entity, dataValue);
 			insertObject(object);
+			List<FileQueryBean> queryListForFile =dyanamicObjectProcessor.getQueryListForFileAttributes(dataValue, entity,object);
+			dyanamicObjectProcessor.executeQuery(queryListForFile,(List<FileQueryBean>)paramaterObjectMap.get(FILE_RECORD_QUERY_LIST));
+			Map<String,Object> map=new HashMap<String, Object>();
+			map.put(DEConstants.IDENTIFIER, AbstractBaseMetadataManager.getObjectId(object));
+			map.put(FILE_RECORD_QUERY_LIST, paramaterObjectMap.get(FILE_RECORD_QUERY_LIST));
+
 			writeObjectToResopnce(object,res);
 
 		} catch (DynamicExtensionsApplicationException e) {
 			e.printStackTrace();
 		} catch (DynamicExtensionsSystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (DAOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (NoSuchMethodException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IllegalAccessException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (InvocationTargetException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

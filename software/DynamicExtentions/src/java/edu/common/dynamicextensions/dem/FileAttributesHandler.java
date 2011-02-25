@@ -73,7 +73,7 @@ public class FileAttributesHandler extends AbstractHandler
 */
 			initAuditManager();
 			initializeParamaterObjectMap(req);
-			Object objectFromRequest = (EntityInterface) paramaterObjectMap.get("object");
+			Object objectFromRequest = paramaterObjectMap.get("object");
 			EntityInterface entity = (EntityInterface) paramaterObjectMap.get(ENTITY);
 			Map<AbstractAttributeInterface, Object> dataValue = (Map<AbstractAttributeInterface, Object>) paramaterObjectMap.get(DATA_VALUE_MAP);
 			Object object = dyanamicObjectProcessor.getQueryListForFileAttributes(dataValue, entity,objectFromRequest);
