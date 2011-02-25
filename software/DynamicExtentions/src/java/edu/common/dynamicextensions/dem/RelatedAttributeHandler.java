@@ -11,11 +11,11 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.dao.exception.DAOException;
 
-public class RecordAssociationHandler extends AbstractHandler {
+public class RelatedAttributeHandler extends AbstractHandler {
 
 	private final DyanamicObjectProcessor dyanamicObjectProcessor;
 
-	public RecordAssociationHandler() throws DAOException
+	public RelatedAttributeHandler() throws DAOException
 	{
 		 dyanamicObjectProcessor = new DyanamicObjectProcessor();
 	}
@@ -27,8 +27,7 @@ public class RecordAssociationHandler extends AbstractHandler {
 
 			initAuditManager();
 			initializeParamaterObjectMap(req);
-			DyanamicObjectProcessor dyanamicObjectProcessor = new DyanamicObjectProcessor();
-			dyanamicObjectProcessor.associateRecord(paramaterObjectMap);
+			dyanamicObjectProcessor.insertRelatedAttribute(paramaterObjectMap);
 
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block

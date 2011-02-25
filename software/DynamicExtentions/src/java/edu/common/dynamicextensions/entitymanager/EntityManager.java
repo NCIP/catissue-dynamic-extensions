@@ -616,8 +616,19 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			client.setParamaterObjectMap(map);
 			client.execute(null);
 			identifier = (Long)client.getObject();
-			List<FileQueryBean> queryListForFile = getQueryListForFileAttributes(dataValue, entity,
-					client.getObject());
+
+			FileAttributesClient fileAttributesClient = new FileAttributesClient();
+			Map<String, Object> fileAttributesHandlerMap = new HashMap<String, Object>();
+			fileAttributesHandlerMap.put(WebUIManagerConstants.ENTITY, entity);
+			fileAttributesHandlerMap.put(WebUIManagerConstants.DATA_VALUE_MAP, dataValue);
+			fileAttributesHandlerMap.put("object", client.getObject());
+			fileAttributesClient.setServerUrl(new URL(Variables.jbossUrl+entity.getEntityGroup().getName()+"/"));
+			fileAttributesClient.setParamaterObjectMap(map);
+			fileAttributesClient.execute(null);
+
+			List<FileQueryBean> queryListForFile =(List<FileQueryBean>)fileAttributesClient.getObject();
+			/*List<FileQueryBean> queryListForFile = getQueryListForFileAttributes(dataValue, entity,
+					client.getObject());*/
 			if (hibernateDao == null)
 			{
 				hibernateDAO.commit();

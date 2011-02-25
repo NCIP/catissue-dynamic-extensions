@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.domain.AbstractAttribute;
 import edu.common.dynamicextensions.domain.Association;
+import edu.common.dynamicextensions.domain.BaseAbstractAttribute;
 import edu.common.dynamicextensions.domain.FileAttributeRecordValue;
 import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
@@ -21,6 +22,7 @@ import edu.common.dynamicextensions.domaininterface.AbstractMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.entitymanager.AbstractBaseMetadataManager;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
@@ -28,6 +30,7 @@ import edu.common.dynamicextensions.entitymanager.FileQueryBean;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
+import edu.common.dynamicextensions.util.global.ErrorConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
@@ -772,7 +775,7 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager{
 
 		return oldObject;
 	}
-	private List<FileQueryBean> getQueryListForFileAttributes(
+	public List<FileQueryBean> getQueryListForFileAttributes(
 			Map<AbstractAttributeInterface, Object> dataValue, EntityInterface entity, Object object)
 			throws  NoSuchMethodException, IllegalAccessException,
 			InvocationTargetException, DAOException, DynamicExtensionsSystemException
@@ -930,5 +933,68 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager{
 			queryBean.setQuery(query.toString());
 		}
 		return queryBean;
+	}
+	public void insertRelatedAttribute(Map<String, Object> paramaterObjectMap) throws DynamicExtensionsSystemException, DAOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, ClassNotFoundException
+	{
+
+		try
+		{
+			Long id = (Long) paramaterObjectMap.get(WebUIManagerConstants.DYNAMIC_OBJECT_ID);
+			CategoryEntityInterface catEntity = (CategoryEntityInterface) paramaterObjectMap.get(WebUIManagerConstants.ENTITY);
+			final Map<BaseAbstractAttribute, Object> attrVsValues=(Map<BaseAbstractAttribute, Object>)paramaterObjectMap.get(WebUIManagerConstants.ATTRVSVALUES);
+			String packageName = (String) paramaterObjectMap.get(WebUIManagerConstants.PACKAGE_NAME);
+			final String entityClassName = packageName + "."+ catEntity.getEntity().getName();
+			final Object object = hibernateDAO.retrieveById(entityClassName, id);
+			Object clonedObject = cloner.clone(object);
+			for (Entry<BaseAbstractAttribute, Object> attrValueEntry : attrVsValues
+					.entrySet())
+			{
+				setRelatedAttributeValues(entityClassName, attrValueEntry.getKey(),
+						attrValueEntry.getValue(), object);
+			}
+
+			hibernateDAO.update(object, clonedObject);
+		} catch (DAOException e) {
+			throw new DynamicExtensionsSystemException(
+					"Error in associating objects", e);
+		}
+		catch (DynamicExtensionsApplicationException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally
+		{
+			try {
+				hibernateDAO.closeSession();
+			} catch (DAOException e) {
+				throw new DynamicExtensionsSystemException(
+						"Error in associating records.", e);
+			}
+		}
+	}
+	/**
+	 * Set values for related attributes.
+	 * @param entityClassName
+	 * @param attr Related value attribute.
+	 * @param value Value to be set for related attribute.
+	 * @param object
+	 * @throws DynamicExtensionsApplicationException
+	 */
+	private void setRelatedAttributeValues(final String entityClassName,
+			final BaseAbstractAttribute attr, final Object value, final Object object)
+			throws DynamicExtensionsApplicationException
+	{
+		final String dataType = ((AttributeMetadataInterface) attr).getAttributeTypeInformation()
+				.getDataType();
+		try
+		{
+			setObjectProperty((AbstractAttribute) attr, dataType, Class.forName(entityClassName),
+					value.toString(), object);
+		}
+		catch (final Exception e)
+		{
+			throw new DynamicExtensionsApplicationException(
+					ErrorConstants.ERROR_ENCNTR_INSERTING_REC, e);
+		}
 	}
 }

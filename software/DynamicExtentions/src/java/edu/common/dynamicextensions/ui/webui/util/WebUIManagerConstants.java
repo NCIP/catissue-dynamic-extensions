@@ -98,6 +98,7 @@ public interface WebUIManagerConstants
 	String CONTAINER_MAP = "containerMap";
 	public final String DATA_VALUE_MAP = "dataValueMap";
 	public final String ENTITY = "entity";
+	public final String ATTRVSVALUES="attrVsValues";
 	public final String DYNAMIC_OBJECT_ID = "dynamicObjectId";
 	public final String OLD_DYNAMIC_OBJECT = "oldDynamicObject";
 	public final String STATIC_OBJECT_ID = "staticObjectId";

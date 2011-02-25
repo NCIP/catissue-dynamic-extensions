@@ -1285,7 +1285,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				final List<Long> recordIds = records.get(catEntityName);
 				for (final Long id : recordIds)
 				{
-					String packageName = null;
+					/*String packageName = null;
 					packageName = getPackageName(catEntity.getEntity(), packageName);
 
 					final String entityClassName = packageName + "."
@@ -1301,7 +1301,17 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 								attrValueEntry.getValue(), object);
 					}
 
-					hibernateDao.update(object, clonedObject);
+					hibernateDao.update(object, clonedObject);*/
+					Map<String, Object> map = new HashMap<String, Object>();
+
+					map.put(WebUIManagerConstants.ENTITY, catEntity);
+					map.put(WebUIManagerConstants.DYNAMIC_OBJECT_ID,id);
+					map.put(WebUIManagerConstants.PACKAGE_NAME, getPackageName(catEntity.getEntity(), null));
+					map.put(WebUIManagerConstants.ATTRVSVALUES, attrVsValues);
+					RelatedAttributeClient relatedAttributeClient = new RelatedAttributeClient();
+					relatedAttributeClient.setServerUrl(new URL(Variables.jbossUrl+catEntity.getEntity().getEntityGroup().getName()+"/"));
+					relatedAttributeClient.setParamaterObjectMap(map);
+					relatedAttributeClient.execute(null);
 
 					final String selectQuery = SELECT_KEYWORD + IDENTIFIER + FROM_KEYWORD
 							+ catEntTblName + WHERE_KEYWORD + RECORD_ID + EQUAL + QUESTION_MARK;
