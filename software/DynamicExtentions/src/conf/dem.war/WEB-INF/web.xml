@@ -8,7 +8,6 @@ PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
 <!-- @@test@@ -->
  
    
-
 	<!-- application properties file path --> 
   	<context-param>
 		<param-name>applicationproperties</param-name>
@@ -30,7 +29,7 @@ PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
 	<servlet>
 		<servlet-name>DataEntryHandler</servlet-name>
 		<servlet-class>edu.common.dynamicextensions.dem.DataEntryHandler</servlet-class>
-    </servlet>
+    </servlet>  
 	<servlet>
 		<servlet-name>DataEditHandler</servlet-name>
 		<servlet-class>edu.common.dynamicextensions.dem.DataEditHandler</servlet-class>
@@ -47,7 +46,15 @@ PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
 		<servlet-name>InsertCategoryEntityTreeHandler</servlet-name>
 		<servlet-class>edu.common.dynamicextensions.dem.InsertCategoryEntityTreeHandler</servlet-class>
     </servlet>
-	
+	<servlet>
+		<servlet-name>RelatedAttributeHandler</servlet-name>
+		<servlet-class>edu.common.dynamicextensions.dem.RelatedAttributeHandler</servlet-class>
+    </servlet>
+	<servlet>
+		<servlet-name>FileAttributesHandler</servlet-name>
+		<servlet-class>edu.common.dynamicextensions.dem.FileAttributesHandler</servlet-class>
+    </servlet>
+	 
     <!-- servlet>
 		<servlet-name>DownloadFileAction</servlet-name>
 		<servlet-class>edu.common.dynamicextensions.ui.webui.action.DownloadFileAction</servlet-class>
@@ -95,6 +102,14 @@ PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
 	<servlet-mapping>
 		<servlet-name>InsertCategoryEntityTreeHandler</servlet-name>
 		<url-pattern>/InsertCategoryEntityTreeHandler</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>RelatedAttributeHandler</servlet-name>
+		<url-pattern>/RelatedAttributeHandler</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>FileAttributesHandler</servlet-name>
+		<url-pattern>/FileAttributesHandler</url-pattern>
 	</servlet-mapping>
 	
 	<!--<servlet-mapping>
