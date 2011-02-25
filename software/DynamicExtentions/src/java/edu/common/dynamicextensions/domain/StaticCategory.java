@@ -5,6 +5,7 @@
 package edu.common.dynamicextensions.domain;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import edu.common.dynamicextensions.domaininterface.StaticCategoryInterface;
 
@@ -25,8 +26,8 @@ public class StaticCategory extends AbstractCategory implements StaticCategoryIn
 	private String formURL;
 
 	/** The grid view column list. */
-	private Collection<GridViewColumn> gridViewColumnList;
-	
+	private Collection<GridViewColumn> gridViewColumnList = new HashSet<GridViewColumn>();
+
 	/** The data query. */
 	private String dataQuery;
 
@@ -48,7 +49,7 @@ public class StaticCategory extends AbstractCategory implements StaticCategoryIn
 		this.formURL = formURL;
 	}
 
-	
+
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domaininterface.StaticCategoryInterface#getGridViewColumnList()
 	 */
@@ -57,7 +58,7 @@ public class StaticCategory extends AbstractCategory implements StaticCategoryIn
 		return gridViewColumnList;
 	}
 
-	
+
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domaininterface.StaticCategoryInterface#setGridViewColumnList(java.util.Collection)
 	 */
@@ -66,10 +67,10 @@ public class StaticCategory extends AbstractCategory implements StaticCategoryIn
 		this.gridViewColumnList = gridViewColumnList;
 	}
 
-	
+
 	/**
 	 * Gets the data query.
-	 * 
+	 *
 	 * @return the data query
 	 */
 	public String getDataQuery()
@@ -77,10 +78,10 @@ public class StaticCategory extends AbstractCategory implements StaticCategoryIn
 		return dataQuery;
 	}
 
-	
+
 	/**
 	 * Sets the data query.
-	 * 
+	 *
 	 * @param dataQuery the new data query
 	 */
 	public void setDataQuery(String dataQuery)
