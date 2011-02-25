@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,6 +14,8 @@ import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.domain.AbstractAttribute;
 import edu.common.dynamicextensions.domain.Association;
+import edu.common.dynamicextensions.domain.FileAttributeRecordValue;
+import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AbstractMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
@@ -20,6 +23,8 @@ import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.entitymanager.AbstractBaseMetadataManager;
+import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
+import edu.common.dynamicextensions.entitymanager.FileQueryBean;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
@@ -27,6 +32,7 @@ import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 import edu.wustl.metadata.util.DyExtnObjectCloner;
 
 public class DyanamicObjectProcessor extends AbstractBaseMetadataManager{
@@ -396,8 +402,20 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager{
 			Object oldDynamicEntity = cloner.clone(dynamicEntity);
 
 
-			updateStaticEntityObject(staticEntity,dynamicEntity,association);
-			updateDynamicEntityObject(staticEntity,dynamicEntity,association);
+			String sourceRoleName = EntityManagerUtil.getHookAssociationSrcRoleName(association
+					.getEntity(), association.getTargetEntity());
+			Set<Object> containedObjects = (Set<Object>) invokeGetterMethod(
+					staticEntity.getClass(),
+					association.getTargetEntity().getName() + "Collection", staticEntity);
+			containedObjects.add(dynamicEntity);
+
+			invokeSetterMethod(staticEntity.getClass(), association.getTargetEntity().getName()
+					+ "Collection", Class.forName("java.util.Collection"), staticEntity,
+					containedObjects);
+
+			invokeSetterMethod(dynamicEntity.getClass(), sourceRoleName, staticEntity.getClass(),
+					dynamicEntity, staticEntity);
+
 
 			hibernateDAO.update(dynamicEntity, oldDynamicEntity);
 			hibernateDAO.update(staticEntity, oldStaticEntity);
@@ -406,6 +424,26 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager{
 		} catch (DAOException e) {
 			throw new DynamicExtensionsSystemException(
 					"Error in associating objects", e);
+		}
+		catch (NoSuchMethodException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IllegalAccessException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (InvocationTargetException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (ClassNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}finally
 		{
 			try {
@@ -434,10 +472,9 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager{
 	}
 	public void associateRecord(Map<String, Object> paramaterObjectMap) throws DynamicExtensionsSystemException, DAOException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, ClassNotFoundException
 	{
-		HibernateDAO hibernateDAO =null;
+
 		try
 		{
-			hibernateDAO = getHibernateDAO();
 			Long srcEntityId = (Long) paramaterObjectMap.get(WebUIManagerConstants.STATIC_OBJECT_ID);
 			Long entityId = (Long) paramaterObjectMap.get(WebUIManagerConstants.DYNAMIC_OBJECT_ID);
 			AssociationInterface lastAsso = (AssociationInterface) paramaterObjectMap.get(WebUIManagerConstants.ASSOCIATION);
@@ -469,7 +506,7 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager{
 		HibernateDAO hibernateDAO=null;
 		try
 		{
-			hibernateDAO = getHibernateDAO();
+			hibernateDAO=getHibernateDAO();
 			Long srcEntityId = (Long) paramaterObjectMap.get(WebUIManagerConstants.STATIC_OBJECT_ID);
 
 			AssociationInterface lastAsso = (AssociationInterface) paramaterObjectMap.get(WebUIManagerConstants.ASSOCIATION);
@@ -489,6 +526,7 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager{
 			addSourceObject(sourceObject, targetObject, sourceObjectClassName,lastAsso);
 
 			hibernateDAO.update(targetObject, clonedTargetObject);
+			hibernateDAO.commit();
 			return targetObject;
 			/*final Object sourceObject = hibernateDAO.retrieveById(sourceObjectClassName, srcEntityId);
 			final Object targetObject = hibernateDAO.retrieveById(targetObjectClassName, entityId);
@@ -514,7 +552,7 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager{
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
 		HibernateDAO hibernateDAO =null;
-		Object updatedObject =null;
+		 List<FileQueryBean> queryListForFile =null;
 		try
 		{
 			hibernateDAO = getHibernateDAO();
@@ -525,7 +563,9 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager{
 			Object oldObject;
 			oldObject = hibernateDAO.retrieveById(className, recordId);
 
-			 updatedObject = updateObject(entity, dataValue, oldObject);
+			Object updatedObject = updateObject(entity, dataValue, oldObject, hibernateDAO);
+			queryListForFile =getQueryListForFileAttributes(dataValue, entity,
+						updatedObject);
 		}
 		catch (DAOException e)
 		{
@@ -537,15 +577,358 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		catch (SecurityException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (NoSuchMethodException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IllegalAccessException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (InvocationTargetException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		finally
 		{
 			try {
 				hibernateDAO.closeSession();
 			} catch (DAOException e) {
 				throw new DynamicExtensionsSystemException(
-						"Error in associating records.", e);
+						"Error in updating records.", e);
 			}
 		}
-		return updatedObject;
+		return queryListForFile;
+	}
+	private Object updateObject(EntityInterface entity,
+			Map<AbstractAttributeInterface, Object> dataValue, Object oldObject,
+			HibernateDAO hibernateDAO) throws DynamicExtensionsApplicationException
+	{
+		String packageName = null;
+		packageName = getPackageName(entity, packageName);
+		Object clonedObject = cloner.clone(oldObject);
+		try
+		{
+			Class oldObjectClass = oldObject.getClass();
+			// If empty, insert row with only identifier column value.
+			if (dataValue == null)
+			{
+				dataValue = new HashMap();
+			}
+
+			for (Entry<AbstractAttributeInterface, Object> dataValueEntry : dataValue.entrySet())
+			{
+				AbstractAttribute attribute = (AbstractAttribute) dataValueEntry.getKey();
+
+				if (attribute instanceof AssociationInterface)
+				{
+					AssociationInterface association = (AssociationInterface) attribute;
+
+					EntityInterface baseEntity = association.getEntity();
+					String baseEntityClassName = packageName + "." + baseEntity.getName();
+
+					EntityInterface targetEntity = association.getTargetEntity();
+					Cardinality targetMaxCardinality = association.getTargetRole()
+							.getMaximumCardinality();
+
+					String targetRole = getTargetRoleNameForMethodInvocation(association);
+
+					Collection<Object> containedObjects = null;
+
+					// Get the associated object(s).
+					Object associatedObjects = invokeGetterMethod(oldObjectClass, targetRole,
+							oldObject);
+
+					if (targetMaxCardinality != Cardinality.ONE)
+					{
+						if (associatedObjects == null)
+						{
+							containedObjects = new HashSet<Object>();
+						}
+						else
+						{
+							containedObjects = (Collection) associatedObjects;
+						}
+					}
+
+					Set<Object> objectsToBeRetained = new HashSet<Object>();
+
+					Object value = dataValueEntry.getValue();
+					List<Map> listOfMapsForContainedEntity = (List) value;
+
+					for (Map valueMapForContainedEntity : listOfMapsForContainedEntity)
+					{
+						boolean isNew = false;
+						Object objForUpdate = null;
+
+						if (targetMaxCardinality == Cardinality.ONE)
+						{
+							objForUpdate = associatedObjects;
+						}
+						else
+						{
+							edu.common.dynamicextensions.domain.EntityRecord entityRecord = new edu.common.dynamicextensions.domain.EntityRecord();
+							Long recordId = (Long) valueMapForContainedEntity.get(entityRecord);
+
+							if (recordId != null)
+							{
+								for (Object obj : containedObjects)
+								{
+									Long identifier = getObjectId(obj);
+									if (identifier.intValue() == recordId.intValue())
+									{
+										objForUpdate = obj;
+										objectsToBeRetained.add(objForUpdate);
+
+										break;
+									}
+								}
+							}
+						}
+
+						if (objForUpdate == null)
+						{
+							String targetEntityClassName = packageName + "."
+									+ targetEntity.getName();
+							objForUpdate = createObjectForClass(targetEntityClassName);
+							isNew = true;
+						}
+
+						objForUpdate = updateObject(targetEntity, valueMapForContainedEntity,
+								objForUpdate, hibernateDAO);
+						Class assoObjectClass = objForUpdate.getClass();
+						String source = getSourceRoleNameForMethodInvocation(association);
+						invokeSetterMethod(assoObjectClass, source, Class
+								.forName(baseEntityClassName), objForUpdate, oldObject);
+
+						if (targetMaxCardinality == Cardinality.ONE)
+						{
+							invokeSetterMethod(oldObjectClass, targetRole, objForUpdate.getClass(),
+									oldObject, objForUpdate);
+							break;
+						}
+						else
+						{
+							if (isNew)
+							{
+								containedObjects.add(objForUpdate);
+								objectsToBeRetained.add(objForUpdate);
+							}
+						}
+					}
+
+					if (containedObjects != null)
+					{
+						List objectsToBeRemoved = new ArrayList();
+						Iterator iterator = containedObjects.iterator();
+						while (iterator.hasNext())
+						{
+							objectsToBeRemoved.add(iterator.next());
+						}
+
+						containedObjects.removeAll(objectsToBeRemoved);
+						containedObjects.addAll(objectsToBeRetained);
+					}
+
+					if (targetMaxCardinality == Cardinality.MANY)
+					{
+						invokeSetterMethod(oldObjectClass, targetRole, Class
+								.forName("java.util.Collection"), oldObject, containedObjects);
+					}
+				}
+				else if (attribute instanceof AttributeInterface)
+				{
+					String dataType = ((AttributeMetadataInterface) attribute)
+							.getAttributeTypeInformation().getDataType();
+					oldObject = setObjectProperty(attribute, dataType, oldObjectClass, dataValue,
+							oldObject);
+				}
+			}
+			Long identifier = getObjectId(oldObject);
+			if (identifier == null)
+			{
+				hibernateDAO.insert(oldObject);
+			}
+			else
+			{
+				hibernateDAO.update(oldObject, clonedObject);
+			}
+			identifier = getObjectId(oldObject);
+			dataValue.put(new edu.common.dynamicextensions.domain.EntityRecord(), identifier);
+		}
+		catch (Exception exception)
+		{
+			throw new DynamicExtensionsApplicationException(
+					"Exception encountered during editing data!", exception);
+		}
+
+		return oldObject;
+	}
+	private List<FileQueryBean> getQueryListForFileAttributes(
+			Map<AbstractAttributeInterface, Object> dataValue, EntityInterface entity, Object object)
+			throws  NoSuchMethodException, IllegalAccessException,
+			InvocationTargetException, DAOException, DynamicExtensionsSystemException
+	{
+		List<FileQueryBean> fileQueryList = new ArrayList<FileQueryBean>();
+		LinkedList<ColumnValueBean> columnValueBeanList = new LinkedList<ColumnValueBean>();
+		// If empty, insert row with only identifier column value.
+		if (dataValue == null)
+		{
+			dataValue = new HashMap();
+		}
+		for (Entry<AbstractAttributeInterface, Object> entryRecord : dataValue.entrySet())
+		{
+			AbstractAttribute attribute = (AbstractAttribute) entryRecord.getKey();
+
+			if (attribute instanceof AttributeInterface)
+			{
+				populateColumnValueBeanForFileAttribute(columnValueBeanList,
+						entryRecord.getValue(), (AttributeInterface) attribute);
+			}
+			else if (attribute instanceof AssociationInterface)
+			{
+				List<Map> listOfMapsForContainedEntity = (List) entryRecord.getValue();
+				AssociationInterface association = (AssociationInterface) attribute;
+				String targetRoleName = getTargetRoleNameForMethodInvocation(association);
+				final Object associatedObjects = invokeGetterMethod(object.getClass(),
+						targetRoleName, object);
+				for (Map valueMapForContainedEntity : listOfMapsForContainedEntity)
+				{
+					Object tgtObject = getAssociatedObject(valueMapForContainedEntity,
+							associatedObjects);
+					//fileQueryList.addAll(getQueryListForFileAssociations(object,));
+					fileQueryList.addAll(getQueryListForFileAttributes(valueMapForContainedEntity,
+							association.getTargetEntity(), tgtObject));
+				}
+			}
+		}
+		if (!columnValueBeanList.isEmpty())
+		{
+			Long identifier = getObjectId(object);
+			FileQueryBean fileQueryBean = createQueryForFileAttribute(identifier, entity,
+					columnValueBeanList);
+			fileQueryList.add(fileQueryBean);
+		}
+		return fileQueryList;
+	}
+	/**
+	 * This method adds the extra columns information
+	 * that needs to be maintained while adding the file data
+	 * @param columnValueList list of column names & its values
+	 * @param value the record value.
+	 * @param primitiveAttr the attribute for which to create the queries.
+	 */
+	private void populateColumnValueBeanForFileAttribute(List<ColumnValueBean> columnValueList,
+			Object value, AttributeInterface primitiveAttr)
+	{
+		if (primitiveAttr.getAttributeTypeInformation() instanceof FileAttributeTypeInformation)
+		{
+
+			if (value == null)
+			{
+				columnValueList.add(new ColumnValueBean(primitiveAttr.getColumnProperties()
+						.getName()
+						+ UNDERSCORE + FILE_NAME, null));
+				columnValueList.add(new ColumnValueBean(primitiveAttr.getColumnProperties()
+						.getName()
+						+ UNDERSCORE + CONTENT_TYPE, null));
+				columnValueList.add(new ColumnValueBean(primitiveAttr.getColumnProperties()
+						.getName(), null));
+			}
+			else if (value instanceof FileAttributeRecordValue)
+			{
+				FileAttributeRecordValue recordValue = (FileAttributeRecordValue) value;
+
+				columnValueList.add(new ColumnValueBean(primitiveAttr.getColumnProperties()
+						.getName()
+						+ UNDERSCORE + FILE_NAME, recordValue.getFileName()));
+				columnValueList.add(new ColumnValueBean(primitiveAttr.getColumnProperties()
+						.getName()
+						+ UNDERSCORE + CONTENT_TYPE, recordValue.getContentType()));
+				columnValueList.add(new ColumnValueBean(primitiveAttr.getColumnProperties()
+						.getName(), recordValue.getFileContent()));
+			}
+		}
+
+	}
+	/**
+	 * This method will search for the EntityRecord in the valueMapForContainedEntity &
+	 * will return the object with the EntityRecordId found before in the associatedObjects.
+	 * @param valueMapForContainedEntity data value map which contains EntityRecord.
+	 * @param associatedObjects objects in which to search for the object.
+	 * @return object with the id found.
+	 * @throws NoSuchMethodException exception.
+	 * @throws IllegalAccessException exception.
+	 * @throws InvocationTargetException exception.
+	 */
+	private Object getAssociatedObject(Map valueMapForContainedEntity, Object associatedObjects)
+			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
+	{
+		edu.common.dynamicextensions.domain.EntityRecord entityRecord = new edu.common.dynamicextensions.domain.EntityRecord();
+		Long recordId = (Long) valueMapForContainedEntity.get(entityRecord);
+		Object tgtObject = null;
+		if (associatedObjects instanceof Set)
+		{
+			Set objectSet = (Set) associatedObjects;
+			for (Object object : objectSet)
+			{
+				if (getObjectId(object).equals(recordId))
+				{
+					tgtObject = object;
+					break;
+				}
+			}
+		}
+		else if (getObjectId(associatedObjects).equals(recordId))
+		{
+			tgtObject = associatedObjects;
+		}
+
+		return tgtObject;
+	}
+	/**
+	 * @param identifier
+	 * @param entity
+	 * @param columnValueBeanList
+	 * @return
+	 * @throws DAOException
+	 * @throws DynamicExtensionsSystemException
+	 */
+	private FileQueryBean createQueryForFileAttribute(Long identifier, EntityInterface entity,
+			List<ColumnValueBean> columnValueBeanList) throws DAOException,
+			DynamicExtensionsSystemException
+	{
+		FileQueryBean queryBean = null;
+		if (!columnValueBeanList.isEmpty())
+		{
+			StringBuffer query = new StringBuffer(UPDATE_KEYWORD);
+			query.append(WHITESPACE).append(entity.getTableProperties().getName()).append(
+					WHITESPACE).append(SET_KEYWORD);
+			ColumnValueBean bean = columnValueBeanList.get(0);
+			query.append(WHITESPACE).append(bean.getColumnName()).append(EQUAL).append(
+					QUESTION_MARK).append(WHITESPACE);
+			for (int i = 1; i < columnValueBeanList.size(); i++)
+			{
+				bean = columnValueBeanList.get(i);
+				query.append(COMMA).append(WHITESPACE).append(bean.getColumnName()).append(EQUAL)
+						.append(QUESTION_MARK).append(WHITESPACE);
+			}
+
+			query.append(WHITESPACE).append(WHERE_KEYWORD).append(IDENTIFIER).append(EQUAL).append(
+					QUESTION_MARK);
+			columnValueBeanList.add(new ColumnValueBean(IDENTIFIER, identifier));
+			queryBean = new FileQueryBean();
+			queryBean.setColValBeanList(columnValueBeanList);
+			queryBean.setQuery(query.toString());
+		}
+		return queryBean;
 	}
 }

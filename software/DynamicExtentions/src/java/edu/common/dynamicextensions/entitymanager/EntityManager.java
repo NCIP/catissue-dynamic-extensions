@@ -4,6 +4,7 @@ package edu.common.dynamicextensions.entitymanager;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Blob;
 import java.sql.ResultSet;
@@ -877,11 +878,11 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			client.setServerUrl(new URL(Variables.jbossUrl+entity.getEntityGroup().getName()+"/"));
 			client.setParamaterObjectMap(map);
 			client.execute(null);
-			Object updatedObject =client.getObject();
+			List<FileQueryBean> queryListForFile =(List<FileQueryBean>)client.getObject();
 
-
-			List<FileQueryBean> queryListForFile = getQueryListForFileAttributes(dataVal, entity,
-					updatedObject);
+			System.out.println();
+			/*List<FileQueryBean> queryListForFile = getQueryListForFileAttributes(dataVal, entity,
+					updatedObject);*/
 			if (hibernateDao == null)
 			{
 				hibernateDAO.commit();
@@ -1758,6 +1759,16 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			map.put(WebUIManagerConstants.DYNAMIC_OBJECT_ID, tgtEntRecId);
 			map.put(WebUIManagerConstants.PACKAGE_NAME, getPackageName(association.getTargetEntity(), ""));
 			DataAssociationClient associationClient = new DataAssociationClient();
+			System.out.println();
+			try
+			{
+				associationClient.setServerUrl(new URL(Variables.jbossUrl+association.getTargetEntity().getEntityGroup().getName()+"/"));
+			}
+			catch (MalformedURLException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			associationClient.setParamaterObjectMap(map);
 			associationClient.execute(null);
 /*

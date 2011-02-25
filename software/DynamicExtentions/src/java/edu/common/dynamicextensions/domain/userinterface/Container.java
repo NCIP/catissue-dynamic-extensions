@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import edu.common.dynamicextensions.domain.AbstractEntity;
 import edu.common.dynamicextensions.domain.DynamicExtensionBaseDomainObject;
 import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
+import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
@@ -24,6 +26,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.skiplogic.SkipLogic;
+import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
@@ -518,7 +521,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 	{
 		final StringBuffer controlHTML = new StringBuffer(108);
 		final List<Object> values = new ArrayList<Object>();
-
+		System.out.println();
 		final List<ControlInterface> controls = getAllControlsUnderSameDisplayLabel(); //UnderSameDisplayLabel();
 		int lastRow = 0;
 		int cntr = 0;
@@ -527,6 +530,10 @@ public class Container extends DynamicExtensionBaseDomainObject
 		{
 			control.setDataEntryOperation(dataEntryOperation);
 			final Object value = containerValueMap.get(control.getBaseAbstractAttribute());
+			if(containerValueMap.get(control.getBaseAbstractAttribute())==null && control.getBaseAbstractAttribute() instanceof AttributeMetadataInterface)
+			{
+				containerValueMap.put(control.getBaseAbstractAttribute(),((AttributeMetadataInterface)control.getBaseAbstractAttribute()).getDefaultValue((Date)this.getContextParameter(Constants.ENCOUNTER_DATE)));
+			}
 			control.setValue(value);
 		}
 		SkipLogic skipLogic = EntityCache.getInstance().getSkipLogicByContainerIdentifier(id);

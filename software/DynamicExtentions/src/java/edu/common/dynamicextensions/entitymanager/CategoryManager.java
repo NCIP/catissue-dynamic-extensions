@@ -3362,16 +3362,24 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	 * @param recordEntryStaticId Entity id of the static entity which is hooked to the DE model.
 	 * @return recordEntry Id associated with this record.
 	 * @exception DynamicExtensionsSystemException Exception.
-	 * @throws DynamicExtensionsCacheException
 	 *
 	 */
 	public long getRecordEntryIdByEntityRecordId(Long dynEntContainerId, Long deRecordId,
-			Long recordEntryStaticId) throws DynamicExtensionsSystemException, DynamicExtensionsCacheException
+			Long recordEntryStaticId) throws DynamicExtensionsSystemException
 	{
 
 		EntityInterface entity = EntityManager.getInstance().getCategoryRootEntityByContainerId(
 				dynEntContainerId);
-		EntityInterface staticEntity = EntityCache.getInstance().getEntityById(recordEntryStaticId);
+		EntityInterface staticEntity=null;
+		try
+		{
+			staticEntity = EntityCache.getInstance().getEntityById(recordEntryStaticId);
+		}
+		catch (DynamicExtensionsCacheException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		AssociationInterface hookAssociation = null;
 		for (AssociationInterface association : staticEntity.getAssociationCollection())
 		{

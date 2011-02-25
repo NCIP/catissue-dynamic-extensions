@@ -36,5 +36,9 @@ public class RecordAssociationClient extends AbstractClient {
 
 		outputToServlet.close();
 	}
+	protected void processResponse(URLConnection servletConnection)
+	throws DynamicExtensionsSystemException, IOException
+	{
 
+	}
 }

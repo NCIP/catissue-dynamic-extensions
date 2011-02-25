@@ -13,6 +13,12 @@ import edu.wustl.dao.exception.DAOException;
 
 public class RecordAssociationHandler extends AbstractHandler {
 
+	private final DyanamicObjectProcessor dyanamicObjectProcessor;
+
+	public RecordAssociationHandler() throws DAOException
+	{
+		 dyanamicObjectProcessor = new DyanamicObjectProcessor();
+	}
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
