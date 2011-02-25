@@ -1489,11 +1489,37 @@
 						</antcall>
 					</else>
 				</if>
+				<property name="ORM1CfgFile" value="${cacore.deployable.dir}/${entitygroupname}.war/orm1.cfg.xml" />
+				<property name="DEWebCfgFile" value="${cacore.deployable.dir}/${entitygroupname}.war/WEB-INF/classes/demHibernate.cfg.xml" />
+
 				<antcall target="generate.cacore" />
+				<java classname="edu.wustl.metadata.util.CacoreDEMetadataAppender" fork="true" maxmemory="1024M">
+					<arg value="${DEWebCfgFile}" />
+					<arg value="${ORM1CfgFile}" />
+					<classpath>
+						<pathelement location="${temp.dir.DE}" />
+						<fileset dir="${de.zip.location}/lib/server">
+							<include name="*.jar" />
+							<exclude name="uml-1.3.jar" />
+						</fileset>
+						<fileset dir="${de.zip.location}/lib/extra">
+							<include name="jboss-j2ee.jar" />
+							<include name="jta.jar" />
+						</fileset>
+					</classpath>
+				</java>
+
+				<antcall target="merge.audit.xml" />
+
+				<copy todir="${jboss.home.dir}/server/default/deploy/${entitygroupname}.war">
+					<fileset dir="${cacore.deployable.dir}/${entitygroupname}.war">
+					</fileset>
+				</copy>
 				<copy todir="${cacore.deployable.dir}/${entitygroupname}.war">
 					<fileset dir="tempWar/${entitygroupname}.war">
 					</fileset>
 				</copy>
+
 				<copy todir="${jboss.home.dir}/server/default/deploy/${entitygroupname}.war">
 					<fileset dir="${cacore.deployable.dir}/${entitygroupname}.war" />
 				</copy>
