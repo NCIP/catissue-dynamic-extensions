@@ -373,7 +373,6 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager{
 									association.getEntity().getName()
 											.lastIndexOf(".") + 1),
 					staticEntity.getClass(), dynamicEntity, staticEntity);
-			System.out.println();
 		} catch (NoSuchMethodException e) {
 			throw new DynamicExtensionsApplicationException(
 					"Error populating dynamic entity", e);

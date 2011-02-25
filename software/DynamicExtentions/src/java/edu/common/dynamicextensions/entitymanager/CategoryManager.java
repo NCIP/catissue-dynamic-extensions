@@ -2390,7 +2390,6 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 								map.put(WebUIManagerConstants.PACKAGE_NAME, getPackageName(association.getTargetEntity(), ""));
 								InsertCategoryEntityTreeClient categoryEntityTreeClient=new InsertCategoryEntityTreeClient();
 								categoryEntityTreeClient.setServerUrl(new URL(Variables.jbossUrl+association.getEntity().getEntityGroup().getName()+"/"));
-								System.out.println();
 								categoryEntityTreeClient.setParamaterObjectMap(map);
 								categoryEntityTreeClient.execute(null);
 

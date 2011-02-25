@@ -868,7 +868,6 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			map.put(WebUIManagerConstants.ENTITY, entity);
 			map.put(WebUIManagerConstants.DATA_VALUE_MAP, dataValue);
 			map.put("recordId", recordId);
-			System.out.println();
 			client.setServerUrl(new URL(Variables.jbossUrl+entity.getEntityGroup().getName()+"/"));
 			client.setParamaterObjectMap(map);
 			client.execute(null);
@@ -1753,7 +1752,6 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			map.put(WebUIManagerConstants.DYNAMIC_OBJECT_ID, tgtEntRecId);
 			map.put(WebUIManagerConstants.PACKAGE_NAME, getPackageName(association.getTargetEntity(), ""));
 			DataAssociationClient associationClient = new DataAssociationClient();
-			System.out.println();
 			try
 			{
 				associationClient.setServerUrl(new URL(Variables.jbossUrl+association.getTargetEntity().getEntityGroup().getName()+"/"));
