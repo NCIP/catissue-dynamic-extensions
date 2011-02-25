@@ -326,17 +326,17 @@
             insert="true"
             column="DataQuery"
         />
-        
+
         <set
             name="gridViewColumnList"
             table="DYEXTN_GRID_VIEW_COLUMNS"
             lazy="false"
             inverse="false"
             order-by="sortOrder asc"
-            cascade="all"
+            cascade="all-delete-orphan"
             sort="unsorted"
         >
-            
+
 
               <key
                   column="CATEGORY_ID" not-null="true"

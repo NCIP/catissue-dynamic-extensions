@@ -44,11 +44,16 @@ public class StaticCategoryGenerator
 	}
 
 	/**
-	 * @param args command line arguments
-	 * @throws JAXBException JAXB exception
-	 * @throws FileNotFoundException File Not Found Exception
-	 * @throws DynamicExtensionsSystemException Dynamic Extensions System Exception
-	 * @throws DynamicExtensionsApplicationException Dynamic Extensions Application Exception
+	 * @param args
+	 *            command line arguments
+	 * @throws JAXBException
+	 *             JAXB exception
+	 * @throws FileNotFoundException
+	 *             File Not Found Exception
+	 * @throws DynamicExtensionsSystemException
+	 *             Dynamic Extensions System Exception
+	 * @throws DynamicExtensionsApplicationException
+	 *             Dynamic Extensions Application Exception
 	 * @throws SAXException
 	 */
 	public static void main(String[] args) throws JAXBException, FileNotFoundException,
@@ -92,12 +97,12 @@ public class StaticCategoryGenerator
 				gridViewCol.setDisplayOrder(gridDisplayColumn.getDisplayOrder());
 				gridColBeans.add(gridViewCol);
 			}
-			if (staticCategory.getGridViewColumnList() != null)
-				staticCategory.getGridViewColumnList().clear();
-			staticCategory.setGridViewColumnList(gridColBeans);
+		if(staticCategory.getGridViewColumnList()!=null)
+			staticCategory.getGridViewColumnList().clear();
+			staticCategory.getGridViewColumnList().addAll(gridColBeans);
 		}
 
-		if(form.getDataQuery() != null)
+		if (form.getDataQuery() != null)
 		{
 			staticCategory.setDataQuery(form.getDataQuery());
 		}
@@ -118,8 +123,10 @@ public class StaticCategoryGenerator
 	}
 
 	/**
-	 * @param formName static category form name
-	 * @throws DynamicExtensionsApplicationException If formName is empty
+	 * @param formName
+	 *            static category form name
+	 * @throws DynamicExtensionsApplicationException
+	 *             If formName is empty
 	 */
 	private static void validateStaticFormName(final String formName)
 			throws DynamicExtensionsApplicationException
