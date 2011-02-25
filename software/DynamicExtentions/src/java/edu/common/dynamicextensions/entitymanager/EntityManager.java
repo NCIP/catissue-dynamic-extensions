@@ -1731,7 +1731,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			Long sourceEntityRecordId, Long TargetEntityRecordId, SessionDataBean sessionDataBean)
 			throws DynamicExtensionsSystemException
 	{
-		// TODO Auto-generated method stub
+		associateEntityRecords(associationInterface, sourceEntityRecordId, TargetEntityRecordId);
 
 	}
 	/* (non-Javadoc)
