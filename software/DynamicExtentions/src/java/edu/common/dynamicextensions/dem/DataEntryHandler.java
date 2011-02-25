@@ -2,6 +2,7 @@
 package edu.common.dynamicextensions.dem;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +28,7 @@ public class DataEntryHandler extends AbstractHandler
 
 	public DataEntryHandler() throws DAOException
 	{
-		 dyanamicObjectProcessor = new DyanamicObjectProcessor();
+		dyanamicObjectProcessor = new DyanamicObjectProcessor();
 	}
 
 	/**
@@ -38,62 +39,71 @@ public class DataEntryHandler extends AbstractHandler
 	 * @throws IOException io exception
 	 */
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException,
-		 	IOException
+			IOException
 	{
 
-		try {
-/*			*//**
-			 * 1. initialize the parameter
-			 *//*
+		try
+		{
+			/*			*//**
+					* 1. initialize the parameter
+					*/
+			/*
 			ObjectInputStream inputFromServlet = null;
 			try {
-				inputFromServlet = new ObjectInputStream(req.getInputStream());
-				Object object = null;
-				while ((object = inputFromServlet.readObject()) != null) {
-					if (object instanceof AbstractEntity) {
-						entity = (EntityInterface) object;
-					}
-					if (object instanceof Map) {
-						dataValue = (Map<AbstractAttributeInterface, Object>) object;
-					}
-
+			inputFromServlet = new ObjectInputStream(req.getInputStream());
+			Object object = null;
+			while ((object = inputFromServlet.readObject()) != null) {
+				if (object instanceof AbstractEntity) {
+					entity = (EntityInterface) object;
 				}
+				if (object instanceof Map) {
+					dataValue = (Map<AbstractAttributeInterface, Object>) object;
+				}
+
+			}
 			} catch (ClassNotFoundException e) {
-				throw new DynamicExtensionsApplicationException(
-						"Error in reading objects from request", e);
+			throw new DynamicExtensionsApplicationException(
+					"Error in reading objects from request", e);
 			} catch (EOFException e) {
-				System.out.println("End of file.");
+			System.out.println("End of file.");
+			} catch (IOException e) {
+			throw new DynamicExtensionsApplicationException(
+					"Error in reading objects from request", e);
+			} finally {
+			try {
+				inputFromServlet.close();
 			} catch (IOException e) {
 				throw new DynamicExtensionsApplicationException(
 						"Error in reading objects from request", e);
-			} finally {
-				try {
-					inputFromServlet.close();
-				} catch (IOException e) {
-					throw new DynamicExtensionsApplicationException(
-							"Error in reading objects from request", e);
-				}
 			}
-*/
+			}
+			*/
 			initAuditManager();
 			initializeParamaterObjectMap(req);
 
 			EntityInterface entity = (EntityInterface) paramaterObjectMap.get(ENTITY);
-			Map<AbstractAttributeInterface, Object> dataValue = (Map<AbstractAttributeInterface, Object>) paramaterObjectMap.get(DATA_VALUE_MAP);
+			Map<AbstractAttributeInterface, Object> dataValue = (Map<AbstractAttributeInterface, Object>) paramaterObjectMap
+					.get(DATA_VALUE_MAP);
 
 			Object object = dyanamicObjectProcessor.createObject(entity, dataValue);
 			insertObject(object);
-			List<FileQueryBean> queryListForFile =dyanamicObjectProcessor.getQueryListForFileAttributes(dataValue, entity,object);
-			dyanamicObjectProcessor.executeQuery(queryListForFile,(List<FileQueryBean>)paramaterObjectMap.get(FILE_RECORD_QUERY_LIST));
-			Map<String,Object> map=new HashMap<String, Object>();
+			List<FileQueryBean> queryListForFile = dyanamicObjectProcessor
+					.getQueryListForFileAttributes(dataValue, entity, object);
+			dyanamicObjectProcessor.executeQuery(queryListForFile,
+					(List<FileQueryBean>) paramaterObjectMap.get(FILE_RECORD_QUERY_LIST));
+			Map<String, Object> map = new HashMap<String, Object>();
 			map.put(DEConstants.IDENTIFIER, AbstractBaseMetadataManager.getObjectId(object));
 			map.put(FILE_RECORD_QUERY_LIST, paramaterObjectMap.get(FILE_RECORD_QUERY_LIST));
 
-			writeObjectToResopnce(object,res);
+			writeObjectToResopnce(map, res);
 
-		} catch (DynamicExtensionsApplicationException e) {
+		}
+		catch (DynamicExtensionsApplicationException e)
+		{
 			e.printStackTrace();
-		} catch (DynamicExtensionsSystemException e) {
+		}
+		catch (DynamicExtensionsSystemException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -117,8 +127,36 @@ public class DataEntryHandler extends AbstractHandler
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 	}
 
+	protected void writeObjectToResopnce(Object object, HttpServletResponse res)
+			throws DynamicExtensionsApplicationException
+	{
+		ObjectOutputStream objectOutputStream = null;
+		try
+		{
+			objectOutputStream = new ObjectOutputStream(res.getOutputStream());
+			objectOutputStream.writeObject(object);
+		}
+		catch (IOException e)
+		{
+			throw new DynamicExtensionsApplicationException(
+					"Error in writing object to the responce", e);
+		}
+		finally
+		{
+			try
+			{
+				objectOutputStream.flush();
+				objectOutputStream.close();
+			}
+			catch (IOException e)
+			{
+				throw new DynamicExtensionsApplicationException(
+						"Error in writing object to the responce", e);
+			}
 
-
+		}
+	}
 }

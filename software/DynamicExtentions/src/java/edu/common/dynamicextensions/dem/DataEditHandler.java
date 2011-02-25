@@ -76,12 +76,18 @@ public class DataEditHandler extends AbstractHandler
 			EntityInterface entity = (EntityInterface) paramaterObjectMap.get(ENTITY);
 			Map<AbstractAttributeInterface, Object> dataValue = (Map<AbstractAttributeInterface, Object>) paramaterObjectMap.get(DATA_VALUE_MAP);
 			Long recordId=(Long)paramaterObjectMap.get("recordId");
+			DyanamicObjectProcessor dyanamicObjectProcessor = new DyanamicObjectProcessor();
 			Object object = dyanamicObjectProcessor.editObject(entity, dataValue,recordId);
 			writeObjectToResopnce(object,res);
 
 		} catch (DynamicExtensionsApplicationException e) {
 			e.printStackTrace();
 		} catch (DynamicExtensionsSystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (DAOException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

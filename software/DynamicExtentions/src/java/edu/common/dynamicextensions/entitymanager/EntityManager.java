@@ -51,7 +51,6 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterfa
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.AssociationTreeObject;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
@@ -869,12 +868,13 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			map.put(WebUIManagerConstants.ENTITY, entity);
 			map.put(WebUIManagerConstants.DATA_VALUE_MAP, dataValue);
 			map.put("recordId", recordId);
+			System.out.println();
 			client.setServerUrl(new URL(Variables.jbossUrl+entity.getEntityGroup().getName()+"/"));
 			client.setParamaterObjectMap(map);
 			client.execute(null);
 			List<FileQueryBean> queryListForFile =(List<FileQueryBean>)client.getObject();
 
-			System.out.println();
+			isSuccess = true;
 			/*List<FileQueryBean> queryListForFile = getQueryListForFileAttributes(dataVal, entity,
 					updatedObject);*/
 			if (hibernateDao == null)

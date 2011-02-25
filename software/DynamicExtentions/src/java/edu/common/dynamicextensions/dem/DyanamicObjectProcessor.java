@@ -147,7 +147,7 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager{
 	 * @return updated object
 	 * @throws DynamicExtensionsApplicationException exception.
 	 */
-	private Object updateObject(EntityInterface entity,
+	/*private Object updateObject(EntityInterface entity,
 			Map<AbstractAttributeInterface, Object> dataValue, Object oldObject) throws DynamicExtensionsApplicationException
 	{
 		String packageName = null;
@@ -325,7 +325,7 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager{
 		}
 
 		return oldObject;
-	}
+	}*/
 
 	@Override
 	protected void logFatalError(Exception exception,
@@ -554,19 +554,16 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager{
 			Map<AbstractAttributeInterface, Object> dataValue,Long recordId)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
-		HibernateDAO hibernateDAO =null;
 		 List<FileQueryBean> queryListForFile =null;
 		try
 		{
-			hibernateDAO = getHibernateDAO();
-
 			String packageName = null;
 			packageName = getPackageName(entity, packageName);
 			String className = packageName + "." + entity.getName();
 			Object oldObject;
 			oldObject = hibernateDAO.retrieveById(className, recordId);
 
-			Object updatedObject = updateObject(entity, dataValue, oldObject, hibernateDAO);
+			Object updatedObject = updateObject(entity, dataValue, oldObject);
 			queryListForFile =getQueryListForFileAttributes(dataValue, entity,
 						updatedObject);
 		}
@@ -612,8 +609,7 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager{
 		return queryListForFile;
 	}
 	private Object updateObject(EntityInterface entity,
-			Map<AbstractAttributeInterface, Object> dataValue, Object oldObject,
-			HibernateDAO hibernateDAO) throws DynamicExtensionsApplicationException
+			Map<AbstractAttributeInterface, Object> dataValue, Object oldObject) throws DynamicExtensionsApplicationException
 	{
 		String packageName = null;
 		packageName = getPackageName(entity, packageName);
@@ -706,7 +702,7 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager{
 						}
 
 						objForUpdate = updateObject(targetEntity, valueMapForContainedEntity,
-								objForUpdate, hibernateDAO);
+								objForUpdate);
 						Class assoObjectClass = objForUpdate.getClass();
 						String source = getSourceRoleNameForMethodInvocation(association);
 						invokeSetterMethod(assoObjectClass, source, Class
@@ -764,6 +760,8 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager{
 			{
 				hibernateDAO.update(oldObject, clonedObject);
 			}
+			hibernateDAO.commit();
+			hibernateDAO.closeSession();
 			identifier = getObjectId(oldObject);
 			dataValue.put(new edu.common.dynamicextensions.domain.EntityRecord(), identifier);
 		}
