@@ -49,12 +49,15 @@ PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
 	<servlet>
 		<servlet-name>RelatedAttributeHandler</servlet-name>
 		<servlet-class>edu.common.dynamicextensions.dem.RelatedAttributeHandler</servlet-class>
-    </servlet>
+    </servlet>      
 	<servlet>
 		<servlet-name>FileAttributesHandler</servlet-name>
 		<servlet-class>edu.common.dynamicextensions.dem.FileAttributesHandler</servlet-class>
     </servlet>
-	 
+	<servlet>
+		<servlet-name>EditCategoryEntityTreeHandler</servlet-name>
+		<servlet-class>edu.common.dynamicextensions.dem.EditCategoryEntityTreeHandler</servlet-class>
+    </servlet>          
     <!-- servlet>
 		<servlet-name>DownloadFileAction</servlet-name>
 		<servlet-class>edu.common.dynamicextensions.ui.webui.action.DownloadFileAction</servlet-class>
@@ -111,7 +114,10 @@ PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
 		<servlet-name>FileAttributesHandler</servlet-name>
 		<url-pattern>/FileAttributesHandler</url-pattern>
 	</servlet-mapping>
-	
+	<servlet-mapping>
+		<servlet-name>EditCategoryEntityTreeHandler</servlet-name>
+		<url-pattern>/EditCategoryEntityTreeHandler</url-pattern>
+	</servlet-mapping>   
 	<!--<servlet-mapping>
 		<servlet-name>DownloadFileAction</servlet-name>
 		<url-pattern>/DownloadFileAction</url-pattern>
