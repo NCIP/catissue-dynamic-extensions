@@ -1,10 +1,8 @@
 
 package edu.common.dynamicextensions.handler;
 
-import java.io.IOException;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,37 +17,13 @@ import edu.wustl.dao.exception.DAOException;
 public class UpdateCategoryHandler extends AbstractHandler
 {
 
+	public UpdateCategoryHandler() throws DAOException
+	{
+		super();
+	}
+
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException
-	{
-		try
-		{
-
-			initAuditManager();
-			initializeParamaterObjectMap(req);
-			updateCategory(paramaterObjectMap);
-
-		}
-		catch (DAOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (DynamicExtensionsApplicationException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (DynamicExtensionsSystemException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 
 	public void updateCategory(Map<String, Object> paramaterObjectMap)
 			throws DynamicExtensionsSystemException, DAOException
@@ -58,5 +32,14 @@ public class UpdateCategoryHandler extends AbstractHandler
 		hibernateDao.merge(paramaterObjectMap.get(WebUIManagerConstants.CATEGORY));
 		hibernateDao.commit();
 		hibernateDao.closeSession();
+	}
+
+	@Override
+	protected void doPostImpl(HttpServletRequest req, HttpServletResponse resp)
+			throws DAOException, DynamicExtensionsApplicationException,
+			DynamicExtensionsSystemException
+	{
+		updateCategory(paramaterObjectMap);
+
 	}
 }
