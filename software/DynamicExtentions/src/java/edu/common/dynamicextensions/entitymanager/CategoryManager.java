@@ -1516,7 +1516,6 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 			// Clear all records from category entity table.
 			clearCategoryEntityData(rootCatEntity, recordId, rlbkQryStack, identifier, jdbcDao);
-
 			if (isEdited)
 			{
 				final Map<String, Long> keyMap = new HashMap<String, Long>();
@@ -1604,7 +1603,6 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		try
 		{
 			Object value = null;
-
 			// Variable to check if record has been inserted for category entity.
 			boolean isCatEntRecIns = false;
 			Map<AbstractAttributeInterface, Object> attributes = null;
@@ -1725,7 +1723,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 							}
 
 							final AssociationInterface asso = pathAssociation.getAssociation();
-							String packageName = null;
+							/*String packageName = null;
 							packageName = getPackageName(asso.getEntity(), packageName);
 
 							final StringBuffer sourceObjectClassName = new StringBuffer(packageName);
@@ -1751,7 +1749,17 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 							// Get the associated object(s).
 							addTargetObject(sourceObject, targetObject, targetObjectClassName
 									.toString(), asso);
-							hibernateDao.update(sourceObject, clonedSourceObject);
+							hibernateDao.update(sourceObject, clonedSourceObject);*/
+							Map<String, Object> map = new HashMap<String, Object>();
+
+							map.put(WebUIManagerConstants.ASSOCIATION, asso);
+							map.put(WebUIManagerConstants.STATIC_OBJECT_ID, previousEntityId);
+							map.put(WebUIManagerConstants.DYNAMIC_OBJECT_ID, targetEntityId);
+							map.put(WebUIManagerConstants.PACKAGE_NAME, getPackageName(asso.getEntity(), ""));
+							EditCategoryEntityTreeClient categoryEntityTreeClient=new EditCategoryEntityTreeClient();
+							categoryEntityTreeClient.setServerUrl(new URL(Variables.jbossUrl+asso.getEntity().getEntityGroup().getName()+"/"));
+							categoryEntityTreeClient.setParamaterObjectMap(map);
+							categoryEntityTreeClient.execute(null);
 						}
 					}
 

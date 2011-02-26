@@ -521,7 +521,6 @@ public class Container extends DynamicExtensionBaseDomainObject
 	{
 		final StringBuffer controlHTML = new StringBuffer(108);
 		final List<Object> values = new ArrayList<Object>();
-		System.out.println();
 		final List<ControlInterface> controls = getAllControlsUnderSameDisplayLabel(); //UnderSameDisplayLabel();
 		int lastRow = 0;
 		int cntr = 0;

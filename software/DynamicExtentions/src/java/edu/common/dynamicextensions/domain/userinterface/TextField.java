@@ -89,7 +89,6 @@ public class TextField extends Control implements TextFieldInterface, Validatabl
 	{
 		String defaultValue = DynamicExtensionsUtility
 				.replaceHTMLSpecialCharacters(getDefaultValueForControl());
-		System.out.println();
 		this.getParentContainer().getContainerValueMap().put(this.getBaseAbstractAttribute(), defaultValue);
 		String htmlComponentName = getHTMLComponentName();
 		String htmlString = "";
