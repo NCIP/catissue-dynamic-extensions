@@ -614,11 +614,14 @@ public final class DataValueMapUtility
 		}
 		if (controlValue instanceof String[] && ((String[]) controlValue).length > 0)
 		{
-			valueMap.put(control.getBaseAbstractAttribute(), Arrays.asList(controlValue));
-		}
-		else
-		{
-			valueMap.put(control.getBaseAbstractAttribute(), controlValue);
+			if(((CategoryAttributeInterface)control.getBaseAbstractAttribute()).getAbstractAttribute() instanceof AssociationInterface)
+			{
+				valueMap.put(control.getBaseAbstractAttribute(), Arrays.asList(controlValue));
+			}else
+			{
+				valueMap.put(control.getBaseAbstractAttribute(), ((String[])controlValue)[0]);
+			}
+
 		}
 
 	}
