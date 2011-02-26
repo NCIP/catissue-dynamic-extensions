@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,12 +26,12 @@ import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.exception.DAOException;
 
-public class UpdateCache extends AbstractHandler
+public class UpdateCache extends HttpServlet
 {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-
+	protected Map<String, Object> paramaterObjectMap;
 	/** logger for information. */
 	protected static final Logger LOGGER = Logger.getCommonLogger(UpdateCache.class);
 
@@ -40,7 +42,7 @@ public class UpdateCache extends AbstractHandler
 		try
 		{
 			// 1: get entity group id to be updated from request
-			initializeParamaterObjectMap(req);
+			paramaterObjectMap = AbstractHandler.readParameterMapFromRequest(req);
 
 			String operation = (String) paramaterObjectMap.get(WebUIManagerConstants.OPERATION);
 			LOGGER.info("Cache operation:" + operation);
