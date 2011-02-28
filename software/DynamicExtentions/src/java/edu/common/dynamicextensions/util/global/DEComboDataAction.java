@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Stack;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,11 +19,16 @@ import org.apache.struts.action.ActionMapping;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.skiplogic.SkipLogic;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.webui.action.BaseDynamicExtensionsAction;
+import edu.common.dynamicextensions.ui.webui.util.CacheManager;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.cab2b.server.cache.EntityCache;
@@ -39,6 +46,7 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 	/** The Constant CONTROL_ID. */
 	private static final String CONTROL_ID = "controlId";
 
+	@SuppressWarnings("unchecked")
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception
 	{
@@ -90,6 +98,13 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 		{
 			if (Long.parseLong(controlId) == control.getId())
 			{
+				if (control.getIsSkipLogicTargetControl())
+				{
+					Map<BaseAbstractAttributeInterface, Object> valueMap = ((Stack<Map<BaseAbstractAttributeInterface, Object>>) CacheManager
+							.getObjectFromCache(request, DEConstants.VALUE_MAP_STACK)).peek();
+					skipLogicEvaluation(container, control, valueMap, request
+							.getParameter("comboBoxId"));
+				}
 				nameValueBeans = ControlsUtility.populateListOfValues(control, sourceControlValues,
 						ControlsUtility.getFormattedDate(keyMap.get(Constants.ENCOUNTER_DATE)));
 			}
@@ -123,7 +138,7 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 	 */
 	private Map<String, String> extractRequestParameter(String controlIdStr)
 	{
-		Map<String,String> keyMap = new HashMap<String,String>();
+		Map<String, String> keyMap = new HashMap<String, String>();
 
 		if (controlIdStr != null)
 		{
@@ -134,7 +149,7 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 				if (paramKeyValStr != null && !"".equals(paramKeyValStr.trim()))
 				{
 					String[] paramKeyVal = paramKeyValStr.split("=");
-					if (i==0)
+					if (i == 0)
 					{
 						keyMap.put("controlId", paramKeyVal[0]);
 					}
@@ -158,6 +173,7 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 	 * @param containerId containing the requested combobox
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	private Object getContainerFromUserSesion(HttpServletRequest request, String containerId)
 	{
 		Map<String, ContainerInterface> map = (Map<String, ContainerInterface>) request
@@ -190,7 +206,71 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 				querySpecificNVBeans.add(nvb);
 			}
 		}
-
 	}
 
+	/**
+	 * Evaluate skip logic again.
+	 * @param container the container
+	 * @param valueMap the value map
+	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
+	 */
+	private void executeSkipLogic(ContainerInterface container,
+			Map<BaseAbstractAttributeInterface, Object> valueMap)
+			throws DynamicExtensionsSystemException
+	{
+		SkipLogic skipLogic = EntityCache.getInstance().getSkipLogicByContainerIdentifier(
+				container.getId());
+		skipLogic.evaluateSkipLogic(container, valueMap);
+
+		// This is the case of Single Line Display. In this case the Skip Logic is associated with child container.
+		if (!container.getChildContainerCollection().isEmpty())
+		{
+			for (ContainerInterface childContainer : container.getChildContainerCollection())
+			{
+				SkipLogic childSkipLogic = EntityCache.getInstance()
+						.getSkipLogicByContainerIdentifier(childContainer.getId());
+				if (childSkipLogic != null)
+				{
+					childSkipLogic.evaluateSkipLogic(childContainer, valueMap);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Gets the appropriate data value map.
+	 * @param container the container
+	 * @param control the control
+	 * @param valueMap the value map
+	 * @param controlName the control name
+	 * @return the appropriate data value map
+	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
+	 */
+	@SuppressWarnings("unchecked")
+	private void skipLogicEvaluation(ContainerInterface container, ControlInterface control,
+			Map<BaseAbstractAttributeInterface, Object> valueMap, String controlName)
+			throws DynamicExtensionsSystemException
+	{
+		for (Entry<BaseAbstractAttributeInterface, Object> entry : valueMap.entrySet())
+		{
+			if (entry.getKey() instanceof CategoryAssociationInterface
+					&& ((CategoryAssociationInterface) entry.getKey()).getTargetCategoryEntity()
+							.getNumberOfEntries() == -1)
+			{
+				List<Map<BaseAbstractAttributeInterface, Object>> innerMap = (List<Map<BaseAbstractAttributeInterface, Object>>) entry
+						.getValue();
+				Integer rowIndex = Integer.parseInt(""+controlName.charAt(controlName.length() -1 ));
+				int currentMapIndex = 1;
+				for (Map<BaseAbstractAttributeInterface, Object> dataValueMap : innerMap)
+				{
+					if (dataValueMap.get(control.getBaseAbstractAttribute()) != null
+							&& rowIndex == currentMapIndex)
+					{
+						executeSkipLogic(container, dataValueMap);
+					}
+					currentMapIndex++;
+				}
+			}
+		}
+	}
 }

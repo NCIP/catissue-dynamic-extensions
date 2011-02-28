@@ -181,7 +181,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 						+ "valueNotFoundText:'',"
 						+ "selectOnFocus:'true',applyTo: '"
 						+ htmlComponentName
-						+ "'});"
+						+ "'});ds.setBaseParam('comboBoxId',combo.getId());"
 						+ "combo.on('blur',function(comboBox){if(comboBox.getValue()==''){comboBox.setValue(comboBox.emptyText);}});"
 						+ "combo.on('focus',function(comboBox){comboBox.setRawValue(comboBox.emptyText);});"
 						+ "combo.on(\"select\", function() {"
@@ -254,7 +254,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					+ "valueNotFoundText:'',"
 					+ "selectOnFocus:'true',applyTo: '"
 					+ htmlComponentName
-					+ "'});"
+					+ "'});ds.setBaseParam('comboBoxId',combo.getId());"
 					+ "combo.on('blur',function(comboBox){if(comboBox.getValue()==''){comboBox.setValue(comboBox.emptyText);}});"
 					+ "combo.on('focus',function(comboBox){comboBox.setRawValue(comboBox.emptyText);});"
 					+ "combo.on(\"select\", function() {"
