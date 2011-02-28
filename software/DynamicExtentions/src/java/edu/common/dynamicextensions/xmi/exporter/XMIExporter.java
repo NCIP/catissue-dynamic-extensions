@@ -1424,11 +1424,9 @@ public class XMIExporter
 			{
 				if (semanticProperty.getSequenceNumber() == 0)
 				{
-					taggedValues.add(createTaggedValue(
-							XMIConstants.TV_OBJECT_CLASS_CONCEPT_CODE, semanticProperty
-									.getConceptCode()));
-					taggedValues.add(createTaggedValue(
-							XMIConstants.TV_OBJECT_CLASS_CONCEPT_DEF,
+					taggedValues.add(createTaggedValue(XMIConstants.TV_OBJECT_CLASS_CONCEPT_CODE,
+							semanticProperty.getConceptCode()));
+					taggedValues.add(createTaggedValue(XMIConstants.TV_OBJECT_CLASS_CONCEPT_DEF,
 							semanticProperty.getConceptDefinition()));
 					taggedValues.add(createTaggedValue(
 							XMIConstants.TAGGED_VALUE_OBJECT_CLASS_CONCEPT_DEFINITION_SOURCE,
