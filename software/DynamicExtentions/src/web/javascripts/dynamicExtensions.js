@@ -2980,7 +2980,7 @@ function updateServerState(controlName, controlId, containerId)
 				if(vRecentControl == null)
 				{
 					vRecentControl = document.getElementsByName(controlName)[0];
-					if(vRecentControl.type="radio")
+					if(vRecentControl.type=="radio")
 					{
 						vRecentControl.value = controlValue;
 					}
