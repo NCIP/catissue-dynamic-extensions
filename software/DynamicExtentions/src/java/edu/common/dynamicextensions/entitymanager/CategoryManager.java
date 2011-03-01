@@ -1,7 +1,6 @@
 
 package edu.common.dynamicextensions.entitymanager;
 
-import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -47,7 +46,6 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.CategoryGenerationUtil;
 import edu.common.dynamicextensions.util.CategoryHelper;
 import edu.common.dynamicextensions.util.CategoryHelperInterface;
@@ -55,7 +53,6 @@ import edu.common.dynamicextensions.util.DataValueMapUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.FormulaCalculator;
 import edu.common.dynamicextensions.util.global.ErrorConstants;
-import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.validation.ValidatorUtil;
 import edu.common.dynamicextensions.validation.category.CategoryValidator;
 import edu.wustl.cab2b.server.cache.EntityCache;
@@ -1285,7 +1282,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				final List<Long> recordIds = records.get(catEntityName);
 				for (final Long id : recordIds)
 				{
-					/*String packageName = null;
+					String packageName = null;
 					packageName = getPackageName(catEntity.getEntity(), packageName);
 
 					final String entityClassName = packageName + "."
@@ -1301,17 +1298,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 								attrValueEntry.getValue(), object);
 					}
 
-					hibernateDao.update(object, clonedObject);*/
-					Map<String, Object> map = new HashMap<String, Object>();
-
-					map.put(WebUIManagerConstants.ENTITY, catEntity);
-					map.put(WebUIManagerConstants.DYNAMIC_OBJECT_ID,id);
-					map.put(WebUIManagerConstants.PACKAGE_NAME, getPackageName(catEntity.getEntity(), null));
-					map.put(WebUIManagerConstants.ATTRVSVALUES, attrVsValues);
-					RelatedAttributeClient relatedAttributeClient = new RelatedAttributeClient();
-					relatedAttributeClient.setServerUrl(new URL(Variables.jbossUrl+catEntity.getEntity().getEntityGroup().getName()+"/"));
-					relatedAttributeClient.setParamaterObjectMap(map);
-					relatedAttributeClient.execute(null);
+					hibernateDao.update(object, clonedObject);
 
 					final String selectQuery = SELECT_KEYWORD + IDENTIFIER + FROM_KEYWORD
 							+ catEntTblName + WHERE_KEYWORD + RECORD_ID + EQUAL + QUESTION_MARK;
@@ -1723,7 +1710,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 							}
 
 							final AssociationInterface asso = pathAssociation.getAssociation();
-							/*String packageName = null;
+							String packageName = null;
 							packageName = getPackageName(asso.getEntity(), packageName);
 
 							final StringBuffer sourceObjectClassName = new StringBuffer(packageName);
@@ -1749,17 +1736,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 							// Get the associated object(s).
 							addTargetObject(sourceObject, targetObject, targetObjectClassName
 									.toString(), asso);
-							hibernateDao.update(sourceObject, clonedSourceObject);*/
-							Map<String, Object> map = new HashMap<String, Object>();
-
-							map.put(WebUIManagerConstants.ASSOCIATION, asso);
-							map.put(WebUIManagerConstants.STATIC_OBJECT_ID, previousEntityId);
-							map.put(WebUIManagerConstants.DYNAMIC_OBJECT_ID, targetEntityId);
-							map.put(WebUIManagerConstants.PACKAGE_NAME, getPackageName(asso.getEntity(), ""));
-							EditCategoryEntityTreeClient categoryEntityTreeClient=new EditCategoryEntityTreeClient();
-							categoryEntityTreeClient.setServerUrl(new URL(Variables.jbossUrl+asso.getEntity().getEntityGroup().getName()+"/"));
-							categoryEntityTreeClient.setParamaterObjectMap(map);
-							categoryEntityTreeClient.execute(null);
+							hibernateDao.update(sourceObject, clonedSourceObject);
 						}
 					}
 
@@ -2259,7 +2236,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 									jdbcDao, colValBeanList);
 						}
 
-						/*String packageName = null;
+						String packageName = null;
 						packageName = getPackageName(lastAsso.getEntity(), packageName);
 						final String sourceObjectClassName = packageName + "."
 								+ lastAsso.getEntity().getName();
@@ -2272,18 +2249,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 						Object clonedTarget = cloner.clone(targetObject);
 						addSourceObject(sourceObject, targetObject, sourceObjectClassName, lastAsso);
 
-						hibernateDao.update(targetObject, clonedTarget);*/
-
-						Map<String, Object> map = new HashMap<String, Object>();
-
-						map.put(WebUIManagerConstants.ASSOCIATION, lastAsso);
-						map.put(WebUIManagerConstants.STATIC_OBJECT_ID, srcEntityId);
-						map.put(WebUIManagerConstants.DYNAMIC_OBJECT_ID, entityId);
-						map.put(WebUIManagerConstants.PACKAGE_NAME, getPackageName(lastAsso.getEntity(), null));
-						RecordAssociationClient associationClient = new RecordAssociationClient();
-						associationClient.setServerUrl(new URL(Variables.jbossUrl+lastAsso.getEntity().getEntityGroup().getName()+"/"));
-						associationClient.setParamaterObjectMap(map);
-						associationClient.execute(null);
+						hibernateDao.update(targetObject, clonedTarget);
 
 					}
 
@@ -2371,10 +2337,15 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 							if (fullKeyMap.get(association.getTargetEntity().getName() + "["
 									+ par.getTargetInstanceId() + "]") == null)
 							{
-
+								String packageName = null;
+								packageName = getPackageName(association.getEntity(), packageName);
+								final String sourceObjectClassName = packageName + "."
+										+ association.getEntity().getName();
+								final String targetObjectClassName = packageName + "."
+										+ association.getTargetEntity().getName();
 								Long Identifier = fullKeyMap.get(association.getEntity().getName()
 										+ "[" + par.getSourceInstanceId() + "]");
-								/*final Object sourceObject = hibernateDao.retrieveById(
+								final Object sourceObject = hibernateDao.retrieveById(
 										sourceObjectClassName, Identifier);
 								Object clonedSourceObject = cloner.clone(sourceObject);
 								Object targetObject = createObjectForClass(targetObjectClassName);
@@ -2390,18 +2361,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 								hibernateDao.update(targetObject, clonedTargetObject);
 
-								final Long entityId = getObjectId(targetObject);*/
-								Map<String, Object> map = new HashMap<String, Object>();
+								final Long entityId = getObjectId(targetObject);
 
-								map.put(WebUIManagerConstants.ASSOCIATION, association);
-								map.put(WebUIManagerConstants.STATIC_OBJECT_ID, Identifier);
-								map.put(WebUIManagerConstants.PACKAGE_NAME, getPackageName(association.getTargetEntity(), ""));
-								InsertCategoryEntityTreeClient categoryEntityTreeClient=new InsertCategoryEntityTreeClient();
-								categoryEntityTreeClient.setServerUrl(new URL(Variables.jbossUrl+association.getEntity().getEntityGroup().getName()+"/"));
-								categoryEntityTreeClient.setParamaterObjectMap(map);
-								categoryEntityTreeClient.execute(null);
-
-								final Long entityId=(Long)categoryEntityTreeClient.getObject();
 								sourceEntityId = entityId;
 
 								fullKeyMap.put(association.getTargetEntity().getName() + "["

@@ -1,8 +1,10 @@
 
 package edu.common.dynamicextensions.processor;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -11,16 +13,14 @@ import java.util.Set;
 import edu.common.dynamicextensions.domain.Entity;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
-import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
-import edu.common.dynamicextensions.entitymanager.CategoryManager;
-import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
-import edu.common.dynamicextensions.entitymanager.EntityManager;
-import edu.common.dynamicextensions.entitymanager.EntityManagerInterface;
-import edu.common.dynamicextensions.entitymanager.FileQueryBean;
+import edu.common.dynamicextensions.entitymanager.DataEditClient;
+import edu.common.dynamicextensions.entitymanager.DataEntryClient;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
+import edu.common.dynamicextensions.util.global.Variables;
 import edu.wustl.common.beans.SessionDataBean;
 
 /**
@@ -82,11 +82,12 @@ public class ApplyDataEntryFormProcessor extends BaseDynamicExtensionsProcessor
 	 * @throws DynamicExtensionsApplicationException on Application exception
 	 * @throws DynamicExtensionsSystemException on System exception
 	 * @return recordIdentifier Record identifier of the last saved record.
+	 * @throws MalformedURLException
 	 * @deprecated Use {@link #insertDataEntryForm(ContainerInterface,Map<BaseAbstractAttributeInterface, Object>,SessionDataBean)} instead
 	 */
 	public String insertDataEntryForm(ContainerInterface container,
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap)
-			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException, MalformedURLException
 	{
 		return insertDataEntryForm(container, attributeValueMap, null);
 	}
@@ -99,32 +100,34 @@ public class ApplyDataEntryFormProcessor extends BaseDynamicExtensionsProcessor
 	 * @throws DynamicExtensionsApplicationException on Application exception
 	 * @throws DynamicExtensionsSystemException on System exception
 	 * @return recordIdentifier Record identifier of the last saved record.
+	 * @throws MalformedURLException
 	 */
 	public String insertDataEntryForm(ContainerInterface container,
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap, SessionDataBean sessionDataBean)
-			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException, MalformedURLException
 	{
 		Long recordIdentifier = null;
-		//quick fix: common manager interface should be used here
-		if (container.getAbstractEntity() instanceof CategoryEntityInterface)
+		String entityGroupName=null;
+		if(container.getAbstractEntity() instanceof EntityInterface)
 		{
-			CategoryInterface categoryInterface = ((CategoryEntityInterface) container
-					.getAbstractEntity()).getCategory();
-			CategoryManagerInterface categoryManager = CategoryManager.getInstance();
-			Long categoryRecordId = categoryManager.insertData(categoryInterface,
-					attributeValueMap, sessionDataBean, userId);
-			recordIdentifier = categoryManager.getEntityRecordIdByRootCategoryEntityRecordId(
-					categoryRecordId, categoryInterface.getRootCategoryElement()
-							.getTableProperties().getName());
+			entityGroupName=((Entity)container.getAbstractEntity()).getEntityGroup().getName();
 		}
 		else
 		{
-			Map map = attributeValueMap;
-			EntityManagerInterface entityManagerInterface = EntityManager.getInstance();
-			recordIdentifier = entityManagerInterface.insertData((EntityInterface) container
-					.getAbstractEntity(), map, null, new ArrayList<FileQueryBean>(), sessionDataBean, userId);
+			entityGroupName=((CategoryEntityInterface) container.getAbstractEntity()).getEntity().getEntityGroup().getName();
 		}
+		Map<String, Object> clientmap = new HashMap<String, Object>();
+		DataEntryClient dataEntryClient=new DataEntryClient();
+		clientmap.put(WebUIManagerConstants.RECORD_ID, recordIdentifier);
+		clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, null);
+		clientmap.put(WebUIManagerConstants.USER_ID, userId);
+		clientmap.put(WebUIManagerConstants.CONTAINER, container);
+		clientmap.put(WebUIManagerConstants.DATA_VALUE_MAP, attributeValueMap);
+		dataEntryClient.setServerUrl(new URL(Variables.jbossUrl+entityGroupName+"/"));
+		dataEntryClient.setParamaterObjectMap(clientmap);
+		dataEntryClient.execute(null);
 
+		recordIdentifier=(Long)dataEntryClient.getObject();
 		return recordIdentifier.toString();
 	}
 
@@ -137,12 +140,13 @@ public class ApplyDataEntryFormProcessor extends BaseDynamicExtensionsProcessor
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
 	 * @throws SQLException
+	 * @throws MalformedURLException
 	 * @deprecated Use {@link #editDataEntryForm(ContainerInterface,Map<BaseAbstractAttributeInterface, Object>,Long,SessionDataBean)} instead
 	 */
 	public Boolean editDataEntryForm(ContainerInterface container,
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap, Long recordIdentifier)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException,
-			SQLException
+			SQLException, MalformedURLException
 	{
 		return editDataEntryForm(container, attributeValueMap, recordIdentifier, null);
 	}
@@ -158,36 +162,34 @@ public class ApplyDataEntryFormProcessor extends BaseDynamicExtensionsProcessor
 	 * @throws DynamicExtensionsApplicationException the dynamic extensions application exception
 	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
 	 * @throws SQLException the SQL exception
+	 * @throws MalformedURLException
 	 */
 	public Boolean editDataEntryForm(ContainerInterface container,
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap, Long recordIdentifier,
 			SessionDataBean sessionDataBean) throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException, SQLException
+			DynamicExtensionsSystemException, SQLException, MalformedURLException
 	{
-		boolean isEdited;
-		//Quick fix:
-		if (container.getAbstractEntity() instanceof EntityInterface)
+		String entityGroupName=null;
+		if(container.getAbstractEntity() instanceof EntityInterface)
 		{
-			EntityManagerInterface entityManager = EntityManager.getInstance();
-			EntityInterface entity = (Entity) container.getAbstractEntity();
-			//Correct this:
-			Map map = attributeValueMap;
-			isEdited = entityManager.editData(entity, map, recordIdentifier, null,
-					new ArrayList<FileQueryBean>(), sessionDataBean, userId);
+			entityGroupName=((Entity)container.getAbstractEntity()).getEntityGroup().getName();
 		}
 		else
 		{
-			CategoryInterface categoryInterface = ((CategoryEntityInterface) container
-					.getAbstractEntity()).getCategory();
-			CategoryManagerInterface categoryManager = CategoryManager.getInstance();
-			Long categoryRecordId = categoryManager.getRootCategoryEntityRecordIdByEntityRecordId(
-					recordIdentifier, categoryInterface.getRootCategoryElement()
-							.getTableProperties().getName());
-			isEdited = CategoryManager.getInstance().editData(
-					(CategoryEntityInterface) container.getAbstractEntity(), attributeValueMap,
-					categoryRecordId, sessionDataBean, userId);
+			entityGroupName=((CategoryEntityInterface) container.getAbstractEntity()).getEntity().getEntityGroup().getName();
 		}
-		return isEdited;
+		Map<String, Object> clientmap = new HashMap<String, Object>();
+		DataEditClient dataEditClient=new DataEditClient();
+		clientmap.put(WebUIManagerConstants.RECORD_ID, recordIdentifier);
+		clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, null);
+		clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, userId);
+		clientmap.put(WebUIManagerConstants.CONTAINER, container);
+		clientmap.put(WebUIManagerConstants.DATA_VALUE_MAP, attributeValueMap);
+		dataEditClient.setServerUrl(new URL(Variables.jbossUrl+entityGroupName+"/"));
+		dataEditClient.setParamaterObjectMap(clientmap);
+		dataEditClient.execute(null);
+
+		return true;
 	}
 
 	public Long getUserId()

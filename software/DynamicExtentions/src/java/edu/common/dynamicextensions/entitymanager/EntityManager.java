@@ -608,17 +608,23 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		HibernateDAO hibernateDAO = hibernateDao;
 		try
 		{
-			DataEntryClient client = new DataEntryClient(entity, dataValue);
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put(WebUIManagerConstants.ENTITY, entity);
-			map.put(WebUIManagerConstants.DATA_VALUE_MAP, dataValue);
-			map.put(WebUIManagerConstants.FILE_RECORD_QUERY_LIST, fileRecordQueryList);
-			client.setServerUrl(new URL(Variables.jbossUrl+entity.getEntityGroup().getName()+"/"));
-			client.setParamaterObjectMap(map);
-			client.execute(null);
-			Map<String, Object> returnedMap=(Map<String, Object>)client.getObject();
-			identifier = (Long)returnedMap.get(DEConstants.IDENTIFIER);
-			fileRecordQueryList=(List<FileQueryBean>) returnedMap.get(WebUIManagerConstants.FILE_RECORD_QUERY_LIST);
+			if (hibernateDAO == null)
+			{
+				hibernateDAO = DynamicExtensionsUtility.getHibernateDAO(sessionDataBean);
+			}
+			Object newObject = createObject(entity, dataValue, hibernateDAO);
+			identifier = getObjectId(newObject);
+			List<FileQueryBean> queryListForFile = getQueryListForFileAttributes(dataValue, entity,
+					newObject);
+			if (hibernateDao == null)
+			{
+				hibernateDAO.commit();
+				executeFileRecordQueryList(queryListForFile);
+			}
+			else
+			{
+				fileRecordQueryList.addAll(queryListForFile);
+			}
 
 		}
 		catch (Exception e)
@@ -852,7 +858,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 
 			Map<AbstractAttributeInterface, Object> dataVal = (Map<AbstractAttributeInterface, Object>) dataValue;
 
-			/*String packageName = null;
+			String packageName = null;
 			packageName = getPackageName(entity, packageName);
 
 			String className = packageName + "." + entity.getName();
@@ -861,21 +867,10 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 
 			Object updatedObject = updateObject(entity, dataVal, oldObject, hibernateDAO);
 
-			isSuccess = true;*/
-
-			DataEditClient client = new DataEditClient(entity, dataVal);
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put(WebUIManagerConstants.ENTITY, entity);
-			map.put(WebUIManagerConstants.DATA_VALUE_MAP, dataValue);
-			map.put("recordId", recordId);
-			client.setServerUrl(new URL(Variables.jbossUrl+entity.getEntityGroup().getName()+"/"));
-			client.setParamaterObjectMap(map);
-			client.execute(null);
-			List<FileQueryBean> queryListForFile =(List<FileQueryBean>)client.getObject();
-
 			isSuccess = true;
-			/*List<FileQueryBean> queryListForFile = getQueryListForFileAttributes(dataVal, entity,
-					updatedObject);*/
+
+			List<FileQueryBean> queryListForFile = getQueryListForFileAttributes(dataVal, entity,
+					updatedObject);
 			if (hibernateDao == null)
 			{
 				hibernateDAO.commit();
@@ -1720,6 +1715,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.common.dynamicextensions.entitymanager.EntityManagerInterface#associateEntityRecords(edu.common.dynamicextensions.domaininterface.AssociationInterface, java.lang.Long, java.lang.Long)
+	 */
 	public void associateEntityRecords(AssociationInterface associationInterface,
 			Long sourceEntityRecordId, Long TargetEntityRecordId, SessionDataBean sessionDataBean)
 			throws DynamicExtensionsSystemException
@@ -1733,18 +1731,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	public void associateEntityRecords(AssociationInterface association, Long srcEntRecId,
 			Long tgtEntRecId) throws DynamicExtensionsSystemException
 	{
-/*		try
-		{
-*/
-/*			Object staticEntity = hibernateDAO.retrieveById(tmpPackageName
-					+ "."
-					+ association.getEntity().getName().substring(
-							association.getEntity().getName().lastIndexOf(".") + 1), srcEntRecId);
-			Object oldStaticEntity = cloner.clone(staticEntity);
-			Object dynamicEntity = hibernateDAO.retrieveById(tmpPackageName + "."
-					+ association.getTargetEntity().getName(), tgtEntRecId);
-			Object oldDynamicEntity = cloner.clone(dynamicEntity);
-*/
+
 			Map<String, Object> map = new HashMap<String, Object>();
 
 			map.put(WebUIManagerConstants.ASSOCIATION, getTempAssociation(association));
@@ -1759,17 +1746,11 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			catch (MalformedURLException e)
 			{
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new DynamicExtensionsSystemException("MalformedURLException: address not correct."+e);
 			}
 			associationClient.setParamaterObjectMap(map);
 			associationClient.execute(null);
-/*
-		}
-		catch (DAOException e)
-		{
-			throw new DynamicExtensionsSystemException(e.getMessage(), e);
-		}
-*/	}
+	}
 
 	private Object getTempAssociation(AssociationInterface association) {
 		AssociationInterface associationInterface = new Association();

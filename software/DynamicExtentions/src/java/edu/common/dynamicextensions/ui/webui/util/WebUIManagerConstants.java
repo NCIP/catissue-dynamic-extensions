@@ -97,6 +97,9 @@ public interface WebUIManagerConstants
 
 	String CONTAINER_MAP = "containerMap";
 	public final String DATA_VALUE_MAP = "dataValueMap";
+	public final String CONTAINER = "container";
+	public final String SESSION_DATA_BEAN="sessionDataBean";
+	public final String RECORD_ID="recordId";
 	public final String ENTITY = "entity";
 	public final String ATTRVSVALUES="attrVsValues";
 	public final String DYNAMIC_OBJECT_ID = "dynamicObjectId";

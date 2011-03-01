@@ -9,21 +9,13 @@ import java.util.Map;
 
 import edu.common.dynamicextensions.client.AbstractClient;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
-import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.utility.HTTPSConnection;
 
 public class DataEditClient extends AbstractClient {
 
-	public DataEditClient(EntityInterface entityInterface, Map<AbstractAttributeInterface, Object> dataValue)
-	{
-		this.entityInterface = entityInterface;
-		this.dataValue = dataValue;
-	}
-
 	private Object object;
 	Map<AbstractAttributeInterface, Object> dataValue ;
-	private final EntityInterface entityInterface;
 	@Override
 	protected void initializeResources(String[] args)
 			throws DynamicExtensionsSystemException, IOException {

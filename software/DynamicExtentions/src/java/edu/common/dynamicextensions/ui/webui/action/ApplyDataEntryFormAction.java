@@ -3,6 +3,7 @@ package edu.common.dynamicextensions.ui.webui.action;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -848,12 +849,13 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
 	 * @throws SQLException
+	 * @throws MalformedURLException
 	 */
 	private String storeParentContainer(
 			Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack,
 			Stack<ContainerInterface> containerStack, HttpServletRequest request,
 			String recordIdentifier, String isShowTemplateRecord) throws NumberFormatException,
-			DynamicExtensionsApplicationException, DynamicExtensionsSystemException, SQLException
+			DynamicExtensionsApplicationException, DynamicExtensionsSystemException, SQLException, MalformedURLException
 	{
 		String identifier = recordIdentifier;
 		Map<BaseAbstractAttributeInterface, Object> rootValueMap = valueMapStack.firstElement();
