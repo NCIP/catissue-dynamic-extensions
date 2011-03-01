@@ -1529,6 +1529,11 @@
 						<include name="DynamicExtensions.jar" />
 					</fileset>
 				</copy>
+				<copy todir="${jboss.home.dir}/server/default/deploy/${entitygroupname}.war/WEB-INF" overwrite="true">
+					<fileset dir="${de.zip.location}/dem.war/WEB-INF" >
+						<include name="web.xml" />
+					</fileset>
+				</copy>
 			</then>
 			<elseif>
 				<equals arg1="${import.xmi}" arg2="False" casesensitive="false" />
@@ -1590,6 +1595,11 @@
 					<copy todir="${jboss.home.dir}/server/default/deploy/${entitygroupname}.war/WEB-INF/lib">
 						<fileset dir="${de.zip.location}/binaries/DynamicExtensionsInterface" >
 							<include name="DynamicExtensions.jar" />
+						</fileset>
+					</copy>
+					<copy todir="${jboss.home.dir}/server/default/deploy/${entitygroupname}.war/WEB-INF" overwrite="true">
+						<fileset dir="${de.zip.location}/dem.war/WEB-INF" >
+							<include name="web.xml" />
 						</fileset>
 					</copy>
 					<copy todir="tempWar/${entitygroupname}.war/WEB-INF/lib/" file="${cacore.deployable.dir}/${entitygroupname}/${entitygroupname}.jar" overwrite="true" />
