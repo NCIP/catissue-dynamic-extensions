@@ -2932,8 +2932,7 @@ function updateServerState(controlName, controlId, containerId)
 	}
 	var controlValue = vControl.value;	
     var vPatentControl = vControl.parentNode;
-    var vParentOriginal = vPatentControl.innerHTML.split('&nbsp;&nbsp;')[0];    
-	vPatentControl.innerHTML = vParentOriginal ;	    
+    var vParentOriginal = vPatentControl.innerHTML.split('&nbsp;&nbsp;')[0];		    
     if(vControl.type=="select-multiple") // for listBox
     {
     	var newValue = controlValue;
@@ -2980,7 +2979,7 @@ function updateServerState(controlName, controlId, containerId)
 				if(vRecentControl == null)
 				{
 					vRecentControl = document.getElementsByName(controlName)[0];
-					if(vRecentControl.type=="radio")
+					if(vRecentControl.type == "radio")
 					{
 						vRecentControl.value = controlValue;
 					}
