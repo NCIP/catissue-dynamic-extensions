@@ -607,7 +607,8 @@ public final class DataValueMapUtility
 					{
 						attributeValueMapList.add(new HashMap<BaseAbstractAttributeInterface, Object>());
 					}
-					attributeValueMapList.get(rowId).put(control.getBaseAbstractAttribute(), controlValue);
+					attributeValueMapList.get(rowId).put(control.getBaseAbstractAttribute(),
+							Arrays.asList(controlValue));
 					return;
 				}
 			}
