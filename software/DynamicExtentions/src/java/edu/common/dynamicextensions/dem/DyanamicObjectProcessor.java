@@ -152,7 +152,7 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 				.get(WebUIManagerConstants.DYNAMIC_OBJECT_ID);
 		Association association = (Association) paramaterObjectMap
 				.get(WebUIManagerConstants.ASSOCIATION);
-
+		HibernateDAO hibernateDAO = getHibernateDAO();
 		String tmpPackageName = (String) paramaterObjectMap.get(WebUIManagerConstants.PACKAGE_NAME);
 
 		try
@@ -198,5 +198,20 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 			throw new DynamicExtensionsSystemException("Error in associating objects", e);
 		}
 		DynamicExtensionsUtility.closeDAO(hibernateDAO);
+	}
+	public static HibernateDAO getHibernateDAO() throws DynamicExtensionsSystemException {
+		HibernateDAO hibernateDao = null;
+		try
+		{
+			hibernateDao = (HibernateDAO) DAOConfigFactory.getInstance().getDAOFactory("dem")
+					.getDAO();
+			hibernateDao.openSession(null);
+		}
+		catch (DAOException e)
+		{
+			throw new DynamicExtensionsSystemException(
+					"Error occured while opening the DAO session", e);
+		}
+		return hibernateDao;
 	}
 }
