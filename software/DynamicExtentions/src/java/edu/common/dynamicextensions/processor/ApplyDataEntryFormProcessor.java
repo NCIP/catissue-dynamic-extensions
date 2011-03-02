@@ -182,7 +182,7 @@ public class ApplyDataEntryFormProcessor extends BaseDynamicExtensionsProcessor
 		DataEditClient dataEditClient=new DataEditClient();
 		clientmap.put(WebUIManagerConstants.RECORD_ID, recordIdentifier);
 		clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, null);
-		clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, userId);
+		clientmap.put(WebUIManagerConstants.USER_ID, userId);
 		clientmap.put(WebUIManagerConstants.CONTAINER, container);
 		clientmap.put(WebUIManagerConstants.DATA_VALUE_MAP, attributeValueMap);
 		dataEditClient.setServerUrl(new URL(Variables.jbossUrl+entityGroupName+"/"));
