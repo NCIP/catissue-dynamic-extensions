@@ -8,6 +8,10 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.dao.exception.DAOException;
 
+/**
+ * @author pathik_sheth
+ * Handles the edit functionality of DE record.
+ */
 public class DataEditHandler extends AbstractHandler
 {
 	private static final long serialVersionUID = 1L;

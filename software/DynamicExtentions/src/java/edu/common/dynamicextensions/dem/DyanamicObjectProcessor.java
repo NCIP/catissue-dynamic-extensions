@@ -8,7 +8,6 @@ import java.util.Set;
 import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
 import edu.common.dynamicextensions.domain.Association;
 import edu.common.dynamicextensions.domain.Entity;
-import edu.common.dynamicextensions.domaininterface.AbstractMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
@@ -31,6 +30,10 @@ import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.metadata.util.DyExtnObjectCloner;
 
+/**
+ * @author pathik_sheth
+ *
+ */
 public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 {
 
@@ -43,6 +46,15 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 		DynamicExtensionDAO.getInstance();
 	}
 
+
+	/**
+	 * This method will pass the changed (modified) values entered into the controls to EntityManager to update them in Database.
+	 * @param paramaterObjectMap object received from request.
+	 * @return whether object is edited or not.
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DAOException
+	 */
 	public Object editObject(Map<String, Object> paramaterObjectMap)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException,
 			DAOException
@@ -55,7 +67,9 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 		Long userId = (Long) paramaterObjectMap.get(WebUIManagerConstants.USER_ID);
 		ContainerInterface container = (ContainerInterface) paramaterObjectMap
 				.get(WebUIManagerConstants.CONTAINER);
+
 		boolean isEdited;
+
 		if (container.getAbstractEntity() instanceof EntityInterface)
 		{
 			EntityManagerInterface entityManager = EntityManager.getInstance();
@@ -81,6 +95,13 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 		return isEdited;
 	}
 
+	/**
+	 * This method will pass the values entered into the controls to EntityManager to insert them in Database.
+	 * @param paramaterObjectMap object received from request.
+	 * @return identifier of the inserted object.
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
+	 */
 	public Long insertDataEntryForm(Map<String, Object> paramaterObjectMap)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
@@ -91,7 +112,9 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 		Long userId = (Long) paramaterObjectMap.get(WebUIManagerConstants.USER_ID);
 		ContainerInterface container = (ContainerInterface) paramaterObjectMap
 				.get(WebUIManagerConstants.CONTAINER);
+
 		Long recordIdentifier = null;
+
 		if (container.getAbstractEntity() instanceof CategoryEntityInterface)
 		{
 			CategoryInterface categoryInterface = ((CategoryEntityInterface) container
@@ -115,6 +138,12 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 		return recordIdentifier;
 	}
 
+	/**
+	 * Associate dynamic record with static entity.
+	 * @param paramaterObjectMap object received from request.
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
+	 */
 	public void associateObjects(Map<String, Object> paramaterObjectMap)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
@@ -169,12 +198,5 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 			throw new DynamicExtensionsSystemException("Error in associating objects", e);
 		}
 		DynamicExtensionsUtility.closeDAO(hibernateDAO);
-	}
-
-	@Override
-	protected void logFatalError(Exception exception, AbstractMetadataInterface abstrMetadata)
-	{
-		// TODO Auto-generated method stub
-
 	}
 }

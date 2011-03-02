@@ -1,4 +1,4 @@
-package edu.common.dynamicextensions.entitymanager;
+package edu.common.dynamicextensions.client;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -7,19 +7,18 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Map;
 
-import edu.common.dynamicextensions.client.AbstractClient;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.utility.HTTPSConnection;
 
-public class DataEditClient extends AbstractClient {
+public class DataEntryClient extends AbstractClient {
 
 	private Object object;
 	Map<AbstractAttributeInterface, Object> dataValue ;
 	@Override
 	protected void initializeResources(String[] args)
 			throws DynamicExtensionsSystemException, IOException {
-		serverUrl = new URL(serverUrl+"DataEditHandler");
+		serverUrl = new URL(serverUrl+"DataEntryHandler");
 	}
 
 	@Override

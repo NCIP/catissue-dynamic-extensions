@@ -8,6 +8,10 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
 
+/**
+ * @author pathik_sheth
+ * Handles the insert functionality of DE record.
+ */
 public class DataEntryHandler extends AbstractHandler {
 	private static final Logger LOGGER = Logger.getCommonLogger(DataEntryHandler.class);
 

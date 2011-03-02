@@ -70,8 +70,11 @@ public abstract class AbstractBaseMetadataManager
 	 * @param exception The exception that took place.
 	 * @param abstrMetadata Entity for which data tables are out of sync.
 	 */
-	protected abstract void logFatalError(Exception exception,
-			AbstractMetadataInterface abstrMetadata);
+	protected void logFatalError(Exception exception,
+			AbstractMetadataInterface abstrMetadata)
+	{
+
+	}
 
 	/**
 	 * This method is called when there any exception occurs while generating

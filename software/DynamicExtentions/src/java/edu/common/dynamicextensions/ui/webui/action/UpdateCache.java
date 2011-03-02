@@ -31,7 +31,6 @@ public class UpdateCache extends HttpServlet
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-	protected Map<String, Object> paramaterObjectMap;
 	/** logger for information. */
 	protected static final Logger LOGGER = Logger.getCommonLogger(UpdateCache.class);
 
@@ -42,23 +41,23 @@ public class UpdateCache extends HttpServlet
 		try
 		{
 			// 1: get entity group id to be updated from request
-			paramaterObjectMap = AbstractHandler.readParameterMapFromRequest(req);
+			Map<String, Object> paramaterObjectMap = AbstractHandler.readParameterMapFromRequest(req);
 
 			String operation = (String) paramaterObjectMap.get(WebUIManagerConstants.OPERATION);
 			LOGGER.info("Cache operation:" + operation);
 
 			if (WebUIManagerConstants.UPDATE_CACHE.endsWith(operation))
 			{
-				updateCache();
+				updateCache(paramaterObjectMap);
 			}
 			else if (WebUIManagerConstants.LOCK_FORMS.endsWith(operation))
 			{
-				lockForms();
-				lockEntity();
+				lockForms(paramaterObjectMap);
+				lockEntity(paramaterObjectMap);
 			}
 			else if (WebUIManagerConstants.RELEASE_FORMS.endsWith(operation))
 			{
-				relaseForms();
+				relaseForms(paramaterObjectMap);
 			}
 		}
 		catch (DynamicExtensionsApplicationException e)
@@ -71,7 +70,7 @@ public class UpdateCache extends HttpServlet
 		}
 	}
 
-	private void lockEntity() throws DynamicExtensionsSystemException
+	private void lockEntity(Map<String, Object> paramaterObjectMap) throws DynamicExtensionsSystemException
 	{
 		EntityGroupInterface entityGroupInterface = (EntityGroupInterface) paramaterObjectMap
 				.get(WebUIManagerConstants.ENTITY_GROUP);
@@ -79,7 +78,7 @@ public class UpdateCache extends HttpServlet
 		LOGGER.info("All Entities Locked successfully");
 	}
 
-	private void relaseForms() throws DynamicExtensionsSystemException
+	private void relaseForms(Map<String, Object> paramaterObjectMap) throws DynamicExtensionsSystemException
 	{
 		EntityGroupInterface entityGroupInterface = (EntityGroupInterface) paramaterObjectMap
 				.get(WebUIManagerConstants.ENTITY_GROUP);
@@ -88,7 +87,7 @@ public class UpdateCache extends HttpServlet
 		LOGGER.info("Release forms successfully");
 	}
 
-	private void lockForms() throws DynamicExtensionsSystemException
+	private void lockForms(Map<String, Object> paramaterObjectMap) throws DynamicExtensionsSystemException
 	{
 		EntityGroupInterface entityGroupInterface = (EntityGroupInterface) paramaterObjectMap
 				.get(WebUIManagerConstants.ENTITY_GROUP);
@@ -97,7 +96,7 @@ public class UpdateCache extends HttpServlet
 		LOGGER.info("Locked forms successfully");
 	}
 
-	private void updateCache() throws DynamicExtensionsSystemException
+	private void updateCache(Map<String, Object> paramaterObjectMap) throws DynamicExtensionsSystemException
 	{
 		// 2: refresh entity cache with latest version of the updated entity
 		// group
