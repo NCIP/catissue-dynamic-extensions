@@ -1529,11 +1529,17 @@
 						<include name="DynamicExtensions.jar" />
 					</fileset>
 				</copy>
+				<copy todir="${jboss.home.dir}/server/default/deploy/${entitygroupname}.war/WEB-INF/classes" overwrite="true">
+					<fileset dir="${de.zip.location}/dem.war/WEB-INF/classes" >
+						<include name="DynamicExtensionDAO.properties" />
+					</fileset>
+				</copy>
 				<copy todir="${jboss.home.dir}/server/default/deploy/${entitygroupname}.war/WEB-INF" overwrite="true">
 					<fileset dir="${de.zip.location}/dem.war/WEB-INF" >
 						<include name="web.xml" />
 					</fileset>
 				</copy>
+				
 			</then>
 			<elseif>
 				<equals arg1="${import.xmi}" arg2="False" casesensitive="false" />
@@ -1597,6 +1603,11 @@
 							<include name="DynamicExtensions.jar" />
 						</fileset>
 					</copy>
+					<copy todir="${jboss.home.dir}/server/default/deploy/${entitygroupname}.war/WEB-INF/classes" overwrite="true">
+						<fileset dir="${de.zip.location}/dem.war/WEB-INF/classes" >
+							<include name="DynamicExtensionDAO.properties" />
+						</fileset>
+				    </copy>
 					<copy todir="${jboss.home.dir}/server/default/deploy/${entitygroupname}.war/WEB-INF" overwrite="true">
 						<fileset dir="${de.zip.location}/dem.war/WEB-INF" >
 							<include name="web.xml" />
