@@ -25,6 +25,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang.WordUtils;
 
+import edu.common.dynamicextensions.client.DataAssociationClient;
 import edu.common.dynamicextensions.domain.AbstractAttribute;
 import edu.common.dynamicextensions.domain.Association;
 import edu.common.dynamicextensions.domain.Attribute;
