@@ -63,7 +63,6 @@ public class PackageName
 			}
 
 			String packageName = getPackageNameFromTaggedValues(entityName);
-
 			final int start = packageName.lastIndexOf('.');
 			String packageEntityName = packageName; // NOPMD
 			if (start != -1)
@@ -71,10 +70,11 @@ public class PackageName
 				packageEntityName = packageName.substring(packageName.lastIndexOf('.') + 1, packageName.length());
 
 				final StringBuffer tempPackageName = new StringBuffer(packageName.substring(0,
-						packageName.indexOf('.') + 1));
+						packageName.indexOf('.')));
 				packageName = packageName.substring(packageName.indexOf('.') + 1, packageName.length());
 				if (packageName.indexOf('.') != -1)
 				{
+					tempPackageName.append('.');
 					tempPackageName.append(packageName.substring(0, packageName.indexOf('.')));
 				}
 				packageName = tempPackageName.toString().replace('.', '/');
