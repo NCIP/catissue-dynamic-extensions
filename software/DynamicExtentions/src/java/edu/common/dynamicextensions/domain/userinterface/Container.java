@@ -529,10 +529,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 		{
 			control.setDataEntryOperation(dataEntryOperation);
 			final Object value = containerValueMap.get(control.getBaseAbstractAttribute());
-			if(containerValueMap.get(control.getBaseAbstractAttribute())==null && control.getBaseAbstractAttribute() instanceof AttributeMetadataInterface)
-			{
-				containerValueMap.put(control.getBaseAbstractAttribute(),((AttributeMetadataInterface)control.getBaseAbstractAttribute()).getDefaultValue((Date)this.getContextParameter(Constants.ENCOUNTER_DATE)));
-			}
+
 			control.setValue(value);
 		}
 		SkipLogic skipLogic = EntityCache.getInstance().getSkipLogicByContainerIdentifier(id);

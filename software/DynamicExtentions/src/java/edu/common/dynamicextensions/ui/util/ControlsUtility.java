@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 import edu.common.dynamicextensions.domain.BooleanAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.CategoryAttribute;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
+import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.userinterface.ListBox;
 import edu.common.dynamicextensions.domain.userinterface.SelectControl;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
@@ -136,7 +137,7 @@ public class ControlsUtility
 						defaultValue = getDefaultDate(dateAttribute);
 					}
 				}
-				else
+				else if(!(abstractAttributeType instanceof FileAttributeTypeInformation))
 				{
 					StringTypeInformationInterface stringAttribute = (StringTypeInformationInterface) abstractAttributeType;
 					if (stringAttribute != null)
