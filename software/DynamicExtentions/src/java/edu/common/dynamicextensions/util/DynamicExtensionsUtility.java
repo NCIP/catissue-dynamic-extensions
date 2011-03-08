@@ -2845,24 +2845,32 @@ public class DynamicExtensionsUtility
 			String serverHost=props.getProperty("jboss.server.host");
 			String serverPrototype=props.getProperty("jboss.secure");
 			String serverPort=props.getProperty("jboss.server.port");
-			if(serverHost==null || serverHost.trim().equals(""))
-			{
-				serverHost="localhost";
-			}
 			if(serverPrototype==null || "".equals(serverPrototype.trim()) || "true".equalsIgnoreCase(serverPrototype.trim()))
 			{
-				serverPrototype="https";
+				serverUrl.append("https");
 			}
 			else
 			{
-				serverPrototype="http";
+				serverUrl.append("http");
 			}
-			if(serverPort==null || serverPort.trim().equals(""))
+			if(serverHost==null || serverHost.trim().equals(""))
 			{
-				serverPort="8080";
+				serverUrl.append("localhost://");
+			}
+			else
+			{
+				serverUrl.append(serverPrototype).append("://");
 			}
 
-			Variables.jbossUrl=serverUrl.append(serverPrototype).append("://").append(serverHost).append(":").append(serverPort).append("/").toString();
+			if(serverPort!=null)
+			{
+				if(!"".equals(serverPort.trim()))
+				{
+					serverUrl.append(":").append(serverPort);
+				}
+			}
+
+			Variables.jbossUrl=serverUrl.append("/").toString();
 			Variables.serverUrl=props.getProperty("Application.url");
 			stream.close();
 		}
