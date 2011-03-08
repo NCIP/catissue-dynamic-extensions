@@ -100,13 +100,10 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 		{
 			this.bulkOperationClass = new BulkOperationClass();
 		}
-		this.bulkOperationClass.setRoleName(BLANK_SPACE);
-		this.bulkOperationClass.setBatchSize(BATCH_SIZE);
+		setCommonAttributes(this.bulkOperationClass);
+
 		this.bulkOperationClass.setCardinality(DEConstants.Cardinality.ONE.getValue().toString());
-		this.bulkOperationClass.setTemplateName(this.category.getName());
 		this.bulkOperationClass.setMaxNoOfRecords(MAX_RECORD);
-		this.bulkOperationClass.setParentRoleName(BLANK_SPACE);
-		this.bulkOperationClass.setRelationShipType(CONTAINMENT);
 		this.bulkOperationClass.setClassName(appendRootCategoryEntityName(rootCategoryEntity
 				.getName()));
 
@@ -149,21 +146,24 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 			CategoryAssociationInterface categoryAssociation)
 	{
 		BulkOperationClass subBulkOperationClass = new BulkOperationClass();
-		StringBuffer className = new StringBuffer();
 
-		subBulkOperationClass.setRoleName(BLANK_SPACE);
-		subBulkOperationClass.setBatchSize(BATCH_SIZE);
-		subBulkOperationClass.setTemplateName(this.category.getName());
-		subBulkOperationClass.setParentRoleName(BLANK_SPACE);
-		subBulkOperationClass.setRelationShipType(CONTAINMENT);
+		setCommonAttributes(subBulkOperationClass);
+
 		setCardinality(categoryAssociation, subBulkOperationClass);
 		setMaxNumberOfRecords(subBulkOperationClass);
-
-		updateCatgeoryEntityName(categoryAssociation, className);
-		subBulkOperationClass.setClassName(className.toString());
+		subBulkOperationClass.setClassName(updateCatgeoryEntityName(categoryAssociation));
 
 		return subBulkOperationClass;
 
+	}
+
+	private void setCommonAttributes(BulkOperationClass subBulkOperationClass)
+	{
+		subBulkOperationClass.setRoleName(BLANK_SPACE);
+		subBulkOperationClass.setBatchSize(BATCH_SIZE);
+		subBulkOperationClass.setParentRoleName(BLANK_SPACE);
+		subBulkOperationClass.setRelationShipType(CONTAINMENT);
+		subBulkOperationClass.setTemplateName(this.category.getName());
 	}
 
 	/**
@@ -238,9 +238,9 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 	 * @param catAssociation object of the category association.
 	 * @param className buffer to store the updated category name.
 	 */
-	private void updateCatgeoryEntityName(CategoryAssociationInterface catAssociation,
-			StringBuffer className)
+	private String updateCatgeoryEntityName(CategoryAssociationInterface catAssociation)
 	{
+		StringBuffer className = new StringBuffer();
 		PathAssociationRelationInterface assocRelation = (PathAssociationRelationInterface) catAssociation
 				.getTargetCategoryEntity().getPath().getPathAssociationRelationCollection()
 				.toArray()[0];
@@ -257,6 +257,7 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 							DEConstants.CLOSING_SQUARE_BRACKET).append(ARROW_OPERATOR);
 		}
 		replaceLastDelimiter(className, ARROW_OPERATOR);
+		return className.toString();
 	}
 
 	/**
@@ -292,10 +293,12 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 	}
 
 	/**
-	 * 
+	 *
 	 * @param pathname
-	 * @throws IOException 
+	 * @throws IOException
+	 *
 	 */
+	@Deprecated
 	private void replaceWord(String pathname) throws IOException
 	{
 		String line = "";
@@ -325,20 +328,20 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 	public void generateXMLAndCSVTemplate(String baseDir, String xmlFilePath, String mappingXML)
 			throws DynamicExtensionsSystemException, BulkOperationException
 	{
+		//Step1:
 		iterateCategory(this.bulkOperationClass);
-		BulkOperationMetadataUtil metadataUtil = new BulkOperationMetadataUtil();
-		final BulkOperationMetaData bulkMetaData = metadataUtil.unmarshall(xmlFilePath, mappingXML);
-		BulkOperationClass rootBulkOperationClass = bulkMetaData.getBulkOperationClass().iterator()
-				.next();
-		final BulkOperationClass deCategoryBulkOperationClass = rootBulkOperationClass
-				.getDynExtCategoryAssociationCollection().iterator().next();
-		deCategoryBulkOperationClass.setTemplateName(this.bulkOperationClass.getTemplateName());
-		deCategoryBulkOperationClass.setClassName(this.bulkOperationClass.getTemplateName());
-		deCategoryBulkOperationClass.getContainmentAssociationCollection().add(
-				this.bulkOperationClass);
-		rootBulkOperationClass.setTemplateName(this.bulkOperationClass.getTemplateName());
-		bulkMetaData.getBulkOperationClass().removeAll(bulkMetaData.getBulkOperationClass());
-		bulkMetaData.getBulkOperationClass().add(rootBulkOperationClass);
+		//Step2:
+		final BulkOperationMetaData bulkMetaData = appnedCategoryTemplate(xmlFilePath, mappingXML);
+		//Step3:
+		File newDir = saveTemplateCopy(baseDir, mappingXML, bulkMetaData);
+		//Step4:
+		createCSVTemplate(bulkMetaData, new File(newDir + File.separator
+				+ this.bulkOperationClass.getTemplateName() + DEConstants.CSV_SUFFIX));
+	}
+
+	private File saveTemplateCopy(String baseDir, String mappingXML,
+			final BulkOperationMetaData bulkMetaData) throws DynamicExtensionsSystemException
+	{
 		File newDir = new File(baseDir + File.separator + DEConstants.TEMPLATE_DIR);
 		if (!newDir.exists())
 		{
@@ -357,8 +360,26 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 			throw new DynamicExtensionsSystemException(
 					"Error while creating XML template for Bulk operation.", exception);
 		}
-		createCSVTemplate(bulkMetaData, new File(newDir + File.separator
-				+ this.bulkOperationClass.getTemplateName() + DEConstants.CSV_SUFFIX));
+		return newDir;
+	}
+
+	private BulkOperationMetaData appnedCategoryTemplate(String xmlFilePath, String mappingXML)
+			throws BulkOperationException
+	{
+		BulkOperationMetadataUtil metadataUtil = new BulkOperationMetadataUtil();
+		final BulkOperationMetaData bulkMetaData = metadataUtil.unmarshall(xmlFilePath, mappingXML);
+		BulkOperationClass rootBulkOperationClass = bulkMetaData.getBulkOperationClass().iterator()
+				.next();
+		final BulkOperationClass deCategoryBulkOperationClass = rootBulkOperationClass
+				.getDynExtCategoryAssociationCollection().iterator().next();
+		deCategoryBulkOperationClass.setTemplateName(this.bulkOperationClass.getTemplateName());
+		deCategoryBulkOperationClass.setClassName(this.bulkOperationClass.getTemplateName());
+		deCategoryBulkOperationClass.getContainmentAssociationCollection().add(
+				this.bulkOperationClass);
+		rootBulkOperationClass.setTemplateName(this.bulkOperationClass.getTemplateName());
+		bulkMetaData.getBulkOperationClass().removeAll(bulkMetaData.getBulkOperationClass());
+		bulkMetaData.getBulkOperationClass().add(rootBulkOperationClass);
+		return bulkMetaData;
 	}
 
 	/**
