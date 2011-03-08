@@ -2847,19 +2847,19 @@ public class DynamicExtensionsUtility
 			String serverPort=props.getProperty("jboss.server.port");
 			if(serverPrototype==null || "".equals(serverPrototype.trim()) || "true".equalsIgnoreCase(serverPrototype.trim()))
 			{
-				serverUrl.append("https");
+				serverUrl.append("https://");
 			}
 			else
 			{
-				serverUrl.append("http");
+				serverUrl.append("http://");
 			}
 			if(serverHost==null || serverHost.trim().equals(""))
 			{
-				serverUrl.append("localhost://");
+				serverUrl.append("localhost");
 			}
 			else
 			{
-				serverUrl.append(serverPrototype).append("://");
+				serverUrl.append(serverHost);
 			}
 
 			if(serverPort!=null)
