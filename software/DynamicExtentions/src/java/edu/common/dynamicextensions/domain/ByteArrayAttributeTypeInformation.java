@@ -9,8 +9,8 @@ import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 /**
  * @version 1.0
  * @created 28-Sep-2006 12:20:07 PM
- * @hibernate.joined-subclass table="DYEXTN_BYTE_ARRAY_TYPE_INFO" 
- * @hibernate.joined-subclass-key column="IDENTIFIER" 
+ * @hibernate.joined-subclass table="DYEXTN_BYTE_ARRAY_TYPE_INFO"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  */
 public class ByteArrayAttributeTypeInformation extends AttributeTypeInformation
 		implements
@@ -29,7 +29,7 @@ public class ByteArrayAttributeTypeInformation extends AttributeTypeInformation
 
 	/**
 	 * This method returns the Content type of the binary data (or file), e.g. JPG, DOC etc..
-	 * @hibernate.property name="contentType" type="string" column="CONTENT_TYPE" 
+	 * @hibernate.property name="contentType" type="string" column="CONTENT_TYPE"
 	 * @return the Content type of the binary data (or file).
 	 */
 	public String getContentType()
@@ -53,7 +53,7 @@ public class ByteArrayAttributeTypeInformation extends AttributeTypeInformation
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public PermissibleValueInterface getPermissibleValueForString(String value)
 	{
@@ -70,4 +70,5 @@ public class ByteArrayAttributeTypeInformation extends AttributeTypeInformation
 		return Clob.class;
 	}
 
+	
 }

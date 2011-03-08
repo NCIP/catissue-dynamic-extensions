@@ -66,4 +66,10 @@ public interface AttributeTypeInformationInterface
 	 * @throws ParseException exception.
 	 */
 	PermissibleValueInterface getPermissibleValueForString(String value) throws ParseException;
+
+	/**
+	 * @return default value converted to string
+	 *
+	 */
+	String getDefaultValueAsString();
 }

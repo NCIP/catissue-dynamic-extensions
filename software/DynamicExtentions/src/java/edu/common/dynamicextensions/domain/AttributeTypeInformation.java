@@ -178,4 +178,12 @@ public abstract class AttributeTypeInformation extends DynamicExtensionBaseDomai
 	public abstract PermissibleValueInterface getPermissibleValueForString(String value)
 			throws ParseException;
 
+	/* Null value is returned for attributes of type File,Object and Byte array
+	 * @see edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface#getDefaultValueAsString()
+	 */
+	public String getDefaultValueAsString()
+	{
+		return null;
+	}
+
 }

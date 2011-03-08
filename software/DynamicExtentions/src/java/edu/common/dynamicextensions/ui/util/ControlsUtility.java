@@ -22,7 +22,6 @@ import java.util.ResourceBundle;
 import edu.common.dynamicextensions.domain.BooleanAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.CategoryAttribute;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
-import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.userinterface.ListBox;
 import edu.common.dynamicextensions.domain.userinterface.SelectControl;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
@@ -31,24 +30,18 @@ import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
-import edu.common.dynamicextensions.domaininterface.BooleanTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.BooleanValueInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.DataElementInterface;
 import edu.common.dynamicextensions.domaininterface.DateTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.DateValueInterface;
-import edu.common.dynamicextensions.domaininterface.DoubleTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.DoubleValueInterface;
-import edu.common.dynamicextensions.domaininterface.FloatTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.FloatValueInterface;
-import edu.common.dynamicextensions.domaininterface.IntegerTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.IntegerValueInterface;
-import edu.common.dynamicextensions.domaininterface.LongTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.LongValueInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.SkipLogicAttributeInterface;
-import edu.common.dynamicextensions.domaininterface.StringTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.StringValueInterface;
 import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
@@ -72,238 +65,6 @@ import edu.wustl.common.util.global.CommonServiceLocator;
 public class ControlsUtility
 {
 
-	/**
-	 * This method returns the default value of the PrimitiveAttribute for
-	 * displaying in corresponding controls on UI.
-	 *
-	 * @param abstractAttribute
-	 *            the PrimitiveAttribute
-	 * @return the Default Value of the PrimitiveAttribute
-	 */
-	public static String getDefaultValue(AbstractAttributeInterface abstractAttribute)
-	{
-		String defaultValue = null;
-		if (abstractAttribute instanceof AttributeInterface)
-		{
-			AttributeTypeInformationInterface abstractAttributeType = ((AttributeInterface) abstractAttribute)
-					.getAttributeTypeInformation();
-			if (abstractAttributeType != null)
-			{
-				if (abstractAttributeType instanceof BooleanTypeInformationInterface)
-				{
-					BooleanTypeInformationInterface booleanAttribute = (BooleanTypeInformationInterface) abstractAttributeType;
-					if (booleanAttribute != null)
-					{
-						defaultValue = getDefaultBoolean(booleanAttribute);
-					}
-				}
-				else if (abstractAttributeType instanceof IntegerTypeInformationInterface)
-				{
-					IntegerTypeInformationInterface integerAttribute = (IntegerTypeInformationInterface) abstractAttributeType;
-					if (integerAttribute != null)
-					{
-						defaultValue = getDefaultInteger(integerAttribute);
-					}
-				}
-				else if (abstractAttributeType instanceof LongTypeInformationInterface)
-				{
-					LongTypeInformationInterface longAttribute = (LongTypeInformationInterface) abstractAttributeType;
-					if (longAttribute != null)
-					{
-						defaultValue = getDefaultLong(longAttribute);
-					}
-				}
-				else if (abstractAttributeType instanceof DoubleTypeInformationInterface)
-				{
-					DoubleTypeInformationInterface doubleAttribute = (DoubleTypeInformationInterface) abstractAttributeType;
-					if (doubleAttribute != null)
-					{
-						defaultValue = getDefaultDouble(doubleAttribute);
-					}
-				}
-				else if (abstractAttributeType instanceof FloatTypeInformationInterface)
-				{
-					FloatTypeInformationInterface floatAttribute = (FloatTypeInformationInterface) abstractAttributeType;
-					if (floatAttribute != null)
-					{
-						defaultValue = getDefaultFloat(floatAttribute);
-					}
-				}
-				else if (abstractAttributeType instanceof DateTypeInformationInterface)
-				{
-					DateTypeInformationInterface dateAttribute = (DateTypeInformationInterface) abstractAttributeType;
-					if (dateAttribute != null)
-					{
-						defaultValue = getDefaultDate(dateAttribute);
-					}
-				}
-				else if(!(abstractAttributeType instanceof FileAttributeTypeInformation))
-				{
-					StringTypeInformationInterface stringAttribute = (StringTypeInformationInterface) abstractAttributeType;
-					if (stringAttribute != null)
-					{
-						defaultValue = getDefaultString(stringAttribute);
-					}
-				}
-			}
-		}
-		return defaultValue;
-	}
-
-	/**
-	 * Gets the default string.
-	 *
-	 * @param stringAttribute
-	 *            the string attribute
-	 * @return the default string
-	 */
-	private static String getDefaultString(StringTypeInformationInterface stringAttribute)
-	{
-		String defaultValue = null;
-		StringValueInterface stringValue = (StringValueInterface) stringAttribute.getDefaultValue();
-		if (stringValue != null)
-		{
-			defaultValue = stringValue.getValue();
-		}
-		return defaultValue;
-	}
-
-	/**
-	 * Gets the default boolean.
-	 *
-	 * @param booleanAttribute
-	 *            the boolean attribute
-	 * @return the default boolean
-	 */
-	private static String getDefaultBoolean(BooleanTypeInformationInterface booleanAttribute)
-	{
-		String defaultValue = null;
-		BooleanValueInterface booleanValue = (BooleanValueInterface) booleanAttribute
-				.getDefaultValue();
-		if (booleanValue != null)
-		{
-			Boolean defaultBoolean = booleanValue.getValue();
-			if (defaultBoolean != null)
-			{
-				defaultValue = defaultBoolean.toString();
-			}
-		}
-		return defaultValue;
-	}
-
-	/**
-	 * Gets the default integer.
-	 *
-	 * @param integerAttribute
-	 *            the integer attribute
-	 * @return the default integer
-	 */
-	private static String getDefaultInteger(IntegerTypeInformationInterface integerAttribute)
-	{
-		String defaultValue = null;
-		IntegerValueInterface integerValue = (IntegerValueInterface) integerAttribute
-				.getDefaultValue();
-		if (integerValue != null)
-		{
-			Integer defaultInteger = integerValue.getValue();
-			if (defaultInteger != null)
-			{
-				defaultValue = defaultInteger.toString();
-			}
-		}
-		return defaultValue;
-	}
-
-	/**
-	 * Gets the default long.
-	 *
-	 * @param longAttribute
-	 *            the long attribute
-	 * @return the default long
-	 */
-	private static String getDefaultLong(LongTypeInformationInterface longAttribute)
-	{
-		String defaultValue = null;
-		LongValueInterface longValue = (LongValueInterface) longAttribute.getDefaultValue();
-		if (longValue != null)
-		{
-			Long defaultLong = longValue.getValue();
-			if (defaultLong != null)
-			{
-				defaultValue = defaultLong.toString();
-			}
-		}
-		return defaultValue;
-	}
-
-	/**
-	 * Gets the default double.
-	 *
-	 * @param doubleAttribute
-	 *            the double attribute
-	 * @return the default double
-	 */
-	private static String getDefaultDouble(DoubleTypeInformationInterface doubleAttribute)
-	{
-		String defaultValue = null;
-		DoubleValueInterface doubleValue = (DoubleValueInterface) doubleAttribute.getDefaultValue();
-		if (doubleValue != null)
-		{
-			Double defaultDouble = doubleValue.getValue();
-			if (defaultDouble != null)
-			{
-				defaultValue = defaultDouble.toString();
-			}
-		}
-		return defaultValue;
-	}
-
-	/**
-	 * Gets the default float.
-	 *
-	 * @param floatAttribute
-	 *            the float attribute
-	 * @return the default float
-	 */
-	private static String getDefaultFloat(FloatTypeInformationInterface floatAttribute)
-	{
-		String defaultValue = null;
-		FloatValueInterface floatValue = (FloatValueInterface) floatAttribute.getDefaultValue();
-		if (floatValue != null)
-		{
-			Float defaultFloat = floatValue.getValue();
-			if (defaultFloat != null)
-			{
-				defaultValue = defaultFloat.toString();
-			}
-		}
-		return defaultValue;
-	}
-
-	/**
-	 * Gets the default date.
-	 *
-	 * @param dateAttribute
-	 *            the date attribute
-	 * @return the default date
-	 */
-	private static String getDefaultDate(DateTypeInformationInterface dateAttribute)
-	{
-		String defaultValue = null;
-		DateValueInterface dateValue = (DateValueInterface) dateAttribute.getDefaultValue();
-
-		if (dateValue != null)
-		{
-			Date defaultDate = dateValue.getValue();
-			if (defaultDate != null)
-			{
-				Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
-				defaultValue = new SimpleDateFormat(getDateFormat(dateAttribute), locale)
-						.format(defaultDate);
-			}
-		}
-		return defaultValue;
-	}
 
 	/**
 	 * This method returns the prescribed date format for the given

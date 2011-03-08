@@ -309,7 +309,7 @@ public class Attribute extends AbstractAttribute
 
 	public String getDefaultValue(Date encounterDate)
 	{
-		return ControlsUtility.getDefaultValue(this);
+		return this.attributeTypeInformationCollection.iterator().next().getDefaultValueAsString();
 
 	}
 

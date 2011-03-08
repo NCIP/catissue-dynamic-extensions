@@ -87,4 +87,19 @@ public class StringAttributeTypeInformation extends AttributeTypeInformation
 		return String.class;
 	}
 
+	public String getDefaultValueAsString()
+	{
+		String defaultValue = null;
+		StringValueInterface stringValue = (StringValueInterface) getDefaultValue();
+		if (stringValue != null)
+		{
+			String defaultString = stringValue.getValue();
+			if (defaultString != null)
+			{
+				defaultValue = defaultString.toString();
+			}
+		}
+		return defaultValue;
+	}
+
 }

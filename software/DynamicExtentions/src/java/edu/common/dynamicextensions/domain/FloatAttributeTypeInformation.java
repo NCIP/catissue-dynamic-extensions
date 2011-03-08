@@ -11,8 +11,8 @@ import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterfac
 
 /**
  * This Class represent the Floating value Attribute of the Entity.
- * @hibernate.joined-subclass table="DYEXTN_FLOAT_TYPE_INFO" 
- * @hibernate.joined-subclass-key column="IDENTIFIER"  
+ * @hibernate.joined-subclass table="DYEXTN_FLOAT_TYPE_INFO"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  * @author sujay_narkar
  */
 public class FloatAttributeTypeInformation extends NumericAttributeTypeInformation
@@ -20,7 +20,7 @@ public class FloatAttributeTypeInformation extends NumericAttributeTypeInformati
 			FloatTypeInformationInterface
 {
 
-	/** 
+	/**
 	 * @see edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface#getDataType()
 	 */
 	public String getDataType()
@@ -30,7 +30,7 @@ public class FloatAttributeTypeInformation extends NumericAttributeTypeInformati
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public PermissibleValueInterface getPermissibleValueForString(String value)
 	{
@@ -42,7 +42,7 @@ public class FloatAttributeTypeInformation extends NumericAttributeTypeInformati
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public String getFormattedValue(Double value)
 	{
@@ -74,5 +74,20 @@ public class FloatAttributeTypeInformation extends NumericAttributeTypeInformati
 	{
 		// TODO Auto-generated method stub
 		return Float.class;
+	}
+
+	public String getDefaultValueAsString()
+	{
+		String defaultValue = null;
+		FloatValueInterface floatValue = (FloatValueInterface) getDefaultValue();
+		if (floatValue != null)
+		{
+			Float defaultFloat = floatValue.getValue();
+			if (defaultFloat != null)
+			{
+				defaultValue = defaultFloat.toString();
+			}
+		}
+		return defaultValue;
 	}
 }

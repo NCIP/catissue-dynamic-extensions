@@ -74,4 +74,19 @@ public class DoubleAttributeTypeInformation extends NumericAttributeTypeInformat
 	{
 		return Double.class;
 	}
+
+	public String getDefaultValueAsString()
+	{
+		String defaultValue = null;
+		DoubleValueInterface doubleValue = (DoubleValueInterface)getDefaultValue();
+		if (doubleValue != null)
+		{
+			Double defaultDouble = doubleValue.getValue();
+			if (defaultDouble != null)
+			{
+				defaultValue = defaultDouble.toString();
+			}
+		}
+		return defaultValue;
+	}
 }

@@ -2,7 +2,9 @@
 package edu.common.dynamicextensions.domain;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import edu.common.dynamicextensions.domaininterface.DateTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.DateValueInterface;
@@ -11,6 +13,7 @@ import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterfac
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.util.Utility;
+import edu.wustl.common.util.global.CommonServiceLocator;
 
 /**
  * @version 1.0
@@ -118,6 +121,24 @@ public class DateAttributeTypeInformation extends AttributeTypeInformation
 	public Class getAttributeDataType()
 	{
 		return Date.class;
+	}
+
+	public String getDefaultValueAsString()
+	{
+		String defaultValue = null;
+		DateValueInterface dateValue = (DateValueInterface) getDefaultValue();
+
+		if (dateValue != null)
+		{
+			Date defaultDate = dateValue.getValue();
+			if (defaultDate != null)
+			{
+				Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
+				defaultValue = new SimpleDateFormat(DynamicExtensionsUtility.getDateFormat(getFormat()), locale)
+						.format(defaultDate);
+			}
+		}
+		return defaultValue;
 	}
 
 }
