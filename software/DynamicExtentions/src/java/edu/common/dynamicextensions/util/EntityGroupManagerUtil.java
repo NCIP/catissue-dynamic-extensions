@@ -47,7 +47,7 @@ public class EntityGroupManagerUtil {
 		{
 			jdbcDAO = DynamicExtensionsUtility.getJDBCDAO();
 			resultSet = jdbcDAO.getResultSet(query, queryDataList, null);
-			if (resultSet.next())
+			while (resultSet.next())
 			{
 				catContainerId.add(resultSet.getLong(1));
 			}
