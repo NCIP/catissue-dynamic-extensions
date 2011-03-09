@@ -4,22 +4,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Set;
 
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
-import edu.common.dynamicextensions.entitymanager.AbstractMetadataManager;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.dao.JDBCDAO;
-import edu.wustl.dao.QueryWhereClause;
-import edu.wustl.dao.condition.INClause;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
-import edu.wustl.dao.util.NamedQueryParam;
 
 public class EntityGroupManagerUtil {
 
