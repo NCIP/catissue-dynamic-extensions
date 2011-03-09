@@ -215,11 +215,15 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 		final BulkOperationMetaData bulkMetaData = BOTemplateGeneratorUtility
 				.appnedCategoryTemplate(xmlFilePath, mappingXML, this.bulkOperationClass);
 		//Step3: Write this template data in a file and store it in temporary directory.
-		File newDir = BOTemplateGeneratorUtility.saveTemplateCopy(baseDir, mappingXML,
+		File newDir = BOTemplateGeneratorUtility.saveXMLTemplateCopy(baseDir, mappingXML,
 				bulkMetaData, this.bulkOperationClass);
 		//Step4: Create CSV template for existing category.
-		BOTemplateGeneratorUtility.createCSVTemplate(bulkMetaData, new File(newDir + File.separator
-				+ this.bulkOperationClass.getTemplateName() + DEConstants.CSV_SUFFIX));
+		final File csvFile = new File(newDir + File.separator
+				+ this.bulkOperationClass.getTemplateName() + DEConstants.CSV_SUFFIX);
+		final String csvTemplateString = BOTemplateGeneratorUtility.createCSVTemplate(bulkMetaData,
+				csvFile);
+		//Step5: Save CSV template for existing category.
+		BOTemplateGeneratorUtility.saveCSVTemplateCopy(csvFile, csvTemplateString);
 	}
 
 	/**

@@ -168,7 +168,7 @@ public class BOTemplateGeneratorUtility
 	 * @param file File to write.
 	 * @throws DynamicExtensionsSystemException throws DESystemException.
 	 */
-	public static void createCSVTemplate(BulkOperationMetaData bulkMetaData, File file)
+	public static String createCSVTemplate(BulkOperationMetaData bulkMetaData, File file)
 			throws DynamicExtensionsSystemException
 	{
 		StringBuffer csvStringBuffer = new StringBuffer();
@@ -184,18 +184,7 @@ public class BOTemplateGeneratorUtility
 
 		processContainmentAssociation(csvStringBuffer, contAssoCollection, 0);
 		replaceLastDelimiter(csvStringBuffer, DEConstants.COMMA);
-
-		try
-		{
-			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-			bufferedWriter.write(csvStringBuffer.toString());
-			bufferedWriter.close();
-		}
-		catch (IOException exception)
-		{
-			throw new DynamicExtensionsSystemException(
-					"Error while creating CSV template for bulk operation.", exception);
-		}
+		return csvStringBuffer.toString();
 	}
 
 	/**
@@ -251,7 +240,7 @@ public class BOTemplateGeneratorUtility
 	 * @return File object.
 	 * @throws DynamicExtensionsSystemException throws DynamicExtensionsSystemException.
 	 */
-	public static File saveTemplateCopy(String baseDir, String mappingXML,
+	public static File saveXMLTemplateCopy(String baseDir, String mappingXML,
 			final BulkOperationMetaData bulkMetaData, BulkOperationClass bulkOperationClass)
 			throws DynamicExtensionsSystemException
 	{
@@ -273,6 +262,27 @@ public class BOTemplateGeneratorUtility
 					"Error while creating XML template for Bulk operation.", exception);
 		}
 		return newDir;
+	}
+
+	/**
+	 * @param file File to save.
+	 * @param csvString CSV string to write in a file.
+	 * @throws DynamicExtensionsSystemException throw DynamicExtensionsSystemException
+	 */
+	public static void saveCSVTemplateCopy(File file, String csvString)
+			throws DynamicExtensionsSystemException
+	{
+		try
+		{
+			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+			bufferedWriter.write(csvString);
+			bufferedWriter.close();
+		}
+		catch (IOException exception)
+		{
+			throw new DynamicExtensionsSystemException(
+					"Error while creating CSV template for bulk operation.", exception);
+		}
 	}
 
 }
