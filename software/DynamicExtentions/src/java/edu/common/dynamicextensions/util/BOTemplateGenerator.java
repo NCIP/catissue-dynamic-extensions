@@ -158,6 +158,7 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 		return subBulkOperationClass;
 
 	}
+	@Override
 	protected BulkOperationClass processMultiSelect(
 			AssociationInterface association)
 	{
@@ -166,7 +167,7 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 				.getName());
 		if(association.getTargetRole().getMaximumCardinality().getValue()==100)
 		{
-			subBulkOperationClass.setCardinality("*");
+			bulkOperationClass.setCardinality(BOTemplateGeneratorUtility.MANY);
 		}
 		else
 		{

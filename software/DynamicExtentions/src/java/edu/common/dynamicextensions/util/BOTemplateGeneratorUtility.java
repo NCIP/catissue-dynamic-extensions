@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package edu.common.dynamicextensions.util;
@@ -26,7 +26,7 @@ import edu.wustl.bulkoperator.util.BulkOperationException;
 public class BOTemplateGeneratorUtility
 {
 
-	private static final String MANY = "*";
+	public static final String MANY = "*";
 	/**
 	 * Constant for adding association between categories.
 	 */
