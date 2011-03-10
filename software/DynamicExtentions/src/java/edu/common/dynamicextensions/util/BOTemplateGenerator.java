@@ -11,6 +11,7 @@ import java.io.IOException;
 import au.com.bytecode.opencsv.CSVReader;
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.PathAssociationRelationInterface;
+import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
@@ -153,6 +154,26 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 				.getNumberOfEntries(), subBulkOperationClass);
 		BOTemplateGeneratorUtility.setMaxNumberOfRecords(subBulkOperationClass);
 		subBulkOperationClass.setClassName(updateCatgeoryEntityName(categoryAssociation));
+
+		return subBulkOperationClass;
+
+	}
+	protected BulkOperationClass processMultiSelect(
+			AssociationInterface association)
+	{
+		BulkOperationClass subBulkOperationClass = new BulkOperationClass();
+		BOTemplateGeneratorUtility.setCommonAttributes(subBulkOperationClass, this.category
+				.getName());
+		if(association.getTargetRole().getMaximumCardinality().getValue()==100)
+		{
+			subBulkOperationClass.setCardinality("*");
+		}
+		else
+		{
+			subBulkOperationClass.setCardinality(DEConstants.Cardinality.ONE.getValue().toString());
+		}
+		BOTemplateGeneratorUtility.setMaxNumberOfRecords(subBulkOperationClass);
+		subBulkOperationClass.setClassName(association.getName());
 
 		return subBulkOperationClass;
 

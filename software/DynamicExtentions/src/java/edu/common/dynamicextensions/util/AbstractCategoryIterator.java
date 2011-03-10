@@ -1,6 +1,7 @@
 
 package edu.common.dynamicextensions.util;
 
+import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
@@ -51,7 +52,19 @@ public abstract class AbstractCategoryIterator<T extends Object>
 		for (CategoryAttributeInterface attributeInterface : categoryEntity
 				.getCategoryAttributeCollection())
 		{
-			processCategoryAttribute(attributeInterface, mainObject);
+			if (attributeInterface.getAbstractAttribute() instanceof AssociationInterface)
+			{
+				AssociationInterface associationInterface = (AssociationInterface) attributeInterface
+						.getAbstractAttribute();
+				T innnerObject = processMultiSelect(associationInterface);
+				processCategoryAttribute(attributeInterface, innnerObject);
+				postprocessCategoryAssociation(innnerObject, mainObject);
+
+			}
+			else
+			{
+				processCategoryAttribute(attributeInterface, mainObject);
+			}
 		}
 		for (CategoryAssociationInterface categoryAssociation : categoryEntity
 				.getCategoryAssociationCollection())
@@ -89,4 +102,11 @@ public abstract class AbstractCategoryIterator<T extends Object>
 	 * @param mainObject T type object.
 	 */
 	protected abstract void postprocessCategoryAssociation(T innerObject, T mainObject);
+
+	/**
+	 * Process multi-select attribute.
+	 * @param associationInterface Category association.
+	 * @return  T type object.
+	 */
+	protected abstract T processMultiSelect(AssociationInterface associationInterface);
 }
