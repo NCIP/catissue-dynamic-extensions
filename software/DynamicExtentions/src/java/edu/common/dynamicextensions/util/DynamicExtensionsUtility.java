@@ -2839,39 +2839,12 @@ public class DynamicExtensionsUtility
 		"DynamicExtension.properties");
 		try
 		{
-			StringBuffer serverUrl=new StringBuffer();
 			Properties props = new Properties();
 			props.load(stream);
-			String serverHost=props.getProperty("jboss.server.host");
-			String serverPrototype=props.getProperty("jboss.secure");
-			String serverPort=props.getProperty("jboss.server.port");
-			if(serverPrototype==null || "".equals(serverPrototype.trim()) || "true".equalsIgnoreCase(serverPrototype.trim()))
-			{
-				serverUrl.append("https://");
-			}
-			else
-			{
-				serverUrl.append("http://");
-			}
-			if(serverHost==null || serverHost.trim().equals(""))
-			{
-				serverUrl.append("localhost");
-			}
-			else
-			{
-				serverUrl.append(serverHost);
-			}
-
-			if(serverPort!=null)
-			{
-				if(!"".equals(serverPort.trim()))
-				{
-					serverUrl.append(":").append(serverPort);
-				}
-			}
-
-			Variables.jbossUrl=serverUrl.append("/").toString();
 			Variables.serverUrl=props.getProperty("Application.url");
+			int lastIndex=props.getProperty("Application.url").lastIndexOf("/");
+			Variables.jbossUrl=props.getProperty("Application.url").substring(0,lastIndex);
+			Logger.out.info(Variables.jbossUrl);
 			stream.close();
 		}
 		catch (IOException exception)
