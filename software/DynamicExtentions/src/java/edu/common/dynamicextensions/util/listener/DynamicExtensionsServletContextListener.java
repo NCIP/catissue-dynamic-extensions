@@ -2,12 +2,16 @@
 package edu.common.dynamicextensions.util.listener;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.apache.commons.lang.StringUtils;
 
+import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
 import edu.common.dynamicextensions.domain.userinterface.SelectControl;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.Variables;
@@ -45,7 +49,21 @@ public class DynamicExtensionsServletContextListener implements ServletContextLi
 		{
 			LOGGER.error(ex.getMessage(), ex);
 		}
-		DynamicExtensionsUtility.initializeVariables(sce);
+
+		try
+		{
+			InputStream stream = DynamicExtensionDAO.class.getClassLoader().getResourceAsStream(
+			"DynamicExtension.properties");
+			Properties props = new Properties();
+			props.load(stream);
+			DynamicExtensionsUtility.initializeVariables(props);
+			stream.close();
+		}
+		catch (IOException e)
+		{
+			LOGGER.error("Cound not found DynamicExtension.properties.", e);
+		}
+
 		String propDirPath = sce.getServletContext().getRealPath("WEB-INF")
 				+ System.getProperty("file.separator") + "classes";
 

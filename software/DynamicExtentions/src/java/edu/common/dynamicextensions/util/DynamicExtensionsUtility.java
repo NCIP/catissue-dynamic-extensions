@@ -43,7 +43,6 @@ import java.util.regex.Pattern;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.servlet.ServletContextEvent;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -104,6 +103,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
+import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.Variables;
@@ -175,7 +175,8 @@ public class DynamicExtensionsUtility
 	 * @throws NumberFormatException
 	 * @throws DynamicExtensionsCacheException
 	 */
-	public static ContainerInterface getContainerByIdentifier(String containerIdentifier) throws DynamicExtensionsCacheException, NumberFormatException
+	public static ContainerInterface getContainerByIdentifier(String containerIdentifier)
+			throws DynamicExtensionsCacheException, NumberFormatException
 	{
 		ContainerInterface containerInterface = null;
 		if (containerIdentifier != null && !"".equals(containerIdentifier))
@@ -193,7 +194,8 @@ public class DynamicExtensionsUtility
 	 * @throws NumberFormatException
 	 * @throws DynamicExtensionsCacheException
 	 */
-	public static ContainerInterface getClonedContainerFromCache(String containerIdentifier) throws DynamicExtensionsCacheException, NumberFormatException
+	public static ContainerInterface getClonedContainerFromCache(String containerIdentifier)
+			throws DynamicExtensionsCacheException, NumberFormatException
 	{
 		ContainerInterface containerInterface = getContainerByIdentifier(containerIdentifier);
 		DyExtnObjectCloner cloner = new DyExtnObjectCloner();
@@ -2833,24 +2835,19 @@ public class DynamicExtensionsUtility
 		}
 		return attribute;
 	}
-	public static void initializeVariables(ServletContextEvent sce)
-	{
-		InputStream stream = DynamicExtensionDAO.class.getClassLoader().getResourceAsStream(
-		"DynamicExtension.properties");
-		try
-		{
-			Properties props = new Properties();
-			props.load(stream);
-			Variables.serverUrl=props.getProperty("Application.url");
-			int lastIndex=props.getProperty("Application.url").lastIndexOf("/");
-			Variables.jbossUrl=props.getProperty("Application.url").substring(0,lastIndex);
-			Logger.out.info(Variables.jbossUrl);
-			stream.close();
-		}
-		catch (IOException exception)
-		{
-			Logger.out.error("Not able to load properties file", exception);
-		}
 
+	public static void initializeVariables(Properties props)
+	{
+		StringBuffer buffer = new StringBuffer();
+		Variables.serverUrl = props.getProperty("Application.url");
+		int lastIndex = props.getProperty("Application.url").lastIndexOf("/");
+		buffer.append(props.getProperty("Application.url").substring(0, lastIndex + 1)).append(
+				WebUIManagerConstants.DYNAMIC_EXTENSIONS);
+		if (props.getProperty("default.prifix.war") != null)
+		{
+			buffer.append(props.getProperty("default.prifix.war").trim());
+		}
+		Variables.jbossUrl = buffer.toString();
+		LOGGER.info(Variables.jbossUrl);
 	}
 }
