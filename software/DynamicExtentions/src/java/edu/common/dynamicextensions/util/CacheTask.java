@@ -1,7 +1,10 @@
 package edu.common.dynamicextensions.util;
 
+import java.io.EOFException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +14,8 @@ import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
-import edu.common.dynamicextensions.util.global.Variables;
+import edu.common.dynamicextensions.utility.HTTPSConnection;
+import edu.wustl.common.util.logger.Logger;
 
 /**
  * @author kunal_kamble
@@ -33,7 +37,7 @@ public class CacheTask {
 			DEClient client = new DEClient();
 			client.setParamaterObjectMap(map);
 			try {
-				client.setServerUrl(new URL(Variables.serverUrl+"UpdateCache"));
+				client.setServerUrl(new URL(args[1]+"/UpdateCache"));
 			} catch (MalformedURLException e) {
 			throw new DynamicExtensionsApplicationException("Error in releasing forms on the server cache",e);
 			}
@@ -46,6 +50,24 @@ public class CacheTask {
 		}
 
 
+	}
+	/**
+	 * This method will process the response recieved from the server .
+	 * @param servletConnection connection by which connected to server
+	 * @throws DynamicExtensionsSystemException exception.
+	 * @throws IOException exception.
+	 */
+	protected void processResponse(URLConnection servletConnection)
+			throws DynamicExtensionsSystemException, IOException
+	{
+	   try
+	   {
+		   HTTPSConnection.getInstance().processResponse(servletConnection);
+	   }
+	   catch(EOFException eofException)
+	   {
+		   Logger.out.info("EOF.");
+	   }
 	}
 
 }
