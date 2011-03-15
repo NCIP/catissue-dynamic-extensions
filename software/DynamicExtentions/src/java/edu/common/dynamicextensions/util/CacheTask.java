@@ -11,12 +11,16 @@ import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
+import edu.wustl.common.util.logger.Logger;
 
 /**
  * @author kunal_kamble
  *
  */
 public class CacheTask {
+
+	protected static final Logger LOGGER = Logger.getCommonLogger(CacheTask.class);
+
 	public static void main(String[] args) throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException {
 		releaseForms(args);
 	}
@@ -32,7 +36,7 @@ public class CacheTask {
 			DEClient client = new DEClient();
 			client.setParamaterObjectMap(map);
 			try {
-				client.setServerUrl(new URL(args[1]+"/UpdateCache"));
+				client.setServerUrl(new URL(args[1]+WebUIManagerConstants.UPDATECACHE));
 			} catch (MalformedURLException e) {
 			throw new DynamicExtensionsApplicationException("Error in releasing forms on the server cache",e);
 			}
@@ -41,7 +45,7 @@ public class CacheTask {
 
 		}else
 		{
-			System.out.println("Entity group " +entityGroupName+" not found");
+			LOGGER.info("Entity group " +entityGroupName+" not found");
 		}
 
 
