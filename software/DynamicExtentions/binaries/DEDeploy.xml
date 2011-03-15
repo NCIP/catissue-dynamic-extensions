@@ -1329,7 +1329,7 @@
 		<antcall target="setupClassExecutionEnvironment" />
 		<java failonerror="true" classname="edu.common.dynamicextensions.util.CacheTask" fork="yes">
 			<arg value="${entity.group.name}" />
-			<arg value="${Application.url}" />
+			<arg value="${Application.url}/" />
 			
 			<classpath>
 				<pathelement location="${temp.dir.DE}" />
