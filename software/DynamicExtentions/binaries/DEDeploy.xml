@@ -1517,7 +1517,7 @@
 					<fileset dir="${cacore.deployable.dir}/${entitygroupname}.war" />
 				</copy>
 				<!-- This is to copy latest DE.jar in the ${entitygroupname}.war/WEB-INF/lib folder present in JBoss deploy folder-->
-				<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib">
+				<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib" overwrite="true">
 					<fileset dir="${de.zip.location}/binaries/DynamicExtensionsInterface" >
 						<include name="DynamicExtensions.jar" />
 					</fileset>
@@ -1591,7 +1591,7 @@
 						</fileset>
 					</copy>
 					<!-- This is to copy latest DE.jar in the ${entitygroupname}.war/WEB-INF/lib folder present in JBoss deploy folder-->
-					<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib">
+					<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib" overwrite="true">
 						<fileset dir="${de.zip.location}/binaries/DynamicExtensionsInterface" >
 							<include name="DynamicExtensions.jar" />
 						</fileset>
