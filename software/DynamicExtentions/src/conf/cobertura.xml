@@ -45,6 +45,7 @@
       		<exclude name="**/entitymanager/*Interface*.class"/>
     		<exclude name="**/util/DatabaseCleaner.class"/>
     	    <exclude name="**/util/DynamicExtensionsBaseTestCase.class"/>
+    		<exclude name="**/util/xml/formdefinition/*.class"/>
     		<exclude name="**/entitymanager/MockEntityManager.class"/>
     		<exclude name="**/dynamicextensions/upgrade/*.class"/>
     		<exclude name="**/edu/hostApp/src/java/*.class"/>
