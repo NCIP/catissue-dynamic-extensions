@@ -66,4 +66,5 @@ public interface AbstractEntityInterface extends AbstractMetadataInterface
 	 * @return
 	 */
 	AssociationMetadataInterface getAssociation(AbstractEntityInterface targetEntity);
+	EntityGroupInterface getEntityGroup();
 }

@@ -11,6 +11,7 @@ import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
+import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.PathInterface;
 import edu.common.dynamicextensions.util.global.CategoryConstants;
@@ -544,6 +545,12 @@ public class CategoryEntity extends AbstractEntity implements CategoryEntityInte
 			}
 		}
 		return association;
+	}
+
+	@Override
+	public EntityGroupInterface getEntityGroup()
+	{
+		return getEntity().getEntityGroup();
 	}
 
 }

@@ -18,6 +18,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,6 +54,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import edu.common.dynamicextensions.bizlogic.BizLogicFactory;
+import edu.common.dynamicextensions.client.DataEntryClient;
 import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
 import edu.common.dynamicextensions.dao.impl.DynamicExtensionDBFactory;
 import edu.common.dynamicextensions.dao.impl.IDEDBUtility;
@@ -73,6 +76,7 @@ import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
+import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
@@ -2849,5 +2853,32 @@ public class DynamicExtensionsUtility
 		}
 		Variables.jbossUrl = buffer.toString();
 		LOGGER.info(Variables.jbossUrl);
+	}
+	public static Long insertDataUtility(Long recordIdentifier, ContainerInterface containerInterface,
+			Map<BaseAbstractAttributeInterface, Object> attributeToValueMap)
+			throws DynamicExtensionsApplicationException
+	{
+		String entityGroupName=containerInterface.getAbstractEntity().getEntityGroup().getName();
+
+		Map<String, Object> clientmap = new HashMap<String, Object>();
+		DataEntryClient dataEntryClient=new DataEntryClient();
+		clientmap.put(WebUIManagerConstants.RECORD_ID, recordIdentifier);
+		clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, null);
+		clientmap.put(WebUIManagerConstants.USER_ID, null);
+		clientmap.put(WebUIManagerConstants.CONTAINER, containerInterface);
+		clientmap.put(WebUIManagerConstants.DATA_VALUE_MAP, attributeToValueMap);
+		try
+		{
+			dataEntryClient.setServerUrl(new URL(Variables.jbossUrl+entityGroupName+"/"));
+		}
+		catch (MalformedURLException e)
+		{
+			throw new DynamicExtensionsApplicationException("Invalid URL:"+Variables.jbossUrl+entityGroupName+"/");
+		}
+		dataEntryClient.setParamaterObjectMap(clientmap);
+		dataEntryClient.execute(null);
+
+		recordIdentifier=(Long)dataEntryClient.getObject();
+		return recordIdentifier;
 	}
 }
