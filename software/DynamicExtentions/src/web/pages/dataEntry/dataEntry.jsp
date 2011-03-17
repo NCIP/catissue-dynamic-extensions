@@ -2,6 +2,7 @@
 <%-- ---------------------------------------------------------------------------------------------- --%>
 <%-- @author : sujay narkar, chetan patil --%>
 
+
 <%-- TagLibs --%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -13,6 +14,7 @@
 <%@ page language="java" contentType="text/html;charset=iso-8859-1" %>
 <%@ page import="org.apache.struts.action.ActionErrors" %>
 <%@ page import="org.apache.struts.action.ActionMessages" %>
+<%@ page import="edu.common.dynamicextensions.util.global.DEConstants" %>
 
 <%-- Stylesheet --%>
 <script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/prototype.js"></script>
@@ -89,6 +91,15 @@
 <c:if test="${mandatory_Message == 'null' || mandatory_Message == null || param.mandatoryMessage == 'true'}">
 	<c:set var="mandatory_Message" value="true" scope="session"/>
 </c:if>
+
+<c:if test="${sessionScope.onFormLoad != null }">
+ <script>
+ var strFun = "window.parent."+'<%=request.getSession().getAttribute(DEConstants.ON_FORM_LOAD)%>';
+ var strParam = "<%=isTopLevelEntity%>";
+
+ onFormLoad(strFun,strParam);
+</script>
+ </c:if>
 <script language="JavaScript" >
 		resetTimeoutCounter();
 </script>
@@ -395,6 +406,7 @@ jQuery(document).ready(
 					document.getElementById('isShowInDiv').value = false;
 				</script>
 			</c:if>
+
 		</html:form>
 		<iframe style="display:none" src="about:blank" id="skipLogicIframe" name="skipLogicIframe" onload=""></iframe>
 		<script type="text/javascript" defer="defer">

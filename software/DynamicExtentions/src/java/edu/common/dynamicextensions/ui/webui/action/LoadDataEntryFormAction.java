@@ -60,6 +60,11 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		final DataEntryForm dataEntryForm = (DataEntryForm) form;
+		String onFormLoadMethodCall = request.getParameter(DEConstants.ON_FORM_LOAD);
+	    if(onFormLoadMethodCall!=null)
+	    {
+		  request.getSession().setAttribute(DEConstants.ON_FORM_LOAD, onFormLoadMethodCall);
+	    }
 		try
 		{
 			cacheCallBackURL(request);

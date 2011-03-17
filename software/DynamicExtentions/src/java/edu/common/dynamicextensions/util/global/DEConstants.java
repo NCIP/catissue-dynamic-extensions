@@ -342,4 +342,8 @@ public class DEConstants
 	 * Constant for XML extension.
 	 */
 	public static final String XML_SUFFIX = ".xml";
+
+	public static final String ON_FORM_LOAD = "onFormLoad";
+
+
 }
