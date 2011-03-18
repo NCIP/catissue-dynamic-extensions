@@ -18,6 +18,7 @@ import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.DateTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.DatePickerInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ValidatableInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
@@ -32,7 +33,7 @@ import edu.wustl.common.util.global.CommonServiceLocator;
  * @hibernate.joined-subclass table="DYEXTN_DATEPICKER"
  * @hibernate.joined-subclass-key column="IDENTIFIER"
  */
-public class DatePicker extends Control implements DatePickerInterface
+public class DatePicker extends Control implements DatePickerInterface, ValidatableInterface
 {
 
 	/** default serial UID. */
@@ -170,6 +171,9 @@ public class DatePicker extends Control implements DatePickerInterface
 							? " disabled='" + ProcessorConstants.TRUE
 							: ""));
 			outputStringBuffer.append(" onchange=\"");
+			//Adding this statement for Live validation Bug #19753
+			outputStringBuffer.append("setIdForValidation('").append(this.id).append("','").append(
+					getParentContainer().getId()).append("');");
 			outputStringBuffer.append(getOnchangeServerCall());
 			outputStringBuffer.append(";\" onfocus=\"javascript:clearDate('");
 			outputStringBuffer.append(htmlComponentName);
@@ -246,10 +250,14 @@ public class DatePicker extends Control implements DatePickerInterface
 							? ProcessorConstants.DATE_TIME_FORMAT
 							: defaultValue));
 			outputStringBuffer.append(DEConstants.SINGLE_QUOTE);
-			outputStringBuffer.append((((isReadOnly != null && isReadOnly) || (isSkipLogicReadOnly != null && isSkipLogicReadOnly))
-							? " disabled='" + ProcessorConstants.TRUE
-							: ""));
-			outputStringBuffer.append("onchange=\"isDataChanged();" + getOnchangeServerCall()
+			outputStringBuffer.append((isReadOnly != null && isReadOnly
+					|| isSkipLogicReadOnly != null && isSkipLogicReadOnly ? " disabled='"
+					+ ProcessorConstants.TRUE: ""));
+			outputStringBuffer.append("onchange=\"isDataChanged();");
+			//Adding this statement for Live validation Bug #19753
+			outputStringBuffer.append("setIdForValidation('").append(this.id).append("','").append(
+					getParentContainer().getId()).append("');");
+			outputStringBuffer.append(getOnchangeServerCall()
 					+ ";\" onfocus=\"javascript:clearDate('");
 			outputStringBuffer.append(htmlComponentName);
 			outputStringBuffer.append("','");
@@ -332,10 +340,14 @@ public class DatePicker extends Control implements DatePickerInterface
 							? ProcessorConstants.MONTH_YEAR_FORMAT
 							: defaultValue));
 			outputStringBuffer.append(DEConstants.SINGLE_QUOTE);
-			outputStringBuffer.append((((isReadOnly != null && isReadOnly) || (isSkipLogicReadOnly != null && isSkipLogicReadOnly))
-							? " disabled='" + ProcessorConstants.TRUE
-							: ""));
-			outputStringBuffer.append(" onchange=\"isDataChanged();" + getOnchangeServerCall()
+			outputStringBuffer.append((isReadOnly != null && isReadOnly
+					|| isSkipLogicReadOnly != null && isSkipLogicReadOnly ? " disabled='"
+					+ ProcessorConstants.TRUE: ""));
+			outputStringBuffer.append("onchange=\"isDataChanged();");
+			//Adding this statement for Live validation Bug #19753
+			outputStringBuffer.append("setIdForValidation('").append(this.id).append("','").append(
+					getParentContainer().getId()).append("');");
+			outputStringBuffer.append(getOnchangeServerCall()
 					+ ";\" onfocus=\"javascript:clearDate('");
 			outputStringBuffer.append(htmlComponentName);
 			outputStringBuffer.append("','");
@@ -409,10 +421,14 @@ public class DatePicker extends Control implements DatePickerInterface
 							? ProcessorConstants.YEAR_ONLY_FORMAT
 							: defaultValue));
 			outputStringBuffer.append(DEConstants.SINGLE_QUOTE);
-			outputStringBuffer.append((((isReadOnly != null && isReadOnly) || (isSkipLogicReadOnly != null && isSkipLogicReadOnly))
-							? " disabled='" + ProcessorConstants.TRUE
-							: ""));
-			outputStringBuffer.append(" onchange=\"isDataChanged();" + getOnchangeServerCall()
+			outputStringBuffer.append((isReadOnly != null && isReadOnly
+					|| isSkipLogicReadOnly != null && isSkipLogicReadOnly ? " disabled='"
+					+ ProcessorConstants.TRUE: ""));
+			outputStringBuffer.append("onchange=\"isDataChanged();");
+			//Adding this statement for Live validation Bug #19753
+			outputStringBuffer.append("setIdForValidation('").append(this.id).append("','").append(
+					getParentContainer().getId()).append("');");
+			outputStringBuffer.append(getOnchangeServerCall()
 					+ ";\" onfocus=\"javascript:clearDate('");
 			outputStringBuffer.append(htmlComponentName);
 			outputStringBuffer.append("','");

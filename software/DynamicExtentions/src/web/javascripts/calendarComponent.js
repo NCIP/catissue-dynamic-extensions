@@ -682,6 +682,17 @@ function cal_after_year(id,day, month, year)
 }
 
 /**
+ * adding method to set the id for live validation.
+ */
+var containerId;
+var controlId;
+function setIdForValidation(ctrlId,cntrId)
+{
+	controlId = ctrlId;
+	containerId = cntrId;
+}
+
+/**
  * Update the date in the input field and hide the calendar.
  * PENDING: find a way to make the format customable.
  */
@@ -692,6 +703,10 @@ function dtemaj(id,jour, mois, annee){
     document.forms[calformname].elements[calformelement].stlayout.month = mois;
     document.forms[calformname].elements[calformelement].stlayout.year = annee;
     hideCalendar(id);
+    if(containerId != null && containerId != "" && controlId != null && controlId != "")
+    {
+    	updateServerState(id, controlId, containerId);
+    }    
 }
 
 
