@@ -2197,7 +2197,7 @@ function getValues()
 /*
  * This attribute is added for live validation.
  * If value is not valid then do not display any other errors.
- * Display only live validation errors which is shown as toolTip.
+ * Display only live validation errors which is shown as toolTip. 
  */
 var isValid = true;
 function calculateAttributes()
@@ -2898,23 +2898,23 @@ function updateServerState(controlName, controlId, containerId)
 	{
 		document.getElementById('isDirty').value = true;
 	}
-	var checkBoxValue = "";
+	var checkBoxValue = "";	
 	var request = newXMLHTTPReq();
     var vControl = document.getElementById(controlName);
     if(vControl == null)
 	{
-    	var controls =  document.getElementsByName(controlName);
+    	var controls =  document.getElementsByName(controlName);		
 		if(controls.length > 1)
 		{
 			for(var i=0;i<controls.length;i++)
 			{
-				var obj = controls.item(i);
+				var obj = controls.item(i);				
 				if(obj.checked && obj.type == "checkbox") //for multiSelect checkBox.
-				{
+				{					
 					vControl = obj;
-					checkBoxValue = checkBoxValue + "~" + obj.value;
+					checkBoxValue = checkBoxValue + "~" + obj.value;					
 				}
-				else if(obj.checked) //for radioButton
+				else if(obj.checked) //for radioButton			
 				{
 					vControl = obj;
 					break;
@@ -2925,14 +2925,14 @@ function updateServerState(controlName, controlId, containerId)
 		{
 			vControl = controls[0]; // for other controls.
 		}
-	}
+	}	
 	if(vControl.type=="select-one")
 	{
 		return;
 	}
-	var controlValue = vControl.value;
+	var controlValue = vControl.value;	
     var vPatentControl = vControl.parentNode;
-    var vParentOriginal = vPatentControl.innerHTML.split('&nbsp;&nbsp;')[0];
+    var vParentOriginal = vPatentControl.innerHTML.split('&nbsp;&nbsp;')[0];		    
     if(vControl.type=="select-multiple") // for listBox
     {
     	var newValue = controlValue;
@@ -2951,7 +2951,7 @@ function updateServerState(controlName, controlId, containerId)
     if(vControl.type=="checkbox" && checkBoxValue != "") // for multiSelect checkBox
 	{
 		controlValue = checkBoxValue.substring(1,checkBoxValue.length);
-	}
+	}	
     request.open("POST","AjaxcodeHandlerAction.do",true);
     request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     request.onreadystatechange=function()
@@ -2959,7 +2959,7 @@ function updateServerState(controlName, controlId, containerId)
 		if (request.readyState==4 && request.status==200)
 		{
 			// Live Validation Code below only for non-enumerated attributes.
-			var vMessage=request.responseText;
+			var vMessage=request.responseText;							
 			if(vMessage != '' && vMessage.length > 0)
 			{
 				var vFormattedMsg=vMessage.replace(',','<br/>');
@@ -2979,11 +2979,14 @@ function updateServerState(controlName, controlId, containerId)
 				if(vRecentControl == null)
 				{
 					vRecentControl = document.getElementsByName(controlName)[0];
-					if(vRecentControl.type == "radio")
-					{
+				}
+				if(vRecentControl.type == "radio")
+				{
 						vRecentControl.value = controlValue;
-					}
-					else
+				}
+				else
+				{
+					if(vRecentControl.type == "select-multiple")
 					{
 						var values = controlValue.split("~");
 						for(var i=0; i<values.length;i++)
@@ -2998,11 +3001,11 @@ function updateServerState(controlName, controlId, containerId)
 							}
 						}
 					}
-				}
-				else
-				{
-					vRecentControl.value = controlValue;
-				}
+					else
+					{
+						vRecentControl.value = controlValue;
+					}
+				}				
 				vRecentControl.className = "font_bl_nor" ;
 				vRecentControl.title = "";
 			}
@@ -3381,12 +3384,3 @@ function selectRadioButton(controlName,controlValue)
       }
     }
 }
-
- function onFormLoad(strFun,strParam)
- {
-
-	 var funcCall = strFun + "('" + strParam + "')";
-	 var ret = eval(funcCall);
-	 return ret;
-
- }
