@@ -79,7 +79,7 @@ public class PermissibleValueAction implements Action
 		boolean valuePresent = false;
 		for (PermissibleValueInterface pvs : listOfPermissibleValues)
 		{
-			if ((selectControl.getValue() != null )&&(pvs.getValueAsObject().toString().endsWith(selectControl.getValue().toString())))
+			if(selectControl.getValue()!= null && pvs.getValueAsObject().toString().endsWith(selectControl.getValue().toString()))
 			{
 				valuePresent = true;
 				break;

@@ -21,6 +21,7 @@ import org.hibernate.Hibernate;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
@@ -79,10 +80,15 @@ public class PrimitiveCondition implements Condition
 	* @return true, if check condition
 	 * @throws DynamicExtensionsSystemException
 	*/
-	public boolean checkCondition(Map<BaseAbstractAttributeInterface, Object> objectValueState)
-			throws DynamicExtensionsSystemException
+	public boolean checkCondition(Map<BaseAbstractAttributeInterface, Object> objectValueState,
+			ContainerInterface controllingContainer) throws DynamicExtensionsSystemException
 	{
-		Object categoryAttributeValue = getCategoryObjectValue(objectValueState);
+		Object categoryAttributeValue = getCategoryObjectValue(controllingContainer
+				.getContainerValueMap());
+		if (categoryAttributeValue == null)
+		{
+			categoryAttributeValue = getCategoryObjectValue(objectValueState);
+		}
 		Object definedConditionValue = getValue();
 		if (definedConditionValue == null || categoryAttributeValue == null)
 		{

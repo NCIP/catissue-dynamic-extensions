@@ -235,7 +235,7 @@ public final class UserInterfaceiUtility
 						clonedSubContainer.getId());
 				if (skipLogic != null)
 				{
-					skipLogic.evaluateSkipLogic(clonedSubContainer, rowValueMap);
+					skipLogic.evaluateSkipLogic(clonedSubContainer, mainContainer.getContainerValueMap());
 				}
 
 				// This is the case of Single Line Display. In this case the Skip Logic is associated with child container.
@@ -248,7 +248,7 @@ public final class UserInterfaceiUtility
 								.getSkipLogicByContainerIdentifier(childContainer.getId());
 						if (childSkipLogic != null)
 						{
-							childSkipLogic.evaluateSkipLogic(childContainer, rowValueMap);
+							childSkipLogic.evaluateSkipLogic(childContainer, mainContainer.getContainerValueMap());
 						}
 					}
 				}

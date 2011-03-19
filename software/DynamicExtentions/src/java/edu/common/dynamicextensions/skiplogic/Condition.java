@@ -6,6 +6,7 @@ package edu.common.dynamicextensions.skiplogic;
 import java.util.Map;
 
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 
 
@@ -43,10 +44,12 @@ public interface Condition
 	/**
 	 * Check condition.
 	 * @param objectValueState the object value state
+	 * @param controllingContainer
 	 * @return true, if successful
 	 * @throws DynamicExtensionsSystemException
 	 */
-	boolean checkCondition(Map<BaseAbstractAttributeInterface, Object> objectValueState) throws DynamicExtensionsSystemException;
+	boolean checkCondition(Map<BaseAbstractAttributeInterface, Object> objectValueState,
+			ContainerInterface controllingContainer) throws DynamicExtensionsSystemException;
 
 
 

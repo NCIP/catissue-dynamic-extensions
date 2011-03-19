@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -17,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import edu.common.dynamicextensions.domain.AbstractEntity;
 import edu.common.dynamicextensions.domain.DynamicExtensionBaseDomainObject;
 import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
-import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
@@ -26,7 +24,6 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.skiplogic.SkipLogic;
-import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
@@ -60,89 +57,68 @@ public class Container extends DynamicExtensionBaseDomainObject
 		return id;
 	}
 
-	/**
-	 * css for the buttons on the container.
-	 */
+	/** css for the buttons on the container. */
 	protected String buttonCss;
-	/**
-	 * Caption to be displayed on the container.
-	 */
-	protected String caption;
-	/**
-	 * css for the main table in the container.
-	 */
-	protected String mainTableCss;
-	/**
-	 * Specifies the indicator symbol that will be used to denote a required field.
-	 */
-	protected String requiredFieldIndicatior;
-	/**
-	 * Specifies the warning mesaage to be displayed in case required fields are not entered by the user.
-	 */
-	protected String requiredFieldWarningMessage;
-	/**
-	 * css of the title in the container.
-	 */
-	protected String titleCss;
-	/**
-	 * Collection of controls that are in this container.
-	 */
-	protected Collection<ControlInterface> controlCollection = new HashSet<ControlInterface>();
-	/**
-	 *
-	 */
-	protected Map containerValueMap = new HashMap<BaseAbstractAttributeInterface, Object>();
 
+	/** Caption to be displayed on the container. */
+	protected String caption;
+
+	/** css for the main table in the container. */
+	protected String mainTableCss;
+
+	/** Specifies the indicator symbol that will be used to denote a required field. */
+	protected String requiredFieldIndicatior;
+
+	/** Specifies the warning mesaage to be displayed in case required fields are not entered by the user. */
+	protected String requiredFieldWarningMessage;
+
+	/** css of the title in the container. */
+	protected String titleCss;
+
+	/** Collection of controls that are in this container. */
+	protected Collection<ControlInterface> controlCollection = new HashSet<ControlInterface>();
+
+	/** The container value map. */
+	protected Map<BaseAbstractAttributeInterface, Object> containerValueMap = new HashMap<BaseAbstractAttributeInterface, Object>();
+
+	/** The previous value map. */
 	protected Map<BaseAbstractAttributeInterface, Object> previousValueMap;
-	/**
-	 * Entity to which this container is associated.
-	 */
+
+	/** Entity to which this container is associated. */
 	protected AbstractEntity abstractEntity;
-	/**
-	 *
-	 */
+
+	/** The mode. */
 	protected String mode = WebUIManagerConstants.EDIT_MODE;
-	/**
-	 *
-	 */
+
+	/** The show association controls as link. */
 	protected Boolean showAssociationControlsAsLink = false;
 
-	/**
-	 * parent of this entity, null is no parent present.
-	 */
+	/** parent of this entity, null is no parent present. */
 	protected ContainerInterface baseContainer = null;
-	/**
-	 * ContainerInterface object.
-	 */
+
+	/** ContainerInterface object. */
 	protected ContainerInterface incontextContainer = this;
-	/**
-	 * boolean value.
-	 */
+
+	/** boolean value. */
 	private Boolean addCaption = true;
-	/**
-	 * Collection object.
-	 */
+
+	/** Collection object. */
 	private Collection<ContainerInterface> childContainerCollection = new HashSet<ContainerInterface>();
-	/**
-	 * Map object.
-	 */
+
+	/** Map object. */
 	public Map<String, Object> contextParameter = new HashMap<String, Object>();
-	/**
-	 * Is Ajax Request.
-	 */
+
+	/** Is Ajax Request. */
 	private boolean isAjaxRequest = false;
 
-	/**
-	 * HTTP request Object.
-	 */
+	/** HTTP request Object. */
 	private HttpServletRequest request;
 
-	/**
-	 * Show required field warning message.
-	 */
+	/** Show required field warning message. */
 	private Boolean showRequiredFieldWarningMessage = true;
 
-	public final List<String> errorList=new ArrayList<String>();
+	/** The error list. */
+	public final List<String> errorList = new ArrayList<String>();
 
 	/**
 	 * @hibernate.set name="childContainerCollection" table="DYEXTN_CONTAINER"
@@ -454,14 +430,14 @@ public class Container extends DynamicExtensionBaseDomainObject
 
 		containerHTML
 				.append("<table summary='' cellpadding='3' cellspacing='0' align='center' width='100%'>");
-		String allControlHTML=generateControlsHTML(caption, dataEntryOperation, this);
+		String allControlHTML = generateControlsHTML(caption, dataEntryOperation, this);
 		if (getMode() != null && getMode().equalsIgnoreCase(WebUIManagerConstants.EDIT_MODE)
 				&& isShowRequiredFieldWarningMessage())
 		{
-			if(!errorList.isEmpty())
+			if (!errorList.isEmpty())
 			{
-                containerHTML
-                        .append("<tr><td  class='formMessage' colspan='3'><table width='100%' height='30'  border='0' cellpadding='4' cellspacing='4' class='td_color_FFFFCC'>");
+				containerHTML
+						.append("<tr><td  class='formMessage' colspan='3'><table width='100%' height='30'  border='0' cellpadding='4' cellspacing='4' class='td_color_FFFFCC'>");
 				for (String error : errorList)
 				{
 					containerHTML.append("<tr><th align='center' class='font_bl_nor'>");
@@ -521,6 +497,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 	{
 		final StringBuffer controlHTML = new StringBuffer(108);
 		final List<Object> values = new ArrayList<Object>();
+		
 		final List<ControlInterface> controls = getAllControlsUnderSameDisplayLabel(); //UnderSameDisplayLabel();
 		int lastRow = 0;
 		int cntr = 0;
@@ -529,13 +506,12 @@ public class Container extends DynamicExtensionBaseDomainObject
 		{
 			control.setDataEntryOperation(dataEntryOperation);
 			final Object value = containerValueMap.get(control.getBaseAbstractAttribute());
-
 			control.setValue(value);
 		}
 		SkipLogic skipLogic = EntityCache.getInstance().getSkipLogicByContainerIdentifier(id);
 		if (skipLogic != null)
 		{
-			skipLogic.evaluateSkipLogic(this, container.getContainerValueMap());
+			skipLogic.evaluateSkipLogic(container, container.getContainerValueMap());
 		}
 
 		// This is the case of Single Line Display. In this case the Skip Logic is associated with child container.
@@ -713,10 +689,11 @@ public class Container extends DynamicExtensionBaseDomainObject
 	public String generateControlsHTMLAsGrid(
 			final List<Map<BaseAbstractAttributeInterface, Object>> valueMaps,
 			final String dataEntryOperation, final ContainerInterface container,
-			boolean isPasteEnable,final List<String> errorList) throws DynamicExtensionsSystemException
+			boolean isPasteEnable, final List<String> errorList)
+			throws DynamicExtensionsSystemException
 	{
 		return UserInterfaceiUtility.generateHTMLforGrid(this, valueMaps, dataEntryOperation,
-				container, isPasteEnable,errorList);
+				container, isPasteEnable, errorList);
 	}
 
 	/**
@@ -1019,6 +996,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 		}
 		return parentContainer;
 	}
+
 	public List<String> getErrorList()
 	{
 		return errorList;

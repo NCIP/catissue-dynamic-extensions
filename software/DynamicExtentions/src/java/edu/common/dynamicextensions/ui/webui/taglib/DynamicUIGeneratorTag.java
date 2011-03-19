@@ -106,8 +106,6 @@ public class DynamicUIGeneratorTag extends TagSupport
 		}
 		try
 		{
-
-
 			final String caption = (String) pageContext.getSession()
 			.getAttribute("OverrideCaption");
 			this.container.setShowRequiredFieldWarningMessage(Boolean.valueOf(pageContext

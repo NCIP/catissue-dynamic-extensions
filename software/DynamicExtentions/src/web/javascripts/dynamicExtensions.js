@@ -1830,7 +1830,7 @@ function initializeDefaultValue(childObjectName,childObject,obj,i,rowIndex, isFr
 			str = childObjectName + "_" + rowIndex;
 		}
 	}
-	if(isFromMain == true  && childObjectName!=null)
+	if(isFromMain == true  && childObjectName!=null && childObjectName!= "")
 	{
 		obj.innerHTML = replaceAll(obj.innerHTML,childObjectName, str);
 	}

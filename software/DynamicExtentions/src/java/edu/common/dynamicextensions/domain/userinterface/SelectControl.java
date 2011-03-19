@@ -114,15 +114,18 @@ public abstract class SelectControl extends Control
 					.filterSystemAttributes(attributes);
 			List<AbstractAttributeInterface> attributesList = new ArrayList<AbstractAttributeInterface>(
 					filteredAttributes);
-			List<Map> values = (List<Map>) value;
-			if (values != null)
+			if(value != null && value.toString().length() !=0)
 			{
-				for (Map valueMap : values)
+				List<Map> values = (List<Map>) value;
+				if (values != null)
 				{
-					String value = (String) valueMap.get(attributesList.get(0));
-					if(value != null && !"".equals(value))
+					for (Map valueMap : values)
 					{
-						valueList.add(value);
+						String value = (String) valueMap.get(attributesList.get(0));
+						if(value != null && !"".equals(value))
+						{
+							valueList.add(value);
+						}
 					}
 				}
 			}

@@ -1,14 +1,15 @@
 /**
  *
  */
+
 package edu.common.dynamicextensions.skiplogic;
 
 import java.util.Map;
 import java.util.Set;
 
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-
 
 /**
  * The Class OperatorCondition.
@@ -54,22 +55,25 @@ public class GroupCondition implements Condition
 	 * @return true, if check condition
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public boolean checkCondition(Map<BaseAbstractAttributeInterface, Object> objectValueState) throws DynamicExtensionsSystemException
+	public boolean checkCondition(Map<BaseAbstractAttributeInterface, Object> objectValueState,
+			ContainerInterface controllingContainer) throws DynamicExtensionsSystemException
 	{
 		boolean result = false;
 		LogicalOperator and = getLogicalOperator();
 		for (Condition condition : listOfConditions)
 		{
-			if(and.equals(LogicalOperator.AND))
+			if (and.equals(LogicalOperator.AND))
 			{
-				if(Boolean.FALSE.equals(condition.checkCondition(objectValueState)))
+				if (Boolean.FALSE.equals(condition.checkCondition(objectValueState,
+						controllingContainer)))
 				{
 					break;
 				}
 			}
 			else
 			{
-				if(Boolean.TRUE.equals(condition.checkCondition(objectValueState)))
+				if (Boolean.TRUE.equals(condition.checkCondition(objectValueState,
+						controllingContainer)))
 				{
 					result = true;
 					break;
@@ -78,7 +82,6 @@ public class GroupCondition implements Condition
 		}
 		return result;
 	}
-
 
 	/**
 	 * Gets the list of conditions.
@@ -89,7 +92,6 @@ public class GroupCondition implements Condition
 		return listOfConditions;
 	}
 
-
 	/**
 	 * Sets the list of conditions.
 	 * @param listOfConditions the listOfConditions to set
@@ -99,7 +101,6 @@ public class GroupCondition implements Condition
 		this.listOfConditions = listOfConditions;
 	}
 
-
 	/**
 	 * Gets the operator condition.
 	 * @return the operatorCondition
@@ -108,7 +109,6 @@ public class GroupCondition implements Condition
 	{
 		return logicalOperator;
 	}
-
 
 	/**
 	 * Sets the operator condition.

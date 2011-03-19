@@ -19,6 +19,7 @@ import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.common.beans.NameValueBean;
 
 /**
@@ -181,9 +182,11 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 						+ "valueNotFoundText:'',"
 						+ "selectOnFocus:'true',applyTo: '"
 						+ htmlComponentName
-						+ "'});ds.setBaseParam('comboBoxId',combo.getId());"
+						+ "'});ds.setBaseParam('"
+						+ DEConstants.COMBOBOX_IDENTIFER
+						+ "',combo.getId());"
 						+ "combo.on('blur',function(comboBox){if(comboBox.getValue()==''){comboBox.setValue(comboBox.emptyText);}});"
-						+ "combo.on('focus',function(comboBox){comboBox.setRawValue(comboBox.emptyText);});"
+						+ "combo.on('focus',function(comboBox){if(comboBox.getValue()==''){comboBox.setRawValue(comboBox.emptyText);}});"
 						+ "combo.on(\"select\", function() {"
 						+ getOnchangeServerCall()
 						+ "}); /*combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7 || Ext.isSafar){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{alert('in else');combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}}, {single: true});*/";
@@ -254,9 +257,11 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					+ "valueNotFoundText:'',"
 					+ "selectOnFocus:'true',applyTo: '"
 					+ htmlComponentName
-					+ "'});ds.setBaseParam('comboBoxId',combo.getId());"
+					+ "'});ds.setBaseParam('"
+					+ DEConstants.COMBOBOX_IDENTIFER
+					+ "',combo.getId());"
 					+ "combo.on('blur',function(comboBox){if(comboBox.getValue()==''){comboBox.setValue(comboBox.emptyText);}});"
-					+ "combo.on('focus',function(comboBox){comboBox.setRawValue(comboBox.emptyText);});"
+					+ "combo.on('focus',function(comboBox){if(comboBox.getValue()==''){comboBox.setRawValue(comboBox.emptyText);}});"
 					+ "combo.on(\"select\", function() {"
 					+ getOnchangeServerCall()
 					+ "}); /*combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7 || Ext.isSafar){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}}, {single: true});*/"

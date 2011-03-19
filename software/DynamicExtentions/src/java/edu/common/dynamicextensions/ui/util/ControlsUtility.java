@@ -1200,4 +1200,16 @@ public class ControlsUtility
 
 		return encounterDateAsString;
 	}
+
+	/**
+	 * Expected controlName format : Control_<container_id>_<in-context_container_id>_<sequence_no>_<y_position>_<row_id>
+	 * Row id will be present only in case of Add more controls.
+	 * Checks if is control present in add more.
+	 * @param htmlControlName the html control name
+	 * @return true, if is control present in add more
+	 */
+	public static boolean isControlPresentInAddMore(String htmlControlName)
+	{
+		return htmlControlName.split("_").length > 5 ;
+	}
 }

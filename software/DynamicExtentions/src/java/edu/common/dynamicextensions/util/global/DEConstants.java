@@ -81,6 +81,9 @@ public class DEConstants
 	public static final String NOVEMBER = "Nov";
 	public static final String DECEMBER = "Dec";
 
+	/** The Constant COMBOBOX_IDENTIFER. */
+	public static final String COMBOBOX_IDENTIFER = "comboBoxId";
+
 	//Constant for groupName prefix
 
 	public static final String GROUP_PREFIX = "Group_";

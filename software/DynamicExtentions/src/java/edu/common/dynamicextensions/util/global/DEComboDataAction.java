@@ -102,8 +102,8 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 				{
 					Map<BaseAbstractAttributeInterface, Object> valueMap = ((Stack<Map<BaseAbstractAttributeInterface, Object>>) CacheManager
 							.getObjectFromCache(request, DEConstants.VALUE_MAP_STACK)).peek();
-					skipLogicEvaluation(container, control, valueMap, request
-							.getParameter("comboBoxId"));
+					skipLogicEvaluationForAddMore(container, control, valueMap, request
+							.getParameter(DEConstants.COMBOBOX_IDENTIFER));
 				}
 				nameValueBeans = ControlsUtility.populateListOfValues(control, sourceControlValues,
 						ControlsUtility.getFormattedDate(keyMap.get(Constants.ENCOUNTER_DATE)));
@@ -179,9 +179,14 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 		Map<String, ContainerInterface> map = (Map<String, ContainerInterface>) request
 				.getSession().getAttribute(WebUIManagerConstants.CONTAINER_MAP);
 		ContainerInterface containerInterface = null;
-		if (map != null)
+		if (map != null && !map.isEmpty())
 		{
 			containerInterface = map.get(containerId);
+		}
+		else
+		{
+			containerInterface = ((Stack<ContainerInterface>) CacheManager.getObjectFromCache(
+					request, DEConstants.CONTAINER_STACK)).peek();
 		}
 		return containerInterface;
 	}
@@ -247,9 +252,9 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
 	 */
 	@SuppressWarnings("unchecked")
-	private void skipLogicEvaluation(ContainerInterface container, ControlInterface control,
-			Map<BaseAbstractAttributeInterface, Object> valueMap, String controlName)
-			throws DynamicExtensionsSystemException
+	private void skipLogicEvaluationForAddMore(ContainerInterface container,
+			ControlInterface control, Map<BaseAbstractAttributeInterface, Object> valueMap,
+			String controlName) throws DynamicExtensionsSystemException
 	{
 		for (Entry<BaseAbstractAttributeInterface, Object> entry : valueMap.entrySet())
 		{
@@ -259,16 +264,17 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 			{
 				List<Map<BaseAbstractAttributeInterface, Object>> innerMap = (List<Map<BaseAbstractAttributeInterface, Object>>) entry
 						.getValue();
-				Integer rowIndex = Integer.parseInt(""+controlName.charAt(controlName.length() -1 ));
-				int currentMapIndex = 1;
-				for (Map<BaseAbstractAttributeInterface, Object> dataValueMap : innerMap)
+				// This check is to make sure that the Skip Logic is evaluated only for Add More Combo box and not for any other combo box.
+				if (ControlsUtility.isControlPresentInAddMore(controlName))
 				{
-					if (dataValueMap.get(control.getBaseAbstractAttribute()) != null
-							&& rowIndex == currentMapIndex)
+					Integer rowIndex = Integer.parseInt(controlName.split("_")[5]);
+					Map<BaseAbstractAttributeInterface, Object> dataValueMap = innerMap
+							.get(rowIndex - 1);
+					if (dataValueMap.containsKey(control.getBaseAbstractAttribute()))
 					{
 						executeSkipLogic(container, dataValueMap);
+						return;
 					}
-					currentMapIndex++;
 				}
 			}
 		}
