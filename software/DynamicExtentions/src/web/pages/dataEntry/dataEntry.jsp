@@ -215,7 +215,7 @@ jQuery(document).ready(
 			<div id="overDiv" style="position:absolute; visibility:hidden;"></div>
 		</c:if>
 		<c:if test='${showInDiv == "null" || showInDiv == "true"}'>
-			<div id="dataEntryFormDiv" style="position:absolute;overflow:no;height:100%;width:100%;z-index:1000;">
+			<div id="dataEntryFormDiv" style="position:absolute;overflow:auto;height:100%;width:100%;z-index:1000;">
 			<div id="overDiv" style="position:absolute; visibility:hidden; z-index:1000;"></div>
 		</c:if>
 
