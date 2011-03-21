@@ -24,6 +24,7 @@ import edu.wustl.bulkoperator.metadata.BulkOperationClass;
 import edu.wustl.bulkoperator.metadata.BulkOperationMetaData;
 import edu.wustl.bulkoperator.util.BulkOperationException;
 import edu.wustl.cab2b.server.cache.EntityCache;
+import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 
@@ -275,19 +276,18 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 		}
 		catch (BulkOperationException exception)
 		{
-			LOGGER.error("Bulk Operation Exception: " + exception.getMsgValues());
-			LOGGER.error("Detailed Exception: ", exception);
+			LOGGER.error(exception.getMsgValues());
+			LOGGER.error(exception);
 		}
 		catch (DynamicExtensionsSystemException exception)
 		{
-			LOGGER.error("Exception while creating Template: " + exception.getLocalizedMessage());
-			LOGGER.error("Detailed Exception: ", exception);
+			LOGGER.error(exception.getLocalizedMessage());
+			LOGGER.error(exception);
 		}
 		catch (IOException exception)
 		{
-			LOGGER.error("Exception while reading category file: "
-					+ exception.getLocalizedMessage());
-			LOGGER.error("Exception: ", exception);
+			LOGGER.error(ApplicationProperties.getValue("bo.error.reading.category.file",exception.getLocalizedMessage()));
+			LOGGER.error(exception);
 		}
 	}
 
@@ -305,8 +305,7 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 				categoryName);
 		if (categoryInterface == null)
 		{
-			throw new BulkOperationException("Category with name '" + categoryName
-					+ "' does not exist.");
+			throw new BulkOperationException(ApplicationProperties.getValue("error.missing.category", categoryName));
 		}
 		else
 		{
@@ -326,13 +325,12 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 		final Integer maxArgLength = 3;
 		if (args.length < minArgLength && args.length > maxArgLength)
 		{
-			throw new BulkOperationException("Invalid number of arguments are passed.");
+			throw new BulkOperationException(ApplicationProperties.getValue("errors.invalid.arguement.numbers", String.valueOf(minArgLength)));
 		}
 		if (!args[MAX_RECORD].endsWith(DEConstants.XML_SUFFIX)
 				|| !args[minArgLength].endsWith(DEConstants.XML_SUFFIX))
 		{
-			throw new BulkOperationException(
-					"Input Template and mapping File does not ends with '.xml' extension.");
+			throw new BulkOperationException(ApplicationProperties.getValue("bo.invalid.template.file"));
 		}
 	}
 
