@@ -7,7 +7,6 @@ import java.util.List;
 import edu.common.dynamicextensions.category.beans.UIProperty;
 import edu.common.dynamicextensions.category.enums.TextFieldEnum;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
-import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.TextFieldInterface;
