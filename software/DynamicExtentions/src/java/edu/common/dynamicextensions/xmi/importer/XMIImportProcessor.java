@@ -2668,7 +2668,8 @@ public class XMIImportProcessor
 		{
 			maxLen = XMIConstants.DEFAULT_TEXT_FIELD_MAX_LENGTH;
 		}
-		if (maxLen != null && Integer.parseInt(maxLen) > 4000)
+		if (maxLen != null
+				&& Integer.parseInt(maxLen) > Integer.getInteger(XMIConstants.MAX_LENGTH_LIMIT))
 		{
 			maxLen = XMIConstants.MAX_LENGTH_LIMIT;
 		}
