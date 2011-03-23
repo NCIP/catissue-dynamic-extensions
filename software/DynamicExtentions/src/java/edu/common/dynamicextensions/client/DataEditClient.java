@@ -58,7 +58,10 @@ public class DataEditClient extends AbstractClient {
 		}finally
 		{
 			try {
-				inputFromServlet.close();
+				if(inputFromServlet != null)
+				{
+					inputFromServlet.close();
+				}
 			} catch (IOException e) {
 				throw new DynamicExtensionsSystemException(
 						"Error in reading objects from responce", e);

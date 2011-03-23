@@ -37,15 +37,12 @@ import edu.wustl.metadata.util.DyExtnObjectCloner;
 public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 {
 
-	private final HibernateDAO hibernateDAO;
 	private final DyExtnObjectCloner cloner = new DyExtnObjectCloner();
+
 	public DyanamicObjectProcessor() throws DAOException
 	{
-		hibernateDAO = (HibernateDAO) DAOConfigFactory.getInstance().getDAOFactory("dem").getDAO();
-		hibernateDAO.openSession(null);
 		DynamicExtensionDAO.getInstance();
 	}
-
 
 	/**
 	 * This method will pass the changed (modified) values entered into the controls to EntityManager to update them in Database.
@@ -152,12 +149,17 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 				.get(WebUIManagerConstants.DYNAMIC_OBJECT_ID);
 		Association association = (Association) paramaterObjectMap
 				.get(WebUIManagerConstants.ASSOCIATION);
-		HibernateDAO hibernateDAO = getHibernateDAO();
+		SessionDataBean sessionDataBean = (SessionDataBean) paramaterObjectMap
+				.get(WebUIManagerConstants.SESSION_DATA_BEAN);
 		String tmpPackageName = (String) paramaterObjectMap.get(WebUIManagerConstants.PACKAGE_NAME);
-
+		HibernateDAO hibernateDao = null;
 		try
 		{
-			Object staticEntity = hibernateDAO
+			String applicationName = DynamicExtensionDAO.getInstance().getAppName();
+			hibernateDao = (HibernateDAO) DAOConfigFactory.getInstance()
+					.getDAOFactory(applicationName).getDAO();
+			hibernateDao.openSession(sessionDataBean);
+			Object staticEntity = hibernateDao
 					.retrieveById(tmpPackageName
 							+ "."
 							+ association.getEntity().getName().substring(
@@ -165,7 +167,7 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 							staticEntityId);
 			Object oldStaticEntity = cloner.clone(staticEntity);
 
-			Object dynamicEntity = hibernateDAO.retrieveById(tmpPackageName + "."
+			Object dynamicEntity = hibernateDao.retrieveById(tmpPackageName + "."
 					+ association.getTargetEntity().getName(), dynamicEntityId);
 			Object oldDynamicEntity = cloner.clone(dynamicEntity);
 
@@ -183,9 +185,9 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 			invokeSetterMethod(dynamicEntity.getClass(), sourceRoleName, staticEntity.getClass(),
 					dynamicEntity, staticEntity);
 
-			hibernateDAO.update(dynamicEntity, oldDynamicEntity);
-			hibernateDAO.update(staticEntity, oldStaticEntity);
-			hibernateDAO.commit();
+			hibernateDao.update(dynamicEntity, oldDynamicEntity);
+			hibernateDao.update(staticEntity, oldStaticEntity);
+			hibernateDao.commit();
 
 		}
 		catch (DAOException e)
@@ -197,21 +199,9 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 		{
 			throw new DynamicExtensionsSystemException("Error in associating objects", e);
 		}
-		DynamicExtensionsUtility.closeDAO(hibernateDAO);
-	}
-	public static HibernateDAO getHibernateDAO() throws DynamicExtensionsSystemException {
-		HibernateDAO hibernateDao = null;
-		try
+		finally
 		{
-			hibernateDao = (HibernateDAO) DAOConfigFactory.getInstance().getDAOFactory("dem")
-					.getDAO();
-			hibernateDao.openSession(null);
+			DynamicExtensionsUtility.closeDAO(hibernateDao);
 		}
-		catch (DAOException e)
-		{
-			throw new DynamicExtensionsSystemException(
-					"Error occured while opening the DAO session", e);
-		}
-		return hibernateDao;
 	}
 }

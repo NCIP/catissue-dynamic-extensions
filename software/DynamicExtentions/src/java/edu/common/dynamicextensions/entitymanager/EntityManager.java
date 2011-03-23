@@ -1723,37 +1723,52 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			Long sourceEntityRecordId, Long TargetEntityRecordId, SessionDataBean sessionDataBean)
 			throws DynamicExtensionsSystemException
 	{
-		associateEntityRecords(associationInterface, sourceEntityRecordId, TargetEntityRecordId);
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put(WebUIManagerConstants.ASSOCIATION, getTempAssociation(associationInterface));
+		map.put(WebUIManagerConstants.STATIC_OBJECT_ID, sourceEntityRecordId);
+		map.put(WebUIManagerConstants.DYNAMIC_OBJECT_ID, TargetEntityRecordId);
+		map.put(WebUIManagerConstants.PACKAGE_NAME, getPackageName(associationInterface
+				.getTargetEntity(), ""));
+		map.put(WebUIManagerConstants.SESSION_DATA_BEAN, sessionDataBean);
+		DataAssociationClient associationClient = new DataAssociationClient();
+		try
+		{
+			associationClient.setServerUrl(new URL(Variables.jbossUrl
+					+ associationInterface.getTargetEntity().getEntityGroup().getName() + "/"));
+		}
+		catch (MalformedURLException e)
+		{
+			// TODO Auto-generated catch block
+			throw new DynamicExtensionsSystemException(
+					"MalformedURLException: address not correct." + e);
+		}
+		associationClient.setParamaterObjectMap(map);
+		associationClient.execute(null);
 
 	}
-	/* (non-Javadoc)
+
+	/**
+	 * Associate entity records.
+	 *
+	 * @param association the association
+	 * @param srcEntRecId the src ent rec id
+	 * @param tgtEntRecId the tgt ent rec id
+	 *
+	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
+	 *
 	 * @see edu.common.dynamicextensions.entitymanager.EntityManagerInterface#associateEntityRecords(edu.common.dynamicextensions.domaininterface.AssociationInterface, java.lang.Long, java.lang.Long)
+	 * @deprecated
 	 */
 	public void associateEntityRecords(AssociationInterface association, Long srcEntRecId,
 			Long tgtEntRecId) throws DynamicExtensionsSystemException
 	{
+		associateEntityRecords(association, srcEntRecId, tgtEntRecId, null);
 
-			Map<String, Object> map = new HashMap<String, Object>();
-
-			map.put(WebUIManagerConstants.ASSOCIATION, getTempAssociation(association));
-			map.put(WebUIManagerConstants.STATIC_OBJECT_ID, srcEntRecId);
-			map.put(WebUIManagerConstants.DYNAMIC_OBJECT_ID, tgtEntRecId);
-			map.put(WebUIManagerConstants.PACKAGE_NAME, getPackageName(association.getTargetEntity(), ""));
-			DataAssociationClient associationClient = new DataAssociationClient();
-			try
-			{
-				associationClient.setServerUrl(new URL(Variables.jbossUrl+association.getTargetEntity().getEntityGroup().getName()+"/"));
-			}
-			catch (MalformedURLException e)
-			{
-				// TODO Auto-generated catch block
-				throw new DynamicExtensionsSystemException("MalformedURLException: address not correct."+e);
-			}
-			associationClient.setParamaterObjectMap(map);
-			associationClient.execute(null);
 	}
 
-	private Object getTempAssociation(AssociationInterface association) {
+	private Object getTempAssociation(AssociationInterface association)
+	{
 		AssociationInterface associationInterface = new Association();
 		EntityInterface sourceEntity = new Entity();
 		sourceEntity.setName(association.getEntity().getName());
@@ -2287,7 +2302,8 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 
 	}
 
-	private Set<EntityInterface> getAssociatedEntities(Long hookEntityId) throws DynamicExtensionsCacheException
+	private Set<EntityInterface> getAssociatedEntities(Long hookEntityId)
+			throws DynamicExtensionsCacheException
 	{
 		Set<EntityInterface> associatedEntities = new HashSet<EntityInterface>();
 		for (AssociationInterface association : EntityCache.getInstance().getEntityById(
@@ -3126,6 +3142,5 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			}
 		}
 	}
-
 
 }
