@@ -247,24 +247,26 @@ public final class DataValueMapUtility
 					rootValueMap.put(abstractAttribute, rootValueMap.get(abstractAttribute));
 				}
 			}
-			cleanMap((List<Map<BaseAbstractAttributeInterface, Object>>) rootValueMap.get(assocation));
+			cleanMap((List<Map<BaseAbstractAttributeInterface, Object>>) rootValueMap
+					.get(assocation));
 		}
 	}
 
 	private static void cleanMap(List<Map<BaseAbstractAttributeInterface, Object>> rootValueMap)
 	{
-		Iterator<Map<BaseAbstractAttributeInterface, Object>> valueMapIterator = rootValueMap.iterator();
-		while(valueMapIterator.hasNext())
+		Iterator<Map<BaseAbstractAttributeInterface, Object>> valueMapIterator = rootValueMap
+				.iterator();
+		while (valueMapIterator.hasNext())
 		{
 			Map<BaseAbstractAttributeInterface, Object> valueMap = valueMapIterator.next();
 			Iterator<BaseAbstractAttributeInterface> values = valueMap.keySet().iterator();
-			while(values.hasNext())
+			while (values.hasNext())
 			{
 				BaseAbstractAttributeInterface attribute = values.next();
-				if(!(attribute instanceof CategoryEntityRecord))
+				if (!(attribute instanceof CategoryEntityRecord))
 				{
 					values.remove();
-	}
+				}
 			}
 		}
 	}
@@ -421,6 +423,7 @@ public final class DataValueMapUtility
 		}
 		return attributeToValueMap;
 	}
+
 	/**
 	 * Method processes the category entity.
 	 * @param attributeToValueMap data value map.
@@ -476,8 +479,9 @@ public final class DataValueMapUtility
 				associationName);
 		if (matchedMssociationInterface == null)
 		{
-			CategoryAttributeInterface attributeInterface = entityInterface.getAttributeByName(associationName+ " Category Attribute");
-			if (attributeInterface == null || attributeInterface.getAbstractAttribute()==null
+			CategoryAttributeInterface attributeInterface = entityInterface
+					.getAttributeByName(associationName + " Category Attribute");
+			if (attributeInterface == null || attributeInterface.getAbstractAttribute() == null
 					|| !(attributeInterface.getAbstractAttribute() instanceof AssociationInterface))
 			{
 				throw new DynamicExtensionsApplicationException("Invalid Instance Name : "
@@ -494,8 +498,8 @@ public final class DataValueMapUtility
 					ArrayList<HashMap<Object, Object>> hashMaps = ((ArrayList<HashMap<Object, Object>>) datavalueEntry
 							.getValue());
 					AttributeInterface multiselectAttr = (AttributeInterface) (EntityManagerUtil
-					.filterSystemAttributes(
-							associationInterface.getTargetEntity().getAllAbstractAttributes())).toArray()[0];
+							.filterSystemAttributes(associationInterface.getTargetEntity()
+									.getAllAbstractAttributes())).toArray()[0];
 					for (HashMap<Object, Object> hashMap : hashMaps)
 					{
 						Map<BaseAbstractAttributeInterface, Object> tempMap = new HashMap<BaseAbstractAttributeInterface, Object>();
@@ -545,8 +549,11 @@ public final class DataValueMapUtility
 		{
 			if (value instanceof Date)
 			{
-				AttributeTypeInformationInterface attributeTypeInformationInterface=((AttributeInterface)attributeInterface.getAbstractAttribute()).getAttributeTypeInformation();
-				String format=DynamicExtensionsUtility.getDateFormat(((DateAttributeTypeInformation) attributeTypeInformationInterface).getFormat());
+				AttributeTypeInformationInterface attributeTypeInformationInterface = ((AttributeInterface) attributeInterface
+						.getAbstractAttribute()).getAttributeTypeInformation();
+				String format = DynamicExtensionsUtility
+						.getDateFormat(((DateAttributeTypeInformation) attributeTypeInformationInterface)
+								.getFormat());
 				DateFormat formatter = new SimpleDateFormat(format);
 				String formatedDate = formatter.format(value);
 				attributeToValueMap.put(attributeInterface, formatedDate);
@@ -578,6 +585,7 @@ public final class DataValueMapUtility
 		}
 		return matchedMssociationInterface;
 	}
+
 	/**
 	 * This method can be used for update the state of the map.
 	 * For every change on the UI, an ajax request is sent to server to update the value for the control
@@ -594,36 +602,74 @@ public final class DataValueMapUtility
 		for (Map.Entry<BaseAbstractAttributeInterface, Object> entry : valueMap.entrySet())
 		{
 			BaseAbstractAttributeInterface attribute = entry.getKey();
-			if (attribute instanceof CategoryAssociationInterface)
+			if (attribute instanceof CategoryAssociationInterface
+					&& isChildControl(control, attribute))
+			{
+				List<Map<BaseAbstractAttributeInterface, Object>> attributeValueMapList = (List<Map<BaseAbstractAttributeInterface, Object>>) entry
+						.getValue();
+				if (attributeValueMapList.size() < rowId + 1)
+				{
+					attributeValueMapList
+							.add(new HashMap<BaseAbstractAttributeInterface, Object>());
+				}
+				updateValueMapForControl(control, controlValue, attributeValueMapList.get(rowId));
+				return;
+
+			}
+		}
+		updateValueMapForControl(control, controlValue, valueMap);
+
+	}
+
+	/**
+	 * @param control
+	 * @param controlValue
+	 * @param attributeValueMapList
+	 */
+	private static void updateValueMapForControl(ControlInterface control, Object controlValue,
+			Map<BaseAbstractAttributeInterface, Object> attributeValueMap)
+	{
+		if (controlValue instanceof String[] && ((String[]) controlValue).length > 0)
+		{
+			if (((CategoryAttributeInterface) control.getBaseAbstractAttribute())
+					.getAbstractAttribute() instanceof AssociationInterface)
 			{
 
-				CategoryAssociationInterface categoryAssociation = (CategoryAssociationInterface) attribute;
-				if (categoryAssociation.getTargetCategoryEntity().equals(
-						container.getAbstractEntity()))
+				attributeValueMap.put(control.getBaseAbstractAttribute(), Arrays
+						.asList(controlValue));
+			}
+			else
+			{
+				attributeValueMap.put(control.getBaseAbstractAttribute(),
+						((String[]) controlValue)[0]);
+			}
+
+		}
+	}
+
+	/**
+	 * @param control
+	 * @param attribute
+	 * @return
+	 */
+	private static boolean isChildControl(ControlInterface control,
+			BaseAbstractAttributeInterface attribute)
+	{
+		CategoryAssociationInterface categoryAssociation = (CategoryAssociationInterface) attribute;
+		ContainerInterface containerInter = (ContainerInterface) categoryAssociation
+				.getTargetCategoryEntity().getContainerCollection().iterator().next();
+		boolean flag = containerInter.getId().equals(control.getParentContainer().getId());
+		if (!flag && !containerInter.getChildContainerCollection().isEmpty())
+		{
+			for (ContainerInterface containerInterface : containerInter
+					.getChildContainerCollection())
+			{
+				if (containerInterface.getId().equals(control.getParentContainer().getId()))
 				{
-					List<Map<BaseAbstractAttributeInterface, Object>> attributeValueMapList = (List<Map<BaseAbstractAttributeInterface, Object>>) entry
-							.getValue();
-					if(attributeValueMapList.size() < rowId+1)
-					{
-						attributeValueMapList.add(new HashMap<BaseAbstractAttributeInterface, Object>());
-					}
-					attributeValueMapList.get(rowId).put(control.getBaseAbstractAttribute(),
-							Arrays.asList(controlValue));
-					return;
+					flag = true;
 				}
 			}
 		}
-		if (controlValue instanceof String[] && ((String[]) controlValue).length > 0)
-		{
-			if(((CategoryAttributeInterface)control.getBaseAbstractAttribute()).getAbstractAttribute() instanceof AssociationInterface)
-			{
-				valueMap.put(control.getBaseAbstractAttribute(), Arrays.asList(controlValue));
-			}else
-			{
-				valueMap.put(control.getBaseAbstractAttribute(), ((String[])controlValue)[0]);
-			}
-
-		}
-
+		return flag;
 	}
 }
