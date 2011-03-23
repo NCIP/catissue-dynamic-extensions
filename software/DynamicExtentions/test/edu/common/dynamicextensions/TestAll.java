@@ -14,6 +14,7 @@ import edu.common.dynamicextensions.categoryManager.TestCategoryUtil;
 import edu.common.dynamicextensions.categoryManager.TestDEIntegration;
 import edu.common.dynamicextensions.categoryManager.TestPvVersion;
 import edu.common.dynamicextensions.client.TestValidateAgainstSchema;
+import edu.common.dynamicextensions.entitymanager.TestCalculatedAttribute;
 import edu.common.dynamicextensions.entitymanager.TestEntityGroupManager;
 import edu.common.dynamicextensions.entitymanager.TestEntityManager;
 import edu.common.dynamicextensions.entitymanager.TestEntityManagerForAssociations;
@@ -88,6 +89,7 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 		suite.addTestSuite(TestImportPermissibleValues.class);
 		suite.addTestSuite(TestCategoryCreation.class);
 		suite.addTestSuite(TestCategoryManager.class);
+		suite.addTestSuite(TestCalculatedAttribute.class);
 
 		suite.addTestSuite(TestEntityManager.class);
 		suite.addTestSuite(TestEntityManagerForAssociations.class);
