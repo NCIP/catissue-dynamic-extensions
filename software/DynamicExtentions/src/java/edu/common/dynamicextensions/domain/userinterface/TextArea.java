@@ -149,21 +149,6 @@ public class TextArea extends Control implements TextAreaInterface, ValidatableI
 			htmlString.append("' ");
 		}
 
-		int maxChars = 0;
-		AttributeMetadataInterface attibute = this.getAttibuteMetadataInterface();
-		if (attibute != null)
-		{
-			maxChars = attibute.getMaxSize();
-		}
-
-		if (maxChars > 0)
-		{
-			htmlString.append(" onchange=\"");
-			htmlString.append(getOnchangeServerCall());
-			htmlString.append(";\" onblur='textCounter(this,");
-			htmlString.append(maxChars);
-			htmlString.append(")'  ");
-		}
 
 		htmlString.append(" wrap='virtual'>");
 

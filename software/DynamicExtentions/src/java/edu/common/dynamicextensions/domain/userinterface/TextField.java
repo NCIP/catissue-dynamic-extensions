@@ -143,26 +143,12 @@ public class TextField extends Control implements TextFieldInterface, Validatabl
 			}
 
 			//set isdisabled property
-
 			if ((this.isReadOnly != null && this.isReadOnly)
 					|| (this.isSkipLogicReadOnly != null && this.isSkipLogicReadOnly))
 			{
 				htmlString += " readonly='" + ProcessorConstants.TRUE + "' ";
 			}
 
-			int maxChars = 0;
-			AttributeMetadataInterface attibute = this.getAttibuteMetadataInterface();
-			if (attibute != null)
-			{
-				maxChars = attibute.getMaxSize();
-			}
-			//Changed by: Kunal
-			//Incase of input type is chosen as number
-			//the max char size is -1
-			if (maxChars > 0)
-			{
-				htmlString += " onblur='textCounter(this," + maxChars + ")'  ";
-			}
 
 			htmlString += "/>";
 			//String measurementUnit = getMeasurementUnit(this.getAbstractAttribute());
