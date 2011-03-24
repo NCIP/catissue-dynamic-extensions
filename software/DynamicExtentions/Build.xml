@@ -364,7 +364,7 @@
 		</war>
 		<copy file="dynamicExtensions.war" todir="${dist.dir}/build" overwrite="true" />
 	</target>
-	
+
 	<target name="build.dem.war" depends="compile">
 		<property name="dem.war" value="dem.war"/>
 		<property name="dem.web-inf" value="dem.war/WEB-INF"/>
@@ -938,6 +938,16 @@
 			<echo message="Test Model Edited Successfully" />
 		</target>
 
+   		<target name="import.permissiblevalues">
+   			<echo message="Now importing Permissible Values for junits" />
+			<ant antfile="DEDeploy.xml" dir="./binaries/" target="import_permissible_values">
+				<property name="pv.dir" value="${test.edited.model.dir}" />
+				<property name="permissibleValuesFile" value="${test.edited.model.dir}/TestModel_pv.xml" />
+			</ant>
+			<echo message="Importing Permissible Values Successfully" />
+    	</target>
+
+
 		<target name="import.caTissueCoreModel" description="Import caTissue Core Model into database">
 			<ant antfile="DEDeploy.xml" dir="./binaries/" target="import.xmi.for.testcases.without.caCore">
 				<property name="filename" value="${basedir}/${resource.dir}/xmi/catissueCore.xmi" />
@@ -1018,6 +1028,7 @@
 			<antcall target="import.static.and.test.model"/>
 			<antcall target="import.caTissueCoreModel"/>
 			<antcall target="import.GeneconnectModel"/>
+			<antcall target="import.permissiblevalues" />
 			<antcall target="deploy" />
 
 			<ant target="run_junit" />
