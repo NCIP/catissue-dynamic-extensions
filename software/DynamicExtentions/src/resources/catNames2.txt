@@ -30,6 +30,8 @@ CPUML/TestModels/TestModel_withTags/edited/Categories/categoryConfigurePaste.csv
 CPUML/TestModels/TestModel_withTags/edited/Categories/Category_TestCase79.csv
 CPUML/TestModels/TestModel_withTags/edited/Categories/Category_TestCase80.csv
 CPUML/TestModels/TestModel_withTags/edited/Categories/Category_TestCase81.csv
+CPUML/TestModels/TestModel_withTags/edited/Categories/Category_TestCase81.csv
+CPUML/TestModels/TestModel_withTags/edited/Categories/catLiveValidation.csv
 CPUML/TestModels/TestModel_withTags/original/Categories/categoryAnnotation.csv
 CPUML/TestModels/TestModel_withTags/original/Categories/categoryAutocompleteDropDown.csv
 CPUML/TestModels/TestModel_withTags/original/Categories/categoryAutocompleteDropDownNegative.csv
