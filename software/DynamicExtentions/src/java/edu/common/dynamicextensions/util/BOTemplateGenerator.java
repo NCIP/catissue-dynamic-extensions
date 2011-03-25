@@ -168,7 +168,7 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 				.getName());
 		if(association.getTargetRole().getMaximumCardinality().getValue()==100)
 		{
-			bulkOperationClass.setCardinality(BOTemplateGeneratorUtility.MANY);
+			subBulkOperationClass.setCardinality(BOTemplateGeneratorUtility.MANY);
 		}
 		else
 		{
