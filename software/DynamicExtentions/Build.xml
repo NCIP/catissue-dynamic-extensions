@@ -908,6 +908,8 @@
 				<property name="hookentity" value="none" />
 				<property name="addQueryPaths" value="false" />
 				<property name="generate.cacore" value="false" />
+				<property name="jboss.home.dir" value="${jboss.home.dir}" />
+				<property name="default.prifix.war" value="${default.prifix.war}" />
 			</ant>
 
 			<antcall target="create.record.entry.table"/>
@@ -922,6 +924,8 @@
 				<property name="addQueryPaths" value="true" />
 				<property name="testcases" value="True" />
 				<property name="cacore.deployable.dir" value="${cacore.location}" />
+				<property name="jboss.home.dir" value="${jboss.home.dir}" />
+				<property name="default.prifix.war" value="${default.prifix.war}" />
 			</ant>
 
 			<echo message="Test Model loaded Successfully" />
@@ -934,6 +938,8 @@
 				<property name="addQueryPaths" value="true" />
 				<property name="testcases" value="True" />
 				<property name="cacore.deployable.dir" value="${cacore.location}" />
+				<property name="jboss.home.dir" value="${jboss.home.dir}" />
+				<property name="default.prifix.war" value="${default.prifix.war}" />
 			</ant>
 			<echo message="Test Model Edited Successfully" />
 		</target>
@@ -957,6 +963,8 @@
 				<property name="addQueryPaths" value="true" />
 				<property name="generate.cacore" value="false" />
 				<property name="cacore.deployable.dir" value="${cacore.location}" />
+				<property name="jboss.home.dir" value="${jboss.home.dir}" />
+				<property name="default.prifix.war" value="${default.prifix.war}" />
 			</ant>
 		</target>
 
@@ -969,6 +977,8 @@
 				<property name="addQueryPaths" value="true" />
 				<property name="generate.cacore" value="false" />
 				<property name="cacore.deployable.dir" value="${cacore.location}" />
+				<property name="jboss.home.dir" value="${jboss.home.dir}" />
+				<property name="default.prifix.war" value="${default.prifix.war}" />
 			</ant>
 		</target>
 
