@@ -12,11 +12,18 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import junit.framework.TestCase;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
+import edu.common.dynamicextensions.domain.userinterface.AbstractContainmentControl;
+import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.RoleInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerExceptionConstantsInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
@@ -407,5 +414,74 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	{
 		String sql = "select identifier from dyextn_category ";
 		return (Long) executeQuery(sql, LONG_TYPE, 1, new LinkedList<ColumnValueBean>());
+	}
+
+	/**
+	 * @param controlCaption
+	 * @param container
+	 * @return
+	 */
+	protected ControlInterface getControlByCpation(String controlCaption, ContainerInterface container)
+	{
+		ControlInterface controlInterface = null;
+		for(ControlInterface control: container.getControlCollection())
+		{
+			if(controlCaption.equals(control.getCaption()))
+			{
+				controlInterface = control;
+				break;
+			}
+
+		}
+		return controlInterface;
+	}
+	/**
+	 * This method traverses the complete
+	 * @param containerCaption
+	 * @param container - root container of the category
+	 * @return
+	 */
+	protected ContainerInterface getContainerByName(String containerCaption, ContainerInterface container)
+	{
+		ContainerInterface searchedContainer = null;
+		if(container.getCaption().equals(containerCaption))
+		{
+			return container;
+		}
+
+		for(ControlInterface control: container.getControlCollection())
+		{
+			if(control instanceof AbstractContainmentControl)
+			{
+				searchedContainer = getContainerByName(containerCaption,
+						((AbstractContainmentControl)control).getContainer());
+				if(searchedContainer != null)
+				{
+					break;
+				}
+			}
+		}
+		return searchedContainer;
+	}
+
+	/**
+	 * @param dataValueMap
+	 * @param control
+	 * @param rowId - for one to one association rowId should be 0
+	 * @return
+	 */
+	protected Map<BaseAbstractAttributeInterface, Object> getContainerDataValueMap(
+			Map<BaseAbstractAttributeInterface, Object> dataValueMap, ControlInterface control,int rowId)
+	{
+		for (Map.Entry<BaseAbstractAttributeInterface, Object> entry : dataValueMap.entrySet())
+		{
+			BaseAbstractAttributeInterface attribute = entry.getKey();
+			if (attribute instanceof CategoryAssociationInterface
+					&& (DataValueMapUtility.isChildControl(control,attribute)))
+			{
+				return ((List<Map<BaseAbstractAttributeInterface, Object>>) entry.getValue()).get(rowId);
+			}
+		}
+		return null;
 	}
 }

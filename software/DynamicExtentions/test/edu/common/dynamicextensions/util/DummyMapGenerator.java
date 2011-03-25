@@ -295,7 +295,7 @@ public class DummyMapGenerator
 	 * @return valid date value.
 	 * @throws ParseException
 	 */
-	private String getDateValueForAttribute(BaseAbstractAttributeInterface attribute,
+	public String getDateValueForAttribute(BaseAbstractAttributeInterface attribute,
 			int mapStratergy) throws ParseException
 	{
 		AttributeInterface abstractAttribute;

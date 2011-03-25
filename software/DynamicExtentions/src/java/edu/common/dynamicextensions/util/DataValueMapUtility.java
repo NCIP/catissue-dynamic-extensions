@@ -652,7 +652,7 @@ public final class DataValueMapUtility
 	 * @param attribute
 	 * @return
 	 */
-	private static boolean isChildControl(ControlInterface control,
+	public static boolean isChildControl(ControlInterface control,
 			BaseAbstractAttributeInterface attribute)
 	{
 		CategoryAssociationInterface categoryAssociation = (CategoryAssociationInterface) attribute;
