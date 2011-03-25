@@ -51,7 +51,6 @@ public class TestDataValueMapUtility extends DynamicExtensionsBaseTestCase
 		DataValueMapUtility.updateDataValueMap(dataValueMap, 0, control, new String[]{"Changed Value"}, subForm1);
 		Map<BaseAbstractAttributeInterface, Object> subForm1Map = getContainerDataValueMap(dataValueMap,control,0);
 		assertEquals("Changed Value", subForm1Map.get(control.getAttibuteMetadataInterface()));
-		categoryManagerInterface.insertData(liveValidationCat, dataValueMap);
 	}
 
 
@@ -73,7 +72,6 @@ public class TestDataValueMapUtility extends DynamicExtensionsBaseTestCase
 		DataValueMapUtility.updateDataValueMap(dataValueMap, 0, control, new String[]{"Changed Value"}, subForm1);
 		Map<BaseAbstractAttributeInterface, Object> subForm1Map = getContainerDataValueMap(dataValueMap,control,0);
 		assertEquals("Changed Value", subForm1Map.get(control.getAttibuteMetadataInterface()));
-		categoryManagerInterface.insertData(liveValidationCat, dataValueMap);
 	}
 
 }
