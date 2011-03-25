@@ -122,11 +122,6 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		StringBuffer htmlString = new StringBuffer(193);
 		List<NameValueBean> nameValueBeans = null;
 		List<String> values = getValueAsStrings();
-		String parentContainerId = "";
-		if (getParentContainer() != null && getParentContainer().getId() != null)
-		{
-			parentContainerId = getParentContainer().getId().toString();
-		}
 		String identifier = "";
 		if (getId() != null)
 		{
@@ -229,28 +224,22 @@ public class ListBox extends SelectControl implements ListBoxInterface
 						+ "_div' name='" + getHTMLComponentName() + "_div'>");
 			}
 
-			String categoryEntityName = getParentContainer().getAbstractEntity().getName();
-			String attributeName = getBaseAbstractAttribute().getName();
+			String comboInnerScript = generateScriptTagForAutoComplete(identifier,
+					sourceHtmlComponentValues.toString(), coordId);
 			multSelWithAutoCmpltHTML
-					.append("<script defer='defer'>Ext.onReady(function(){var myUrl= \"DEComboDataAction.do?controlId="
-							+ identifier
-							+ "~containerIdentifier="
-							+ parentContainerId
-							+ "~sourceControlValues="
-							+ sourceHtmlComponentValues.toString()
-							+ "~categoryEntityName="
-							+ categoryEntityName
-							+ "~attributeName="
-							+ attributeName
-							+ "\";var ds = new Ext.data.Store({proxy: new Ext.data.HttpProxy({url: myUrl}),reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, [{name: 'id', mapping: 'id'},{name: 'excerpt', mapping: 'field'}])});var combo = new Ext.form.ComboBox({store: ds,hiddenName: 'CB_coord_"
-							+ getHTMLComponentName()
-							+ "',displayField:'excerpt',valueField: 'id',typeAhead: 'false',pageSize:15,forceSelection: 'true',queryParam : 'query',mode: 'remote',triggerAction: 'all',minChars : "
-							+ minQueryChar
-							+ ",queryDelay:500,lazyInit:true,emptyText:'--Select--',valueNotFoundText:'',selectOnFocus:'true',applyTo: '"
-							+ coordId
-							+ "'});combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});ds.on('load',function(){if (this.getAt(0) != null && this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50;} else {combo.typeAheadDelay=60000}});});</script>\n");
-
-			multSelWithAutoCmpltHTML.append("<br><table border=\"0\" width=\"100%\">\n");
+					.append("<script defer='defer'>Ext.onReady(function(){")
+					.append(comboInnerScript)
+					.append(
+							"combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});ds.on('load',function(){if (this.getAt(0) != null && this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50;} else {combo.typeAheadDelay=60000}});});</script>\n<div id='comboScript_")
+					.append(getHTMLComponentName())
+					.append("' name='comboScript_")
+					.append(getHTMLComponentName())
+					.append(
+							"' style='display:none'>Ext.onReady(function(){if(Ext.isIE || Ext.isIE7){")
+					.append(comboInnerScript)
+					.append(
+							"combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}});}});</div>");
+			multSelWithAutoCmpltHTML.append("<br><table border=\"0\" width=\"400\">\n");
 			multSelWithAutoCmpltHTML.append("\t<tr>\n");
 			multSelWithAutoCmpltHTML
 					.append("\t\t<td width=\"35%\" class=\"black_ar_new\" valign=\"TOP\">\n");
@@ -316,9 +305,13 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		}
 		if (getIsSkipLogicTargetControl())
 		{
-			htmlString.append(
-					"<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '")
-					.append(getHTMLComponentName()).append("_div' /></div>");
+			htmlString
+					.append(
+							"<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '")
+					.append(getHTMLComponentName())
+					.append(
+							"_div' /><input type='hidden' name='skipLogicControlScript' id='skipLogicControlScript' value = 'comboScript_")
+					.append(getHTMLComponentName()).append("' />" + "</div>");
 		}
 		return htmlString.toString();
 	}
@@ -447,7 +440,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		List<NameValueBean> nameValueBeans = ControlsUtility.getListOfPermissibleValues(
 				getAttibuteMetadataInterface(), encounterDate);
 		boolean isInavlidVaue = true;
-		for(String value:values)
+		for (String value : values)
 		{
 			for (NameValueBean bean : nameValueBeans)
 			{
@@ -457,9 +450,9 @@ public class ListBox extends SelectControl implements ListBoxInterface
 					break;
 				}
 			}
-			if(isInavlidVaue)
+			if (isInavlidVaue)
 			{
-				StringBuilder errorMessage=new StringBuilder();
+				StringBuilder errorMessage = new StringBuilder();
 				errorMessage.append('\'');
 				errorMessage.append(value);
 				errorMessage.append("' is not a valid value for '");
@@ -495,7 +488,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 	 * Returns collection of key-value pairs.
 	 */
 	@Override
-    public Collection<UIProperty> getControlTypeValues()
+	public Collection<UIProperty> getControlTypeValues()
 	{
 		Collection<UIProperty> uiProperties = super.getControlTypeValues();
 		ListBoxEnum[] uiPropertyValues = ListBoxEnum.values();
@@ -514,7 +507,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 	 * Set collection of key-value pairs for a control.
 	 */
 	@Override
-    public void setControlTypeValues(Collection<UIProperty> uiProperties)
+	public void setControlTypeValues(Collection<UIProperty> uiProperties)
 	{
 		super.setControlTypeValues(uiProperties);
 		for (UIProperty uiProperty : uiProperties)

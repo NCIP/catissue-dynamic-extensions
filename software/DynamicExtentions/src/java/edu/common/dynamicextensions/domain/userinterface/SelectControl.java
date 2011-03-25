@@ -13,6 +13,7 @@ import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.AssociationControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.SelectInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.beans.NameValueBean;
 
 /**
@@ -155,5 +156,53 @@ public abstract class SelectControl extends Control
 	{
 		this.optionList = optionList;
 	}
+
+	/**
+	 * Generate script tag for auto complete.
+	 *
+	 * @param controlId the control id
+	 * @param sourceHtmlComponentValues the source html component values
+	 * @param applyTo the apply to
+	 *
+	 * @return the string
+	 *
+	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
+	 */
+	protected String generateScriptTagForAutoComplete(String controlId,
+			String sourceHtmlComponentValues, String applyTo)
+			throws DynamicExtensionsSystemException
+	{
+		String parentContainerId = "";
+		String categoryEntityName = "";
+		if (getParentContainer() != null && getParentContainer().getId() != null)
+		{
+			parentContainerId = getParentContainer().getId().toString();
+			categoryEntityName = getParentContainer().getAbstractEntity().getName();
+		}
+		String attributeName = getBaseAbstractAttribute().getName();
+		StringBuffer comboStringBuffer = new StringBuffer(700);
+		comboStringBuffer
+				.append("var myUrl= \"DEComboDataAction.do?controlId=")
+				.append(controlId)
+				.append("~containerIdentifier=")
+				.append(parentContainerId)
+				.append("~sourceControlValues=")
+				.append(sourceHtmlComponentValues)
+				.append("~categoryEntityName=")
+				.append(categoryEntityName)
+				.append("~attributeName=")
+				.append(attributeName)
+				.append(
+						"\";var ds = new Ext.data.Store({proxy: new Ext.data.HttpProxy({url: myUrl}),reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, [{name: 'id', mapping: 'id'},{name: 'excerpt', mapping: 'field'}])});var combo = new Ext.form.ComboBox({store: ds,width:140,listWidth:240,hiddenName: 'CB_coord_")
+				.append(getHTMLComponentName())
+				.append(
+						"',displayField:'excerpt',valueField: 'id',typeAhead: 'false',pageSize:15,forceSelection: 'true',queryParam : 'query',mode: 'remote',triggerAction: 'all',minChars : ")
+				.append(minQueryChar)
+				.append(
+						",queryDelay:500,lazyInit:true,emptyText:'--Select--',valueNotFoundText:'',selectOnFocus:'true',applyTo: '")
+				.append(applyTo).append("'});");
+		return comboStringBuffer.toString();
+	}
+
 
 }
