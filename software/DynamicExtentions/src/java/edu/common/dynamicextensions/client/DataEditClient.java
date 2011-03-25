@@ -1,3 +1,4 @@
+
 package edu.common.dynamicextensions.client;
 
 import java.io.IOException;
@@ -11,26 +12,30 @@ import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.utility.HTTPSConnection;
 
-public class DataEditClient extends AbstractClient {
+public class DataEditClient extends AbstractClient
+{
 
 	private Object object;
-	Map<AbstractAttributeInterface, Object> dataValue ;
+	Map<AbstractAttributeInterface, Object> dataValue;
+
 	@Override
-	protected void initializeResources(String[] args)
-			throws DynamicExtensionsSystemException, IOException {
-		serverUrl = new URL(serverUrl+"DataEditHandler");
+	protected void initializeResources(String[] args) throws DynamicExtensionsSystemException,
+			IOException
+	{
+		serverUrl = new URL(serverUrl + "DataEditHandler");
 	}
 
 	@Override
-	protected void validate(String[] args)
-			throws DynamicExtensionsSystemException {
+	protected void validate(String[] args) throws DynamicExtensionsSystemException
+	{
 		// TODO Auto-generated method stub
 
 	}
+
 	@Override
-	protected void performAction(HTTPSConnection httpsConnection,
-			URLConnection servletConnection)
-			throws DynamicExtensionsSystemException, IOException {
+	protected void performAction(HTTPSConnection httpsConnection, URLConnection servletConnection)
+			throws DynamicExtensionsSystemException, IOException
+	{
 		ObjectOutputStream outputToServlet = new ObjectOutputStream(servletConnection
 				.getOutputStream());
 		outputToServlet.writeObject(paramaterObjectMap);
@@ -38,31 +43,36 @@ public class DataEditClient extends AbstractClient {
 		outputToServlet.close();
 
 	}
+
 	@Override
 	protected void processResponse(URLConnection servletConnection)
-			throws DynamicExtensionsSystemException{
+			throws DynamicExtensionsSystemException
+	{
 		ObjectInputStream inputFromServlet = null;
 		try
 		{
-			inputFromServlet = new ObjectInputStream(servletConnection
-					.getInputStream());
+			inputFromServlet = new ObjectInputStream(servletConnection.getInputStream());
 			object = inputFromServlet.readObject();
 		}
 		catch (IOException e)
 		{
-			throw new DynamicExtensionsSystemException(
-					"Error in reading objects from responce", e);
-		} catch (ClassNotFoundException e) {
-			throw new DynamicExtensionsSystemException(
-					"Error in reading objects from responce", e);
-		}finally
+			throw new DynamicExtensionsSystemException("Error in reading objects from responce", e);
+		}
+		catch (ClassNotFoundException e)
 		{
-			try {
-				if(inputFromServlet != null)
+			throw new DynamicExtensionsSystemException("Error in reading objects from responce", e);
+		}
+		finally
+		{
+			try
+			{
+				if (inputFromServlet != null)
 				{
 					inputFromServlet.close();
 				}
-			} catch (IOException e) {
+			}
+			catch (IOException e)
+			{
 				throw new DynamicExtensionsSystemException(
 						"Error in reading objects from responce", e);
 			}
@@ -70,22 +80,24 @@ public class DataEditClient extends AbstractClient {
 		}
 	}
 
-	public Object getObject() {
+	public Object getObject()
+	{
 		return object;
 	}
 
-	public void setObject(Object object) {
+	public void setObject(Object object)
+	{
 		this.object = object;
 	}
 
-	public Map<AbstractAttributeInterface, Object> getDataValue() {
+	public Map<AbstractAttributeInterface, Object> getDataValue()
+	{
 		return dataValue;
 	}
 
-	public void setDataValue(Map<AbstractAttributeInterface, Object> dataValue) {
+	public void setDataValue(Map<AbstractAttributeInterface, Object> dataValue)
+	{
 		this.dataValue = dataValue;
 	}
-
-
 
 }

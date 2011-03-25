@@ -1480,8 +1480,11 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		List<FileQueryBean> fileAttrQueryList = new ArrayList<FileQueryBean>();
 		try
 		{
-			jdbcDao = DynamicExtensionsUtility.getJDBCDAO(sessionDataBean);
-			hibernateDao = DynamicExtensionsUtility.getHibernateDAO(sessionDataBean);
+			//Reverting back
+			/*jdbcDao = DynamicExtensionsUtility.getJDBCDAO(sessionDataBean);
+			hibernateDao = DynamicExtensionsUtility.getHibernateDAO(sessionDataBean);*/
+			jdbcDao = DynamicExtensionsUtility.getJDBCDAO(null);
+			hibernateDao = DynamicExtensionsUtility.getHibernateDAO(null);
 			final Long entityRecId = getRootCategoryEntityRecordId(rootCatEntity, recordId, jdbcDao);
 			final Long identifier = (((userId != null) && (userId.length > 0)) ? userId[0] : null);
 			final List<Long> entityRecIds = new ArrayList<Long>();

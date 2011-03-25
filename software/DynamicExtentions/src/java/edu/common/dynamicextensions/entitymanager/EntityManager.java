@@ -1730,7 +1730,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		map.put(WebUIManagerConstants.DYNAMIC_OBJECT_ID, TargetEntityRecordId);
 		map.put(WebUIManagerConstants.PACKAGE_NAME, getPackageName(associationInterface
 				.getTargetEntity(), ""));
-		map.put(WebUIManagerConstants.SESSION_DATA_BEAN, sessionDataBean);
+		// Reverting back
+		//map.put(WebUIManagerConstants.SESSION_DATA_BEAN, sessionDataBean);
+		map.put(WebUIManagerConstants.SESSION_DATA_BEAN, null);
 		DataAssociationClient associationClient = new DataAssociationClient();
 		try
 		{
@@ -1739,7 +1741,6 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		}
 		catch (MalformedURLException e)
 		{
-			// TODO Auto-generated catch block
 			throw new DynamicExtensionsSystemException(
 					"MalformedURLException: address not correct." + e);
 		}
