@@ -857,7 +857,7 @@ function updateControlsSequence()
         // Open connection to servlet
         request.open("POST","AjaxcodeHandlerAction.do",true);
         request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-        request.send("&ajaxOperation=updateControlsSequence&gridControlIds="+gridItemIds);
+        request.send(encodeURI("&ajaxOperation=updateControlsSequence&gridControlIds="+gridItemIds));
     }
 }
 
@@ -1190,7 +1190,7 @@ function groupChanged(flagClearAttributeList)
 
         request.open("POST","AjaxcodeHandlerAction.do",true);
         request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-        request.send("&ajaxOperation=changeGroup&grpName="+grpName);
+        request.send(encodeURI("&ajaxOperation=changeGroup&grpName="+grpName));
     }
 }
 
@@ -1273,7 +1273,7 @@ function formChanged(flagClearAttributeList)
 
         request.open("POST","AjaxcodeHandlerAction.do",true);
         request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-        request.send("&ajaxOperation=changeForm&frmName="+frmName);
+        request.send(encodeURI("&ajaxOperation=changeForm&frmName="+frmName));
     }
 }
 
@@ -1664,7 +1664,7 @@ function removeCheckedRow(containerId)
     // Open connection to servlet
     request.open("POST","AjaxcodeHandlerAction.do",true);
     request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-    request.send("&ajaxOperation=deleteRowsForContainment&containerId=" + containerId+"&deletedRowIds="+deletedRowIds);
+    request.send(encodeURI("&ajaxOperation=deleteRowsForContainment&containerId=" + containerId+"&deletedRowIds="+deletedRowIds));
 }
 
 function ignoreResponseHandler(str)
@@ -1906,7 +1906,7 @@ function treeNodeSelected(fldName)
     request.open("POST","AjaxcodeHandlerAction.do",true);
     request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     // var selectedFormName = document.getElementById(fldName).value;
-    request.send("&ajaxOperation=selectFormNameFromTree&selectedFormName="+fldName);
+    request.send(encodeURI("&ajaxOperation=selectFormNameFromTree&selectedFormName="+fldName));
 }
 
 // Previously defined entity selected
@@ -1931,7 +1931,7 @@ function definedEntitySelected(fldname)
         // Open connection to servlet
         request.open("POST","AjaxcodeHandlerAction.do",true);
         request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-        request.send("&ajaxOperation=selectFormNameFromAssociationTree&selectedFormId="+fldname);
+        request.send(encodeURI("&ajaxOperation=selectFormNameFromAssociationTree&selectedFormId="+fldname));
     }
     else
     {
@@ -2075,7 +2075,7 @@ function groupSelected(groupList)
             request.onreadystatechange = handlerFunction;
             request.open("POST","AjaxcodeHandlerAction.do",true);
             request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-            request.send("&ajaxOperation=selectGroup&selectedGroupName="+groupName);
+            request.send(encodeURI("&ajaxOperation=selectGroup&selectedGroupName="+groupName));
         }
     }
 }
@@ -2102,8 +2102,8 @@ function evaluateFormulaForAttribute(controlName)
 		request.open("POST", "ApplyDataEntryFormAction.do", true);
 		request.setRequestHeader("Content-Type",
 				"application/x-www-form-urlencoded");
-		request.send("&dataEntryOperation=evaluateFormula&selectedControlId="
-				+ controlName);
+		request.send(encodeURI("&dataEntryOperation=evaluateFormula&selectedControlId="
+				+ controlName));
     }
 }
 
@@ -2197,7 +2197,7 @@ function getValues()
 /*
  * This attribute is added for live validation.
  * If value is not valid then do not display any other errors.
- * Display only live validation errors which is shown as toolTip. 
+ * Display only live validation errors which is shown as toolTip.
  */
 var isValid = true;
 function calculateAttributes()
@@ -2872,7 +2872,7 @@ function insertBreadCrumbForSubForm(containerId,applicationName)
 		request.onreadystatechange = handlerFunction;
 		request.open("POST","AjaxcodeHandlerAction.do",true);
 		request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-		request.send("&ajaxOperation=breadCrumbOperation&breadCrumbOperation=prepareBreadCrumbLink&containerId="+containerId);
+		request.send(encodeURI("&ajaxOperation=breadCrumbOperation&breadCrumbOperation=prepareBreadCrumbLink&containerId="+containerId));
 	}
 }
 
@@ -2898,23 +2898,23 @@ function updateServerState(controlName, controlId, containerId)
 	{
 		document.getElementById('isDirty').value = true;
 	}
-	var checkBoxValue = "";	
+	var checkBoxValue = "";
 	var request = newXMLHTTPReq();
     var vControl = document.getElementById(controlName);
     if(vControl == null)
 	{
-    	var controls =  document.getElementsByName(controlName);		
+    	var controls =  document.getElementsByName(controlName);
 		if(controls.length > 1)
 		{
 			for(var i=0;i<controls.length;i++)
 			{
-				var obj = controls.item(i);				
+				var obj = controls.item(i);
 				if(obj.checked && obj.type == "checkbox") //for multiSelect checkBox.
-				{					
+				{
 					vControl = obj;
-					checkBoxValue = checkBoxValue + "~" + obj.value;					
+					checkBoxValue = checkBoxValue + "~" + obj.value;
 				}
-				else if(obj.checked) //for radioButton			
+				else if(obj.checked) //for radioButton
 				{
 					vControl = obj;
 					break;
@@ -2925,14 +2925,14 @@ function updateServerState(controlName, controlId, containerId)
 		{
 			vControl = controls[0]; // for other controls.
 		}
-	}	
+	}
 	if(vControl.type=="select-one")
 	{
 		return;
 	}
-	var controlValue = vControl.value;	
+	var controlValue = vControl.value;
     var vPatentControl = vControl.parentNode;
-    var vParentOriginal = vPatentControl.innerHTML.split('&nbsp;&nbsp;')[0];		    
+    var vParentOriginal = vPatentControl.innerHTML.split('&nbsp;&nbsp;')[0];
     if(vControl.type=="select-multiple") // for listBox
     {
     	var newValue = controlValue;
@@ -2951,7 +2951,7 @@ function updateServerState(controlName, controlId, containerId)
     if(vControl.type=="checkbox" && checkBoxValue != "") // for multiSelect checkBox
 	{
 		controlValue = checkBoxValue.substring(1,checkBoxValue.length);
-	}	
+	}
     request.open("POST","AjaxcodeHandlerAction.do",true);
     request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     request.onreadystatechange=function()
@@ -2959,7 +2959,7 @@ function updateServerState(controlName, controlId, containerId)
 		if (request.readyState==4 && request.status==200)
 		{
 			// Live Validation Code below only for non-enumerated attributes.
-			var vMessage=request.responseText;							
+			var vMessage=request.responseText;
 			if(vMessage != '' && vMessage.length > 0)
 			{
 				var vFormattedMsg=vMessage.replace(',','<br/>');
@@ -3005,14 +3005,14 @@ function updateServerState(controlName, controlId, containerId)
 					{
 						vRecentControl.value = controlValue;
 					}
-				}				
+				}
 				vRecentControl.className = "font_bl_nor" ;
 				vRecentControl.title = "";
 			}
 		}
     }
-    request.send("&ajaxOperation=updateServerState&containerId=" + containerId + "&controlId=" + controlId
-			+ "&controlValue=" + controlValue + "&controlName=" + controlName);
+    request.send(encodeURI("&ajaxOperation=updateServerState&containerId=" + containerId + "&controlId=" + controlId
+			+ "&controlValue=" + controlValue + "&controlName=" + controlName));
 }
 
 // ==================Copy Paste=============
@@ -3050,7 +3050,7 @@ function pasteDataPart(clipboardData,index,categoryEntityName)
     request.onreadystatechange = handlerFunction;
     request.open("POST","AjaxcodeHandlerAction.do",true);
     request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-    request.send("&ajaxOperation=pasteData&containerId="+conatinerId+"&cardinality="+cardinality+"&index="+index+"&clipboradData="+clipboardData+"&categoryEntityName="+categoryEntityName);
+    request.send(encodeURI("&ajaxOperation=pasteData&containerId="+conatinerId+"&cardinality="+cardinality+"&index="+index+"&clipboradData="+clipboardData+"&categoryEntityName="+categoryEntityName));
 }
 
 function pasteData(conatinerId_temp,cardinality_temp,categoryEntityName)
