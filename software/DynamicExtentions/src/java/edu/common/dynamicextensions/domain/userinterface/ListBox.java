@@ -242,12 +242,12 @@ public class ListBox extends SelectControl implements ListBoxInterface
 			multSelWithAutoCmpltHTML.append("<br><table border=\"0\" width=\"400\">\n");
 			multSelWithAutoCmpltHTML.append("\t<tr>\n");
 			multSelWithAutoCmpltHTML
-					.append("\t\t<td width=\"35%\" class=\"black_ar_new\" valign=\"TOP\">\n");
+					.append("\t\t<td width=\"35%\" class=\"black_ar_new1\" valign=\"TOP\">\n");
 			multSelWithAutoCmpltHTML.append("\t\t\t<input type='text' id='" + coordId + "' name='"
 					+ coordId + "' value =' ' size='20'/>\n");
 			multSelWithAutoCmpltHTML.append("\t\t</td>\n\n");
 			multSelWithAutoCmpltHTML
-					.append("\t\t<td class=\"black_ar_new\" width=\"20%\" align=\"center\" valign=\"TOP\">\n");
+					.append("\t\t<td class=\"black_ar_new1\" width=\"20%\" align=\"center\" valign=\"TOP\">\n");
 			multSelWithAutoCmpltHTML
 					.append("\t\t\t<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n");
 			multSelWithAutoCmpltHTML.append("\t\t\t\t<tr>\n");
@@ -280,7 +280,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 			multSelWithAutoCmpltHTML.append("\t\t\t</table>\n");
 			multSelWithAutoCmpltHTML.append("\t\t</td>\n\n");
 			multSelWithAutoCmpltHTML
-					.append("\t\t<td width=\"50%\" align=\"center\" class=\"black_ar_new\">\n");
+					.append("\t\t<td width=\"50%\" align=\"center\" class=\"black_ar_new1\">\n");
 			multSelWithAutoCmpltHTML.append("\t\t\t<SELECT id=\"" + protocolCoordId + "\" name=\""
 					+ getHTMLComponentName()
 					+ "\" size=\"4\" multiple=\"true\" style=\"width:170\">");
