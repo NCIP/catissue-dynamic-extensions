@@ -119,8 +119,7 @@ public class ApplyDataEntryFormProcessor extends BaseDynamicExtensionsProcessor
 		Map<String, Object> clientmap = new HashMap<String, Object>();
 		DataEntryClient dataEntryClient=new DataEntryClient();
 		clientmap.put(WebUIManagerConstants.RECORD_ID, recordIdentifier);
-		// Reverting back
-		//clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, sessionDataBean);
+		clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, sessionDataBean);
 		clientmap.put(WebUIManagerConstants.USER_ID, userId);
 		clientmap.put(WebUIManagerConstants.CONTAINER, container);
 		clientmap.put(WebUIManagerConstants.DATA_VALUE_MAP, attributeValueMap);

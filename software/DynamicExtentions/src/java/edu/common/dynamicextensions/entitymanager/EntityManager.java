@@ -1730,9 +1730,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		map.put(WebUIManagerConstants.DYNAMIC_OBJECT_ID, TargetEntityRecordId);
 		map.put(WebUIManagerConstants.PACKAGE_NAME, getPackageName(associationInterface
 				.getTargetEntity(), ""));
-		// Reverting back
-		//map.put(WebUIManagerConstants.SESSION_DATA_BEAN, sessionDataBean);
-		map.put(WebUIManagerConstants.SESSION_DATA_BEAN, null);
+		map.put(WebUIManagerConstants.SESSION_DATA_BEAN, sessionDataBean);
 		DataAssociationClient associationClient = new DataAssociationClient();
 		try
 		{

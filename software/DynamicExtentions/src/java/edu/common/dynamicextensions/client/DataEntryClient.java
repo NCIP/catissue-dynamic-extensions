@@ -66,7 +66,10 @@ public class DataEntryClient extends AbstractClient
 		{
 			try
 			{
-				inputFromServlet.close();
+				if (inputFromServlet != null)
+				{
+					inputFromServlet.close();
+				}
 			}
 			catch (IOException e)
 			{

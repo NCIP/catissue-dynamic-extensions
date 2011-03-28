@@ -158,9 +158,7 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 			String applicationName = DynamicExtensionDAO.getInstance().getAppName();
 			hibernateDao = (HibernateDAO) DAOConfigFactory.getInstance()
 					.getDAOFactory(applicationName).getDAO();
-			//Reverting back
-			//hibernateDao.openSession(sessionDataBean);
-			hibernateDao.openSession(null);
+			hibernateDao.openSession(sessionDataBean);
 			Object staticEntity = hibernateDao
 					.retrieveById(tmpPackageName
 							+ "."
