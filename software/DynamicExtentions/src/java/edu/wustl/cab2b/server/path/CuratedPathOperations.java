@@ -4,13 +4,12 @@ package edu.wustl.cab2b.server.path;
 import java.util.List;
 import java.util.Set;
 
+import edu.common.dynamicextensions.domaininterface.PathInterface;
 import edu.wustl.cab2b.common.exception.RuntimeException;
 import edu.wustl.common.bizlogic.DefaultBizLogic;
 import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.querysuite.metadata.path.CuratedPath;
 import edu.wustl.common.querysuite.metadata.path.ICuratedPath;
-import edu.wustl.common.querysuite.metadata.path.IPath;
-import edu.wustl.common.querysuite.metadata.path.Path;
 
 /**
  * Class for C R U D operations on curated path
@@ -78,12 +77,12 @@ public class CuratedPathOperations extends DefaultBizLogic
 	 * @param identifier identifier of the path
 	 * @return path object
 	 */
-	public IPath getPathById(Long identifier)
+	public PathInterface getPathById(Long identifier)
 	{
 		try
 		{
-			List<?> pathList = retrieve(Path.class.getName(), "pathId", identifier);
-			return (IPath) pathList.get(0);
+			List<?> pathList = retrieve(edu.common.dynamicextensions.domain.Path.class.getName(), "id", identifier);
+			return (PathInterface) pathList.get(0);
 		}
 		catch (BizLogicException e)
 		{
