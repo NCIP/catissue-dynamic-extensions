@@ -140,6 +140,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					&& (!getIsSkipLogicTargetControl() && !"skipLogicAttributes"
 							.equals(getDataEntryOperation())))
 			{
+			//FIXME - Need to refactor the below code. Added method 'generateScriptTagForAutoComplete()' in super class
 				htmlString += "<script "
 						+ (((CategoryEntityInterface) getParentContainer().getAbstractEntity())
 								.getParentCategoryEntity() == null ? "" : " id='subformExtScript' ")
