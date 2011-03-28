@@ -33,23 +33,11 @@ public class CuratedPathOperationsTest extends DynamicExtensionsBaseTestCase
 		}
 	}
 
-	//    public void testIsDuplicate() {
-	//        CuratedPathOperations opr = new CuratedPathOperations();
-	//
-	//        List<ICuratedPath> list = opr.getAllCuratedPath();
-	//        if (!list.isEmpty()) {
-	//            boolean res = opr.isDuplicate(list.get(0));
-	//            assertTrue(res);
-	//
-	//        }
-	//    }
-
 	public void testGetPathById()
 	{
-		CuratedPathOperations opr = new CuratedPathOperations();
 		try
 		{
-			opr.getPathById(1L);
+			new CuratedPathOperations().getPathById(1L);
 		}
 		catch (Throwable t)
 		{
