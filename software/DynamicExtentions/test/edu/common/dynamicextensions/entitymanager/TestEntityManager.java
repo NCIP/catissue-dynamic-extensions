@@ -9,6 +9,8 @@
 
 package edu.common.dynamicextensions.entitymanager;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import edu.common.dynamicextensions.client.DataEditClient;
 import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
 import edu.common.dynamicextensions.domain.Attribute;
 import edu.common.dynamicextensions.domain.AttributeTypeInformation;
@@ -37,6 +40,7 @@ import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CaDSRValueDomainInfoInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.NumericTypeInformationInterface;
@@ -54,8 +58,10 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsValidationException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.ControlConfigurationsFactory;
+import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationDirection;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
@@ -432,10 +438,14 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(startDate, "02-2009");
 			dataValue.put(endDate, "2009");
 
-			EntityManagerInterface manager = EntityManager.getInstance();
-			Long recordId = manager.insertData(clinicalAnnotations, dataValue, null, null);
+
+
+			ContainerInterface 	containerInterface = (ContainerInterface)clinicalAnnotations.getContainerCollection().toArray()[0];
+			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
+
 			assertNotNull(recordId);
-			Map map = manager.getRecordById(clinicalAnnotations, recordId);
+			Map map = EntityManager.getInstance().getRecordById(clinicalAnnotations, recordId);
 
 			assertEquals("02-2009", map.get(startDate));
 			assertEquals("2009", map.get(endDate));
@@ -444,10 +454,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 			dataValue.put(startDate, "08-2010");
 			dataValue.put(endDate, "2010");
+			editData(containerInterface,recordId,dataValue);
 
-			manager.editData(clinicalAnnotations, dataValue, recordId, null, null);
-
-			map = manager.getRecordById(clinicalAnnotations, recordId);
+			map = EntityManager.getInstance().getRecordById(clinicalAnnotations, recordId);
 			assertEquals("08-2010", map.get(startDate));
 			assertEquals("2010", map.get(endDate));
 
@@ -471,7 +480,29 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			Logger.out.debug(e.getStackTrace());
 		}
 	}
+	public void editData(ContainerInterface container,Long recordId,Map dataValue) throws MalformedURLException
+	{
+		String entityGroupName=null;
+		if(container.getAbstractEntity() instanceof EntityInterface)
+		{
+			entityGroupName=((Entity)container.getAbstractEntity()).getEntityGroup().getName();
+		}
+		else
+		{
+			entityGroupName=((CategoryEntityInterface) container.getAbstractEntity()).getEntity().getEntityGroup().getName();
+		}
+		Map<String, Object> clientmap = new HashMap<String, Object>();
+		DataEditClient dataEditClient=new DataEditClient();
+		clientmap.put(WebUIManagerConstants.RECORD_ID, recordId);
+		clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, null);
+		clientmap.put(WebUIManagerConstants.USER_ID, null);
+		clientmap.put(WebUIManagerConstants.CONTAINER, container);
+		clientmap.put(WebUIManagerConstants.DATA_VALUE_MAP, dataValue);
+		dataEditClient.setServerUrl(new URL(Variables.jbossUrl+entityGroupName+"/"));
+		dataEditClient.setParamaterObjectMap(clientmap);
+		dataEditClient.execute(null);
 
+	}
 	/**
 	 * This method associates static entity record Id with dynamic entity record
 	 * Id
@@ -776,10 +807,11 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(startDate, "02-2009");
 			dataValue.put(endDate, "2009");
 
-			EntityManagerInterface manager = EntityManager.getInstance();
-			Long recordId = manager.insertData(clinicalAnnotations, dataValue, null, null);
+			ContainerInterface 	containerInterface = (ContainerInterface)clinicalAnnotations.getContainerCollection().toArray()[0];
+			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 			assertNotNull(recordId);
-			Map map = manager.getRecordById(clinicalAnnotations, recordId);
+			Map map = EntityManager.getInstance().getRecordById(clinicalAnnotations, recordId);
 
 			assertEquals("02-2009", map.get(startDate));
 			assertEquals("2009", map.get(endDate));
@@ -1459,11 +1491,11 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(dateTimeAtt, testDateTime);
 			dataValue.put(dateOnlyAtt, testDateValue);
 
-			EntityManagerInterface entityManager = EntityManager.getInstance();
-			Long recordId = entityManager.insertData(diagnosis, dataValue, null, null);
-
+			ContainerInterface 	containerInterface = (ContainerInterface)diagnosis.getContainerCollection().toArray()[0];
+			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 			// Step 3.
-			dataValue = entityManager.getRecordById(diagnosis, recordId);
+			dataValue = EntityManager.getInstance().getRecordById(diagnosis, recordId);
 
 			assertEquals(testDateTime, dataValue.get(dateTimeAtt));
 			assertEquals(testDateValue, dataValue.get(dateOnlyAtt));
@@ -1496,11 +1528,13 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(durationAtt, "15");
 			dataValue.put(monthYearAtt, monthYearValue);
 			dataValue.put(yearOnlyAtt, yearValue);
-			EntityManagerInterface entityManager = EntityManager.getInstance();
-			Long recordId = entityManager.insertData(chemoTheropyEntity, dataValue, null, null);
+
+			ContainerInterface 	containerInterface = (ContainerInterface)chemoTheropyEntity.getContainerCollection().toArray()[0];
+			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 
 			// Step 3.
-			dataValue = entityManager.getRecordById(chemoTheropyEntity, recordId);
+			dataValue = EntityManager.getInstance().getRecordById(chemoTheropyEntity, recordId);
 
 			assertEquals("15", dataValue.get(durationAtt));
 			assertEquals("15", dataValue.get(durationAtt));
@@ -1540,11 +1574,13 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 					+ ProcessorConstants.DATE_SEPARATOR + "1998";
 			dataValue.put(testDate, testDateValue);
 
-			EntityManagerInterface entityManager = EntityManager.getInstance();
-			Long recordId = entityManager.insertData(labTestEntity, dataValue, null, null);
+
+			ContainerInterface 	containerInterface = (ContainerInterface)labTestEntity.getContainerCollection().toArray()[0];
+			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 
 			// Step 3. Validate data
-			dataValue = entityManager.getRecordById(labTestEntity, recordId);
+			dataValue = EntityManager.getInstance().getRecordById(labTestEntity, recordId);
 
 			assertEquals("test Agent", dataValue.get(testAgent));
 			assertEquals(testDateValue, dataValue.get(testDate));
