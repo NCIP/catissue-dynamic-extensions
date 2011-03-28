@@ -14,6 +14,7 @@ import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterfa
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.entitymanager.CategoryManager;
 import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
 import edu.common.dynamicextensions.entitymanager.EntityGroupManager;
@@ -72,7 +73,10 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 
 			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 			Map<BaseAbstractAttributeInterface, Object> dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity, 0);
-			Long recordId = categoryManager.insertData(category, dataValue);
+
+			ContainerInterface 	containerInterface = (ContainerInterface)category.getRootCategoryElement().getContainerCollection().toArray()[0];
+			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 
 			List<Long> recordEntryIdList=new ArrayList<Long>();
 
@@ -111,7 +115,9 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 
 			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 			Map<BaseAbstractAttributeInterface, Object> dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity, 0);
-			Long recordId = categoryManager.insertData(category, dataValue);
+			ContainerInterface 	containerInterface = (ContainerInterface)category.getRootCategoryElement().getContainerCollection().toArray()[0];
+			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 
 			EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
 					TEST_ENTITYGROUP_NAME);
@@ -146,7 +152,10 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 
 			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 			Map<BaseAbstractAttributeInterface, Object> dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity, 0);
-			Long recordId = categoryManager.insertData(category, dataValue);
+
+			ContainerInterface 	containerInterface = (ContainerInterface)category.getRootCategoryElement().getContainerCollection().toArray()[0];
+			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 
 			Long recordIdentifier = categoryManager.getEntityRecordIdByRootCategoryEntityRecordId(
 					recordId, category.getRootCategoryElement().getTableProperties().getName());
@@ -182,7 +191,10 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 
 			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 			Map<BaseAbstractAttributeInterface, Object> dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity, 0);
-			Long recordId = categoryManager.insertData(category, dataValue);
+
+			ContainerInterface 	containerInterface = (ContainerInterface)category.getRootCategoryElement().getContainerCollection().toArray()[0];
+			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 
 			Long recordIdentifier = categoryManager.getEntityRecordIdByRootCategoryEntityRecordId(
 					recordId, category.getRootCategoryElement().getTableProperties().getName());
@@ -229,13 +241,6 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 			//search for association between static and dynamic entities for associating these two entities
 			Collection<AssociationInterface> asntCollection = staticEntity
 					.getAssociationCollection();
-			System.out.println("**************************************************************************");
-			System.out.println(asntCollection);
-			System.out.println(asntCollection.size());
-			System.out.println(staticEntity);
-			System.out.println(staticEntity.getAssociationCollection());
-			System.out.println(staticEntity.getAssociationCollection().size());
-			System.out.println("**************************************************************************");
 			AssociationInterface asntInterface = null;
 			for (AssociationInterface association : asntCollection)
 			{
@@ -274,7 +279,10 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 
 			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 			Map<BaseAbstractAttributeInterface, Object> dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity, 0);
-			Long recordId = categoryManager.insertData(category, dataValue);
+
+			ContainerInterface 	containerInterface = (ContainerInterface)category.getRootCategoryElement().getContainerCollection().toArray()[0];
+			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 
 			List<Long> recordEntryIdList=new ArrayList<Long>();
 
@@ -311,7 +319,11 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 
 			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 			Map<BaseAbstractAttributeInterface, Object> dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity, 0);
-			Long recordId = categoryManager.insertData(category, dataValue);
+
+			ContainerInterface 	containerInterface = (ContainerInterface)category.getRootCategoryElement().getContainerCollection().toArray()[0];
+			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
+
 			Long recordIdentifier = categoryManager.getEntityRecordIdByRootCategoryEntityRecordId(
 					recordId, category.getRootCategoryElement().getTableProperties().getName());
 
@@ -343,7 +355,10 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 
 			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 			Map<BaseAbstractAttributeInterface, Object> dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity, 0);
-			Long recordId = categoryManager.insertData(category, dataValue);
+
+			ContainerInterface 	containerInterface = (ContainerInterface)category.getRootCategoryElement().getContainerCollection().toArray()[0];
+			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 
 			Long recordIdentifier = categoryManager.getEntityRecordIdByRootCategoryEntityRecordId(
 					recordId, category.getRootCategoryElement().getTableProperties().getName());
@@ -376,7 +391,10 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 
 			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 			Map<BaseAbstractAttributeInterface, Object> dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity, 0);
-			Long recordId = categoryManager.insertData(category, dataValue);
+
+			ContainerInterface 	containerInterface = (ContainerInterface)category.getRootCategoryElement().getContainerCollection().toArray()[0];
+			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 
 			Long recordIdentifier = categoryManager.getEntityRecordIdByRootCategoryEntityRecordId(
 					recordId, category.getRootCategoryElement().getTableProperties().getName());
@@ -407,7 +425,10 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 
 			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 			Map<BaseAbstractAttributeInterface, Object> dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity, 0);
-			Long recordId = categoryManager.insertData(category, dataValue);
+
+			ContainerInterface 	containerInterface = (ContainerInterface)category.getRootCategoryElement().getContainerCollection().toArray()[0];
+			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 
 			Long recordIdentifier = categoryManager.getEntityRecordIdByRootCategoryEntityRecordId(
 					recordId, category.getRootCategoryElement().getTableProperties().getName());
@@ -443,7 +464,10 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 
 			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 			Map<BaseAbstractAttributeInterface, Object> dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity, 0);
-			Long recordId = categoryManager.insertData(category, dataValue);
+
+			ContainerInterface 	containerInterface = (ContainerInterface)category.getRootCategoryElement().getContainerCollection().toArray()[0];
+			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 
 			Long recordIdentifier = categoryManager.getEntityRecordIdByRootCategoryEntityRecordId(
 					recordId, category.getRootCategoryElement().getTableProperties().getName());
@@ -512,7 +536,10 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 
 			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 			Map<BaseAbstractAttributeInterface, Object> dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity, 0);
-			Long recordId = categoryManager.insertData(category, dataValue);
+
+			ContainerInterface 	containerInterface = (ContainerInterface)category.getRootCategoryElement().getContainerCollection().toArray()[0];
+			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 
 			List<Long> recordEntryIdList=new ArrayList<Long>();
 
@@ -548,7 +575,10 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 
 			CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 			Map<BaseAbstractAttributeInterface, Object> dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity, 0);
-			Long recordId = categoryManager.insertData(category, dataValue);
+
+			ContainerInterface 	containerInterface = (ContainerInterface)category.getRootCategoryElement().getContainerCollection().toArray()[0];
+			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 
 			Long recordIdentifier = categoryManager.getEntityRecordIdByRootCategoryEntityRecordId(
 					recordId, category.getRootCategoryElement().getTableProperties().getName());
