@@ -2795,7 +2795,7 @@ function getSkipLogicControl(controlName, controlId, containerId)
 					            		if (skipLogicDiv!= null && originalDiv != null)
 					            		{
 					            			originalDiv.innerHTML = skipLogicDiv.innerHTML;
-					            			var items = originalDiv.getElementsByTagName('script');
+					            			var items = skipLogicDiv.getElementsByTagName('script');
 											for(var i=0;i<items.length;i++)
 											{
 												eval(items[i].innerHTML);
