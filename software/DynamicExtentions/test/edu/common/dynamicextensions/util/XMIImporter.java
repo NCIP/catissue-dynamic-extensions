@@ -10,6 +10,7 @@ import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.entitymanager.EntityManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.xmi.XMIConfiguration;
 import edu.common.dynamicextensions.xmi.importer.AbstractXMIImporter;
 import edu.wustl.common.exception.BizLogicException;
@@ -29,7 +30,7 @@ public class XMIImporter extends AbstractXMIImporter
 			{
 				args[3]="edu.wustl.catissuecore.domain.RecordEntry";
 			}
-
+			Variables.serverUrl=args[7];
 			XMIImporter xmiImporter = new XMIImporter();
 			xmiImporter.importXMI(args);
 		}
