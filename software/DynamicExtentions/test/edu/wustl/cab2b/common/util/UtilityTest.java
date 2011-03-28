@@ -138,7 +138,7 @@ public class UtilityTest extends DynamicExtensionsBaseTestCase {
 		assertEquals("Gene", res);
 	}
 	public void testGetEntityGroup() {
-		EntityInterface entity = TestUtil.getEntity("Gene");
+		EntityInterface entity = TestUtil.getEntity("LabTest");
 		boolean gotException = false;
 		try {
 			Utility.getEntityGroup(entity);

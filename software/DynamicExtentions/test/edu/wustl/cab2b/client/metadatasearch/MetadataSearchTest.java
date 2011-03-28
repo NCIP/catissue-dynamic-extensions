@@ -108,7 +108,7 @@ public class MetadataSearchTest extends DynamicExtensionsBaseTestCase
 
 		MetadataSearch metadataSearch = new MetadataSearch(entityCache);
 		int[] searchTargetStatus = {Constants.CLASS_WITH_DESCRIPTION};
-		String[] searchString = {"test3--ClinicalAnnotations"};
+		String[] searchString = {"test--ClinicalAnnotations"};
 		int basedOn = Constants.BASED_ON_TEXT;
 		try
 		{
