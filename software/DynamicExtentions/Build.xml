@@ -853,10 +853,14 @@
 				<param name="sleep-time-seconds" value="300" />
 			</antcall>
 			<echo message="Junit started running" />
+
+			<antcall target="import.static.and.test.model"/>
+			<antcall target="import.caTissueCoreModel"/>
+			<antcall target="import.GeneconnectModel"/>
+
 			<junit printsummary="yes" haltonerror="no" haltonfailure="no" fork="yes" maxmemory="1024m" timeout="5400000">
 
 				<sysproperty key="net.sourceforge.cobertura.datafile" file="./cobertura/coverage.ser" />
-
 
 				<!--formatter type="plain" usefile="false"/-->
 				<formatter type="xml" />
@@ -908,8 +912,8 @@
 				<property name="hookentity" value="none" />
 				<property name="addQueryPaths" value="false" />
 				<property name="generate.cacore" value="false" />
-				<property name="jboss.home.dir" value="${jboss.home.dir}" />
-				<property name="default.prifix.war" value="${default.prifix.war}" />
+				<property name="cacore.deployable.dir" value="${cacore.location}" />
+				<property name="Application.url" value="${Application.url}" />
 			</ant>
 
 			<antcall target="create.record.entry.table"/>
@@ -924,8 +928,7 @@
 				<property name="addQueryPaths" value="true" />
 				<property name="testcases" value="True" />
 				<property name="cacore.deployable.dir" value="${cacore.location}" />
-				<property name="jboss.home.dir" value="${jboss.home.dir}" />
-				<property name="default.prifix.war" value="${default.prifix.war}" />
+				<property name="Application.url" value="${Application.url}" />
 			</ant>
 
 			<echo message="Test Model loaded Successfully" />
@@ -938,8 +941,7 @@
 				<property name="addQueryPaths" value="true" />
 				<property name="testcases" value="True" />
 				<property name="cacore.deployable.dir" value="${cacore.location}" />
-				<property name="jboss.home.dir" value="${jboss.home.dir}" />
-				<property name="default.prifix.war" value="${default.prifix.war}" />
+				<property name="Application.url" value="${Application.url}" />
 			</ant>
 			<echo message="Test Model Edited Successfully" />
 		</target>
@@ -1035,11 +1037,17 @@
 			<ant target="compile_test_cases" />
 			<!--<ant target="checkout_test_model" />-->
 
-			<antcall target="import.static.and.test.model"/>
-			<antcall target="import.caTissueCoreModel"/>
-			<antcall target="import.GeneconnectModel"/>
-			<antcall target="import.permissiblevalues" />
+			<copy file="src/conf/web.xml" tofile="src/conf/webBackup.xml" overwrite="true"/>
+
+			<ant antfile="DEDeploy.xml" dir="./binaries/" target="updatecache">
+				<property name="webxml.path" value="../src/conf" />
+			</ant>
+
 			<antcall target="deploy" />
+
+			<delete file="src/conf/web.xml" />
+			<copy file="src/conf/webBackup.xml" tofile="src/conf/web.xml" overwrite="true"/>
+			<delete file="src/conf/webBackup.xml" />
 
 			<ant target="run_junit" />
 			<ant antfile="src/conf/cobertura.xml" target="coverage.report" >
@@ -1387,4 +1395,12 @@
 				</classpath>
 			</sql>
 		</target>
+
+	<!-- =================================
+          target: execute.testcase
+         ================================= -->
+    <target name="execute.testcase" depends="db_initialized,generate_schema,generate_codecoverage_report" description="description">
+
+    </target>
+
 	</project>

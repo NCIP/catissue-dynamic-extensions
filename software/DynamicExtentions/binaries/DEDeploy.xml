@@ -657,6 +657,7 @@
 			<arg value="${addQueryPaths}" />
 			<arg value="${condition}" />
 			<arg value="${generate.cacore}" />
+			<arg value="${Application.url}" />
 			<sysproperty key="net.sourceforge.cobertura.datafile" file="../cobertura/coverage.ser" />
 			<classpath>
 				<pathelement location="${base.dir}/classes/" />
@@ -1325,12 +1326,12 @@
 	     Audit related targets end
          ================================= -->
 	<target name="release.forms" description="To release forms locked for model updates">
-		
+
 		<antcall target="setupClassExecutionEnvironment" />
 		<java failonerror="true" classname="edu.common.dynamicextensions.util.CacheTask" fork="yes">
 			<arg value="${entity.group.name}" />
 			<arg value="${Application.url}/" />
-			
+
 			<classpath>
 				<pathelement location="${temp.dir.DE}" />
 				<fileset dir="${lib.dir.DE}">
@@ -1356,6 +1357,7 @@
 			<param name="package" value="${package.name}" />
 			<param name="hookentity" value="${hookentity}" />
 			<param name="addQueryPaths" value="${addQueryPaths}" />
+			<param name="Application.url" value="${Application.url}" />
 		</antcall>
 
 		<delete dir="${tempcacore.dir}" />
@@ -1996,12 +1998,35 @@
           target: update.import.pv.version.property.
          ================================= -->
 	<target name="update.import.pv.version.property" depends="" description="This ant task updates the Import pv version property mentioned in Applicaiton Resource Property file of DE">
-		<!--<if name="import.pv.version.classname">-->
 		<propertyfile file="${app.resource.path}/ApplicationResources.properties">
 			<entry key="import.pv.version.implementation" value="${import.pv.version.classname}" />
 		</propertyfile>
-		<!--</if>-->
 	</target>
+
+	<!-- =================================
+          target: updatecache
+         ================================= -->
+    <target name="updatecache" description="This property adds the updatecache entry in the web.xml while running JUnit test cases">
+    	<echo message="Inside update cache *********************************************************************" />
+    	<replace file="${webxml.path}/web.xml">
+			<replacetoken>&lt;/web-app&gt;</replacetoken>
+			<replacevalue>
+				<![CDATA[
+				    	 <servlet>
+							<servlet-name>UpdateCache</servlet-name>
+							<servlet-class>edu.common.dynamicextensions.ui.webui.action.UpdateCache</servlet-class>
+						</servlet>
+						<servlet-mapping>
+						<servlet-name>UpdateCache</servlet-name>
+						<url-pattern>/UpdateCache</url-pattern>
+						</servlet-mapping>
+
+						</web-app>
+				 ]]>
+			</replacevalue>
+    	</replace>
+    </target>
+
 
 	<!-- =================================
 		       generate.bo.template
