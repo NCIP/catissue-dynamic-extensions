@@ -60,4 +60,36 @@ public class TestImportPermissibleValues extends DynamicExtensionsBaseTestCase
 			fail();
 		}
 	}
+
+	public void testAddPermissibleValuesInXMLFormatRhinovirus()
+	{
+		try
+		{
+			System.out.println("Inside testEditPermissibleValuesInXMLFormat test case");
+			String[] parameters = {"CPUML",APPLICATIONURL,"CPUML/TestModels/TestModel_withTags/edited/PVs/Rhinovirus.xml","false"};
+			PermissibleValuesClient.main(parameters);
+			System.out.println("Outside testEditPermissibleValuesInXMLFormat test case");
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail();
+		}
+	}
+
+	public void testAddPermissibleValuesInXMLFormatNewPV()
+	{
+		try
+		{
+			System.out.println("Inside testEditPermissibleValuesInXMLFormat test case");
+			String[] parameters = {"CPUML",APPLICATIONURL,"CPUML/TestModels/TestModel_withTags/edited/PVs/NewPVs.xml","false"};
+			PermissibleValuesClient.main(parameters);
+			System.out.println("Outside testEditPermissibleValuesInXMLFormat test case");
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail();
+		}
+	}
 }
