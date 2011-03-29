@@ -1286,52 +1286,6 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
-	public void testInsertDataForCategoryforautomationofbugs()
-	{
-		CategoryInterface category = null;
-		try
-		{
-			category = EntityCache.getInstance().getCategoryByName("Automation form for bugs");
-			assertNotNull(category);
-			insertDataForCategory(category);
-		}
-		catch (Exception e)
-		{
-			System.out.println("Record Insertion failed for Category " + category.getName());
-		}
-
-	}
-	public void testEditDataForCategoryforautomationofbugs()
-	{
-		CategoryInterface category = null;
-		try
-		{
-			category = EntityCache.getInstance().getCategoryByName("Automation form for bugs");
-			Long recordId = insertDataForCategory(category);
-			System.out.println("Record inserted succesfully for " + category.getName()
-					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
-		}
-		catch (Exception e)
-		{
-			System.out.println("Record Insertion failed for Category " + category.getName());
-		}
-
-	}
-	public void testValidateDataFormCategoryforautomationofbugs()
-	{
-		CategoryInterface category = null;
-		try
-		{
-			category = EntityCache.getInstance().getCategoryByName("Automation form for bugs");
-			testValidateDataForCategorie(category);
-		}
-		catch (Exception e)
-		{
-			System.out.println("Record validation failed for Category " + category.getName());
-		}
-
-	}
 	public void testInsertDataForCategoryConfigurePasteNegative()
 	{
 		CategoryInterface category = null;
@@ -1339,8 +1293,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Test Category_Negative Case for Paste");
-			assertNotNull(category);
-			insertDataForCategory(category);
+			assertNull("testInsertDataForCategoryConfigurePasteNegative: Expecting null as category Test Category_Negative Case for Paste should not have been created.",category);
 		}
 		catch (Exception e)
 		{
@@ -1353,11 +1306,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Test Category_Negative Case for Paste");
-			Long recordId = insertDataForCategory(category);
-			System.out.println("Record inserted succesfully for " + category.getName()
-					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			category = EntityCache.getInstance().getCategoryByName("c");
+			assertNull("testInsertDataForCategoryConfigurePasteNegative: Expecting null as category Test Category_Negative Case for Paste should not have been created.",category);
+
 		}
 		catch (Exception e)
 		{
@@ -1371,7 +1322,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Test Category_Negative Case for Paste");
-			testValidateDataForCategorie(category);
+			assertNull("testInsertDataForCategoryConfigurePasteNegative: Expecting null as category Test Category_Negative Case for Paste should not have been created.",category);
 		}
 		catch (Exception e)
 		{
