@@ -61,8 +61,8 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	}
 	protected final static String TEST_MODEL_DIR = "CPUML/TestModels/TestModel_withTags/edited";
 	protected final static String XMI_FILE_PATH = "./src/resources/xmi/";
-    protected final static String XML_FILE_PATH = "./src/resources/xml/";
-//    protected final static String XML_FILE_PATH = "./software/DynamicExtentions/src/resources/xml/";
+	protected final static String XML_FILE_PATH = "./src/resources/xml/";
+	//    protected final static String XML_FILE_PATH = "./software/DynamicExtentions/src/resources/xml/";
 	protected final static String CSV_FILE_PATH = "./src/resources/csv/";
 	protected final static String PV_FILE_PATH = "./src/resources/pvs/";
 	protected final static String RESOURCE_DIR_PATH = "./src/resources/";
@@ -79,6 +79,11 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	protected final static String LONG_TYPE = "long";
 	protected final static String APPLICATIONURL = "http://10.88.199.44:28080/dynamicExtensions";
 	protected final static String APPLICATIONURLFORWAR = "http://10.88.199.44:28080/dynamicExtensionsdefault";
+
+	static
+	{
+		Variables.serverUrl = APPLICATIONURLFORWAR;
+	}
 
 	JDBCDAO dao;
 
@@ -422,12 +427,13 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	 * @param container
 	 * @return
 	 */
-	protected ControlInterface getControlByCpation(String controlCaption, ContainerInterface container)
+	protected ControlInterface getControlByCpation(String controlCaption,
+			ContainerInterface container)
 	{
 		ControlInterface controlInterface = null;
-		for(ControlInterface control: container.getControlCollection())
+		for (ControlInterface control : container.getControlCollection())
 		{
-			if(controlCaption.equals(control.getCaption()))
+			if (controlCaption.equals(control.getCaption()))
 			{
 				controlInterface = control;
 				break;
@@ -436,27 +442,29 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 		}
 		return controlInterface;
 	}
+
 	/**
 	 * This method traverses the complete
 	 * @param containerCaption
 	 * @param container - root container of the category
 	 * @return
 	 */
-	protected ContainerInterface getContainerByName(String containerCaption, ContainerInterface container)
+	protected ContainerInterface getContainerByName(String containerCaption,
+			ContainerInterface container)
 	{
 		ContainerInterface searchedContainer = null;
-		if(container.getCaption().equals(containerCaption))
+		if (container.getCaption().equals(containerCaption))
 		{
 			return container;
 		}
 
-		for(ControlInterface control: container.getControlCollection())
+		for (ControlInterface control : container.getControlCollection())
 		{
-			if(control instanceof AbstractContainmentControl)
+			if (control instanceof AbstractContainmentControl)
 			{
 				searchedContainer = getContainerByName(containerCaption,
-						((AbstractContainmentControl)control).getContainer());
-				if(searchedContainer != null)
+						((AbstractContainmentControl) control).getContainer());
+				if (searchedContainer != null)
 				{
 					break;
 				}
@@ -472,15 +480,17 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	 * @return
 	 */
 	protected Map<BaseAbstractAttributeInterface, Object> getContainerDataValueMap(
-			Map<BaseAbstractAttributeInterface, Object> dataValueMap, ControlInterface control,int rowId)
+			Map<BaseAbstractAttributeInterface, Object> dataValueMap, ControlInterface control,
+			int rowId)
 	{
 		for (Map.Entry<BaseAbstractAttributeInterface, Object> entry : dataValueMap.entrySet())
 		{
 			BaseAbstractAttributeInterface attribute = entry.getKey();
 			if (attribute instanceof CategoryAssociationInterface
-					&& (DataValueMapUtility.isChildControl(control,attribute)))
+					&& (DataValueMapUtility.isChildControl(control, attribute)))
 			{
-				return ((List<Map<BaseAbstractAttributeInterface, Object>>) entry.getValue()).get(rowId);
+				return ((List<Map<BaseAbstractAttributeInterface, Object>>) entry.getValue())
+						.get(rowId);
 			}
 		}
 		return null;
