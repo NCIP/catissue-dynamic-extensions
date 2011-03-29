@@ -37,7 +37,6 @@ import edu.common.dynamicextensions.domain.userinterface.Container;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
-import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CaDSRValueDomainInfoInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
@@ -1659,8 +1658,10 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				validatorRule.validate(date, "11" + ProcessorConstants.DATE_SEPARATOR + "16"
 						+ ProcessorConstants.DATE_SEPARATOR + "1982", rulesMap, "LeapYear");
 			}
+			ContainerInterface 	containerInterface = (ContainerInterface)entity.getContainerCollection().toArray()[0];
+			recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 
-			recordId = entityManager.insertData(savedEntity, dataValue, null, null);
 			assertEquals(recordId, null);
 		}
 		catch (DynamicExtensionsValidationException e)
@@ -1788,7 +1789,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			 * "09" + ProcessorConstants.DATE_SEPARATOR + "2018");
 			 */
 
-			recordId = entityManager.insertData(entity1, dataValue, null, null);
+			ContainerInterface 	containerInterface = (ContainerInterface)entity1.getContainerCollection().toArray()[0];
+			recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 
 			dataValue = entityManager.getRecordById(entity1, recordId);
 
@@ -1865,8 +1868,10 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				validatorRule.validate(date, "11" + ProcessorConstants.DATE_SEPARATOR + "16"
 						+ ProcessorConstants.DATE_SEPARATOR + "2000", null, "Date");
 			}
+			ContainerInterface 	containerInterface = (ContainerInterface)savedEntity.getContainerCollection().toArray()[0];
+			recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 
-			recordId = entityManager.insertData(savedEntity, dataValue, null, null);
 		}
 		catch (DynamicExtensionsValidationException e)
 		{
@@ -1909,7 +1914,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(barcode, "123'456");
 
 			EntityManagerInterface.persistEntity(specimen);
-			EntityManagerInterface.insertData(specimen, dataValue, null, null);
+			ContainerInterface 	containerInterface = (ContainerInterface)specimen.getContainerCollection().toArray()[0];
+			DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 
 			assertTrue(true);
 		}
@@ -2142,7 +2149,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				Map dataValue = new HashMap();
 				dataValue.put(floatAtribute, "15.90");
 
-				recordId1 = EntityManagerInterface.insertData(savedEntity, dataValue, null, null);
+				ContainerInterface 	containerInterface = (ContainerInterface)savedEntity.getContainerCollection().toArray()[0];
+				recordId1=DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+						dataValue);
 
 				dataValue = EntityManagerInterface.getRecordById(entity, recordId1);
 
@@ -2156,7 +2165,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				Map dataValue2 = new HashMap();
 				dataValue2.put(floatAtribute, "15.90");
 
-				recordId2 = EntityManagerInterface.insertData(savedEntity, dataValue2, null, null);
+				recordId2=DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+						dataValue2);
+
 				assertEquals(recordId2, null);
 			}
 			catch (DynamicExtensionsValidationException e)
@@ -2218,8 +2229,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				validatorRule.validate(floatTypeAttribute, incorrectValue, null, floatTypeAttribute
 						.getName());
 			}
-
-			recordId = entityManager.insertData(savedEntity, dataValue, null, null);
+			ContainerInterface 	containerInterface = (ContainerInterface)savedEntity.getContainerCollection().toArray()[0];
+			recordId=DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 			assertEquals(recordId, null);
 		}
 		catch (DynamicExtensionsValidationException e)
@@ -2411,7 +2423,10 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				Map map = dataValueMap;
 				List<String> errorList = new ArrayList<String>();
 				ValidatorUtil.validateEntity(dataValueMap, errorList, container, true);
-				long recordId = entityManager.insertData(entity, map, null, null);
+				ContainerInterface 	containerInterface = (ContainerInterface)entity.getContainerCollection().toArray()[0];
+				Long recordId=DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+						map);
+
 				System.out.println("Record inserted succesfully for entity " + entity
 						+ " recordId " + recordId);
 			}
@@ -2466,7 +2481,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				Map<BaseAbstractAttributeInterface, Object> dataValueMap = mapGenerator
 						.createDataValueMapForEntity(entity, 0);
 				Map map = dataValueMap;
-				long recordId = entityManager.insertData(entity, map, null, null);
+				ContainerInterface 	containerInterface = (ContainerInterface)entity.getContainerCollection().toArray()[0];
+				Long recordId=DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+						map);
 				System.out.println("Record inserted succesfully for " + entity + " recordId "
 						+ recordId);
 				Map<AbstractAttributeInterface, Object> editedDataValueMap = entityManager
