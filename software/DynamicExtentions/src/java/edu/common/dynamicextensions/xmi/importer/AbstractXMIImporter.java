@@ -193,7 +193,7 @@ public abstract class AbstractXMIImporter
 
 			DEClient client = new DEClient();
 			client.setParamaterObjectMap(map);
-			client.setServerUrl(new URL(Variables.serverUrl + "UpdateCache"));
+			client.setServerUrl(getServerUrl());
 			client.execute(null);
 		}
 		catch (Exception e)
@@ -218,6 +218,22 @@ public abstract class AbstractXMIImporter
 	}
 
 	/**
+	 * This method checks whether Application URL has '/' appended or not and accordingly returns the URL object
+	 * @return
+	 * @throws MalformedURLException
+	 */
+	private URL getServerUrl() throws MalformedURLException
+	{
+		StringBuilder url = new StringBuilder(Variables.serverUrl);
+		if (!Variables.serverUrl.endsWith("/"))
+		{
+			url.append("/");
+		}
+		url.append("UpdateCache");
+		return new URL(url.toString());
+	}
+
+	/**
 	 * Lock froms.
 	 * @param entityGroupInterface
 	 * @throws DynamicExtensionsApplicationException the dynamic extensions application exception
@@ -232,7 +248,7 @@ public abstract class AbstractXMIImporter
 		client.setParamaterObjectMap(map);
 		try
 		{
-			client.setServerUrl(new URL(Variables.serverUrl + "UpdateCache"));
+			client.setServerUrl(getServerUrl());
 		}
 		catch (MalformedURLException e)
 		{
