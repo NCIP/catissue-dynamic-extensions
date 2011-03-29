@@ -11,7 +11,6 @@ import edu.common.dynamicextensions.category.TestXMLToCSVConverter;
 import edu.common.dynamicextensions.categoryManager.TestCalculatedAttribute;
 import edu.common.dynamicextensions.categoryManager.TestCategoryCreation;
 import edu.common.dynamicextensions.categoryManager.TestCategoryManager;
-import edu.common.dynamicextensions.categoryManager.TestCategoryUtil;
 import edu.common.dynamicextensions.categoryManager.TestDEIntegration;
 import edu.common.dynamicextensions.categoryManager.TestPvVersion;
 import edu.common.dynamicextensions.client.TestValidateAgainstSchema;
@@ -116,7 +115,7 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 		suite.addTestSuite(SQLQueryUtilTest.class);
 		suite.addTestSuite(TestControlsUtility.class);
 		suite.addTestSuite(CategoryUtilTest.class);
-		suite.addTestSuite(TestCategoryUtil.class);
+		//suite.addTestSuite(TestCategoryUtil.class);
 		suite.addTestSuite(TestQueryableObjectUtility.class);
 		suite.addTestSuite(TestQueryableEntity.class);
 		suite.addTestSuite(TestQueryableCategory.class);

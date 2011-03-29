@@ -77,8 +77,9 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	protected final static String STRING_TYPE = "string";
 	protected final static String INT_TYPE = "int";
 	protected final static String LONG_TYPE = "long";
-	protected final String APPLICATIONURL = "http://10.88.199.44:28080/dynamicExtensions";
+	protected final static String APPLICATIONURL = "http://10.88.199.44:28080/dynamicExtensions";
 	protected final static String APPLICATIONURLFORWAR = "http://10.88.199.44:28080/dynamicExtensionsdefault";
+
 	JDBCDAO dao;
 
 	protected DummyMapGenerator mapGenerator = new DummyMapGenerator();

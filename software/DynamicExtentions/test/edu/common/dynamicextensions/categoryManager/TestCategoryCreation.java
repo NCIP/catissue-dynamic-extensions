@@ -27,7 +27,6 @@ import edu.common.dynamicextensions.domaininterface.StaticCategoryInterface;
 import edu.common.dynamicextensions.entitymanager.StaticCategoryManager;
 import edu.common.dynamicextensions.entitymanager.StaticCategoryManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.util.CategoryGenerationUtil;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.parser.CategoryFileParser;
@@ -48,10 +47,10 @@ public class TestCategoryCreation extends DynamicExtensionsBaseTestCase
 	{
 		try
 		{
-			String[] args = {CATEGORY_FILE_DIR, APPLICATIONURL};//, TEST_MODEL_DIR + "/catNames.txt"};
+			String[] args = {CATEGORY_FILE_DIR, APPLICATIONURL, TEST_MODEL_DIR + "/cat_list_for_test_edited1.txt"};
 			CategoryClient.main(args);
 			System.out.println("done categoryCreation");
-			assertAllCategoriesCreatedInDir(CATEGORY_FILE_DIR);
+			assertAllCategoriesCreatedInFile(TEST_MODEL_DIR + "/cat_list_for_test_edited1.txt");
 
 		}
 		catch (Exception e)
@@ -62,17 +61,18 @@ public class TestCategoryCreation extends DynamicExtensionsBaseTestCase
 	}
 
 	/**
-	 * This test case will create the categories present in the CPUML Folder & specified in the catNames2.txt.
+	 * This test case will create all the categories present in the CPUML Folder.
 	 * If one of the category creation is failed then this test case is also failed.
 	 */
 	public void testCreateCategory2()
 	{
 		try
 		{
-			String[] args = {CATEGORY_FILE_DIR, APPLICATIONURL, TEST_MODEL_DIR + "/catNames2.txt"};
+			String[] args = {CATEGORY_FILE_DIR, APPLICATIONURL, TEST_MODEL_DIR + "/cat_list_for_test_edited2.txt"};
 			CategoryClient.main(args);
 			System.out.println("done categoryCreation");
-			assertAllCategoriesCreatedInFile(TEST_MODEL_DIR + "/catNames2.txt");
+			assertAllCategoriesCreatedInFile(TEST_MODEL_DIR + "/cat_list_for_test_edited2.txt");
+
 		}
 		catch (Exception e)
 		{
@@ -82,17 +82,18 @@ public class TestCategoryCreation extends DynamicExtensionsBaseTestCase
 	}
 
 	/**
-	 * This method will find out the names of the categories present in the given catDir & will verify
-	 * wether that categories are saved in DB or not.
-	 * @param catDir category directory.
+	 * This test case will create all the categories present in the CPUML Folder.
+	 * If one of the category creation is failed then this test case is also failed.
 	 */
-	private void assertAllCategoriesCreatedInDir(String catDir)
+	public void testCreateCategory3()
 	{
 		try
 		{
-			List<String> catFiles = CategoryGenerationUtil.getCategoryFileListInDirectory(new File(
-					catDir), catDir + File.separator);
-			assertCategoriesFromFiles(catFiles);
+			String[] args = {CATEGORY_FILE_DIR, APPLICATIONURL, TEST_MODEL_DIR + "/cat_list_for_test_edited3.txt"};
+			CategoryClient.main(args);
+			System.out.println("done categoryCreation");
+			assertAllCategoriesCreatedInFile(TEST_MODEL_DIR + "/cat_list_for_test_edited3.txt");
+
 		}
 		catch (Exception e)
 		{
