@@ -1026,6 +1026,18 @@ public abstract class AbstractEntityCache implements IEntityCache
 	}
 
 	/**
+	 * Release all entities. This method will release all the entities as Entities in Use.
+	 * @param allEntities the all entities that are to release
+	 */
+	public synchronized void releaseAllEntities(Collection<EntityInterface> allEntities)
+	{
+		for (EntityInterface entityInterface : allEntities)
+		{
+			entitiesInUse.remove(entityInterface.getId());
+		}
+	}
+
+	/**
 	 * Gets the skip logic by container identifier.
 	 * @param containerIdentifier the container identifier
 	 * @return the skip logic by container identifier
