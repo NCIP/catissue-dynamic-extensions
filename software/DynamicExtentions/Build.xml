@@ -965,8 +965,7 @@
 				<property name="addQueryPaths" value="true" />
 				<property name="generate.cacore" value="false" />
 				<property name="cacore.deployable.dir" value="${cacore.location}" />
-				<property name="jboss.home.dir" value="${jboss.home.dir}" />
-				<property name="default.prifix.war" value="${default.prifix.war}" />
+				<property name="Application.url" value="${Application.url}" />
 			</ant>
 		</target>
 
@@ -979,8 +978,7 @@
 				<property name="addQueryPaths" value="true" />
 				<property name="generate.cacore" value="false" />
 				<property name="cacore.deployable.dir" value="${cacore.location}" />
-				<property name="jboss.home.dir" value="${jboss.home.dir}" />
-				<property name="default.prifix.war" value="${default.prifix.war}" />
+				<property name="Application.url" value="${Application.url}" />
 			</ant>
 		</target>
 

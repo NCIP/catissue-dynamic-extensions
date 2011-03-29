@@ -682,6 +682,7 @@
 			<arg value="${addQueryPaths}" />
 			<arg value="${condition}" />
 			<arg value="${generate.cacore}" />
+			<arg value="${Application.url}" />
 			<sysproperty key="net.sourceforge.cobertura.datafile" file="../cobertura/coverage.ser" />
 			<classpath>
 				<pathelement location="${base.dir}/classes/" />
