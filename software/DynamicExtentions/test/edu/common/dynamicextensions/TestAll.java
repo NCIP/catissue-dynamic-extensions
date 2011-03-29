@@ -38,6 +38,7 @@ import edu.common.dynamicextensions.xmi.TestAnnotationUtil;
 import edu.common.dynamicextensions.xmi.TestUpdateCSRToEntityPath;
 import edu.wustl.cab2b.client.metadatasearch.MetadataSearchTest;
 import edu.wustl.cab2b.common.cache.CompareUtilTest;
+import edu.wustl.cab2b.common.cache.UpdateCacheTestCases;
 import edu.wustl.cab2b.common.util.IdGeneratorTest;
 import edu.wustl.cab2b.common.util.TreeNodeTest;
 import edu.wustl.cab2b.server.path.CuratedPathOperationsTest;
@@ -140,6 +141,7 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 		suite.addTestSuite(TestServerProperties.class);
 		suite.addTestSuite(TestReadPermissibleValueProcessor.class);
 		suite.addTestSuite(TestBOTemplateGenerator.class);
+		suite.addTestSuite(UpdateCacheTestCases.class);
 		return suite;
 	}
 }
