@@ -7,6 +7,7 @@ import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.xmi.XMIConfiguration;
 import edu.common.dynamicextensions.xmi.importer.AbstractXMIImporter;
 import edu.wustl.common.exception.BizLogicException;
@@ -22,6 +23,7 @@ public class CiderXMIImporter extends AbstractXMIImporter
 	 */
 	public static void main(String[] args)
 	{
+		Variables.serverUrl=args[7];
 		CiderXMIImporter xmiImporter = new CiderXMIImporter();
 		xmiImporter.importXMI(args);
 	}
