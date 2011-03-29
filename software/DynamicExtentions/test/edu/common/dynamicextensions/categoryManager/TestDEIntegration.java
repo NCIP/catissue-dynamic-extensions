@@ -38,7 +38,7 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 
 	private final String CATEGORY_FILE_DIR = "CPUML";
 	private final String ENTITY_BY_NAME = "ClinicalAnnotations";
-	private final String CATEGORY_NAME="Test Category_Chemotherapy";
+	private final String CATEGORY_NAME="TestCase52";
 	/**
 	 * This test case will create all the categories present in the CPUML Folder.
 	 * If one of the category creation is failed then this test case is also failed.
@@ -237,7 +237,7 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 
 			//Get static entity from metadata id of recordEntry
 			EntityInterface staticEntity = manager.getEntityByName("edu.wustl.catissuecore.domain.RecordEntry");
-
+			System.out.println("staticEntity "+staticEntity.getId()+" and staticEntityRecId "+staticEntityRecId + " recordId "+recordId);
 			//search for association between static and dynamic entities for associating these two entities
 			Collection<AssociationInterface> asntCollection = staticEntity
 					.getAssociationCollection();
@@ -568,7 +568,6 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 			EntityManagerInterface manager = EntityManager.getInstance();
 			DEIntegration deIntegration = new DEIntegration();
 			CategoryManagerInterface categoryManager = CategoryManager.getInstance();
-			getCategoryIdentifier();
 			Category category = (Category) categoryManager.getCategoryByName(CATEGORY_NAME);
 			Collection<Container> containers=category.getRootCategoryElement().getContainerCollection();
 			Container container=containers.iterator().next();
