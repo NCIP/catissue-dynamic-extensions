@@ -841,12 +841,12 @@
 		<target name="run_junit">
 			<delete dir="${junit.report.dir}" />
 			<mkdir dir="${junit.report.dir}" />
-			<echo message="Now shutting down the server" />
+			<!--echo message="Now shutting down the server" />
 			<antcall target="stop-appserver" />
 			<antcall target="sleep">
 				<param name="sleep-time-seconds" value="240" />
 			</antcall>
-			<echo message="Shut down complete" />
+			<echo message="Shut down complete" /-->
 			<delete file="${jboss.home.dir}/bin/cobertura.ser"/>
 			<antcall target="start-appserver" />
 			<antcall target="sleep">
@@ -1035,7 +1035,7 @@
 			<ant target="compile_test_cases" />
 			<!--<ant target="checkout_test_model" />-->
 
-			<copy file="src/conf/web.xml" tofile="src/conf/webBackup.xml" overwrite="true"/>
+			<!--copy file="src/conf/web.xml" tofile="src/conf/webBackup.xml" overwrite="true"/>
 
 			<ant antfile="DEDeploy.xml" dir="./binaries/" target="updatecache">
 				<property name="webxml.path" value="../src/conf" />
@@ -1045,7 +1045,7 @@
 
 			<delete file="src/conf/web.xml" />
 			<copy file="src/conf/webBackup.xml" tofile="src/conf/web.xml" overwrite="true"/>
-			<delete file="src/conf/webBackup.xml" />
+			<delete file="src/conf/webBackup.xml" /-->
 
 			<ant target="run_junit" />
 			<ant antfile="src/conf/cobertura.xml" target="coverage.report" >
