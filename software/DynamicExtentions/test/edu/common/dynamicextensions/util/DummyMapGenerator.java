@@ -25,6 +25,7 @@ import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.StringAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.UserDefinedDE;
 import edu.common.dynamicextensions.domain.userinterface.AbstractContainmentControl;
+import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
@@ -146,6 +147,7 @@ public class DummyMapGenerator
 						.getDataElement(null)).getPermissibleValueCollection())
 				{
 					dataValue.put(catAtt, permissibleValue.getValueAsObject().toString());
+					break;
 				}
 			}
 		}
@@ -181,10 +183,11 @@ public class DummyMapGenerator
 		}
 	}
 
+	
 	private FileAttributeRecordValue getFileRecordValueForAttribute()
 			throws DynamicExtensionsSystemException
 	{
-		File formFile = new File("src/java/ApplicationDAOProperties.xml");
+		File formFile = new File(DynamicExtensionsBaseTestCase.FILE_LOCATION);
 		FileAttributeRecordValue fileAttributeRecordValue = new FileAttributeRecordValue();
 		fileAttributeRecordValue.setFileContent(getFileContents(formFile));
 		fileAttributeRecordValue.setFileName(formFile.getName());
@@ -299,18 +302,25 @@ public class DummyMapGenerator
 			int mapStratergy) throws ParseException
 	{
 		AttributeInterface abstractAttribute;
-		Set<RuleInterface> attributeRules;
-		if (attribute instanceof CategoryAttributeInterface)
+		Set<RuleInterface> attributeRules = new HashSet<RuleInterface>();
+		if (attribute instanceof CategoryAttributeInterface
+				&& !((CategoryAttributeInterface) attribute).getRuleCollection().isEmpty())
 		{
 			CategoryAttributeInterface catAttribute = (CategoryAttributeInterface) attribute;
 			abstractAttribute = (AttributeInterface) catAttribute.getAbstractAttribute();
-
-			attributeRules = new HashSet<RuleInterface>(catAttribute.getRuleCollection());
+			attributeRules.addAll(catAttribute.getRuleCollection());
+			attributeRules.addAll(abstractAttribute.getRuleCollection());
+		}
+		else if (attribute instanceof CategoryAttributeInterface)
+		{
+			CategoryAttributeInterface catAttribute = (CategoryAttributeInterface) attribute;
+			abstractAttribute = (AttributeInterface) catAttribute.getAbstractAttribute();
+			attributeRules.addAll(abstractAttribute.getRuleCollection());
 		}
 		else
 		{
 			abstractAttribute = (AttributeInterface) attribute;
-			attributeRules = new HashSet<RuleInterface>(abstractAttribute.getRuleCollection());
+			attributeRules.addAll(abstractAttribute.getRuleCollection());
 		}
 		Date dateValue = new Date();
 		String format = ((DateAttributeTypeInformation) abstractAttribute

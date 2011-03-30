@@ -28,6 +28,7 @@ public class DynamicExtensionsUtilityTest extends DynamicExtensionsBaseTestCase
 	private CategoryInterface getCategory() throws DynamicExtensionsSystemException
 	{
 		Long categoryIdentifier = getCategoryIdentifier();
+		System.out.println("getCategory()-fetching category with id - " + categoryIdentifier);
 		return CategoryManager.getInstance().getCategoryById(categoryIdentifier);
 	}
 
@@ -188,6 +189,7 @@ public class DynamicExtensionsUtilityTest extends DynamicExtensionsBaseTestCase
 		{
 			LOGGER
 					.info("-----------------Test For getting container by caption started--------------------");
+			System.out.println("-----------------Test For getting container by caption started--------------------");
 			ContainerInterface container = (ContainerInterface) getCategory()
 					.getRootCategoryElement().getContainerCollection().iterator().next();
 			String caption = container.getCaption();

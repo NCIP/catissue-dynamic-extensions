@@ -78,7 +78,8 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	protected final static String INT_TYPE = "int";
 	protected final static String LONG_TYPE = "long";
 	protected final static String APPLICATIONURL = "http://10.88.199.44:28080/dynamicExtensions";
-	protected final static String APPLICATIONURLFORWAR = "http://10.88.199.44:28080/dynamicExtensionsdefault";
+	protected final static String APPLICATIONURLFORWAR = "http://10.88.199.210:28080/dynamicExtensionsdefault";
+	protected final static String FILE_LOCATION = "/home/Hudson_Home/workspace/DynamicExtensions-1.5.1/sourcecode/software/DynamicExtentions/src/java/ApplicationDAOProperties.xml";
 
 	static
 	{
