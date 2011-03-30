@@ -43,6 +43,7 @@ import edu.wustl.cab2b.common.beans.MatchedClassEntry;
 import edu.wustl.cab2b.common.exception.RuntimeException;
 import edu.wustl.cab2b.common.util.Utility;
 import edu.wustl.cab2b.server.util.DynamicExtensionUtility;
+import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.exception.DAOException;
 
@@ -57,6 +58,8 @@ import edu.wustl.dao.exception.DAOException;
  */
 public abstract class AbstractEntityCache implements IEntityCache
 {
+
+	private static final String DATA_ENTRY_CONTAINER_IN_USE = "data.entry.container.in.use";
 
 	private static final long serialVersionUID = 1234567890L;
 
@@ -877,7 +880,7 @@ public abstract class AbstractEntityCache implements IEntityCache
 		if (containerInUse.contains(container.getId()))
 		{
 			throw new DynamicExtensionsCacheException(
-					"Container is already in use; try after some time.");
+					ApplicationProperties.getValue(DATA_ENTRY_CONTAINER_IN_USE));
 		}
 		return container;
 	}
