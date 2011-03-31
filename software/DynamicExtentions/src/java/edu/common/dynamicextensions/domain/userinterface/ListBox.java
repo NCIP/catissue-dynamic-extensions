@@ -436,7 +436,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		{
 			for (NameValueBean bean : nameValueBeans)
 			{
-				if (bean.getValue().equals(value))
+				if (bean.getValue().equals(DynamicExtensionsUtility.getEscapedStringValue(value)))
 				{
 					isInavlidVaue = false;
 					break;
