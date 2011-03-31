@@ -23,7 +23,7 @@ import edu.common.dynamicextensions.util.CategoryHelper;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.parser.CategoryGenerator;
-import edu.wustl.bulkoperator.ImportBulkOperationUsingDAO;
+import edu.wustl.bulkoperator.templateImport.ImportBulkOperationUsingDAO;
 import edu.wustl.bulkoperator.util.BulkOperationConstants;
 import edu.wustl.bulkoperator.util.BulkOperationException;
 import edu.wustl.cab2b.server.cache.EntityCache;
