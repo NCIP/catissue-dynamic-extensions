@@ -85,6 +85,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -104,6 +105,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 	}
 	public void testValidateDataForSingleCategories()
@@ -117,6 +119,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -133,6 +136,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 	}
 	public void testEditDataForForCategoryRadiotherapy()
@@ -149,6 +153,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -163,6 +168,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -178,6 +184,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -195,6 +202,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -209,6 +217,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -224,6 +233,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 	}
 	public void testEditDataForForCategoryDiagnosis()
@@ -240,6 +250,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -254,6 +265,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -269,6 +281,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 	}
 	public void testEditDataForForCategoryAnnotation()
@@ -285,6 +298,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -299,6 +313,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -315,6 +330,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -332,6 +348,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -346,6 +363,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -361,6 +379,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -378,6 +397,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -392,6 +412,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -408,6 +429,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -425,6 +447,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -439,6 +462,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -455,6 +479,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -472,6 +497,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -486,6 +512,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -501,6 +528,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -518,6 +546,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -532,6 +561,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -547,6 +577,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -564,6 +595,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -578,6 +610,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -593,6 +626,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -610,6 +644,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -624,6 +659,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -640,6 +676,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -657,6 +694,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -671,6 +709,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -689,6 +728,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -706,6 +746,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -720,6 +761,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -738,6 +780,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -755,6 +798,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -769,6 +813,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -787,6 +832,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -804,6 +850,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -818,6 +865,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -833,6 +881,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -850,6 +899,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -864,6 +914,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -880,6 +931,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -897,6 +949,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -911,6 +964,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -927,6 +981,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -944,6 +999,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -958,6 +1014,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -974,6 +1031,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -991,6 +1049,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1005,6 +1064,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1020,6 +1080,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1037,6 +1098,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1051,6 +1113,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1066,6 +1129,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1083,6 +1147,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1097,6 +1162,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1112,6 +1178,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1129,6 +1196,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1143,6 +1211,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1159,6 +1228,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1176,6 +1246,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1190,6 +1261,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1206,6 +1278,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1223,6 +1296,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1237,6 +1311,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1252,6 +1327,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1269,6 +1345,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1283,6 +1360,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1343,6 +1421,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1360,6 +1439,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1374,6 +1454,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1389,6 +1470,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1406,6 +1488,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1420,6 +1503,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1435,6 +1519,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1452,6 +1537,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1466,6 +1552,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1481,6 +1568,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1498,6 +1586,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
 		}
 
 	}
@@ -1512,6 +1601,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
 		}
 
 	}
