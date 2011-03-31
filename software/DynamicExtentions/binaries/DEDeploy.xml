@@ -1525,6 +1525,12 @@
 						<include name="DynamicExtensions.jar" />
 					</fileset>
 				</copy>
+				<delete file="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib/washu-commons-1.1.7.jar" />
+				<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib" overwrite="true">
+					<fileset dir="${de.zip.location}/lib/server" >
+						<include name="washu-commons-1.1.8.jar" />
+					</fileset>
+				</copy>
 				<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/classes" overwrite="true">
 					<fileset dir="${de.zip.location}/dem.war/WEB-INF/classes" >
 						<include name="DynamicExtensionDAO.properties" />
@@ -1535,6 +1541,7 @@
 						<include name="web.xml" />
 					</fileset>
 				</copy>
+				
 
 			</then>
 			<elseif>
@@ -1597,6 +1604,12 @@
 					<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib" overwrite="true">
 						<fileset dir="${de.zip.location}/binaries/DynamicExtensionsInterface" >
 							<include name="DynamicExtensions.jar" />
+						</fileset>
+					</copy>
+					<delete file="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib/washu-commons-1.1.7.jar" />
+					<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib" overwrite="true">
+						<fileset dir="${de.zip.location}/lib/server" >
+							<include name="washu-commons-1.1.8.jar" />
 						</fileset>
 					</copy>
 					<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/classes" overwrite="true">
