@@ -7,7 +7,7 @@
 
     <session-factory>
     	<property name="show_sql">false</property>
-   		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="dialect">org.hibernate.dialect.Oracle9Dialect</property>
 
    	 	<!-- <property name="connection.datasource">java:/catissuecore</property>
    	 	<property name="transaction.manager_lookup_class">org.hibernate.transaction.JBossTransactionManagerLookup</property> -->
@@ -15,11 +15,11 @@
 		<property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
 		<property name="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
 		<property name="hibernate.jdbc.batch_size">0</property>
-		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
 		<property name="hibernate.query.substitutions">true 1,false 0</property>
 
 		<!-- Oracle dialect
-		<property name="dialect">org.hibernate.dialect.Oracle9Dialect</property>
+   		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
 		-->
 
 <!-- My sql settings -->
@@ -33,9 +33,9 @@
 		<property name="hibernate.c3p0.validate">false</property>
 
 		<property name="hibernate.jdbc.batch_size">0</property>
-       	<property name="hibernate.connection.username">root</property>
-        <property name="hibernate.connection.password">root</property>
-        <property name="hibernate.connection.url">jdbc:mysql://10.88.199.105/dyext</property>
+       	<property name="hibernate.connection.username">DE_NBUser</property>
+        <property name="hibernate.connection.password">DE_NBUser123</property>
+        <property name="hibernate.connection.url">jdbc:oracle:thin:DE_NBUser/DE_NBUser123@ps4153:1521:orclnew</property>
 
 <!-- My sql settings end -->
 
@@ -50,7 +50,7 @@
     -->
 <!-- PostGreSQL settings end-->
 
-        <!-- List of all Mapping files -->
+       <!-- List of all Mapping files -->
 
         <mapping resource="edu/common/dynamicextensions/hbm/AbstractMetadata.hbm.xml"/>
         <mapping resource="edu/common/dynamicextensions/hbm/AttributeTypeInformation.hbm.xml"/>
@@ -80,19 +80,22 @@
         <mapping resource="edu/common/dynamicextensions/hbm/validationrules/RuleParameter.hbm.xml"/>
         <mapping resource="edu/common/dynamicextensions/hbm/EntityManagerHQL.hbm.xml"/>
 
-        <mapping resource="edu/common/dynamicextensions/hbm/IdGenerator.hbm.xml"/>
+		<mapping resource="edu/common/dynamicextensions/hbm/IdGenerator.hbm.xml"/>
         <mapping resource="edu/common/dynamicextensions/hbm/Path.hbm.xml"/>
         <mapping resource="edu/common/dynamicextensions/hbm/PathAssociationRelation.hbm.xml"/>
-   		<mapping resource="edu/common/dynamicextensions/hbm/DESQLAudit.hbm.xml"/>
+		<mapping resource="edu/common/dynamicextensions/hbm/DESQLAudit.hbm.xml"/>
    		<mapping resource="edu/common/dynamicextensions/hbm/FormControlNotes.hbm.xml"/>
    		<mapping resource="edu/common/dynamicextensions/hbm/databaseproperties/ConstraintKeyProperties.hbm.xml"/>
-        <mapping resource="edu/common/dynamicextensions/hbm/Formula.hbm.xml"/>
+   		<mapping resource="edu/common/dynamicextensions/hbm/Formula.hbm.xml"/>
 		<mapping resource="edu/hostApp/src/hbm/RecordEntry.hbm.xml"/>
 		<mapping resource="edu/common/dynamicextensions/hbm/integration/AbstractRecordEntry.hbm.xml"/>
 		<mapping resource="edu/common/dynamicextensions/hbm/integration/AbstractFormContext.hbm.xml"/>
-
 		<mapping resource="edu/common/dynamicextensions/host/csd/util/CategoryInfo.hbm.xml"/>
+		<mapping resource="edu/common/dynamicextensions/hbm/SkipLogic.hbm.xml"/>
+		<mapping resource="edu/common/dynamicextensions/hbm/AutoLoadXpath.hbm.xml"/>
 		<mapping resource="edu/common/dynamicextensions/hbm/GridViewColumn.hbm.xml" />
+
+
 
 
     </session-factory>
