@@ -24,6 +24,10 @@
 	<property name="testCases.hookEntity.dir" value="${base.dir}/test/edu/hostApp" />
 	<property name="cacore.location" value="${cacore_deployable}"/>
 
+	<property name="tempWar.dir" value="${base.dir}/binaries/tempWar"/>
+	<property name="jboss.deploy.dir" value="${jboss.home.dir}/server/default/deploy"/>
+	<property name="test.war.name" value="dynamicExtensions${default.prifix.war}test.war"/>
+
 
 	<property name="hbm.dir" value="${src.dir}/edu/common/dynamicextensions/hbm" />
 	<property name="extra_lib.dir" value="${base.dir}/lib/extra" />
@@ -195,6 +199,33 @@
 				<exclude name="**/server.properties" />
 				<exclude name="**/uicontrols-captions.properties" />
 				<exclude name="**/edu/hostApp/**/*.*" />
+				<exclude name="**/*Test*.class" />
+				<exclude name="**/TestHibernate.cfg.xml" />
+				<exclude name="**/*ApplicationDAOProperties.xml" />
+			</fileset>
+			<manifest>
+				<section name="${DynamicExtensions.jar.details}">
+					<attribute name="Version" value="${DynamicExtensions.jar.version}" />
+					<attribute name="Built-By" value="${user.name}" />
+					<attribute name="Build-on" value="${TODAY_IND}" />
+					<attribute name="SVN-URL" value="${dist.revision}" />
+				</section>
+			</manifest>
+		</jar>
+	</target>
+	<!-- Create dynamic extensions jar Begins-->
+
+	<!-- Create dynamic extensions jar Begins-->
+	<target name="create_dynext_jar_testcase">
+		<delete file="${interface.dir}/DynamicExtensions.jar" />
+		<jar taskname="buildJar" jarfile="${interface.dir}/DynamicExtensions.jar">
+
+			<fileset dir="${target.dir}">
+				<include name="**/*.*" />
+				<include name="**/*.*" />
+				<exclude name="**/log4j.properties" />
+				<exclude name="**/server.properties" />
+				<exclude name="**/uicontrols-captions.properties" />
 				<exclude name="**/*Test*.class" />
 				<exclude name="**/TestHibernate.cfg.xml" />
 				<exclude name="**/*ApplicationDAOProperties.xml" />
@@ -436,7 +467,7 @@
 		<delete dir="${temp.dir}" />
 	</target>
 
-	<target name="init_build_war">
+	<target name="init_build_war" depends="create_dynext_jar_testcase">
 		<delete dir="${temp.dir}" />
 		<mkdir dir="${temp.dir}" />
 		<mkdir dir="${temp.dir}/WEB-INF/classes" />
@@ -447,12 +478,15 @@
 		<mkdir dir="${temp.dir}/images/de" />
 		<copy todir="${temp.dir}/WEB-INF/classes">
 			<fileset dir="binaries/classes">
-				<include name="**/*" />
+				<exclude name="**/*.class" />
 			</fileset>
 		</copy>
 		<copy todir="${temp.dir}/WEB-INF/lib">
 			<fileset dir="lib/server">
 				<include name="**/*" />
+			</fileset>
+			<fileset dir="${interface.dir}">
+				<include name="DynamicExtensions.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="${temp.dir}/WEB-INF">
@@ -508,9 +542,8 @@
 		<delete file="${jboss.home.dir}/bin/cobertura.ser" />
 		<delete dir="${jboss.home.dir}/server/default/log" failonerror="false"/>
 		<copy file="dynamicExtensions.war" todir="${jboss.home.dir}/server/default/deploy" overwrite="true" />
+		<copy file="${interface.dir}/DynamicExtensions.jar" todir="${jboss.home.dir}/server/default/deploy/dynamicExtensions${default.prifix.war}test.war/WEB-INF/lib/" overwrite="true" />
 	</target>
-
-
 
 	<target name="build_jar" depends="compile">
 		<delete>
@@ -858,6 +891,21 @@
 			<antcall target="import.caTissueCoreModel"/>
 			<antcall target="import.GeneconnectModel"/>
 
+			<!-- wars are generated in ${tempWar.dir} location -->
+
+			<copy todir="${jboss.deploy.dir}/${test.war.name}" overwrite="true">
+				<fileset dir="${tempWar.dir}/test.war" />
+			</copy>
+
+			<!-- Copy the latest DE jar in the war to ensure that the classes are compatible
+				Ideally the demwar shold contain the latest jars automatically.
+			-->
+			<copy todir="${jboss.home.dir}/server/default/deploy/${test.war.name}/WEB-INF/lib" overwrite="true">
+				<fileset dir="${interface.dir}" >
+					<include name="DynamicExtensions.jar" />
+				</fileset>
+			</copy>
+
 			<junit printsummary="yes" haltonerror="no" haltonfailure="no" fork="yes" maxmemory="1024m" timeout="5400000">
 
 				<sysproperty key="net.sourceforge.cobertura.datafile" file="./cobertura/coverage.ser" />
@@ -926,8 +974,8 @@
 				<property name="package.name" value="test.annotations" />
 				<property name="hookentity" value="edu.wustl.catissuecore.domain.RecordEntry" />
 				<property name="addQueryPaths" value="true" />
-				<property name="testcases" value="True" />
 				<property name="cacore.deployable.dir" value="${cacore.location}" />
+				<property name="testcases" value="True" />
 				<property name="Application.url" value="${Application.url}" />
 			</ant>
 
@@ -939,8 +987,8 @@
 				<property name="package.name" value="test.annotations" />
 				<property name="hookentity" value="edu.wustl.catissuecore.domain.RecordEntry" />
 				<property name="addQueryPaths" value="true" />
-				<property name="testcases" value="True" />
 				<property name="cacore.deployable.dir" value="${cacore.location}" />
+				<property name="testcases" value="True" />
 				<property name="Application.url" value="${Application.url}" />
 			</ant>
 			<echo message="Test Model Edited Successfully" />
@@ -1035,7 +1083,7 @@
 			<ant target="compile_test_cases" />
 			<!--<ant target="checkout_test_model" />-->
 
-			<!--copy file="src/conf/web.xml" tofile="src/conf/webBackup.xml" overwrite="true"/>
+			<copy file="src/conf/web.xml" tofile="src/conf/webBackup.xml" overwrite="true"/>
 
 			<ant antfile="DEDeploy.xml" dir="./binaries/" target="updatecache">
 				<property name="webxml.path" value="../src/conf" />
@@ -1045,7 +1093,7 @@
 
 			<delete file="src/conf/web.xml" />
 			<copy file="src/conf/webBackup.xml" tofile="src/conf/web.xml" overwrite="true"/>
-			<delete file="src/conf/webBackup.xml" /-->
+			<delete file="src/conf/webBackup.xml" />
 
 			<ant target="run_junit" />
 			<ant antfile="src/conf/cobertura.xml" target="coverage.report" >
