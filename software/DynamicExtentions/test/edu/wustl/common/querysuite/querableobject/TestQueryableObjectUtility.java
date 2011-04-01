@@ -164,11 +164,14 @@ public class TestQueryableObjectUtility extends DynamicExtensionsBaseTestCase
 	{
 		try
 		{
-			CategoryInterface category = CategoryManager.getInstance().getCategoryById(
-					getCategoryIdentifier());
+			CategoryInterface category = CategoryManager.getInstance().getCategoryByName(
+					"Test Category_Lab Information");
 			CategoryAttributeInterface categoryAttribute = null;
 			EntityInterface entity = null;
 			AttributeInterface attribute = null;
+			QueryableAttributeInterface queryableAttribute = null;
+			QueryableAttributeInterface queryableEntityAtt = null;
+
 			for (CategoryAssociationInterface catAssociation : category.getRootCategoryElement()
 					.getCategoryAssociationCollection())
 			{
@@ -187,12 +190,14 @@ public class TestQueryableObjectUtility extends DynamicExtensionsBaseTestCase
 				}
 				if (isAttributeFound)
 				{
+					queryableAttribute = QueryableObjectUtility.createQueryableAttribute(
+							categoryAttribute, category);
+					queryableEntityAtt = QueryableObjectUtility.createQueryableAttribute(attribute,
+							entity);
 					break;
 				}
 			}
 
-			QueryableAttributeInterface queryableAttribute = QueryableObjectUtility
-					.createQueryableAttribute(categoryAttribute, category);
 			if (queryableAttribute == null)
 			{
 				System.out
@@ -202,8 +207,6 @@ public class TestQueryableObjectUtility extends DynamicExtensionsBaseTestCase
 						+ category.getName());
 			}
 
-			QueryableAttributeInterface queryableEntityAtt = QueryableObjectUtility
-					.createQueryableAttribute(attribute, entity);
 			if (queryableEntityAtt == null)
 			{
 				System.out
@@ -218,7 +221,7 @@ public class TestQueryableObjectUtility extends DynamicExtensionsBaseTestCase
 		{
 			System.out.println("testCreateQueryableAttribute -- > Exception occured");
 			e.printStackTrace();
-			fail();
+			fail("testCreateQueryableAttribute -- > Exception occured" + e.getMessage());
 		}
 	}
 

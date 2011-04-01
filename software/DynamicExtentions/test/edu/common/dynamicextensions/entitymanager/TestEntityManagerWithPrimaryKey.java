@@ -567,15 +567,16 @@ public class TestEntityManagerWithPrimaryKey extends DynamicExtensionsBaseTestCa
 					.getEntityGroupByName("test_primaryKey_InvalidDataType");
 			if (entityGroup != null)
 			{
-				fail();
+				fail("Did not expect to fetch the entity group for file - test_primaryKey_InvalidDataType.xmi");
 			}
 		}
 		catch (Exception e)
 		{
-			fail();
-			System.out.println("--------------- Test Case to import XMI successful ------------");
+			// FIXME - Check for the valid exception and then pass.
+			e.printStackTrace();
+			fail("Unexpected exception caught - " + e.getMessage());
 		}
-
+		System.out.println("--------------- Test Case to import XMI successful ------------");
 	}
 
 	/**

@@ -650,9 +650,9 @@ public final class DynamicExtensionUtility
 		String associationName = "AssociationName_"
 				+ (srcEntity.getAssociationCollection().size() + 1);
 		association.setName(associationName);
-		association.setAssociationDirection(AssociationDirection.SRC_DESTINATION);
 		association.setEntity(srcEntity);
 		association.setTargetEntity(tarEntity);
+		association.setAssociationDirection(AssociationDirection.SRC_DESTINATION);
 		association.setSourceRole(getNewRole(AssociationType.CONTAINTMENT, "source_role_"
 				+ associationName, Cardinality.ONE, Cardinality.ONE));
 		association.setTargetRole(getNewRole(AssociationType.CONTAINTMENT, "target_role_"

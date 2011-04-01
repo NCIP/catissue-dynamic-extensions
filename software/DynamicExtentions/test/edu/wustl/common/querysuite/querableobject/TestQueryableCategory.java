@@ -139,8 +139,9 @@ public class TestQueryableCategory extends DynamicExtensionsBaseTestCase
 
 	public void testGetEntityAttributeByName() throws DynamicExtensionsSystemException
 	{
-		CategoryInterface category = CategoryManager.getInstance().getCategoryById(
-				getCategoryIdentifier());
+		//FIXME Changed the fetching of category.
+		CategoryInterface category = CategoryManager.getInstance().getCategoryByName(
+				"Test Category_Lab Information");
 		AttributeInterface attribute = null;
 		for (CategoryAssociationInterface catAssociation : category.getRootCategoryElement()
 				.getCategoryAssociationCollection())
@@ -214,6 +215,7 @@ public class TestQueryableCategory extends DynamicExtensionsBaseTestCase
 					.println("testQueryableCategoryInvalidConstructor --> exception thrown , thus successfull.");
 		}
 	}
+
 	public void testGetDiscriminatorValue()
 	{
 		try
@@ -225,7 +227,7 @@ public class TestQueryableCategory extends DynamicExtensionsBaseTestCase
 			{
 				queryCat.getDiscriminatorValue();
 			}
-			catch(RuntimeException exception)
+			catch (RuntimeException exception)
 			{
 
 			}
@@ -233,7 +235,7 @@ public class TestQueryableCategory extends DynamicExtensionsBaseTestCase
 			{
 				queryCat.getParentEntity();
 			}
-			catch(RuntimeException exception)
+			catch (RuntimeException exception)
 			{
 
 			}
@@ -241,7 +243,7 @@ public class TestQueryableCategory extends DynamicExtensionsBaseTestCase
 			{
 				queryCat.getDiscriminatorColumn();
 			}
-			catch(RuntimeException exception)
+			catch (RuntimeException exception)
 			{
 
 			}
@@ -249,7 +251,7 @@ public class TestQueryableCategory extends DynamicExtensionsBaseTestCase
 			{
 				queryCat.getEntity();
 			}
-			catch(RuntimeException exception)
+			catch (RuntimeException exception)
 			{
 
 			}
@@ -257,7 +259,7 @@ public class TestQueryableCategory extends DynamicExtensionsBaseTestCase
 			{
 				queryCat.isAbstract();
 			}
-			catch(RuntimeException exception)
+			catch (RuntimeException exception)
 			{
 
 			}
@@ -265,7 +267,7 @@ public class TestQueryableCategory extends DynamicExtensionsBaseTestCase
 			{
 				queryCat.getTableProperties();
 			}
-			catch(RuntimeException exception)
+			catch (RuntimeException exception)
 			{
 
 			}
@@ -273,7 +275,7 @@ public class TestQueryableCategory extends DynamicExtensionsBaseTestCase
 			{
 				queryCat.getInheritanceStrategy();
 			}
-			catch(RuntimeException exception)
+			catch (RuntimeException exception)
 			{
 
 			}

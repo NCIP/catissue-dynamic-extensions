@@ -1,3 +1,4 @@
+
 package edu.wustl.cab2b.server.util;
 
 import static edu.wustl.cab2b.common.util.Constants.CAB2B_ENTITY_GROUP;
@@ -26,193 +27,219 @@ import gov.nih.nci.cagrid.metadata.common.SemanticMetadata;
 /**
  * @author Chandrakant Talele
  */
-public class DynamicExtensionUtilityTest extends DynamicExtensionsBaseTestCase {
-    DomainObjectFactory fact = DomainObjectFactory.getInstance();
+public class DynamicExtensionUtilityTest extends DynamicExtensionsBaseTestCase
+{
 
-    public void testSetSemanticMetadata() {
+	DomainObjectFactory fact = DomainObjectFactory.getInstance();
 
-        AttributeInterface attrib = fact.createStringAttribute();
-        SemanticMetadata[] semanticMetadataArr = new SemanticMetadata[1];
+	public void testSetSemanticMetadata()
+	{
 
-        semanticMetadataArr[0] = new SemanticMetadata();
-        semanticMetadataArr[0].setConceptCode("conceptcode");
-        semanticMetadataArr[0].setConceptName("conceptName");
+		AttributeInterface attrib = fact.createStringAttribute();
+		SemanticMetadata[] semanticMetadataArr = new SemanticMetadata[1];
 
-        DynamicExtensionUtility.setSemanticMetadata(attrib, semanticMetadataArr);
-        assertEquals(1, attrib.getSemanticPropertyCollection().size());
+		semanticMetadataArr[0] = new SemanticMetadata();
+		semanticMetadataArr[0].setConceptCode("conceptcode");
+		semanticMetadataArr[0].setConceptName("conceptName");
 
-        SemanticPropertyInterface sp = attrib.getSemanticPropertyCollection().iterator().next();
-        assertEquals(semanticMetadataArr[0].getConceptCode(), sp.getConceptCode());
-        assertEquals(semanticMetadataArr[0].getConceptName(), sp.getConceptPreferredName());
-        assertEquals(0, sp.getSequenceNumber());
+		DynamicExtensionUtility.setSemanticMetadata(attrib, semanticMetadataArr);
+		assertEquals(1, attrib.getSemanticPropertyCollection().size());
 
-    }
+		SemanticPropertyInterface sp = attrib.getSemanticPropertyCollection().iterator().next();
+		assertEquals(semanticMetadataArr[0].getConceptCode(), sp.getConceptCode());
+		assertEquals(semanticMetadataArr[0].getConceptName(), sp.getConceptPreferredName());
+		assertEquals(0, sp.getSequenceNumber());
 
-    public void testSetSemanticMetadataNull() {
-        AttributeInterface attrib = fact.createStringAttribute();
-        DynamicExtensionUtility.setSemanticMetadata(attrib, null);
-        assertEquals(0, attrib.getSemanticPropertyCollection().size());
-    }
+	}
 
-    public void testAddTaggedValue() {
-        AttributeInterface attrib = fact.createStringAttribute();
-        DynamicExtensionUtility.addTaggedValue(attrib, "key", "value");
-        assertEquals(1, attrib.getTaggedValueCollection().size());
-        TaggedValueInterface tag = attrib.getTaggedValueCollection().iterator().next();
-        assertEquals("key", tag.getKey());
-        assertEquals("value", tag.getValue());
-    }
+	public void testSetSemanticMetadataNull()
+	{
+		AttributeInterface attrib = fact.createStringAttribute();
+		DynamicExtensionUtility.setSemanticMetadata(attrib, null);
+		assertEquals(0, attrib.getSemanticPropertyCollection().size());
+	}
 
-    public void testCreateEntityGroup() {
-        EntityGroupInterface eg = DynamicExtensionUtility.createEntityGroup();
-        assertEquals(1, eg.getTaggedValueCollection().size());
-        TaggedValueInterface tag = eg.getTaggedValueCollection().iterator().next();
-        assertEquals(CAB2B_ENTITY_GROUP, tag.getKey());
-        assertEquals(CAB2B_ENTITY_GROUP, tag.getValue());
-    }
+	public void testAddTaggedValue()
+	{
+		AttributeInterface attrib = fact.createStringAttribute();
+		DynamicExtensionUtility.addTaggedValue(attrib, "key", "value");
+		assertEquals(1, attrib.getTaggedValueCollection().size());
+		TaggedValueInterface tag = attrib.getTaggedValueCollection().iterator().next();
+		assertEquals("key", tag.getKey());
+		assertEquals("value", tag.getValue());
+	}
 
-//    public void testAddTaggedValueToEntityGroup() {
-//        EntityGroupInterface eg = DynamicExtensionUtility.createEntityGroup();
-//        eg.setName("temp1");
-//        eg.setLongName("Temp1");
-//        DynamicExtensionUtility.addTaggedValue(eg, LOAD_STATUS, LOAD_FAILED);
-//        DynamicExtensionUtility.persistEntityGroup(eg);
-//        assertNotNull(eg.getId());
-//    }
+	public void testCreateEntityGroup()
+	{
+		EntityGroupInterface eg = DynamicExtensionUtility.createEntityGroup();
+		assertEquals(1, eg.getTaggedValueCollection().size());
+		TaggedValueInterface tag = eg.getTaggedValueCollection().iterator().next();
+		assertEquals(CAB2B_ENTITY_GROUP, tag.getKey());
+		assertEquals(CAB2B_ENTITY_GROUP, tag.getValue());
+	}
 
-    public void testGetNewRole() {
-        AssociationType type = AssociationType.ASSOCIATION;
-        String name = "someName";
-        Cardinality min = Cardinality.ONE;
-        Cardinality max = Cardinality.MANY;
-        RoleInterface role = DynamicExtensionUtility.getNewRole(type, name, min, max);
-        verifyRole(role, type, name, min, max);
-    }
+	//    public void testAddTaggedValueToEntityGroup() {
+	//        EntityGroupInterface eg = DynamicExtensionUtility.createEntityGroup();
+	//        eg.setName("temp1");
+	//        eg.setLongName("Temp1");
+	//        DynamicExtensionUtility.addTaggedValue(eg, LOAD_STATUS, LOAD_FAILED);
+	//        DynamicExtensionUtility.persistEntityGroup(eg);
+	//        assertNotNull(eg.getId());
+	//    }
 
-    public void testCreateNewOneToManyAsso() throws DynamicExtensionsSystemException {
-        EntityInterface src = fact.createEntity();
-        src.setId(1224L);
-        EntityInterface tgt = fact.createEntity();
-        tgt.setId(123524L);
-        AssociationInterface assoc = DynamicExtensionUtility.createNewOneToManyAsso(src, tgt);
+	public void testGetNewRole()
+	{
+		AssociationType type = AssociationType.ASSOCIATION;
+		String name = "someName";
+		Cardinality min = Cardinality.ONE;
+		Cardinality max = Cardinality.MANY;
+		RoleInterface role = DynamicExtensionUtility.getNewRole(type, name, min, max);
+		verifyRole(role, type, name, min, max);
+	}
 
-        String name = "AssociationName_1";
-        assertEquals(name, assoc.getName());
-        assertEquals(AssociationDirection.SRC_DESTINATION, assoc.getAssociationDirection());
-        assertEquals(src, assoc.getEntity());
-        assertEquals(tgt, assoc.getTargetEntity());
+	public void testCreateNewOneToManyAsso() throws DynamicExtensionsSystemException
+	{
+		EntityInterface src = fact.createEntity();
+		src.setId(1224L);
+		EntityInterface tgt = fact.createEntity();
+		tgt.setId(123524L);
+		//FIXME Changed the order of assigning the sourceEntity, targetEntity and then Association direction
+		AssociationInterface assoc = DynamicExtensionUtility.createNewOneToManyAsso(src, tgt);
 
-        Cardinality zero = Cardinality.ZERO;
-        Cardinality one = Cardinality.ONE;
-        Cardinality many = Cardinality.MANY;
-        AssociationType type = AssociationType.CONTAINTMENT;
+		String name = "AssociationName_1";
+		assertEquals(name, assoc.getName());
+		assertEquals(AssociationDirection.SRC_DESTINATION, assoc.getAssociationDirection());
+		assertEquals(src, assoc.getEntity());
+		assertEquals(tgt, assoc.getTargetEntity());
 
-        String srcName = "source_role_" + name;
-        String tgtName = "target_role_" + name;
+		Cardinality zero = Cardinality.ZERO;
+		Cardinality one = Cardinality.ONE;
+		Cardinality many = Cardinality.MANY;
+		AssociationType type = AssociationType.CONTAINTMENT;
 
-        verifyRole(assoc.getSourceRole(), type, srcName, one, one);
-        verifyRole(assoc.getTargetRole(), type, tgtName, zero, many);
-    }
+		String srcName = "source_role_" + name;
+		String tgtName = "target_role_" + name;
 
-    public void testGetAttributeCopy() {
-        AttributeInterface[] arr = { fact.createStringAttribute(), fact.createIntegerAttribute(), fact.createLongAttribute(), fact.createDoubleAttribute(), fact.createFloatAttribute(), fact.createDateAttribute(), fact.createBooleanAttribute(),fact.createShortAttribute(),fact.createObjectAttribute()};
-        PermissibleValueInterface[] values = { fact.createStringValue(), fact.createIntegerValue(), fact.createLongValue(), fact.createDoubleValue(), fact.createFloatValue(), fact.createDateValue(), fact.createBooleanValue(),fact.createIntegerValue(),fact.createStringValue()};
+		verifyRole(assoc.getSourceRole(), type, srcName, one, one);
+		verifyRole(assoc.getTargetRole(), type, tgtName, zero, many);
+	}
 
-        for (int i = 0; i < arr.length; i++) {
-            arr[i].setName("name" + i);
-            arr[i].setDescription("Description" + i);
-            UserDefinedDE userDefinedDE = fact.createUserDefinedDE();
-            userDefinedDE.addPermissibleValue(values[i]);
+	public void testGetAttributeCopy()
+	{
+		//FIXME Commenting the Short data type as it is not supported.
+		AttributeInterface[] arr = {fact.createStringAttribute(), fact.createIntegerAttribute(),
+				fact.createLongAttribute(), fact.createDoubleAttribute(),
+				fact.createFloatAttribute(), fact.createDateAttribute(),
+				fact.createBooleanAttribute(),/*fact.createShortAttribute(),*/
+				fact.createObjectAttribute()};
+		PermissibleValueInterface[] values = {fact.createStringValue(), fact.createIntegerValue(),
+				fact.createLongValue(), fact.createDoubleValue(), fact.createFloatValue(),
+				fact.createDateValue(), fact.createBooleanValue(),/*fact.createIntegerValue(),*/
+				fact.createStringValue()};
 
-            arr[i].getAttributeTypeInformation().setDataElement(userDefinedDE);
-            AttributeInterface attr = DynamicExtensionUtility.getAttributeCopy(arr[i]);
-            assertEquals(arr[i].getClass(), attr.getClass());
-            assertEquals(arr[i].getName(), attr.getName());
-            assertEquals(arr[i].getDescription(), attr.getDescription());
-        }
-    }
+		for (int i = 0; i < arr.length; i++)
+		{
+			arr[i].setName("name" + i);
+			arr[i].setDescription("Description" + i);
+			UserDefinedDE userDefinedDE = fact.createUserDefinedDE();
+			userDefinedDE.addPermissibleValue(values[i]);
 
-    public void testGetAttributeCopyWithPV() {
-        StringValueInterface value = fact.createStringValue();
-        value.setValue("val_");
+			arr[i].getAttributeTypeInformation().setDataElement(userDefinedDE);
+			AttributeInterface attr = DynamicExtensionUtility.getAttributeCopy(arr[i]);
+			assertEquals(arr[i].getClass(), attr.getClass());
+			assertEquals(arr[i].getName(), attr.getName());
+			assertEquals(arr[i].getDescription(), attr.getDescription());
+		}
+	}
 
-        UserDefinedDEInterface userDefinedDE = fact.createUserDefinedDE();
-        userDefinedDE.addPermissibleValue(value);
+	public void testGetAttributeCopyWithPV()
+	{
+		StringValueInterface value = fact.createStringValue();
+		value.setValue("val_");
 
-        AttributeInterface attrib = fact.createStringAttribute();
-        attrib.getAttributeTypeInformation().setDataElement(userDefinedDE);
+		UserDefinedDEInterface userDefinedDE = fact.createUserDefinedDE();
+		userDefinedDE.addPermissibleValue(value);
 
-        AttributeInterface attr = DynamicExtensionUtility.getAttributeCopy(attrib);
-        assertEquals(attrib.getClass(), attr.getClass());
-        UserDefinedDEInterface res = (UserDefinedDEInterface) attr.getAttributeTypeInformation().getDataElement();
-        assertEquals(1, res.getPermissibleValueCollection().size());
-        assertEquals("val_", res.getPermissibleValueCollection().iterator().next().getValueAsObject());
+		AttributeInterface attrib = fact.createStringAttribute();
+		attrib.getAttributeTypeInformation().setDataElement(userDefinedDE);
 
-    }
+		AttributeInterface attr = DynamicExtensionUtility.getAttributeCopy(attrib);
+		assertEquals(attrib.getClass(), attr.getClass());
+		UserDefinedDEInterface res = (UserDefinedDEInterface) attr.getAttributeTypeInformation()
+				.getDataElement();
+		assertEquals(1, res.getPermissibleValueCollection().size());
+		assertEquals("val_", res.getPermissibleValueCollection().iterator().next()
+				.getValueAsObject());
 
-    public void testGetAttributeCopyWithCustomName() {
-        AttributeInterface arr = fact.createStringAttribute();
-        AttributeInterface attr = DynamicExtensionUtility.getAttributeCopy(arr, "name");
-        assertEquals("name", attr.getName());
+	}
 
-    }
+	public void testGetAttributeCopyWithCustomName()
+	{
+		AttributeInterface arr = fact.createStringAttribute();
+		AttributeInterface attr = DynamicExtensionUtility.getAttributeCopy(arr, "name");
+		assertEquals("name", attr.getName());
 
-    public void testGetAttributeCopyWithConceptCode() {
-        AttributeInterface attrib = fact.createStringAttribute();
-        SemanticPropertyInterface semanticProp = fact.createSemanticProperty();
-        semanticProp.setConceptPreferredName("term");
-        semanticProp.setConceptCode("conceptCode");
-        attrib.addSemanticProperty(semanticProp);
+	}
 
-        AttributeInterface res = DynamicExtensionUtility.getAttributeCopy(attrib);
-        Collection<SemanticPropertyInterface> coll = res.getSemanticPropertyCollection();
-        assertEquals(1, coll.size());
+	public void testGetAttributeCopyWithConceptCode()
+	{
+		AttributeInterface attrib = fact.createStringAttribute();
+		SemanticPropertyInterface semanticProp = fact.createSemanticProperty();
+		semanticProp.setConceptPreferredName("term");
+		semanticProp.setConceptCode("conceptCode");
+		attrib.addSemanticProperty(semanticProp);
 
-        SemanticPropertyInterface prop = coll.iterator().next();
+		AttributeInterface res = DynamicExtensionUtility.getAttributeCopy(attrib);
+		Collection<SemanticPropertyInterface> coll = res.getSemanticPropertyCollection();
+		assertEquals(1, coll.size());
 
-        assertEquals("conceptCode", prop.getConceptCode());
-        assertEquals("term", prop.getConceptPreferredName());
+		SemanticPropertyInterface prop = coll.iterator().next();
 
-    }
+		assertEquals("conceptCode", prop.getConceptCode());
+		assertEquals("term", prop.getConceptPreferredName());
 
-    public void testCloneRole() {
-        String name = "RoleName";
-        Cardinality one = Cardinality.ONE;
-        Cardinality many = Cardinality.MANY;
-        AssociationType type = AssociationType.CONTAINTMENT;
+	}
 
-        RoleInterface role = fact.createRole();
-        role.setAssociationsType(type);
-        role.setName(name);
-        role.setMaximumCardinality(many);
-        role.setMinimumCardinality(one);
+	public void testCloneRole()
+	{
+		String name = "RoleName";
+		Cardinality one = Cardinality.ONE;
+		Cardinality many = Cardinality.MANY;
+		AssociationType type = AssociationType.CONTAINTMENT;
 
-        RoleInterface res = DynamicExtensionUtility.cloneRole(role);
-        verifyRole(res, type, name, one, many);
-    }
+		RoleInterface role = fact.createRole();
+		role.setAssociationsType(type);
+		role.setName(name);
+		role.setMaximumCardinality(many);
+		role.setMinimumCardinality(one);
 
-    private void verifyRole(RoleInterface roleToVerify, AssociationType associationType, String name,
-                            Cardinality minCard, Cardinality maxCard) {
-        assertEquals(associationType, roleToVerify.getAssociationsType());
-        assertEquals(maxCard, roleToVerify.getMaximumCardinality());
-        assertEquals(minCard, roleToVerify.getMinimumCardinality());
-        assertEquals(name, roleToVerify.getName());
-    }
+		RoleInterface res = DynamicExtensionUtility.cloneRole(role);
+		verifyRole(res, type, name, one, many);
+	}
 
-//    public void testMarkMetadataEntityGroup() {
-//        String[] names = new String[] { "caFE Server 1.1", "caTissue_Core", "GeneConnect", "caArray", "CategoryEntityGroup" };
-//
-//        for (String name : names) {
-//            EntityGroupInterface entityGroup = null;
-//            try {
-//                entityGroup = EntityManager.getInstance().getEntityGroupByName(name);
-//                DynamicExtensionUtility.markMetadataEntityGroup(entityGroup);
-//                EntityManager.getInstance().persistEntityGroupMetadata(entityGroup);
-//            } catch (DynamicExtensionsSystemException e) {
-//                e.printStackTrace();
-//            } catch (DynamicExtensionsApplicationException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
+	private void verifyRole(RoleInterface roleToVerify, AssociationType associationType,
+			String name, Cardinality minCard, Cardinality maxCard)
+	{
+		assertEquals(associationType, roleToVerify.getAssociationsType());
+		assertEquals(maxCard, roleToVerify.getMaximumCardinality());
+		assertEquals(minCard, roleToVerify.getMinimumCardinality());
+		assertEquals(name, roleToVerify.getName());
+	}
+
+	//    public void testMarkMetadataEntityGroup() {
+	//        String[] names = new String[] { "caFE Server 1.1", "caTissue_Core", "GeneConnect", "caArray", "CategoryEntityGroup" };
+	//
+	//        for (String name : names) {
+	//            EntityGroupInterface entityGroup = null;
+	//            try {
+	//                entityGroup = EntityManager.getInstance().getEntityGroupByName(name);
+	//                DynamicExtensionUtility.markMetadataEntityGroup(entityGroup);
+	//                EntityManager.getInstance().persistEntityGroupMetadata(entityGroup);
+	//            } catch (DynamicExtensionsSystemException e) {
+	//                e.printStackTrace();
+	//            } catch (DynamicExtensionsApplicationException e) {
+	//                e.printStackTrace();
+	//            }
+	//        }
+	//    }
 }
