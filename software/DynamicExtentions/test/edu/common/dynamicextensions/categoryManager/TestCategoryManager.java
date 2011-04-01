@@ -7,18 +7,27 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.client.CategoryMetadataClient;
 import edu.common.dynamicextensions.client.DataEditClient;
+import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
+import edu.common.dynamicextensions.domaininterface.DataElementInterface;
+import edu.common.dynamicextensions.domaininterface.EntityInterface;
+import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
+import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.entitymanager.CategoryManager;
 import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
+import edu.common.dynamicextensions.entitymanager.EntityManager;
+import edu.common.dynamicextensions.entitymanager.EntityManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
@@ -27,6 +36,7 @@ import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.validation.ValidatorUtil;
 import edu.wustl.cab2b.server.cache.EntityCache;
+import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.exception.DAOException;
 
@@ -433,6 +443,57 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			System.out.println("Record validation failed for Category " + category.getName());
+			fail();
+		}
+
+	}
+
+	public void testValidatePVsWithApostrophe()
+	{
+		try
+		{
+			Set<String> desiredPermissibleValues = new HashSet<String>();
+			desiredPermissibleValues.add(DynamicExtensionsUtility
+					.getEscapedStringValue("Prems' Eye Clinic"));
+			desiredPermissibleValues.add(DynamicExtensionsUtility
+					.getEscapedStringValue("Jeevan's Jyoti Nursing Home"));
+			desiredPermissibleValues.add(DynamicExtensionsUtility
+					.getEscapedStringValue("St. John's Medical College Hospital"));
+			desiredPermissibleValues.add(DynamicExtensionsUtility
+					.getEscapedStringValue("St. Martha's Hospital"));
+
+			EntityManagerInterface entityManager = EntityManager.getInstance();
+
+			EntityInterface entity = entityManager.getEntityByIdentifier(entityManager.getEntityId(
+					"PhysicianInformation", EntityCache.getInstance().getEntityGroupByName("test")
+							.getId()));
+			if (entity != null)
+			{
+				AttributeInterface attribute = entity.getAttributeByName("hospitals");
+				if (attribute != null)
+				{
+					DataElementInterface dataElement = attribute.getAttributeTypeInformation()
+							.getDataElement();
+					if (dataElement instanceof UserDefinedDEInterface)
+					{
+						UserDefinedDEInterface userDefinedDEInterface = (UserDefinedDEInterface) dataElement;
+						for (PermissibleValueInterface pv : userDefinedDEInterface
+								.getPermissibleValues())
+						{
+							if (desiredPermissibleValues.contains(pv.getValueAsObject().toString()))
+							{
+								Logger.out
+										.info("Permissible value with apostropy is present in model.");
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			Logger.out.info("Cannot find any Permissible value with apostropy in model.");
 			fail();
 		}
 
