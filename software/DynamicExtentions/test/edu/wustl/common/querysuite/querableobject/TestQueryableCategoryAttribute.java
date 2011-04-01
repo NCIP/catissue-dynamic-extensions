@@ -83,8 +83,9 @@ public class TestQueryableCategoryAttribute extends DynamicExtensionsBaseTestCas
 	{
 		try
 		{
-			CategoryInterface category = CategoryManager.getInstance().getCategoryById(
-					getCategoryIdentifier());
+			//FIXME Testing by getting category by name.
+			CategoryInterface category = CategoryManager.getInstance().getCategoryByName(
+					"Test Category_Lab Information");
 			CategoryAttributeInterface catAttribute = getCategoryAttribute(category);
 			QueryableCategoryAttribute queryCatAtt = getQueryableCategoryAttribute(catAttribute,
 					category);
@@ -196,6 +197,7 @@ public class TestQueryableCategoryAttribute extends DynamicExtensionsBaseTestCas
 		}
 		return categoryAttribute;
 	}
+
 	public void testGetDescription()
 	{
 		try
@@ -219,6 +221,7 @@ public class TestQueryableCategoryAttribute extends DynamicExtensionsBaseTestCas
 			fail("testGetDescription-->failed, exception occured.");
 		}
 	}
+
 	public void testIsTagPresent()
 	{
 		try
@@ -228,8 +231,10 @@ public class TestQueryableCategoryAttribute extends DynamicExtensionsBaseTestCas
 			CategoryAttributeInterface catAttribute = getCategoryAttribute(category);
 			QueryableCategoryAttribute queryCatAtt = getQueryableCategoryAttribute(catAttribute,
 					category);
-			AttributeInterface atribute = QueryableObjectUtility.getAttributeFromCategoryAttribute(catAttribute);
-			Collection<TaggedValueInterface> taggedValueColl =((AbstractMetadataInterface)atribute).getTaggedValueCollection();
+			AttributeInterface atribute = QueryableObjectUtility
+					.getAttributeFromCategoryAttribute(catAttribute);
+			Collection<TaggedValueInterface> taggedValueColl = ((AbstractMetadataInterface) atribute)
+					.getTaggedValueCollection();
 			for (TaggedValueInterface tag : taggedValueColl)
 			{
 				assertTrue(queryCatAtt.isTagPresent(tag.getKey()));
@@ -242,6 +247,7 @@ public class TestQueryableCategoryAttribute extends DynamicExtensionsBaseTestCas
 			fail("testGetDescription-->failed, exception occured.");
 		}
 	}
+
 	public void testGetTaggedValue()
 	{
 		try
@@ -251,11 +257,13 @@ public class TestQueryableCategoryAttribute extends DynamicExtensionsBaseTestCas
 			CategoryAttributeInterface catAttribute = getCategoryAttribute(category);
 			QueryableCategoryAttribute queryCatAtt = getQueryableCategoryAttribute(catAttribute,
 					category);
-			AttributeInterface atribute = QueryableObjectUtility.getAttributeFromCategoryAttribute(catAttribute);
-			Collection<TaggedValueInterface> taggedValueColl =((AbstractMetadataInterface)atribute).getTaggedValueCollection();
+			AttributeInterface atribute = QueryableObjectUtility
+					.getAttributeFromCategoryAttribute(catAttribute);
+			Collection<TaggedValueInterface> taggedValueColl = ((AbstractMetadataInterface) atribute)
+					.getTaggedValueCollection();
 			for (TaggedValueInterface tag : taggedValueColl)
 			{
-				assertEquals(queryCatAtt.getTaggedValue(tag.getKey()),tag.getValue());
+				assertEquals(queryCatAtt.getTaggedValue(tag.getKey()), tag.getValue());
 				break;
 			}
 		}
