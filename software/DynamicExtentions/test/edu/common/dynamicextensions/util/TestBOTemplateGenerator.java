@@ -11,6 +11,7 @@ import edu.common.dynamicextensions.entitymanager.CategoryManager;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.bulkoperator.util.BulkOperationException;
+import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.util.logger.Logger;
 
 /**
@@ -21,6 +22,8 @@ import edu.wustl.common.util.logger.Logger;
 public class TestBOTemplateGenerator extends DynamicExtensionsBaseTestCase
 {
 
+	private static String participantXMLDir = System.getProperty("user.dir") + File.separator + "src"
+	+ File.separator + "resources" + File.separator + "xml";
 	/**
 	 * Logger object.
 	 */
@@ -33,8 +36,7 @@ public class TestBOTemplateGenerator extends DynamicExtensionsBaseTestCase
 	{
 		try
 		{
-			String filePath = System.getProperty("user.dir") + File.separator + "src"
-					+ File.separator + "resources" + File.separator + "xml";
+
 			CategoryInterface category = CategoryManager.getInstance().getAllCategories()
 					.iterator().next();
 			if (category == null)
@@ -46,11 +48,11 @@ public class TestBOTemplateGenerator extends DynamicExtensionsBaseTestCase
 			{
 				BOTemplateGenerator boTemplateGenerator = new BOTemplateGenerator(category);
 				boTemplateGenerator.generateXMLAndCSVTemplate(System.getProperty("user.dir"),
-						filePath + File.separator + "Participant.xml", filePath + File.separator
+						participantXMLDir + File.separator + "Participant.xml", participantXMLDir + File.separator
 								+ "mapping.xml");
 				LOGGER.info("testGenerateXMLAndCSVTemplate() executed successfully.");
 			}
-			deleteFiles(filePath);
+			deleteFiles(participantXMLDir);
 		}
 		catch (BulkOperationException boException)
 		{
@@ -71,7 +73,59 @@ public class TestBOTemplateGenerator extends DynamicExtensionsBaseTestCase
 			fail();
 		}
 	}
+	public void testGenerateXMLAndCSVTemplateForMultiSelect()
+	{
+		try
+		{
+			CategoryInterface category =  EntityCache.getInstance().getCategoryByName("Test AutoComplete multiselect");
+			if (category == null)
+			{
+				LOGGER.info("testGenerateXMLAndCSVTemplate() failed.");
+				fail();
+			}
+			else
+			{
+				BOTemplateGenerator boTemplateGenerator = new BOTemplateGenerator(category);
+				boTemplateGenerator.generateXMLAndCSVTemplate(System.getProperty("user.dir"),
+						participantXMLDir + File.separator + "Participant.xml", participantXMLDir + File.separator
+								+ "mapping.xml");
+				String preTestedXMLTemplateFilePath = System.getProperty("user.dir")+"/XMLAndCSVTemplate/Tested_AutoComplete_multiselect.xml";
 
+				String generatedXMLTemplateFilePath = System.getProperty("user.dir") + File.separator + "src"
+						+ File.separator + "resources" + File.separator +"/XMLAndCSVTemplate/Test AutoComplete multiselect.xml";
+
+				assertTrue(compareFiles(preTestedXMLTemplateFilePath, generatedXMLTemplateFilePath));
+				LOGGER.info("testGenerateXMLAndCSVTemplate() executed successfully.");
+			}
+		}
+		catch (BulkOperationException boException)
+		{
+			LOGGER.error("BulkOperation Exception: ", boException);
+			boException.printStackTrace();
+			fail();
+		}
+		catch (DynamicExtensionsSystemException deException)
+		{
+			LOGGER.error("DE System Exception: ", deException);
+			deException.printStackTrace();
+			fail();
+		}
+	}
+	private boolean compareFiles(String preTestedXMLTemplateFilePath,
+			String generatedXMLTemplateFilePath)
+	{
+		boolean areFileSame=true;
+		File preTestedXMLTemplate=new File(preTestedXMLTemplateFilePath);
+		File generatedXMLTemplate=new File(generatedXMLTemplateFilePath );
+		if(generatedXMLTemplate!=null && preTestedXMLTemplate!=null)
+		{
+			if(generatedXMLTemplate.compareTo(preTestedXMLTemplate)!=0)
+			{
+				areFileSame=false;
+			}
+		}
+		return areFileSame;
+	}
 	/**
 	 * @param filePath Delete Files created.
 	 */
