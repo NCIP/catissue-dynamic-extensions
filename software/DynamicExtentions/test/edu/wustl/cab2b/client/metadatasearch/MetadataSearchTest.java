@@ -162,7 +162,8 @@ public class MetadataSearchTest extends DynamicExtensionsBaseTestCase
 
 		MetadataSearch metadataSearch = new MetadataSearch(entityCache);
 		int[] searchTargetStatus = {Constants.CLASS};
-		String[] searchString = {"C7738"};
+		//String[] searchString = {"C7738"};
+		String[] searchString = {"12345"};
 		int basedOn = Constants.BASED_ON_CONCEPT_CODE;
 		try
 		{
@@ -180,7 +181,8 @@ public class MetadataSearchTest extends DynamicExtensionsBaseTestCase
 		{
 			String result = eI.getName();
 			System.out.println(result);
-			b = b || result.contains("ClinicalAnnotations");
+			//b = b || result.contains("ClinicalAnnotations");
+			b = b || result.contains("Diagnosis");
 		}
 		assertTrue(b);
 	}
@@ -227,7 +229,7 @@ public class MetadataSearchTest extends DynamicExtensionsBaseTestCase
 
 		MetadataSearch metadataSearch = new MetadataSearch(entityCache);
 		int[] searchTargetStatus = {PV};
-		String[] searchString = {"Irla Nursing Home & Polyclinic"};
+		String[] searchString = {"Fertility Test"};
 		int basedOn = Constants.BASED_ON_TEXT;
 		try
 		{
@@ -245,7 +247,7 @@ public class MetadataSearchTest extends DynamicExtensionsBaseTestCase
 		{
 			String result = eI.getName();
 			System.out.println(result);
-			b = b || result.contains("LabInfo");
+			b = b || result.contains("LabTest");
 		}
 		assertTrue(b);
 	}

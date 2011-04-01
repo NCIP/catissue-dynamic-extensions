@@ -25,7 +25,6 @@ import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.StringAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.UserDefinedDE;
 import edu.common.dynamicextensions.domain.userinterface.AbstractContainmentControl;
-import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
@@ -183,7 +182,7 @@ public class DummyMapGenerator
 		}
 	}
 
-	
+
 	private FileAttributeRecordValue getFileRecordValueForAttribute()
 			throws DynamicExtensionsSystemException
 	{
@@ -325,6 +324,7 @@ public class DummyMapGenerator
 		Date dateValue = new Date();
 		String format = ((DateAttributeTypeInformation) abstractAttribute
 				.getAttributeTypeInformation()).getFormat();
+		boolean isDateRangeRuleDefined = false;
 		for (RuleInterface rule : attributeRules)
 		{
 			if (rule.getName().equalsIgnoreCase(CategoryCSVConstants.RANGE)
@@ -335,11 +335,26 @@ public class DummyMapGenerator
 
 				dateValue = getDateValueForAttributeRangeRule(mapStratergy, minParam, maxParam,
 						format);
+				isDateRangeRuleDefined = true;
 
 			}
 			else if (rule.getName().equalsIgnoreCase(CategoryCSVConstants.ALLOW_FUTURE_DATE))
 			{
+
 				Calendar cal = Calendar.getInstance();
+				if(isDateRangeRuleDefined)
+				{
+					cal.setTime(dateValue);
+					if (mapStratergy == 0)
+					{
+						cal.add(Calendar.DAY_OF_MONTH, -1);
+					}
+					else
+					{
+						cal.add(Calendar.DAY_OF_MONTH, 1);
+					}
+				}
+
 				if (mapStratergy == 0)
 				{
 					cal.add(Calendar.DAY_OF_MONTH, 1);
@@ -353,6 +368,18 @@ public class DummyMapGenerator
 			else if (rule.getName().equalsIgnoreCase(CategoryCSVConstants.DATE))
 			{
 				Calendar cal = Calendar.getInstance();
+				if(isDateRangeRuleDefined)
+				{
+					cal.setTime(dateValue);
+					if (mapStratergy == 0)
+					{
+						cal.add(Calendar.DAY_OF_MONTH, 1);
+					}
+					else
+					{
+						cal.add(Calendar.DAY_OF_MONTH, -1);
+					}
+				}
 				if (mapStratergy == 0)
 				{
 					cal.add(Calendar.DAY_OF_MONTH, -1);
