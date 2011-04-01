@@ -1641,6 +1641,8 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 		catch (Exception e)
 		{
+			// FIXME - Getting the validation message - error --> TestDate edited must be of equal to or lesser than 12-12-2010.
+			e.printStackTrace();
 			System.out.println("Record validation failed for Category " + category.getName());
 			fail();
 		}
