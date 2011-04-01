@@ -19,7 +19,7 @@ public class TestImportPermissibleValues extends DynamicExtensionsBaseTestCase
 	{
 		try
 		{
-			String[] parameters = {"CPUML/TestModels/TestModel_withTags/edited/",APPLICATIONURL};
+			String[] parameters = {"CPUML/",APPLICATIONURL};
 			PermissibleValuesClient.main(parameters);
 		}
 		catch (Exception e)
