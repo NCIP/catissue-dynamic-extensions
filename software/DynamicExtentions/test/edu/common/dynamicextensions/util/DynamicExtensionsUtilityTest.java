@@ -187,6 +187,8 @@ public class DynamicExtensionsUtilityTest extends DynamicExtensionsBaseTestCase
 	{
 		try
 		{
+			/*FIXME There can be 2 containers with same caption. And the container of the Category fetched, might not be
+			 * the container which is fetched using HQL. Hence this test case might fail.*/
 			LOGGER
 					.info("-----------------Test For getting container by caption started--------------------");
 			System.out.println("-----------------Test For getting container by caption started--------------------");
@@ -195,7 +197,7 @@ public class DynamicExtensionsUtilityTest extends DynamicExtensionsBaseTestCase
 			String caption = container.getCaption();
 			ContainerInterface fetchedContainer = DynamicExtensionsUtility
 					.getContainerByCaption(caption);
-			assertTrue(container.getAbstractEntity().getName().equalsIgnoreCase(
+			assertTrue(caption.equalsIgnoreCase(
 					fetchedContainer.getAbstractEntity().getName()));
 			LOGGER
 					.info("-----------------Test For getting container by caption successful--------------------");
