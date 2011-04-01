@@ -64,19 +64,7 @@ public class DataEntryClient extends AbstractClient
 		}
 		finally
 		{
-			try
-			{
-				if (inputFromServlet != null)
-				{
-					inputFromServlet.close();
-				}
-			}
-			catch (IOException e)
-			{
-				throw new DynamicExtensionsSystemException(
-						"Error in reading objects from responce", e);
-			}
-
+			closeObjectInputStream(inputFromServlet);
 		}
 	}
 

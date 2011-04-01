@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Map;
@@ -47,15 +48,13 @@ public abstract class AbstractClient
 
 	protected transient URL jbossUrl;
 
-
-
-
-	protected Map<String, Object> paramaterObjectMap ;
+	protected Map<String, Object> paramaterObjectMap;
 
 	@Override
-	public String toString() {
-		return "AbstractClient [paramaterObjectMap=" + paramaterObjectMap
-				+ ", serverUrl=" + serverUrl + "]";
+	public String toString()
+	{
+		return "AbstractClient [paramaterObjectMap=" + paramaterObjectMap + ", serverUrl="
+				+ serverUrl + "]";
 	}
 
 	/**
@@ -78,7 +77,7 @@ public abstract class AbstractClient
 			// open the servlet connection
 			URLConnection servletConnection = httpsConnection.openServletConnection(serverUrl);
 			LOGGER.info("Connection established");
-			performAction(httpsConnection,servletConnection);
+			performAction(httpsConnection, servletConnection);
 
 			LOGGER.info("Artifacts uploaded");
 			// read the response from server
@@ -100,7 +99,9 @@ public abstract class AbstractClient
 		}
 	}
 
-	protected void performAction(HTTPSConnection httpsConnection, URLConnection servletConnection) throws DynamicExtensionsSystemException, IOException {
+	protected void performAction(HTTPSConnection httpsConnection, URLConnection servletConnection)
+			throws DynamicExtensionsSystemException, IOException
+	{
 		// upload the Zip file to server
 		httpsConnection.uploadFileToServer(servletConnection, zipFile);
 
@@ -186,19 +187,23 @@ public abstract class AbstractClient
 		return catFileNameString.toString();
 	}
 
-	public Map<String, Object> getParamaterObjectMap() {
+	public Map<String, Object> getParamaterObjectMap()
+	{
 		return paramaterObjectMap;
 	}
 
-	public void setParamaterObjectMap(Map<String, Object> paramaterObjectMap) {
+	public void setParamaterObjectMap(Map<String, Object> paramaterObjectMap)
+	{
 		this.paramaterObjectMap = paramaterObjectMap;
 	}
 
-	public URL getServerUrl() {
+	public URL getServerUrl()
+	{
 		return serverUrl;
 	}
 
-	public void setServerUrl(URL serverUrl) {
+	public void setServerUrl(URL serverUrl)
+	{
 		this.serverUrl = serverUrl;
 	}
 
@@ -207,11 +212,29 @@ public abstract class AbstractClient
 		return jbossUrl;
 	}
 
-
 	public void setJbossUrl(URL jbossUrl)
 	{
 		this.jbossUrl = jbossUrl;
 	}
 
+	/**
+	 * Close object input stream.
+	 * @param inputStream the input stream
+	 */
+	public static void closeObjectInputStream(ObjectInputStream inputStream)
+	{
+		try
+		{
+			if (inputStream != null)
+			{
+				inputStream.close();
+			}
+		}
+		catch (IOException e)
+		{
+			LOGGER.error("Error while closing input stream " + e.getMessage());
+			LOGGER.debug("Error while closing input stream ", e);
+		}
+	}
 
 }

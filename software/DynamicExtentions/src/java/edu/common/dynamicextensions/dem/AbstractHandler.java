@@ -24,11 +24,11 @@ import edu.wustl.dao.exception.DAOException;
 
 public abstract class AbstractHandler extends HttpServlet implements WebUIManagerConstants
 {
+
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getCommonLogger(AbstractHandler.class);
 	protected Map<String, Object> paramaterObjectMap;
 	protected DyanamicObjectProcessor dyanamicObjectProcessor;
-
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
@@ -36,25 +36,35 @@ public abstract class AbstractHandler extends HttpServlet implements WebUIManage
 	{
 		doPost(req, resp);
 	}
+
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-			IOException
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException
 	{
-		try {
+		try
+		{
 			dyanamicObjectProcessor = new DyanamicObjectProcessor();
 			initAuditManager();
 			initializeParamaterObjectMap(req);
 			doPostImpl(req, resp);
-		} catch (DynamicExtensionsApplicationException e) {
+		}
+		catch (DynamicExtensionsApplicationException e)
+		{
 			LOGGER.error(e);
-		} catch (DAOException e) {
+		}
+		catch (DAOException e)
+		{
 			LOGGER.error(e);
-		} catch (DynamicExtensionsSystemException e) {
+		}
+		catch (DynamicExtensionsSystemException e)
+		{
 			LOGGER.error(e);
 		}
 	}
 
-	protected abstract void doPostImpl(HttpServletRequest req, HttpServletResponse resp) throws DAOException, DynamicExtensionsApplicationException, DynamicExtensionsSystemException;
+	protected abstract void doPostImpl(HttpServletRequest req, HttpServletResponse resp)
+			throws DAOException, DynamicExtensionsApplicationException,
+			DynamicExtensionsSystemException;
 
 	protected void initAuditManager()
 	{
@@ -64,7 +74,7 @@ public abstract class AbstractHandler extends HttpServlet implements WebUIManage
 		}
 		catch (AuditException e1)
 		{
-			LOGGER.error("Error initializing audit manager",e1);
+			LOGGER.error("Error initializing audit manager", e1);
 		}
 	}
 
@@ -108,15 +118,7 @@ public abstract class AbstractHandler extends HttpServlet implements WebUIManage
 		}
 		finally
 		{
-			try
-			{
-				inputFromServlet.close();
-			}
-			catch (IOException e)
-			{
-				throw new DynamicExtensionsApplicationException(
-						"Error in reading objects from request", e);
-			}
+			closeObjectInputStream(inputFromServlet);
 		}
 		return paramaterObjectMap;
 	}
@@ -193,6 +195,26 @@ public abstract class AbstractHandler extends HttpServlet implements WebUIManage
 						"Error in writing object to the responce", e);
 			}
 
+		}
+	}
+
+	/**
+	 * Close object input stream.
+	 * @param inputStream the input stream
+	 */
+	public static void closeObjectInputStream(ObjectInputStream inputStream)
+	{
+		try
+		{
+			if (inputStream != null)
+			{
+				inputStream.close();
+			}
+		}
+		catch (IOException e)
+		{
+			LOGGER.error("Error while closing input stream " + e.getMessage());
+			LOGGER.debug("Error while closing input stream ",e);
 		}
 	}
 }
