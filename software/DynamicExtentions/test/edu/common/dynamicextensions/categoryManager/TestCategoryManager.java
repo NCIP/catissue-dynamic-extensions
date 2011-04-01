@@ -69,8 +69,6 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 	}
 
-
-
 	public void testEditDataForSingleCategories()
 	{
 		CategoryInterface category = null;
@@ -80,7 +78,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -108,6 +106,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			fail();
 		}
 	}
+
 	public void testValidateDataForSingleCategories()
 	{
 		CategoryInterface category = null;
@@ -123,6 +122,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCategoryRadiotherapy()
 	{
 		CategoryInterface category = null;
@@ -139,16 +139,18 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			fail();
 		}
 	}
+
 	public void testEditDataForForCategoryRadiotherapy()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Test Category Radiation Therapy");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Test Category Radiation Therapy");
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -157,12 +159,14 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForCategoryRadiotherapy()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Test Category Radiation Therapy");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Test Category Radiation Therapy");
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -172,6 +176,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCategoryLabInfo()
 	{
 		CategoryInterface category = null;
@@ -188,6 +193,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForForCategoryLabInfo()
 	{
 		CategoryInterface category = null;
@@ -197,7 +203,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -206,6 +212,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForCategoryLabInfo()
 	{
 		CategoryInterface category = null;
@@ -221,6 +228,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCategoryDiagnosis()
 	{
 		CategoryInterface category = null;
@@ -236,6 +244,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			fail();
 		}
 	}
+
 	public void testEditDataForForCategoryDiagnosis()
 	{
 		CategoryInterface category = null;
@@ -245,7 +254,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -254,6 +263,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForCategoryDiagnosis()
 	{
 		CategoryInterface category = null;
@@ -269,6 +279,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCategoryAnnotation()
 	{
 		CategoryInterface category = null;
@@ -284,6 +295,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			fail();
 		}
 	}
+
 	public void testEditDataForForCategoryAnnotation()
 	{
 		CategoryInterface category = null;
@@ -293,7 +305,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -302,6 +314,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForCategoryAnnotation()
 	{
 		CategoryInterface category = null;
@@ -317,6 +330,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCategoryPathAnnotation()
 	{
 		CategoryInterface category = null;
@@ -334,16 +348,18 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForForPathAnnotation()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Test Category_Pathological Annotation");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Test Category_Pathological Annotation");
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -352,12 +368,14 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForPathAnnotation()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Test Category_Pathological Annotation");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Test Category_Pathological Annotation");
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -367,6 +385,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCategoryAutocompleteDropDown()
 	{
 		CategoryInterface category = null;
@@ -383,6 +402,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForForAutocompleteDropDown()
 	{
 		CategoryInterface category = null;
@@ -392,7 +412,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -401,6 +421,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForAutocompleteDropDown()
 	{
 		CategoryInterface category = null;
@@ -416,6 +437,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForSingleLineDisplayForAutomation()
 	{
 		CategoryInterface category = null;
@@ -433,16 +455,18 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForForSingleLineDisplayForAutomation()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Category Single Line For Automation");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Category Single Line For Automation");
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -451,12 +475,14 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForDisplayForAutomation()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Category Single Line For Automation");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Category Single Line For Automation");
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -466,6 +492,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCalculatedAttributeForAutomation1()
 	{
 		CategoryInterface category = null;
@@ -483,16 +510,18 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCalculatedAttributeForAutomation1()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Calculated Attributes For Automation");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Calculated Attributes For Automation");
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -501,12 +530,14 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForCalculatedAttributeForAutomation1()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Calculated Attributes For Automation");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Calculated Attributes For Automation");
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -516,6 +547,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForSkipLogicForAutomation()
 	{
 		CategoryInterface category = null;
@@ -532,6 +564,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForSkipLogicForAutomation()
 	{
 		CategoryInterface category = null;
@@ -541,7 +574,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -550,6 +583,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForSkipLogicForAutomation()
 	{
 		CategoryInterface category = null;
@@ -565,6 +599,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForSkipLogicForAutomation2()
 	{
 		CategoryInterface category = null;
@@ -581,6 +616,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForSkipLogicForAutomation2()
 	{
 		CategoryInterface category = null;
@@ -590,7 +626,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -599,6 +635,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForSkipLogicForForAutomation2()
 	{
 		CategoryInterface category = null;
@@ -614,6 +651,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForSkipLogicForAutomation3()
 	{
 		CategoryInterface category = null;
@@ -630,6 +668,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForSkipLogicForAutomation3()
 	{
 		CategoryInterface category = null;
@@ -639,7 +678,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -648,6 +687,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForSkipLogicForForAutomation3()
 	{
 		CategoryInterface category = null;
@@ -663,6 +703,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCalculated_multiline_different_classes()
 	{
 		CategoryInterface category = null;
@@ -680,16 +721,18 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCalculated_multiline_different_classes()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Multiline subcategory calculated attributes from different classes");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Multiline subcategory calculated attributes from different classes");
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -698,12 +741,14 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForCalculated_multiline_different_classes()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Multiline subcategory calculated attributes from different classes");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Multiline subcategory calculated attributes from different classes");
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -713,6 +758,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCalculated_multiline_different_classes_invisible_RA()
 	{
 		CategoryInterface category = null;
@@ -732,16 +778,20 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCalculated_multiline_different_classes_invisible_RA()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Multiline subcategory calculated attributes from different classes invisible RA");
+			category = EntityCache
+					.getInstance()
+					.getCategoryByName(
+							"Multiline subcategory calculated attributes from different classes invisible RA");
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -750,12 +800,16 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForCalculated_multiline_different_classes_invisible_RA()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Multiline subcategory calculated attributes from different classes invisible RA");
+			category = EntityCache
+					.getInstance()
+					.getCategoryByName(
+							"Multiline subcategory calculated attributes from different classes invisible RA");
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -765,6 +819,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCalculated_multiline_different_classes_simple_formula()
 	{
 		CategoryInterface category = null;
@@ -784,16 +839,20 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCalculated_multiline_different_classes_simple_formula()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Multiline subcategory simple formula calculated attributes from different classes");
+			category = EntityCache
+					.getInstance()
+					.getCategoryByName(
+							"Multiline subcategory simple formula calculated attributes from different classes");
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -802,12 +861,16 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForCalculated_multiline_different_classes_simple_formula()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Multiline subcategory simple formula calculated attributes from different classes");
+			category = EntityCache
+					.getInstance()
+					.getCategoryByName(
+							"Multiline subcategory simple formula calculated attributes from different classes");
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -817,6 +880,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCalculated_multiline_different_classes_visible_RA()
 	{
 		CategoryInterface category = null;
@@ -836,16 +900,20 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCalculated_multiline_different_classes_visible_RA()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Multiline subcategory calculated attributes from different classes visible RA");
+			category = EntityCache
+					.getInstance()
+					.getCategoryByName(
+							"Multiline subcategory calculated attributes from different classes visible RA");
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -854,12 +922,16 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForCalculated_multiline_different_classes_visible_RA()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Multiline subcategory calculated attributes from different classes visible RA");
+			category = EntityCache
+					.getInstance()
+					.getCategoryByName(
+							"Multiline subcategory calculated attributes from different classes visible RA");
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -869,6 +941,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCalculated_multiline_same_class()
 	{
 		CategoryInterface category = null;
@@ -885,6 +958,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCalculated_multiline_same_class()
 	{
 		CategoryInterface category = null;
@@ -894,7 +968,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -903,6 +977,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForCalculated_multiline_same_class()
 	{
 		CategoryInterface category = null;
@@ -918,6 +993,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCalculated_multiline_same_class_invisible_RA()
 	{
 		CategoryInterface category = null;
@@ -935,16 +1011,18 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCalculated_multiline_same_class_invisible_RA()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Multiline subcategory calculated attributes from same class invisible RA");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Multiline subcategory calculated attributes from same class invisible RA");
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -953,12 +1031,14 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForCalculated_multiline_same_class_invisible_RA()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Multiline subcategory calculated attributes from same class invisible RA");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Multiline subcategory calculated attributes from same class invisible RA");
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -968,6 +1048,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCalculated_multiline_same_class_simple_formula()
 	{
 		CategoryInterface category = null;
@@ -985,16 +1066,18 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCalculated_multiline_same_class_simple_formula()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Multiline subcategory simple formula calculated attributes from same class");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Multiline subcategory simple formula calculated attributes from same class");
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -1003,12 +1086,14 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForCalculated_multiline_same_class_simple_formula()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Multiline subcategory simple formula calculated attributes from same class");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Multiline subcategory simple formula calculated attributes from same class");
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -1018,6 +1103,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCalculated_multiline_same_class_visible_RA()
 	{
 		CategoryInterface category = null;
@@ -1035,16 +1121,18 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCalculated_multiline_same_class_visible_RA()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Multiline subcategory calculated attributes from same class visible RA");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Multiline subcategory calculated attributes from same class visible RA");
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -1053,12 +1141,14 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForCalculated_multiline_same_class_visible_RA()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Multiline subcategory calculated attributes from same class visible RA");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Multiline subcategory calculated attributes from same class visible RA");
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -1068,6 +1158,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCategoryLabReport()
 	{
 		CategoryInterface category = null;
@@ -1084,6 +1175,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCategoryLabReport()
 	{
 		CategoryInterface category = null;
@@ -1093,7 +1185,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -1102,6 +1194,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForCategoryLabReport()
 	{
 		CategoryInterface category = null;
@@ -1117,6 +1210,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCategoryClinicalReport()
 	{
 		CategoryInterface category = null;
@@ -1133,6 +1227,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCategoryClinicalReport()
 	{
 		CategoryInterface category = null;
@@ -1142,7 +1237,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -1151,6 +1246,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForCategoryClinicalReport()
 	{
 		CategoryInterface category = null;
@@ -1166,6 +1262,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCategoryPathReports()
 	{
 		CategoryInterface category = null;
@@ -1182,6 +1279,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCategoryCategoryPathReports()
 	{
 		CategoryInterface category = null;
@@ -1191,7 +1289,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -1200,6 +1298,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForCategoryCategoryPathReports()
 	{
 		CategoryInterface category = null;
@@ -1215,6 +1314,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCategoryLabReportforAutomation()
 	{
 		CategoryInterface category = null;
@@ -1232,16 +1332,18 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCategoryLabReportforAutomation()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Test Category_Lab Report for Automation");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Test Category_Lab Report for Automation");
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -1250,12 +1352,14 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForCategoryLabReportforAutomation()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Test Category_Lab Report for Automation");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Test Category_Lab Report for Automation");
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -1265,6 +1369,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCategoryCalculated_MultipleTimes()
 	{
 		CategoryInterface category = null;
@@ -1282,16 +1387,18 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCategoryCalculated_MultipleTimes()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Calculated attribute multiple times");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Calculated attribute multiple times");
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -1300,12 +1407,14 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataForCategoryCalculated_MultipleTimes()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Calculated attribute multiple times");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Calculated attribute multiple times");
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -1315,6 +1424,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCategoryFormMultiSelectAddDetails()
 	{
 		CategoryInterface category = null;
@@ -1331,6 +1441,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCategoryFormMultiSelectAddDetails()
 	{
 		CategoryInterface category = null;
@@ -1340,7 +1451,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -1349,6 +1460,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataFormMultiSelectAddDetails()
 	{
 		CategoryInterface category = null;
@@ -1364,6 +1476,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCategoryConfigurePasteNegative()
 	{
 		CategoryInterface category = null;
@@ -1371,7 +1484,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Test Category_Negative Case for Paste");
-			assertNull("testInsertDataForCategoryConfigurePasteNegative: Expecting null as category Test Category_Negative Case for Paste should not have been created.",category);
+			assertNull(
+					"testInsertDataForCategoryConfigurePasteNegative: Expecting null as category Test Category_Negative Case for Paste should not have been created.",
+					category);
 		}
 		catch (Exception e)
 		{
@@ -1379,13 +1494,16 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCategoryConfigurePasteNegative()
 	{
 		CategoryInterface category = null;
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("c");
-			assertNull("testInsertDataForCategoryConfigurePasteNegative: Expecting null as category Test Category_Negative Case for Paste should not have been created.",category);
+			assertNull(
+					"testInsertDataForCategoryConfigurePasteNegative: Expecting null as category Test Category_Negative Case for Paste should not have been created.",
+					category);
 
 		}
 		catch (Exception e)
@@ -1394,13 +1512,17 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataFormCategoryConfigurePasteNegative()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Test Category_Negative Case for Paste");
-			assertNull("testInsertDataForCategoryConfigurePasteNegative: Expecting null as category Test Category_Negative Case for Paste should not have been created.",category);
+			category = EntityCache.getInstance().getCategoryByName(
+					"Test Category_Negative Case for Paste");
+			assertNull(
+					"testInsertDataForCategoryConfigurePasteNegative: Expecting null as category Test Category_Negative Case for Paste should not have been created.",
+					category);
 		}
 		catch (Exception e)
 		{
@@ -1408,6 +1530,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCategoryConfigurePaste()
 	{
 		CategoryInterface category = null;
@@ -1425,16 +1548,18 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCategoryConfigurePaste()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Test Category_Paste Button Configuration");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Test Category_Paste Button Configuration");
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -1443,12 +1568,14 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataFormCategoryConfigurePaste()
 	{
 		CategoryInterface category = null;
 		try
 		{
-			category = EntityCache.getInstance().getCategoryByName("Test Category_Paste Button Configuration");
+			category = EntityCache.getInstance().getCategoryByName(
+					"Test Category_Paste Button Configuration");
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -1458,6 +1585,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCategory_TestCase79()
 	{
 		CategoryInterface category = null;
@@ -1474,6 +1602,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCategory_TestCase79()
 	{
 		CategoryInterface category = null;
@@ -1483,7 +1612,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -1492,6 +1621,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataFormCategory_TestCase79()
 	{
 		CategoryInterface category = null;
@@ -1507,6 +1637,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCategory_TestCase80()
 	{
 		CategoryInterface category = null;
@@ -1523,6 +1654,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCategory_TestCase80()
 	{
 		CategoryInterface category = null;
@@ -1532,7 +1664,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -1541,6 +1673,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataFormCategory_TestCase80()
 	{
 		CategoryInterface category = null;
@@ -1556,6 +1689,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testInsertDataForCategory_TestCase81()
 	{
 		CategoryInterface category = null;
@@ -1572,6 +1706,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testEditDataForCategory_TestCase81()
 	{
 		CategoryInterface category = null;
@@ -1581,7 +1716,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
-			editDataForCategory(category,recordId);
+			editDataForCategory(category, recordId);
 		}
 		catch (Exception e)
 		{
@@ -1590,6 +1725,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	public void testValidateDataFormCategory_TestCase81()
 	{
 		CategoryInterface category = null;
@@ -1605,6 +1741,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 
 	}
+
 	private Long insertDataForCategory(CategoryInterface category) throws ParseException,
 			DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
@@ -1701,32 +1838,32 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		}
 		printFailedCategoryReport(failedCatVsException, "Html generation failed for Category ");
 	}
-	public void testValidateDataForCategorie(CategoryInterface category) throws DynamicExtensionsSystemException, ParseException
+
+	public void testValidateDataForCategorie(CategoryInterface category)
+			throws DynamicExtensionsSystemException, ParseException
 	{
 		System.out.println("Validating record for " + category.getName());
 		Map<BaseAbstractAttributeInterface, Object> dataValue;
 		CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 		dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity, 0);
 		List<String> errorList = new ArrayList<String>();
-		ValidatorUtil.validateEntity(dataValue, errorList,
-				(ContainerInterface) rootCatEntity.getContainerCollection().iterator()
-						.next(), true);
+		ValidatorUtil.validateEntity(dataValue, errorList, (ContainerInterface) rootCatEntity
+				.getContainerCollection().iterator().next(), true);
 		if (errorList.isEmpty())
 		{
-			System.out.println("Record validated succesfully for category "
-					+ category.getName());
+			System.out.println("Record validated succesfully for category " + category.getName());
 		}
 		else
 		{
-			System.out.println("Record validation failed for category "
-					+ category.getName());
+			System.out.println("Record validation failed for category " + category.getName());
 			for (String error : errorList)
 			{
 				System.out.println("error --> " + error);
 			}
-			fail("Record validation failed for category"+category.getName());
+			fail("Record validation failed for category" + category.getName());
 		}
 	}
+
 	/**
 	 * This method will retrieve the category with the given name from DB.
 	 * @param name name of the category
@@ -1809,7 +1946,8 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		printFailedCategoryReport(failedCatVsException,
 				"testInsertDataForAllCategoriesForBO: Record Insertion failed for Category ");
 	}*/
-	public void editDataForCategory(CategoryInterface category,Long recordIdentifier) throws MalformedURLException
+	public void editDataForCategory(CategoryInterface category, Long recordIdentifier)
+			throws MalformedURLException
 	{
 		try
 		{
