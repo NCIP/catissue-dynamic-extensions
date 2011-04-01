@@ -32,6 +32,14 @@ public class DynamicExtensionsUtilityTest extends DynamicExtensionsBaseTestCase
 		return CategoryManager.getInstance().getCategoryById(categoryIdentifier);
 	}
 
+	private CategoryInterface getCategoryByName(String catName) throws DynamicExtensionsSystemException
+	{
+		System.out.println("getCategory()-fetching category with id " + catName);
+		return CategoryManager.getInstance().getCategoryByName(catName);
+	}
+
+
+
 	private Long getContainerIdentifier() throws DynamicExtensionsSystemException
 	{
 		ContainerInterface container = (ContainerInterface) getCategory().getRootCategoryElement()
@@ -115,7 +123,7 @@ public class DynamicExtensionsUtilityTest extends DynamicExtensionsBaseTestCase
 			LOGGER
 					.info("-----------------Test For getting Child Container from cache by Identifier and Main container started--------------------");
 			long containerIdentifier = getContainerIdentifier();
-			ContainerInterface mainContainer = (ContainerInterface) getCategory()
+			ContainerInterface mainContainer = (ContainerInterface) getCategoryByName("Test Category_Lab Information")
 					.getRootCategoryElement().getContainerCollection().iterator().next();
 			Collection<ControlInterface> controls = mainContainer.getAllControls();
 			int i = 0;
