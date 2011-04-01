@@ -36,9 +36,11 @@ public class TestCalculatedAttribute extends DynamicExtensionsBaseTestCase
 		try
 		{
 			InputStream stream = DynamicExtensionDAO.class.getClassLoader().getResourceAsStream(
-					"DynamicExtensionsInstall.properties");
+					"DynamicExtensions.properties");
 			Properties props = new Properties();
+			// FIXME - getting a null pointer exception here.
 			props.load(stream);
+			System.out.println("testing load properies - " + props.getProperty("Application.url"));
 			DynamicExtensionsUtility.initializeVariables(props);
 			CategoryInterface categoryInterface = EntityCache.getInstance().getCategoryByName(
 					"CalcAttribute_Formula_within_formula");
@@ -74,7 +76,7 @@ public class TestCalculatedAttribute extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured " + e.getMessage());
 		}
 	}
 
