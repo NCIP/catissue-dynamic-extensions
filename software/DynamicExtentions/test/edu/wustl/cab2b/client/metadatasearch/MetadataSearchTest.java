@@ -171,13 +171,15 @@ public class MetadataSearchTest extends DynamicExtensionsBaseTestCase
 		catch (CheckedException e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());
 		}
 		Set<EntityInterface> entities = resultMatchedClass.getEntityCollection();
 		boolean b = false;
+		System.out.println("testSearchEntityBasedOnConceptCode :: fetched entities are --> ");
 		for (EntityInterface eI : entities)
 		{
 			String result = eI.getName();
+			System.out.println(result);
 			b = b || result.contains("ClinicalAnnotations");
 		}
 		assertTrue(b);
@@ -234,13 +236,15 @@ public class MetadataSearchTest extends DynamicExtensionsBaseTestCase
 		catch (CheckedException e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());
 		}
 		Set<EntityInterface> entities = resultMatchedClass.getEntityCollection();
 		boolean b = false;
+		System.out.println("testSearchPvBasedOnText :: matched entities are --> ");
 		for (EntityInterface eI : entities)
 		{
 			String result = eI.getName();
+			System.out.println(result);
 			b = b || result.contains("LabInfo");
 		}
 		assertTrue(b);
@@ -261,13 +265,15 @@ public class MetadataSearchTest extends DynamicExtensionsBaseTestCase
 		catch (CheckedException e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());
 		}
 		Set<EntityInterface> entities = resultMatchedClass.getEntityCollection();
 		boolean b = false;
+		System.out.println("testSearchPvOnConceptCode :: matched entities are --> ");
 		for (EntityInterface eI : entities)
 		{
 			String result = eI.getName();
+			System.out.println(result);
 			b = b || result.contains("LabTest");
 		}
 		assertTrue(b);
