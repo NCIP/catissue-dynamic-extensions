@@ -50,13 +50,13 @@ public class TestCategoryCreation extends DynamicExtensionsBaseTestCase
 			String[] args = {CATEGORY_FILE_DIR, APPLICATIONURL, TEST_MODEL_DIR + "/cat_list_for_test_edited1.txt"};
 			CategoryClient.main(args);
 			System.out.println("done categoryCreation");
-			assertAllCategoriesCreatedInFile(TEST_MODEL_DIR + "/cat_list_for_test_edited1.txt");
+			assertAllCategoriesCreatedInFile(TEST_MODEL_DIR + "/cat_list_for_test_edited1.txt", false);
 
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());
 		}
 	}
 
@@ -71,13 +71,13 @@ public class TestCategoryCreation extends DynamicExtensionsBaseTestCase
 			String[] args = {CATEGORY_FILE_DIR, APPLICATIONURL, TEST_MODEL_DIR + "/cat_list_for_test_edited2.txt"};
 			CategoryClient.main(args);
 			System.out.println("done categoryCreation");
-			assertAllCategoriesCreatedInFile(TEST_MODEL_DIR + "/cat_list_for_test_edited2.txt");
+			assertAllCategoriesCreatedInFile(TEST_MODEL_DIR + "/cat_list_for_test_edited2.txt", false);
 
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());
 		}
 	}
 
@@ -92,13 +92,34 @@ public class TestCategoryCreation extends DynamicExtensionsBaseTestCase
 			String[] args = {CATEGORY_FILE_DIR, APPLICATIONURL, TEST_MODEL_DIR + "/cat_list_for_test_edited3.txt"};
 			CategoryClient.main(args);
 			System.out.println("done categoryCreation");
-			assertAllCategoriesCreatedInFile(TEST_MODEL_DIR + "/cat_list_for_test_edited3.txt");
+			assertAllCategoriesCreatedInFile(TEST_MODEL_DIR + "/cat_list_for_test_edited3.txt", false);
 
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());
+		}
+	}
+
+	/**
+	 * This test case will create all the categories present in the CPUML Folder.
+	 * If one of the category creation is failed then this test case is also failed.
+	 */
+	public void testCreateNegativeCategory()
+	{
+		try
+		{
+			String[] args = {CATEGORY_FILE_DIR, APPLICATIONURL, TEST_MODEL_DIR + "/cat_list_for_test_edited4.txt"};
+			CategoryClient.main(args);
+			System.out.println("done categoryCreation");
+			assertAllCategoriesCreatedInFile(TEST_MODEL_DIR + "/cat_list_for_test_edited4.txt", true);
+
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail("Unknown exception occured - " + e.getMessage());
 		}
 	}
 
@@ -106,9 +127,10 @@ public class TestCategoryCreation extends DynamicExtensionsBaseTestCase
 	 * This method will find out the names of the categories specified in the fileName & verify all these
 	 * categories are created.
 	 * @param fileName
+	 * @param isNegativeTest TODO
 	 * @throws IOException
 	 */
-	private void assertAllCategoriesCreatedInFile(String fileName) throws IOException
+	private void assertAllCategoriesCreatedInFile(String fileName, boolean isNegativeTest) throws IOException
 	{
 		File objFile = new File(fileName);
 		BufferedReader bufRdr = null;
@@ -128,12 +150,19 @@ public class TestCategoryCreation extends DynamicExtensionsBaseTestCase
 					line = bufRdr.readLine();
 				}
 			}
-			assertCategoriesFromFiles(catFiles);
+			if (isNegativeTest)
+			{
+				assertFailedCategoriesFromFiles(catFiles);
+			}
+			else
+			{
+				assertCategoriesFromFiles(catFiles);
+			}
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());
 			//throw new DynamicExtensionsSystemException("Can not read from file ", e);
 		}
 		finally
@@ -143,7 +172,6 @@ public class TestCategoryCreation extends DynamicExtensionsBaseTestCase
 				bufRdr.close();
 			}
 		}
-
 	}
 
 	/**
@@ -198,7 +226,70 @@ public class TestCategoryCreation extends DynamicExtensionsBaseTestCase
 		printCategoryCreationReport(successFulCategories, FailedCategories);
 		if (!FailedCategories.isEmpty())
 		{
-			fail();
+			//System.out.println("Following categores has failed - ");
+			fail("One or more category imports failed. hence failing testcase");
+		}
+	}
+
+
+	/**
+	 * This method will very that the category name given in the catFiles file is also present in the
+	 * Db. if not present then the test case is failed.
+	 * @param catFiles
+	 * @throws DynamicExtensionsSystemException
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws DAOException
+	 * @throws SQLException
+	 */
+	private void assertFailedCategoriesFromFiles(Collection<String> catFiles)
+			throws DynamicExtensionsSystemException, FileNotFoundException, IOException,
+			DAOException, SQLException
+	{
+		List<String> catNameInTestCase = new ArrayList<String>();
+		for (String line : catFiles)
+		{
+			String catName;
+			CategoryFileParser categoryFileParser = DomainObjectFactory.getInstance()
+					.createCategoryFileParser(line, "", null);
+			categoryFileParser.readNext();
+			if (categoryFileParser.hasFormDefination())
+			{
+				categoryFileParser.readNext();
+				catName = categoryFileParser.getCategoryName();
+				catNameInTestCase.add(catName);
+			}
+
+		}
+		Collection<String> categoryNameInDB = getSavedCategoryNames();
+		Set<String> successFulCategories = new HashSet<String>();
+		Set<String> FailedCategories = new HashSet<String>();
+		for (String name : catNameInTestCase)
+		{
+			boolean isPresent = false;
+			for (String cat : categoryNameInDB)
+			{
+				if (cat.equals(name))
+				{
+					successFulCategories.add(name);
+					isPresent = true;
+
+				}
+			}
+			if (!isPresent)
+			{
+				FailedCategories.add(name);
+			}
+		}
+		printCategoryCreationReport(successFulCategories, FailedCategories);
+		if (!successFulCategories.isEmpty())
+		{
+			System.out.println("Following negative categores are imported succesfully - ");
+			for (String catName : successFulCategories)
+			{
+				System.out.println(catName);
+			}
+			fail("One or more negative category imports is successful. Hence failing testcase");
 		}
 	}
 
@@ -279,7 +370,9 @@ public class TestCategoryCreation extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());
 		}
 	}
+
+
 }
