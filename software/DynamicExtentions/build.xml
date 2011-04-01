@@ -127,6 +127,7 @@
 			<classpath refid="app.classpath" />
 		</javac>
 		<copy file="${target.dir}/TestHibernate.cfg.xml" tofile="${target.dir}/DynamicExtensionsHibernate.cfg.xml" overwrite="true" />
+		<copy file="${base.dir}/src/conf/DynamicExtensions.properties" tofile="${target.dir}/DynamicExtensions.properties" overwrite="true" />
 	</target>
 
 
