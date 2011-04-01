@@ -95,7 +95,8 @@
 <c:if test="${sessionScope.onFormLoad != null }">
  <script>
  var strFun = "window.parent."+'<%=request.getSession().getAttribute(DEConstants.ON_FORM_LOAD)%>';
- var strParam = "<%=isTopLevelEntity%>";
+ var deRecId = <%= request.getParameter("recordIdentifier") %>;
+ var strParam = "<%=isTopLevelEntity%>" + "," + deRecId;
 
  onFormLoad(strFun,strParam);
 </script>
