@@ -1428,7 +1428,8 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				TEST_ENTITYGROUP_NAME);
 		//Step 2
 		EntityInterface pathAnnotatopnChild = testGroup.getEntityByName("PathAnnotationChild");
-		AttributeInterface dateOnlyAtt = pathAnnotatopnChild.getAttributeByName("detectionDateChild");
+		AttributeInterface dateOnlyAtt = pathAnnotatopnChild
+				.getAttributeByName("detectionDateChild");
 
 		EntityManagerInterface entityManager = EntityManager.getInstance();
 
@@ -1448,7 +1449,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			recordId = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
 					dataValue);
 
-			assertNotNull("Record for test case testInsertFutureDateForDateOnlyFormat() inserted successfully.", recordId);
+			assertNotNull(
+					"Record for test case testInsertFutureDateForDateOnlyFormat() inserted successfully.",
+					recordId);
 
 			// Step 4.
 			dataValue = EntityManager.getInstance().getRecordById(pathAnnotatopnChild, recordId);
@@ -1695,129 +1698,38 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	 */
 	public void testDataForFutureDateRule()
 	{
-		/*
-		 * DomainObjectFactory factory = DomainObjectFactory.getInstance();
-		 * EntityGroupInterface entityGroup = factory.createEntityGroup();
-		 * entityGroup.setName("test_future_date");
-		 *
-		 * //Step 1 Entity entity = (Entity) createAndPopulateEntity();
-		 * entity.setName("Appointments");
-		 */
-
 		EntityManagerInterface entityManager = EntityManager.getInstance();
-
 		Long recordId = null;
 		try
 		{
-			EntityGroupInterface entityGroup1 = EntityGroupManager.getInstance()
+			EntityGroupInterface testEntityGroup = EntityGroupManager.getInstance()
 					.getEntityGroupByName(TEST_ENTITYGROUP_NAME);
-			Entity entity1 = (Entity) entityGroup1.getEntityByName("Diagnosis");
-			edu.common.dynamicextensions.domain.Attribute dateOnly = (Attribute) entity1
-					.getAttributeByName("diagnosisDate");
+			Entity pathAnnotationChildEntity = (Entity) testEntityGroup
+					.getEntityByName("PathAnnotationChild");
+			edu.common.dynamicextensions.domain.Attribute detectionDateChild = (Attribute) pathAnnotationChildEntity
+					.getAttributeByName("detectionDateChild");
 
-			/*
-			 * Attribute dateOnly = (Attribute) factory.createDateAttribute();
-			 * ((DateAttributeTypeInformation)
-			 * dateOnly.getAttributeTypeInformation())
-			 * .setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
-			 * dateOnly.setName("dateOnly");
-			 *
-			 * Attribute dateTime = (Attribute) factory.createDateAttribute();
-			 * ((DateAttributeTypeInformation)
-			 * dateTime.getAttributeTypeInformation())
-			 * .setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEANDTIME);
-			 * dateTime.setName("dateTime");
-			 *
-			 * Attribute yearOnlyDate = (Attribute)
-			 * factory.createDateAttribute(); ((DateAttributeTypeInformation)
-			 * yearOnlyDate.getAttributeTypeInformation())
-			 * .setFormat(ProcessorConstants.DATE_FORMAT_OPTION_YEARONLY);
-			 * yearOnlyDate.setName("yearOnlyDate");
-			 *
-			 * Attribute monthYearDate = (Attribute)
-			 * factory.createDateAttribute(); ((DateAttributeTypeInformation)
-			 * monthYearDate.getAttributeTypeInformation())
-			 * .setFormat(ProcessorConstants.DATE_FORMAT_OPTION_MONTHANDYEAR);
-			 * monthYearDate.setName("monthYearDate");
-			 *
-			 * RuleInterface allowfuturedate = factory.createRule();
-			 * allowfuturedate.setName("allowfuturedate");
-			 * allowfuturedate.setIsImplicitRule(false);
-			 * dateOnly.getRuleCollection().add(allowfuturedate);
-			 * dateTime.getRuleCollection().add(allowfuturedate);
-			 * yearOnlyDate.getRuleCollection().add(allowfuturedate);
-			 * monthYearDate.getRuleCollection().add(allowfuturedate);
-			 *
-			 * entity.addAbstractAttribute(dateOnly);
-			 * entity.addAbstractAttribute(dateTime);
-			 * entity.addAbstractAttribute(yearOnlyDate);
-			 * entity.addAbstractAttribute(monthYearDate);
-			 * entityGroup.addEntity(entity);
-			 * entity.setEntityGroup(entityGroup);
-			 *
-			 * //Step 2
-			 */
-			// EntityInterface savedEntity =
-			// entityManager.persistEntity(entity1);
-
-			for (RuleInterface rule : dateOnly.getRuleCollection())
+			for (RuleInterface rule : detectionDateChild.getRuleCollection())
 			{
 				ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
 						.getValidatorRule(rule.getName());
-				validatorRule.validate(dateOnly, "08" + ProcessorConstants.DATE_SEPARATOR + "16"
-						+ ProcessorConstants.DATE_SEPARATOR + "2020", null, "Date");
+				validatorRule.validate(detectionDateChild, "08" + ProcessorConstants.DATE_SEPARATOR
+						+ "16" + ProcessorConstants.DATE_SEPARATOR + "2020", null, "Date");
 			}
-			/*
-			 * for (RuleInterface rule : dateTime.getRuleCollection()) {
-			 * ValidatorRuleInterface validatorRule =
-			 * ControlConfigurationsFactory.getInstance()
-			 * .getValidatorRule(rule.getName());
-			 * validatorRule.validate(dateTime, "11" +
-			 * ProcessorConstants.DATE_SEPARATOR + "12" +
-			 * ProcessorConstants.DATE_SEPARATOR + "2020 10:11", null, "Date");
-			 * } for (RuleInterface rule : yearOnlyDate.getRuleCollection()) {
-			 * ValidatorRuleInterface validatorRule =
-			 * ControlConfigurationsFactory.getInstance()
-			 * .getValidatorRule(rule.getName());
-			 * validatorRule.validate(yearOnlyDate, "2020", null, "Date"); } for
-			 * (RuleInterface rule : monthYearDate.getRuleCollection()) {
-			 * ValidatorRuleInterface validatorRule =
-			 * ControlConfigurationsFactory.getInstance()
-			 * .getValidatorRule(rule.getName());
-			 * validatorRule.validate(monthYearDate, "09" +
-			 * ProcessorConstants.DATE_SEPARATOR + "2020", null, "Date"); }
-			 */
 
 			Map dataValue = new HashMap();
-			dataValue.put(dateOnly, "05" + ProcessorConstants.DATE_SEPARATOR + "05"
-					+ ProcessorConstants.DATE_SEPARATOR + "2018 " + "00:00");
-			/*
-			 * dataValue.put(dateTime, "11" + ProcessorConstants.DATE_SEPARATOR
-			 * + "12" + ProcessorConstants.DATE_SEPARATOR + "2018 10:11");
-			 * dataValue.put(yearOnlyDate, "2018"); dataValue.put(monthYearDate,
-			 * "09" + ProcessorConstants.DATE_SEPARATOR + "2018");
-			 */
+			dataValue.put(detectionDateChild, "05" + ProcessorConstants.DATE_SEPARATOR + "05"
+					+ ProcessorConstants.DATE_SEPARATOR + "2018");
 
-			ContainerInterface containerInterface = (ContainerInterface) entity1
+			ContainerInterface containerInterface = (ContainerInterface) pathAnnotationChildEntity
 					.getContainerCollection().toArray()[0];
 			recordId = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
 					dataValue);
 
-			dataValue = entityManager.getRecordById(entity1, recordId);
+			dataValue = entityManager.getRecordById(pathAnnotationChildEntity, recordId);
 
-			/*
-			 * assertEquals("11" + ProcessorConstants.DATE_SEPARATOR + "12" +
-			 * ProcessorConstants.DATE_SEPARATOR + "2018 10:11",
-			 * dataValue.get(dateTime));
-			 */
 			assertEquals("05" + ProcessorConstants.DATE_SEPARATOR + "05"
-					+ ProcessorConstants.DATE_SEPARATOR + "2018 " + "00:00", dataValue
-					.get(dateOnly));
-			/*
-			 * assertEquals("2018", dataValue.get(yearOnlyDate));
-			 * assertEquals("09" + ProcessorConstants.DATE_SEPARATOR + "2018",
-			 * dataValue .get(monthYearDate));
-			 */
+					+ ProcessorConstants.DATE_SEPARATOR + "2018", dataValue.get(detectionDateChild));
 		}
 		catch (DynamicExtensionsValidationException e)
 		{
@@ -1905,35 +1817,29 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	 */
 	public void testInsertValueWithQuote()
 	{
-		EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-		DomainObjectFactory factory = DomainObjectFactory.getInstance();
-		EntityGroupInterface entityGroup = factory.createEntityGroup();
-		entityGroup.setName("test_" + new Double(Math.random()).toString());
-
+		EntityManagerInterface entityManager = EntityManager.getInstance();
+		Long recordId = null;
 		try
 		{
 			// Step 1
-			EntityInterface specimen = createAndPopulateEntity();
-			specimen.setName("specimen");
-			specimen.setAbstract(true);
-			AttributeInterface barcode = factory.createStringAttribute();
-			barcode.setName("barcode");
-			specimen.addAbstractAttribute(barcode);
-			entityGroup.addEntity(specimen);
-			specimen.setEntityGroup(entityGroup);
+			EntityGroupInterface testEntityGroup = EntityGroupManager.getInstance()
+					.getEntityGroupByName(TEST_ENTITYGROUP_NAME);
+			Entity labTestEntity = (Entity) testEntityGroup.getEntityByName("LabTest");
+			edu.common.dynamicextensions.domain.Attribute qualResult = (Attribute) labTestEntity
+					.getAttributeByName("qualResult");
+
 			Map dataValue = new HashMap();
+			dataValue.put(qualResult, "123'456");
 
-			dataValue.put(barcode, "123'456");
-
-			EntityManagerInterface.persistEntity(specimen);
-			ContainerInterface containerInterface = (ContainerInterface) specimen
+			ContainerInterface containerInterface = (ContainerInterface) labTestEntity
 					.getContainerCollection().toArray()[0];
-			DynamicExtensionsUtility.insertDataUtility(null, containerInterface, dataValue);
+			recordId = DynamicExtensionsUtility.insertDataUtility(null, containerInterface, dataValue);
 
-			assertTrue(true);
+			assertTrue(recordId != null);
 		}
 		catch (Exception e)
 		{
+			System.out.println("Unknown exception occured " + e.getMessage());
 			e.printStackTrace();
 			fail();
 		}
