@@ -959,7 +959,7 @@
 		
 	<target name="update.dem.hibernate.cfg">
 			<echo message="Inside update dem.hibernate.cfg. ****************************************" />
-		<echo message="The hibernate cfg path is $hibernate.cfg.location}" />
+		<echo message="The hibernate cfg path is ${hibernate.cfg.location}" />
 			<replace file="${hibernate.cfg.location}/demHibernate.cfg.xml">
 				<replacetoken>&lt;session-factory&gt;</replacetoken>
 				<replacevalue>
@@ -968,6 +968,8 @@
 					    	 <!--
 					]]>
 				</replacevalue>
+			</replace>
+			<replace file="${hibernate.cfg.location}/demHibernate.cfg.xml">
 				<replacetoken>&lt;!-- My sql settings --&gt;</replacetoken>
 				<replacevalue>
 					<![CDATA[
