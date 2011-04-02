@@ -1419,62 +1419,45 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	 * Create a date only attribute, and try to insert a future date value Data
 	 * should not get inserted and a validation message with cause should be
 	 * shown to the user.
+	 * @throws DynamicExtensionsSystemException
 	 */
-	public void testInsertFutureDateForDateOnlyFormat()
+	public void testInsertFutureDateForDateOnlyFormat() throws DynamicExtensionsSystemException
 	{
-		DomainObjectFactory factory = DomainObjectFactory.getInstance();
-		EntityGroupInterface entityGroup = factory.createEntityGroup();
-		entityGroup.setName("test_date_only_future_date");
-
 		// Step 1
-		Entity entity = (Entity) createAndPopulateEntity();
-		entity.setName("Stock");
+		EntityGroupInterface testGroup = EntityGroupManager.getInstance().getEntityGroupByName(
+				TEST_ENTITYGROUP_NAME);
+		//Step 2
+		EntityInterface pathAnnotatopnChild = testGroup.getEntityByName("PathAnnotationChild");
+		AttributeInterface dateOnlyAtt = pathAnnotatopnChild.getAttributeByName("detectionDateChild");
 
 		EntityManagerInterface entityManager = EntityManager.getInstance();
 
 		Long recordId = null;
 		try
 		{
-			Attribute date = (Attribute) factory.createDateAttribute();
-			date.setName("Date");
-			((DateAttributeTypeInformation) date.getAttributeTypeInformation())
-					.setFormat(ProcessorConstants.DATE_FORMAT_OPTION_DATEONLY);
-
-			RuleInterface dateRule = factory.createRule();
-			dateRule.setName("date");
-			date.getRuleCollection().add(dateRule);
-
-			date.getRuleCollection().add(dateRule);
-
-			entity.addAbstractAttribute(date);
-			entityGroup.addEntity(entity);
-			entity.setEntityGroup(entityGroup);
-
-			// Step 2
-			EntityInterface savedEntity = entityManager.persistEntity(entity);
-
+			// Step 3
 			Map dataValue = new HashMap();
-			dataValue.put("date", "11" + ProcessorConstants.DATE_SEPARATOR + "16"
-					+ ProcessorConstants.DATE_SEPARATOR + "1982");
+			String testDate = "11" + ProcessorConstants.DATE_SEPARATOR + "16"
+					+ ProcessorConstants.DATE_SEPARATOR + "2020";
 
-			for (RuleInterface rule : date.getRuleCollection())
-			{
-				ValidatorRuleInterface validatorRule = ControlConfigurationsFactory.getInstance()
-						.getValidatorRule(rule.getName());
-				validatorRule.validate(date, "08" + ProcessorConstants.DATE_SEPARATOR + "16"
-						+ ProcessorConstants.DATE_SEPARATOR + "2020", null, "Date");
-			}
+			dataValue.put(dateOnlyAtt, testDate);
 
-			recordId = entityManager.insertData(savedEntity, dataValue, null, null);
-			assertEquals(recordId, null);
+			ContainerInterface containerInterface = (ContainerInterface) pathAnnotatopnChild
+					.getContainerCollection().toArray()[0];
+
+			recordId = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
+
+			assertNotNull("Record for test case testInsertFutureDateForDateOnlyFormat() inserted successfully.", recordId);
+
+			// Step 4.
+			dataValue = EntityManager.getInstance().getRecordById(pathAnnotatopnChild, recordId);
+			assertEquals(testDate, dataValue.get(dateOnlyAtt));
 		}
 		catch (DynamicExtensionsValidationException e)
 		{
-			System.out.println("Could not insert data....");
-			System.out
-					.println("Validation failed. Input date should be lesser than or equal to today's date");
-			assertEquals("Validation failed", e.getMessage());
-			assertEquals(recordId, null);
+			System.out.println("Unknown exception occured " + e.getMessage());
+			//LOGGER.error(e.printStackTrace());
 		}
 		catch (Exception e)
 		{
