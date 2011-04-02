@@ -9,6 +9,8 @@
 
 package edu.common.dynamicextensions.entitymanager;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.client.DataEditClient;
@@ -75,6 +78,9 @@ import edu.wustl.dao.daofactory.DAOConfigFactory;
 public class TestEntityManager extends DynamicExtensionsBaseTestCase
 {
 
+	/** The Constant LOGGER. */
+	private static final Logger LOGGER = Logger.getCommonLogger(TestEntityManager.class);
+
 	/**
 	 *
 	 */
@@ -102,6 +108,20 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	protected void setUp() throws DynamicExtensionsCacheException
 	{
 		super.setUp();
+		try
+		{
+			InputStream stream = DynamicExtensionDAO.class.getClassLoader().getResourceAsStream(
+					"DynamicExtensions.properties");
+			Properties props = new Properties();
+			System.out.println("DynamicExtensions.properties file found : " + stream != null);
+			// FIXME - getting a null pointer exception here.
+			props.load(stream);
+			DynamicExtensionsUtility.initializeVariables(props);
+		}
+		catch (IOException ioException)
+		{
+			LOGGER.error("Error occured while loading DynamicExtensions.properties");
+		}
 	}
 
 	/**
@@ -283,7 +303,6 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		}
 	}
 
-
 	/**
 	 * PURPOSE : To test the method getEntityGroupByName EXPECTED BEHAVIOR : The
 	 * new entity group should be stored correctly and should be retrieved back
@@ -437,10 +456,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(startDate, "02-2009");
 			dataValue.put(endDate, "2009");
 
-
-
-			ContainerInterface 	containerInterface = (ContainerInterface)clinicalAnnotations.getContainerCollection().toArray()[0];
-			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+			ContainerInterface containerInterface = (ContainerInterface) clinicalAnnotations
+					.getContainerCollection().toArray()[0];
+			Long recordId = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
 					dataValue);
 
 			assertNotNull(recordId);
@@ -453,7 +471,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 			dataValue.put(startDate, "08-2010");
 			dataValue.put(endDate, "2010");
-			editData(containerInterface,recordId,dataValue);
+			editData(containerInterface, recordId, dataValue);
 
 			map = EntityManager.getInstance().getRecordById(clinicalAnnotations, recordId);
 			assertEquals("08-2010", map.get(startDate));
@@ -479,29 +497,33 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			Logger.out.debug(e.getStackTrace());
 		}
 	}
-	public void editData(ContainerInterface container,Long recordId,Map dataValue) throws MalformedURLException
+
+	public void editData(ContainerInterface container, Long recordId, Map dataValue)
+			throws MalformedURLException
 	{
-		String entityGroupName=null;
-		if(container.getAbstractEntity() instanceof EntityInterface)
+		String entityGroupName = null;
+		if (container.getAbstractEntity() instanceof EntityInterface)
 		{
-			entityGroupName=((Entity)container.getAbstractEntity()).getEntityGroup().getName();
+			entityGroupName = ((Entity) container.getAbstractEntity()).getEntityGroup().getName();
 		}
 		else
 		{
-			entityGroupName=((CategoryEntityInterface) container.getAbstractEntity()).getEntity().getEntityGroup().getName();
+			entityGroupName = ((CategoryEntityInterface) container.getAbstractEntity()).getEntity()
+					.getEntityGroup().getName();
 		}
 		Map<String, Object> clientmap = new HashMap<String, Object>();
-		DataEditClient dataEditClient=new DataEditClient();
+		DataEditClient dataEditClient = new DataEditClient();
 		clientmap.put(WebUIManagerConstants.RECORD_ID, recordId);
 		clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, null);
 		clientmap.put(WebUIManagerConstants.USER_ID, null);
 		clientmap.put(WebUIManagerConstants.CONTAINER, container);
 		clientmap.put(WebUIManagerConstants.DATA_VALUE_MAP, dataValue);
-		dataEditClient.setServerUrl(new URL(Variables.jbossUrl+entityGroupName+"/"));
+		dataEditClient.setServerUrl(new URL(Variables.jbossUrl + entityGroupName + "/"));
 		dataEditClient.setParamaterObjectMap(clientmap);
 		dataEditClient.execute(null);
 
 	}
+
 	/**
 	 * This method associates static entity record Id with dynamic entity record
 	 * Id
@@ -806,8 +828,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(startDate, "02-2009");
 			dataValue.put(endDate, "2009");
 
-			ContainerInterface 	containerInterface = (ContainerInterface)clinicalAnnotations.getContainerCollection().toArray()[0];
-			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+			ContainerInterface containerInterface = (ContainerInterface) clinicalAnnotations
+					.getContainerCollection().toArray()[0];
+			Long recordId = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
 					dataValue);
 			assertNotNull(recordId);
 			Map map = EntityManager.getInstance().getRecordById(clinicalAnnotations, recordId);
@@ -1490,8 +1513,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(dateTimeAtt, testDateTime);
 			dataValue.put(dateOnlyAtt, testDateValue);
 
-			ContainerInterface 	containerInterface = (ContainerInterface)diagnosis.getContainerCollection().toArray()[0];
-			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+			ContainerInterface containerInterface = (ContainerInterface) diagnosis
+					.getContainerCollection().toArray()[0];
+			Long recordId = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
 					dataValue);
 			// Step 3.
 			dataValue = EntityManager.getInstance().getRecordById(diagnosis, recordId);
@@ -1528,8 +1552,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(monthYearAtt, monthYearValue);
 			dataValue.put(yearOnlyAtt, yearValue);
 
-			ContainerInterface 	containerInterface = (ContainerInterface)chemoTheropyEntity.getContainerCollection().toArray()[0];
-			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+			ContainerInterface containerInterface = (ContainerInterface) chemoTheropyEntity
+					.getContainerCollection().toArray()[0];
+			Long recordId = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
 					dataValue);
 
 			// Step 3.
@@ -1573,9 +1598,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 					+ ProcessorConstants.DATE_SEPARATOR + "1998";
 			dataValue.put(testDate, testDateValue);
 
-
-			ContainerInterface 	containerInterface = (ContainerInterface)labTestEntity.getContainerCollection().toArray()[0];
-			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+			ContainerInterface containerInterface = (ContainerInterface) labTestEntity
+					.getContainerCollection().toArray()[0];
+			Long recordId = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
 					dataValue);
 
 			// Step 3. Validate data
@@ -1658,8 +1683,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				validatorRule.validate(date, "11" + ProcessorConstants.DATE_SEPARATOR + "16"
 						+ ProcessorConstants.DATE_SEPARATOR + "1982", rulesMap, "LeapYear");
 			}
-			ContainerInterface 	containerInterface = (ContainerInterface)entity.getContainerCollection().toArray()[0];
-			recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+			ContainerInterface containerInterface = (ContainerInterface) entity
+					.getContainerCollection().toArray()[0];
+			recordId = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
 					dataValue);
 
 			assertEquals(recordId, null);
@@ -1789,8 +1815,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			 * "09" + ProcessorConstants.DATE_SEPARATOR + "2018");
 			 */
 
-			ContainerInterface 	containerInterface = (ContainerInterface)entity1.getContainerCollection().toArray()[0];
-			recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+			ContainerInterface containerInterface = (ContainerInterface) entity1
+					.getContainerCollection().toArray()[0];
+			recordId = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
 					dataValue);
 
 			dataValue = entityManager.getRecordById(entity1, recordId);
@@ -1801,7 +1828,8 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			 * dataValue.get(dateTime));
 			 */
 			assertEquals("05" + ProcessorConstants.DATE_SEPARATOR + "05"
-                    + ProcessorConstants.DATE_SEPARATOR + "2018 " + "00:00", dataValue.get(dateOnly));
+					+ ProcessorConstants.DATE_SEPARATOR + "2018 " + "00:00", dataValue
+					.get(dateOnly));
 			/*
 			 * assertEquals("2018", dataValue.get(yearOnlyDate));
 			 * assertEquals("09" + ProcessorConstants.DATE_SEPARATOR + "2018",
@@ -1868,8 +1896,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				validatorRule.validate(date, "11" + ProcessorConstants.DATE_SEPARATOR + "16"
 						+ ProcessorConstants.DATE_SEPARATOR + "2000", null, "Date");
 			}
-			ContainerInterface 	containerInterface = (ContainerInterface)savedEntity.getContainerCollection().toArray()[0];
-			recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+			ContainerInterface containerInterface = (ContainerInterface) savedEntity
+					.getContainerCollection().toArray()[0];
+			recordId = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
 					dataValue);
 
 		}
@@ -1914,9 +1943,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			dataValue.put(barcode, "123'456");
 
 			EntityManagerInterface.persistEntity(specimen);
-			ContainerInterface 	containerInterface = (ContainerInterface)specimen.getContainerCollection().toArray()[0];
-			DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
-					dataValue);
+			ContainerInterface containerInterface = (ContainerInterface) specimen
+					.getContainerCollection().toArray()[0];
+			DynamicExtensionsUtility.insertDataUtility(null, containerInterface, dataValue);
 
 			assertTrue(true);
 		}
@@ -2149,8 +2178,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				Map dataValue = new HashMap();
 				dataValue.put(floatAtribute, "15.90");
 
-				ContainerInterface 	containerInterface = (ContainerInterface)savedEntity.getContainerCollection().toArray()[0];
-				recordId1=DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+				ContainerInterface containerInterface = (ContainerInterface) savedEntity
+						.getContainerCollection().toArray()[0];
+				recordId1 = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
 						dataValue);
 
 				dataValue = EntityManagerInterface.getRecordById(entity, recordId1);
@@ -2165,7 +2195,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				Map dataValue2 = new HashMap();
 				dataValue2.put(floatAtribute, "15.90");
 
-				recordId2=DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+				recordId2 = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
 						dataValue2);
 
 				assertEquals(recordId2, null);
@@ -2229,8 +2259,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				validatorRule.validate(floatTypeAttribute, incorrectValue, null, floatTypeAttribute
 						.getName());
 			}
-			ContainerInterface 	containerInterface = (ContainerInterface)savedEntity.getContainerCollection().toArray()[0];
-			recordId=DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+			ContainerInterface containerInterface = (ContainerInterface) savedEntity
+					.getContainerCollection().toArray()[0];
+			recordId = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
 					dataValue);
 			assertEquals(recordId, null);
 		}
@@ -2396,7 +2427,6 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		}
 	}
 
-
 	/**
 	 * This test case will try to insert the data for all the entities present
 	 * in the test model .
@@ -2423,9 +2453,10 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				Map map = dataValueMap;
 				List<String> errorList = new ArrayList<String>();
 				ValidatorUtil.validateEntity(dataValueMap, errorList, container, true);
-				ContainerInterface 	containerInterface = (ContainerInterface)entity.getContainerCollection().toArray()[0];
-				Long recordId=DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
-						map);
+				ContainerInterface containerInterface = (ContainerInterface) entity
+						.getContainerCollection().toArray()[0];
+				Long recordId = DynamicExtensionsUtility.insertDataUtility(null,
+						containerInterface, map);
 
 				System.out.println("Record inserted succesfully for entity " + entity
 						+ " recordId " + recordId);
@@ -2481,9 +2512,10 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				Map<BaseAbstractAttributeInterface, Object> dataValueMap = mapGenerator
 						.createDataValueMapForEntity(entity, 0);
 				Map map = dataValueMap;
-				ContainerInterface 	containerInterface = (ContainerInterface)entity.getContainerCollection().toArray()[0];
-				Long recordId=DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
-						map);
+				ContainerInterface containerInterface = (ContainerInterface) entity
+						.getContainerCollection().toArray()[0];
+				Long recordId = DynamicExtensionsUtility.insertDataUtility(null,
+						containerInterface, map);
 				System.out.println("Record inserted succesfully for " + entity + " recordId "
 						+ recordId);
 				Map<AbstractAttributeInterface, Object> editedDataValueMap = entityManager
