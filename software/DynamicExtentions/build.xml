@@ -892,10 +892,7 @@
 			<antcall target="import.caTissueCoreModel"/>
 			<antcall target="import.GeneconnectModel"/>
 			
-			<!-- This is to update the dem.hibernate.cfg file for test case set up -->
-			<antcall target="update.dem.hibernate.cfg">
-				<param name="hibernate.cfg.location" value="${tempWar.dir}/test.war/WEB-INF/classes" />
-			</antcall>
+			
 
 			<!-- wars are generated in ${tempWar.dir} location -->
 
@@ -911,6 +908,11 @@
 					<include name="DynamicExtensions.jar" />
 				</fileset>
 			</copy>
+			
+			<!-- This is to update the dem.hibernate.cfg file for test case set up -->
+			<antcall target="update.dem.hibernate.cfg">
+				<param name="hibernate.cfg.location" value="${jboss.home.dir}/server/default/deploy/${test.war.name}/WEB-INF/classes" />
+			</antcall>
 
 			<junit printsummary="yes" haltonerror="no" haltonfailure="no" fork="yes" maxmemory="1024m" timeout="5400000">
 
@@ -956,6 +958,8 @@
 		</target>
 		
 	<target name="update.dem.hibernate.cfg">
+			<echo message="Inside update dem.hibernate.cfg. ****************************************" />
+		<echo message="The hibernate cfg path is $hibernate.cfg.location}" />
 			<replace file="${hibernate.cfg.location}/demHibernate.cfg.xml">
 				<replacetoken>&lt;session-factory&gt;</replacetoken>
 				<replacevalue>
