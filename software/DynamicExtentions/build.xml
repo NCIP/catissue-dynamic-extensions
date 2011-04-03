@@ -217,7 +217,7 @@
 	<!-- Create dynamic extensions jar Begins-->
 
 	<!-- Create dynamic extensions jar Begins-->
-	<target name="create_dynext_jar_testcase">
+	<target name="create_dynext_jar_testcase" depends="compile,instrument">
 		<delete file="${interface.dir}/DynamicExtensions.jar" />
 		<jar taskname="buildJar" jarfile="${interface.dir}/DynamicExtensions.jar">
 
@@ -242,6 +242,10 @@
 		</jar>
 	</target>
 	<!-- Create dynamic extensions jar Begins-->
+	
+	<target name="instrument" >
+		<ant antfile="src/conf/cobertura.xml" target="instrument" />
+	</target>
 
 
 
@@ -558,7 +562,8 @@
 
 
 	<!-- Generates schema for DE release.The longblob changes are done for MYSQL using Alter table SQL -->
-	<target name="generate_schema" depends="build_jar,build_app_war">
+	<!-- target name="generate_schema" depends="build_jar,build_app_war" -->
+	<target name="generate_schema" depends="build_jar">
 		<echo message="${is_generate_schema}">
 		</echo>
 		<java classname="edu.common.dynamicextensions.util.GenerateSchema">
@@ -871,8 +876,13 @@
 				<substitution expression="" />
 			</replaceregexp>
 		</target>
+		<!-- Target used to do the setup for running the junit test cases
+		-->
+		<target name="init_test_setup">
+			<!--<copy file="${extra_lib.dir}/jta.jar" todir="${lib.dir}"/> -->
+		</target>
 
-		<target name="run_junit">
+		<target name="run_junit" depends="init_test_setup,compile_test_cases">
 			<delete dir="${junit.report.dir}" />
 			<mkdir dir="${junit.report.dir}" />
 			<!--echo message="Now shutting down the server" />
@@ -1124,11 +1134,12 @@
 		</target>
 
 		<target name="generate_codecoverage_report">
+			<!--
 			<copy file="${extra_lib.dir}/jta.jar" todir="${lib.dir}"/>
 			<ant target="compile"/>
 			<copy todir="${test.model.dir}" file="${resource.dir}/catNames2.txt" />
 			<ant antfile="src/conf/cobertura.xml" target="instrument" />
-			<ant target="compile_test_cases" />
+			<ant target="compile_test_cases" /-->
 			<!--<ant target="checkout_test_model" />-->
 
 			<copy file="src/conf/web.xml" tofile="src/conf/webBackup.xml" overwrite="true"/>
