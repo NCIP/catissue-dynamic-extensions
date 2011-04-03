@@ -222,7 +222,7 @@ public class MetadataSearchTest extends DynamicExtensionsBaseTestCase
 		}
 		assertTrue(gotException);
 	}
-
+/*
 	public void testSearchPvBasedOnText()
 	{
 		MatchedClass resultMatchedClass = new MatchedClass();
@@ -280,7 +280,7 @@ public class MetadataSearchTest extends DynamicExtensionsBaseTestCase
 		}
 		assertTrue(b);
 	}
-
+*/
 	public void testsearchNullTargetString()
 	{
 		new MatchedClass();
