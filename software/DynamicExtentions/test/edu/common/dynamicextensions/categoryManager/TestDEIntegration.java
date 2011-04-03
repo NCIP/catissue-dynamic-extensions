@@ -78,14 +78,10 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
 					dataValue);
 
-			assertNotNull(recordId);
-
 			List<Long> recordEntryIdList=new ArrayList<Long>();
 
 			Long recordIdentifier = categoryManager.getEntityRecordIdByRootCategoryEntityRecordId(
 					recordId, category.getRootCategoryElement().getTableProperties().getName());
-
-			assertNotNull(recordIdentifier);
 
 			EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
 					TEST_ENTITYGROUP_NAME);
