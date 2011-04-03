@@ -200,12 +200,12 @@ public class DynamicExtensionsUtilityTest extends DynamicExtensionsBaseTestCase
 			LOGGER
 					.info("-----------------Test For getting container by caption started--------------------");
 			System.out.println("-----------------Test For getting container by caption started--------------------");
-			ContainerInterface container = (ContainerInterface) getCategory()
+			ContainerInterface container = (ContainerInterface) getCategoryByName("Test Category_Lab Information")
 					.getRootCategoryElement().getContainerCollection().iterator().next();
 			String caption = container.getCaption();
 			ContainerInterface fetchedContainer = DynamicExtensionsUtility
 					.getContainerByCaption(caption);
-			assertTrue(caption.equalsIgnoreCase(
+			assertTrue(container.getAbstractEntity().getName().equalsIgnoreCase(
 					fetchedContainer.getAbstractEntity().getName()));
 			LOGGER
 					.info("-----------------Test For getting container by caption successful--------------------");

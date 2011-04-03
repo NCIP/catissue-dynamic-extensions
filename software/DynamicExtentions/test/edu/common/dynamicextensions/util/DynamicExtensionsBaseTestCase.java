@@ -9,13 +9,16 @@
 package edu.common.dynamicextensions.util;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import junit.framework.TestCase;
+import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.userinterface.AbstractContainmentControl;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
@@ -28,12 +31,13 @@ import edu.common.dynamicextensions.entitymanager.EntityManagerExceptionConstant
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
+import edu.common.dynamicextensions.util.global.Variables;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.global.Constants;
+import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.query.generator.ColumnValueBean;
@@ -42,6 +46,9 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 		implements
 			EntityManagerExceptionConstantsInterface
 {
+
+	/** The Constant LOGGER. */
+	private static final Logger LOGGER = Logger.getCommonLogger(DynamicExtensionsBaseTestCase.class);
 
 	public static final String TEST_MODLE_PCKAGE_NAME = "test.annotations";
 
@@ -55,7 +62,6 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 		}
 		catch (final IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -84,6 +90,20 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	static
 	{
 		Variables.serverUrl = APPLICATIONURLFORWAR;
+		try
+		{
+			InputStream stream = DynamicExtensionDAO.class.getClassLoader().getResourceAsStream(
+			"DynamicExtensions.properties");
+			Properties props = new Properties();
+			System.out.println("DynamicExtensions.properties file found : " + stream != null);
+			props.load(stream);
+			DynamicExtensionsUtility.initializeVariables(props);
+		}
+		catch (IOException e)
+		{
+			LOGGER.error("Error occured while initializing DynamicExtensions.properties");
+			e.printStackTrace();
+		}
 	}
 
 	JDBCDAO dao;

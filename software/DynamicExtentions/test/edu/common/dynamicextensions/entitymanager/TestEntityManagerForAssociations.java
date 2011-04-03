@@ -14,12 +14,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import edu.common.dynamicextensions.domain.AbstractAttribute;
 import edu.common.dynamicextensions.domain.Association;
+import edu.common.dynamicextensions.domain.Attribute;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.Entity;
 import edu.common.dynamicextensions.domain.userinterface.Container;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
+import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.RoleInterface;
@@ -396,7 +399,6 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 		}
 
 	}
-
 
 	/**
 	 * @param targetEntity
@@ -1473,7 +1475,6 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 
 	}
 
-
 	/**
 	 *
 	 */
@@ -1580,117 +1581,67 @@ public class TestEntityManagerForAssociations extends DynamicExtensionsBaseTestC
 	 *                  6. Add data for user  rahul -> Verizon --> Pune
 	 *                  7. edit data for the user  rahul --> PSPL -->Pune
 	 *                  8. Address should have only one record.. previous one should get deleted and new one should get added
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
 	 */
 	public void testEditDataWithContainmentForMultipleLevel()
 	{
-
-		EntityManagerInterface entityManager = EntityManager.getInstance();
-		DomainObjectFactory factory = DomainObjectFactory.getInstance();
-		EntityGroupInterface entityGroup = factory.createEntityGroup();
-		entityGroup.setName("test_" + new Double(Math.random()).toString());
 		try
 		{
-			//Step 1
-			EntityInterface user = createAndPopulateEntity();
-			AttributeInterface userNameAttribute = factory.createStringAttribute();
-			userNameAttribute.setName("user name");
-			user.setName("user");
-			user.addAbstractAttribute(userNameAttribute);
-			entityGroup.addEntity(user);
-			user.setEntityGroup(entityGroup);
+			EntityManagerInterface entityManager = EntityManager.getInstance();
 
-			entityManager.persistEntity(user);
+			// Step 1. Fetch all required entities
+			EntityGroupInterface testEntityGroup = entityManager
+					.getEntityGroupByName(TEST_ENTITYGROUP_NAME);
 
-			//Step 2 create institute
-			EntityInterface institution = createAndPopulateEntity();
-			AttributeInterface institutionName = factory.createStringAttribute();
-			institutionName.setName("institution Name");
-			institution.setName("institution");
-			institution.addAbstractAttribute(institutionName);
-			entityGroup.addEntity(institution);
-			institution.setEntityGroup(entityGroup);
+			Entity patientInformationEntity = (Entity) testEntityGroup
+					.getEntityByName("PatientInformation");
 
-			entityManager.persistEntity(institution);
+			Entity physicianInformationEntity = (Entity) testEntityGroup
+					.getEntityByName("PhysicianInformation");
 
-			//Step 3 create address
-			EntityInterface address = createAndPopulateEntity();
-			AttributeInterface addressCity = factory.createStringAttribute();
-			addressCity.setName("City");
-			address.setName("address");
-			address.addAbstractAttribute(addressCity);
-			entityGroup.addEntity(address);
-			address.setEntityGroup(entityGroup);
-			entityManager.persistEntity(address);
+			Entity physicianContactInformationEntity = (Entity) testEntityGroup
+					.getEntityByName("PhyContactInfo");
 
-			//Step 4 user --- > institute
-			AssociationInterface userInstitute = factory.createAssociation();
+			// Step 2. Start populating datavalue map from lowest(second) hierarchy entity
+			Map<BaseAbstractAttributeInterface, Object> phyContactInfoMap = new HashMap<BaseAbstractAttributeInterface, Object>();
+			List<Map<BaseAbstractAttributeInterface, Object>> phyContactInfoList = new ArrayList<Map<BaseAbstractAttributeInterface, Object>>();
+			edu.common.dynamicextensions.domain.Attribute phoneType = (Attribute) physicianContactInformationEntity
+					.getAttributeByName("phoneType");
+			phyContactInfoMap.put(phoneType, "Home");
+			phyContactInfoList.add(phyContactInfoMap);
 
-			userInstitute.setTargetEntity(institution);
-			userInstitute.setAssociationDirection(AssociationDirection.SRC_DESTINATION);
-			userInstitute.setName("userinstitution");
-			userInstitute.setSourceRole(getRole(AssociationType.CONTAINTMENT, "user",
-					Cardinality.ONE, Cardinality.ONE));
-			userInstitute.setTargetRole(getRole(AssociationType.CONTAINTMENT, "institution",
-					Cardinality.ONE, Cardinality.MANY));
-			user.addAbstractAttribute(userInstitute);
-			DynamicExtensionsUtility.getConstraintPropertiesForAssociation(userInstitute);
+			// Step 3. Populate datavalue map for first entity in hierarchy
+			Map<BaseAbstractAttributeInterface, Object> phyInformationMap = new HashMap<BaseAbstractAttributeInterface, Object>();
+			List<Map<BaseAbstractAttributeInterface, Object>> phyInfoList = new ArrayList<Map<BaseAbstractAttributeInterface, Object>>();
+			edu.common.dynamicextensions.domain.Attribute physicianName = (Attribute) physicianInformationEntity
+					.getAttributeByName("physicianName");
+			AbstractAttribute physicianContactInformation = (AbstractAttribute) physicianInformationEntity
+					.getAttributeByName("physicianContact");
+			phyContactInfoMap.put(physicianName, "Gaurav Mehta");
+			phyContactInfoMap.put(physicianContactInformation, phyContactInfoList);
+			phyInfoList.add(phyInformationMap);
 
-			entityManager.persistEntity(user);
+			//Step 4. Populate datavalue map for teop level entity.
+			Map<BaseAbstractAttributeInterface, Object> patientInformationMap = new HashMap<BaseAbstractAttributeInterface, Object>();
+			edu.common.dynamicextensions.domain.Attribute age = (Attribute) patientInformationEntity
+					.getAttributeByName("age");
+			AbstractAttribute physicianInformation = (AbstractAttribute) patientInformationEntity
+					.getAttributeByName("pi");
+			phyContactInfoMap.put(age, "25");
+			phyContactInfoMap.put(physicianInformation, phyInfoList);
 
-			//Step 5 institute -->address
-			AssociationInterface instituteAddress = factory.createAssociation();
+			ContainerInterface containerInterface = (ContainerInterface) patientInformationEntity
+					.getContainerCollection().toArray()[0];
+			Long recordId = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					patientInformationMap);
 
-			instituteAddress.setTargetEntity(address);
-			instituteAddress.setAssociationDirection(AssociationDirection.SRC_DESTINATION);
-			instituteAddress.setName("instituteAddress");
-			instituteAddress.setSourceRole(getRole(AssociationType.CONTAINTMENT,
-					"instituteAddress", Cardinality.ONE, Cardinality.ONE));
-			instituteAddress.setTargetRole(getRole(AssociationType.CONTAINTMENT, "address",
-					Cardinality.ONE, Cardinality.MANY));
-
-			institution.addAbstractAttribute(instituteAddress);
-			DynamicExtensionsUtility.getConstraintPropertiesForAssociation(instituteAddress);
-
-			entityManager.persistEntity(institution);
-
-			//Step 6
-			Map addressValueMap = new HashMap();
-			addressValueMap.put(addressCity, "Pune");
-
-			Map institutionValueMap = new HashMap();
-			List addressList = new ArrayList();
-			addressList.add(addressValueMap);
-
-			institutionValueMap.put(institutionName, "verizon");
-			institutionValueMap.put(instituteAddress, addressList);
-
-			//			Map institutionValueMap1 = new HashMap();
-			//			institutionValueMap1.put(institutionName,"pspl");
-
-			Map dataValue = new HashMap();
-			List institutionList = new ArrayList();
-			institutionList.add(institutionValueMap);
-			//instituionList.add(institutionValueMap1);
-
-			dataValue.put(userNameAttribute, "Rahul");
-			dataValue.put(userInstitute, institutionList);
-
-			Long recordId = entityManager.insertData(user, dataValue, null, null);
-
-			//Step 7
-			institutionValueMap.put(institutionName, "PSPL");
-			entityManager.editData(user, dataValue, recordId, null, null);
-
-			//step 8
-			int rowCount = (Integer) executeQuery("select count(*) from "
-					+ address.getTableProperties().getName(), INT_TYPE, 1, null);
-			assertEquals(1, rowCount);
-
+			assertNotNull(recordId);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("testEditDataWithContainmentForMultipleLevel() : unknown exception occured " + e.getMessage());
 		}
 
 	}

@@ -56,7 +56,7 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());;
 		}
 	}
 	public void testGetDynamicEntityRecordIdFromHookEntityRecordIdWithJDBCDAO()
@@ -78,10 +78,14 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 			Long recordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
 					dataValue);
 
+			assertNotNull(recordId);
+
 			List<Long> recordEntryIdList=new ArrayList<Long>();
 
 			Long recordIdentifier = categoryManager.getEntityRecordIdByRootCategoryEntityRecordId(
 					recordId, category.getRootCategoryElement().getTableProperties().getName());
+
+			assertNotNull(recordIdentifier);
 
 			EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
 					TEST_ENTITYGROUP_NAME);
@@ -97,7 +101,7 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());
 		}
 	}
 	public void testGetCategoryRecIdBasedOnHookEntityRecIdWithStaticIdList()
@@ -133,7 +137,7 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());;
 		}
 	}
 	public void testGetCategoryRecIdBasedOnHookEntityRecIdWithStaticId()
@@ -172,7 +176,7 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());;
 		}
 	}
 	public void testGetCategoryRecIdBasedOnHookEntityRecIdWithJDBCDAO()
@@ -211,7 +215,7 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());;
 		}
 	}
 	private Long associateHookEntity(EntityInterface clinicalAnnotations, Long recordId,EntityManagerInterface manager)
@@ -261,7 +265,7 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 		{
 			Logger.out.debug(e.getMessage());
 			e.printStackTrace();
-			fail("Exception occured");
+			fail("Exception occured - " + e.getMessage());
 		}
 		return staticEntityRecId;
 	}
@@ -303,7 +307,7 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());
 		}
 	}
 	public void testIsDataHooked()
@@ -338,7 +342,7 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());
 		}
 	}
 	public void testIsDataHookedForDynRecordId()
@@ -374,7 +378,7 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());
 		}
 	}
 	public void testGetCategoryRecordIdBasedOnCategoryId()
@@ -408,7 +412,7 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());;
 		}
 	}
 	public void testGetDynamicRecordForCategoryFromStaticId()
@@ -446,7 +450,7 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());;
 		}
 	}
 	public void testGetDynamicRecordFromStaticId()
@@ -485,7 +489,7 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());;
 		}
 	}
 	public void testIsCategory()
@@ -504,7 +508,7 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());;
 		}
 	}
 	public void testGetDynamicEntitiesContainerIdFromHookEntity()
@@ -519,7 +523,7 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 	   catch(Exception exception)
 	   {
 		   exception.printStackTrace();
-		   fail();
+		   fail("Unknown exception occured - " + exception.getMessage());;
 	   }
 	}
 	public void testGetDynamicEntityRecordIdFromHookEntityRecordIdWithStringRecId()
@@ -557,7 +561,7 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());;
 		}
 	}
 
@@ -596,7 +600,7 @@ public class TestDEIntegration extends DynamicExtensionsBaseTestCase
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			fail();
+			fail("Unknown exception occured - " + e.getMessage());;
 		}
 	}
 }

@@ -9,8 +9,6 @@
 
 package edu.common.dynamicextensions.entitymanager;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -20,7 +18,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.client.DataEditClient;
@@ -37,7 +34,6 @@ import edu.common.dynamicextensions.domain.StringAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.StringValue;
 import edu.common.dynamicextensions.domain.databaseproperties.TableProperties;
 import edu.common.dynamicextensions.domain.userinterface.Container;
-import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
@@ -45,7 +41,6 @@ import edu.common.dynamicextensions.domaininterface.CaDSRValueDomainInfoInterfac
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
-import edu.common.dynamicextensions.domaininterface.NumericTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.SemanticPropertyInterface;
 import edu.common.dynamicextensions.domaininterface.TaggedValueInterface;
@@ -63,11 +58,11 @@ import edu.common.dynamicextensions.ui.util.ControlConfigurationsFactory;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
-import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationDirection;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.common.dynamicextensions.util.global.DEConstants.ValueDomainType;
+import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.validation.ValidatorRuleInterface;
 import edu.common.dynamicextensions.validation.ValidatorUtil;
 import edu.hostApp.src.java.RecordEntry;
@@ -81,13 +76,15 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getCommonLogger(TestEntityManager.class);
 
+	/** The Constant entityManager. */
+	private static final EntityManagerInterface entityManager = EntityManager.getInstance();
+
 	/**
-	 *
+	 * Instantiates a new test entity manager.
 	 */
 	public TestEntityManager()
 	{
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -97,7 +94,6 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	public TestEntityManager(String arg0)
 	{
 		super(arg0);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -108,20 +104,6 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	protected void setUp() throws DynamicExtensionsCacheException
 	{
 		super.setUp();
-		try
-		{
-			InputStream stream = DynamicExtensionDAO.class.getClassLoader().getResourceAsStream(
-					"DynamicExtensions.properties");
-			Properties props = new Properties();
-			System.out.println("DynamicExtensions.properties file found : " + stream != null);
-			// FIXME - getting a null pointer exception here.
-			props.load(stream);
-			DynamicExtensionsUtility.initializeVariables(props);
-		}
-		catch (IOException ioException)
-		{
-			LOGGER.error("Error occured while loading DynamicExtensions.properties");
-		}
 	}
 
 	/**
@@ -1698,7 +1680,6 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	 */
 	public void testDataForFutureDateRule()
 	{
-		EntityManagerInterface entityManager = EntityManager.getInstance();
 		Long recordId = null;
 		try
 		{
@@ -1833,7 +1814,8 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 
 			ContainerInterface containerInterface = (ContainerInterface) labTestEntity
 					.getContainerCollection().toArray()[0];
-			recordId = DynamicExtensionsUtility.insertDataUtility(null, containerInterface, dataValue);
+			recordId = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					dataValue);
 
 			assertTrue(recordId != null);
 		}
@@ -2031,58 +2013,35 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		// please refer http://bugs.mysql.com/bug.php?id=9528
 		if (!dbType.equalsIgnoreCase("mysql"))
 		{
-			DomainObjectFactory factory = DomainObjectFactory.getInstance();
-			EntityGroupInterface entityGroup = factory.createEntityGroup();
-			entityGroup.setName("unique");
-
-			// Step 1
-			Entity entity = (Entity) createAndPopulateEntity();
-			entity.setName("unique_rule");
-			EntityManagerInterface EntityManagerInterface = EntityManager.getInstance();
-			Long recordId1 = null;
 			Long recordId2 = null;
-
 			try
 			{
-				Attribute floatAtribute = (Attribute) factory.createFloatAttribute();
-				floatAtribute.setName("Price");
-
-				NumericTypeInformationInterface numericAttributeTypeInfo = (NumericTypeInformationInterface) factory
-						.createFloatAttributeTypeInformation();
-				numericAttributeTypeInfo.setDecimalPlaces(2);
-
-				floatAtribute.setAttributeTypeInformation(numericAttributeTypeInfo);
-
-				RuleInterface uniqueRule = factory.createRule();
-				uniqueRule.setName("unique");
-				floatAtribute.getRuleCollection().add(uniqueRule);
-
-				entity.addAbstractAttribute(floatAtribute);
-				entityGroup.addEntity(entity);
-				entity.setEntityGroup(entityGroup);
-
-				// Step 2
-				EntityInterface savedEntity = EntityManagerInterface.persistEntity(entity);
+				EntityGroupInterface testEntityGroup = EntityGroupManager.getInstance()
+						.getEntityGroupByName(TEST_ENTITYGROUP_NAME);
+				Entity phyContactInfoEntity = (Entity) testEntityGroup
+						.getEntityByName("PhyContactInfo");
+				edu.common.dynamicextensions.domain.Attribute phoneNumber = (Attribute) phyContactInfoEntity
+						.getAttributeByName("phoneNumber");
 
 				Map dataValue = new HashMap();
-				dataValue.put(floatAtribute, "15.90");
+				dataValue.put(phoneNumber, "123456789");
 
-				ContainerInterface containerInterface = (ContainerInterface) savedEntity
+				ContainerInterface containerInterface = (ContainerInterface) phyContactInfoEntity
 						.getContainerCollection().toArray()[0];
-				recordId1 = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
-						dataValue);
+				Long recordId1 = DynamicExtensionsUtility.insertDataUtility(null,
+						containerInterface, dataValue);
 
-				dataValue = EntityManagerInterface.getRecordById(entity, recordId1);
+				dataValue = entityManager.getRecordById(phyContactInfoEntity, recordId1);
 
-				for (RuleInterface rule : floatAtribute.getRuleCollection())
+				for (RuleInterface rule : phoneNumber.getRuleCollection())
 				{
 					ValidatorRuleInterface validatorRule = ControlConfigurationsFactory
 							.getInstance().getValidatorRule(rule.getName());
-					validatorRule.validate(floatAtribute, "15.90", null, "Date");
+					validatorRule.validate(phoneNumber, "123456789", null, "Phone Number");
 				}
 
 				Map dataValue2 = new HashMap();
-				dataValue2.put(floatAtribute, "15.90");
+				dataValue2.put(phoneNumber, "123456789");
 
 				recordId2 = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
 						dataValue2);
@@ -2098,7 +2057,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			catch (Exception e)
 			{
 				e.printStackTrace();
-				fail();
+				fail("testUniqueRule() : unkonwn exception occured " + e.getMessage());
 			}
 		}
 	}
@@ -2391,35 +2350,33 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		Map<EntityInterface, Exception> failedEntityVsException = new HashMap<EntityInterface, Exception>();
 		EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
 				TEST_ENTITYGROUP_NAME);
-		EntityManagerInterface entityManager = EntityManager.getInstance();
 		for (ContainerInterface container : testModel.getMainContainerCollection())
 		{
 			EntityInterface entity = (EntityInterface) container.getAbstractEntity();
 			try
 			{
+                System.out.println("--------------------------------------------------");
 				System.out.println("Inserting record for " + entity.getName());
 				Map<BaseAbstractAttributeInterface, Object> dataValueMap = mapGenerator
 						.createDataValueMapForEntity(entity, 0);
-				Map map = dataValueMap;
 				ContainerInterface containerInterface = (ContainerInterface) entity
 						.getContainerCollection().toArray()[0];
 				Long recordId = DynamicExtensionsUtility.insertDataUtility(null,
-						containerInterface, map);
+						containerInterface, dataValueMap);
 				System.out.println("Record inserted succesfully for " + entity + " recordId "
 						+ recordId);
-				Map<AbstractAttributeInterface, Object> editedDataValueMap = entityManager
-						.getRecordById(entity, recordId);
-				entityManager.editData(entity, editedDataValueMap, recordId, null, null);
+				Map editedDataValueMap = entityManager.getRecordById(entity, recordId);
+                Long editRecordId = DynamicExtensionsUtility.insertDataUtility(recordId,
+                        containerInterface, editedDataValueMap);
+//				entityManager.editData(entity, editedDataValueMap, recordId, null, null);
 				System.out.println("Record Edited Successfully for " + entity + " recordId "
-						+ recordId);
+						+ editRecordId);
 			}
 			catch (Exception e)
 			{
-				System.out.println("Record Insertion failed for  entity " + entity.getName());
+				System.out.println("Record Insertion/Updation failed for  entity " + entity.getName());
 				failedEntityVsException.put(entity, e);
 			}
-			// mapGenerator.validateRetrievedDataValueMap(editedDataValueMap,
-			// dataValueMap);
 		}
 		printFailedCategoryReport(failedEntityVsException, "Record Insertion failed for  entity ");
 
