@@ -49,6 +49,13 @@ import edu.common.dynamicextensions.domaininterface.databaseproperties.Constrain
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleParameterInterface;
+import edu.common.dynamicextensions.entitymanager.EntityGroupManager;
+import edu.common.dynamicextensions.entitymanager.EntityGroupManagerInterface;
+import edu.common.dynamicextensions.entitymanager.EntityManager;
+import edu.common.dynamicextensions.entitymanager.EntityManagerExceptionConstantsInterface;
+import edu.common.dynamicextensions.entitymanager.EntityManagerInterface;
+import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
+import edu.common.dynamicextensions.entitymanager.MockEntityManager;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
@@ -2043,9 +2050,9 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				Map dataValue2 = new HashMap();
 				dataValue2.put(phoneNumber, "1234567890");
 
-				recordId2 = DynamicExtensionsUtility.editDataUtility(recordId1, containerInterface,dataValue2);
+				DynamicExtensionsUtility.editDataUtility(recordId1, containerInterface,dataValue2,null);
 
-				assertNull("No new record should be added.",recordId2);
+				assertNull("No new record should be added.",recordId1);
 			}
 			catch (DynamicExtensionsValidationException e)
 			{
