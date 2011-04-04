@@ -58,11 +58,11 @@ import edu.common.dynamicextensions.ui.util.ControlConfigurationsFactory;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationDirection;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.common.dynamicextensions.util.global.DEConstants.ValueDomainType;
-import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.validation.ValidatorRuleInterface;
 import edu.common.dynamicextensions.validation.ValidatorUtil;
 import edu.hostApp.src.java.RecordEntry;
@@ -2043,7 +2043,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				Map dataValue2 = new HashMap();
 				dataValue2.put(phoneNumber, "1234567890");
 
-				recordId2 = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+				recordId2 = DynamicExtensionsUtility.insertDataUtility(recordId1, containerInterface,
 						dataValue2);
 
 				assertNull("No new record should be added.",recordId2);
