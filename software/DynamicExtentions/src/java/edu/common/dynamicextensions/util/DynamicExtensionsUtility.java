@@ -54,6 +54,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import edu.common.dynamicextensions.bizlogic.BizLogicFactory;
+import edu.common.dynamicextensions.client.DataEditClient;
 import edu.common.dynamicextensions.client.DataEntryClient;
 import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
 import edu.common.dynamicextensions.dao.impl.DynamicExtensionDBFactory;
@@ -2880,5 +2881,21 @@ public class DynamicExtensionsUtility
 
 		recordIdentifier=(Long)dataEntryClient.getObject();
 		return recordIdentifier;
+	}
+	public static boolean editDataUtility(Long recordIdentifier, ContainerInterface containerInterface,
+			Map<BaseAbstractAttributeInterface, Object> attributeToValueMap,SessionDataBean sessionDataBean) throws MalformedURLException
+	{
+		String entityGroupName=containerInterface.getAbstractEntity().getEntityGroup().getName();
+		Map<String, Object> clientmap = new HashMap<String, Object>();
+		DataEditClient dataEditClient=new DataEditClient();
+		clientmap.put(WebUIManagerConstants.RECORD_ID, recordIdentifier);
+		clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, sessionDataBean);
+		clientmap.put(WebUIManagerConstants.USER_ID, sessionDataBean.getUserId());
+		clientmap.put(WebUIManagerConstants.CONTAINER, containerInterface);
+		clientmap.put(WebUIManagerConstants.DATA_VALUE_MAP, attributeToValueMap);
+		dataEditClient.setServerUrl(new URL(Variables.jbossUrl+entityGroupName+"/"));
+		dataEditClient.setParamaterObjectMap(clientmap);
+		dataEditClient.execute(null);
+		return true;
 	}
 }
