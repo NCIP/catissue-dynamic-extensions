@@ -2043,8 +2043,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				Map dataValue2 = new HashMap();
 				dataValue2.put(phoneNumber, "1234567890");
 
-				recordId2 = DynamicExtensionsUtility.insertDataUtility(recordId1, containerInterface,
-						dataValue2);
+				recordId2 = DynamicExtensionsUtility.editDataUtility(recordId1, containerInterface,dataValue2);
 
 				assertNull("No new record should be added.",recordId2);
 			}
