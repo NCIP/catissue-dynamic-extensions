@@ -101,7 +101,22 @@ public class TestCategoryCreation extends DynamicExtensionsBaseTestCase
 			fail("Unknown exception occured - " + e.getMessage());
 		}
 	}
+	public void testCreateCategory4()
+	{
+		try
+		{
+			String[] args = {CATEGORY_FILE_DIR, APPLICATIONURL, TEST_MODEL_DIR + "/cat_list_for_test_edited5.txt"};
+			CategoryClient.main(args);
+			System.out.println("done categoryCreation");
+			assertAllCategoriesCreatedInFile(TEST_MODEL_DIR + "/cat_list_for_test_edited5.txt", false);
 
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail("Unknown exception occured - " + e.getMessage());
+		}
+	}
 	/**
 	 * This test case will create all the categories present in the CPUML Folder.
 	 * If one of the category creation is failed then this test case is also failed.
