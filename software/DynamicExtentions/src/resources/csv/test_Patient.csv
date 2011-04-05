@@ -3,19 +3,21 @@ Form_Definition
 Fullform_3_EntityGroup_Form_WO_MS
 
 Fullform_3_EntityGroup
+
 Fullform_3_EntityGroup_Form_WO_MS~Fullform_3_EntityGroup_Form_WO_MS
 
 Display_Label:Fullform_3_EntityGroup_Form_WO_MS, show=false
 instance:Fullform_3_EntityGroup_Form_WO_MS[1]
-Fullform_3_EntityGroup_Form_WO_MS:ta,textArea,TA,options~Columns=25:Rows=5,Rules~required,defaultValue=asdfasdf
-Fullform_3_EntityGroup_Form_WO_MS:cb,checkBox,CB,Rules~required,defaultValue=true
-Fullform_3_EntityGroup_Form_WO_MS:date,datePicker,Date,Rules~required,defaultValue=2010-02-11 00:00:00.0
-Fullform_3_EntityGroup_Form_WO_MS:fu,fileUpload,FU,options~MaxFileSize=4.0,Rules~required
-Fullform_3_EntityGroup_Form_WO_MS:rb,radioButton,RB,Rules~required,PermVal_Options~IsOrdered=true
-Fullform_3_EntityGroup_Form_WO_MS:dd,comboBox,DD,Rules~required,PermVal_Options~IsOrdered=true
-Fullform_3_EntityGroup_Form_WO_MS:ti,textField,TI,options~Columns=10,Rules~required,defaultValue=3
-Fullform_3_EntityGroup_Form_WO_MS:tw,textField,TW,options~Columns=10,Rules~required,defaultValue=3.1
-Fullform_3_EntityGroup_Form_WO_MS:ts,textField,TS,options~Columns=25,Rules~required,defaultValue=Abc
+Fullform_3_EntityGroup_Form_WO_MS:ta,textArea,"TA",options~Columns=25:Rows=5,Rules~required,defaultValue="asdfasdf"
+Fullform_3_EntityGroup_Form_WO_MS:cb,checkBox,"CB",Rules~required,defaultValue="true"
+Fullform_3_EntityGroup_Form_WO_MS:date,datePicker,"Date",Rules~required,defaultValue="2010-02-11 00:00:00.0"
+Fullform_3_EntityGroup_Form_WO_MS:fu,fileUpload,"FU",options~MaxFileSize=4.0,Rules~required
+Fullform_3_EntityGroup_Form_WO_MS:rb,radioButton,"RB",Rules~required,PermVal_Options~IsOrdered=true
+Fullform_3_EntityGroup_Form_WO_MS:dd,comboBox,"DD",Rules~required,PermVal_Options~IsOrdered=true
+Fullform_3_EntityGroup_Form_WO_MS:ti,textField,"TI",options~Columns=10,Rules~required,defaultValue="3"
+Fullform_3_EntityGroup_Form_WO_MS:tw,textField,"TW",options~Columns=10,Rules~required,defaultValue="3.1"
+Fullform_3_EntityGroup_Form_WO_MS:ts,textField,"TS",options~Columns=25,Rules~required,defaultValue="Abc"
+
 
 SkipLogicAttribute:
 

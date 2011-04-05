@@ -78,8 +78,7 @@
 			<Property value="25" key="Columns">
 			</Property>
 		</Attribute>
-	</Form>
-	<SkipLogic>
+		<SkipLogic>
 		<ControllingAttribute>
 			<Instance>NeuroOncAnnotations[1]</Instance>
 			<Attribute attributeName="agent" value="Penicillin"></Attribute>
@@ -107,4 +106,5 @@
 			</DependentAttribute>
 		</ControllingAttribute>
 	</SkipLogic>
+	</Form>	
 </FormDefinition>
