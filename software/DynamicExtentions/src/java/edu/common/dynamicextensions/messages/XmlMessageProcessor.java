@@ -456,7 +456,7 @@ public class XmlMessageProcessor
 			else
 			{// Edit data.
 				//categoryManager.editData(rootCatEntity, recordMap, recordID, sessionDataBean);
-				DynamicExtensionsUtility.editDataUtility(recordID, containerInterface, recordMap, sessionDataBean);
+				DynamicExtensionsUtility.editDataUtility(recordID, containerInterface, recordMap, sessionDataBean,sessionDataBean.getUserId());
 				insrtedRecordId = recordID;
 				LOGGER.info("Record edited successfully with id  " + insrtedRecordId);
 			}

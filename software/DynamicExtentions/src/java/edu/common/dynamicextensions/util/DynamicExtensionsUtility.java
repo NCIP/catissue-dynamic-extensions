@@ -2883,14 +2883,14 @@ public class DynamicExtensionsUtility
 		return recordIdentifier;
 	}
 	public static boolean editDataUtility(Long recordIdentifier, ContainerInterface containerInterface,
-			Map<BaseAbstractAttributeInterface, Object> attributeToValueMap,SessionDataBean sessionDataBean) throws MalformedURLException
+			Map<BaseAbstractAttributeInterface, Object> attributeToValueMap,SessionDataBean sessionDataBean,Long userid) throws MalformedURLException
 	{
 		String entityGroupName=containerInterface.getAbstractEntity().getEntityGroup().getName();
 		Map<String, Object> clientmap = new HashMap<String, Object>();
 		DataEditClient dataEditClient=new DataEditClient();
 		clientmap.put(WebUIManagerConstants.RECORD_ID, recordIdentifier);
 		clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, sessionDataBean);
-		clientmap.put(WebUIManagerConstants.USER_ID, sessionDataBean.getUserId());
+		clientmap.put(WebUIManagerConstants.USER_ID, userid);
 		clientmap.put(WebUIManagerConstants.CONTAINER, containerInterface);
 		clientmap.put(WebUIManagerConstants.DATA_VALUE_MAP, attributeToValueMap);
 		dataEditClient.setServerUrl(new URL(Variables.jbossUrl+entityGroupName+"/"));
