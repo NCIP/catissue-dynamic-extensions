@@ -550,34 +550,7 @@ public class TestEntityManagerWithPrimaryKey extends DynamicExtensionsBaseTestCa
 		}
 	}
 
-	/**
-	 * Import xmi which contains string attribute as primary key
-	 * Expected Behaviour : should throw exception telling Invalid DataType
-	 */
-	public void testXMIImportInvalidPrimaryKeyDataType()
-	{
-		//String[] args = {"F:/SCGModel/scg1.xmi","edu.wustl.catissuecore.domain.PathAnnotation_SCG", "F:/SCGModel/scg.csv"};
-		String[] args = {XMI_FILE_PATH + "test_primaryKey_InvalidDataType.xmi",
-				CSV_FILE_PATH + "test_primaryKey.csv", "test_id", "none", "false", "false", "", APPLICATIONURL};
-		try
-		{
-			CiderXMIImporter.main(args);
 
-			EntityGroupInterface entityGroup = EntityGroupManager.getInstance()
-					.getEntityGroupByName("test_primaryKey_InvalidDataType");
-			if (entityGroup != null)
-			{
-				fail("Did not expect to fetch the entity group for file - test_primaryKey_InvalidDataType.xmi");
-			}
-		}
-		catch (Exception e)
-		{
-			// FIXME - Check for the valid exception and then pass.
-			e.printStackTrace();
-			fail("Unexpected exception caught - " + e.getMessage());
-		}
-		System.out.println("--------------- Test Case to import XMI successful ------------");
-	}
 
 	/**
 	 * Import xmi which contains primary key tag as a attribute which is not present in the entity
