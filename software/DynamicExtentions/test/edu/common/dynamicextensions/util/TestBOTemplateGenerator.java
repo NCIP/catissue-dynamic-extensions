@@ -4,7 +4,12 @@
 
 package edu.common.dynamicextensions.util;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.entitymanager.CategoryManager;
@@ -22,8 +27,8 @@ import edu.wustl.common.util.logger.Logger;
 public class TestBOTemplateGenerator extends DynamicExtensionsBaseTestCase
 {
 
-	private static String participantXMLDir = System.getProperty("user.dir") + File.separator + "src"
-	+ File.separator + "resources" + File.separator + "xml";
+	private static String participantXMLDir = System.getProperty("user.dir") + File.separator
+			+ "src" + File.separator + "resources" + File.separator + "xml";
 	/**
 	 * Logger object.
 	 */
@@ -48,8 +53,8 @@ public class TestBOTemplateGenerator extends DynamicExtensionsBaseTestCase
 			{
 				BOTemplateGenerator boTemplateGenerator = new BOTemplateGenerator(category);
 				boTemplateGenerator.generateXMLAndCSVTemplate(System.getProperty("user.dir"),
-						participantXMLDir + File.separator + "Participant.xml", participantXMLDir + File.separator
-								+ "mapping.xml");
+						participantXMLDir + File.separator + "Participant.xml", participantXMLDir
+								+ File.separator + "mapping.xml");
 				LOGGER.info("testGenerateXMLAndCSVTemplate() executed successfully.");
 			}
 			deleteFiles(participantXMLDir);
@@ -73,11 +78,13 @@ public class TestBOTemplateGenerator extends DynamicExtensionsBaseTestCase
 			fail();
 		}
 	}
+
 	public void testGenerateXMLAndCSVTemplateForMultiSelect()
 	{
 		try
 		{
-			CategoryInterface category =  EntityCache.getInstance().getCategoryByName("Test AutoComplete multiselect");
+			CategoryInterface category = EntityCache.getInstance().getCategoryByName(
+					"Test AutoComplete multiselect");
 			if (category == null)
 			{
 				LOGGER.info("testGenerateXMLAndCSVTemplate() failed.");
@@ -87,14 +94,16 @@ public class TestBOTemplateGenerator extends DynamicExtensionsBaseTestCase
 			{
 				BOTemplateGenerator boTemplateGenerator = new BOTemplateGenerator(category);
 				boTemplateGenerator.generateXMLAndCSVTemplate(System.getProperty("user.dir"),
-						participantXMLDir + File.separator + "Participant.xml", participantXMLDir + File.separator
-								+ "mapping.xml");
-				String preTestedXMLTemplateFilePath = System.getProperty("user.dir")+"/XMLAndCSVTemplate/Tested_AutoComplete_multiselect.xml";
+						participantXMLDir + File.separator + "Participant.xml", participantXMLDir
+								+ File.separator + "mapping.xml");
+				String preTestedXMLTemplateFilePath = System.getProperty("user.dir")
+						+ "/XMLAndCSVTemplate/Tested_AutoComplete_multiselect.xml";
 
-				String generatedXMLTemplateFilePath = System.getProperty("user.dir") + File.separator + "src"
-						+ File.separator + "resources" + File.separator +"/XMLAndCSVTemplate/Test AutoComplete multiselect.xml";
+				String generatedXMLTemplateFilePath = System.getProperty("user.dir")
+						+ File.separator + "src" + File.separator + "resources" + File.separator
+						+ "/XMLAndCSVTemplate/Test AutoComplete multiselect.xml";
 
-				assertTrue(compareFiles(preTestedXMLTemplateFilePath, generatedXMLTemplateFilePath));
+				compareFiles(preTestedXMLTemplateFilePath, generatedXMLTemplateFilePath);
 				LOGGER.info("testGenerateXMLAndCSVTemplate() executed successfully.");
 			}
 		}
@@ -110,22 +119,38 @@ public class TestBOTemplateGenerator extends DynamicExtensionsBaseTestCase
 			deException.printStackTrace();
 			fail();
 		}
-	}
-	private boolean compareFiles(String preTestedXMLTemplateFilePath,
-			String generatedXMLTemplateFilePath)
-	{
-		boolean areFileSame=true;
-		File preTestedXMLTemplate=new File(preTestedXMLTemplateFilePath);
-		File generatedXMLTemplate=new File(generatedXMLTemplateFilePath );
-		if(generatedXMLTemplate!=null && preTestedXMLTemplate!=null)
+		catch (IOException e)
 		{
-			if(generatedXMLTemplate.compareTo(preTestedXMLTemplate)!=0)
-			{
-				areFileSame=false;
-			}
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return areFileSame;
 	}
+
+	private void compareFiles(String preTestedXMLTemplateFilePath,
+			String generatedXMLTemplateFilePath) throws IOException
+	{
+
+		StringBuffer strContentOutPut = new StringBuffer();
+		String str = null;
+		FileInputStream fstream = new FileInputStream(preTestedXMLTemplateFilePath);
+		DataInputStream in = new DataInputStream(fstream);
+		BufferedReader br = new BufferedReader(new InputStreamReader(in));
+		while ((str = br.readLine()) != null)
+		{
+			strContentOutPut.append(str);
+		}
+
+		FileInputStream fstream1 = new FileInputStream(generatedXMLTemplateFilePath);
+		DataInputStream in1 = new DataInputStream(fstream1);
+		BufferedReader br1 = new BufferedReader(new InputStreamReader(in1));
+		StringBuffer strContent = new StringBuffer();
+		while ((str = br1.readLine()) != null)
+		{
+			strContent.append(str);
+		}
+		assertEquals(strContent.toString(), strContentOutPut.toString());
+	}
+
 	/**
 	 * @param filePath Delete Files created.
 	 */
