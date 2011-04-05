@@ -49,13 +49,6 @@ import edu.common.dynamicextensions.domaininterface.databaseproperties.Constrain
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleParameterInterface;
-import edu.common.dynamicextensions.entitymanager.EntityGroupManager;
-import edu.common.dynamicextensions.entitymanager.EntityGroupManagerInterface;
-import edu.common.dynamicextensions.entitymanager.EntityManager;
-import edu.common.dynamicextensions.entitymanager.EntityManagerExceptionConstantsInterface;
-import edu.common.dynamicextensions.entitymanager.EntityManagerInterface;
-import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
-import edu.common.dynamicextensions.entitymanager.MockEntityManager;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
@@ -1420,7 +1413,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		AttributeInterface dateOnlyAtt = pathAnnotatopnChild
 				.getAttributeByName("detectionDateChild");
 
-		EntityManagerInterface entityManager = EntityManager.getInstance();
+		EntityManager.getInstance();
 
 		Long recordId = null;
 		try
@@ -1638,8 +1631,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 			entityGroup.addEntity(entity);
 			entity.setEntityGroup(entityGroup);
 
-			// Step 2
-			EntityInterface savedEntity = entityManager.persistEntity(entity);
+			entityManager.persistEntity(entity);
 
 			Map dataValue = new HashMap();
 			dataValue.put("date", "11" + ProcessorConstants.DATE_SEPARATOR + "15"
@@ -1805,7 +1797,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 	 */
 	public void testInsertValueWithQuote()
 	{
-		EntityManagerInterface entityManager = EntityManager.getInstance();
+		EntityManager.getInstance();
 		Long recordId = null;
 		try
 		{
@@ -2050,7 +2042,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				Map dataValue2 = new HashMap();
 				dataValue2.put(phoneNumber, "1234567890");
 
-				DynamicExtensionsUtility.editDataUtility(recordId1, containerInterface,dataValue2,null);
+				DynamicExtensionsUtility.editDataUtility(recordId1, containerInterface,dataValue2,null,null);
 
 				assertNull("No new record should be added.",recordId1);
 			}
@@ -2295,7 +2287,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 		Map<EntityInterface, Exception> failedEntityVsException = new HashMap<EntityInterface, Exception>();
 		EntityGroupInterface testModel = EntityGroupManager.getInstance().getEntityGroupByName(
 				TEST_ENTITYGROUP_NAME);
-		EntityManagerInterface entityManager = EntityManager.getInstance();
+		EntityManager.getInstance();
 		for (ContainerInterface container : testModel.getMainContainerCollection())
 		{
 			EntityInterface entity = (EntityInterface) container.getAbstractEntity();
