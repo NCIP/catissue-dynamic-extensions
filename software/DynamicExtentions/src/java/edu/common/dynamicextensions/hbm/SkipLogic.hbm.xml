@@ -114,7 +114,7 @@
 					update="true" insert="true" column="CONTROL" not-null="false" />
 
 
-		<many-to-one name="defaultSkipLogicValue" class="edu.common.dynamicextensions.domain.PermissibleValue" cascade="all,delete" outer-join="auto"
+		<many-to-one name="defaultSkipLogicValue" class="edu.common.dynamicextensions.domain.PermissibleValue" cascade="none" outer-join="auto"
 					update="true" insert="true" column="SKIP_LOGIC_DEFAULT_VALUE" not-null="false" />
 
 
