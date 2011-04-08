@@ -88,6 +88,7 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 		suite.addTestSuite(TestEntityMangerForXMIImportExport.class);
 		suite.addTestSuite(TestImportPermissibleValues.class);
 		suite.addTestSuite(TestCategoryCreation.class);
+		suite.addTestSuite(TestDEIntegration.class);
 		suite.addTestSuite(UpdateCacheTestCases.class);
 
 		suite.addTestSuite(TestCategoryManager.class);
@@ -127,7 +128,6 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 		suite.addTestSuite(TestAbstractQueryableObject.class);
 		suite.addTestSuite(TestXmlMessageProcessor.class);
 		suite.addTestSuite(TestValidateAgainstSchema.class);
-		suite.addTestSuite(TestDEIntegration.class);
 		suite.addTestSuite(TestXMLToCSVConverter.class);
 		suite.addTestSuite(TestEntityGroupManager.class);
 		suite.addTestSuite(DynamicExtensionsUtilityTest.class);
