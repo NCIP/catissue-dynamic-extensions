@@ -97,11 +97,11 @@ public class TestBOTemplateGenerator extends DynamicExtensionsBaseTestCase
 						participantXMLDir + File.separator + "Participant.xml", participantXMLDir
 								+ File.separator + "mapping.xml");
 				String preTestedXMLTemplateFilePath = System.getProperty("user.dir")
-						+ "/XMLAndCSVTemplate/Tested_AutoComplete_multiselect.xml";
+						+ "/XMLAndCSVTemplate/Test AutoComplete multiselect.xml";
 
 				String generatedXMLTemplateFilePath = System.getProperty("user.dir")
 						+ File.separator + "src" + File.separator + "resources" + File.separator
-						+ "/XMLAndCSVTemplate/Test AutoComplete multiselect.xml";
+						+ "/XMLAndCSVTemplate/Tested_AutoComplete_multiselect.xml";
 
 				compareFiles(preTestedXMLTemplateFilePath, generatedXMLTemplateFilePath);
 				LOGGER.info("testGenerateXMLAndCSVTemplate() executed successfully.");
@@ -125,7 +125,52 @@ public class TestBOTemplateGenerator extends DynamicExtensionsBaseTestCase
 			e.printStackTrace();
 		}
 	}
+	public void testGenerateXMLAndCSVTemplateForLiveValidation()
+	{
+		try
+		{
+			CategoryInterface category = EntityCache.getInstance().getCategoryByName(
+					"Live Validation Form");
+			if (category == null)
+			{
+				LOGGER.info("testGenerateXMLAndCSVTemplate() failed.");
+				fail();
+			}
+			else
+			{
+				BOTemplateGenerator boTemplateGenerator = new BOTemplateGenerator(category);
+				boTemplateGenerator.generateXMLAndCSVTemplate(System.getProperty("user.dir"),
+						participantXMLDir + File.separator + "Participant.xml", participantXMLDir
+								+ File.separator + "mapping.xml");
+				String preTestedXMLTemplateFilePath = System.getProperty("user.dir")
+						+ "/XMLAndCSVTemplate/Live Validation Form.xml";
 
+				String generatedXMLTemplateFilePath = System.getProperty("user.dir")
+						+ File.separator + "src" + File.separator + "resources" + File.separator
+						+ "/XMLAndCSVTemplate/Tested Live Validation Form.xml";
+
+				compareFiles(preTestedXMLTemplateFilePath, generatedXMLTemplateFilePath);
+				LOGGER.info("testGenerateXMLAndCSVTemplate() executed successfully.");
+			}
+		}
+		catch (BulkOperationException boException)
+		{
+			LOGGER.error("BulkOperation Exception: ", boException);
+			boException.printStackTrace();
+			fail();
+		}
+		catch (DynamicExtensionsSystemException deException)
+		{
+			LOGGER.error("DE System Exception: ", deException);
+			deException.printStackTrace();
+			fail();
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	private void compareFiles(String preTestedXMLTemplateFilePath,
 			String generatedXMLTemplateFilePath) throws IOException
 	{
