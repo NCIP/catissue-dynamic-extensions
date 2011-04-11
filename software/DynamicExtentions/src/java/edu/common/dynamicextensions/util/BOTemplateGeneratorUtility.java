@@ -182,7 +182,7 @@ public class BOTemplateGeneratorUtility
 		final Collection<BulkOperationClass> contAssoCollection = boObject
 				.getContainmentAssociationCollection();
 
-		processContainmentAssociation(csvStringBuffer, contAssoCollection, 0);
+		processContainmentAssociation(boObject,csvStringBuffer, contAssoCollection, 0);
 		replaceLastDelimiter(csvStringBuffer, DEConstants.COMMA);
 		return csvStringBuffer.toString();
 	}
@@ -193,17 +193,17 @@ public class BOTemplateGeneratorUtility
 	 * @param containmentAssoCollection Collection of Containment association.
 	 * @param count Count required to get depth of containment association.
 	 */
-	private static void processContainmentAssociation(StringBuffer csvBuffer,
+	private static void processContainmentAssociation(BulkOperationClass parentBOClass,StringBuffer csvBuffer,
 			Collection<BulkOperationClass> containmentAssoCollection, Integer count)
 	{
 		for (BulkOperationClass boClass : containmentAssoCollection)
 		{
-			appendAttributeCSVNames(csvBuffer, count, boClass);
+			appendAttributeCSVNames(csvBuffer, count, boClass,parentBOClass);
 			final Collection<BulkOperationClass> caCollection = boClass
 					.getContainmentAssociationCollection();
 			if (!caCollection.isEmpty())
 			{
-				processContainmentAssociation(csvBuffer, caCollection, count + 1);
+				processContainmentAssociation(boClass,csvBuffer, caCollection, count + 1);
 			}
 		}
 	}
@@ -215,12 +215,29 @@ public class BOTemplateGeneratorUtility
 	 * @param boClass get attribute collection from this object.
 	 */
 	private static void appendAttributeCSVNames(StringBuffer csvBuffer, Integer count,
-			BulkOperationClass boClass)
+			BulkOperationClass boClass,BulkOperationClass parentBOClass)
 	{
+		String instanceId=null;
+		String className=boClass.getClassName();
+		if(className.contains("->"))
+		{
+			className=className.substring(className.lastIndexOf("->")+2,className.length());
+			instanceId=className.substring(className.indexOf("[")+1,className.lastIndexOf("]"));
+			className=className.substring(0,className.indexOf("["));
+		}
+
 		for (int index = 0; index < boClass.getMaxNoOfRecords(); index++)
 		{
 			for (Attribute attribute : boClass.getAttributeCollection())
 			{
+				if(attribute.getName().equalsIgnoreCase(className))
+				{
+					className=parentBOClass.getClassName();
+					className=className.substring(className.lastIndexOf("->")+2,className.length());
+					instanceId=className.substring(className.indexOf("[")+1,className.lastIndexOf("]"));
+					className=className.substring(0,className.indexOf("["));
+				}
+				csvBuffer.append(className).append("_").append(instanceId);
 				csvBuffer.append(attribute.getCsvColumnName());
 				for (int incr = 0; incr < count; incr++)
 				{
