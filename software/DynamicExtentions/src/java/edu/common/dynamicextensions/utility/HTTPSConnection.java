@@ -3,6 +3,7 @@ package edu.common.dynamicextensions.utility;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -217,12 +218,16 @@ public final class HTTPSConnection
 	public void processResponse(URLConnection servletConnection) throws IOException,
 			DynamicExtensionsSystemException
 	{
-		ObjectInputStream inputFromServlet = new ObjectInputStream(servletConnection
-				.getInputStream());
+		ObjectInputStream inputFromServlet = null;
 		try
 		{
+			inputFromServlet = new ObjectInputStream(servletConnection
+					.getInputStream());
 			Object exceptionOccured = inputFromServlet.readObject();
 			printExceptionLog(exceptionOccured);
+		}
+		catch (EOFException e) {
+			LOGGER.info("No response from server.");
 		}
 		catch (IOException e)
 		{
@@ -231,7 +236,6 @@ public final class HTTPSConnection
 		}
 		catch (ClassNotFoundException e)
 		{
-
 			throw new DynamicExtensionsSystemException(
 					"Class not found " + e.getLocalizedMessage(), e);
 		}
