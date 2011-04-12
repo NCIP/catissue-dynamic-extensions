@@ -91,21 +91,55 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 		return this.bulkOperationClass;
 	}
 
+	protected void processCategoryEntity(CategoryEntityInterface categoryEntity, BulkOperationClass mainObject)
+	{
+
+		for (CategoryAttributeInterface attributeInterface : categoryEntity
+				.getCategoryAttributeCollection())
+		{
+			if (attributeInterface.getAbstractAttribute() instanceof AssociationInterface)
+			{
+				AssociationInterface associationInterface = (AssociationInterface) attributeInterface
+						.getAbstractAttribute();
+				BulkOperationClass innnerObject = processMultiSelect(associationInterface);
+				processCategoryAttribute(attributeInterface, innnerObject,mainObject);
+				postprocessCategoryAssociation(innnerObject, mainObject);
+
+			}
+			else
+			{
+				processCategoryAttribute(attributeInterface, mainObject,mainObject);
+			}
+		}
+		for (CategoryAssociationInterface categoryAssociation : categoryEntity
+				.getCategoryAssociationCollection())
+		{
+			BulkOperationClass innnerObject = processCategoryAssociation(categoryAssociation);
+			processCategoryEntity(categoryAssociation.getTargetCategoryEntity(), innnerObject);
+			postprocessCategoryAssociation(innnerObject, mainObject);
+		}
+	}
 	/**
 	 * process each category entity attributes.
 	 * @param attribute category attribute.
 	 * @param boObject Bulk operation class object.
 	 */
-	@Override
-	protected void processCategoryAttribute(CategoryAttributeInterface attribute,
-			BulkOperationClass boObject)
+	private void processCategoryAttribute(CategoryAttributeInterface attribute,
+			BulkOperationClass boObject,BulkOperationClass parentObject)
 	{
 		if (!attribute.getIsRelatedAttribute())
 		{
 			Attribute bulkOperationAttribute = new Attribute();
 			bulkOperationAttribute.setName(attribute.getAbstractAttribute().getName());
 			bulkOperationAttribute.setBelongsTo("");
-			bulkOperationAttribute.setCsvColumnName(attribute.getAbstractAttribute().getName());
+			if(attribute.getAbstractAttribute().getName().equalsIgnoreCase(boObject.getClassName()))
+			{
+				bulkOperationAttribute.setCsvColumnName(BOTemplateGeneratorUtility.getAttributename(parentObject.getClassName(),attribute.getAbstractAttribute().getName()));
+			}
+			else
+			{
+				bulkOperationAttribute.setCsvColumnName(attribute.getAbstractAttribute().getName());
+			}
 			bulkOperationAttribute.setUpdateBasedOn(false);
 
 			final AttributeTypeInformationInterface attributeType = DynamicExtensionsUtility
@@ -160,8 +194,7 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 
 	}
 	@Override
-	protected BulkOperationClass processMultiSelect(
-			AssociationInterface association)
+	protected BulkOperationClass processMultiSelect(AssociationInterface association)
 	{
 		BulkOperationClass subBulkOperationClass = new BulkOperationClass();
 		BOTemplateGeneratorUtility.setCommonAttributes(subBulkOperationClass, this.category
@@ -214,7 +247,7 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 		{
 			className.append(pathAssociationRelation.getAssociation().getTargetEntity().getName())
 					.append(DEConstants.OPENING_SQUARE_BRACKET).append(
-							pathAssociationRelation.getPathSequenceNumber()).append(
+							pathAssociationRelation.getTargetInstanceId()).append(
 							DEConstants.CLOSING_SQUARE_BRACKET).append(ARROW_OPERATOR);
 		}
 		BOTemplateGeneratorUtility.replaceLastDelimiter(className, ARROW_OPERATOR);
@@ -348,6 +381,14 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 	public void setBulkOperationClass(BulkOperationClass bulkOperationClass)
 	{
 		this.bulkOperationClass = bulkOperationClass;
+	}
+
+	@Override
+	protected void processCategoryAttribute(CategoryAttributeInterface attribute,
+			BulkOperationClass object)
+	{
+		// TODO Auto-generated method stub
+
 	}
 
 }

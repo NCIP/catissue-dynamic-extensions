@@ -46,7 +46,7 @@ public abstract class AbstractCategoryIterator<T extends Object>
 	 * @param categoryEntity category entity object.
 	 * @param mainObject main object.
 	 */
-	private void processCategoryEntity(CategoryEntityInterface categoryEntity, T mainObject)
+	protected void processCategoryEntity(CategoryEntityInterface categoryEntity, T mainObject)
 	{
 
 		for (CategoryAttributeInterface attributeInterface : categoryEntity

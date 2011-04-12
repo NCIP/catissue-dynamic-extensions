@@ -182,7 +182,7 @@ public class BOTemplateGeneratorUtility
 		final Collection<BulkOperationClass> contAssoCollection = boObject
 				.getContainmentAssociationCollection();
 
-		processContainmentAssociation(boObject,csvStringBuffer, contAssoCollection, 0);
+		processContainmentAssociation(csvStringBuffer, contAssoCollection, 0);
 		replaceLastDelimiter(csvStringBuffer, DEConstants.COMMA);
 		return csvStringBuffer.toString();
 	}
@@ -193,17 +193,17 @@ public class BOTemplateGeneratorUtility
 	 * @param containmentAssoCollection Collection of Containment association.
 	 * @param count Count required to get depth of containment association.
 	 */
-	private static void processContainmentAssociation(BulkOperationClass parentBOClass,StringBuffer csvBuffer,
+	private static void processContainmentAssociation(StringBuffer csvBuffer,
 			Collection<BulkOperationClass> containmentAssoCollection, Integer count)
 	{
 		for (BulkOperationClass boClass : containmentAssoCollection)
 		{
-			appendAttributeCSVNames(csvBuffer, count, boClass,parentBOClass);
+			appendAttributeCSVNames(csvBuffer, count, boClass);
 			final Collection<BulkOperationClass> caCollection = boClass
 					.getContainmentAssociationCollection();
 			if (!caCollection.isEmpty())
 			{
-				processContainmentAssociation(boClass,csvBuffer, caCollection, count + 1);
+				processContainmentAssociation(csvBuffer, caCollection, count + 1);
 			}
 		}
 	}
@@ -215,29 +215,12 @@ public class BOTemplateGeneratorUtility
 	 * @param boClass get attribute collection from this object.
 	 */
 	private static void appendAttributeCSVNames(StringBuffer csvBuffer, Integer count,
-			BulkOperationClass boClass,BulkOperationClass parentBOClass)
+			BulkOperationClass boClass)
 	{
-		String instanceId=null;
-		String className=boClass.getClassName();
-		if(className.contains("->"))
-		{
-			className=className.substring(className.lastIndexOf("->")+2,className.length());
-			instanceId=className.substring(className.indexOf("[")+1,className.lastIndexOf("]"));
-			className=className.substring(0,className.indexOf("["));
-		}
-
 		for (int index = 0; index < boClass.getMaxNoOfRecords(); index++)
 		{
 			for (Attribute attribute : boClass.getAttributeCollection())
 			{
-				if(attribute.getName().equalsIgnoreCase(className))
-				{
-					className=parentBOClass.getClassName();
-					className=className.substring(className.lastIndexOf("->")+2,className.length());
-					instanceId=className.substring(className.indexOf("[")+1,className.lastIndexOf("]"));
-					className=className.substring(0,className.indexOf("["));
-				}
-				csvBuffer.append(className).append("_").append(instanceId);
 				csvBuffer.append(attribute.getCsvColumnName());
 				for (int incr = 0; incr < count; incr++)
 				{
@@ -301,5 +284,16 @@ public class BOTemplateGeneratorUtility
 					"Error while creating CSV template for bulk operation.", exception);
 		}
 	}
-
+	public static String getAttributename(String className,String attributeName)
+	{
+		StringBuffer csvBuffer=new StringBuffer();
+		String instanceId=null;
+		if(className.contains("->"))
+		{
+			className=className.substring(className.lastIndexOf("->")+2,className.length());
+			instanceId=className.substring(className.indexOf("[")+1,className.lastIndexOf("]"));
+			className=className.substring(0,className.indexOf("["));
+		}
+		return csvBuffer.append(className).append("_").append(attributeName).append(instanceId).toString();
+	}
 }
