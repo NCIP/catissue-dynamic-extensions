@@ -181,7 +181,7 @@
 
 
 	<!-- Create dynamic extensions jar Begins-->
-	<target name="create_dyn_ext_interface_jar" depends="compile">
+	<target name="create_dyn_ext_interface_jar" depends="compile" >
 		<delete file="${interface.dir}/DynamicExtensions.jar" />
 		<jar taskname="buildJar" jarfile="${interface.dir}/DynamicExtensions.jar">
 			<fileset dir="${target.dir}">
@@ -1323,4 +1323,28 @@
 				</classpath>
 			</sql>
 		</target>
+
+	<target name="create.upgrade.db.jar" depends="compile">
+		<delete file="${interface.dir}/UpgradeDB.jar" />
+		<jar taskname="buildJar" jarfile="${interface.dir}/UpgradeDB.jar">
+			<fileset dir="${target.dir}">
+				<include name="**/upgrade/**.class" />
+				<include name="displaytype-classname-mapping.properties" />
+				<include name="dbutil.properties" />
+				<include name="DynamicExtensionDAO.properties" />
+				<include name="hibernate.properties" />
+				<include name="uicontrols-captions.properties.properties" />
+				<exclude name="**/TestHibernate.cfg.xml" />
+				<exclude name="**/*ApplicationDAOProperties.xml" />
+			</fileset>
+			<manifest>
+				<section name="${DynamicExtensions.jar.details}">
+					<attribute name="Version" value="${DynamicExtensions.jar.version}" />
+					<attribute name="Built-By" value="${user.name}" />
+					<attribute name="Build-on" value="${TODAY_IND}" />
+					<attribute name="SVN-URL" value="${dist.revision}" />
+				</section>
+			</manifest>
+		</jar>
+	</target>
 	</project>
