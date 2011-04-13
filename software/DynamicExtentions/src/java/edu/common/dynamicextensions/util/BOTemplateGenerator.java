@@ -236,14 +236,14 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 	{
 		StringBuffer className = new StringBuffer();
 		PathAssociationRelationInterface assocRelation = (PathAssociationRelationInterface) catAssociation
-				.getTargetCategoryEntity().getPath().getPathAssociationRelationCollection()
+				.getTargetCategoryEntity().getPath().getSortedPathAssociationRelationCollection()
 				.toArray()[0];
 		className.append(catAssociation.getCategoryEntity().getEntity().getName()).append(
 				DEConstants.OPENING_SQUARE_BRACKET).append(assocRelation.getSourceInstanceId())
 				.append(DEConstants.CLOSING_SQUARE_BRACKET).append(ARROW_OPERATOR);
 
 		for (PathAssociationRelationInterface pathAssociationRelation : catAssociation
-				.getTargetCategoryEntity().getPath().getPathAssociationRelationCollection())
+				.getTargetCategoryEntity().getPath().getSortedPathAssociationRelationCollection())
 		{
 			className.append(pathAssociationRelation.getAssociation().getTargetEntity().getName())
 					.append(DEConstants.OPENING_SQUARE_BRACKET).append(
