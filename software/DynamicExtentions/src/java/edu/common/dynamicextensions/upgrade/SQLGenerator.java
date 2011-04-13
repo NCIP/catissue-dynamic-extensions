@@ -77,10 +77,10 @@ public class SQLGenerator
 			int entityGroupNumber, List<String> consolidatedErrorList)
 	{
 		String entityGroupName = UpgradeConstants.ENTITY_GROUP_NAME + entityGroupNumber;
-		entityGroup.setShortName(entityGroupName);
-		entityGroup.setLongName(entityGroupName);
+		entityGroup.setShortName(entityGroup.getName());
+		entityGroup.setLongName(entityGroup.getName());
 		consolidatedErrorList.add("Updating Entity Group Long/Short name having id :"
-				+ entityGroup.getId() + " with '" + entityGroupName + "'");
+				+ entityGroup.getId() + " with '" + entityGroup.getName() + "'");
 	}
 
 	/**
@@ -143,8 +143,11 @@ public class SQLGenerator
 			if (taggedValue.getKey().equalsIgnoreCase(UpgradeConstants.PACKAGE_NAME_KEY))
 			{
 				taggedValue.setValue(entityGroupPackageName);
+				break;
 			}
 		}
+		consolidatedErrorList.add("Updating Entity Group package name having id :"
+				+ entityGroup.getId() + " to '" + entityGroupPackageName + "'");
 	}
 
 	/**

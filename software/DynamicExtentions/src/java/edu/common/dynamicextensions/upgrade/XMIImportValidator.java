@@ -414,9 +414,13 @@ public class XMIImportValidator
 		ERROR_LIST.clear();
 
 		EntityCache cache = EntityCache.getInstance();
-		EntityInterface scgRecordEntryEntity = cache.getEntityById(2183L);
-		EntityInterface participantRecordEntryEntity = cache.getEntityById(2179L);
-		EntityInterface specimenRecordEntryEntity = cache.getEntityById(2181L);
+		EntityGroupInterface caTissueCore = cache.getEntityGroupById(1L);
+		//EntityInterface scgRecordEntryEntity = cache.getEntityById(2183L);
+		EntityInterface scgRecordEntryEntity = caTissueCore.getEntityByName("edu.wustl.catissuecore.domain.deintegration.SCGRecordEntry");
+		//EntityInterface participantRecordEntryEntity = cache.getEntityById(2179L);
+		EntityInterface participantRecordEntryEntity = caTissueCore.getEntityByName("edu.wustl.catissuecore.domain.deintegration.ParticipantRecordEntry");
+		//EntityInterface specimenRecordEntryEntity = cache.getEntityById(2181L);
+		EntityInterface specimenRecordEntryEntity = caTissueCore.getEntityByName("edu.wustl.catissuecore.domain.deintegration.SpecimenRecordEntry");
 		Boolean staticHookEntityFound = false;
 		EntityInterface staticHookEntity = null;
 

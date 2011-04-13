@@ -75,7 +75,7 @@ public class UpgradeCaTissueDump extends AbstractEntityCache
 				}
 			}
 
-			//Step 5. Commiting the updated models.
+			//Step 5. Committing the updated models.
 			hibernateDao.commit();
 
 			//Step 6. Write error log generated for each entity group to Log file
