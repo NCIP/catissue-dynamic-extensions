@@ -100,4 +100,37 @@ public class TestEntityCache extends DynamicExtensionsBaseTestCase
 		assertTrue(true);
 	}
 
+	public void testGetContainerByIdNegative() throws DynamicExtensionsSystemException
+	{
+		try
+		{
+			cache.getContainerById(-1L);
+		}
+		catch (DynamicExtensionsCacheException e)
+		{
+			System.out.println(e.getMessage());
+			assertTrue(true);
+			return;
+		}
+		fail();
+	}
+
+	public void testGetContainerById() throws DynamicExtensionsSystemException
+	{
+		EntityGroupInterface entityGroupInterface = EntityGroupManager.getInstance().getEntityGroupByName(
+				TEST_ENTITYGROUP_NAME);
+		Set<Long> associatedFormId =
+			EntityGroupManagerUtil.getAssociatedFormId(entityGroupInterface);
+		try
+		{
+			cache.getContainerById(associatedFormId.iterator().next());
+		}
+		catch (DynamicExtensionsCacheException e)
+		{
+			e.printStackTrace();
+			return;
+		}
+		assertTrue(true);
+
+	}
 }

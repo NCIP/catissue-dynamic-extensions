@@ -60,6 +60,8 @@ public abstract class AbstractEntityCache implements IEntityCache
 {
 
 	private static final String DATA_ENTRY_CONTAINER_IN_USE = "data.entry.container.in.use";
+	private static final String CONTAINER_NOT_FOUND = "container.not.found";
+
 
 	private static final long serialVersionUID = 1234567890L;
 
@@ -869,13 +871,11 @@ public abstract class AbstractEntityCache implements IEntityCache
 		}
 		catch (DynamicExtensionsSystemException e)
 		{
-			throw new RuntimeException("Exception encounter while fetching the category"
-					+ identifier, e);
+			throw new DynamicExtensionsCacheException(ApplicationProperties.getValue(CONTAINER_NOT_FOUND, String.valueOf(identifier)),e);
 		}
 		if (container == null)
 		{
-			throw new RuntimeException("container with given id is not present in cache : "
-					+ identifier);
+			throw new DynamicExtensionsCacheException(ApplicationProperties.getValue(CONTAINER_NOT_FOUND, String.valueOf(identifier)));
 		}
 		if (containerInUse.contains(container.getId()))
 		{
