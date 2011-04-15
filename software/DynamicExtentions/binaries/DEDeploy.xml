@@ -37,9 +37,31 @@
 	<property name="mysql.dialect.string.DE" value="org.hibernate.dialect.MySQLDialect" />
 	<property name="db2.dialect.string.DE" value="org.hibernate.dialect.DB2Dialect" />
 
+
+	<!-- Ant target to clean up the DE entity group wars in the deploy directory -->
+	<target name="clean_entity_group_wars" depends=""
+		description="clean up the DE entity group wars in the deploy directory">
+		
+		<taskdef resource="net/sf/antcontrib/antlib.xml">	
+			<classpath>
+				<pathelement location="${extra.lib.dir.DE}/ant-contrib.jar" />
+			</classpath>
+		</taskdef>
+		
+		<echo message="Deleting the existing entity group wars from deploy folder ... "/>
+		<for param="entity.group.war">
+		  <path>
+		    <dirset dir="${jboss.home.dir}/server/default/deploy" >
+		    	<include name="dynamicExtensions*" />
+		    </dirset>
+		  </path>
+		  <sequential>
+			<delete dir="@{entity.group.war}" failonerror="yes" />
+		  </sequential>
+		</for>
+	</target>	
+	
 	<!-- Target For Upgrading the Database From DE v 1.2.0 to DE v 1.3.0 -->
-
-
 	<target name="deploy_db_DE">
 		<echo message="Initializing Database for DynamicExtentions Application..." />
 		<delete dir="${de.temp.dir}" failonerror="no" />
