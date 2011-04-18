@@ -39,7 +39,7 @@
 
 
 	<!-- Ant target to clean up the DE entity group wars in the deploy directory -->
-	<target name="clean_entity_group_wars" depends=""
+	<target name="clean_entity_group_wars" depends="setupClassExecutionEnvironment"
 		description="clean up the DE entity group wars in the deploy directory">
 		
 		<taskdef resource="net/sf/antcontrib/antlib.xml">	
