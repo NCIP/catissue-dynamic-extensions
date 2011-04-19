@@ -127,7 +127,6 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		{
 			identifier = getId().toString();
 		}
-
 		//String htmlComponentName = getHTMLComponentName();
 		StringBuffer sourceHtmlComponentValues = null;
 		if (getSourceSkipControl() == null)
@@ -168,7 +167,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		if ((isReadOnly != null && isReadOnly)
 				|| (isSkipLogicReadOnly != null && isSkipLogicReadOnly))
 		{
-			htmlString.append(" \" disabled='").append(ProcessorConstants.TRUE).append("' ");
+			htmlString.append(" \" disabled='").append(ProcessorConstants.TRUE).append("'style='background:white'");
 		}
 		htmlString.append("\">");
 
