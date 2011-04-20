@@ -138,7 +138,7 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 			}
 			else
 			{
-				bulkOperationAttribute.setCsvColumnName(attribute.getAbstractAttribute().getName());
+				bulkOperationAttribute.setCsvColumnName(BOTemplateGeneratorUtility.getAttributename(boObject.getClassName(),attribute.getAbstractAttribute().getName()));
 			}
 			bulkOperationAttribute.setUpdateBasedOn(false);
 
