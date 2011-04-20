@@ -1646,7 +1646,7 @@
 	<target name="update.jars.in.caCORE.wars" description="Update project specific jars in caCORE war">
 
 		<!-- This is to copy latest DE.jar in the ${entitygroupname}.war/WEB-INF/lib folder present in JBoss deploy folder-->
-		<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib" overwrite="true">
+		<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib" overwrite="true" failonerror="false">
 			<fileset dir="${de.zip.location}/binaries/DynamicExtensionsInterface" >
 				<include name="DynamicExtensions.jar" />
 			</fileset>
@@ -1655,32 +1655,32 @@
 				<include name="jaxb*" />
 			</fileset>
 		</copy>
-		<delete>
+		<delete failonerror="false">
 			<fileset dir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib" >
 				<include name="washu-commons*" />
 			</fileset>
 		</delete>
-		<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib" overwrite="true">
+		<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib" overwrite="true" failonerror="false">
 			<fileset dir="${de.zip.location}/lib/server" >
 				<include name="washu-commons*" />
 			</fileset>
 		</copy>
-		<delete>
-			<fileset dir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib" >
+		<delete failonerror="false">
+			<fileset dir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib">
 				<include name="commonpackage*" />
 			</fileset>
 		</delete>
-		<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib" overwrite="true">
+		<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib" overwrite="true" failonerror="false">
 			<fileset dir="${de.zip.location}/lib/server" >
 				<include name="commonpackage*" />
 			</fileset>
 		</copy>
-		<delete>
+		<delete failonerror="false">
 			<fileset dir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib" >
 				<include name="DAO*" />
 			</fileset>
 		</delete>
-		<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib" overwrite="true">
+		<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib" overwrite="true" failonerror="false">
 			<fileset dir="${de.zip.location}/lib/server" >
 				<include name="DAO*" />
 			</fileset>
