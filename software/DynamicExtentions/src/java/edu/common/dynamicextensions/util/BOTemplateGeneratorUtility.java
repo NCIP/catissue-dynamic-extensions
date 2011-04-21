@@ -199,12 +199,6 @@ public class BOTemplateGeneratorUtility
 		for (BulkOperationClass boClass : containmentAssoCollection)
 		{
 			appendAttributeCSVNames(csvBuffer, count, boClass);
-			final Collection<BulkOperationClass> caCollection = boClass
-					.getContainmentAssociationCollection();
-			if (!caCollection.isEmpty())
-			{
-				processContainmentAssociation(csvBuffer, caCollection, count + 1);
-			}
 		}
 	}
 
@@ -227,6 +221,12 @@ public class BOTemplateGeneratorUtility
 					csvBuffer.append(CONTAINMENT_SEPARATOR);
 				}
 				csvBuffer.append('#').append(index + 1).append(DEConstants.COMMA);
+			}
+			final Collection<BulkOperationClass> caCollection = boClass
+			.getContainmentAssociationCollection();
+			if (!caCollection.isEmpty())
+			{
+				processContainmentAssociation(csvBuffer, caCollection, count + 1);
 			}
 		}
 	}

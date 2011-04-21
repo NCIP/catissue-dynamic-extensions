@@ -33,7 +33,7 @@ public class TestBOTemplateGenerator extends DynamicExtensionsBaseTestCase
 		try
 		{
 
-			String[] args = {"Test AutoComplete multiselect",
+			String[] args = {"Test Category_Diagnosis",
 					participantXMLDir + File.separator + "Participant.xml",
 					participantXMLDir + File.separator + "mapping.xml"};
 			BOTemplateGenerator.main(args);
@@ -159,6 +159,36 @@ public class TestBOTemplateGenerator extends DynamicExtensionsBaseTestCase
 		assertEquals(strContent.toString(), strContentOutPut.toString());
 	}
 
+	/**
+	 * Test Category_Pathological Annotation
+	 */
+	public void testGenerateXMLAndCSVTemplateForMultipleEntityUnderSameDisplayLabel()
+	{
+		try
+		{
+
+			String[] args = {"Test Category_Pathological Annotation",
+					participantXMLDir + File.separator + "Participant.xml",
+					participantXMLDir + File.separator + "mapping.xml"};
+			BOTemplateGenerator.main(args);
+
+			String preTestedXMLTemplateFilePath = System.getProperty("user.dir")
+					+ "/XMLAndCSVTemplate/Test Category_Pathological Annotation.xml";
+
+			String generatedXMLTemplateFilePath = System.getProperty("user.dir") + File.separator
+					+ "src" + File.separator + "resources" + File.separator
+					+ "/XMLAndCSVTemplate/Test Category_Pathological Annotation.xml";
+
+			compareFiles(preTestedXMLTemplateFilePath, generatedXMLTemplateFilePath);
+			LOGGER.info("testGenerateXMLAndCSVTemplate() executed successfully.");
+		}
+
+		catch (IOException e)
+		{
+			fail();
+			e.printStackTrace();
+		}
+	}
 	/**
 	 * @param filePath Delete Files created.
 	 */
