@@ -120,7 +120,7 @@ public class PermissibleValuesValidator
 	public static void validateStringForStinger(Stinger stingerValidator, String value)
 			throws DynamicExtensionsSystemException
 	{
-		if (stingerValidator != null && !stingerValidator.validate(value))
+		if (!stingerValidator.validate(value))
 		{
 			throw new DynamicExtensionsSystemException(ApplicationProperties.getValue(
 					"dynExtn.validation.unsafe.character", value));
