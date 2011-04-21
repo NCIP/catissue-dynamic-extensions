@@ -65,7 +65,7 @@ public class CategoryPermissibleValuesProcessorHelper
 	private static final EntityManagerInterface ENTITY_MANAGER = EntityManager.getInstance();
 
 	/** The stinger validator. */
-	private static Stinger stingerValidator;
+	private Stinger stingerValidator;
 
 	public CategoryPermissibleValuesProcessorHelper(Stinger stinger)
 	{
