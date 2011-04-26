@@ -3384,3 +3384,10 @@ function selectRadioButton(controlName,controlValue)
       }
     }
 }
+
+function onFormLoad(strFun,strParam)
+{
+	var funcCall = strFun + "('" + strParam + "')";
+	var ret = eval(funcCall);
+	return ret;
+}
