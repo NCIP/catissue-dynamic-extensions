@@ -1326,7 +1326,7 @@
 		</copy>
 
 
-		<java classname="edu.wustl.common.audit.util.AuditXMLGenerator" fork="true" maxmemory="1024M">
+		<java classname="edu.common.dynamicextensions.util.DEAuditXMLGenerator" fork="true" maxmemory="1024M">
 			<arg value="${package.name}" />
 			<arg value="${cacore.deployable.dir}/${entity.name}/auditablemetadata.xml" />
 			<arg value="true" />
