@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.client.CategoryMetadataClient;
 import edu.common.dynamicextensions.client.DataEditClient;
+import edu.common.dynamicextensions.client.DataEntryClient;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
@@ -1813,16 +1814,36 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 		Map<BaseAbstractAttributeInterface, Object> dataValue = mapGenerator
 				.createDataValueMapForCategory(rootCatEntity, 0);
-		Long recordId = null;
+		Long recordIdentifier = null;
 
 		ContainerInterface containerInterface = (ContainerInterface) category
 				.getRootCategoryElement().getContainerCollection().toArray()[0];
-		recordId = DynamicExtensionsUtility.insertDataUtility(recordId, containerInterface,
-				dataValue);
+		String entityGroupName = containerInterface.getAbstractEntity().getEntityGroup().getName();
+
+		Map<String, Object> clientmap = new HashMap<String, Object>();
+		DataEntryClient dataEntryClient = new DataEntryClient();
+		clientmap.put(WebUIManagerConstants.RECORD_ID, recordIdentifier);
+		clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, null);
+		clientmap.put(WebUIManagerConstants.USER_ID, null);
+		clientmap.put(WebUIManagerConstants.CONTAINER, containerInterface);
+		clientmap.put(WebUIManagerConstants.DATA_VALUE_MAP, dataValue);
+		try
+		{
+			dataEntryClient.setServerUrl(new URL(Variables.jbossUrl + entityGroupName + "/"));
+		}
+		catch (MalformedURLException e)
+		{
+			throw new DynamicExtensionsApplicationException("Invalid URL:" + Variables.jbossUrl
+					+ entityGroupName + "/");
+		}
+		dataEntryClient.setParamaterObjectMap(clientmap);
+		dataEntryClient.execute(null);
+
+		recordIdentifier = (Long) dataEntryClient.getObject();
 
 		System.out.println("Record inserted succesfully for " + category.getName() + " RecordId "
-				+ recordId);
-		return recordId;
+				+ recordIdentifier);
+		return recordIdentifier;
 	}
 
 	private void printFailedCategoryReport(Map<CategoryInterface, Exception> failedCatVsException,
