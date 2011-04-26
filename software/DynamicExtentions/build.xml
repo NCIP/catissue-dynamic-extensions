@@ -242,7 +242,7 @@
 		</jar>
 	</target>
 	<!-- Create dynamic extensions jar Begins-->
-	
+
 	<target name="instrument" >
 		<ant antfile="src/conf/cobertura.xml" target="instrument" />
 	</target>
@@ -897,12 +897,13 @@
 				<param name="sleep-time-seconds" value="300" />
 			</antcall>
 			<echo message="Junit started running" />
+			<antcall target="create.audit.tables"/>
 
 			<antcall target="import.static.and.test.model"/>
 			<antcall target="import.caTissueCoreModel"/>
 			<antcall target="import.GeneconnectModel"/>
-			
-			
+
+
 
 			<!-- wars are generated in ${tempWar.dir} location -->
 
@@ -918,7 +919,7 @@
 					<include name="DynamicExtensions.jar" />
 				</fileset>
 			</copy>
-			
+
 			<!-- This is to update the dem.hibernate.cfg file for test case set up -->
 			<antcall target="update.dem.hibernate.cfg">
 				<param name="hibernate.cfg.location" value="${jboss.home.dir}/server/default/deploy/${test.war.name}/WEB-INF/classes" />
@@ -966,7 +967,23 @@
 				</fileset>
 			</delete>-->
 		</target>
-		
+
+	<!-- =================================
+          target: name
+         ================================= -->
+    <target name="create.audit.tables" description="create audit setup">
+    	<echo message="Create audit setup" />
+		<sql driver="${oracle.driver.string.DE}" url="${hibernate.connection.url}" userid="${hibernate.connection.username}" password="${hibernate.connection.password}" onerror="continue" rdbms="oracle">
+			<transaction src="${testCases.hookEntity.dir}/../../db/oracle/AuditOracleScript.sql"></transaction>
+			<transaction>commit;</transaction>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</sql>
+    </target>
+
 	<target name="update.dem.hibernate.cfg">
 			<echo message="Inside update dem.hibernate.cfg. ****************************************" />
 		<echo message="The hibernate cfg path is ${hibernate.cfg.location}" />
@@ -990,13 +1007,13 @@
 					       	<property name="hibernate.jdbc.batch_size">0</property>
 					    	<property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
 					    	<property name="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
-	
+
 							<!-- oracle settings-->
-	
+
 					  	    <property name="dialect">org.hibernate.dialect.Oracle9Dialect</property>
 					        <property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
 					        <property name="hibernate.query.substitutions">true 1,false 0</property>
-	
+
 					        <property name="hibernate.connection.username">DE_NBUser</property>
 							<property name="hibernate.connection.password">DE_NBUser123</property>
 							<property name="hibernate.connection.url">jdbc:oracle:thin:@ps4153:1521:orclnew</property>
