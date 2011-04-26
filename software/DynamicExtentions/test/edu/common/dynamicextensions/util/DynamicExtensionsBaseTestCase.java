@@ -31,15 +31,18 @@ import edu.common.dynamicextensions.entitymanager.EntityManagerExceptionConstant
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
-import edu.common.dynamicextensions.util.global.Variables;
+import edu.wustl.common.audit.AuditManager;
+import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 import edu.wustl.dao.JDBCDAO;
+import edu.wustl.dao.exception.AuditException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
 
 public class DynamicExtensionsBaseTestCase extends TestCase
@@ -48,7 +51,8 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 {
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger.getCommonLogger(DynamicExtensionsBaseTestCase.class);
+	private static final Logger LOGGER = Logger
+			.getCommonLogger(DynamicExtensionsBaseTestCase.class);
 
 	public static final String TEST_MODLE_PCKAGE_NAME = "test.annotations";
 
@@ -75,6 +79,7 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	protected final static String EDITED_XMI_FILE_PATH = "./src/resources/edited_xmi/";
 	protected final static String JBOSS_PATH = "http://10.88.199.44:46210/dynamicExtensions";
 	protected final static String TEST_ENTITYGROUP_NAME = "test";
+	protected final static String TEST_CONF_DIR_PATH = "./test/";
 	protected int noOfDefaultColumns = 2;
 
 	//1:ACTIVITY_STATUS 2:IDENTIFIER 3:FILE NAME 4:CONTENTE_TYPE 5:ACTUAL_CONTENTS
@@ -86,6 +91,7 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	protected final static String APPLICATIONURL = "http://10.88.199.44:28080/dynamicExtensions";
 	protected final static String APPLICATIONURLFORWAR = "http://10.88.199.44:28080/dynamicExtensionsdefault";
 	protected final static String FILE_LOCATION = "/home/Hudson_Home/workspace/DynamicExtensions-1.5.1/sourcecode/software/DynamicExtentions/src/java/ApplicationDAOProperties.xml";
+	protected SessionDataBean sessionDataBean = null;
 
 	static
 	{
@@ -93,7 +99,7 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 		try
 		{
 			InputStream stream = DynamicExtensionDAO.class.getClassLoader().getResourceAsStream(
-			"DynamicExtensions.properties");
+					"DynamicExtensions.properties");
 			Properties props = new Properties();
 			System.out.println("DynamicExtensions.properties file found : " + stream != null);
 			props.load(stream);
@@ -135,6 +141,16 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 	protected void setUp() throws DynamicExtensionsCacheException
 	{
 		ApplicationProperties.initBundle("ApplicationResources");
+		createAdminSessionDataBean();
+		try
+		{
+			AuditManager.init("sampleAuditablemetadata.xml");
+		}
+		catch (AuditException e)
+		{
+			e.printStackTrace();
+
+		}
 	}
 
 	/**
@@ -515,5 +531,16 @@ public class DynamicExtensionsBaseTestCase extends TestCase
 			}
 		}
 		return null;
+	}
+
+	private void createAdminSessionDataBean()
+	{
+		sessionDataBean = new SessionDataBean();
+		sessionDataBean.setFirstName("Test_First");
+		sessionDataBean.setLastName("Test_Last");
+		sessionDataBean.setUserName("Test_User@psl.com");
+		sessionDataBean.setUserId(Long.valueOf(1));
+		sessionDataBean.setCsmUserId(null);
+		sessionDataBean.setAdmin(true);
 	}
 }
