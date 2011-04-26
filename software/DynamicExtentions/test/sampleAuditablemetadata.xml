@@ -1,0 +1,991 @@
+<?xml version='1.0' encoding='utf-8'?>
+<AuditableMetaData>
+<AuditableClass className="test.annotations.Alcohol" relationShipType="main" roleName="">
+	<attribute name="drinksPerWeek" dataType="java.lang.Double" />
+	<attribute name="hazards" dataType="test.annotations.Hazards" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.Annotations" relationShipType="main" roleName="">
+	<attribute name="comments" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ParticipantRecordEntry" />
+		<attribute name="sequence" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_Annotations" dataType="test.annotations.ParticipantRecordEntry" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="ParticipantRecordEntry_BaseAnnotations" dataType="test.annotations.ParticipantRecordEntry" />
+	<attribute name="visitDate" dataType="java.util.Date" />
+		<attribute name="name" dataType="java.lang.String" />
+	<attribute name="insuranceAmount" dataType="java.lang.Float" />
+		<attribute name="opinions" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.BacterialInfections" relationShipType="main" roleName="">
+	<attribute name="infections" dataType="test.annotations.Infections" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="nameOfBacteria" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.BaseAnnotations" relationShipType="main" roleName="">
+	<attribute name="ParticipantRecordEntry_BaseAnnotations" dataType="test.annotations.ParticipantRecordEntry" />
+	<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="visitDate" dataType="java.util.Date" />
+	<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ParticipantRecordEntry" />
+				<attribute name="insuranceAmount" dataType="java.lang.Float" />
+	<attribute name="name" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.Chemotherapy" relationShipType="main" roleName="">
+	<attribute name="startDate" dataType="java.util.Date" />
+	<attribute name="dueDate" dataType="java.util.Date" />
+	<attribute name="endDate" dataType="java.util.Date" />
+	<attribute name="duration" dataType="java.lang.Integer" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="health" dataType="test.annotations.HealthAnnotations" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ClinicalAnnotations" relationShipType="main" roleName="">
+	<attribute name="comments" dataType="java.lang.String" />
+		<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ParticipantRecordEntry" />
+			<attribute name="sequence" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_Annotations" dataType="test.annotations.ParticipantRecordEntry" />
+	<attribute name="id" dataType="java.lang.Long" />
+		<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="ParticipantRecordEntry_BaseAnnotations" dataType="test.annotations.ParticipantRecordEntry" />
+	<attribute name="visitDate" dataType="java.util.Date" />
+		<attribute name="ParticipantRecordEntry_ClinicalAnnotations" dataType="test.annotations.ParticipantRecordEntry" />
+		<attribute name="name" dataType="java.lang.String" />
+	<attribute name="insuranceAmount" dataType="java.lang.Float" />
+			<attribute name="opinions" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.CollectionAttributeClassagent253" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRoleHealthAnnotations" dataType="test.annotations.HealthAnnotations" />
+	<attribute name="collectionAttribute254" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.CollectionAttributeClassclinics862" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePhysicianInformation" dataType="test.annotations.PhysicianInformation" />
+	<attribute name="collectionAttribute863" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.CollectionAttributeClasshazardType2363" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRoleHazards" dataType="test.annotations.Hazards" />
+	<attribute name="collectionAttribute2364" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.CollectionAttributeClasshospitals305" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePhysicianInformation" dataType="test.annotations.PhysicianInformation" />
+	<attribute name="collectionAttribute306" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.CollectionAttributeClasstumorLocation270" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePathologicalAnnotations" dataType="test.annotations.PathologicalAnnotations" />
+	<attribute name="collectionAttribute271" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.CollectionAttributeClasstumorLocationChild877" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePathAnnotationChild" dataType="test.annotations.PathAnnotationChild" />
+	<attribute name="collectionAttribute878" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.CollectionAttributeClasstumorSize281" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePathologicalAnnotations" dataType="test.annotations.PathologicalAnnotations" />
+	<attribute name="collectionAttribute282" dataType="java.lang.Double" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.CollectionAttributeClasstumorSizeChild888" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePathAnnotationChild" dataType="test.annotations.PathAnnotationChild" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="collectionAttribute889" dataType="java.lang.Double" />
+</AuditableClass>
+<AuditableClass className="test.annotations.Diagnosis" relationShipType="main" roleName="">
+	<attribute name="diagnosisDate" dataType="java.util.Date" />
+		<attribute name="followupDiagnosisDate" dataType="java.util.Date" />
+	<attribute name="labInfo" dataType="test.annotations.LabInfo" />
+	<attribute name="diagnosis" dataType="java.lang.Boolean" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.FungalInfections" relationShipType="main" roleName="">
+	<attribute name="infections" dataType="test.annotations.Infections" />
+	<attribute name="nameOfFungus" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.GermCount" relationShipType="main" roleName="">
+	<attribute name="bacterialCount" dataType="java.lang.Float" />
+	<attribute name="protozoanCount" dataType="java.lang.Long" />
+	<attribute name="clinAnn" dataType="test.annotations.ClinicalAnnotations" />
+	<attribute name="viralCount" dataType="java.lang.Double" />
+	<attribute name="totalCount" dataType="java.lang.Integer" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.Hazards" relationShipType="main" roleName="">
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasshazardType2363"/>
+	<attribute name="deprecated_hazardType" dataType="java.lang.String" />
+	<attribute name="alcohol" dataType="test.annotations.Alcohol" />
+	<attribute name="history" dataType="test.annotations.History" />
+	<attribute name="smoking" dataType="test.annotations.SmokingHistory" />
+	<attribute name="noYearsExposed" dataType="java.lang.Float" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.HealthAnnotations" relationShipType="main" roleName="">
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClassagent253"/>
+	<attribute name="clinAnn" dataType="test.annotations.ClinicalAnnotations" />
+			<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.History" relationShipType="main" roleName="">
+	<attribute name="patientInfo" dataType="test.annotations.PatientInformation" />
+	<attribute name="recordDate" dataType="java.util.Date" />
+		<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.AlcoholImpl" relationShipType="main" roleName="">
+	<attribute name="drinksPerWeek" dataType="java.lang.Double" />
+	<attribute name="hazards" dataType="test.annotations.Hazards" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.AnnotationsImpl" relationShipType="main" roleName="">
+	<attribute name="comments" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ParticipantRecordEntry" />
+		<attribute name="sequence" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_Annotations" dataType="test.annotations.ParticipantRecordEntry" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="ParticipantRecordEntry_BaseAnnotations" dataType="test.annotations.ParticipantRecordEntry" />
+	<attribute name="visitDate" dataType="java.util.Date" />
+		<attribute name="name" dataType="java.lang.String" />
+	<attribute name="insuranceAmount" dataType="java.lang.Float" />
+		<attribute name="opinions" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.BacterialInfectionsImpl" relationShipType="main" roleName="">
+	<attribute name="infections" dataType="test.annotations.Infections" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="nameOfBacteria" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.BaseAnnotationsImpl" relationShipType="main" roleName="">
+	<attribute name="ParticipantRecordEntry_BaseAnnotations" dataType="test.annotations.ParticipantRecordEntry" />
+	<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="visitDate" dataType="java.util.Date" />
+	<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ParticipantRecordEntry" />
+				<attribute name="insuranceAmount" dataType="java.lang.Float" />
+	<attribute name="name" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.ChemotherapyImpl" relationShipType="main" roleName="">
+	<attribute name="startDate" dataType="java.util.Date" />
+	<attribute name="dueDate" dataType="java.util.Date" />
+	<attribute name="endDate" dataType="java.util.Date" />
+	<attribute name="duration" dataType="java.lang.Integer" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="health" dataType="test.annotations.HealthAnnotations" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.ClinicalAnnotationsImpl" relationShipType="main" roleName="">
+	<attribute name="comments" dataType="java.lang.String" />
+		<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ParticipantRecordEntry" />
+			<attribute name="sequence" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_Annotations" dataType="test.annotations.ParticipantRecordEntry" />
+	<attribute name="id" dataType="java.lang.Long" />
+		<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="ParticipantRecordEntry_BaseAnnotations" dataType="test.annotations.ParticipantRecordEntry" />
+	<attribute name="visitDate" dataType="java.util.Date" />
+		<attribute name="ParticipantRecordEntry_ClinicalAnnotations" dataType="test.annotations.ParticipantRecordEntry" />
+		<attribute name="name" dataType="java.lang.String" />
+	<attribute name="insuranceAmount" dataType="java.lang.Float" />
+			<attribute name="opinions" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.CollectionAttributeClassagent253Impl" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRoleHealthAnnotations" dataType="test.annotations.HealthAnnotations" />
+	<attribute name="collectionAttribute254" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.CollectionAttributeClassclinics862Impl" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePhysicianInformation" dataType="test.annotations.PhysicianInformation" />
+	<attribute name="collectionAttribute863" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.CollectionAttributeClasshazardType2363Impl" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRoleHazards" dataType="test.annotations.Hazards" />
+	<attribute name="collectionAttribute2364" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.CollectionAttributeClasshospitals305Impl" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePhysicianInformation" dataType="test.annotations.PhysicianInformation" />
+	<attribute name="collectionAttribute306" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.CollectionAttributeClasstumorLocation270Impl" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePathologicalAnnotations" dataType="test.annotations.PathologicalAnnotations" />
+	<attribute name="collectionAttribute271" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.CollectionAttributeClasstumorLocationChild877Impl" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePathAnnotationChild" dataType="test.annotations.PathAnnotationChild" />
+	<attribute name="collectionAttribute878" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.CollectionAttributeClasstumorSize281Impl" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePathologicalAnnotations" dataType="test.annotations.PathologicalAnnotations" />
+	<attribute name="collectionAttribute282" dataType="java.lang.Double" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.CollectionAttributeClasstumorSizeChild888Impl" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePathAnnotationChild" dataType="test.annotations.PathAnnotationChild" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="collectionAttribute889" dataType="java.lang.Double" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.DiagnosisImpl" relationShipType="main" roleName="">
+	<attribute name="diagnosisDate" dataType="java.util.Date" />
+		<attribute name="followupDiagnosisDate" dataType="java.util.Date" />
+	<attribute name="labInfo" dataType="test.annotations.LabInfo" />
+	<attribute name="diagnosis" dataType="java.lang.Boolean" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.FungalInfectionsImpl" relationShipType="main" roleName="">
+	<attribute name="infections" dataType="test.annotations.Infections" />
+	<attribute name="nameOfFungus" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.GermCountImpl" relationShipType="main" roleName="">
+	<attribute name="bacterialCount" dataType="java.lang.Float" />
+	<attribute name="protozoanCount" dataType="java.lang.Long" />
+	<attribute name="clinAnn" dataType="test.annotations.ClinicalAnnotations" />
+	<attribute name="viralCount" dataType="java.lang.Double" />
+	<attribute name="totalCount" dataType="java.lang.Integer" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.HazardsImpl" relationShipType="main" roleName="">
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasshazardType2363"/>
+	<attribute name="deprecated_hazardType" dataType="java.lang.String" />
+	<attribute name="alcohol" dataType="test.annotations.Alcohol" />
+	<attribute name="history" dataType="test.annotations.History" />
+	<attribute name="smoking" dataType="test.annotations.SmokingHistory" />
+	<attribute name="noYearsExposed" dataType="java.lang.Float" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.HealthAnnotationsImpl" relationShipType="main" roleName="">
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClassagent253"/>
+	<attribute name="clinAnn" dataType="test.annotations.ClinicalAnnotations" />
+			<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.HistoryImpl" relationShipType="main" roleName="">
+	<attribute name="patientInfo" dataType="test.annotations.PatientInformation" />
+	<attribute name="recordDate" dataType="java.util.Date" />
+		<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.InfectionsImpl" relationShipType="main" roleName="">
+	<attribute name="fungal" dataType="test.annotations.FungalInfections" />
+		<attribute name="priDiagnosis" dataType="test.annotations.PrimaryDiagnosis" />
+	<attribute name="infections" dataType="java.lang.String" />
+		<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.LabInfoImpl" relationShipType="main" roleName="">
+	<attribute name="clinAnn" dataType="test.annotations.ClinicalAnnotations" />
+			<attribute name="source" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.LabReportsImpl" relationShipType="main" roleName="">
+	<attribute name="testReportData" dataType="test.annotations.LabTest" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.LabTestImpl" relationShipType="main" roleName="">
+		<attribute name="quantResult" dataType="java.lang.Float" />
+	<attribute name="resultUnit" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_LabTest" dataType="test.annotations.ParticipantRecordEntry" />
+	<attribute name="testDate" dataType="java.util.Date" />
+	<attribute name="testAgent" dataType="java.lang.String" />
+	<attribute name="labInfo" dataType="test.annotations.LabInfo" />
+	<attribute name="qualResult" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="testName" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.ParticipantRecordEntryImpl" relationShipType="main" roleName="">
+							<attribute name="id" dataType="java.lang.Long" />
+	</AuditableClass>
+<AuditableClass className="test.annotations.impl.PathAnnotationChildImpl" relationShipType="main" roleName="">
+	<attribute name="detectionDateChild" dataType="java.util.Date" />
+	<attribute name="clinAnn" dataType="test.annotations.ClinicalAnnotations" />
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasstumorSizeChild888"/>
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasstumorLocationChild877"/>
+	<attribute name="malignantChild" dataType="java.lang.Boolean" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.PathologicalAnnotationsImpl" relationShipType="main" roleName="">
+	<attribute name="comments" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ParticipantRecordEntry" />
+		<attribute name="sequence" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_Annotations" dataType="test.annotations.ParticipantRecordEntry" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasstumorLocation270"/>
+	<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="ParticipantRecordEntry_BaseAnnotations" dataType="test.annotations.ParticipantRecordEntry" />
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasstumorSize281"/>
+	<attribute name="ParticipantRecordEntry_PathologicalAnnotations" dataType="test.annotations.ParticipantRecordEntry" />
+	<attribute name="detectionDate" dataType="java.util.Date" />
+	<attribute name="visitDate" dataType="java.util.Date" />
+		<attribute name="name" dataType="java.lang.String" />
+	<attribute name="insuranceAmount" dataType="java.lang.Float" />
+		<attribute name="malignant" dataType="java.lang.Boolean" />
+	<attribute name="opinions" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.PathologyReportsImpl" relationShipType="main" roleName="">
+	<attribute name="pathReports" dataType="test.annotations.ClinicalAnnotations" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.PatientInformationImpl" relationShipType="main" roleName="">
+	<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ParticipantRecordEntry" />
+				<attribute name="insuranceAmount" dataType="java.lang.Float" />
+	<attribute name="name" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.PhyContactInfoImpl" relationShipType="main" roleName="">
+	<attribute name="extension" dataType="java.lang.Integer" />
+	<attribute name="phoneType" dataType="java.lang.String" />
+	<attribute name="physicianContact" dataType="test.annotations.PhysicianInformation" />
+	<attribute name="phoneNumber" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.PhysicianInformationImpl" relationShipType="main" roleName="">
+	<attribute name="physicianName" dataType="java.lang.String" />
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClassclinics862"/>
+		<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasshospitals305"/>
+	<attribute name="pi" dataType="test.annotations.PatientInformation" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.PrimaryDiagnosisImpl" relationShipType="main" roleName="">
+		<attribute name="result" dataType="java.lang.String" />
+	<attribute name="testPerformed" dataType="java.lang.String" />
+	<attribute name="diagnosis" dataType="test.annotations.Diagnosis" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.RadiationTherapyImpl" relationShipType="main" roleName="">
+	<attribute name="dose" dataType="java.lang.Float" />
+	<attribute name="calculationResult" dataType="java.lang.Float" />
+	<attribute name="doseUnits" dataType="java.lang.String" />
+	<attribute name="duration" dataType="java.lang.Double" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="health" dataType="test.annotations.HealthAnnotations" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.SmokingHistoryImpl" relationShipType="main" roleName="">
+	<attribute name="packsPerDay" dataType="java.lang.Long" />
+	<attribute name="hazards" dataType="test.annotations.Hazards" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.ViralInfectionsImpl" relationShipType="main" roleName="">
+	<attribute name="infections" dataType="test.annotations.Infections" />
+	<attribute name="nameOfVirus" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.impl.VitalInformationImpl" relationShipType="main" roleName="">
+	<attribute name="patient" dataType="test.annotations.PatientInformation" />
+	<attribute name="pulse" dataType="java.lang.String" />
+	<attribute name="height" dataType="java.lang.Float" />
+	<attribute name="ParticipantRecordEntry_VitalInformation" dataType="test.annotations.ParticipantRecordEntry" />
+	<attribute name="bmi" dataType="java.lang.Float" />
+	<attribute name="bp" dataType="java.lang.Integer" />
+	<attribute name="weight" dataType="java.lang.Float" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.Infections" relationShipType="main" roleName="">
+	<attribute name="fungal" dataType="test.annotations.FungalInfections" />
+		<attribute name="priDiagnosis" dataType="test.annotations.PrimaryDiagnosis" />
+	<attribute name="infections" dataType="java.lang.String" />
+		<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.LabInfo" relationShipType="main" roleName="">
+	<attribute name="clinAnn" dataType="test.annotations.ClinicalAnnotations" />
+			<attribute name="source" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.LabReports" relationShipType="main" roleName="">
+	<attribute name="testReportData" dataType="test.annotations.LabTest" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.LabTest" relationShipType="main" roleName="">
+		<attribute name="quantResult" dataType="java.lang.Float" />
+	<attribute name="resultUnit" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_LabTest" dataType="test.annotations.ParticipantRecordEntry" />
+	<attribute name="testDate" dataType="java.util.Date" />
+	<attribute name="testAgent" dataType="java.lang.String" />
+	<attribute name="labInfo" dataType="test.annotations.LabInfo" />
+	<attribute name="qualResult" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="testName" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ParticipantRecordEntry" relationShipType="main" roleName="">
+							<attribute name="id" dataType="java.lang.Long" />
+	</AuditableClass>
+<AuditableClass className="test.annotations.PathAnnotationChild" relationShipType="main" roleName="">
+	<attribute name="detectionDateChild" dataType="java.util.Date" />
+	<attribute name="clinAnn" dataType="test.annotations.ClinicalAnnotations" />
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasstumorSizeChild888"/>
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasstumorLocationChild877"/>
+	<attribute name="malignantChild" dataType="java.lang.Boolean" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.PathologicalAnnotations" relationShipType="main" roleName="">
+	<attribute name="comments" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ParticipantRecordEntry" />
+		<attribute name="sequence" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_Annotations" dataType="test.annotations.ParticipantRecordEntry" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasstumorLocation270"/>
+	<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="ParticipantRecordEntry_BaseAnnotations" dataType="test.annotations.ParticipantRecordEntry" />
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasstumorSize281"/>
+	<attribute name="ParticipantRecordEntry_PathologicalAnnotations" dataType="test.annotations.ParticipantRecordEntry" />
+	<attribute name="detectionDate" dataType="java.util.Date" />
+	<attribute name="visitDate" dataType="java.util.Date" />
+		<attribute name="name" dataType="java.lang.String" />
+	<attribute name="insuranceAmount" dataType="java.lang.Float" />
+		<attribute name="malignant" dataType="java.lang.Boolean" />
+	<attribute name="opinions" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.PathologyReports" relationShipType="main" roleName="">
+	<attribute name="pathReports" dataType="test.annotations.ClinicalAnnotations" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.PatientInformation" relationShipType="main" roleName="">
+	<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ParticipantRecordEntry" />
+				<attribute name="insuranceAmount" dataType="java.lang.Float" />
+	<attribute name="name" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.PhyContactInfo" relationShipType="main" roleName="">
+	<attribute name="extension" dataType="java.lang.Integer" />
+	<attribute name="phoneType" dataType="java.lang.String" />
+	<attribute name="physicianContact" dataType="test.annotations.PhysicianInformation" />
+	<attribute name="phoneNumber" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.PhysicianInformation" relationShipType="main" roleName="">
+	<attribute name="physicianName" dataType="java.lang.String" />
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClassclinics862"/>
+		<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasshospitals305"/>
+	<attribute name="pi" dataType="test.annotations.PatientInformation" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.PrimaryDiagnosis" relationShipType="main" roleName="">
+		<attribute name="result" dataType="java.lang.String" />
+	<attribute name="testPerformed" dataType="java.lang.String" />
+	<attribute name="diagnosis" dataType="test.annotations.Diagnosis" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.RadiationTherapy" relationShipType="main" roleName="">
+	<attribute name="dose" dataType="java.lang.Float" />
+	<attribute name="calculationResult" dataType="java.lang.Float" />
+	<attribute name="doseUnits" dataType="java.lang.String" />
+	<attribute name="duration" dataType="java.lang.Double" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="health" dataType="test.annotations.HealthAnnotations" />
+</AuditableClass>
+<AuditableClass className="test.annotations.SmokingHistory" relationShipType="main" roleName="">
+	<attribute name="packsPerDay" dataType="java.lang.Long" />
+	<attribute name="hazards" dataType="test.annotations.Hazards" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ViralInfections" relationShipType="main" roleName="">
+	<attribute name="infections" dataType="test.annotations.Infections" />
+	<attribute name="nameOfVirus" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.VitalInformation" relationShipType="main" roleName="">
+	<attribute name="patient" dataType="test.annotations.PatientInformation" />
+	<attribute name="pulse" dataType="java.lang.String" />
+	<attribute name="height" dataType="java.lang.Float" />
+	<attribute name="ParticipantRecordEntry_VitalInformation" dataType="test.annotations.ParticipantRecordEntry" />
+	<attribute name="bmi" dataType="java.lang.Float" />
+	<attribute name="bp" dataType="java.lang.Integer" />
+	<attribute name="weight" dataType="java.lang.Float" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.Alcohol" relationShipType="main" roleName="">
+	<attribute name="drinksPerWeek" dataType="java.lang.Double" />
+	<attribute name="hazards" dataType="test.annotations.ws.Hazards" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.AlcoholImpl" relationShipType="main" roleName="">
+	<attribute name="drinksPerWeek" dataType="java.lang.Double" />
+	<attribute name="hazards" dataType="test.annotations.ws.Hazards" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.Annotations" relationShipType="main" roleName="">
+	<attribute name="comments" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ws.ParticipantRecordEntry" />
+		<attribute name="sequence" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_Annotations" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="ParticipantRecordEntry_BaseAnnotations" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<attribute name="visitDate" dataType="java.util.Date" />
+		<attribute name="name" dataType="java.lang.String" />
+	<attribute name="insuranceAmount" dataType="java.lang.Float" />
+		<attribute name="opinions" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.AnnotationsImpl" relationShipType="main" roleName="">
+	<attribute name="comments" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ws.ParticipantRecordEntry" />
+		<attribute name="sequence" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_Annotations" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="ParticipantRecordEntry_BaseAnnotations" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<attribute name="visitDate" dataType="java.util.Date" />
+		<attribute name="name" dataType="java.lang.String" />
+	<attribute name="insuranceAmount" dataType="java.lang.Float" />
+		<attribute name="opinions" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.BacterialInfections" relationShipType="main" roleName="">
+	<attribute name="infections" dataType="test.annotations.ws.Infections" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="nameOfBacteria" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.BacterialInfectionsImpl" relationShipType="main" roleName="">
+	<attribute name="infections" dataType="test.annotations.ws.Infections" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="nameOfBacteria" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.BaseAnnotations" relationShipType="main" roleName="">
+	<attribute name="ParticipantRecordEntry_BaseAnnotations" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="visitDate" dataType="java.util.Date" />
+	<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ws.ParticipantRecordEntry" />
+				<attribute name="insuranceAmount" dataType="java.lang.Float" />
+	<attribute name="name" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.BaseAnnotationsImpl" relationShipType="main" roleName="">
+	<attribute name="ParticipantRecordEntry_BaseAnnotations" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="visitDate" dataType="java.util.Date" />
+	<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ws.ParticipantRecordEntry" />
+				<attribute name="insuranceAmount" dataType="java.lang.Float" />
+	<attribute name="name" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.Chemotherapy" relationShipType="main" roleName="">
+	<attribute name="startDate" dataType="java.util.Date" />
+	<attribute name="dueDate" dataType="java.util.Date" />
+	<attribute name="endDate" dataType="java.util.Date" />
+	<attribute name="duration" dataType="java.lang.Integer" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="health" dataType="test.annotations.ws.HealthAnnotations" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.ChemotherapyImpl" relationShipType="main" roleName="">
+	<attribute name="startDate" dataType="java.util.Date" />
+	<attribute name="dueDate" dataType="java.util.Date" />
+	<attribute name="endDate" dataType="java.util.Date" />
+	<attribute name="duration" dataType="java.lang.Integer" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="health" dataType="test.annotations.ws.HealthAnnotations" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.ClinicalAnnotations" relationShipType="main" roleName="">
+	<attribute name="comments" dataType="java.lang.String" />
+		<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ws.ParticipantRecordEntry" />
+			<attribute name="sequence" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_Annotations" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<attribute name="id" dataType="java.lang.Long" />
+		<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="ParticipantRecordEntry_BaseAnnotations" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<attribute name="visitDate" dataType="java.util.Date" />
+		<attribute name="ParticipantRecordEntry_ClinicalAnnotations" dataType="test.annotations.ws.ParticipantRecordEntry" />
+		<attribute name="name" dataType="java.lang.String" />
+	<attribute name="insuranceAmount" dataType="java.lang.Float" />
+			<attribute name="opinions" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.ClinicalAnnotationsImpl" relationShipType="main" roleName="">
+	<attribute name="comments" dataType="java.lang.String" />
+		<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ws.ParticipantRecordEntry" />
+			<attribute name="sequence" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_Annotations" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<attribute name="id" dataType="java.lang.Long" />
+		<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="ParticipantRecordEntry_BaseAnnotations" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<attribute name="visitDate" dataType="java.util.Date" />
+		<attribute name="ParticipantRecordEntry_ClinicalAnnotations" dataType="test.annotations.ws.ParticipantRecordEntry" />
+		<attribute name="name" dataType="java.lang.String" />
+	<attribute name="insuranceAmount" dataType="java.lang.Float" />
+			<attribute name="opinions" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.CollectionAttributeClassagent253" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRoleHealthAnnotations" dataType="test.annotations.ws.HealthAnnotations" />
+	<attribute name="collectionAttribute254" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.CollectionAttributeClassagent253Impl" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRoleHealthAnnotations" dataType="test.annotations.ws.HealthAnnotations" />
+	<attribute name="collectionAttribute254" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.CollectionAttributeClassclinics862" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePhysicianInformation" dataType="test.annotations.ws.PhysicianInformation" />
+	<attribute name="collectionAttribute863" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.CollectionAttributeClassclinics862Impl" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePhysicianInformation" dataType="test.annotations.ws.PhysicianInformation" />
+	<attribute name="collectionAttribute863" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.CollectionAttributeClasshazardType2363" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRoleHazards" dataType="test.annotations.ws.Hazards" />
+	<attribute name="collectionAttribute2364" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.CollectionAttributeClasshazardType2363Impl" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRoleHazards" dataType="test.annotations.ws.Hazards" />
+	<attribute name="collectionAttribute2364" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.CollectionAttributeClasshospitals305" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePhysicianInformation" dataType="test.annotations.ws.PhysicianInformation" />
+	<attribute name="collectionAttribute306" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.CollectionAttributeClasshospitals305Impl" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePhysicianInformation" dataType="test.annotations.ws.PhysicianInformation" />
+	<attribute name="collectionAttribute306" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.CollectionAttributeClasstumorLocation270" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePathologicalAnnotations" dataType="test.annotations.ws.PathologicalAnnotations" />
+	<attribute name="collectionAttribute271" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.CollectionAttributeClasstumorLocation270Impl" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePathologicalAnnotations" dataType="test.annotations.ws.PathologicalAnnotations" />
+	<attribute name="collectionAttribute271" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.CollectionAttributeClasstumorLocationChild877" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePathAnnotationChild" dataType="test.annotations.ws.PathAnnotationChild" />
+	<attribute name="collectionAttribute878" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.CollectionAttributeClasstumorLocationChild877Impl" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePathAnnotationChild" dataType="test.annotations.ws.PathAnnotationChild" />
+	<attribute name="collectionAttribute878" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.CollectionAttributeClasstumorSize281" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePathologicalAnnotations" dataType="test.annotations.ws.PathologicalAnnotations" />
+	<attribute name="collectionAttribute282" dataType="java.lang.Double" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.CollectionAttributeClasstumorSize281Impl" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePathologicalAnnotations" dataType="test.annotations.ws.PathologicalAnnotations" />
+	<attribute name="collectionAttribute282" dataType="java.lang.Double" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.CollectionAttributeClasstumorSizeChild888" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePathAnnotationChild" dataType="test.annotations.ws.PathAnnotationChild" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="collectionAttribute889" dataType="java.lang.Double" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.CollectionAttributeClasstumorSizeChild888Impl" relationShipType="main" roleName="">
+	<attribute name="collectionAttributeRolePathAnnotationChild" dataType="test.annotations.ws.PathAnnotationChild" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="collectionAttribute889" dataType="java.lang.Double" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.Diagnosis" relationShipType="main" roleName="">
+	<attribute name="diagnosisDate" dataType="java.util.Date" />
+		<attribute name="followupDiagnosisDate" dataType="java.util.Date" />
+	<attribute name="labInfo" dataType="test.annotations.ws.LabInfo" />
+	<attribute name="diagnosis" dataType="java.lang.Boolean" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.DiagnosisImpl" relationShipType="main" roleName="">
+	<attribute name="diagnosisDate" dataType="java.util.Date" />
+		<attribute name="followupDiagnosisDate" dataType="java.util.Date" />
+	<attribute name="labInfo" dataType="test.annotations.ws.LabInfo" />
+	<attribute name="diagnosis" dataType="java.lang.Boolean" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.FungalInfections" relationShipType="main" roleName="">
+	<attribute name="infections" dataType="test.annotations.ws.Infections" />
+	<attribute name="nameOfFungus" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.FungalInfectionsImpl" relationShipType="main" roleName="">
+	<attribute name="infections" dataType="test.annotations.ws.Infections" />
+	<attribute name="nameOfFungus" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.GermCount" relationShipType="main" roleName="">
+	<attribute name="bacterialCount" dataType="java.lang.Float" />
+	<attribute name="protozoanCount" dataType="java.lang.Long" />
+	<attribute name="clinAnn" dataType="test.annotations.ws.ClinicalAnnotations" />
+	<attribute name="viralCount" dataType="java.lang.Double" />
+	<attribute name="totalCount" dataType="java.lang.Integer" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.GermCountImpl" relationShipType="main" roleName="">
+	<attribute name="bacterialCount" dataType="java.lang.Float" />
+	<attribute name="protozoanCount" dataType="java.lang.Long" />
+	<attribute name="clinAnn" dataType="test.annotations.ws.ClinicalAnnotations" />
+	<attribute name="viralCount" dataType="java.lang.Double" />
+	<attribute name="totalCount" dataType="java.lang.Integer" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.Hazards" relationShipType="main" roleName="">
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasshazardType2363"/>
+	<attribute name="deprecated_hazardType" dataType="java.lang.String" />
+	<attribute name="alcohol" dataType="test.annotations.ws.Alcohol" />
+	<attribute name="history" dataType="test.annotations.ws.History" />
+	<attribute name="smoking" dataType="test.annotations.ws.SmokingHistory" />
+	<attribute name="noYearsExposed" dataType="java.lang.Float" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.HazardsImpl" relationShipType="main" roleName="">
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasshazardType2363"/>
+	<attribute name="deprecated_hazardType" dataType="java.lang.String" />
+	<attribute name="alcohol" dataType="test.annotations.ws.Alcohol" />
+	<attribute name="history" dataType="test.annotations.ws.History" />
+	<attribute name="smoking" dataType="test.annotations.ws.SmokingHistory" />
+	<attribute name="noYearsExposed" dataType="java.lang.Float" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.HealthAnnotations" relationShipType="main" roleName="">
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClassagent253"/>
+	<attribute name="clinAnn" dataType="test.annotations.ws.ClinicalAnnotations" />
+			<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.HealthAnnotationsImpl" relationShipType="main" roleName="">
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClassagent253"/>
+	<attribute name="clinAnn" dataType="test.annotations.ws.ClinicalAnnotations" />
+			<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.History" relationShipType="main" roleName="">
+	<attribute name="patientInfo" dataType="test.annotations.ws.PatientInformation" />
+	<attribute name="recordDate" dataType="java.util.Date" />
+		<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.HistoryImpl" relationShipType="main" roleName="">
+	<attribute name="patientInfo" dataType="test.annotations.ws.PatientInformation" />
+	<attribute name="recordDate" dataType="java.util.Date" />
+		<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.Infections" relationShipType="main" roleName="">
+	<attribute name="fungal" dataType="test.annotations.ws.FungalInfections" />
+		<attribute name="priDiagnosis" dataType="test.annotations.ws.PrimaryDiagnosis" />
+	<attribute name="infections" dataType="java.lang.String" />
+		<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.InfectionsImpl" relationShipType="main" roleName="">
+	<attribute name="fungal" dataType="test.annotations.ws.FungalInfections" />
+		<attribute name="priDiagnosis" dataType="test.annotations.ws.PrimaryDiagnosis" />
+	<attribute name="infections" dataType="java.lang.String" />
+		<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.LabInfo" relationShipType="main" roleName="">
+	<attribute name="clinAnn" dataType="test.annotations.ws.ClinicalAnnotations" />
+			<attribute name="source" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.LabInfoImpl" relationShipType="main" roleName="">
+	<attribute name="clinAnn" dataType="test.annotations.ws.ClinicalAnnotations" />
+			<attribute name="source" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.LabReports" relationShipType="main" roleName="">
+	<attribute name="testReportData" dataType="test.annotations.ws.LabTest" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.LabReportsImpl" relationShipType="main" roleName="">
+	<attribute name="testReportData" dataType="test.annotations.ws.LabTest" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.LabTest" relationShipType="main" roleName="">
+		<attribute name="quantResult" dataType="java.lang.Float" />
+	<attribute name="resultUnit" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_LabTest" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<attribute name="testDate" dataType="java.util.Date" />
+	<attribute name="testAgent" dataType="java.lang.String" />
+	<attribute name="labInfo" dataType="test.annotations.ws.LabInfo" />
+	<attribute name="qualResult" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="testName" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.LabTestImpl" relationShipType="main" roleName="">
+		<attribute name="quantResult" dataType="java.lang.Float" />
+	<attribute name="resultUnit" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_LabTest" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<attribute name="testDate" dataType="java.util.Date" />
+	<attribute name="testAgent" dataType="java.lang.String" />
+	<attribute name="labInfo" dataType="test.annotations.ws.LabInfo" />
+	<attribute name="qualResult" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="testName" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.ParticipantRecordEntry" relationShipType="main" roleName="">
+							<attribute name="id" dataType="java.lang.Long" />
+	</AuditableClass>
+<AuditableClass className="test.annotations.ws.ParticipantRecordEntryImpl" relationShipType="main" roleName="">
+							<attribute name="id" dataType="java.lang.Long" />
+	</AuditableClass>
+<AuditableClass className="test.annotations.ws.PathAnnotationChild" relationShipType="main" roleName="">
+	<attribute name="detectionDateChild" dataType="java.util.Date" />
+	<attribute name="clinAnn" dataType="test.annotations.ws.ClinicalAnnotations" />
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasstumorSizeChild888"/>
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasstumorLocationChild877"/>
+	<attribute name="malignantChild" dataType="java.lang.Boolean" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.PathAnnotationChildImpl" relationShipType="main" roleName="">
+	<attribute name="detectionDateChild" dataType="java.util.Date" />
+	<attribute name="clinAnn" dataType="test.annotations.ws.ClinicalAnnotations" />
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasstumorSizeChild888"/>
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasstumorLocationChild877"/>
+	<attribute name="malignantChild" dataType="java.lang.Boolean" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.PathologicalAnnotations" relationShipType="main" roleName="">
+	<attribute name="comments" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ws.ParticipantRecordEntry" />
+		<attribute name="sequence" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_Annotations" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasstumorLocation270"/>
+	<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="ParticipantRecordEntry_BaseAnnotations" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasstumorSize281"/>
+	<attribute name="ParticipantRecordEntry_PathologicalAnnotations" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<attribute name="detectionDate" dataType="java.util.Date" />
+	<attribute name="visitDate" dataType="java.util.Date" />
+		<attribute name="name" dataType="java.lang.String" />
+	<attribute name="insuranceAmount" dataType="java.lang.Float" />
+		<attribute name="malignant" dataType="java.lang.Boolean" />
+	<attribute name="opinions" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.PathologicalAnnotationsImpl" relationShipType="main" roleName="">
+	<attribute name="comments" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ws.ParticipantRecordEntry" />
+		<attribute name="sequence" dataType="java.lang.String" />
+	<attribute name="ParticipantRecordEntry_Annotations" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasstumorLocation270"/>
+	<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="ParticipantRecordEntry_BaseAnnotations" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasstumorSize281"/>
+	<attribute name="ParticipantRecordEntry_PathologicalAnnotations" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<attribute name="detectionDate" dataType="java.util.Date" />
+	<attribute name="visitDate" dataType="java.util.Date" />
+		<attribute name="name" dataType="java.lang.String" />
+	<attribute name="insuranceAmount" dataType="java.lang.Float" />
+		<attribute name="malignant" dataType="java.lang.Boolean" />
+	<attribute name="opinions" dataType="java.lang.String" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.PathologyReports" relationShipType="main" roleName="">
+	<attribute name="pathReports" dataType="test.annotations.ws.ClinicalAnnotations" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.PathologyReportsImpl" relationShipType="main" roleName="">
+	<attribute name="pathReports" dataType="test.annotations.ws.ClinicalAnnotations" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.PatientInformation" relationShipType="main" roleName="">
+	<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ws.ParticipantRecordEntry" />
+				<attribute name="insuranceAmount" dataType="java.lang.Float" />
+	<attribute name="name" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.PatientInformationImpl" relationShipType="main" roleName="">
+	<attribute name="age" dataType="java.lang.Integer" />
+	<attribute name="ParticipantRecordEntry_PatientInformation" dataType="test.annotations.ws.ParticipantRecordEntry" />
+				<attribute name="insuranceAmount" dataType="java.lang.Float" />
+	<attribute name="name" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.PhyContactInfo" relationShipType="main" roleName="">
+	<attribute name="extension" dataType="java.lang.Integer" />
+	<attribute name="phoneType" dataType="java.lang.String" />
+	<attribute name="physicianContact" dataType="test.annotations.ws.PhysicianInformation" />
+	<attribute name="phoneNumber" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.PhyContactInfoImpl" relationShipType="main" roleName="">
+	<attribute name="extension" dataType="java.lang.Integer" />
+	<attribute name="phoneType" dataType="java.lang.String" />
+	<attribute name="physicianContact" dataType="test.annotations.ws.PhysicianInformation" />
+	<attribute name="phoneNumber" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.PhysicianInformation" relationShipType="main" roleName="">
+	<attribute name="physicianName" dataType="java.lang.String" />
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClassclinics862"/>
+		<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasshospitals305"/>
+	<attribute name="pi" dataType="test.annotations.ws.PatientInformation" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.PhysicianInformationImpl" relationShipType="main" roleName="">
+	<attribute name="physicianName" dataType="java.lang.String" />
+	<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClassclinics862"/>
+		<containmentAssociationCollection className="java.util.Collection" relationShipType="containment" roleName="collectionAttributeRoleCollectionAttributeClasshospitals305"/>
+	<attribute name="pi" dataType="test.annotations.ws.PatientInformation" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.PrimaryDiagnosis" relationShipType="main" roleName="">
+		<attribute name="result" dataType="java.lang.String" />
+	<attribute name="testPerformed" dataType="java.lang.String" />
+	<attribute name="diagnosis" dataType="test.annotations.ws.Diagnosis" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.PrimaryDiagnosisImpl" relationShipType="main" roleName="">
+		<attribute name="result" dataType="java.lang.String" />
+	<attribute name="testPerformed" dataType="java.lang.String" />
+	<attribute name="diagnosis" dataType="test.annotations.ws.Diagnosis" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.RadiationTherapy" relationShipType="main" roleName="">
+	<attribute name="dose" dataType="java.lang.Float" />
+	<attribute name="calculationResult" dataType="java.lang.Float" />
+	<attribute name="doseUnits" dataType="java.lang.String" />
+	<attribute name="duration" dataType="java.lang.Double" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="health" dataType="test.annotations.ws.HealthAnnotations" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.RadiationTherapyImpl" relationShipType="main" roleName="">
+	<attribute name="dose" dataType="java.lang.Float" />
+	<attribute name="calculationResult" dataType="java.lang.Float" />
+	<attribute name="doseUnits" dataType="java.lang.String" />
+	<attribute name="duration" dataType="java.lang.Double" />
+	<attribute name="id" dataType="java.lang.Long" />
+	<attribute name="health" dataType="test.annotations.ws.HealthAnnotations" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.SmokingHistory" relationShipType="main" roleName="">
+	<attribute name="packsPerDay" dataType="java.lang.Long" />
+	<attribute name="hazards" dataType="test.annotations.ws.Hazards" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.SmokingHistoryImpl" relationShipType="main" roleName="">
+	<attribute name="packsPerDay" dataType="java.lang.Long" />
+	<attribute name="hazards" dataType="test.annotations.ws.Hazards" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.ViralInfections" relationShipType="main" roleName="">
+	<attribute name="infections" dataType="test.annotations.ws.Infections" />
+	<attribute name="nameOfVirus" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.ViralInfectionsImpl" relationShipType="main" roleName="">
+	<attribute name="infections" dataType="test.annotations.ws.Infections" />
+	<attribute name="nameOfVirus" dataType="java.lang.String" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.VitalInformation" relationShipType="main" roleName="">
+	<attribute name="patient" dataType="test.annotations.ws.PatientInformation" />
+	<attribute name="pulse" dataType="java.lang.String" />
+	<attribute name="height" dataType="java.lang.Float" />
+	<attribute name="ParticipantRecordEntry_VitalInformation" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<attribute name="bmi" dataType="java.lang.Float" />
+	<attribute name="bp" dataType="java.lang.Integer" />
+	<attribute name="weight" dataType="java.lang.Float" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+<AuditableClass className="test.annotations.ws.VitalInformationImpl" relationShipType="main" roleName="">
+	<attribute name="patient" dataType="test.annotations.ws.PatientInformation" />
+	<attribute name="pulse" dataType="java.lang.String" />
+	<attribute name="height" dataType="java.lang.Float" />
+	<attribute name="ParticipantRecordEntry_VitalInformation" dataType="test.annotations.ws.ParticipantRecordEntry" />
+	<attribute name="bmi" dataType="java.lang.Float" />
+	<attribute name="bp" dataType="java.lang.Integer" />
+	<attribute name="weight" dataType="java.lang.Float" />
+	<attribute name="id" dataType="java.lang.Long" />
+</AuditableClass>
+</AuditableMetaData>
