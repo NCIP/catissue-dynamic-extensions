@@ -4,10 +4,13 @@ package edu.common.dynamicextensions.categoryManager;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,7 +42,9 @@ import edu.common.dynamicextensions.validation.ValidatorUtil;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.HibernateDAO;
+import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 
 /**
  *
@@ -405,11 +410,41 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			category = EntityCache.getInstance().getCategoryByName("Test AutoComplete multiselect");
 			assertNotNull(category);
 			insertDataForCategory(category);
+			//Audit Insert data
+			assertAudit("test.annotations.CollectionAttributeClasshospitals%");
+
+
 		}
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
 			fail();
+		}
+
+	}
+
+	private void assertAudit(String elementName) throws DAOException,
+			DynamicExtensionsSystemException, SQLException
+	{
+		JDBCDAO jdbcDao = null;
+		ResultSet resultSet = null;
+		try
+		{
+			String selectQuery = "Select * from CATISSUE_AUDIT_EVENT_DETAILS where ELEMENT_NAME like ?";
+			final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+			queryDataList.add(new ColumnValueBean("ELEMENT_NAME", elementName));
+			jdbcDao = DynamicExtensionsUtility.getJDBCDAO(null);
+			resultSet = jdbcDao.getResultSet(selectQuery, queryDataList, null);
+
+			if (!resultSet.next())
+			{
+				fail();
+			}
+		}
+		finally
+		{
+			jdbcDao.closeStatement(resultSet);
+			DynamicExtensionsUtility.closeDAO(jdbcDao);
 		}
 
 	}
@@ -1823,7 +1858,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		Map<String, Object> clientmap = new HashMap<String, Object>();
 		DataEntryClient dataEntryClient = new DataEntryClient();
 		clientmap.put(WebUIManagerConstants.RECORD_ID, recordIdentifier);
-		clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, null);
+		clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, sessionDataBean);
 		clientmap.put(WebUIManagerConstants.USER_ID, null);
 		clientmap.put(WebUIManagerConstants.CONTAINER, containerInterface);
 		clientmap.put(WebUIManagerConstants.DATA_VALUE_MAP, dataValue);
@@ -2048,7 +2083,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			Map<String, Object> clientmap = new HashMap<String, Object>();
 			DataEditClient dataEditClient = new DataEditClient();
 			clientmap.put(WebUIManagerConstants.RECORD_ID, recordIdentifier);
-			clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, null);
+			clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, sessionDataBean);
 			clientmap.put(WebUIManagerConstants.USER_ID, null);
 			clientmap.put(WebUIManagerConstants.CONTAINER, container);
 			clientmap.put(WebUIManagerConstants.DATA_VALUE_MAP, editedDataValue);
