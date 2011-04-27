@@ -227,7 +227,7 @@ public final class HTTPSConnection
 			printExceptionLog(exceptionOccured);
 		}
 		catch (EOFException e) {
-			LOGGER.info("No response from server.");
+			LOGGER.info("Server response process completed.");
 		}
 		catch (IOException e)
 		{
