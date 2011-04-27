@@ -12,6 +12,7 @@ import java.util.Map;
 
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.utility.HTTPSConnection;
+import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 
@@ -73,20 +74,21 @@ public abstract class AbstractClient
 			//validate all the arguments
 			validate(args);
 			// Initialize all instance variables
+			LOGGER.info(ApplicationProperties.getValue(ClientConstants.INIT_RESOURCES));
 			initializeResources(args);
 			// open the servlet connection
+			LOGGER.info(ApplicationProperties.getValue(ClientConstants.CONNECT_SERVER) + serverUrl);
 			URLConnection servletConnection = httpsConnection.openServletConnection(serverUrl);
-			LOGGER.info("Connection established");
+			LOGGER.info(ApplicationProperties.getValue(ClientConstants.CONN_ESTABLISHED));
 			performAction(httpsConnection, servletConnection);
 
-			LOGGER.info("Artifacts uploaded");
+			LOGGER.info(ApplicationProperties.getValue(ClientConstants.ARTIFACTS_UPLOADED));
 			// read the response from server
 			processResponse(servletConnection);
-			LOGGER.info("Target completed successfully");
+			LOGGER.info(ApplicationProperties.getValue(ClientConstants.TARGET_COMPLETE));
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
 			LOGGER.error("Exception : " + e.getLocalizedMessage());
 			LOGGER.info("For more information please check :/log/dynamicExtentionsError.log");
 			LOGGER.debug("Exception occured is as follows : ", e);
@@ -103,6 +105,7 @@ public abstract class AbstractClient
 			throws DynamicExtensionsSystemException, IOException
 	{
 		// upload the Zip file to server
+		LOGGER.info(ApplicationProperties.getValue(ClientConstants.UPLOAD_ARTIFACTS));
 		httpsConnection.uploadFileToServer(servletConnection, zipFile);
 
 	}
@@ -134,6 +137,7 @@ public abstract class AbstractClient
 	protected void processResponse(URLConnection servletConnection)
 			throws DynamicExtensionsSystemException, IOException
 	{
+		LOGGER.info(ApplicationProperties.getValue(ClientConstants.PROCESS_RESPONSE));
 		HTTPSConnection.getInstance().processResponse(servletConnection);
 	}
 
@@ -168,6 +172,8 @@ public abstract class AbstractClient
 			}
 			catch (IOException e)
 			{
+				LOGGER.info("IO Exception :: Could not read from file" + listCatFileName);
+				LOGGER.info("IO Exception :: " + e.getMessage());
 				throw new DynamicExtensionsSystemException("Can not read from file "
 						+ listCatFileName, e);
 			}
@@ -181,6 +187,7 @@ public abstract class AbstractClient
 		}
 		else
 		{
+			LOGGER.info("Category names file not found at " + listCatFileName);
 			throw new DynamicExtensionsSystemException("Category names file not found at "
 					+ listCatFileName);
 		}
