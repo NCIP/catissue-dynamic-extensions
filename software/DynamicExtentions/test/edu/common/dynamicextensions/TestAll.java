@@ -30,6 +30,7 @@ import edu.common.dynamicextensions.ui.util.TestControlsUtility;
 import edu.common.dynamicextensions.util.CategoryUtilTest;
 import edu.common.dynamicextensions.util.DynamicExtensionsBaseTestCase;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtilityTest;
+import edu.common.dynamicextensions.util.TestAuditMetaDataXML;
 import edu.common.dynamicextensions.util.TestBOTemplateGenerator;
 import edu.common.dynamicextensions.util.TestMetadataQueryUtil;
 import edu.common.dynamicextensions.util.xml.TestObjectFactory;
@@ -143,6 +144,7 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 		suite.addTestSuite(TestServerProperties.class);
 		suite.addTestSuite(TestReadPermissibleValueProcessor.class);
 		suite.addTestSuite(TestBOTemplateGenerator.class);
+		suite.addTestSuite(TestAuditMetaDataXML.class);
 		return suite;
 	}
 }
