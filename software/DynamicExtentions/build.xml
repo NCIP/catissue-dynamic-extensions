@@ -940,6 +940,9 @@
 				</batchtest>
 
 				<classpath>
+					<fileset dir="${interface.dir}" >
+						<include name="DynamicExtensions.jar" />
+					</fileset>
 					<!--	<pathelement location="${junit.classes.dir}"/> -->
 					<pathelement location="./cobertura/instrumented/" />
 					<pathelement location="${target.dir}" />
