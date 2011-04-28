@@ -464,8 +464,7 @@ public class XmlMessageProcessor
 	   {
 		   throw new DynamicExtensionsSystemException("invalid application URL: "+Variables.jbossUrl, malformedURLException);
 	   }
-		return categoryManager.getEntityRecordIdByRootCategoryEntityRecordId(insrtedRecordId,
-				rootCatEntity.getTableProperties().getName());
+		return insrtedRecordId;
 	}
 
 	/**
