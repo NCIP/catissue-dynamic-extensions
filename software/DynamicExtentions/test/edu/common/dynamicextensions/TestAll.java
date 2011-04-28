@@ -14,6 +14,7 @@ import edu.common.dynamicextensions.categoryManager.TestCategoryManager;
 import edu.common.dynamicextensions.categoryManager.TestDEIntegration;
 import edu.common.dynamicextensions.categoryManager.TestPvVersion;
 import edu.common.dynamicextensions.client.TestValidateAgainstSchema;
+import edu.common.dynamicextensions.domaininterface.userinterface.TestContainer;
 import edu.common.dynamicextensions.entitymanager.TestEntityGroupManager;
 import edu.common.dynamicextensions.entitymanager.TestEntityManager;
 import edu.common.dynamicextensions.entitymanager.TestEntityManagerForAssociations;
@@ -145,6 +146,7 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 		suite.addTestSuite(TestReadPermissibleValueProcessor.class);
 		suite.addTestSuite(TestBOTemplateGenerator.class);
 		suite.addTestSuite(TestAuditMetaDataXML.class);
+		suite.addTestSuite(TestContainer.class);
 		return suite;
 	}
 }

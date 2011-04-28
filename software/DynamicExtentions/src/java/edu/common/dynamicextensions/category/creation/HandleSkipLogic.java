@@ -114,12 +114,6 @@ public class HandleSkipLogic
 			// Step 4. Get the value of the condition //Create Source Skip Logic
 			Object conditionValue = fileParser.getConditionValue();
 
-			// Step 5. Populate the condition object
-			PrimitiveCondition condition = new PrimitiveCondition();
-			condition.setCategoryAttribute(conditionCategoryAttribute);
-			condition.setRelationalOperator(RelationalOperator.EQUALS);
-			condition.setValue(conditionValue);
-
 			// Step 5. Get control corresponding to Action
 			final List<ControlInterface> targetControls = getTargetControl(categoryPathInformation,
 					skipLogicHelper);
@@ -130,9 +124,15 @@ public class HandleSkipLogic
 				// Action object
 				Action action = getActionObjectDependingOnActionType(targetControl);
 				targetControl.setIsSkipLogicTargetControl(Boolean.TRUE);
+
+				// Step 7. Populate the condition object
+				PrimitiveCondition condition = new PrimitiveCondition();
+				condition.setCategoryAttribute(conditionCategoryAttribute);
+				condition.setRelationalOperator(RelationalOperator.EQUALS);
+				condition.setValue(conditionValue);
 				condition.setAction(action);
 
-				// Step 7. Combine different cases for a single Switch statement
+				// Step 8. Combine different cases for a single Switch statement
 				// If There is no switch for the control then create a new Switch
 				// statement i.e ConditionStatements Object.
 				if (catAttrVsConditionStatements.get(targetControl) == null)
