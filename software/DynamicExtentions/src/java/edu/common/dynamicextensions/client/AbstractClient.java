@@ -12,7 +12,6 @@ import java.util.Map;
 
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.utility.HTTPSConnection;
-import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 
@@ -74,18 +73,13 @@ public abstract class AbstractClient
 			//validate all the arguments
 			validate(args);
 			// Initialize all instance variables
-			LOGGER.info(ApplicationProperties.getValue(ClientConstants.INIT_RESOURCES));
 			initializeResources(args);
 			// open the servlet connection
-			LOGGER.info(ApplicationProperties.getValue(ClientConstants.CONNECT_SERVER) + serverUrl);
 			URLConnection servletConnection = httpsConnection.openServletConnection(serverUrl);
-			LOGGER.info(ApplicationProperties.getValue(ClientConstants.CONN_ESTABLISHED));
 			performAction(httpsConnection, servletConnection);
 
-			LOGGER.info(ApplicationProperties.getValue(ClientConstants.ARTIFACTS_UPLOADED));
 			// read the response from server
 			processResponse(servletConnection);
-			LOGGER.info(ApplicationProperties.getValue(ClientConstants.TARGET_COMPLETE));
 		}
 		catch (IOException e)
 		{
@@ -105,7 +99,6 @@ public abstract class AbstractClient
 			throws DynamicExtensionsSystemException, IOException
 	{
 		// upload the Zip file to server
-		LOGGER.info(ApplicationProperties.getValue(ClientConstants.UPLOAD_ARTIFACTS));
 		httpsConnection.uploadFileToServer(servletConnection, zipFile);
 
 	}
@@ -137,7 +130,6 @@ public abstract class AbstractClient
 	protected void processResponse(URLConnection servletConnection)
 			throws DynamicExtensionsSystemException, IOException
 	{
-		LOGGER.info(ApplicationProperties.getValue(ClientConstants.PROCESS_RESPONSE));
 		HTTPSConnection.getInstance().processResponse(servletConnection);
 	}
 
