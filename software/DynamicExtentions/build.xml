@@ -451,6 +451,9 @@
 	<target name="build_app_war" depends="init_build_war">
 		<delete file="../DynamicExtentions/build/dynamicExtensions.war" />
 		<copy file="${temp.dir}/WEB-INF/classes/TestHibernate.cfg.xml" tofile="${temp.dir}/WEB-INF/classes/DynamicExtensionsHibernate.cfg.xml" overwrite="true" />
+		<copy file="${test.dir}/sampleAuditablemetadata.xml" tofile="${temp.dir}/WEB-INF/classes/DynamicExtensionsAuditMetadata.xml" overwrite="true" />
+		<copy file="${test.dir}/mapping.xml" tofile="${temp.dir}/WEB-INF/classes/mapping.xml" overwrite="true" />
+
 		<ant antfile="DEDeploy.xml" dir="./binaries/" target="update.import.pv.version.property">
 			<property name="app.resource.path" value="../${temp.dir}/WEB-INF/classes" />
 			<property name="import.pv.version.classname" value="edu.common.dynamicextensions.permissiblevalue.version.CategoryPermissibleValuesProcessor" />
