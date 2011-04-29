@@ -4,14 +4,10 @@
 
 package edu.common.dynamicextensions.skiplogic;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
-import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
-import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
@@ -105,5 +101,5 @@ public class ConditionStatements
 			condition.getAction().resetAction(controlFromCache);
 		}
 	}
-	
+
 }
