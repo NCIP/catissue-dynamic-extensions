@@ -1,4 +1,3 @@
-
 package edu.common.dynamicextensions.util.parser;
 
 import java.io.FileNotFoundException;
@@ -6,7 +5,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -44,7 +42,6 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.skiplogic.ConditionStatements;
 import edu.common.dynamicextensions.skiplogic.SkipLogic;
-import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.util.CategoryGenerationUtil;
 import edu.common.dynamicextensions.util.CategoryHelper;
 import edu.common.dynamicextensions.util.CategoryHelperInterface;
