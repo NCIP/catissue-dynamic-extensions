@@ -16,5 +16,9 @@ public abstract class BaseAbstractAttribute extends AbstractMetadata
 		implements
 			BaseAbstractAttributeInterface
 {
+	/**
+	 * Serial Version Unique Identifier
+	 */
+	protected static final long serialVersionUID = 1234567890L;
 
 }
