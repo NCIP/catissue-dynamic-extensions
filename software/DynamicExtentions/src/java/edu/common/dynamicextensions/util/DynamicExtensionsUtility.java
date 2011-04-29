@@ -2859,12 +2859,27 @@ public class DynamicExtensionsUtility
 			Map<BaseAbstractAttributeInterface, Object> attributeToValueMap)
 			throws DynamicExtensionsApplicationException
 	{
+		return insertDataUtility(recordIdentifier, containerInterface, attributeToValueMap, null);
+	}
+
+	/**
+	 * @param recordIdentifier
+	 * @param containerInterface
+	 * @param attributeToValueMap
+	 * @return
+	 * @throws DynamicExtensionsApplicationException
+	 */
+	public static Long insertDataUtility(Long recordIdentifier,
+			ContainerInterface containerInterface,
+			Map<BaseAbstractAttributeInterface, Object> attributeToValueMap, SessionDataBean sessionDataBean)
+			throws DynamicExtensionsApplicationException
+	{
 		String entityGroupName=containerInterface.getAbstractEntity().getEntityGroup().getName();
 
 		Map<String, Object> clientmap = new HashMap<String, Object>();
 		DataEntryClient dataEntryClient=new DataEntryClient();
 		clientmap.put(WebUIManagerConstants.RECORD_ID, recordIdentifier);
-		clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, null);
+		clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, sessionDataBean);
 		clientmap.put(WebUIManagerConstants.USER_ID, null);
 		clientmap.put(WebUIManagerConstants.CONTAINER, containerInterface);
 		clientmap.put(WebUIManagerConstants.DATA_VALUE_MAP, attributeToValueMap);

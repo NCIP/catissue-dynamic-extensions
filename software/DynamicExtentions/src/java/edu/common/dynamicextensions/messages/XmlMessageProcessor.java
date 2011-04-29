@@ -450,7 +450,7 @@ public class XmlMessageProcessor
 			if (recordID == null)
 			{// new data insertion.
 				//editedRecordId = categoryManager.insertData(rootCatEntity.getCategory(), recordMap, sessionDataBean);
-				insrtedRecordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,recordMap);
+				insrtedRecordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,recordMap, sessionDataBean);
 				LOGGER.info("Record inserted successfully with id " + insrtedRecordId);
 			}
 			else
