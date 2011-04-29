@@ -68,6 +68,7 @@
 <c:set var="recordIdentifier123" value="${dataEntryForm.recordIdentifier}" />
 <jsp:useBean id="recordIdentifier123" type="java.lang.String"/>
 
+
 <c:set var="mode" value="${dataEntryForm.mode}" />
 <jsp:useBean id="mode" type="java.lang.String"/>
 
@@ -95,7 +96,7 @@
 <c:if test="${sessionScope.onFormLoad != null }">
  <script>
  var strFun = "window.parent."+'<%=request.getSession().getAttribute(DEConstants.ON_FORM_LOAD)%>';
- var deRecId = <%= request.getParameter("recordIdentifier") %>;
+ var deRecId = "<%=recordIdentifier123%>";
  var strParam = "<%=isTopLevelEntity%>" + "," + deRecId;
 
  onFormLoad(strFun,strParam);
