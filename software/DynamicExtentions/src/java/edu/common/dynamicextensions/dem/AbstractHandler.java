@@ -16,7 +16,6 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.wustl.common.audit.AuditManager;
-import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 import edu.wustl.dao.HibernateDAO;
@@ -43,7 +42,6 @@ public abstract class AbstractHandler extends HttpServlet implements WebUIManage
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
 			IOException
 	{
-		LOGGER.info(ApplicationProperties.getValue(GET_SERVER_CALL));
 		doPost(req, resp);
 	}
 
@@ -51,13 +49,10 @@ public abstract class AbstractHandler extends HttpServlet implements WebUIManage
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException
 	{
-		LOGGER.info(ApplicationProperties.getValue("post.server.call"));
 		try
 		{
-			LOGGER.info(ApplicationProperties.getValue("init.dyn.obj"));
 			dyanamicObjectProcessor = new DyanamicObjectProcessor();
 			initAuditManager();
-			LOGGER.info(ApplicationProperties.getValue(INIT_PARAMETER_MAP));
 			initializeParamaterObjectMap(req);
 			doPostImpl(req, resp);
 		}
