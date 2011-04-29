@@ -11,7 +11,6 @@ import java.util.Map;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.utility.HTTPSConnection;
-import edu.wustl.common.util.global.ApplicationProperties;
 
 public class DataEntryClient extends AbstractClient
 {
@@ -39,7 +38,6 @@ public class DataEntryClient extends AbstractClient
 	{
 		ObjectOutputStream outputToServlet = new ObjectOutputStream(servletConnection
 				.getOutputStream());
-		LOGGER.info(ApplicationProperties.getValue(ClientConstants.WRITE_PARAMETER_MAP));
 		outputToServlet.writeObject(paramaterObjectMap);
 		outputToServlet.flush();
 		outputToServlet.close();
@@ -54,7 +52,6 @@ public class DataEntryClient extends AbstractClient
 		try
 		{
 			inputFromServlet = new ObjectInputStream(servletConnection.getInputStream());
-			LOGGER.info(ApplicationProperties.getValue(ClientConstants.READ_OBJECT));
 			object = inputFromServlet.readObject();
 		}
 		catch (IOException e)
