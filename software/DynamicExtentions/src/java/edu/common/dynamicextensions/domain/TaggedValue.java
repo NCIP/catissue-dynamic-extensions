@@ -23,6 +23,11 @@ public class TaggedValue extends DynamicExtensionBaseDomainObject implements Tag
 {
 
 	/**
+	 * DEfault serial id
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Key part of the tagged value.
 	 */
 	private String key;
