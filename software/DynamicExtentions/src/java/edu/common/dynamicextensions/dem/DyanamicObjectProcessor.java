@@ -79,9 +79,6 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 		}
 		else
 		{
-			CategoryInterface categoryInterface = ((CategoryEntityInterface) container
-					.getAbstractEntity()).getCategory();
-			CategoryManagerInterface categoryManager = CategoryManager.getInstance();
 			isEdited = CategoryManager.getInstance().editData(
 					(CategoryEntityInterface) container.getAbstractEntity(), attributeValueMap,
 					recordIdentifier, sessionDataBean, userId);
