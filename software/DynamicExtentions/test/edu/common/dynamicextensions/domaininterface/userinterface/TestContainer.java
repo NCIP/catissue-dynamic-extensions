@@ -20,8 +20,8 @@ public class TestContainer extends DynamicExtensionsBaseTestCase
 		try
 		{
 
+			EntityCache cache = EntityCache.getInstance();
 			CategoryInterface category = CategoryManager.getInstance().getCategoryByName("Skip logic for Automation 3");
-			EntityCache cache = EntityCache.getInstance(category.getRootCategoryElement().getEntityGroup());
 			cache.cacheSkipLogic();
 			ContainerInterface  container = (ContainerInterface) category.getRootCategoryElement().getContainerCollection().iterator().next();
 			container.generateContainerHTML(category.getName(), WebUIManagerConstants.EDIT_MODE);
@@ -44,8 +44,8 @@ public class TestContainer extends DynamicExtensionsBaseTestCase
 	{
 		try
 		{
+			EntityCache cache = EntityCache.getInstance();
 			CategoryInterface category = CategoryManager.getInstance().getCategoryByName("Skip logic for Automation 3");
-			EntityCache cache = EntityCache.getInstance(category.getRootCategoryElement().getEntityGroup());
 			cache.cacheSkipLogic();
 			ContainerInterface  container = (ContainerInterface) category.getRootCategoryElement().getContainerCollection().iterator().next();
 			container.generateContainerHTML(category.getName(), WebUIManagerConstants.VIEW_MODE);
