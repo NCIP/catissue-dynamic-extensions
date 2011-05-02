@@ -177,7 +177,7 @@ public class DummyMapGenerator
 			}
 			else
 			{
-				dataValue.put(catAtt, "test String for other data type");
+				dataValue.put(catAtt, "test String data type");
 			}
 		}
 	}
