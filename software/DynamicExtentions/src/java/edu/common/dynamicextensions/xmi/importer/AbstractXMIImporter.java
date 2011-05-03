@@ -889,13 +889,7 @@ public abstract class AbstractXMIImporter
 			DynamicExtensionsApplicationException
 	{
 
-		for (ContainerInterface containerInterface : mainContainerList)
-		{
-			AssociationInterface association = addAssociationForEntities(staticEntity,
-					(EntityInterface) containerInterface.getAbstractEntity());
-			intermodelAssociationCollection.add(association);
-			//staticEntity.addAssociation(association);
-		}
+
 
 		if (hibernatedao == null)
 		{
@@ -910,11 +904,21 @@ public abstract class AbstractXMIImporter
 
 		List<String> queriesList = new ArrayList<String>();
 		List<String> revQueryList = new ArrayList<String>();
-		for (AssociationInterface associationInterface : intermodelAssociationCollection)
+		for (ContainerInterface containerInterface : mainContainerList)
 		{
+			AssociationInterface association = createAssociation(staticEntity,
+					(EntityInterface) containerInterface.getAbstractEntity());
+			//Add association to the static entity.
+			staticEntity.addAssociation(association);
+
+			//create an association without setting the source entity.
+			//Hook entity will be updated as the source on the server
+			intermodelAssociationCollection.add(createAssociation(staticEntity,
+					(EntityInterface) containerInterface.getAbstractEntity()));
 			queriesList.addAll(QueryBuilderFactory.getQueryBuilder().getQueryPartForAssociation(
-					associationInterface, revQueryList, true));
+					association, revQueryList, true));
 		}
+
 		DynamicQueryList dynamicQueryList = new DynamicQueryList();
 		dynamicQueryList.setQueryList(queriesList);
 		dynamicQueryList.setRevQueryList(revQueryList);
@@ -929,7 +933,7 @@ public abstract class AbstractXMIImporter
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	public AssociationInterface addAssociationForEntities(EntityInterface staticEntity,
+	public AssociationInterface createAssociation(EntityInterface staticEntity,
 			EntityInterface dynamicEntity) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
@@ -949,9 +953,6 @@ public abstract class AbstractXMIImporter
 		ConstraintPropertiesInterface constProperts = AnnotationUtil.getConstraintProperties(
 				staticEntity, dynamicEntity);
 		association.setConstraintProperties(constProperts);
-
-		//Add association to the static entity and save it.
-		staticEntity.addAssociation(association);
 
 		return association;
 
