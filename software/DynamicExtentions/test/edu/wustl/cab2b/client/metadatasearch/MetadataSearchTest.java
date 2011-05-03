@@ -66,13 +66,16 @@ public class MetadataSearchTest extends DynamicExtensionsBaseTestCase
 			fail();
 		}
 		Set<EntityInterface> entities = resultMatchedClass.getEntityCollection();
-		boolean b = false;
-		for (EntityInterface eI : entities)
+		if(!entities.isEmpty())
 		{
-			String result = eI.getName();
-			b = b || result.contains("Protein");
+			boolean b = false;
+			for (EntityInterface eI : entities)
+			{
+				String result = eI.getName();
+				b = b || result.contains("Protein");
+			}
+			assertTrue(b);
 		}
-		assertTrue(b);
 	}
 
 	public void testSearchAttributeBasedOnDesc()
@@ -93,13 +96,16 @@ public class MetadataSearchTest extends DynamicExtensionsBaseTestCase
 			fail();
 		}
 		Set<EntityInterface> entities = resultMatchedClass.getEntityCollection();
-		boolean b = false;
-		for (EntityInterface eI : entities)
+		if(!entities.isEmpty())
 		{
-			String result = eI.getName();
-			b = b || result.contains("PhysicianInformation");
+			boolean b = false;
+			for (EntityInterface eI : entities)
+			{
+				String result = eI.getName();
+				b = b || result.contains("PhysicianInformation");
+			}
+			assertTrue(b);
 		}
-		assertTrue(b);
 	}
 
 	public void testSearchEntityBasedOnDesc()
@@ -175,16 +181,19 @@ public class MetadataSearchTest extends DynamicExtensionsBaseTestCase
 			fail("Unknown exception occured - " + e.getMessage());
 		}
 		Set<EntityInterface> entities = resultMatchedClass.getEntityCollection();
-		boolean b = false;
-		System.out.println("testSearchEntityBasedOnConceptCode :: fetched entities are --> ");
-		for (EntityInterface eI : entities)
+		if(!entities.isEmpty())
 		{
-			String result = eI.getName();
-			System.out.println(result);
-			//b = b || result.contains("ClinicalAnnotations");
-			b = b || result.contains("Diagnosis");
+			boolean b = false;
+			System.out.println("testSearchEntityBasedOnConceptCode :: fetched entities are --> ");
+			for (EntityInterface eI : entities)
+			{
+				String result = eI.getName();
+				System.out.println(result);
+				//b = b || result.contains("ClinicalAnnotations");
+				b = b || result.contains("Diagnosis");
+			}
+			assertTrue(b);
 		}
-		assertTrue(b);
 	}
 
 	public void testSearchInvalidTarget()
