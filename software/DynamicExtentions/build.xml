@@ -925,6 +925,27 @@
 				</fileset>
 			</copy>
 
+
+			<!-- This is to copy latest DE.jar in the entitygroupname.war/WEB-INF/lib folder present in JBoss deploy folder-->
+
+			<delete failonerror="false">
+				<fileset dir="${jboss.home.dir}/server/default/deploy/${test.war.name}/WEB-INF/lib" >
+					<include name="washu-commons*" />
+					<include name="commonpackage*" />
+					<include name="DAO*" />
+				</fileset>
+			</delete>
+			<copy todir="${jboss.home.dir}/server/default/deploy/${test.war.name}/WEB-INF/lib" overwrite="true" failonerror="false">
+				<fileset dir="${lib.dir}" >
+					<include name="jep-2.4.1.jar" />
+					<include name="jaxb*" />
+					<include name="washu-commons*" />
+					<include name="commonpackage*" />
+					<include name="DAO*" />
+				</fileset>
+			</copy>
+
+
 			<!-- This is to update the dem.hibernate.cfg file for test case set up -->
 			<antcall target="update.dem.hibernate.cfg">
 				<param name="hibernate.cfg.location" value="${jboss.home.dir}/server/default/deploy/${test.war.name}/WEB-INF/classes" />
