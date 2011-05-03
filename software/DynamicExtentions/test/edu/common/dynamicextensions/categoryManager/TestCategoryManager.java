@@ -410,6 +410,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			category = EntityCache.getInstance().getCategoryByName("Test AutoComplete multiselect");
 			assertNotNull(category);
 			insertDataForCategory(category);
+			System.out.println("Data inserted sucessfully for Test AutoComplete multiselect" + sessionDataBean.getFirstName());
 			//Audit Insert data
 			assertAudit("test.annotations.CollectionAttributeClasshospitals%");
 
