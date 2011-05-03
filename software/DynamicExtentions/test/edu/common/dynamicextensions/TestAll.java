@@ -99,10 +99,7 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 		suite.addTestSuite(TestEntityManager.class);
 		suite.addTestSuite(TestEntityManagerForAssociations.class);
 		suite.addTestSuite(TestEntityManagerForInheritance.class);
-		suite.addTestSuite(TestXMLToJavaObjectConverter.class);
-		suite.addTestSuite(TestObjectFactory.class);
-		suite.addTestSuite(TestPvVersion.class);
-		suite.addTestSuite(TestCSDUtility.class);
+
 		suite.addTestSuite(TestMetadataQueryUtil.class);
 		suite.addTestSuite(MetadataSearchTest.class);
 		suite.addTestSuite(CompareUtilTest.class);
@@ -146,6 +143,10 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 		suite.addTestSuite(TestReadPermissibleValueProcessor.class);
 		suite.addTestSuite(TestBOTemplateGenerator.class);
 		suite.addTestSuite(TestAuditMetaDataXML.class);
+		suite.addTestSuite(TestXMLToJavaObjectConverter.class);
+		suite.addTestSuite(TestObjectFactory.class);
+		suite.addTestSuite(TestPvVersion.class);
+		suite.addTestSuite(TestCSDUtility.class);
 		return suite;
 	}
 }
