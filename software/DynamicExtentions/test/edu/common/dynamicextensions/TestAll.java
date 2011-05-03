@@ -95,7 +95,7 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 
 		suite.addTestSuite(TestCategoryManager.class);
 		suite.addTestSuite(TestCalculatedAttribute.class);
-
+		suite.addTestSuite(TestContainer.class);
 		suite.addTestSuite(TestEntityManager.class);
 		suite.addTestSuite(TestEntityManagerForAssociations.class);
 		suite.addTestSuite(TestEntityManagerForInheritance.class);
@@ -146,7 +146,6 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 		suite.addTestSuite(TestReadPermissibleValueProcessor.class);
 		suite.addTestSuite(TestBOTemplateGenerator.class);
 		suite.addTestSuite(TestAuditMetaDataXML.class);
-		suite.addTestSuite(TestContainer.class);
 		return suite;
 	}
 }
