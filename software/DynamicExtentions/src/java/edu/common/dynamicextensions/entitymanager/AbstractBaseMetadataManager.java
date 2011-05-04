@@ -97,11 +97,18 @@ public abstract class AbstractBaseMetadataManager
 	 * @throws DynamicExtensionsSystemException
 	 *             the dynamic extensions system exception
 	 */
-	protected void rollbackQueries(Stack<String> revQryStack,
+	public void rollbackQueries(Stack<String> revQryStack,
 			AbstractMetadataInterface abstrMetadata, Exception exception, DAO dao)
 			throws DynamicExtensionsSystemException
 	{
 		abstractMetadataManagerHelper.rollbackDao(dao);
+		executeRollbackQueries(revQryStack, abstrMetadata, exception);
+	}
+
+	protected void executeRollbackQueries(Stack<String> revQryStack,
+			AbstractMetadataInterface abstrMetadata, Exception exception)
+			throws DynamicExtensionsSystemException
+	{
 		if (revQryStack != null && !revQryStack.isEmpty())
 		{
 			String message = "";

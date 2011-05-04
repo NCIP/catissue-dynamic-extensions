@@ -183,7 +183,7 @@ public class CategoryPermissibleValuesProcessor
 							+ errorString);
 		}
 		// persist category
-		CATEGORY_MANAGER.persistDynamicExtensionObjectForCategory(category);
+		CATEGORY_MANAGER.persistCategory(category);
 
 		return WARNING_MESSAGE_LIST;
 	}

@@ -312,19 +312,31 @@ public abstract class AbstractMetadataManager extends AbstractBaseMetadataManage
 	{
 		try
 		{
-			if (abstrMetadata.getId() == null)
-			{
-				hibernateDAO.insert(abstrMetadata);
-			}
-			else
-			{
-				hibernateDAO.update(abstrMetadata);
-			}
+			persistObject(abstrMetadata, hibernateDAO);
 		}
 		catch (DAOException e)
 		{
 			rollbackQueries(rlbkQryStack, null, e, hibernateDAO);
 			throw new DynamicExtensionsSystemException(e.getMessage(), e, DYEXTN_S_003);
+		}
+	}
+
+	/**
+	 * This helper method makes appropriate calls depending upon whether its an add or edit case
+	 * @param abstrMetadata
+	 * @param hibernateDAO
+	 * @throws DAOException
+	 */
+	protected void persistObject(AbstractMetadataInterface abstrMetadata, HibernateDAO hibernateDAO)
+			throws DAOException
+	{
+		if (abstrMetadata.getId() == null)
+		{
+			hibernateDAO.insert(abstrMetadata);
+		}
+		else
+		{
+			hibernateDAO.update(abstrMetadata);
 		}
 	}
 

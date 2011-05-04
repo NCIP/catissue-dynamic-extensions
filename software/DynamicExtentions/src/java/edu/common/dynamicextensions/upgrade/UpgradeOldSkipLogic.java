@@ -35,6 +35,8 @@ import edu.common.dynamicextensions.skiplogic.SkipLogic;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
+import edu.wustl.dao.HibernateDAO;
+import edu.wustl.dao.exception.DAOException;
 
 /**
  * @author Gaurav_mehta
@@ -79,6 +81,10 @@ public class UpgradeOldSkipLogic
 		{
 			e.printStackTrace();
 			LOGGER.error("Error occured while updating old Skip Logic to New Skip Logic model");
+		}
+		catch (DAOException e)
+		{
+			e.printStackTrace();
 		}
 	}
 
@@ -258,20 +264,26 @@ public class UpgradeOldSkipLogic
 
 	/**
 	 * Load new object in database.
+	 * @throws DAOException
+	 * @throws DynamicExtensionsSystemException
 	 */
-	private static void loadNewObjectInDatabase()
+	private static void loadNewObjectInDatabase() throws DAOException, DynamicExtensionsSystemException
 	{
 		Map<ContainerInterface, SkipLogic> conditionStatements = HandleSkipLogic
 				.populateControlIdentifierInSkipLogic(catAttrVsConditionStatements);
 
 		Set<Entry<ContainerInterface, SkipLogic>> entrySet = conditionStatements.entrySet();
 		System.out.println("Inside Saving");
+		HibernateDAO hibernateDAO = null;
 		for (Entry<ContainerInterface, SkipLogic> entry : entrySet)
 		{
 			try
 			{
 				// Insert new Skip Logic into database and cache
-				new CategoryOperations().persistSkipLogic(entry.getValue());
+				hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
+				hibernateDAO.insert(entry.getValue());
+				hibernateDAO.commit();
+
 				LOGGER.info("Updated Skip Logic for Container Id :" + entry.getKey().getId());
 			}
 			catch (DynamicExtensionsSystemException e)
@@ -280,6 +292,13 @@ public class UpgradeOldSkipLogic
 				e.printStackTrace();
 				LOGGER.info("Container Id : " + entry.getKey().getId());
 				//throw new DynamicExtensionsSystemException("Error occured while inserting new Skip Logic object into database");
+			}
+			catch (DAOException e)
+			{
+				hibernateDAO.rollback();
+			}finally
+			{
+				DynamicExtensionsUtility.closeDAO(hibernateDAO);
 			}
 		}
 	}

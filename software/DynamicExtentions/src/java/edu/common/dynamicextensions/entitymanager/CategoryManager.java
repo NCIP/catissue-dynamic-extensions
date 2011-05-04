@@ -209,27 +209,56 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	 * @param categry interface for Category
 	 * @throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	 */
-	public CategoryInterface persistCategory(final CategoryInterface category)
+	public void persistCategory(final CategoryInterface category)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
-		CategoryValidator.validateCategoryForConceptCodes(category);
-		persistDynamicExtensionObject(category);
-		/*EntityCache.getInstance().addCategoryToCache(categry);*/
-		return category;
+		HibernateDAO hibernateDAO = null;
+		Stack<String> revQueries = null;
+		try
+		{
+			hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
+			revQueries = persistDynamicExtensionObjectForCategory(category,hibernateDAO);
+		}
+		catch (DynamicExtensionsSystemException ex)
+		{
+			try
+			{
+				((CategoryManager)CategoryManager.getInstance()).rollbackQueries(revQueries, null, ex, hibernateDAO);
+			}
+			catch (DynamicExtensionsSystemException e)
+			{
+				throw new DynamicExtensionsSystemException(e.getMessage(),e);
+			}
+
+		}
+		finally
+		{
+			try
+			{
+				DynamicExtensionsUtility.closeDAO(hibernateDAO);
+			}
+			catch (DynamicExtensionsSystemException e)
+			{
+				LOGGER.error(e.getMessage());
+				LOGGER.error("Error occured in closing DAO .", e.getCause());
+			}
+			new CategoryHelper().releaseLockOnCategory(category);
+		}
 	}
 
 	/**
 	 * Method to persist category meta-data.
 	 * @param category interface for Category
 	 * @throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	 * @throws DAOException
 	 */
-	public CategoryInterface persistCategoryMetadata(final CategoryInterface category)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	public CategoryInterface persistCategoryMetadata(final CategoryInterface category,HibernateDAO hibernateDAO)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException, DAOException
 	{
 		CategoryValidator.validateCategoryForConceptCodes(category);
-		final CategoryInterface savedCategory = (CategoryInterface) persistDynamicExtensionObjectMetdata(category);
-		EntityCache.getInstance().addCategoryToCache(savedCategory);
-		return savedCategory;
+		persistObject(category, hibernateDAO);
+		EntityCache.getInstance().addCategoryToCache(category);
+		return category;
 	}
 
 	/* (non-Javadoc)
@@ -3557,18 +3586,16 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	 * @throws DynamicExtensionsApplicationException
 	 *             the dynamic extensions application exception
 	 */
-	public CategoryInterface persistDynamicExtensionObjectForCategory(
-			CategoryInterface categoryInterface) throws DynamicExtensionsSystemException,
+	public Stack<String> persistDynamicExtensionObjectForCategory(
+			CategoryInterface categoryInterface,HibernateDAO hibernateDAO) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
 		List<String> revQueries = new LinkedList<String>();
 		List<String> queries = new ArrayList<String>();
 		Stack<String> rlbkQryStack = new Stack<String>();
-		HibernateDAO hibernateDAO = null;
 		CategoryHelperInterface categoryHelper = new CategoryHelper();
 		try
 		{
-			hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
 			CategoryEntityInterface categoryEntityInterface = categoryInterface
 					.getRootCategoryElement();
 
@@ -3581,27 +3608,16 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 			postProcess(queries, revQueries, rlbkQryStack);
 
-			hibernateDAO.commit();
 			EntityCache.getInstance().addCategoryToCache(categoryInterface);
-		}
-		catch (DAOException e)
-		{
-			rollbackQueries(rlbkQryStack, null, e, hibernateDAO);
-			throw new DynamicExtensionsSystemException(e.getMessage(), e, DYEXTN_S_003);
 		}
 		catch (DynamicExtensionsSystemException e)
 		{
-			rollbackQueries(rlbkQryStack, null, e, hibernateDAO);
+			executeRollbackQueries(rlbkQryStack, null, e);
 			LOGGER.error(e.getMessage());
 			throw e;
 		}
-		finally
-		{
-			DynamicExtensionsUtility.closeDAO(hibernateDAO);
 
-		}
-
-		return categoryInterface;
+		return rlbkQryStack;
 	}
 
 	/**

@@ -8,12 +8,14 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 import java.util.Map.Entry;
 
 import org.owasp.stinger.Stinger;
 
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
+import edu.common.dynamicextensions.entitymanager.CategoryManager;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.operations.CategoryOperations;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
@@ -29,6 +31,7 @@ import edu.wustl.bulkoperator.util.BulkOperationException;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
+import edu.wustl.dao.HibernateDAO;
 
 /**
  * @author Gaurav_mehta
@@ -85,32 +88,40 @@ public class CategoryProcessor
 			boolean isPersistMetadataOnly, Map<String, Exception> catNameVsExcep)
 	{
 		CategoryInterface category = null;
+		HibernateDAO hibernateDAO = null;
+		Stack<String> revQueries = null;
 		try
 		{
+			//1: build category object
 			CategoryGenerator categoryGenerator = new CategoryGenerator(filePath, baseDirectory,
 					this.stinger);
 			category = categoryGenerator.generateCategory();
 
+			hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
 			CategoryOperations operations = new CategoryOperations();
-			operations.saveCategory(isPersistMetadataOnly, category);
 
+			//2: save category object
+			revQueries = operations.saveCategory(isPersistMetadataOnly, category,hibernateDAO);
+
+			//3: Delete existing Skip Logic from database and cache
 			Collection<ContainerInterface> allContainers = categoryGenerator
-					.getAllContainersForCategory(category);
+			.getAllContainersForCategory(category);
 			for (ContainerInterface containerInterface : allContainers)
 			{
-				// Delete existing Skip Logic from database and cache
-				operations.deleteSkipLogic(containerInterface.getId());
+				operations.deleteSkipLogic(containerInterface.getId(),hibernateDAO);
 				EntityCache.getInstance().deleteSkipLogicFromCache(containerInterface.getId());
 			}
+
+			//4: Insert new Skip Logic into database and cache
 			Map<ContainerInterface, SkipLogic> conditionStatements = categoryGenerator
 					.getContainerVsSkipLogicMap();
 			Set<Entry<ContainerInterface, SkipLogic>> entrySet = conditionStatements.entrySet();
 			for (Entry<ContainerInterface, SkipLogic> entry : entrySet)
 			{
-				// Insert new Skip Logic into database and cache
-				operations.persistSkipLogic(entry.getValue());
+				hibernateDAO.insert(entry.getValue());
 				EntityCache.getInstance().updateSkipLogicInCache(entry.getValue());
 			}
+
 			if (ProcessorConstants.TRUE.equalsIgnoreCase(this.importBulkTemplate))
 			{
 				createAndImportBOTemplate(baseDirectory, category); //create and import bulk template.
@@ -118,14 +129,34 @@ public class CategoryProcessor
 			LOGGER.info("Saved category " + category.getName() + " successfully");
 			LOGGER.info("Form definition file " + filePath + " executed successfully.");
 			catNameVsExcep.put(filePath, null);
+			hibernateDAO.commit();
 		}
 		catch (Exception ex)
 		{
-			LOGGER.error("Error occured while creating category", ex);
+			try
+			{
+				((CategoryManager)CategoryManager.getInstance()).rollbackQueries(revQueries, null, ex, hibernateDAO);
+			}
+			catch (DynamicExtensionsSystemException e)
+			{
+				LOGGER.error(e.getMessage());
+				LOGGER.error("Error occured in rollback.", e.getCause());
+			}
+
+			LOGGER.error("Error occured while creating category",  ex.getCause());
 			catNameVsExcep.put(filePath, ex);
 		}
 		finally
 		{
+			try
+			{
+				DynamicExtensionsUtility.closeDAO(hibernateDAO);
+			}
+			catch (DynamicExtensionsSystemException e)
+			{
+				LOGGER.error(e.getMessage());
+				LOGGER.error("Error occured in closing DAO .", e.getCause());
+			}
 			new CategoryHelper().releaseLockOnCategory(category);
 		}
 	}

@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import net.sf.ehcache.CacheException;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
@@ -20,6 +21,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.beans.SessionDataBean;
+import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.exception.DAOException;
 
 /**
@@ -33,7 +35,6 @@ public interface CategoryManagerInterface
 
 	/**
 	 * Persist category.
-	 *
 	 * @param category
 	 *            the category
 	 * @return the category interface
@@ -42,22 +43,22 @@ public interface CategoryManagerInterface
 	 * @throws DynamicExtensionsApplicationException
 	 *             the dynamic extensions application exception
 	 */
-	CategoryInterface persistCategory(CategoryInterface category)
+	void persistCategory(CategoryInterface category)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
+
 
 	/**
 	 * Persist category metadata.
-	 *
-	 * @param category
-	 *            the category
+	 * @param category the category
+	 * @param hibernateDAO
 	 * @return the category interface
 	 * @throws DynamicExtensionsSystemException
 	 *             the dynamic extensions system exception
 	 * @throws DynamicExtensionsApplicationException
 	 *             the dynamic extensions application exception
 	 */
-	CategoryInterface persistCategoryMetadata(CategoryInterface category)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
+	CategoryInterface persistCategoryMetadata(CategoryInterface category,HibernateDAO hibernateDAO)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException, DynamicExtensionsApplicationException, DAOException;
 
 	/**
 	 * It will return the Category with the id as given identifier in the
@@ -491,11 +492,12 @@ public interface CategoryManagerInterface
 	/**
 	 * It will persist dynamic extension object.
 	 * @param categoryInterface Category to persist.
+	 * @param hibernateDAO
 	 * @return CategoryInterface category.
 	 * @throws DynamicExtensionsSystemException exception.
 	 * @throws DynamicExtensionsApplicationException exception.
 	 */
-	CategoryInterface persistDynamicExtensionObjectForCategory(CategoryInterface categoryInterface)
+	Stack<String> persistDynamicExtensionObjectForCategory(CategoryInterface categoryInterface,HibernateDAO hibernateDAO)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
 
 	/**
