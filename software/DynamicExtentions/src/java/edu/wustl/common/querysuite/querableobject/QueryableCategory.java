@@ -68,8 +68,8 @@ public class QueryableCategory extends AbstractQueryableObject
 	}
 
 	/**
-	 * This method returns the Collection of QueryableAttributes which are 
-	 * created from the CategoryAttributes which are present in the 
+	 * This method returns the Collection of QueryableAttributes which are
+	 * created from the CategoryAttributes which are present in the
 	 * CategoryEntities of the category present in the QuerableCategory.
 	 * @return the Collection of QueryableAttributesAttribute.
 	 */
@@ -79,7 +79,7 @@ public class QueryableCategory extends AbstractQueryableObject
 	}
 
 	/**
-	 * This method returns the Collection of Attributes which are present in the 
+	 * This method returns the Collection of Attributes which are present in the
 	 * CategoryEntities of the category present in the QuerableCategory.
 	 * @return the Collection of Attribute.
 	 */
@@ -89,8 +89,8 @@ public class QueryableCategory extends AbstractQueryableObject
 	}
 
 	/**
-	 * It will search the Attribute with given identifier in all the Attributes which are present in the 
-	 * category. 
+	 * It will search the Attribute with given identifier in all the Attributes which are present in the
+	 * category.
 	 * @param attributeName
 	 * @return attribute if found else null;
 	 */
@@ -100,7 +100,7 @@ public class QueryableCategory extends AbstractQueryableObject
 	}
 
 	/**
-	 * This method returns the Collection of Attributes which are present in the 
+	 * This method returns the Collection of Attributes which are present in the
 	 * CategoryEntities of the category present in the QuerableCategory.
 	 * @return the Collection of Attribute.
 	 */
@@ -110,7 +110,7 @@ public class QueryableCategory extends AbstractQueryableObject
 	}
 
 	/**
-	 * This method returns the Collection of Attributes which are present in the 
+	 * This method returns the Collection of Attributes which are present in the
 	 * CategoryEntities of the category present in the QuerableCategory.
 	 * @return the Collection of Attribute.
 	 */
@@ -168,28 +168,28 @@ public class QueryableCategory extends AbstractQueryableObject
 
 	/**
 	 * It will return the relatedAtributeCategoryEntityCollection of the category.
-	 * @return 
+	 * @return
 	 */
 	public Collection<CategoryEntityInterface> getRelatedAttributeCategoryEntityCollection()
 	{
-		// TODO Auto-generated method stub 
+		// TODO Auto-generated method stub
 		return category.getRelatedAttributeCategoryEntityCollection();
 	}
 
 	/**
 	 * It will return the root categoryElement of the category.
-	 * @return root category element ie. CategoryEntity. 
+	 * @return root category element ie. CategoryEntity.
 	 */
 	public CategoryEntityInterface getRootCategoryElement()
 	{
-		// TODO Auto-generated method stub 
+		// TODO Auto-generated method stub
 		return category.getRootCategoryElement();
 	}
 
 	/**
-	 * It will check weather the tag with the given key is present on the Category from 
+	 * It will check weather the tag with the given key is present on the Category from
 	 * which this Object is derived.
-	 * @return true if tag present else false. 
+	 * @return true if tag present else false.
 	 */
 	public boolean isTagPresent(String key)
 	{
@@ -254,7 +254,7 @@ public class QueryableCategory extends AbstractQueryableObject
 	/**
 	 * It will return the Value of the tag with the Key equal to the given Key present on the
 	 * Category, if not present will return empty string.
-	 * @return value of the tag if tag present else empty string. 
+	 * @return value of the tag if tag present else empty string.
 	 */
 	public String getTaggedValue(String key)
 	{
@@ -263,7 +263,7 @@ public class QueryableCategory extends AbstractQueryableObject
 	}
 
 	/**
-	 * It will return the collection of CategoryEntities present in the Category 
+	 * It will return the collection of CategoryEntities present in the Category
 	 * of this Object.
 	 * @return collection of category Entities.
 	 */
@@ -278,7 +278,7 @@ public class QueryableCategory extends AbstractQueryableObject
 			PathInterface dePath = categoryEntity.getPath();
 			for( PathAssociationRelationInterface pathAssociation : dePath.getSortedPathAssociationRelationCollection())
 			{
-				 IntraModelAssociation association = new IntraModelAssociation(pathAssociation.getAssociation()); 
+				 IntraModelAssociation association = new IntraModelAssociation(pathAssociation.getAssociation());
 				 intermediateAssociations.add(association);
 			}
 			return new Path(category.getRootCategoryElement().getEntity(),categoryEntity.getEntity(),intermediateAssociations);
@@ -287,7 +287,7 @@ public class QueryableCategory extends AbstractQueryableObject
 	/**
 	 * It will search the path in the two category Entities present in the category & specified in the
 	 * CSV file of Category. If the path present will return that else will return null.
-	 * @param srcCaregoryEntity 
+	 * @param srcCaregoryEntity
 	 * @param tgtCategoryEntity
 	 * @return IPath present in the  srcCaregoryEntity & tgtCaregoryEntity, if path not present will return null
 	 */
@@ -297,23 +297,15 @@ public class QueryableCategory extends AbstractQueryableObject
 		List<IAssociation> associationList = new ArrayList<IAssociation>();
 		Path path = null;
 		PathInterface dePath = tgtCategoryEntity.getPath();
-		boolean isSrcFound = false;
 		for (PathAssociationRelationInterface pathAssociation : dePath
 				.getSortedPathAssociationRelationCollection())
 		{
 			AssociationInterface association = pathAssociation.getAssociation();
-			if (association.getEntity().equals(srcCaregoryEntity.getEntity()) || isSrcFound)
-			{
-				isSrcFound = true;
-				IntraModelAssociation intraModelAssociation = new IntraModelAssociation(association);
-				associationList.add(intraModelAssociation);
-			}
+			IntraModelAssociation intraModelAssociation = new IntraModelAssociation(association);
+			associationList.add(intraModelAssociation);
 		}
-		if (isSrcFound)
-		{
-			path = new Path(srcCaregoryEntity.getEntity(), tgtCategoryEntity.getEntity(),
+		path = new Path(srcCaregoryEntity.getEntity(), tgtCategoryEntity.getEntity(),
 					associationList);
-		}
 
 		return path;
 	}
@@ -352,9 +344,9 @@ public class QueryableCategory extends AbstractQueryableObject
 	}
 
 	/**
-	 * It will create and return the QueryableEntity which is created from the Entity from which the 
+	 * It will create and return the QueryableEntity which is created from the Entity from which the
 	 * RootCategoryEntity of the Category is created.
-	 * @return QueryableObjectInerface 
+	 * @return QueryableObjectInerface
 	 */
 	public QueryableObjectInterface getRootQueryableObject()
 	{
