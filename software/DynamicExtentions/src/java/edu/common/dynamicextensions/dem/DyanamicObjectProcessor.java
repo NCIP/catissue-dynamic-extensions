@@ -79,9 +79,15 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 		}
 		else
 		{
+			CategoryInterface categoryInterface = ((CategoryEntityInterface) container
+					.getAbstractEntity()).getCategory();
+			CategoryManagerInterface categoryManager = CategoryManager.getInstance();
+			Long categoryRecordId = categoryManager.getRootCategoryEntityRecordIdByEntityRecordId(
+					recordIdentifier, categoryInterface.getRootCategoryElement()
+							.getTableProperties().getName());
 			isEdited = CategoryManager.getInstance().editData(
 					(CategoryEntityInterface) container.getAbstractEntity(), attributeValueMap,
-					recordIdentifier, sessionDataBean, userId);
+					categoryRecordId, sessionDataBean, userId);
 		}
 		return isEdited;
 	}
