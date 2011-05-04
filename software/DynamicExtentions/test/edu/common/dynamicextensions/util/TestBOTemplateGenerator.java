@@ -33,7 +33,7 @@ public class TestBOTemplateGenerator extends DynamicExtensionsBaseTestCase
 		try
 		{
 
-			String[] args = {"Test Category_Diagnosis",
+			String[] args = {"Test AutoComplete multiselect",
 					participantXMLDir + File.separator + "Participant.xml",
 					participantXMLDir + File.separator + "mapping.xml"};
 			BOTemplateGenerator.main(args);
