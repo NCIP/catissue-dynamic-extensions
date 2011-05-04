@@ -300,8 +300,8 @@ public class XmlMessageProcessor
 	 * @throws DynamicExtensionsApplicationException exception.
 	 */
 	public Long insertOrEditDataFromMessage(String xmlMessage, String insertXmlMessage,
-			Long rootContainerId, Long catRecordId, SessionDataBean sessionDataBean) throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException
+			Long rootContainerId, Long catRecordId, SessionDataBean sessionDataBean) 
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		// retrieve the given container
 		CategoryEntity rootCatEntity = (CategoryEntity) EntityCache.getInstance().getContainerById(
@@ -349,8 +349,9 @@ public class XmlMessageProcessor
 				{
 					if (conceptCodeColl.contains(conceptCode) || conceptCodeColl.isEmpty())
 					{
-						populateMapForConceptNode(updateXmlDocument, categoryEntityXPathMap, category
-								.getRootCategoryElement(), recordMap, conceptCode, identifyingXPath);
+						populateMapForConceptNode(updateXmlDocument, categoryEntityXPathMap,
+								category.getRootCategoryElement(), recordMap, conceptCode,
+								identifyingXPath);
 					}
 				}
 			}
@@ -360,7 +361,7 @@ public class XmlMessageProcessor
 						insertXmlDocument, identifyingXPath);
 
 				messageConceptCodeColl.removeAll(insertMessageConceptCode);
-				if(!messageConceptCodeColl.isEmpty())
+				if (!messageConceptCodeColl.isEmpty())
 				{
 					insertMessageConceptCode.addAll(messageConceptCodeColl);
 				}
@@ -369,14 +370,15 @@ public class XmlMessageProcessor
 				{
 					if (conceptCodeColl.contains(conceptCode) || conceptCodeColl.isEmpty())
 					{
-						populateMapForConceptNode(updateXmlDocument, categoryEntityXPathMap, category
-								.getRootCategoryElement(), recordMap, conceptCode, identifyingXPath);
+						populateMapForConceptNode(updateXmlDocument, categoryEntityXPathMap,
+								category.getRootCategoryElement(), recordMap, conceptCode,
+								identifyingXPath);
 					}
 				}
 			}
 		}
 
-		Long editedRecordId = persistData(rootCatEntity, recordMap, catRecordId ,sessionDataBean);
+		Long editedRecordId = persistData(rootCatEntity, recordMap, catRecordId, sessionDataBean);
 
 		return editedRecordId;
 	}
@@ -436,34 +438,40 @@ public class XmlMessageProcessor
 	 * @throws DynamicExtensionsApplicationException exception thrown.
 	 */
 	private Long persistData(CategoryEntity rootCatEntity,
-			Map<BaseAbstractAttributeInterface, Object> recordMap, Long recordID, SessionDataBean sessionDataBean)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			Map<BaseAbstractAttributeInterface, Object> recordMap, Long recordID,
+			SessionDataBean sessionDataBean) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 
 	{
 		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
-		Long insrtedRecordId=null;
-	   try
-	   {
+		Long insrtedRecordId = null;
+		try
+		{
 
-
-			ContainerInterface 	containerInterface = (ContainerInterface)rootCatEntity.getContainerCollection().toArray()[0];
+			ContainerInterface containerInterface = (ContainerInterface) rootCatEntity
+					.getContainerCollection().toArray()[0];
 			if (recordID == null)
 			{// new data insertion.
 				//editedRecordId = categoryManager.insertData(rootCatEntity.getCategory(), recordMap, sessionDataBean);
-				insrtedRecordId =DynamicExtensionsUtility.insertDataUtility(null, containerInterface,recordMap, sessionDataBean);
+				insrtedRecordId = DynamicExtensionsUtility.insertDataUtility(null,
+						containerInterface, recordMap, sessionDataBean);
 				LOGGER.info("Record inserted successfully with id " + insrtedRecordId);
 			}
 			else
 			{// Edit data.
 				//categoryManager.editData(rootCatEntity, recordMap, recordID, sessionDataBean);
-				DynamicExtensionsUtility.editDataUtility(recordID, containerInterface, recordMap, sessionDataBean,sessionDataBean.getUserId());
-				insrtedRecordId = recordID;
+				insrtedRecordId = categoryManager.getEntityRecordIdByRootCategoryEntityRecordId(
+						recordID, rootCatEntity.getTableProperties().getName());
+				DynamicExtensionsUtility.editDataUtility(insrtedRecordId, containerInterface, recordMap,
+						sessionDataBean, sessionDataBean.getUserId());
 				LOGGER.info("Record edited successfully with id  " + insrtedRecordId);
 			}
-	   }catch(MalformedURLException malformedURLException)
-	   {
-		   throw new DynamicExtensionsSystemException("invalid application URL: "+Variables.jbossUrl, malformedURLException);
-	   }
+		}
+		catch (MalformedURLException malformedURLException)
+		{
+			throw new DynamicExtensionsSystemException("invalid application URL: "
+					+ Variables.jbossUrl, malformedURLException);
+		}
 		return insrtedRecordId;
 	}
 
@@ -553,7 +561,7 @@ public class XmlMessageProcessor
 						// get the values for the cat Attribute using the XPath.
 						String valueXpath = catAttribute.getAbstractAttribute().getTaggedValue(
 								XMIConstants.TAGGED_NAME_VALUE_XPATH);
-						if(valueXpath == null)
+						if (valueXpath == null)
 						{
 							recordValueMap.put(catAttribute, null);
 						}
@@ -561,7 +569,7 @@ public class XmlMessageProcessor
 						{
 							//Here again get the value Xpath, predicateCondition same like Idenfying Xpath
 							String predicateCondition = catAttribute.getAbstractAttribute()
-							.getTaggedValue(XMIConstants.TAGGED_NAME_PREDICATE_XPATH);
+									.getTaggedValue(XMIConstants.TAGGED_NAME_PREDICATE_XPATH);
 							if (predicateCondition != null && !"".equals(predicateCondition))
 							{
 								predicateCondition = predicateCondition.replace("?", conceptCode);
@@ -575,7 +583,7 @@ public class XmlMessageProcessor
 								recordValueMap.put(catAttribute, value);
 							}
 							// This is for update case, to avoid inserting extra column every time update is called.
-							else if(recordValueMap.get(catAttribute) != null)
+							else if (recordValueMap.get(catAttribute) != null)
 							{
 								recordValueMap.put(catAttribute, "");
 							}
