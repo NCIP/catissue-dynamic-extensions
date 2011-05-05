@@ -26,6 +26,11 @@ import edu.wustl.dao.exception.DAOException;
 public abstract class AbstractHandler extends HttpServlet implements WebUIManagerConstants
 {
 
+	/**
+	 * default serial version id
+	 */
+	private static final long serialVersionUID = 1L;
+
 	static
 	{
 		LoggerConfig.configureLogger(System.getProperty("user.dir"));
@@ -60,19 +65,19 @@ public abstract class AbstractHandler extends HttpServlet implements WebUIManage
 		{
 			LOGGER.info("Exception occured in doPost :: " + e.getMessage());
 			LOGGER.info("DynamicExtensions Application Exception occured.");
-			LOGGER.error(e);
+			LOGGER.error(e.getCause());
 		}
 		catch (DAOException e)
 		{
 			LOGGER.info("Exception occured in doPost :: " + e.getMessage());
 			LOGGER.info("DAO Exception Exception occured." + e.getCustomizedMsg());
-			LOGGER.error(e);
+			LOGGER.error(e.getCause());
 		}
 		catch (DynamicExtensionsSystemException e)
 		{
 			LOGGER.info("Exception occured in doPost :: " + e.getMessage());
 			LOGGER.info("DynamicExtensions System Exception occured :: " + e.getLocalizedMessage());
-			LOGGER.error(e);
+			LOGGER.error(e.getCause());
 		}
 	}
 
