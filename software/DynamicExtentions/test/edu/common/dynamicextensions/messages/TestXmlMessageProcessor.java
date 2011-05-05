@@ -22,49 +22,6 @@ public class TestXmlMessageProcessor extends DynamicExtensionsBaseTestCase
 
 	/**
 	 *
-	 * This test case will try to insert the data into the Generic form from the message & also edits the same
-	 * record later.
-	 */
-	public void testInsertDataFromMessageGenericForm()
-	{
-		ApplicationProperties.initBundle("ApplicationResources");
-		try
-		{
-			EntityCache.getInstance().refreshCache();
-			CategoryManagerInterface catManager = CategoryManager.getInstance();
-			CategoryInterface category = catManager
-					.getCategoryByName("Generic Form to load all lab tests");
-			XmlMessageProcessor messagePrcocessor = XmlMessageProcessor.getInstance();
-			ContainerInterface container = (ContainerInterface) category.getRootCategoryElement()
-					.getContainerCollection().iterator().next();
-			String xmlString = readXmlFile(TEST_MODEL_DIR + File.separator + "Labxml_message.xml");
-			Long recordId = messagePrcocessor.insertOrEditDataFromMessage(xmlString, null, container
-					.getId(), null, sessionDataBean);
-			if (recordId == null)
-			{
-				fail("testInsertDataFromMessageGenericForm--> data insertion failed. RecordId is null");
-			}
-			System.out
-					.println("testInsertDataFromMessageGenericForm-->Data Inserted successfully for the Generic Form to load all lab tests. Record Id = "
-							+ recordId);
-			Long catRecordId = catManager.getRootCategoryEntityRecordIdByEntityRecordId(recordId,
-					category.getRootCategoryElement().getTableProperties().getName());
-			catManager.getRecordById(category.getRootCategoryElement(), catRecordId);
-			messagePrcocessor
-					.insertOrEditDataFromMessage(xmlString, xmlString, container.getId(), catRecordId, sessionDataBean);
-			System.out
-					.println("testInsertDataFromMessageGenericForm-->Data Edited successfully for the Generic Form to load all lab tests. Record Id = "
-							+ recordId);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			fail("testInsertDataFromMessageGenericForm --> Failed");
-		}
-	}
-
-	/**
-	 *
 	 * This test case will try to insert the data into the Instance based form from the message & also edits the same
 	 * record later.
 	 */
@@ -103,6 +60,49 @@ public class TestXmlMessageProcessor extends DynamicExtensionsBaseTestCase
 		{
 			e.printStackTrace();
 			fail("testInsertDataFromMessageInstanceBasedForm --> Failed");
+		}
+	}
+
+	/**
+	 *
+	 * This test case will try to insert the data into the Generic form from the message & also edits the same
+	 * record later.
+	 */
+	public void testInsertDataFromMessageGenericForm()
+	{
+		ApplicationProperties.initBundle("ApplicationResources");
+		try
+		{
+			EntityCache.getInstance().refreshCache();
+			CategoryManagerInterface catManager = CategoryManager.getInstance();
+			CategoryInterface category = catManager
+					.getCategoryByName("Generic Form to load all lab tests");
+			XmlMessageProcessor messagePrcocessor = XmlMessageProcessor.getInstance();
+			ContainerInterface container = (ContainerInterface) category.getRootCategoryElement()
+					.getContainerCollection().iterator().next();
+			String xmlString = readXmlFile(TEST_MODEL_DIR + File.separator + "Labxml_message.xml");
+			Long recordId = messagePrcocessor.insertOrEditDataFromMessage(xmlString, null, container
+					.getId(), null, sessionDataBean);
+			if (recordId == null)
+			{
+				fail("testInsertDataFromMessageGenericForm--> data insertion failed. RecordId is null");
+			}
+			System.out
+					.println("testInsertDataFromMessageGenericForm-->Data Inserted successfully for the Generic Form to load all lab tests. Record Id = "
+							+ recordId);
+			Long catRecordId = catManager.getRootCategoryEntityRecordIdByEntityRecordId(recordId,
+					category.getRootCategoryElement().getTableProperties().getName());
+			catManager.getRecordById(category.getRootCategoryElement(), catRecordId);
+			messagePrcocessor
+					.insertOrEditDataFromMessage(xmlString, xmlString, container.getId(), catRecordId, sessionDataBean);
+			System.out
+					.println("testInsertDataFromMessageGenericForm-->Data Edited successfully for the Generic Form to load all lab tests. Record Id = "
+							+ recordId);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail("testInsertDataFromMessageGenericForm --> Failed");
 		}
 	}
 
