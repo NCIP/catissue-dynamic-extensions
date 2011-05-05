@@ -258,12 +258,13 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 	{
 		for (Entry<BaseAbstractAttributeInterface, Object> entry : valueMap.entrySet())
 		{
+			List<Map<BaseAbstractAttributeInterface, Object>> innerMap = (List<Map<BaseAbstractAttributeInterface, Object>>) entry
+			.getValue();
 			if (entry.getKey() instanceof CategoryAssociationInterface
 					&& ((CategoryAssociationInterface) entry.getKey()).getTargetCategoryEntity()
-							.getNumberOfEntries() == -1)
+							.getNumberOfEntries() == -1
+							&& innerMap.size()>0)
 			{
-				List<Map<BaseAbstractAttributeInterface, Object>> innerMap = (List<Map<BaseAbstractAttributeInterface, Object>>) entry
-						.getValue();
 				// This check is to make sure that the Skip Logic is evaluated only for Add More Combo box and not for any other combo box.
 				if (ControlsUtility.isControlPresentInAddMore(controlName))
 				{
