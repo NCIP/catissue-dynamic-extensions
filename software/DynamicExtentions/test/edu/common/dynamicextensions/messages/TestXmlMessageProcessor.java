@@ -83,7 +83,7 @@ public class TestXmlMessageProcessor extends DynamicExtensionsBaseTestCase
 					.getContainerCollection().iterator().next();
 			String xmlString = readXmlFile(TEST_MODEL_DIR + File.separator + "Labxml_message.xml");
 			Long recordId = messagePrcocessor.insertOrEditDataFromMessage(xmlString, null, container
-					.getId(), null);
+					.getId(), null, sessionDataBean);
 			if (recordId == null)
 			{
 				fail("testInsertDataFromMessageInstanceBasedForm--> data insertion failed.");
@@ -94,7 +94,7 @@ public class TestXmlMessageProcessor extends DynamicExtensionsBaseTestCase
 			Long catRecordId = catManager.getRootCategoryEntityRecordIdByEntityRecordId(recordId,
 					category.getRootCategoryElement().getTableProperties().getName());
 			catManager.getRecordById(category.getRootCategoryElement(), catRecordId);
-			messagePrcocessor.insertOrEditDataFromMessage(xmlString, xmlString, container.getId(), catRecordId);
+			messagePrcocessor.insertOrEditDataFromMessage(xmlString, xmlString, container.getId(), catRecordId,sessionDataBean);
 			System.out
 					.println("testInsertDataFromMessageInstanceBasedForm-->Data Edited successfully for the Instance based Form to load all lab tests. Record Id = "
 							+ recordId);
@@ -144,7 +144,7 @@ public class TestXmlMessageProcessor extends DynamicExtensionsBaseTestCase
 								+ containerId);
 
 				Long recordId = messageProcessor.insertOrEditDataFromMessage(xmlString, null,
-						containerId, null);
+						containerId, null, sessionDataBean);
 				if (recordId == null)
 				{
 					fail("testSearchMatchingFormContextForMessage--> data insertion failed.");
