@@ -39,7 +39,7 @@ public class TestXmlMessageProcessor extends DynamicExtensionsBaseTestCase
 					.getContainerCollection().iterator().next();
 			String xmlString = readXmlFile(TEST_MODEL_DIR + File.separator + "Labxml_message.xml");
 			Long recordId = messagePrcocessor.insertOrEditDataFromMessage(xmlString, null, container
-					.getId(), null);
+					.getId(), null, sessionDataBean);
 			if (recordId == null)
 			{
 				fail("testInsertDataFromMessageGenericForm--> data insertion failed. RecordId is null");
@@ -51,7 +51,7 @@ public class TestXmlMessageProcessor extends DynamicExtensionsBaseTestCase
 					category.getRootCategoryElement().getTableProperties().getName());
 			catManager.getRecordById(category.getRootCategoryElement(), catRecordId);
 			messagePrcocessor
-					.insertOrEditDataFromMessage(xmlString, xmlString, container.getId(), catRecordId);
+					.insertOrEditDataFromMessage(xmlString, xmlString, container.getId(), catRecordId, sessionDataBean);
 			System.out
 					.println("testInsertDataFromMessageGenericForm-->Data Edited successfully for the Generic Form to load all lab tests. Record Id = "
 							+ recordId);
