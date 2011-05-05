@@ -126,6 +126,7 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 		suite.addTestSuite(TestQueryableEntityAttribute.class);
 		suite.addTestSuite(TestAbstractQueryableObject.class);
 		suite.addTestSuite(TestValidateAgainstSchema.class);
+		suite.addTestSuite(TestXmlMessageProcessor.class);
 		suite.addTestSuite(TestXMLToCSVConverter.class);
 		suite.addTestSuite(TestEntityGroupManager.class);
 		suite.addTestSuite(DynamicExtensionsUtilityTest.class);
@@ -146,7 +147,6 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 		suite.addTestSuite(TestObjectFactory.class);
 		suite.addTestSuite(TestPvVersion.class);
 		suite.addTestSuite(TestCSDUtility.class);
-		suite.addTestSuite(TestXmlMessageProcessor.class);
 		return suite;
 	}
 }
