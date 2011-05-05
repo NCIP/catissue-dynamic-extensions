@@ -94,7 +94,7 @@ public class TestXmlMessageProcessor extends DynamicExtensionsBaseTestCase
 			Long catRecordId = catManager.getRootCategoryEntityRecordIdByEntityRecordId(recordId,
 					category.getRootCategoryElement().getTableProperties().getName());
 			catManager.getRecordById(category.getRootCategoryElement(), catRecordId);
-			messagePrcocessor.insertOrEditDataFromMessage(xmlString, xmlString, container.getId(), recordId);
+			messagePrcocessor.insertOrEditDataFromMessage(xmlString, xmlString, container.getId(), catRecordId);
 			System.out
 					.println("testInsertDataFromMessageInstanceBasedForm-->Data Edited successfully for the Instance based Form to load all lab tests. Record Id = "
 							+ recordId);
