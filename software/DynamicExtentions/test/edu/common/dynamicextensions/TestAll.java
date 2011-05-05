@@ -147,6 +147,7 @@ public class TestAll extends DynamicExtensionsBaseTestCase
 		suite.addTestSuite(TestObjectFactory.class);
 		suite.addTestSuite(TestPvVersion.class);
 		suite.addTestSuite(TestCSDUtility.class);
+		suite.addTestSuite(TestXmlMessageProcessor.class);
 		return suite;
 	}
 }
