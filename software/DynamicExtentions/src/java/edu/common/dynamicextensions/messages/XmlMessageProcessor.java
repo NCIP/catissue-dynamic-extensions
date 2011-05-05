@@ -336,29 +336,19 @@ public class XmlMessageProcessor
 		{
 			Collection<String> conceptCodeColl = autoLoadXpath.getConceptCodeCollection();
 
-			for(String conceptCode : conceptCodeColl)
-			{
-				System.out.println("The concept code is "+conceptCode);
-			}
-
 			//From Identifying XPath, get the concept code collection from XML Message
 			String identifyingXPath = autoLoadXpath.getXpath();
 
-			System.out.println("identifyingXPath "+identifyingXPath);
 			//Get the concept codes from Messages
 			Collection<String> messageConceptCodeColl = getAllValuesForXpath(updateXmlDocument,
 					identifyingXPath);
-			for(String conceptCode : messageConceptCodeColl)
-			{
-				System.out.println("identifyingXPath "+conceptCode+" insert xml "+insertXmlDocument+ " iudate "+updateXmlDocument);
-			}
+
 			if (insertXmlDocument == null)
 			{
 				for (String conceptCode : messageConceptCodeColl)
 				{
 					if (conceptCodeColl.contains(conceptCode) || conceptCodeColl.isEmpty())
 					{
-						System.out.println("Concept code matched"+conceptCode);
 						populateMapForConceptNode(updateXmlDocument, categoryEntityXPathMap,
 								category.getRootCategoryElement(), recordMap, conceptCode,
 								identifyingXPath);
@@ -367,7 +357,6 @@ public class XmlMessageProcessor
 			}
 			else
 			{
-				System.out.println("Update cease");
 				Collection<String> insertMessageConceptCode = getAllValuesForXpath(
 						insertXmlDocument, identifyingXPath);
 
@@ -381,7 +370,6 @@ public class XmlMessageProcessor
 				{
 					if (conceptCodeColl.contains(conceptCode) || conceptCodeColl.isEmpty())
 					{
-						System.out.println("Concept code matched3"+conceptCode);
 						populateMapForConceptNode(updateXmlDocument, categoryEntityXPathMap,
 								category.getRootCategoryElement(), recordMap, conceptCode,
 								identifyingXPath);
@@ -701,7 +689,6 @@ public class XmlMessageProcessor
 			value = valueCollection.iterator().next();
 			if (!catAttribute.getAllPermissibleValues().isEmpty())
 			{
-				System.out.println("getValueForAttributeFromXml");
 				// permissible values exist for this category attribute so find the PV for the given concept code
 				// and insert that PV in the Map.
 				value = getPermissibleValueForConceptCode(catAttribute.getAllPermissibleValues(),
@@ -819,7 +806,6 @@ public class XmlMessageProcessor
 
 					if (startingXpath.equals(xpath))
 					{
-						System.out.println("in isDataMapForGivenConceptCode");
 						String value = getPermissibleValueForConceptCode(catAttribute
 								.getAllPermissibleValues(), conceptCode, catAttribute.getName());
 						if (entryObject.getValue().equals(value))
@@ -906,18 +892,14 @@ public class XmlMessageProcessor
 			Collection<PermissibleValueInterface> pvCollection, String conceptCode,
 			String attributeName) throws DynamicExtensionsSystemException
 	{
-		System.out.println("in getPermissibleValueForConceptCode");
 		String value = null;
 		for (PermissibleValueInterface permissibleValue : pvCollection)
 		{
-			System.out.println("in permissibleValue "+permissibleValue.getValueAsObject());
 			for (SemanticPropertyInterface semanticProp : permissibleValue
 					.getOrderedSemanticPropertyCollection())
 			{
-				System.out.println("in semanticProp "+semanticProp.getConceptCode());
 				if (conceptCode.equals(semanticProp.getConceptCode()))
 				{
-					System.out.println("in getConceptCode match got "+semanticProp.getConceptCode());
 					value = permissibleValue.getValueAsObject().toString();
 					break;
 				}
