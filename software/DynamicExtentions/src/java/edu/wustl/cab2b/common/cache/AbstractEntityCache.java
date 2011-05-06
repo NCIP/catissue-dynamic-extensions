@@ -640,10 +640,16 @@ public abstract class AbstractEntityCache implements IEntityCache
 	public EntityInterface getEntityById(final Long identifier)
 			throws DynamicExtensionsCacheException
 	{
+		if(identifier==0)
+		{
+			LOGGER.error("Error while retriving entity for identifier 0.");
+			throw new DynamicExtensionsCacheException("Error while retriving entity for identifier 0.An error has occurred in the database. Please contact system administrator.");
+		}
 		if (!entitiesInUse.contains(identifier))
 		{
 			return getEntityByIdForCacheUpdate(identifier);
 		}
+
 		throw new DynamicExtensionsCacheException("Entity With Identifier :" + identifier
 				+ " is in use.");
 	}
