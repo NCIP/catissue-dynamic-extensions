@@ -8,8 +8,8 @@ import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterface;
 
 /**
- * @hibernate.joined-subclass table="DYEXTN_OBJECT_TYPE_INFO" 
- * @hibernate.joined-subclass-key column="IDENTIFIER"  
+ * @hibernate.joined-subclass table="DYEXTN_OBJECT_TYPE_INFO"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  * @author Rahul Ner
  *
  */
@@ -27,12 +27,23 @@ public class ObjectAttributeTypeInformation extends AttributeTypeInformation
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public PermissibleValueInterface getPermissibleValueForString(String value)
 			throws ParseException
 	{
 		return null;
 	}
+
+	/**
+	 * (non-Javadoc)
+	 * @see edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface#getAttributeDataType()
+	 * @return Class type for attribute.
+	 */
+	public Class getAttributeDataType()
+	{
+		return Object.class;
+	}
+
 
 }

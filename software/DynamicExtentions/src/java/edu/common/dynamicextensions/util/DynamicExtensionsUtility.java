@@ -70,6 +70,7 @@ import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
@@ -2720,5 +2721,30 @@ public class DynamicExtensionsUtility
 			}
 		}
 	}
+
+	/**
+	 * This method will return the baseAttribute of the given category Attribute,
+	 * if the base attribute is association i.e. multiselect case then it will search the original
+	 * attribute created for it & return that.
+	 * @param catAttribute category attribute whose base attribute is needed.
+	 * @return attribute from which the category attribute is derived.
+	 */
+	public static AttributeInterface getBaseAttributeOfcategoryAttribute(
+			CategoryAttributeInterface catAttribute)
+	{
+		AttributeInterface attribute;
+		if (catAttribute.getAbstractAttribute() instanceof AssociationInterface)
+		{
+			attribute = (AttributeInterface) EntityManagerUtil.filterSystemAttributes(
+					((AssociationInterface) catAttribute.getAbstractAttribute()).getTargetEntity()
+							.getAbstractAttributeCollection()).iterator().next();
+		}
+		else
+		{
+			attribute = (AttributeInterface) catAttribute.getAbstractAttribute();
+		}
+		return attribute;
+	}
+
 
 }

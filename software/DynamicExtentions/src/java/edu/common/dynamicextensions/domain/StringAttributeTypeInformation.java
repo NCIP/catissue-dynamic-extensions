@@ -77,4 +77,14 @@ public class StringAttributeTypeInformation extends AttributeTypeInformation
 		return stringValue;
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface#getAttributeDataType()
+	 * @return Class type for attribute.
+	 */
+	public Class getAttributeDataType()
+	{
+		return String.class;
+	}
+
 }

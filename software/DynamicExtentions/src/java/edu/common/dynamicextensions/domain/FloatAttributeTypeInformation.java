@@ -11,15 +11,15 @@ import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterfac
 
 /**
  * This Class represent the Floating value Attribute of the Entity.
- * @hibernate.joined-subclass table="DYEXTN_FLOAT_TYPE_INFO" 
- * @hibernate.joined-subclass-key column="IDENTIFIER"  
+ * @hibernate.joined-subclass table="DYEXTN_FLOAT_TYPE_INFO"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  * @author sujay_narkar
  */
 public class FloatAttributeTypeInformation extends NumericAttributeTypeInformation
 		implements
 			FloatTypeInformationInterface
 {
-	/** 
+	/**
 	 * @see edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface#getDataType()
 	 */
 	public String getDataType()
@@ -29,7 +29,7 @@ public class FloatAttributeTypeInformation extends NumericAttributeTypeInformati
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public PermissibleValueInterface getPermissibleValueForString(String value)
 	{
@@ -40,20 +40,20 @@ public class FloatAttributeTypeInformation extends NumericAttributeTypeInformati
 		return floatValue;
 	}
 	/**
-	 * 
+	 *
 	 */
 	public String getFormattedValue(Double value)
 	{
 		String formattedValue = "";
 		if (value != null)
 		{
-			if (this.decimalPlaces.intValue() > 0)
+			if (decimalPlaces.intValue() > 0)
 			{
 				DecimalFormat formatDecimal = (DecimalFormat) NumberFormat
 						.getNumberInstance();
 				formatDecimal.setParseBigDecimal(true);
 				formatDecimal.setGroupingUsed(false);
-				formatDecimal.setMaximumFractionDigits(this.decimalPlaces
+				formatDecimal.setMaximumFractionDigits(decimalPlaces
 						.intValue());
 				formattedValue = formatDecimal.format(Float.valueOf(value
 						.floatValue()));
@@ -64,5 +64,16 @@ public class FloatAttributeTypeInformation extends NumericAttributeTypeInformati
 			}
 		}
 		return formattedValue;
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * @see edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface#getAttributeDataType()
+	 * @return Class type for attribute.
+	 */
+	public Class getAttributeDataType()
+	{
+		// TODO Auto-generated method stub
+		return Float.class;
 	}
 }

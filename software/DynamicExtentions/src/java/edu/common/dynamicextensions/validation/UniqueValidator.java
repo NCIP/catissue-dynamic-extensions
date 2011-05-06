@@ -49,7 +49,7 @@ public class UniqueValidator implements ValidatorRuleInterface
 		{
 			List<String> placeHolders = new ArrayList<String>();
 			placeHolders.add(controlCaption);
-			placeHolders.add((String) valueObject);
+			placeHolders.add(valueObject.toString());
 			throw new DynamicExtensionsValidationException("Validation failed", null,
 					"dynExtn.validation.Unique", placeHolders);
 		}

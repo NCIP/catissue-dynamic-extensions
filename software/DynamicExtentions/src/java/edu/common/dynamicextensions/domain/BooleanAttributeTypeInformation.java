@@ -9,15 +9,15 @@ import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterfac
 /**
  * @version 1.0
  * @created 28-Sep-2006 12:20:06 PM
- * @hibernate.joined-subclass table="DYEXTN_BOOLEAN_TYPE_INFO" 
- * @hibernate.joined-subclass-key column="IDENTIFIER" 
+ * @hibernate.joined-subclass table="DYEXTN_BOOLEAN_TYPE_INFO"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  */
 public class BooleanAttributeTypeInformation extends AttributeTypeInformation
 		implements
 			BooleanTypeInformationInterface
 {
 
-	/** 
+	/**
 	 * @see edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface#getDataType()
 	 */
 	public String getDataType()
@@ -26,7 +26,7 @@ public class BooleanAttributeTypeInformation extends AttributeTypeInformation
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public PermissibleValueInterface getPermissibleValueForString(String value)
 	{
@@ -35,6 +35,11 @@ public class BooleanAttributeTypeInformation extends AttributeTypeInformation
 		booleanValue.setValue(Boolean.valueOf(value));
 
 		return booleanValue;
+	}
+
+	public Class getAttributeDataType()
+	{
+		return Boolean.class;
 	}
 
 }

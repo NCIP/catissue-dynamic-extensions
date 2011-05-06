@@ -65,8 +65,11 @@ public abstract class AbstractBaseMetadataManager
 	 * @param exception The exception that took place.
 	 * @param abstrMetadata Entity for which data tables are out of sync.
 	 */
-	protected abstract void logFatalError(Exception exception,
-			AbstractMetadataInterface abstrMetadata);
+	protected void logFatalError(Exception exception,
+			AbstractMetadataInterface abstrMetadata)
+	{
+
+	}
 
 	/**
 	 * This method is called when there any exception occurs while generating
@@ -412,23 +415,31 @@ public abstract class AbstractBaseMetadataManager
 	 *            the invoke on object
 	 * @param argument
 	 *            the argument
-	 *
-	 * @throws InvocationTargetException
-	 *             the invocation target exception
-	 * @throws IllegalAccessException
-	 *             the illegal access exception
-	 * @throws NoSuchMethodException
-	 *             the no such method exception
+	 * @throws DynamicExtensionsSystemException exception while executing the method via reflection.
 	 */
 	protected void invokeSetterMethod(Class klass, String property, Class argumentType,
-			Object invokeOnObject, Object argument) throws NoSuchMethodException,
-			IllegalAccessException, InvocationTargetException
+			Object invokeOnObject, Object argument) throws DynamicExtensionsSystemException
 
 	{
 		// Method setter = klass.getMethod("set" + property, argumentType);
 		// setter.invoke(invokeOnObject, argument);
-		abstractMetadataManagerHelper.invokeSetterMethod(klass, property, argumentType,
-				invokeOnObject, argument);
+		try
+		{
+			abstractMetadataManagerHelper.invokeSetterMethod(klass, property, argumentType,
+					invokeOnObject, argument);
+		}
+		catch (NoSuchMethodException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
+		}
+		catch (InvocationTargetException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
+		}
 	}
 
 	/**
@@ -443,19 +454,37 @@ public abstract class AbstractBaseMetadataManager
 	 *            the invoke on object.
 	 *
 	 * @return the returned object.
-	 *
-	 * @throws NoSuchMethodException
-	 *             the no such method exception
-	 * @throws InvocationTargetException
-	 *             the invocation target exception
-	 * @throws IllegalAccessException
-	 *             the illegal access exception
+	 * @throws DynamicExtensionsSystemException exception while executing method via reflection
 	 */
 	protected Object invokeGetterMethod(Class klass, String property, Object invokeOnObject)
-			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
+			throws DynamicExtensionsSystemException
 	{
-		Method getter = klass.getMethod("get" + property);
-		Object returnedObject = getter.invoke(invokeOnObject);
+		Object returnedObject;
+		try
+		{
+			Method getter = klass.getMethod("get" + property);
+			returnedObject = getter.invoke(invokeOnObject);
+		}
+		catch (SecurityException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
+		}
+		catch (NoSuchMethodException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
+		}
+		catch (IllegalArgumentException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
+		}
+		catch (IllegalAccessException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
+		}
+		catch (InvocationTargetException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
+		}
 
 		return returnedObject;
 	}
@@ -624,14 +653,11 @@ public abstract class AbstractBaseMetadataManager
 	 * @param targetObject object to be added.
 	 * @param targetClassName target objects class name.
 	 * @param association association between the source & target object.
-	 * @throws NoSuchMethodException targetClassName
-	 * @throws IllegalAccessException targetClassName
-	 * @throws InvocationTargetException targetClassName
+	 * @throws DynamicExtensionsSystemException
 	 * @throws ClassNotFoundException targetClassName
 	 */
 	protected void addTargetObject(Object sourceObject, Object targetObject,
-			String targetClassName, AssociationInterface association) throws NoSuchMethodException,
-			IllegalAccessException, InvocationTargetException, ClassNotFoundException
+			String targetClassName, AssociationInterface association) throws DynamicExtensionsSystemException, ClassNotFoundException
 	{
 
 		Class srcObjectClass = sourceObject.getClass();
@@ -676,14 +702,12 @@ public abstract class AbstractBaseMetadataManager
 	 * @param targetObject target object in which to add
 	 * @param sourceClassName class name of the source object
 	 * @param association association
-	 * @throws NoSuchMethodException exception.
-	 * @throws IllegalAccessException exception.
-	 * @throws InvocationTargetException exception.
 	 * @throws ClassNotFoundException exception.
+	 * @throws DynamicExtensionsSystemException
 	 */
 	protected void addSourceObject(Object sourceObject, Object targetObject,
-			String sourceClassName, AssociationInterface association) throws NoSuchMethodException,
-			IllegalAccessException, InvocationTargetException, ClassNotFoundException
+			String sourceClassName, AssociationInterface association) throws
+			ClassNotFoundException, DynamicExtensionsSystemException
 	{
 
 		Class srcObjectClass = Class.forName(sourceClassName);

@@ -58,7 +58,7 @@ public class FutureDateValidator implements ValidatorRuleInterface
 	{
 		AttributeTypeInformationInterface attributeTypeInformation = attribute
 				.getAttributeTypeInformation();
-		boolean isValidValue = ((valueObject != null) && (!((String) valueObject).trim().equals("")))
+		boolean isValidValue = ((valueObject != null) && (!(valueObject.toString()).trim().equals("")))
 				&& ((attributeTypeInformation != null) && (attributeTypeInformation instanceof DateAttributeTypeInformation));
 		if (isValidValue)
 		{
@@ -66,7 +66,7 @@ public class FutureDateValidator implements ValidatorRuleInterface
 			DateAttributeTypeInformation dateAttributeTypeInformation = (DateAttributeTypeInformation) attributeTypeInformation;
 			String dateFormat = DynamicExtensionsUtility.getDateFormat(dateAttributeTypeInformation
 					.getFormat());
-			String value = (String) valueObject;
+			String value =valueObject.toString();
 			try
 			{
 				Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();

@@ -1359,7 +1359,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	public boolean editData(final CategoryEntityInterface rootCatEntity,
 			final Map<BaseAbstractAttributeInterface, Object> dataValue, final Long recordId,
 			final Long... userId) throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException, SQLException
+			DynamicExtensionsSystemException
 	{
 		final CategoryInterface category = rootCatEntity.getCategory();
 		JDBCDAO jdbcDao = null;
@@ -3367,4 +3367,6 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		}
 		return categoryAttributeCollection;
 	}
+
+
 }

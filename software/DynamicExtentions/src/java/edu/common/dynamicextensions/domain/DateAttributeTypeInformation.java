@@ -110,4 +110,14 @@ public class DateAttributeTypeInformation extends AttributeTypeInformation
 		return dateValue;
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface#getAttributeDataType()
+	 * @return Class type for attribute.
+	 */
+	public Class getAttributeDataType()
+	{
+		return Date.class;
+	}
+
 }

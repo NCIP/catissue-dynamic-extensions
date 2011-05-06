@@ -61,10 +61,9 @@ public interface EntityManagerInterface
 	 * @param targetEntityId
 	 * @return
 	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
 	 */
 	Collection<AssociationInterface> getAssociations(Long sourceEntityId, Long targetEntityId)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
+			throws DynamicExtensionsSystemException;
 
 	/**
 	 * Returns a collection of association objects given the source entity id and
@@ -87,10 +86,9 @@ public interface EntityManagerInterface
 	 * @param targetEntityId
 	 * @return
 	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
 	 */
 	Collection<Long> getAssociationIds(Long sourceEntityId, Long targetEntityId)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
+			throws DynamicExtensionsSystemException;
 
 	/**
 	 * Returns an entity object given the entity name;
@@ -766,6 +764,15 @@ public interface EntityManagerInterface
 	 * @exception DynamicExtensionsSystemException exception.
 	 */
 	EntityInterface getCategoryRootEntityByContainerId(Long containerId)
+			throws DynamicExtensionsSystemException;
+
+	/**
+	 * This method will return the root container id of the given category name.
+	 * @param categoryName name of the category.
+	 * @return id of the root container.
+	 * @throws DynamicExtensionsSystemException exception.
+	 */
+	public Long getRootCategoryContainerIdByName(String categoryName)
 			throws DynamicExtensionsSystemException;
 
 }

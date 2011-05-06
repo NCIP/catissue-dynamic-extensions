@@ -44,10 +44,10 @@ public class NumberValidator implements ValidatorRuleInterface
 	{
 		boolean isValid = true;
 
-		String value = (String) valueObject;
-		if (value != null)
+		String value = null;
+		if (valueObject!= null)
 		{
-			value = value.trim();
+			value = valueObject.toString().trim();
 		}
 		if (value == null || value.length() == 0)
 		{
@@ -72,7 +72,7 @@ public class NumberValidator implements ValidatorRuleInterface
 			{
 				try
 				{
-					if (!(DynamicExtensionsUtility.isNumeric((String) valueObject)))
+					if (!(DynamicExtensionsUtility.isNumeric(valueObject.toString())))
 					{
 						isValid = false;
 					}

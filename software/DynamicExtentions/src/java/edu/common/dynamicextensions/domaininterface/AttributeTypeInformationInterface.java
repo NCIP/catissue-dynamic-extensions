@@ -57,4 +57,10 @@ public interface AttributeTypeInformationInterface
 	 * @throws ParseException
 	 */
 	PermissibleValueInterface getPermissibleValueForString(String value) throws ParseException;
+
+	/**
+	 * This method returns the class type of the attribute based on it's attributeTypeInformation object.
+	 * @return Class attribute type.
+	 */
+	Class getAttributeDataType();
 }

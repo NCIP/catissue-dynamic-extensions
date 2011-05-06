@@ -1,6 +1,7 @@
 
 package edu.common.dynamicextensions.util;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
+import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
@@ -29,6 +31,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.AbstractContai
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 
 /**
@@ -510,4 +513,222 @@ public final class DataValueMapUtility
 			return association;
 
 		}*/
+
+	/**
+	 * Returns attribute to value map for the given map and CategoryInterface.
+	 * @param dataValue value map.
+	 * @param categoryInterface CategoryInterface
+	 * @return attribute to value map.
+	 * @throws DynamicExtensionsSystemException thrown while error occurred while processing entity.
+	 * @throws ParseException Thrown while parsing the date.
+	 */
+	public static Map<BaseAbstractAttributeInterface, Object> getAttributeToValueMap(
+			final Map<String, Object> dataValue, CategoryInterface categoryInterface)
+			throws DynamicExtensionsApplicationException, ParseException
+	{
+
+		Map<BaseAbstractAttributeInterface, Object> attributeToValueMap = // NOPMD by gaurav_sawant
+		new HashMap<BaseAbstractAttributeInterface, Object>();
+		Set<java.util.Map.Entry<String, Object>> dataValueEntrySet = dataValue.entrySet();
+		String associationName = null;
+		for (Map.Entry<String, Object> datavalueEntry : dataValueEntrySet)
+		{
+			if (datavalueEntry.getValue() instanceof List)
+			{
+				if (datavalueEntry.getKey().contains("->"))
+				{
+					associationName = datavalueEntry.getKey().replace("->", "");
+				}
+				else
+				{
+					associationName = datavalueEntry.getKey() + datavalueEntry.getKey();
+				}
+				if (categoryInterface.getRootCategoryElement().getName().equals(associationName))
+				{
+					ArrayList<HashMap<Object, Object>> hashMaps = ((ArrayList<HashMap<Object, Object>>) datavalueEntry
+							.getValue());
+					for (HashMap<Object, Object> hashMap : hashMaps)
+					{
+						processCategoryEntity(attributeToValueMap, categoryInterface
+								.getRootCategoryElement(), hashMap);
+					}
+				}
+				else
+				{
+					throw new DynamicExtensionsApplicationException(
+							"Invalid Association Name For Root Category : "
+									+ datavalueEntry.getKey().toString());
+				}
+			}
+			else
+			{
+				processAttributes(attributeToValueMap, categoryInterface.getRootCategoryElement(),
+						datavalueEntry.getKey(), datavalueEntry.getValue());
+			}
+		}
+		return attributeToValueMap;
+	}
+
+	/**
+	 * Method processes the category entity.
+	 * @param attributeToValueMap data value map.
+	 * @param entityInterface CategoryEntityInterface which needs to be processed.
+	 * @param object value object.
+	 * @throws DynamicExtensionsSystemException thrown while error occurred while processing entity.
+	 */
+	private static void processCategoryEntity(
+			Map<BaseAbstractAttributeInterface, Object> attributeToValueMap,
+			CategoryEntityInterface entityInterface, Object object)
+			throws DynamicExtensionsApplicationException
+	{
+		HashMap<Object, Object> hashMap = (HashMap<Object, Object>) object;
+		Set<java.util.Map.Entry<Object, Object>> dataValueEntrySet = hashMap.entrySet();
+		for (Map.Entry<Object, Object> datavalueEntry : dataValueEntrySet)
+		{
+			if (datavalueEntry.getValue() instanceof List)
+			{
+				processAssociation(attributeToValueMap, entityInterface, datavalueEntry);
+			}
+			else
+			{
+				processAttributes(attributeToValueMap, entityInterface, datavalueEntry.getKey()
+						.toString(), datavalueEntry.getValue());
+			}
+		}
+
+	}
+
+	/**
+	 * Method processes the association.
+	 * @param attributeToValueMap Data value map.
+	 * @param entityInterface CategoryEntityInterface for which association is being processed.
+	 * @param datavalueEntry name to value map for the association.
+	 * @throws DynamicExtensionsSystemException thrown when association with
+	 * specified name does not exist.
+	 * @throws DynamicExtensionsApplicationException
+	 */
+	private static void processAssociation(
+			Map<BaseAbstractAttributeInterface, Object> attributeToValueMap,
+			CategoryEntityInterface entityInterface, Map.Entry<Object, Object> datavalueEntry)
+			throws DynamicExtensionsApplicationException
+	{
+		String associationName = datavalueEntry.getKey().toString();
+		CategoryAssociationInterface matchedMssociationInterface;
+		Collection<CategoryAssociationInterface> associationInterfaces = entityInterface
+				.getCategoryAssociationCollection();
+		if (datavalueEntry.getKey().toString().contains("->"))
+		{
+			associationName = datavalueEntry.getKey().toString().replace("->", "");
+		}
+		matchedMssociationInterface = getAssociationInterface(associationInterfaces,
+				associationName);
+		if (matchedMssociationInterface == null)
+		{
+			CategoryAttributeInterface attributeInterface = entityInterface
+					.getAttributeByName(associationName + " Category Attribute");
+			if (attributeInterface == null || attributeInterface.getAbstractAttribute() == null
+					|| !(attributeInterface.getAbstractAttribute() instanceof AssociationInterface))
+			{
+				throw new DynamicExtensionsApplicationException("Invalid Instance Name : "
+						+ datavalueEntry.getKey().toString());
+			}
+			else
+			{
+				AbstractAttributeInterface abstractAttributeInterface = attributeInterface
+						.getAbstractAttribute();
+				if (abstractAttributeInterface instanceof AssociationInterface)
+				{
+					AssociationInterface associationInterface = (AssociationInterface) abstractAttributeInterface;
+					List<Map<BaseAbstractAttributeInterface, Object>> list = new ArrayList<Map<BaseAbstractAttributeInterface, Object>>();
+					ArrayList<HashMap<Object, Object>> hashMaps = ((ArrayList<HashMap<Object, Object>>) datavalueEntry
+							.getValue());
+					AttributeInterface multiselectAttr = (AttributeInterface) (EntityManagerUtil
+							.filterSystemAttributes(associationInterface.getTargetEntity()
+									.getAllAbstractAttributes())).toArray()[0];
+					for (HashMap<Object, Object> hashMap : hashMaps)
+					{
+						Map<BaseAbstractAttributeInterface, Object> tempMap = new HashMap<BaseAbstractAttributeInterface, Object>();
+						list.add(tempMap);
+						tempMap.put(multiselectAttr, hashMap.get(associationName));
+					}
+					attributeToValueMap.put(attributeInterface, list);
+				}
+			}
+		}
+		else
+		{
+			List<Map<BaseAbstractAttributeInterface, Object>> list = new ArrayList<Map<BaseAbstractAttributeInterface, Object>>();
+			ArrayList<HashMap<Object, Object>> hashMaps = ((ArrayList<HashMap<Object, Object>>) datavalueEntry
+					.getValue());
+			for (HashMap<Object, Object> hashMap : hashMaps)
+			{
+				Map<BaseAbstractAttributeInterface, Object> tempMap = new HashMap<BaseAbstractAttributeInterface, Object>();
+				list.add(tempMap);
+				processCategoryEntity(tempMap, matchedMssociationInterface
+						.getTargetCategoryEntity(), hashMap);
+			}
+			attributeToValueMap.put(matchedMssociationInterface, list);
+		}
+	}
+
+	/**
+	 * Method add the attribute and value to the data value map.
+	 * @param attributeToValueMap data value map.
+	 * @param entityInterface CategoryEntityInterface for which attribute is being processed.
+	 * @param key attribute name.
+	 * @param value attribute value.
+	 * @throws DynamicExtensionsSystemException thrown when attribute not found in interface.
+	 */
+	private static void processAttributes(
+			Map<BaseAbstractAttributeInterface, Object> attributeToValueMap,
+			CategoryEntityInterface entityInterface, String key, Object value)
+			throws DynamicExtensionsApplicationException
+	{
+		CategoryAttributeInterface attributeInterface = entityInterface.getAttributeByName(key
+				+ " Category Attribute");
+		if (attributeInterface == null)
+		{
+			throw new DynamicExtensionsApplicationException("Invalid Attribute Name : " + key);
+		}
+		else
+		{
+			if (value instanceof Date)
+			{
+				AttributeTypeInformationInterface attributeTypeInformationInterface = ((AttributeInterface) attributeInterface
+						.getAbstractAttribute()).getAttributeTypeInformation();
+				String format = DynamicExtensionsUtility
+						.getDateFormat(((DateAttributeTypeInformation) attributeTypeInformationInterface)
+								.getFormat());
+				DateFormat formatter = new SimpleDateFormat(format);
+				String formatedDate = formatter.format(value);
+				attributeToValueMap.put(attributeInterface, formatedDate);
+			}
+			else
+			{
+				attributeToValueMap.put(attributeInterface, value);
+			}
+		}
+	}
+
+	/**
+	 * This method returns the association according to association name.
+	 * @param associationInterfaces collection of association.
+	 * @param associationName Name of the association.
+	 * @return CategoryAssociationInterface.
+	 */
+	private static CategoryAssociationInterface getAssociationInterface(
+			Collection<CategoryAssociationInterface> associationInterfaces, String associationName)
+	{
+		CategoryAssociationInterface matchedMssociationInterface = null;
+		for (CategoryAssociationInterface associationInterface : associationInterfaces)
+		{
+			if (associationInterface.getTargetCategoryEntity().getName().equals(associationName))
+			{
+				matchedMssociationInterface = associationInterface;
+				break;
+			}
+		}
+		return matchedMssociationInterface;
+	}
+
 }

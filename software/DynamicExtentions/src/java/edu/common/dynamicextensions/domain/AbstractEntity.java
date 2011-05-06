@@ -8,6 +8,7 @@ import java.util.Set;
 
 import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationMetadataInterface;
+import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.databaseproperties.ConstraintPropertiesInterface;
 import edu.common.dynamicextensions.domaininterface.databaseproperties.TablePropertiesInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
@@ -96,9 +97,9 @@ public abstract class AbstractEntity extends AbstractMetadata implements Abstrac
 		}
 		else
 		{
-			this.constraintPropertiesCollection.clear();
+			constraintPropertiesCollection.clear();
 		}
-		this.constraintPropertiesCollection.add(constraintProperties);
+		constraintPropertiesCollection.add(constraintProperties);
 	}
 
 	/**
@@ -150,9 +151,9 @@ public abstract class AbstractEntity extends AbstractMetadata implements Abstrac
 		}
 		else
 		{
-			this.tablePropertiesCollection.clear();
+			tablePropertiesCollection.clear();
 		}
-		this.tablePropertiesCollection.add(tableProperties);
+		tablePropertiesCollection.add(tableProperties);
 	}
 
 	/**
@@ -177,17 +178,23 @@ public abstract class AbstractEntity extends AbstractMetadata implements Abstrac
 	}
 
 	/**
-	 * 
+	 *
 	 * @param containerInterface
 	 */
 	public void addContainer(ContainerInterface containerInterface)
 	{
 		containerCollection.add(containerInterface);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domaininterface.AbstractEntityInterface#getAssociation(edu.common.dynamicextensions.domaininterface.AbstractEntityInterface)
 	 */
 	public abstract AssociationMetadataInterface getAssociation(AbstractEntityInterface targetEntity);
 
+
+	/**
+	 * This method will return the entityGroup to which this entity belongs.
+	 * @return entityGroup
+	 */
+	public abstract EntityGroupInterface getEntityGroup();
 }

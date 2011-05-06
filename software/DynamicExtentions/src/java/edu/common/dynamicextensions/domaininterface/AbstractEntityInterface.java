@@ -66,4 +66,10 @@ public interface AbstractEntityInterface extends AbstractMetadataInterface
 	 * @return
 	 */
 	AssociationMetadataInterface getAssociation(AbstractEntityInterface targetEntity);
+
+	/**
+	 * This method will return the entityGroup to which this entity belongs.
+	 * @return entityGroup
+	 */
+	EntityGroupInterface getEntityGroup();
 }

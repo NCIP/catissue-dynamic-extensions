@@ -44,7 +44,7 @@ public class TextLengthValidator implements ValidatorRuleInterface
 					.getAttributeTypeInformation();
 			if (attributeTypeInformation instanceof StringAttributeTypeInformation)
 			{
-				String value = (String) valueObject;
+				String value = valueObject.toString();
 				StringAttributeTypeInformation stringAttributeTypeInformation = (StringAttributeTypeInformation) attributeTypeInformation;
 				Integer size = stringAttributeTypeInformation.getSize();
 				Integer length = value.length();

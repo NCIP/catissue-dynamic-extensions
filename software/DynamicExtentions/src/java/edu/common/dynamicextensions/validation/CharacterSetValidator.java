@@ -44,7 +44,7 @@ public class CharacterSetValidator implements ValidatorRuleInterface
 		}
 		else if (valueObject != null)
 		{
-			String value = (String) valueObject;
+			String value = valueObject.toString();
 			if (attributeTypeInformation instanceof StringAttributeTypeInformation)
 			{
 				ArrayList<String> placeHolders = new ArrayList<String>();

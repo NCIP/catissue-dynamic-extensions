@@ -980,11 +980,9 @@ public class AnnotationUtil
 	/**
 	 * @param entityName
 	 * @return
-	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public static Long getEntityId(String entityName) throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException
+	public static Long getEntityId(String entityName) throws DynamicExtensionsSystemException
 	{
 		Long entityId = Long.valueOf(0);
 		if (entityName != null)

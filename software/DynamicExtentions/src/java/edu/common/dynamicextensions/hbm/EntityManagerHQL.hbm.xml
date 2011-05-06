@@ -351,4 +351,8 @@
            		and eg.taggedValueCollection.value=?
 
 	</query>
+	<query name="getRootCategoryContainerIdByName">
+		select category.rootCategoryElement.containerCollection.id from
+		edu.common.dynamicextensions.domain.Category category where category.name = ?
+	</query>
 </hibernate-mapping>

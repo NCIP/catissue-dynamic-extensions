@@ -11,6 +11,7 @@ import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
+import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.PathInterface;
 
@@ -40,17 +41,17 @@ public class CategoryEntity extends AbstractEntity implements CategoryEntityInte
 	protected Collection<CategoryEntityInterface> childCategories = new HashSet<CategoryEntityInterface>();
 
 	/**
-	 * 
+	 *
 	 */
 	protected CategoryEntityInterface parentCategoryEntity;
 
 	/**
-	 * 
+	 *
 	 */
 	protected CategoryEntityInterface treeParentCategoryEntity;
 
 	/**
-	 * 
+	 *
 	 */
 	//protected Collection<CategoryEntityInterface> parentCategoryEntityCollection = new HashSet<CategoryEntityInterface>();
 	/**
@@ -74,11 +75,11 @@ public class CategoryEntity extends AbstractEntity implements CategoryEntityInte
 	protected Collection<CategoryInterface> categoryCollection = new HashSet<CategoryInterface>();
 
 	/**
-	 * 
+	 *
 	 */
 	protected Collection<CategoryAssociationInterface> CategoryAssociationCollection = new HashSet<CategoryAssociationInterface>();
 	/**
-	 * 
+	 *
 	 */
 	protected Boolean isCreateTable = Boolean.TRUE;
 
@@ -145,12 +146,12 @@ public class CategoryEntity extends AbstractEntity implements CategoryEntityInte
 	}
 
 	/**
-	 * 
+	 *
 	 * @param categoryEntityInterface
 	 */
 	public void addChildCategory(CategoryEntityInterface categoryEntityInterface)
 	{
-		if (this.childCategories == null)
+		if (childCategories == null)
 		{
 			childCategories = new HashSet<CategoryEntityInterface>();
 		}
@@ -217,7 +218,7 @@ public class CategoryEntity extends AbstractEntity implements CategoryEntityInte
 		{
 			pathCollection.clear();
 		}
-		this.pathCollection.add(path);
+		pathCollection.add(path);
 	}
 
 	/**
@@ -241,7 +242,7 @@ public class CategoryEntity extends AbstractEntity implements CategoryEntityInte
 	 */
 	public void addPath(PathInterface pathInterface)
 	{
-		// TODO Auto-generated method stub	
+		// TODO Auto-generated method stub
 	}
 
 	/**
@@ -315,7 +316,7 @@ public class CategoryEntity extends AbstractEntity implements CategoryEntityInte
 		{
 			categoryCollection.clear();
 		}
-		this.categoryCollection.add(categoryInterface);
+		categoryCollection.add(categoryInterface);
 	}
 
 	/**
@@ -365,7 +366,7 @@ public class CategoryEntity extends AbstractEntity implements CategoryEntityInte
 	{
 		Collection<CategoryAttributeInterface> allCategoryAttributesColl = new HashSet<CategoryAttributeInterface>();
 		allCategoryAttributesColl.addAll(getCategoryAttributeCollection());
-		CategoryEntityInterface parent = this.parentCategoryEntity;
+		CategoryEntityInterface parent = parentCategoryEntity;
 		while (parent != null)
 		{
 			allCategoryAttributesColl.addAll(parent.getCategoryAttributeCollection());
@@ -375,8 +376,8 @@ public class CategoryEntity extends AbstractEntity implements CategoryEntityInte
 	}
 
 	/* (non-Javadoc)
-	 * Incase of CategoryEntity this method will alwas return false, 
-	 * since category entity cannot be abstract. 
+	 * Incase of CategoryEntity this method will alwas return false,
+	 * since category entity cannot be abstract.
 	 * @see edu.common.dynamicextensions.domaininterface.AbstractEntityInterface#isAbstract()
 	 */
 	public boolean isAbstract()
@@ -397,7 +398,7 @@ public class CategoryEntity extends AbstractEntity implements CategoryEntityInte
 	}
 
 	/**
-	 * 
+	 *
 	 * @param attributeName
 	 * @return
 	 */
@@ -499,7 +500,7 @@ public class CategoryEntity extends AbstractEntity implements CategoryEntityInte
 	/**
 	 * This method returns the create table
 	 * @hibernate.property name="isCreateTable" type="boolean" column="IS_CREATETABLE"
-	 * @return the isCreateTable 
+	 * @return the isCreateTable
 	 */
 	public Boolean isCreateTable()
 	{
@@ -511,7 +512,7 @@ public class CategoryEntity extends AbstractEntity implements CategoryEntityInte
 	 */
 	public void setCreateTable(Boolean isTableCreated)
 	{
-		this.isCreateTable = isTableCreated;
+		isCreateTable = isTableCreated;
 	}
 
 	/**
@@ -533,4 +534,13 @@ public class CategoryEntity extends AbstractEntity implements CategoryEntityInte
 		return association;
 	}
 
+	/**
+	 * This method will return the entityGroup to which the actual entity corresponding to this category
+	 * entity belongs.
+	 * @return entityGroup to which this category entity belongs.
+	 */
+	public EntityGroupInterface getEntityGroup()
+	{
+		return getEntity().getEntityGroup();
+	}
 }

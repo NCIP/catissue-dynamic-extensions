@@ -51,14 +51,14 @@ public class RangeValidator implements ValidatorRuleInterface
 		}
 
 		/* Check for the validity of the range of the number against the predefined range*/
-		if (valueObject != null && !((String) valueObject).trim().equals(""))
+		if (valueObject != null && !(valueObject.toString()).trim().equals(""))
 		{
 			AttributeTypeInformationInterface attributeTypeInformation = attribute
 					.getAttributeTypeInformation();
 
 			if (attributeTypeInformation != null)
 			{
-				String value = (String) valueObject;
+				String value = valueObject.toString();
 
 				Set<Map.Entry<String, String>> parameterSet = parameterMap.entrySet();
 				for (Map.Entry<String, String> parameter : parameterSet)

@@ -7,8 +7,8 @@ import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterface;
 
 /**
- * @hibernate.joined-subclass table="DYEXTN_LONG_TYPE_INFO" 
- * @hibernate.joined-subclass-key column="IDENTIFIER"  
+ * @hibernate.joined-subclass table="DYEXTN_LONG_TYPE_INFO"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  * @author sujay_narkar
  *
  */
@@ -17,7 +17,7 @@ public class LongAttributeTypeInformation extends NumericAttributeTypeInformatio
 			LongTypeInformationInterface
 {
 
-	/** 
+	/**
 	 * @see edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface#getDataType()
 	 */
 	public String getDataType()
@@ -26,7 +26,7 @@ public class LongAttributeTypeInformation extends NumericAttributeTypeInformatio
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public PermissibleValueInterface getPermissibleValueForString(String value)
 	{
@@ -37,10 +37,20 @@ public class LongAttributeTypeInformation extends NumericAttributeTypeInformatio
 		return longValue;
 	}
 	/**
-	 * 
+	 *
 	 */
 	public String getFormattedValue(Double value)
 	{
 		return Long.valueOf(value.longValue()).toString();
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * @see edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface#getAttributeDataType()
+	 * @return Class type for attribute.
+	 */
+	public Class getAttributeDataType()
+	{
+		return Long.class;
 	}
 }

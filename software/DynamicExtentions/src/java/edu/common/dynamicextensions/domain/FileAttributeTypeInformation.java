@@ -1,6 +1,7 @@
 
 package edu.common.dynamicextensions.domain;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -119,4 +120,13 @@ public class FileAttributeTypeInformation extends AttributeTypeInformation
 		return null;
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface#getAttributeDataType()
+	 * @return Class type for attribute.
+	 */
+	public Class getAttributeDataType()
+	{
+		return File.class;
+	}
 }

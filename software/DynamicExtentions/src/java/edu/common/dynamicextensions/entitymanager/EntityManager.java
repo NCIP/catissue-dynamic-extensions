@@ -303,10 +303,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	 * @param tgtEntityId target entity Id
 	 * @return associations collection of association
 	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
 	 */
 	public Collection<AssociationInterface> getAssociations(Long srcEntityId, Long tgtEntityId)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			throws DynamicExtensionsSystemException
 	{
 		// Create a map of substitution parameters.
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
@@ -356,10 +355,9 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	 * @param tgtEntityId target entity Id
 	 * @return associations collection of association
 	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
 	 */
 	public Collection<Long> getAssociationIds(Long srcEntityId, Long tgtEntityId)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			throws DynamicExtensionsSystemException
 	{
 		// Create a map of substitution parameters.
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
@@ -1927,18 +1925,6 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		{
 			throw new DynamicExtensionsSystemException(e.getMessage(), e);
 		}
-		catch (NoSuchMethodException e)
-		{
-			throw new DynamicExtensionsSystemException(e.getMessage(), e);
-		}
-		catch (IllegalAccessException e)
-		{
-			throw new DynamicExtensionsSystemException(e.getMessage(), e);
-		}
-		catch (InvocationTargetException e)
-		{
-			throw new DynamicExtensionsSystemException(e.getMessage(), e);
-		}
 		catch (ClassNotFoundException e)
 		{
 			throw new DynamicExtensionsSystemException(e.getMessage(), e);
@@ -3155,4 +3141,31 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		}
 		return name;
 	}
+
+	/**
+	 * This method will return the root container id of the given category name.
+	 * @param categoryName name of the category.
+	 * @return id of the root container.
+	 * @throws DynamicExtensionsSystemException exception.
+	 */
+	public Long getRootCategoryContainerIdByName(String categoryName)
+		throws DynamicExtensionsSystemException
+	{
+		Long containerId = null;
+
+		// Create a map of substitution parameters.
+		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
+		substParams.put("0", new NamedQueryParam(DBTypes.STRING, categoryName));
+
+		Collection containerIds = executeHQL("getRootCategoryContainerIdByName", substParams);
+		if ((containerIds != null) && !containerIds.isEmpty())
+		{
+			containerId = (Long) containerIds.iterator().next();
+		}
+
+		return containerId;
+	}
+
+
+
 }

@@ -8,8 +8,8 @@ import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterfac
 
 /**
  * @author sujay_narkar
- * @hibernate.joined-subclass table="DYEXTN_INTEGER_TYPE_INFO" 
- * @hibernate.joined-subclass-key column="IDENTIFIER" 
+ * @hibernate.joined-subclass table="DYEXTN_INTEGER_TYPE_INFO"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  *
  */
 public class IntegerAttributeTypeInformation extends NumericAttributeTypeInformation
@@ -17,7 +17,7 @@ public class IntegerAttributeTypeInformation extends NumericAttributeTypeInforma
 			IntegerTypeInformationInterface
 {
 
-	/** 
+	/**
 	 * @see edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface#getDataType()
 	 */
 	public String getDataType()
@@ -26,7 +26,7 @@ public class IntegerAttributeTypeInformation extends NumericAttributeTypeInforma
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public PermissibleValueInterface getPermissibleValueForString(String value)
 	{
@@ -37,11 +37,21 @@ public class IntegerAttributeTypeInformation extends NumericAttributeTypeInforma
 		return integerValue;
 	}
 	/**
-	 * 
+	 *
 	 */
 	public String getFormattedValue(Double value)
 	{
 		return Integer.valueOf(value.intValue()).toString();
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * @see edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface#getAttributeDataType()
+	 * @return Class type for attribute.
+	 */
+	public Class getAttributeDataType()
+	{
+		return Integer.class;
 	}
 
 }

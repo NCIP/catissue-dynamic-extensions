@@ -7,8 +7,8 @@ import edu.common.dynamicextensions.domaininterface.ShortValueInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterface;
 
 /**
- * @hibernate.joined-subclass table="DYEXTN_SHORT_TYPE_INFO" 
- * @hibernate.joined-subclass-key column="IDENTIFIER"  
+ * @hibernate.joined-subclass table="DYEXTN_SHORT_TYPE_INFO"
+ * @hibernate.joined-subclass-key column="IDENTIFIER"
  * @author sujay_narkar
  *
  */
@@ -17,7 +17,7 @@ public class ShortAttributeTypeInformation extends NumericAttributeTypeInformati
 			ShortTypeInformationInterface
 {
 
-	/** 
+	/**
 	 * @see edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface#getDataType()
 	 */
 	public String getDataType()
@@ -27,7 +27,7 @@ public class ShortAttributeTypeInformation extends NumericAttributeTypeInformati
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public PermissibleValueInterface getPermissibleValueForString(String value)
 	{
@@ -38,10 +38,20 @@ public class ShortAttributeTypeInformation extends NumericAttributeTypeInformati
 		return shortValue;
 	}
 	/**
-	 * 
+	 *
 	 */
 	public String getFormattedValue(Double value)
 	{
 		return Short.valueOf(value.shortValue()).toString();
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * @see edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface#getAttributeDataType()
+	 * @return Class type for attribute.
+	 */
+	public Class getAttributeDataType()
+	{
+		return Short.class;
 	}
 }

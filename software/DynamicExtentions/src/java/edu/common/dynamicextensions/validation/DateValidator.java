@@ -77,7 +77,7 @@ public class DateValidator implements ValidatorRuleInterface
 
 		if (isValidAttributeType(valueObject, attributeTypeInformation))
 		{
-			String value = (String) valueObject;
+			String value = valueObject.toString();
 
 			DateAttributeTypeInformation dateAttributeTypeInformation = (DateAttributeTypeInformation) attributeTypeInformation;
 			String dateFormat = DynamicExtensionsUtility.getDateFormat(dateAttributeTypeInformation

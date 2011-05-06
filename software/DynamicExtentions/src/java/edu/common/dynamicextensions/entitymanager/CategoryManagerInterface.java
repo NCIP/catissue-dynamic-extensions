@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.ehcache.CacheException;
-
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
@@ -210,15 +209,13 @@ public interface CategoryManagerInterface
      *             the dynamic extensions application exception
      * @throws DynamicExtensionsSystemException
      *             the dynamic extensions system exception
-     * @throws SQLException
-     *             the SQL exception
      * @return
      */
     boolean editData(CategoryEntityInterface catEntity,
             Map<BaseAbstractAttributeInterface, Object> attributeValues,
             Long recordId, Long... userId)
             throws DynamicExtensionsApplicationException,
-            DynamicExtensionsSystemException, SQLException;
+            DynamicExtensionsSystemException;
 
     /**
      * Check if the subset of permissible values passed is valid.
@@ -372,4 +369,6 @@ public interface CategoryManagerInterface
     long getRecordEntryIdByEntityRecordId(Long dynEntContainerId,
             Long deRecordId, Long recordEntryStaticId)
             throws DynamicExtensionsSystemException;
+
+
 }

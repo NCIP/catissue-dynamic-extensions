@@ -41,13 +41,13 @@ public class DateRangeValidator implements ValidatorRuleInterface
 
 		AttributeTypeInformationInterface attributeTypeInformation = attribute
 				.getAttributeTypeInformation();
-		if (((valueObject != null) && (!((String) valueObject).trim().equals("")))
+		if (((valueObject != null) && (!(valueObject.toString()).trim().equals("")))
 				&& ((attributeTypeInformation != null))
 				&& (attributeTypeInformation instanceof DateAttributeTypeInformation))
 		{
 			DateAttributeTypeInformation dateAttributeTypeInformation = (DateAttributeTypeInformation) attributeTypeInformation;
 			String dateFormat = DynamicExtensionsUtility.getDateFormat(dateAttributeTypeInformation.getFormat());
-			String value = (String) valueObject;
+			String value = valueObject.toString();
 
 			if (dateFormat.equals(ProcessorConstants.MONTH_YEAR_FORMAT))
 			{

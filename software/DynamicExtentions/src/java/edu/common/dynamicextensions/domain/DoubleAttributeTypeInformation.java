@@ -54,13 +54,13 @@ public class DoubleAttributeTypeInformation extends NumericAttributeTypeInformat
 		String formattedValue = "";
 		if (value != null)
 		{
-			if (this.decimalPlaces.intValue() > 0)
+			if (decimalPlaces.intValue() > 0)
 			{
 					DecimalFormat formatDecimal = (DecimalFormat) NumberFormat
 							.getNumberInstance();
 					formatDecimal.setParseBigDecimal(true);
 				formatDecimal.setGroupingUsed(false);
-					formatDecimal.setMaximumFractionDigits(this.decimalPlaces
+					formatDecimal.setMaximumFractionDigits(decimalPlaces
 							.intValue());
 					formattedValue = formatDecimal.format(value);
 			}
@@ -70,5 +70,10 @@ public class DoubleAttributeTypeInformation extends NumericAttributeTypeInformat
 			}
 		}
 		return formattedValue;
+	}
+
+	public Class getAttributeDataType()
+	{
+		return Double.class;
 	}
 }
