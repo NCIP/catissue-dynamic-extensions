@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import edu.common.dynamicextensions.domain.Attribute;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.Entity;
 import edu.common.dynamicextensions.domain.userinterface.Container;
@@ -457,6 +458,7 @@ public class AnnotationUtil
 					.setName(
 							"DYEXTN_AS_" + staticEntity.getId().toString() + "_"
 									+ dynamicEntity.getId().toString());
+
 			constprop.getTgtEntityConstraintKeyProperties().setSrcPrimaryKeyAttribute(attribute);
 
 		}
@@ -464,6 +466,31 @@ public class AnnotationUtil
 		return constprop;
 	}
 
+	/**
+	 * @param staticEntity
+	 * @param dynamicEntity
+	 * @return
+	 */
+	public static ConstraintPropertiesInterface getDummyConstraintProperties(
+			EntityInterface staticEntity, EntityInterface dynamicEntity)
+	{
+		ConstraintPropertiesInterface constprop = DomainObjectFactory.getInstance()
+				.createConstraintProperties();
+		constprop.setName(dynamicEntity.getTableProperties().getName());
+		for (AttributeInterface attribute : staticEntity.getPrimaryKeyAttributeCollection())
+		{
+			constprop.getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties()
+					.setName(
+							"DYEXTN_AS_" + staticEntity.getId().toString() + "_"
+									+ dynamicEntity.getId().toString());
+			Attribute tempAttribute = new Attribute();
+			tempAttribute.setId(attribute.getId());
+			constprop.getTgtEntityConstraintKeyProperties().setSrcPrimaryKeyAttribute(tempAttribute);
+
+		}
+		constprop.getSrcEntityConstraintKeyPropertiesCollection().clear();
+		return constprop;
+	}
 	/**
 	 * @param targetEntity
 	 * @param assonDirectn

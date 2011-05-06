@@ -189,7 +189,7 @@ public abstract class AbstractXMIImporter
 			map.put(WebUIManagerConstants.OPERATION, WebUIManagerConstants.UPDATE_CACHE);
 			map.put(WebUIManagerConstants.ASSOCIATION, intermodelAssociationCollection);
 			map.put(WebUIManagerConstants.ENTITY_GROUP, ((EntityInterface) mainContainerList.get(0)
-					.getAbstractEntity()).getEntityGroup());
+					.getAbstractEntity()).getEntityGroup().getName());
 
 			DEClient client = new DEClient();
 			client.setParamaterObjectMap(map);
@@ -951,6 +951,29 @@ public abstract class AbstractXMIImporter
 
 		//Create constraint properties for the created association.
 		ConstraintPropertiesInterface constProperts = AnnotationUtil.getConstraintProperties(
+				staticEntity, dynamicEntity);
+		association.setConstraintProperties(constProperts);
+
+		return association;
+
+	}
+
+	/**
+	 *It will create a new association object between the staticEntity & dynamicEntity.
+	 * @param staticEntity source entity
+	 * @param dynamicEntity destination entity.
+	 * @return newly added association
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
+	 */
+	public AssociationInterface createDummyAssociation(EntityInterface staticEntity,
+			EntityInterface dynamicEntity) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
+	{
+		AssociationInterface association =createAssociation(staticEntity, dynamicEntity);
+
+		//Create constraint properties for the created association.
+		ConstraintPropertiesInterface constProperts = AnnotationUtil.getDummyConstraintProperties(
 				staticEntity, dynamicEntity);
 		association.setConstraintProperties(constProperts);
 

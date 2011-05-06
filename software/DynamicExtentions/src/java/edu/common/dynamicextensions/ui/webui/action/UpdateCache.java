@@ -16,6 +16,8 @@ import edu.common.dynamicextensions.dem.AbstractHandler;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
+import edu.common.dynamicextensions.domaininterface.databaseproperties.ConstraintPropertiesInterface;
+import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
@@ -84,8 +86,8 @@ public class UpdateCache extends HttpServlet
 	 */
 	private void releaseEntity(Map<String, Object> paramaterObjectMap)
 	{
-		EntityGroupInterface entityGroupInterface = EntityCache.getInstance().getEntityGroupByName((String) paramaterObjectMap
-				.get(WebUIManagerConstants.ENTITY_GROUP));
+		EntityGroupInterface entityGroupInterface = EntityCache.getInstance().getEntityGroupByName(
+				(String) paramaterObjectMap.get(WebUIManagerConstants.ENTITY_GROUP));
 		EntityCache.getInstance().releaseAllEntities(entityGroupInterface.getEntityCollection());
 		LOGGER.info(ApplicationProperties.getValue(RELEASE_ALL_ENTITIES));
 	}
@@ -100,8 +102,8 @@ public class UpdateCache extends HttpServlet
 	private void lockEntity(Map<String, Object> paramaterObjectMap)
 			throws DynamicExtensionsSystemException
 	{
-		EntityGroupInterface entityGroupInterface = EntityCache.getInstance().getEntityGroupByName((String) paramaterObjectMap
-				.get(WebUIManagerConstants.ENTITY_GROUP));
+		EntityGroupInterface entityGroupInterface = EntityCache.getInstance().getEntityGroupByName(
+				(String) paramaterObjectMap.get(WebUIManagerConstants.ENTITY_GROUP));
 		EntityCache.getInstance().lockAllEntities(entityGroupInterface.getEntityCollection());
 		LOGGER.info(ApplicationProperties.getValue(LOCK_ALL_ENTITIES));
 	}
@@ -116,8 +118,8 @@ public class UpdateCache extends HttpServlet
 	private void relaseForms(Map<String, Object> paramaterObjectMap)
 			throws DynamicExtensionsSystemException
 	{
-		EntityGroupInterface entityGroupInterface = EntityCache.getInstance().getEntityGroupByName((String) paramaterObjectMap
-				.get(WebUIManagerConstants.ENTITY_GROUP));
+		EntityGroupInterface entityGroupInterface = EntityCache.getInstance().getEntityGroupByName(
+				(String) paramaterObjectMap.get(WebUIManagerConstants.ENTITY_GROUP));
 		EntityCache.getInstance().releaseAllContainer(
 				EntityGroupManagerUtil.getAssociatedFormId(entityGroupInterface));
 		LOGGER.info(ApplicationProperties.getValue(RELEASE_FORMS));
@@ -133,8 +135,8 @@ public class UpdateCache extends HttpServlet
 	private void lockForms(Map<String, Object> paramaterObjectMap)
 			throws DynamicExtensionsSystemException
 	{
-		EntityGroupInterface entityGroupInterface = EntityCache.getInstance().getEntityGroupByName((String) paramaterObjectMap
-				.get(WebUIManagerConstants.ENTITY_GROUP));
+		EntityGroupInterface entityGroupInterface = EntityCache.getInstance().getEntityGroupByName(
+				(String) paramaterObjectMap.get(WebUIManagerConstants.ENTITY_GROUP));
 		EntityCache.getInstance().lockAllContainer(
 				EntityGroupManagerUtil.getAssociatedFormId(entityGroupInterface));
 		LOGGER.info(ApplicationProperties.getValue(LOCK_FORMS));
@@ -146,14 +148,15 @@ public class UpdateCache extends HttpServlet
 	 * @param paramaterObjectMap the paramater object map
 	 *
 	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
+	 * @throws DynamicExtensionsApplicationException
 	 */
 	private void updateCache(Map<String, Object> paramaterObjectMap)
-			throws DynamicExtensionsSystemException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		// 2: refresh entity cache with latest version of the updated entity
 		// group
-		EntityCache cache = refreshCache(EntityCache.getInstance().getEntityGroupByName((String) paramaterObjectMap
-				.get(WebUIManagerConstants.ENTITY_GROUP)));
+		EntityCache cache = refreshCache(EntityManager.getInstance().getEntityGroupByName(
+				(String) paramaterObjectMap.get(WebUIManagerConstants.ENTITY_GROUP)));
 
 		Collection<AssociationInterface> association = (Collection<AssociationInterface>) paramaterObjectMap
 				.get(WebUIManagerConstants.ASSOCIATION);
@@ -210,6 +213,7 @@ public class UpdateCache extends HttpServlet
 	{
 		for (AssociationInterface associationInterface : association)
 		{
+			updateConstrainPropeties(associationInterface, hookEntity);
 			associationInterface.setEntity(hookEntity);
 			associationInterface.setTargetEntity(cache
 					.getEntityByIdForCacheUpdate(associationInterface.getTargetEntity().getId()));
@@ -217,5 +221,20 @@ public class UpdateCache extends HttpServlet
 			LOGGER.info(associationInterface.getTargetEntity().getName()
 					+ " associated successfully.");
 		}
+	}
+
+	/**
+	 * @param association
+	 * @param staticEntity
+	 */
+	private void updateConstrainPropeties(AssociationInterface association,
+			EntityInterface staticEntity)
+	{
+		ConstraintPropertiesInterface constraintProperties = association.getConstraintProperties();
+		constraintProperties.getTgtEntityConstraintKeyProperties().setSrcPrimaryKeyAttribute(
+				EntityCache.getInstance().getAttributeById(
+						constraintProperties.getTgtEntityConstraintKeyProperties()
+								.getSrcPrimaryKeyAttribute().getId()));
+
 	}
 }
