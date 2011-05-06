@@ -39,7 +39,7 @@ public class CacheTask
 		if (entityGroup != null)
 		{
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put(WebUIManagerConstants.ENTITY_GROUP, entityGroup);
+			map.put(WebUIManagerConstants.ENTITY_GROUP, entityGroupName);
 			map.put(WebUIManagerConstants.OPERATION, WebUIManagerConstants.RELEASE_FORMS);
 			DEClient client = new DEClient();
 			client.setParamaterObjectMap(map);

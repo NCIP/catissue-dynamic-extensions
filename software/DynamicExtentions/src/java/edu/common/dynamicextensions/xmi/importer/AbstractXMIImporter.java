@@ -154,7 +154,7 @@ public abstract class AbstractXMIImporter
 			boolean isEditedXmi = xmiImportProcessor.isEditedXmi;
 			if (isEditedXmi)
 			{
-				lockFroms(xmiImportProcessor.getEntityGroup());
+				lockFroms(xmiImportProcessor.getEntityGroup().getName());
 			}
 			generateLogForProcessXMI(processXMIStartTime, isEditedXmi);
 			long assoWithHEstartTime = System.currentTimeMillis();
@@ -235,14 +235,14 @@ public abstract class AbstractXMIImporter
 
 	/**
 	 * Lock froms.
-	 * @param entityGroupInterface
+	 * @param entityGroupName
 	 * @throws DynamicExtensionsApplicationException the dynamic extensions application exception
 	 */
-	private void lockFroms(EntityGroupInterface entityGroupInterface)
+	private void lockFroms(String entityGroupName)
 			throws DynamicExtensionsApplicationException
 	{
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put(WebUIManagerConstants.ENTITY_GROUP, entityGroupInterface);
+		map.put(WebUIManagerConstants.ENTITY_GROUP, entityGroupName);
 		map.put(WebUIManagerConstants.OPERATION, WebUIManagerConstants.LOCK_FORMS);
 		DEClient client = new DEClient();
 		client.setParamaterObjectMap(map);
