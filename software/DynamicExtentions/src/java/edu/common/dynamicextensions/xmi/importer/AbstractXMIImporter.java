@@ -179,7 +179,7 @@ public abstract class AbstractXMIImporter
 			LOGGER.info("Now associating the clinical study to the main Containers");
 			postProcess(isEditedXmi, coRecObjCsvFName, mainContainerList, domainModelName);
 			generateValidationLogs();
-
+			hibernatedao.commit();
 			generateLog(" IMPORT_XMI -->TOTAL TIME", processStartTime);
 
 		}
