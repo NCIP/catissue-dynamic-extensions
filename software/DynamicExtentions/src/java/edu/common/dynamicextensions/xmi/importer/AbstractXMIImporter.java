@@ -217,7 +217,7 @@ public abstract class AbstractXMIImporter
 		map.put(WebUIManagerConstants.OPERATION, WebUIManagerConstants.UPDATE_CACHE);
 		map.put(WebUIManagerConstants.ASSOCIATION, intermodelAssociationCollection);
 		map.put(WebUIManagerConstants.ENTITY_GROUP, ((EntityInterface) mainContainerList.get(0)
-				.getAbstractEntity()).getEntityGroup().getName());
+				.getAbstractEntity()).getEntityGroup());
 
 		DEClient client = new DEClient();
 		client.setParamaterObjectMap(map);

@@ -155,8 +155,8 @@ public class UpdateCache extends HttpServlet
 	{
 		// 2: refresh entity cache with latest version of the updated entity
 		// group
-		EntityCache cache = refreshCache(EntityManager.getInstance().getEntityGroupByName(
-				(String) paramaterObjectMap.get(WebUIManagerConstants.ENTITY_GROUP)));
+		EntityCache cache = refreshCache((EntityGroupInterface) paramaterObjectMap
+				.get(WebUIManagerConstants.ENTITY_GROUP));
 
 		Collection<AssociationInterface> association = (Collection<AssociationInterface>) paramaterObjectMap
 				.get(WebUIManagerConstants.ASSOCIATION);
