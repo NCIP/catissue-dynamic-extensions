@@ -181,20 +181,7 @@ public abstract class AbstractXMIImporter
 			generateValidationLogs();
 
 			generateLog(" IMPORT_XMI -->TOTAL TIME", processStartTime);
-			LOGGER.info("updating server cache");
 
-			//step 7: update server cache
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put(WebUIManagerConstants.ENTITY, hookEntityName);
-			map.put(WebUIManagerConstants.OPERATION, WebUIManagerConstants.UPDATE_CACHE);
-			map.put(WebUIManagerConstants.ASSOCIATION, intermodelAssociationCollection);
-			map.put(WebUIManagerConstants.ENTITY_GROUP, ((EntityInterface) mainContainerList.get(0)
-					.getAbstractEntity()).getEntityGroup().getName());
-
-			DEClient client = new DEClient();
-			client.setParamaterObjectMap(map);
-			client.setServerUrl(getServerUrl());
-			client.execute(null);
 		}
 		catch (Exception e)
 		{
@@ -213,7 +200,33 @@ public abstract class AbstractXMIImporter
 		}
 		if (isImportSuccess)
 		{
+			LOGGER.info("updating server cache");
+
+			updateCache(mainContainerList);
 			exportXmiForCacore(mainContainerList);
+		}
+	}
+
+	private void updateCache(List<ContainerInterface> mainContainerList)
+
+	{
+		try{
+		//step 7: update server cache
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(WebUIManagerConstants.ENTITY, hookEntityName);
+		map.put(WebUIManagerConstants.OPERATION, WebUIManagerConstants.UPDATE_CACHE);
+		map.put(WebUIManagerConstants.ASSOCIATION, intermodelAssociationCollection);
+		map.put(WebUIManagerConstants.ENTITY_GROUP, ((EntityInterface) mainContainerList.get(0)
+				.getAbstractEntity()).getEntityGroup().getName());
+
+		DEClient client = new DEClient();
+		client.setParamaterObjectMap(map);
+		client.setServerUrl(getServerUrl());
+		client.execute(null);
+		}
+		catch(MalformedURLException exception)
+		{
+			LOGGER.error(exception.getCause());
 		}
 	}
 
