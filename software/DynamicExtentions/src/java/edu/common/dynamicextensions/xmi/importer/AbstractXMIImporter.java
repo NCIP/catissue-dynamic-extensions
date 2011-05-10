@@ -926,7 +926,7 @@ public abstract class AbstractXMIImporter
 
 			//create an association without setting the source entity.
 			//Hook entity will be updated as the source on the server
-			intermodelAssociationCollection.add(createAssociation(staticEntity,
+			intermodelAssociationCollection.add(createDummyAssociation(staticEntity,
 					(EntityInterface) containerInterface.getAbstractEntity()));
 			queriesList.addAll(QueryBuilderFactory.getQueryBuilder().getQueryPartForAssociation(
 					association, revQueryList, true));
