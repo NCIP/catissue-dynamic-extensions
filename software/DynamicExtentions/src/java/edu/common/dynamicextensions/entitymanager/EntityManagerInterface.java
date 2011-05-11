@@ -95,20 +95,17 @@ public interface EntityManagerInterface
 	 * @param entityName
 	 * @return
 	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
 	 */
-	EntityInterface getEntityByName(String entityName) throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException;
+	EntityInterface getEntityByName(String entityName) throws DynamicExtensionsSystemException;
 
 	/**
 	 * @param entityName
 	 * @param hibernateDAO
 	 * @return
 	 * @throws DynamicExtensionsSystemException
-	 * @throws DynamicExtensionsApplicationException
 	 */
 	EntityInterface getEntityByName(String entityName, HibernateDAO hibernateDAO)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
+			throws DynamicExtensionsSystemException;
 
 	/**
 	 * Returns an association object given the entity name and source role name.
@@ -524,7 +521,7 @@ public interface EntityManagerInterface
 	 * @throws DynamicExtensionsApplicationException
 	 */
 	EntityGroupInterface getEntityGroupByName(String entityGroupName)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
+			throws DynamicExtensionsSystemException;
 
 	/**
 	 * Returns all entityGroups in the system.

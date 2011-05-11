@@ -1,5 +1,5 @@
 
-package edu.common.dynamicextensions.util;
+package edu.common.dynamicextensions.util.templategenerator;
 
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;

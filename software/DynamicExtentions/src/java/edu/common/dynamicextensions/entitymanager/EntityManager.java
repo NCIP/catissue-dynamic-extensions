@@ -392,7 +392,7 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 	 * @see edu.common.dynamicextensions.entitymanager.EntityManagerInterface#getEntityByName(java.lang.String, edu.wustl.dao.HibernateDAO)
 	 */
 	public EntityInterface getEntityByName(String entityName, HibernateDAO hibernateDAO)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+			throws DynamicExtensionsSystemException
 	{
 		EntityInterface entity = (EntityInterface) getObjectByName(Entity.class.getName(),
 				entityName, hibernateDAO);

@@ -2,9 +2,12 @@
  *
  */
 
-package edu.common.dynamicextensions.util;
+package edu.common.dynamicextensions.util.templategenerator;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Collection;
 
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
@@ -12,9 +15,6 @@ import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.bulkoperator.metadata.Attribute;
 import edu.wustl.bulkoperator.metadata.BulkOperationClass;
 import edu.wustl.bulkoperator.metadata.BulkOperationMetaData;
-import edu.wustl.bulkoperator.metadata.BulkOperationMetadataUtil;
-import edu.wustl.bulkoperator.metadata.HookingInformation;
-import edu.wustl.bulkoperator.util.BulkOperationException;
 
 /**
  * @author shrishail_kalshetty
@@ -123,7 +123,7 @@ public class BOTemplateGeneratorUtility
 	public static void setCardinality(Integer numberOfEntries, BulkOperationClass bulkOperationClass)
 	{
 		//to check if cardinality is one to many or not
-		if (numberOfEntries < 0)
+		if (numberOfEntries < 0 || numberOfEntries>99)
 		{
 			bulkOperationClass.setCardinality(MANY);
 		}
@@ -133,56 +133,7 @@ public class BOTemplateGeneratorUtility
 		}
 	}
 
-	/**
-	 * This method appends the XML template data into an existing XML file.
-	 * @param xmlFilePath XML File Path.
-	 * @param mappingXML Mapping XML file path.
-	 * @param bulkOperationClass BO class object.
-	 * @return BulkOperationMetaData object.
-	 * @throws BulkOperationException throws BulkOperationMetaData
-	 */
-	public static BulkOperationMetaData appnedCategoryTemplate(String xmlFilePath,
-			String mappingXML, BulkOperationClass bulkOperationClass) throws BulkOperationException
-	{
-		BulkOperationMetadataUtil metadataUtil = new BulkOperationMetadataUtil();
-		final BulkOperationMetaData bulkMetaData = metadataUtil.unmarshall(xmlFilePath, mappingXML);
-		BulkOperationClass rootBulkOperationClass = bulkMetaData.getBulkOperationClass().iterator()
-				.next();
-		final BulkOperationClass deCategoryBulkOperationClass = rootBulkOperationClass
-				.getDynExtCategoryAssociationCollection().iterator().next();
-		deCategoryBulkOperationClass.setTemplateName(bulkOperationClass.getTemplateName());
-		deCategoryBulkOperationClass.setClassName(bulkOperationClass.getTemplateName());
-		deCategoryBulkOperationClass.getContainmentAssociationCollection().add(bulkOperationClass);
-		rootBulkOperationClass.setTemplateName(bulkOperationClass.getTemplateName());
-		bulkMetaData.getBulkOperationClass().removeAll(bulkMetaData.getBulkOperationClass());
-		bulkMetaData.getBulkOperationClass().add(rootBulkOperationClass);
-		return bulkMetaData;
-	}
 
-	/**
-	 * Generate CSV template required for Bulk operation.
-	 * @param bulkMetaData BulkMetaData object.
-	 * @param file File to write.
-	 * @throws DynamicExtensionsSystemException throws DESystemException.
-	 */
-	public static String createCSVTemplate(BulkOperationMetaData bulkMetaData, File file)
-			throws DynamicExtensionsSystemException
-	{
-		StringBuffer csvStringBuffer = new StringBuffer();
-		final BulkOperationClass boObject = bulkMetaData.getBulkOperationClass().iterator().next()
-				.getDynExtCategoryAssociationCollection().iterator().next();
-		HookingInformation hookingInformation = boObject.getHookingInformation().iterator().next();
-		for (Attribute attribute : hookingInformation.getAttributeCollection())
-		{
-			csvStringBuffer.append(attribute.getCsvColumnName()).append(DEConstants.COMMA);
-		}
-		final Collection<BulkOperationClass> contAssoCollection = boObject
-				.getContainmentAssociationCollection();
-
-		processContainmentAssociation(csvStringBuffer, contAssoCollection, 0);
-		replaceLastDelimiter(csvStringBuffer, DEConstants.COMMA);
-		return csvStringBuffer.toString();
-	}
 
 	/**
 	 * Process the containment association for adding attribute names in CSV file.
@@ -190,12 +141,12 @@ public class BOTemplateGeneratorUtility
 	 * @param containmentAssoCollection Collection of Containment association.
 	 * @param count Count required to get depth of containment association.
 	 */
-	private static void processContainmentAssociation(StringBuffer csvBuffer,
-			Collection<BulkOperationClass> containmentAssoCollection, Integer count)
+	public static void processContainmentAssociation(StringBuffer csvBuffer,
+			Collection<BulkOperationClass> containmentAssoCollection, String suffix )
 	{
 		for (BulkOperationClass boClass : containmentAssoCollection)
 		{
-			appendAttributeCSVNames(csvBuffer, count, boClass);
+			appendAttributeCSVNames(csvBuffer, suffix, boClass);
 		}
 	}
 
@@ -205,40 +156,72 @@ public class BOTemplateGeneratorUtility
 	 * @param count number of times to append CA separator.
 	 * @param boClass get attribute collection from this object.
 	 */
-	private static void appendAttributeCSVNames(StringBuffer csvBuffer, Integer count,
+	private static void appendAttributeCSVNames(StringBuffer csvBuffer, String suffix,
 			BulkOperationClass boClass)
 	{
-		for (int index = 0; index < boClass.getMaxNoOfRecords(); index++)
+		for (int index = 1; index <= boClass.getMaxNoOfRecords(); index++)
 		{
 			for (Attribute attribute : boClass.getAttributeCollection())
 			{
 				csvBuffer.append(attribute.getCsvColumnName());
-				for (int incr = 0; incr < count; incr++)
-				{
-					csvBuffer.append(CONTAINMENT_SEPARATOR);
-				}
-				csvBuffer.append('#').append(index + 1).append(DEConstants.COMMA);
+				csvBuffer.append(suffix + "#" + index);
+
+				csvBuffer.append(DEConstants.COMMA);
 			}
 			final Collection<BulkOperationClass> caCollection = boClass
 			.getContainmentAssociationCollection();
 			if (!caCollection.isEmpty())
 			{
-				processContainmentAssociation(csvBuffer, caCollection, count + 1);
+				processContainmentAssociation(csvBuffer, caCollection, suffix+"#" + index);
 			}
 		}
 	}
 
 
-	public static String getAttributename(String className,String attributeName)
+
+
+	/**
+	 * This method saves the XML file copy in Template directory.
+	 * @param baseDir Base directory in which template directory to be created.
+	 * @param mappingXML Mapping XML file path.
+	 * @param bulkMetaData BulkOperationMetaData object.
+	 * @return File object.
+	 * @throws DynamicExtensionsSystemException throws DynamicExtensionsSystemException.
+	 */
+	public static void saveXMLTemplateCopy(File fileName, String mappingXML,
+			final BulkOperationMetaData bulkMetaData)
+			throws DynamicExtensionsSystemException
 	{
-		StringBuffer csvBuffer=new StringBuffer();
-		String instanceId=null;
-		if(className.contains("->"))
+		try
 		{
-			className=className.substring(className.lastIndexOf("->")+2,className.length());
-			instanceId=className.substring(className.indexOf("[")+1,className.lastIndexOf("]"));
-			className=className.substring(0,className.indexOf("["));
+			MarshalUtility.marshalObject(mappingXML, bulkMetaData, new FileWriter(
+					fileName));
 		}
-		return csvBuffer.append(className).append("_").append(attributeName).append(instanceId).toString();
+		catch (IOException exception)
+		{
+			throw new DynamicExtensionsSystemException(
+					"Error while creating XML template for Bulk operation.", exception);
+		}
+	}
+
+	/**
+	 * @param file File to save.
+	 * @param csvString CSV string to write in a file.
+	 * @throws DynamicExtensionsSystemException throw DynamicExtensionsSystemException
+	 */
+	public static void saveCSVTemplateCopy(File file, String csvString)
+			throws DynamicExtensionsSystemException
+	{
+		try
+		{
+			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+			bufferedWriter.write(csvString);
+			bufferedWriter.close();
+		}
+		catch (IOException exception)
+		{
+			throw new DynamicExtensionsSystemException(
+					"Error while creating CSV template for bulk operation.", exception);
+		}
 	}
 }
