@@ -348,5 +348,29 @@ public class DEConstants
 
 	public static final String ON_FORM_LOAD = "onFormLoad";
 
+	public static final String FILE_NAME= "fileName";
+
+	public static final String SUFFIX_FILENAME= "_FILE_NAME";
+
+	public static final String CONTENT_TYPE = "contentType";
+
+	public static final String SUFFIX_CONTENT_TYPE = "_CONTENT_TYPE";
+
+	public static final String ENTITY_ID = "entityId";
+
+	public static final String ENTITY_ID_COL_NAME = "ENTITY_ID";
+
+	public static final String IDENTIFIER_COL_NAME = "IDENTIFIER";
+
+	public static final String RECORD_ID = "recordId";
+
+	public static final String AUDIT_INSERT = "INSERT";
+
+	public static final String AUDIT_UPDATE = "UPDATE";
+
+	public static final String AUDIT_TABLENAME = "tableName";
+
+	public static final String AUDIT_COL_NAME_MAP = "attributeColumnNameMap";
+
 
 }
