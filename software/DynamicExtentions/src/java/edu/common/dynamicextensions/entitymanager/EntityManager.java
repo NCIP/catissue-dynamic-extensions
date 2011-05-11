@@ -617,6 +617,12 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			identifier = getObjectId(newObject);
 			List<FileQueryBean> queryListForFile = getQueryListForFileAttributes(dataValue, entity,
 					newObject);
+			if (!queryListForFile.isEmpty())
+			{
+				FileAuditHandler.getInstance().auditFile(sessionDataBean, hibernateDAO, newObject,
+						DEConstants.AUDIT_INSERT, dataValue);
+			}
+
 			if (hibernateDao == null)
 			{
 				hibernateDAO.commit();
@@ -872,6 +878,11 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 
 			List<FileQueryBean> queryListForFile = getQueryListForFileAttributes(dataVal, entity,
 					updatedObject);
+			if (!queryListForFile.isEmpty())
+			{
+				FileAuditHandler.getInstance().auditFile(sessionDataBean, hibernateDAO,
+						updatedObject, DEConstants.AUDIT_UPDATE, dataVal);
+			}
 			if (hibernateDao == null)
 			{
 				hibernateDAO.commit();
