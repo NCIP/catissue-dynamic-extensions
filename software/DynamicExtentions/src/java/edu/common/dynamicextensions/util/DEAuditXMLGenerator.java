@@ -4,6 +4,9 @@
 
 package edu.common.dynamicextensions.util;
 
+import java.util.ArrayList;
+
+import edu.common.dynamicextensions.domain.FileAttribute;
 import edu.wustl.common.audit.util.AuditXMLGenerator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.AuditException;
@@ -41,5 +44,17 @@ public class DEAuditXMLGenerator extends AuditXMLGenerator
 	public DEAuditXMLGenerator()
 	{
 		super(new DEAuditXMLTagGenerator());
+	}
+
+	@Override
+	protected Class[] getClasses(String packageName) throws AuditException
+	{
+		ArrayList<Class> classes = new ArrayList<Class>();
+		for(Class klass : super.getClasses(packageName))
+		{
+			classes.add(klass);
+		}
+		classes.add(FileAttribute.class);
+		return classes.toArray(new Class[classes.size()]);
 	}
 }

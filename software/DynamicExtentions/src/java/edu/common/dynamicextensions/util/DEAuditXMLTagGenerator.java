@@ -22,7 +22,8 @@ public class DEAuditXMLTagGenerator extends AuditXMLTagGenerator
 	@Override
 	protected void updateAttributeTag(StringBuffer auditableMetatdataXML, Field field)
 	{
-		if(field.getName().startsWith(DEConstants.COLLECTIONATTRIBUTE) && AuditXMLGenerator.excludeAssociation)
+		if (field.getName().startsWith(DEConstants.COLLECTIONATTRIBUTE)
+				&& AuditXMLGenerator.excludeAssociation)
 		{
 			AuditXMLGenerator.excludeAssociation = false;
 			super.updateAttributeTag(auditableMetatdataXML, field);
@@ -33,5 +34,15 @@ public class DEAuditXMLTagGenerator extends AuditXMLTagGenerator
 			super.updateAttributeTag(auditableMetatdataXML, field);
 		}
 
+	}
+
+	@Override
+	protected void generateAttributeTag(StringBuffer auditableMetatdataXML, Field field)
+	{
+		if (!DEConstants.AUDIT_TABLENAME.equals(field.getName())
+				&& !DEConstants.AUDIT_COL_NAME_MAP.equals(field.getName()))
+		{
+			super.generateAttributeTag(auditableMetatdataXML, field);
+		}
 	}
 }
