@@ -901,4 +901,23 @@ public abstract class AbstractEntityCache implements IEntityCache
 		}
 
 	}
+
+	public CategoryInterface getCategoryByName(String name) throws DynamicExtensionsSystemException
+	{
+		CategoryInterface cat =null;
+		for(CategoryInterface category : deCategories)
+		{
+			if(category.getName().equals(name))
+			{
+				cat = category;
+				break;
+			}
+		}
+		if(cat==null)
+		{
+			cat = CategoryManager.getInstance().getCategoryByName(name);
+		}
+		return cat;
+	}
+
 }
