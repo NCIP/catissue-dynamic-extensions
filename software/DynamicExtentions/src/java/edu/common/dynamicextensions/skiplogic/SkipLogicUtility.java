@@ -56,7 +56,8 @@ public final class SkipLogicUtility
 				{
 					if (permissibleValue.equals(defaultValue))
 					{
-						defaultValue = permissibleValue;
+						defaultValue.setObjectValue(permissibleValue.getValueAsObject());
+						break;
 					}
 				}
 			}
