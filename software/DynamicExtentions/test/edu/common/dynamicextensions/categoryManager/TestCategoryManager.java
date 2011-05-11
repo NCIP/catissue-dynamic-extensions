@@ -441,6 +441,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			//FIXME generate auditmetadata xml for models imported.
 			if (resultSet.next())
 			{
+				System.out.println("Inside resultset");
 				fail();
 			}
 		}
@@ -1424,6 +1425,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 					"Test Category_Lab Report for Automation");
 			assertNotNull(category);
 			insertDataForCategory(category);
+			assertAudit("%_FILE_NAME");
 		}
 		catch (Exception e)
 		{
