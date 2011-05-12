@@ -909,14 +909,13 @@
 			<antcall target="import.caTissueCoreModel"/>
 			<antcall target="import.GeneconnectModel"/>
 
-			<copy file="./binaries/test/auditablemetadata.xml" tofile="${jboss.home.dir}/server/default/deploy/${test.war.name}/WEB-INF/classes/DynamicExtensionsAuditMetadata.xml" overwrite="true" failonerror="false"/>
-
-
 			<!-- wars are generated in ${tempWar.dir} location -->
 
 			<copy todir="${jboss.deploy.dir}/${test.war.name}" overwrite="true">
 				<fileset dir="${tempWar.dir}/test.war" />
 			</copy>
+
+			<copy file="./binaries/test/auditablemetadata.xml" tofile="${jboss.home.dir}/server/default/deploy/${test.war.name}/WEB-INF/classes/DynamicExtensionsAuditMetadata.xml" overwrite="true" failonerror="false"/>
 
 			<!-- Copy the latest DE jar in the war to ensure that the classes are compatible
 				Ideally the demwar shold contain the latest jars automatically.
