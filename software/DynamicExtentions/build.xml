@@ -909,7 +909,7 @@
 			<antcall target="import.caTissueCoreModel"/>
 			<antcall target="import.GeneconnectModel"/>
 
-			<copy file="${cacore_deployable}/${entity.name}/auditablemetadata.xml" tofile="${jboss.home.dir}/server/default/deploy/${test.war.name}/WEB-INF/classes/DynamicExtensionsAuditMetadata.xml" overwrite="true" failonerror="false"/>
+			<copy file="./binaries/test/auditablemetadata.xml" tofile="${jboss.home.dir}/server/default/deploy/${test.war.name}/WEB-INF/classes/DynamicExtensionsAuditMetadata.xml" overwrite="true" failonerror="false"/>
 
 
 			<!-- wars are generated in ${tempWar.dir} location -->
