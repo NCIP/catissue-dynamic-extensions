@@ -21,7 +21,7 @@ public class DEAuditXMLGenerator extends AuditXMLGenerator
 {
 
 	/** The LOGGER. */
-	private static Logger LOGGER = Logger.getCommonLogger(DEAuditXMLGenerator.class);
+	private static final Logger LOGGER = Logger.getCommonLogger(DEAuditXMLGenerator.class);
 
 	/**
 	 * The main method.
