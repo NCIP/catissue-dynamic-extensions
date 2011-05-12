@@ -22,6 +22,7 @@
 	<property name="javadoc.zip" value="DynamicExtensionsJavaDoc.zip" />
 	<property name="resource.dir" value="src/resources" />
 	<property name="testCases.hookEntity.dir" value="${base.dir}/test/edu/hostApp" />
+	<property name="cacore_deployable" value="${base.dir}"/>
 	<property name="cacore.location" value="${cacore_deployable}"/>
 
 	<property name="tempWar.dir" value="${base.dir}/binaries/tempWar"/>
@@ -908,6 +909,7 @@
 			<antcall target="import.caTissueCoreModel"/>
 			<antcall target="import.GeneconnectModel"/>
 
+			<copy file="${cacore_deployable}/${entity.name}/auditablemetadata.xml" tofile="${jboss.home.dir}/server/default/deploy/${test.war.name}/WEB-INF/classes/DynamicExtensionsAuditMetadata.xml" overwrite="true" failonerror="false"/>
 
 
 			<!-- wars are generated in ${tempWar.dir} location -->
@@ -1081,6 +1083,7 @@
 				<property name="cacore.deployable.dir" value="${cacore.location}" />
 				<property name="testcases" value="True" />
 				<property name="Application.url" value="${Application.url}" />
+				<property name="de.zip.location" value="${base.dir}" />
 			</ant>
 
 			<echo message="Test Model loaded Successfully" />
@@ -1094,6 +1097,7 @@
 				<property name="cacore.deployable.dir" value="${cacore.location}" />
 				<property name="testcases" value="True" />
 				<property name="Application.url" value="${Application.url}" />
+				<property name="de.zip.location" value="${base.dir}" />
 			</ant>
 			<echo message="Test Model Edited Successfully" />
 		</target>
