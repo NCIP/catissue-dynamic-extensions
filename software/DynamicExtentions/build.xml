@@ -1083,7 +1083,7 @@
 				<property name="cacore.deployable.dir" value="${cacore.location}" />
 				<property name="testcases" value="True" />
 				<property name="Application.url" value="${Application.url}" />
-				<property name="de.zip.location" value="${base.dir}" />
+				<property name="de.zip.location" value="${basedir}" />
 			</ant>
 
 			<echo message="Test Model loaded Successfully" />
