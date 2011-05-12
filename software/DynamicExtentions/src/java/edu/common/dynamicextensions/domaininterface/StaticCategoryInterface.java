@@ -23,32 +23,32 @@ public interface StaticCategoryInterface extends AbstractMetadataInterface
 	 * @param formURL Form URL
 	 */
 	void setFormURL(String formURL);
-	
+
 	/**
 	 * Gets the grid view column list.
-	 * 
+	 *
 	 * @return the grid view column list
 	 */
-	public Collection<GridViewColumn> getGridViewColumnList();
-	
+	Collection<GridViewColumn> getGridViewColumnList();
+
 	/**
 	 * Sets the grid view column list.
-	 * 
+	 *
 	 * @param gridViewColumnList the new grid view column list
 	 */
-	public void setGridViewColumnList(Collection<GridViewColumn> gridViewColumnList);
+	void setGridViewColumnList(Collection<GridViewColumn> gridViewColumnList);
 	/**
 	 * Gets the data query.
-	 * 
+	 *
 	 * @return the data query
 	 */
-	public String getDataQuery();
-	
+	String getDataQuery();
+
 	/**
 	 * Sets the data query.
-	 * 
+	 *
 	 * @param dataQuery the new data query
 	 */
-	public void setDataQuery(String dataQuery);
+	void setDataQuery(String dataQuery);
 
 }
