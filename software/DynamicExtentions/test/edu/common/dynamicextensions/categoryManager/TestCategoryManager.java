@@ -2173,11 +2173,12 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO(null);
 			resultSet = jdbcDao.getResultSet(selectQuery, queryDataList, null);
 
-			//Currently audit meta data xml is empty hence no results will be available
-			//FIXME generate auditmetadata xml for models imported.
 			if (resultSet.next())
 			{
-				System.out.println("Inside resultset");
+				System.out.println("Data Audited sucessfully.");
+			}
+			else
+			{
 				fail();
 			}
 		}
