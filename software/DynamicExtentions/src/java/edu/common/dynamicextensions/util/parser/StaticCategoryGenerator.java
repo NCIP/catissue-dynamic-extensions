@@ -97,9 +97,11 @@ public class StaticCategoryGenerator
 				gridViewCol.setDisplayOrder(gridDisplayColumn.getDisplayOrder());
 				gridColBeans.add(gridViewCol);
 			}
-		if(staticCategory.getGridViewColumnList()!=null)
-			staticCategory.getGridViewColumnList().clear();
-			staticCategory.getGridViewColumnList().addAll(gridColBeans);
+			if(staticCategory.getGridViewColumnList()!=null)
+			{
+				staticCategory.getGridViewColumnList().clear();
+				staticCategory.getGridViewColumnList().addAll(gridColBeans);
+			}
 		}
 
 		if (form.getDataQuery() != null)
