@@ -2900,7 +2900,6 @@ public class DynamicExtensionBaseQueryBuilder
 		boolean isPresent = false;
 
 		String tableName = attribute.getEntity().getTableProperties().getName();
-		System.out.println("");
 		String columnName = attribute.getColumnProperties().getName();
 		Object frmtedValue = QueryBuilderFactory.getQueryBuilder().getFormattedValue(
 				(AbstractAttribute) attribute, value);
