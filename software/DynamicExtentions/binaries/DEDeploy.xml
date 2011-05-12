@@ -1770,6 +1770,7 @@
 				</java>
 
 				<jar destfile="${entity.jar.location}/${entitygroupname}.jar" basedir="${entity.jar.location}" />
+				<antcall target="generate.xml.for.audit" />
 				<copy todir="${base.dir}/../lib/server/" file="${entity.jar.location}/${entitygroupname}.jar" overwrite="true" />
 				<copy todir="tempWar/${entitygroupname}.war/WEB-INF/lib/" file="${entity.jar.location}/${entitygroupname}.jar" overwrite="true" />
 			</then>
