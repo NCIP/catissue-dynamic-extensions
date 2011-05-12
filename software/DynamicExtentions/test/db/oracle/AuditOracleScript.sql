@@ -66,3 +66,4 @@ create sequence CATISSUE_AUDIT_EVENT_DET_SEQ;
 create sequence CATISSUE_AUDIT_EVENT_PARAM_SEQ;
 create sequence CATISSUE_AUDIT_EVENT_SEQ;
 create sequence CATISSUE_AUDIT_EVENT_QUERY_SEQ;
+commit;
