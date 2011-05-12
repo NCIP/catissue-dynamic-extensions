@@ -91,7 +91,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Test Category_Chemotherapy");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -129,6 +131,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Test Category_Chemotherapy");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -163,7 +166,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Test Category Radiation Therapy");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -183,6 +188,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Test Category Radiation Therapy");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -216,7 +222,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Test Category_Lab Information");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -235,6 +243,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Test Category_Lab Information");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -267,7 +276,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Test Category_Diagnosis");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -286,6 +297,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Test Category_Diagnosis");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -318,7 +330,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Test Category_Annotations");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -337,6 +351,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Test Category_Annotations");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -372,7 +387,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Test Category_Pathological Annotation");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -392,6 +409,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Test Category_Pathological Annotation");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -410,10 +428,10 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			category = EntityCache.getInstance().getCategoryByName("Test AutoComplete multiselect");
 			assertNotNull(category);
 			insertDataForCategory(category);
-			System.out.println("Data inserted sucessfully for Test AutoComplete multiselect" + sessionDataBean.getFirstName());
+			System.out.println("Data inserted sucessfully for Test AutoComplete multiselect"
+					+ sessionDataBean.getFirstName());
 			//Audit Insert data
 			assertAudit("test.annotations.CollectionAttributeClasshospitals%");
-
 
 		}
 		catch (Exception e)
@@ -424,42 +442,15 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 
 	}
 
-	private void assertAudit(String elementName) throws DAOException,
-			DynamicExtensionsSystemException, SQLException
-	{
-		JDBCDAO jdbcDao = null;
-		ResultSet resultSet = null;
-		try
-		{
-			String selectQuery = "Select * from CATISSUE_AUDIT_EVENT_DETAILS where ELEMENT_NAME like ?";
-			final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
-			queryDataList.add(new ColumnValueBean("ELEMENT_NAME", elementName));
-			jdbcDao = DynamicExtensionsUtility.getJDBCDAO(null);
-			resultSet = jdbcDao.getResultSet(selectQuery, queryDataList, null);
-
-			//Currently audit meta data xml is empty hence no results will be available
-			//FIXME generate auditmetadata xml for models imported.
-			if (resultSet.next())
-			{
-				System.out.println("Inside resultset");
-				fail();
-			}
-		}
-		finally
-		{
-			jdbcDao.closeStatement(resultSet);
-			DynamicExtensionsUtility.closeDAO(jdbcDao);
-		}
-
-	}
-
 	public void testEditDataForForAutocompleteDropDown()
 	{
 		CategoryInterface category = null;
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Test AutoComplete multiselect");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -478,6 +469,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Test AutoComplete multiselect");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -564,7 +556,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Category Single Line For Automation");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -584,6 +578,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Category Single Line For Automation");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -619,7 +614,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Calculated Attributes For Automation");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -639,6 +636,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Calculated Attributes For Automation");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -672,7 +670,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Skip logic for Automation");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -691,6 +691,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Skip logic for Automation");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -724,7 +725,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Skip logic for Automation 2");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -743,6 +746,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Skip logic for Automation 2");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -776,7 +780,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Skip logic for Automation 3");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -795,6 +801,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Skip logic for Automation 3");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -830,7 +837,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Multiline subcategory calculated attributes from different classes");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -850,6 +859,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Multiline subcategory calculated attributes from different classes");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -889,7 +899,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 					.getInstance()
 					.getCategoryByName(
 							"Multiline subcategory calculated attributes from different classes invisible RA");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -911,6 +923,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 					.getInstance()
 					.getCategoryByName(
 							"Multiline subcategory calculated attributes from different classes invisible RA");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -950,6 +963,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 					.getInstance()
 					.getCategoryByName(
 							"Multiline subcategory simple formula calculated attributes from different classes");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
@@ -972,6 +986,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 					.getInstance()
 					.getCategoryByName(
 							"Multiline subcategory simple formula calculated attributes from different classes");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -1011,7 +1026,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 					.getInstance()
 					.getCategoryByName(
 							"Multiline subcategory calculated attributes from different classes visible RA");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -1033,6 +1050,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 					.getInstance()
 					.getCategoryByName(
 							"Multiline subcategory calculated attributes from different classes visible RA");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -1066,7 +1084,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Multiline simple 2");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -1085,6 +1105,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Multiline simple 2");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -1120,7 +1141,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Multiline subcategory calculated attributes from same class invisible RA");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -1140,6 +1163,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Multiline subcategory calculated attributes from same class invisible RA");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -1175,7 +1199,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Multiline subcategory simple formula calculated attributes from same class");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -1195,6 +1221,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Multiline subcategory simple formula calculated attributes from same class");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -1230,7 +1257,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Multiline subcategory calculated attributes from same class visible RA");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -1250,6 +1279,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Multiline subcategory calculated attributes from same class visible RA");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -1283,7 +1313,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Test Category_Lab Report");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -1302,6 +1334,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Test Category_Lab Report");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -1335,7 +1368,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Category_Clinical Reports");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -1354,6 +1389,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Category_Clinical Reports");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -1387,7 +1423,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Category_Pathology Reports");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -1406,6 +1444,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Category_Pathology Reports");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -1442,7 +1481,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Test Category_Lab Report for Automation");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -1462,6 +1503,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Test Category_Lab Report for Automation");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -1497,7 +1539,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Calculated attribute multiple times");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -1517,6 +1561,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		{
 			category = EntityCache.getInstance().getCategoryByName(
 					"Calculated attribute multiple times");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -1550,7 +1595,9 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Form Multiselect Add Details");
+			assertNotNull(category);
 			Long recordId = insertDataForCategory(category);
+			assertNotNull(recordId);
 			System.out.println("Record inserted succesfully for " + category.getName()
 					+ " RecordId " + recordId);
 			editDataForCategory(category, recordId);
@@ -1569,6 +1616,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		try
 		{
 			category = EntityCache.getInstance().getCategoryByName("Form Multiselect Add Details");
+			assertNotNull(category);
 			testValidateDataForCategorie(category);
 		}
 		catch (Exception e)
@@ -1881,6 +1929,8 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 
 		recordIdentifier = (Long) dataEntryClient.getObject();
 
+		assertNotNull(recordIdentifier);
+
 		System.out.println("Record inserted succesfully for " + category.getName() + " RecordId "
 				+ recordIdentifier);
 		return recordIdentifier;
@@ -2093,16 +2143,48 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 			clientmap.put(WebUIManagerConstants.CONTAINER, container);
 			clientmap.put(WebUIManagerConstants.DATA_VALUE_MAP, editedDataValue);
 			dataEditClient.setServerUrl(new URL(Variables.jbossUrl + entityGroupName + "/"));
+			assertTrue("Jboss url is " + Variables.jbossUrl, true);
 			dataEditClient.setParamaterObjectMap(clientmap);
 			dataEditClient.execute(null);
 			System.out.println("Record Edited succesfully for " + category.getName() + " RecordId "
 					+ recordIdentifier);
 			editedDataValue = categoryManager.getRecordById(rootCatEntity, recordIdentifier);
 			mapGenerator.validateRetrievedDataValueMap(editedDataValue, dataValue);
+			assertTrue("Record edited sucessfully for categoey " + category.getName(), true);
 		}
 		catch (Exception e)
 		{
 			System.out.println("Record Insertion failed for Category " + category.getName());
+			fail();
+		}
+
+	}
+
+	private void assertAudit(String elementName) throws DAOException,
+			DynamicExtensionsSystemException, SQLException
+	{
+		JDBCDAO jdbcDao = null;
+		ResultSet resultSet = null;
+		try
+		{
+			String selectQuery = "Select * from CATISSUE_AUDIT_EVENT_DETAILS where ELEMENT_NAME like ?";
+			final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
+			queryDataList.add(new ColumnValueBean("ELEMENT_NAME", elementName));
+			jdbcDao = DynamicExtensionsUtility.getJDBCDAO(null);
+			resultSet = jdbcDao.getResultSet(selectQuery, queryDataList, null);
+
+			//Currently audit meta data xml is empty hence no results will be available
+			//FIXME generate auditmetadata xml for models imported.
+			if (resultSet.next())
+			{
+				System.out.println("Inside resultset");
+				fail();
+			}
+		}
+		finally
+		{
+			jdbcDao.closeStatement(resultSet);
+			DynamicExtensionsUtility.closeDAO(jdbcDao);
 		}
 
 	}
