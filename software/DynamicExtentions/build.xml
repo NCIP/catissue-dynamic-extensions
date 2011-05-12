@@ -549,7 +549,7 @@
 	</target>
 	<!--Deploys the application war file at JBOSS server by coping it to deploy directory of application server-->
 	<target name="deploy" depends="build_app_war">
-		<delete file="${jboss.home.dir}/bin/cobertura.ser" />
+		<!--delete file="${jboss.home.dir}/bin/cobertura.ser" /-->
 		<delete dir="${jboss.home.dir}/server/default/log" failonerror="false"/>
 		<copy file="dynamicExtensions.war" todir="${jboss.home.dir}/server/default/deploy" overwrite="true" />
 		<copy file="${interface.dir}/DynamicExtensions.jar" todir="${jboss.home.dir}/server/default/deploy/dynamicExtensions${default.prifix.war}test.war/WEB-INF/lib/" overwrite="true" />
