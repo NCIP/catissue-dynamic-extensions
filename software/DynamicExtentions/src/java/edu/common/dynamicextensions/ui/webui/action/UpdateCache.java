@@ -33,8 +33,6 @@ public class UpdateCache extends HttpServlet
 
 	private static final String LOCK_FORMS = "lock.forms";
 	private static final String RELEASE_FORMS = "release.forms";
-	private static final String LOCK_ALL_ENTITIES = "lock.all.entities";
-	private static final String RELEASE_ALL_ENTITIES = "release.all.entities";
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	/** logger for information. */
@@ -60,12 +58,10 @@ public class UpdateCache extends HttpServlet
 			else if (WebUIManagerConstants.LOCK_FORMS.endsWith(operation))
 			{
 				lockForms(paramaterObjectMap);
-				lockEntity(paramaterObjectMap);
 			}
 			else if (WebUIManagerConstants.RELEASE_FORMS.endsWith(operation))
 			{
 				relaseForms(paramaterObjectMap);
-				releaseEntity(paramaterObjectMap);
 			}
 		}
 		catch (DynamicExtensionsApplicationException e)
@@ -78,34 +74,7 @@ public class UpdateCache extends HttpServlet
 		}
 	}
 
-	/**
-	 * Release entity.
-	 *
-	 * @param paramaterObjectMap the paramater object map
-	 */
-	private void releaseEntity(Map<String, Object> paramaterObjectMap)
-	{
-		EntityGroupInterface entityGroupInterface = EntityCache.getInstance().getEntityGroupByName(
-				(String) paramaterObjectMap.get(WebUIManagerConstants.ENTITY_GROUP));
-		EntityCache.getInstance().releaseAllEntities(entityGroupInterface.getEntityCollection());
-		LOGGER.info(ApplicationProperties.getValue(RELEASE_ALL_ENTITIES));
-	}
 
-	/**
-	 * Lock entity.
-	 *
-	 * @param paramaterObjectMap the paramater object map
-	 *
-	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
-	 */
-	private void lockEntity(Map<String, Object> paramaterObjectMap)
-			throws DynamicExtensionsSystemException
-	{
-		EntityGroupInterface entityGroupInterface = EntityCache.getInstance().getEntityGroupByName(
-				(String) paramaterObjectMap.get(WebUIManagerConstants.ENTITY_GROUP));
-		EntityCache.getInstance().lockAllEntities(entityGroupInterface.getEntityCollection());
-		LOGGER.info(ApplicationProperties.getValue(LOCK_ALL_ENTITIES));
-	}
 
 	/**
 	 * Relase forms.

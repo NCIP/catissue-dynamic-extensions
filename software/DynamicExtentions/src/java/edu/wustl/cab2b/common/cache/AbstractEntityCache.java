@@ -153,8 +153,6 @@ public abstract class AbstractEntityCache implements IEntityCache
 	/** This set contains all the categories which are in opened at this instance in Edit mode by any user. */
 	protected Set<Long> containerInUse = new HashSet<Long>();
 
-	/** This set contains all the entity id which are in use. */
-	protected Set<Long> entitiesInUse = new HashSet<Long>();
 
 	/**
 	 * This method gives the singleton cache object. If cache is not present then it
@@ -640,18 +638,14 @@ public abstract class AbstractEntityCache implements IEntityCache
 	public EntityInterface getEntityById(final Long identifier)
 			throws DynamicExtensionsCacheException
 	{
-		if(identifier==0)
+		if (identifier == 0)
 		{
 			LOGGER.error("Error while retriving entity for identifier 0.");
-			throw new DynamicExtensionsCacheException("Error while retriving entity for identifier 0.An error has occurred in the database. Please contact system administrator.");
+			throw new DynamicExtensionsCacheException(
+					"Error while retriving entity for identifier 0.An error has occurred in the database. Please contact system administrator.");
 		}
-		if (!entitiesInUse.contains(identifier))
-		{
-			return getEntityByIdForCacheUpdate(identifier);
-		}
+		return getEntityByIdForCacheUpdate(identifier);
 
-		throw new DynamicExtensionsCacheException("Entity With Identifier :" + identifier
-				+ " is in use.");
 	}
 
 	/**
@@ -1022,29 +1016,6 @@ public abstract class AbstractEntityCache implements IEntityCache
 		return !containerInUse.contains(containerId);
 	}
 
-	/**
-	 * Lock all entities. This method will lock all the entities as Entities in Use.
-	 * @param allEntities the all entities
-	 */
-	public synchronized void lockAllEntities(Collection<EntityInterface> allEntities)
-	{
-		for (EntityInterface entityInterface : allEntities)
-		{
-			entitiesInUse.add(entityInterface.getId());
-		}
-	}
-
-	/**
-	 * Release all entities. This method will release all the entities as Entities in Use.
-	 * @param allEntities the all entities that are to release
-	 */
-	public synchronized void releaseAllEntities(Collection<EntityInterface> allEntities)
-	{
-		for (EntityInterface entityInterface : allEntities)
-		{
-			entitiesInUse.remove(entityInterface.getId());
-		}
-	}
 
 	/**
 	 * Gets the skip logic by container identifier.
