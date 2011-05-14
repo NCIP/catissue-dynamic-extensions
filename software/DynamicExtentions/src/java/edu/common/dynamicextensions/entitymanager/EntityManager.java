@@ -54,6 +54,7 @@ import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.DAO;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
@@ -3000,12 +3001,30 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		// Create a map of substitution parameters.
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
 		substParams.put("0", new NamedQueryParam(DBTypes.LONG, pathAssociationRelationId));
-		Collection<Long> associationColl = null;
-		associationColl = executeHQL("getAssoIdFrmPathAssoRelationId", substParams);
-		if ((associationColl != null) && !associationColl.isEmpty())
+		Collection associationColl = null;
+		DAO jdbcDao=null;
+		try
 		{
-			identifier = associationColl.iterator().next();
+			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
+			List<ColumnValueBean> columnValueList = new ArrayList<ColumnValueBean>();
+			columnValueList.add(new ColumnValueBean("identifier", pathAssociationRelationId));
+			associationColl = jdbcDao.executeQuery("select ASSOCIATION_ID from dyextn_path_asso_rel where identifier = ? ",columnValueList );
+			if ((associationColl != null) && !associationColl.isEmpty())
+			{
+
+				identifier = Long.valueOf(((List)associationColl.iterator().next()).get(0).toString());
+			}
 		}
+		catch (DAOException e)
+		{
+			throw new DynamicExtensionsSystemException("error occured while retrieving the association id",e);
+		}
+		finally
+		{
+			DynamicExtensionsUtility.closeDAO(jdbcDao);
+		}
+		//associationColl = executeHQL("getAssoIdFrmPathAssoRelationId", substParams);
+
 		return identifier;
 	}
 

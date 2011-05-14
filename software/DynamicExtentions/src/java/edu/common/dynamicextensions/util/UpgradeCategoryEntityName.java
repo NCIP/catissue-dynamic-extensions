@@ -133,6 +133,7 @@ public class UpgradeCategoryEntityName implements DynamicExtensionsQueryBuilderC
 		colValBeanList.add(new ColumnValueBean(IDENTIFIER, categoryEntityId));
 		queryVsDatamap.put(query.toString(), colValBeanList);
 		List<Map<String, LinkedList<ColumnValueBean>>> queryList = new ArrayList<Map<String, LinkedList<ColumnValueBean>>>();
+		queryList.add(queryVsDatamap);
 		DynamicExtensionsUtility.executeDML(queryList);
 	}
 
@@ -149,6 +150,7 @@ public class UpgradeCategoryEntityName implements DynamicExtensionsQueryBuilderC
 		StringBuffer categoryEntityName = new StringBuffer();
 		if (pathAssociationRelationIds != null && !pathAssociationRelationIds.isEmpty())
 		{
+
 			for (Long pathAssociationRelationId : pathAssociationRelationIds)
 			{
 				Long associationId = entityManager

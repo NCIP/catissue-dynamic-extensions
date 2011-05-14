@@ -133,7 +133,8 @@ public class BOCategoryTemplateGenerator extends AbstractCategoryIterator<BulkOp
 		if (!attribute.getIsRelatedAttribute())
 		{
 			Attribute bulkOperationAttribute = new Attribute();
-			bulkOperationAttribute.setName(attribute.getAbstractAttribute().getName());
+			String name = attribute.getName().replace(" Category Attribute", "");
+			bulkOperationAttribute.setName(name);
 			bulkOperationAttribute.setBelongsTo("");
 			if(attribute.getAbstractAttribute().getName().equalsIgnoreCase(boObject.getClassName()))
 			{
