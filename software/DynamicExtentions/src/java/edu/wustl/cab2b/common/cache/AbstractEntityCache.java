@@ -30,6 +30,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterfa
 import edu.common.dynamicextensions.entitymanager.AbstractBaseMetadataManager;
 import edu.common.dynamicextensions.entitymanager.AbstractMetadataManager;
 import edu.common.dynamicextensions.entitymanager.CategoryManager;
+import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
@@ -64,7 +65,7 @@ public abstract class AbstractEntityCache implements IEntityCache
 	/**
 	 * Set of all the DyanamicExtensions categories loaded in the database.
 	 */
-	protected List<CategoryInterface> deCategories = new ArrayList<CategoryInterface>();
+	protected Map<String,CategoryInterface> deCategories = new HashMap<String,CategoryInterface>();
 
 	/**
 	 * Set of all the entity groups loaded as metadata in caB2B.
@@ -90,6 +91,7 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 * Map with KEY as dynamic extension Attribute's identifier and Value as Attribute object
 	 */
 	protected Map<Long, AttributeInterface> idVsAttribute = new HashMap<Long, AttributeInterface>();
+
 
 	/**
 	 * This map holds all the original association. Associations which are
@@ -204,8 +206,9 @@ public abstract class AbstractEntityCache implements IEntityCache
 		try
 		{
 			HibernateDAO hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
-			deCategories = DynamicExtensionUtility.getAllCacheableCategories(hibernateDAO);
-			addCategoriesToCache(deCategories);
+			List<CategoryInterface> categories = DynamicExtensionUtility.getAllCacheableCategories(hibernateDAO);
+
+			addCategoriesToCache(categories);
 		}
 		catch (final DAOException e)
 		{
@@ -228,6 +231,7 @@ public abstract class AbstractEntityCache implements IEntityCache
 	{
 		for (final CategoryInterface category : categoryList)
 		{
+			deCategories.put(category.getName(), category);
 			createCategoryEntityCache(category.getRootCategoryElement());
 		}
 	}
@@ -891,33 +895,49 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 */
 	public synchronized void addCategoryToCache(final CategoryInterface category)
 	{
-		if (deCategories.contains(category))
+		if(deCategories.containsKey(category.getName()))
 		{
 			LOGGER.info("adding category to cache" + category);
-			deCategories.remove(category);
-			deCategories.add(category);
+			deCategories.put(category.getName(),category);
 			createCategoryEntityCache(category.getRootCategoryElement());
 			LOGGER.info("adding category to cache done");
 		}
-
 	}
 
-	public CategoryInterface getCategoryByName(String name) throws DynamicExtensionsSystemException
+	/**
+	 * this method will add the category to the cache without checking whether it exists in the cache from before or not
+	 * Specifically
+	 * @param category
+	 */
+	private synchronized void addCategoryToTempCache(CategoryInterface category)
 	{
-		CategoryInterface cat =null;
-		for(CategoryInterface category : deCategories)
+		LOGGER.info("adding category to cache" + category);
+		deCategories.put(category.getName(),category);
+		createCategoryEntityCache(category.getRootCategoryElement());
+		LOGGER.info("adding category to cache done");
+	}
+
+
+	/**
+	 * @param categoryName
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 */
+	public CategoryInterface getCategoryByName(String categoryName)
+			throws DynamicExtensionsSystemException
+	{
+		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
+		CategoryInterface categoryInterface = deCategories.get(categoryName);
+		if (categoryInterface == null)
 		{
-			if(category.getName().equals(name))
+			categoryInterface = categoryManager.getCategoryByName(categoryName);
+			if (categoryInterface != null)
 			{
-				cat = category;
-				break;
+				addCategoryToTempCache(categoryInterface);
 			}
+
 		}
-		if(cat==null)
-		{
-			cat = CategoryManager.getInstance().getCategoryByName(name);
-		}
-		return cat;
+		return categoryInterface;
 	}
 
 }

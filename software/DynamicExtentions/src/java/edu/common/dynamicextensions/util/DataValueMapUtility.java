@@ -873,7 +873,7 @@ public final class DataValueMapUtility
 		String associationName = datavalueEntry.getKey().toString();
 		AssociationInterface matchedMssociationInterface;
 		Collection<AssociationInterface> associationInterfaces = entityInterface
-				.getAssociationCollection();
+				.getAllAssociations();
 		matchedMssociationInterface = getAssociationInterface(associationInterfaces,
 				associationName);
 		if (matchedMssociationInterface == null)

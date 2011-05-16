@@ -92,14 +92,14 @@ public class BOEntityTemplateGenerator extends AbstractEntityIterator<BulkOperat
 	protected void processEntity(EntityInterface entity, BulkOperationClass mainObject)
 	{
 		for (AttributeInterface attributeInterface : entity
-				.getAttributeCollection())
+				.getAllAttributes())
 		{
 
 				processAttribute(attributeInterface,mainObject);
 
 		}
 		for (AssociationInterface association : entity
-				.getAssociationCollection())
+				.getAllAssociations())
 		{
 			BulkOperationClass innnerObject = processAssociation(association);
 			processEntity(association.getTargetEntity(), innnerObject);
