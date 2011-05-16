@@ -173,9 +173,27 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 	public CategoryInterface getCategoryByName(final String name)
 			throws DynamicExtensionsSystemException
 	{
-		CategoryInterface category = (CategoryInterface) getObjectByName(CategoryInterface.class
-				.getName(), name);
-		return category;
+		HibernateDAO dao = DynamicExtensionsUtility.getHibernateDAO();
+		Collection<CategoryInterface> categoryColl = null;
+		try
+		{
+			categoryColl = dao.executeQuery("from edu.common.dynamicextensions.domain.Category where name = '"+name+"'");
+		}
+		catch (DAOException e)
+		{
+			LOGGER.error("Error occured in closing DAO .", e.getCause());
+		}finally
+		{
+			DynamicExtensionsUtility.closeDAO(dao);
+		}
+		if(categoryColl != null && !categoryColl.isEmpty())
+		{
+			return categoryColl.iterator().next();
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	/**
