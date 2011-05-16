@@ -61,44 +61,44 @@ public class TestEntityCache extends DynamicExtensionsBaseTestCase
 		assertTrue(true);
 	}
 
-	public void testLockAllEntities() throws DynamicExtensionsSystemException
-	{
-		EntityGroupInterface entityGroupInterface = EntityGroupManager.getInstance().getEntityGroupByName(
-				TEST_ENTITYGROUP_NAME);
-		cache.lockAllEntities(entityGroupInterface.getEntityCollection());
-
-		Long lockeEntity= entityGroupInterface.getEntityCollection().iterator().next().getId();
-		try
-		{
-			cache.getEntityById(lockeEntity);
-		}
-		catch (DynamicExtensionsCacheException e)
-		{
-			assertTrue(true);
-			return;
-		}
-		fail();
-
-	}
-	public void testReleaseAllEntities() throws DynamicExtensionsSystemException
-	{
-		EntityGroupInterface entityGroupInterface = EntityGroupManager.getInstance().getEntityGroupByName(
-				TEST_ENTITYGROUP_NAME);
-		cache.lockAllEntities(entityGroupInterface.getEntityCollection());
-		cache.releaseAllEntities(entityGroupInterface.getEntityCollection());
-
-		Long lockeEntity= entityGroupInterface.getEntityCollection().iterator().next().getId();
-		try
-		{
-			cache.getEntityById(lockeEntity);
-		}
-		catch (DynamicExtensionsCacheException e)
-		{
-			fail();
-			return;
-		}
-		assertTrue(true);
-	}
+//	public void testLockAllEntities() throws DynamicExtensionsSystemException
+//	{
+//		EntityGroupInterface entityGroupInterface = EntityGroupManager.getInstance().getEntityGroupByName(
+//				TEST_ENTITYGROUP_NAME);
+//		cache.lockAllEntities(entityGroupInterface.getEntityCollection());
+//
+//		Long lockeEntity= entityGroupInterface.getEntityCollection().iterator().next().getId();
+//		try
+//		{
+//			cache.getEntityById(lockeEntity);
+//		}
+//		catch (DynamicExtensionsCacheException e)
+//		{
+//			assertTrue(true);
+//			return;
+//		}
+//		fail();
+//
+//	}
+//	public void testReleaseAllEntities() throws DynamicExtensionsSystemException
+//	{
+//		EntityGroupInterface entityGroupInterface = EntityGroupManager.getInstance().getEntityGroupByName(
+//				TEST_ENTITYGROUP_NAME);
+//		cache.lockAllEntities(entityGroupInterface.getEntityCollection());
+//		cache.releaseAllEntities(entityGroupInterface.getEntityCollection());
+//
+//		Long lockeEntity= entityGroupInterface.getEntityCollection().iterator().next().getId();
+//		try
+//		{
+//			cache.getEntityById(lockeEntity);
+//		}
+//		catch (DynamicExtensionsCacheException e)
+//		{
+//			fail();
+//			return;
+//		}
+//		assertTrue(true);
+//	}
 
 	public void testGetContainerByIdNegative() throws DynamicExtensionsSystemException
 	{
