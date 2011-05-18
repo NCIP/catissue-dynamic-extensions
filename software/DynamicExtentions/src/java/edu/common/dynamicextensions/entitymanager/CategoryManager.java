@@ -236,6 +236,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		{
 			hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
 			revQueries = persistDynamicExtensionObjectForCategory(category,hibernateDAO);
+			hibernateDAO.commit();
 		}
 		catch (DynamicExtensionsSystemException ex)
 		{
@@ -248,6 +249,17 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				throw new DynamicExtensionsSystemException(e.getMessage(),e);
 			}
 
+		}
+		catch (DAOException ex)
+		{
+			try
+			{
+				((CategoryManager)CategoryManager.getInstance()).rollbackQueries(revQueries, null, ex, hibernateDAO);
+			}
+			catch (DynamicExtensionsSystemException e)
+			{
+				throw new DynamicExtensionsSystemException(e.getMessage(),e);
+			}
 		}
 		finally
 		{
