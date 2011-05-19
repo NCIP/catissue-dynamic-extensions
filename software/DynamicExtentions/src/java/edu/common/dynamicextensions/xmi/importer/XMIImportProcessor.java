@@ -1247,10 +1247,10 @@ public class XMIImportProcessor
 		association.setTargetEntity(targetEntity);
 		association.setAssociationDirection(AssociationDirection.SRC_DESTINATION);
 		association.setName(umlAttribute.getName());
-		association.setSourceRole(EntityManagerUtil.getRole(AssociationType.ASSOCIATION,
+		association.setSourceRole(EntityManagerUtil.getRole(AssociationType.CONTAINTMENT,
 				DEConstants.COLLECTIONATTRIBUTEROLE + entity.getName(), Cardinality.ONE,
 				Cardinality.ONE));
-		association.setTargetRole(EntityManagerUtil.getRole(AssociationType.ASSOCIATION,
+		association.setTargetRole(EntityManagerUtil.getRole(AssociationType.CONTAINTMENT,
 				DEConstants.COLLECTIONATTRIBUTEROLE + targetEntity.getName(), Cardinality.ONE,
 				Cardinality.MANY));
 

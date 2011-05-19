@@ -759,7 +759,7 @@ public class DynamicExtensionBaseQueryBuilder
 				if (association.getSourceRole().getAssociationsType().equals(
 						AssociationType.CONTAINTMENT)
 						|| (association.getSourceRole().getAssociationsType().equals(
-								AssociationType.ASSOCIATION) && association.getIsCollection()))
+								AssociationType.CONTAINTMENT) && association.getIsCollection()))
 				{
 					List<Map<AbstractAttributeInterface, Object>> cntnmntRecords = new ArrayList<Map<AbstractAttributeInterface, Object>>();
 
