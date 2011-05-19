@@ -177,7 +177,7 @@ public class RadioButton extends SelectControl implements RadioButtonInterface
 					errorMessage.append('\'');
 					errorMessage.append(value);
 					errorMessage.append("' is not a valid value for '");
-					errorMessage.append(getAttibuteMetadataInterface().getAttribute().getName());
+					errorMessage.append(this.getName());
 					errorMessage.append("' anymore. Please select a new value.");
 					errorList.add(errorMessage.toString());
 				}
