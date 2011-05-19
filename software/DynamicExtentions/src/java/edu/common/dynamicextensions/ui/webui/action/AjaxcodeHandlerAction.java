@@ -45,7 +45,6 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.GroupProcessor;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
-import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.util.SemanticPropertyBuilderUtil;
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
@@ -184,7 +183,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 		Map<Long, ContainerInterface> containerMap = (Map<Long, ContainerInterface>) request
 				.getSession().getAttribute("MapForValidation");
 		int rowId = 0;
-		//ContainerInterface container = EntityCache.getInstance().getContainerById(containerId);		
+		//ContainerInterface container = EntityCache.getInstance().getContainerById(containerId);
 		//ControlInterface control = EntityCache.getInstance().getControlById(controlId);
 		ContainerInterface container = containerMap.get(containerId);
 		ControlInterface control = container.getControlById(controlId);
@@ -955,7 +954,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 				}
 				errorList.addAll(ValidatorUtil.validateEntity(rowValueMap, new ArrayList<String>(),
 						containerInterface, false));
-				updateMapForskipLogic(containerInterface, rowValueMap, rwoIndex);
+				//updateMapForskipLogic(containerInterface, rowValueMap, rwoIndex);
 
 				containerInterface.setContainerValueMap(rowValueMap);
 				returnString.append(UserInterfaceiUtility.getContainerHTMLAsARow(
@@ -996,25 +995,25 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void updateMapForskipLogic(final ContainerInterface containerInterface,
-			final Map<BaseAbstractAttributeInterface, Object> rowValueMap, final int rwoIndex)
-			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
-	{
-		for (final ControlInterface control : containerInterface
-				.getAllControlsUnderSameDisplayLabel())
-		{
-			if (control.getIsSkipLogic())
-			{
-				final String[] stringArray = {(String) rowValueMap.get(control
-						.getAttibuteMetadataInterface())};
-				final List<ControlInterface> targetSkipControlsList = control
-						.setSkipLogicControls(stringArray);
-				ControlsUtility.populateAttributeValueMapForSkipLogicAttributes(rowValueMap,
-						rowValueMap, rwoIndex, true, control.getHTMLComponentName() + "_"
-								+ rwoIndex, targetSkipControlsList, true);
-			}
-		}
-
-	}
+//	private void updateMapForskipLogic(final ContainerInterface containerInterface,
+//			final Map<BaseAbstractAttributeInterface, Object> rowValueMap, final int rwoIndex)
+//			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+//	{
+//		for (final ControlInterface control : containerInterface
+//				.getAllControlsUnderSameDisplayLabel())
+//		{
+//			if (control.getIsSkipLogic())
+//			{
+//				final String[] stringArray = {(String) rowValueMap.get(control
+//						.getAttibuteMetadataInterface())};
+//				final List<ControlInterface> targetSkipControlsList = control
+//						.setSkipLogicControls(stringArray);
+//				ControlsUtility.populateAttributeValueMapForSkipLogicAttributes(rowValueMap,
+//						rowValueMap, rwoIndex, true, control.getHTMLComponentName() + "_"
+//								+ rwoIndex, targetSkipControlsList, true);
+//			}
+//		}
+//
+//	}
 
 }
