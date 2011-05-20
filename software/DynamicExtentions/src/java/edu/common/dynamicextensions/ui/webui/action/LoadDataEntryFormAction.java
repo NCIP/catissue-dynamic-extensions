@@ -71,20 +71,10 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 			final ContainerInterface containerInterface = getContainerInterface(request);
 
 			String recordId = request.getParameter("recordIdentifier");
-			if (recordId == null || recordId.equals(""))
+			if (recordId == null)
 			{
-				recordId = (String) CacheManager
-						.getObjectFromCache(request, "rootRecordIdentifier");
-				if (recordId == null)
-				{
-					recordId = "";
-				}
+				recordId = "";
 			}
-			else
-			{
-				CacheManager.addObjectToCache(request, "rootRecordIdentifier", recordId);
-			}
-
 			final LoadDataEntryFormProcessor loadDataEntryFormProcessor = LoadDataEntryFormProcessor
 					.getInstance();
 			final Map<BaseAbstractAttributeInterface, Object> recordMap = loadDataEntryFormProcessor
