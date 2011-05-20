@@ -491,7 +491,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 					.getAbstractAttribute().getTaggedValue(XMIConstants.TAGGED_KEY_HS));
 		}
 		controlHTML.append("'>");
-		
+
 		if (showLabel != null && showLabel)
 		{
 			controlHTML.append(((BaseAbstractAttribute) getBaseAbstractAttribute())
@@ -1295,7 +1295,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 			serverCallString.append(this.id);
 			serverCallString.append("','");
 			serverCallString.append(getParentContainer().getId());
-			serverCallString.append("')");
+			serverCallString.append("');");
 			//return isSkipLogicString.toString();
 		}
 		else
@@ -1319,7 +1319,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		updateServerState.append(id);
 		updateServerState.append("','");
 		updateServerState.append(getParentContainer().getId() );
-		updateServerState.append("')");
+		updateServerState.append("');");
 		return updateServerState.toString();
 	}
 
