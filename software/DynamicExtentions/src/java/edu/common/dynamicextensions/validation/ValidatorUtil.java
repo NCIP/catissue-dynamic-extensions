@@ -12,6 +12,7 @@ import java.util.Set;
 
 import edu.common.dynamicextensions.domain.PermissibleValue;
 import edu.common.dynamicextensions.domain.UserDefinedDE;
+import edu.common.dynamicextensions.domain.userinterface.SelectControl;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
@@ -35,6 +36,7 @@ import edu.common.dynamicextensions.ui.util.ControlConfigurationsFactory;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
+import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.global.ApplicationProperties;
 
@@ -77,9 +79,9 @@ public class ValidatorUtil
 									(AttributeMetadataInterface) abstractAttribute, container);
 					if (control != null)
 					{
-						listOfError.addAll(validateAttributes(abstractAttribute,attributeValueNode.getValue(),
-								DynamicExtensionsUtility.replaceHTMLSpecialCharacters(control
-										.getCaption())));
+						listOfError.addAll(validateAttributes(abstractAttribute, attributeValueNode
+								.getValue(), DynamicExtensionsUtility
+								.replaceHTMLSpecialCharacters(control.getCaption())));
 						checkForPermissibleValue(listOfError, control, abstractAttribute,
 								attributeValueNode.getValue(), (Date) container
 										.getContextParameter(Constants.ENCOUNTER_DATE));
@@ -148,30 +150,80 @@ public class ValidatorUtil
 			BaseAbstractAttributeInterface abstractAttribute, Object attributeValue,
 			Date encounterDate) throws DynamicExtensionsSystemException
 	{
-		if (control instanceof EnumeratedControlInterface)
+		if (control instanceof EnumeratedControlInterface && attributeValue != null)
 		{
-			AttributeMetadataInterface attributeMetadataInterface = (AttributeMetadataInterface) abstractAttribute;
-			if (attributeMetadataInterface.getDataElement(encounterDate) != null)
+			boolean isValuePresent = true;
+			if (control instanceof SelectControl)
 			{
-				boolean isValuePresent = false;
-				try
+				SelectControl selectControl = (SelectControl) control;
+				List<NameValueBean> optionList = selectControl.getOptionList();
+				if (optionList != null && !optionList.isEmpty())
 				{
-					isValuePresent = isValidPermissibleValue(attributeValue,
-							attributeMetadataInterface, encounterDate);
+					for (NameValueBean nameValueBean : optionList)
+					{
+						if (nameValueBean.getValue().equals(attributeValue.toString()))
+						{
+							isValuePresent = true;
+							break;
+						}
+						else
+						{
+							isValuePresent = false;
+						}
+					}
 				}
-				catch (ParseException e)
+				else
 				{
-					throw new DynamicExtensionsSystemException(
-							"Exception while validating permissible value.", e);
-				}
-				if (!isValuePresent)
-				{
-					errorList.add("Please Enter valid permissible value for attribute "
-							+ DynamicExtensionsUtility.replaceHTMLSpecialCharacters(control
-									.getCaption()));
+					isValuePresent = validatePermissibleValues(abstractAttribute, attributeValue,
+							encounterDate);
 				}
 			}
+			else
+			{
+				isValuePresent = validatePermissibleValues(abstractAttribute, attributeValue,
+						encounterDate);
+			}
+			if (!isValuePresent)
+			{
+				errorList.add("Please Enter valid permissible value for attribute "
+						+ DynamicExtensionsUtility.replaceHTMLSpecialCharacters(control
+								.getCaption()));
+			}
 		}
+	}
+
+	/**
+	 * Validate p vs.
+	 *
+	 * @param abstractAttribute the abstract attribute
+	 * @param attributeValue the attribute value
+	 * @param encounterDate the encounter date
+	 *
+	 * @return true, if validate p vs
+	 *
+	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
+	 */
+	private static boolean validatePermissibleValues(
+			BaseAbstractAttributeInterface abstractAttribute, Object attributeValue,
+			Date encounterDate) throws DynamicExtensionsSystemException
+	{
+		boolean isValuePresent = true;
+		AttributeMetadataInterface attributeMetadataInterface = (AttributeMetadataInterface) abstractAttribute;
+		if (attributeMetadataInterface.getDataElement(encounterDate) != null)
+		{
+
+			try
+			{
+				isValuePresent = isValidPermissibleValue(attributeValue,
+						attributeMetadataInterface, encounterDate);
+			}
+			catch (ParseException e)
+			{
+				throw new DynamicExtensionsSystemException(
+						"Exception while validating permissible value.", e);
+			}
+		}
+		return isValuePresent;
 	}
 
 	/**
@@ -370,8 +422,9 @@ public class ValidatorUtil
 					(AttributeMetadataInterface) abstractAttribute, containerInterface);
 			if (control != null && control.getBaseAbstractAttribute() != null)
 			{
-				errorList.addAll(validateAttributes(abstractAttribute,attributeValueNode.getValue(), DynamicExtensionsUtility
-						.replaceHTMLSpecialCharacters(control.getCaption())));
+				errorList.addAll(validateAttributes(abstractAttribute, attributeValueNode
+						.getValue(), DynamicExtensionsUtility.replaceHTMLSpecialCharacters(control
+						.getCaption())));
 			}
 		}
 	}
@@ -383,7 +436,8 @@ public class ValidatorUtil
 	 * @return errorList List of errors.
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public static List<String> validateAttributes(BaseAbstractAttributeInterface abstractAttribute,Object val,String controlCaption) throws DynamicExtensionsSystemException
+	public static List<String> validateAttributes(BaseAbstractAttributeInterface abstractAttribute,
+			Object val, String controlCaption) throws DynamicExtensionsSystemException
 	{
 		List<String> errorList = new ArrayList<String>();
 
@@ -401,13 +455,11 @@ public class ValidatorUtil
 				{
 
 					Long recordId = attribute.getId();
-					checkForUniqueValue(val, controlCaption, errorList, attribute,
-							recordId);
+					checkForUniqueValue(val, controlCaption, errorList, attribute, recordId);
 				}
 				else
 				{
-					checkNonUniqueValueValidation(val, controlCaption, errorList,
-							attribute, rule);
+					checkNonUniqueValueValidation(val, controlCaption, errorList, attribute, rule);
 				}
 			}
 		}
@@ -424,10 +476,9 @@ public class ValidatorUtil
 	 * @param rule Rules which needs to be validate.
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private static void checkNonUniqueValueValidation(
-			Object valueObject,
-			String controlCaption, List<String> errorList, AttributeMetadataInterface attribute,
-			RuleInterface rule) throws DynamicExtensionsSystemException
+	private static void checkNonUniqueValueValidation(Object valueObject, String controlCaption,
+			List<String> errorList, AttributeMetadataInterface attribute, RuleInterface rule)
+			throws DynamicExtensionsSystemException
 	{
 		String errorMessage;
 		if (valueObject instanceof List)
@@ -458,10 +509,9 @@ public class ValidatorUtil
 	 * @param recordId Identifier of the record.
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private static void checkForUniqueValue(
-			Object valueObject,
-			String controlCaption, List<String> errorList, AttributeMetadataInterface attribute,
-			Long recordId) throws DynamicExtensionsSystemException
+	private static void checkForUniqueValue(Object valueObject, String controlCaption,
+			List<String> errorList, AttributeMetadataInterface attribute, Long recordId)
+			throws DynamicExtensionsSystemException
 	{
 		String errorMessage;
 		if (valueObject instanceof List)
@@ -601,7 +651,8 @@ public class ValidatorUtil
 			String attributeName) throws DynamicExtensionsSystemException
 	{
 		if (allValidationRules.contains(ProcessorConstants.ALLOW_FUTURE_DATE)
-				&& (allValidationRules.contains(ProcessorConstants.ALLOW_PAST_AND_PRESENT_DATE_ONLY)))
+				&& (allValidationRules
+						.contains(ProcessorConstants.ALLOW_PAST_AND_PRESENT_DATE_ONLY)))
 		{
 			throw new DynamicExtensionsSystemException(
 					"Conflicting rules present. Allow Past and Present Date and Allow Future Date rules cannot be applied for attribute:, "

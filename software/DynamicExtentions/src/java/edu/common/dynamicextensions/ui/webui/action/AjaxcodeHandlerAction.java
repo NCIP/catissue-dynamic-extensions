@@ -45,6 +45,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.GroupProcessor;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
+import edu.common.dynamicextensions.skiplogic.SkipLogic;
 import edu.common.dynamicextensions.ui.util.SemanticPropertyBuilderUtil;
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
@@ -54,6 +55,7 @@ import edu.common.dynamicextensions.util.DataValueMapUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.validation.ValidatorUtil;
+import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.logger.Logger;
 
@@ -952,13 +954,31 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 						rowValueMap.put(control.getBaseAbstractAttribute(), cols[columnCounter++]);
 					}
 				}
-				errorList.addAll(ValidatorUtil.validateEntity(rowValueMap, new ArrayList<String>(),
-						containerInterface, false));
-				//updateMapForskipLogic(containerInterface, rowValueMap, rwoIndex);
 
 				containerInterface.setContainerValueMap(rowValueMap);
+				SkipLogic skipLogic = EntityCache.getInstance().getSkipLogicByContainerIdentifier(
+						containerInterface.getId());
+				skipLogic.evaluateSkipLogic(containerInterface, rowValueMap);
+
+				// This is the case of Single Line Display. In this case the Skip Logic is associated with child container.
+				if (!containerInterface.getChildContainerCollection().isEmpty())
+				{
+					for (ContainerInterface childContainer : containerInterface
+							.getChildContainerCollection())
+					{
+						SkipLogic childSkipLogic = EntityCache.getInstance()
+								.getSkipLogicByContainerIdentifier(childContainer.getId());
+						if (childSkipLogic != null)
+						{
+							childSkipLogic.evaluateSkipLogic(childContainer, rowValueMap);
+						}
+					}
+				}
+				errorList.addAll(ValidatorUtil.validateEntity(rowValueMap, new ArrayList<String>(),
+						containerInterface, false));
 				returnString.append(UserInterfaceiUtility.getContainerHTMLAsARow(
-						containerInterface, rwoIndex, null, containerInterface,new ArrayList<String>()));
+						containerInterface, rwoIndex, null, containerInterface,
+						new ArrayList<String>()));
 				rwoIndex++;
 				rowsCopied++;
 			}
@@ -987,33 +1007,5 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 		containerInterface.setAjaxRequest(false);
 		containerInterface.setRequest(null);
 	}
-
-	/**
-	 * @param containerInterface
-	 * @param rowValueMap
-	 * @param rwoIndex
-	 * @throws DynamicExtensionsApplicationException
-	 * @throws DynamicExtensionsSystemException
-	 */
-//	private void updateMapForskipLogic(final ContainerInterface containerInterface,
-//			final Map<BaseAbstractAttributeInterface, Object> rowValueMap, final int rwoIndex)
-//			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
-//	{
-//		for (final ControlInterface control : containerInterface
-//				.getAllControlsUnderSameDisplayLabel())
-//		{
-//			if (control.getIsSkipLogic())
-//			{
-//				final String[] stringArray = {(String) rowValueMap.get(control
-//						.getAttibuteMetadataInterface())};
-//				final List<ControlInterface> targetSkipControlsList = control
-//						.setSkipLogicControls(stringArray);
-//				ControlsUtility.populateAttributeValueMapForSkipLogicAttributes(rowValueMap,
-//						rowValueMap, rwoIndex, true, control.getHTMLComponentName() + "_"
-//								+ rwoIndex, targetSkipControlsList, true);
-//			}
-//		}
-//
-//	}
 
 }
