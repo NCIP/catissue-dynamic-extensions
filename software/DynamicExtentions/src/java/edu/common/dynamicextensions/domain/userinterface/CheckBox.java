@@ -86,11 +86,9 @@ public class CheckBox extends Control implements CheckBoxInterface
 			htmlStringBuffer.append("' checked");
 			htmlStringBuffer.append(disabled);
 			htmlStringBuffer.append(" onchange=\"");
-			htmlStringBuffer.append(getOnchangeServerCall());
 			htmlStringBuffer.append("\" onclick=\"changeValueForCheckBox(this);");
-			htmlStringBuffer.append((isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
-					+ "','" + identifier + "','" + parentContainerId + "');" : "")
-					+ "\">");
+			htmlStringBuffer.append(getOnchangeServerCall());
+			htmlStringBuffer.append("\">");
 		}
 		else
 		{
@@ -108,11 +106,10 @@ public class CheckBox extends Control implements CheckBoxInterface
 			htmlStringBuffer.append(disabled);
 			htmlStringBuffer.append(htmlComponentName);
 			htmlStringBuffer.append("' onchange=\"");
+			htmlStringBuffer.append("\" onclick=\"changeValueForCheckBox(this);");
 			htmlStringBuffer.append(getOnchangeServerCall());
-			htmlStringBuffer.append(";\" onclick=\"changeValueForCheckBox(this);");
-			htmlStringBuffer.append((isSkipLogic ? "getSkipLogicControl('" + htmlComponentName
-					+ "','" + identifier + "','" + parentContainerId + "');" : "")
-					+ "\">");
+			htmlStringBuffer.append("\">");
+
 		}
 		if (getIsSkipLogicTargetControl())
 		{
