@@ -958,7 +958,10 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 				containerInterface.setContainerValueMap(rowValueMap);
 				SkipLogic skipLogic = EntityCache.getInstance().getSkipLogicByContainerIdentifier(
 						containerInterface.getId());
-				skipLogic.evaluateSkipLogic(containerInterface, rowValueMap);
+				if(skipLogic != null)
+				{
+					skipLogic.evaluateSkipLogic(containerInterface, rowValueMap);
+				}
 
 				// This is the case of Single Line Display. In this case the Skip Logic is associated with child container.
 				if (!containerInterface.getChildContainerCollection().isEmpty())
