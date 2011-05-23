@@ -39,16 +39,7 @@ public class CheckBox extends Control implements CheckBoxInterface
 			throws DynamicExtensionsSystemException
 	{
 		final String checked = getDefaultValueForControl();
-		String parentContainerId = "";
-		if (getParentContainer() != null && getParentContainer().getId() != null)
-		{
-			parentContainerId = getParentContainer().getId().toString();
-		}
-		String identifier = "";
-		if (getId() != null)
-		{
-			identifier = getId().toString();
-		}
+
 		final StringBuilder htmlStringBuffer = new StringBuilder();
 		if (getIsSkipLogicTargetControl())
 		{
