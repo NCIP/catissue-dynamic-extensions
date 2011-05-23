@@ -72,6 +72,7 @@ public class XMLToObjectConverter
         FileWriter writer = new FileWriter(baseDir + File.separator + fileName
                 + ".xml");
         marshaller.marshal(outputPVVersion, writer);
+        writer.close();
     }
 
 	/**
