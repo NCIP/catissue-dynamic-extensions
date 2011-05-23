@@ -1854,8 +1854,10 @@
 					         	================================= -->
 	<target name="upgrade.de">
 		<!-- =================================
-			 Currently no DE upgrade is available for ver. 1.5.0 to 1.5.1, so as per bug#16635 empty target is created.
-			                    ================================= -->
+			Upgrade db from DE_1.4.0.1 to DE_1.4.0.2
+				                    ================================= -->
+		<antcall target="upgrade_db_from_DE_1.5.0_to_DE_1.5.1">
+		</antcall>
 	</target>
 
 	<target name="query.metadata" description="Querying metadata to get dynamically generated table names and column names">
