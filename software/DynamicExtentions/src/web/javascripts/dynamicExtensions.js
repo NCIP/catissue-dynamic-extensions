@@ -2986,7 +2986,7 @@ function updateServerState(controlName, controlId, containerId)
 				}
 				else
 				{
-					if(vRecentControl.type == "select-multiple")
+					if(vRecentControl.type == "select-multiple" || (vRecentControl.type=="checkbox" && controlValue.split("~").length >1))
 					{
 						var values = controlValue.split("~");
 						for(var i=0; i<values.length;i++)
