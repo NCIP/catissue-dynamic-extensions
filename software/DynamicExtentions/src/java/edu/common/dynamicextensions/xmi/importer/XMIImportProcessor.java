@@ -3059,12 +3059,22 @@ public class XMIImportProcessor
 					AssociationType.CONTAINTMENT) == 0)
 			{
 				// This line is for containment association.
-
-				controlInterface = DE_FACTORY.createContainmentAssociationControl();
-				associationInterface.getSourceRole().setAssociationsType(
+				if (isMultiselectTagValue(taggedValueMap))
+				{//List box for 1 to many or many to many relationship
+					controlInterface = DE_FACTORY.createListBox();
+					setMultiselectTaggedValue(taggedValueMap, controlModel);
+					((ListBoxInterface) controlInterface).setIsMultiSelect(controlModel
+							.getIsMultiSelect());
+					((ListBoxInterface) controlInterface).setNoOfRows(controlModel.getRows());
+				}
+				else
+				{
+					controlInterface = DE_FACTORY.createContainmentAssociationControl();
+					associationInterface.getSourceRole().setAssociationsType(
+							AssociationType.CONTAINTMENT);
+					associationInterface.getTargetRole().setAssociationsType(
 						AssociationType.CONTAINTMENT);
-				associationInterface.getTargetRole().setAssociationsType(
-						AssociationType.CONTAINTMENT);
+				}
 			}
 			else
 			{
