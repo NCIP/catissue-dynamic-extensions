@@ -68,7 +68,7 @@ public class CategoryPermissibleValuesProcessor
 	private final List<String> ERROR_LIST = new ArrayList<String>();
 
 	/** The WARNING MESSAGE list. */
-	private final List<String> WARNING_MESSAGE_LIST = new ArrayList<String>();
+	private List<String> WARNING_MESSAGE_LIST = null;
 
 	/** The cat data entry performed. */
 	private boolean catDataEntryPerformed = false;
@@ -161,7 +161,7 @@ public class CategoryPermissibleValuesProcessor
 		processEntityList(classNames);
 
 		// Messages to inform which all Permissible values have been added to Attribute Set
-		if (!WARNING_MESSAGE_LIST.isEmpty())
+		if (WARNING_MESSAGE_LIST != null && !WARNING_MESSAGE_LIST.isEmpty())
 		{
 			for (String message : WARNING_MESSAGE_LIST)
 			{
@@ -283,10 +283,10 @@ public class CategoryPermissibleValuesProcessor
 							encounteredDateVsActDate);
 					if (!missingPVsInOriSet.isEmpty())
 					{
+						initializeWarnMessageList();
 						WARNING_MESSAGE_LIST
 								.add("Following Permissible values are not present for Attribute "
-										+ attributeName);
-						WARNING_MESSAGE_LIST.add("Hence added them to the Attribute set");
+										+ attributeName+", added them to the Attribute set.");
 						addMissingPvToErrorList(missingPVsInOriSet);
 					}
 				}
@@ -295,6 +295,17 @@ public class CategoryPermissibleValuesProcessor
 			{
 				ERROR_LIST.add(e.getMessage());
 			}
+		}
+	}
+
+	/**
+	 * Initialize warn message list
+	 */
+	private void initializeWarnMessageList()
+	{
+		if(WARNING_MESSAGE_LIST == null)
+		{
+			WARNING_MESSAGE_LIST = new ArrayList<String>();
 		}
 	}
 
