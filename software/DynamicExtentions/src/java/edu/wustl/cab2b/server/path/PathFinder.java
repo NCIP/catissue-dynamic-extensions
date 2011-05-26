@@ -665,8 +665,10 @@ public class PathFinder
 	private Map<String, Set<ICuratedPath>> cacheCuratedPaths() throws DynamicExtensionsCacheException
 	{
 		List<ICuratedPath> list = new CuratedPathOperations().getAllCuratedPath();
+		LOGGER.info("List.........."+list);
 		Map<String, Set<ICuratedPath>> entitySetVsCuratedPath = new HashMap<String, Set<ICuratedPath>>(
 				list.size());
+		LOGGER.info("entitySetVsCuratedPath when initialized in cacheCuratedPaths()....."+entitySetVsCuratedPath);
 		for (ICuratedPath curatedPath : list)
 		{
 			postProcessCuratedPath(curatedPath);
@@ -699,14 +701,17 @@ public class PathFinder
 		Map<Long, IAssociation> idVsIassociation = new HashMap<Long, IAssociation>(
 				intraModelRecords.length + interModelRecords.length);
 		deIdVsAssociationId = new HashMap<Long, Long>(intraModelRecords.length);
-		for (String[] intraModelRecord : intraModelRecords)
-		{
-			Long identifier = Long.parseLong(intraModelRecord[0]);
-			Long deAssociationId = Long.parseLong(intraModelRecord[1]);
-			AssociationInterface association = getCache().getAssociationById(deAssociationId);
-			idVsIassociation.put(identifier, new IntraModelAssociation(association));
-			deIdVsAssociationId.put(deAssociationId, identifier);
-		}
+
+			for (String[] intraModelRecord : intraModelRecords)
+			{
+				Long identifier = Long.parseLong(intraModelRecord[0]);
+				Long deAssociationId = Long.parseLong(intraModelRecord[1]);
+				LOGGER.info("Get association for Id:............"+deAssociationId);
+				AssociationInterface association = getCache().getAssociationById(deAssociationId);
+				LOGGER.info("association for Id:............"+deAssociationId+"is"+association);
+				idVsIassociation.put(identifier, new IntraModelAssociation(association));
+				deIdVsAssociationId.put(deAssociationId, identifier);
+			}
 		leftEntityVsInterModelAsso = new HashMap<Long, List<IInterModelAssociation>>(
 				interModelRecords.length);
 		for (String[] interModelRecord : interModelRecords)
@@ -874,6 +879,8 @@ public class PathFinder
 
 	protected void setEntitySetVsCuratedPath(Map<String, Set<ICuratedPath>> entitySetVsCuratedPath)
 	{
+		LOGGER.info("EntitySetVsCuratedPath..............."+entitySetVsCuratedPath);
+
 		this.entitySetVsCuratedPath = entitySetVsCuratedPath;
 	}
 

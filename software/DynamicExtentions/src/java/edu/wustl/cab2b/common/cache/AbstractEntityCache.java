@@ -343,13 +343,18 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 */
 	public void createCache(final Collection<EntityGroupInterface> entityGroups)
 	{
+	
+		 LOGGER.info("EntityGroupSize............:"+entityGroups);
 		for (final EntityGroupInterface entityGroup : entityGroups)
 		{
-			cab2bEntityGroups.remove(entityGroup);
+
+		  LOGGER.info("Started Caching EntityGroup............:"+entityGroup);
+		  cab2bEntityGroups.remove(entityGroup);
 			cab2bEntityGroups.add(entityGroup);
+
 			for (final EntityInterface entity : entityGroup.getEntityCollection())
 			{
-				addEntityToCache(entity);
+      			addEntityToCache(entity);
 			}
 		}
 	}
@@ -435,6 +440,8 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 */
 	private void addContainerToCache(final ContainerInterface container)
 	{
+
+		LOGGER.info("Add Container to Cache.............."+container);
 		idVscontainers.put(container.getId(), container);
 		createControlCache(container.getControlCollection());
 		addAbstractEntityToCache(container.getAbstractEntity());
@@ -477,6 +484,8 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 */
 	private void createAttributeCache(final EntityInterface entity)
 	{
+
+	   LOGGER.info("Create Attribute Cache for Entity:"+entity);
 		for (final AttributeInterface attribute : entity.getAttributeCollection())
 		{
 			idVsAttribute.put(attribute.getId(), attribute);
@@ -489,8 +498,12 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 */
 	private void createAssociationCache(final EntityInterface entity)
 	{
+
+		LOGGER.info("Create Association Cache for Entity:"+entity);
+
 		for (final AssociationInterface association : entity.getAssociationCollection())
 		{
+			LOGGER.info("Association......................"+association);
 			idVsAssociation.put(association.getId(), association);
 			if (!Utility.isInherited(association))
 			{
@@ -505,6 +518,7 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 */
 	private void createPermissibleValueCache(final EntityInterface entity)
 	{
+		LOGGER.info("Create PV Cache for Entity:"+entity);
 		for (final AttributeInterface attribute : entity.getAttributeCollection())
 		{
 			for (final PermissibleValueInterface value : Utility.getPermissibleValues(attribute))
@@ -753,10 +767,12 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 */
 	private void createEntityCache(final EntityInterface entity)
 	{
-		idVsEntity.put(entity.getId(), entity);
-		createAttributeCache(entity);
-		createAssociationCache(entity);
-		createPermissibleValueCache(entity);
+
+		LOGGER.info("create Entity Cache for............."+entity);
+		 idVsEntity.put(entity.getId(), entity);
+		 createAttributeCache(entity);
+		 createAssociationCache(entity);
+		 createPermissibleValueCache(entity);
 	}
 
 	/**
@@ -766,12 +782,18 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 */
 	public void addEntityToCache(final EntityInterface entity)
 	{
+
+	   LOGGER.info("Add Entity................"+entity);
+
 		if ((entity.getContainerCollection() == null) || entity.getContainerCollection().isEmpty())
 		{
+			LOGGER.info("Create EntityCache........");
 			createEntityCache(entity);
 		}
 		else
 		{
+
+			LOGGER.info("Add Entity Container to Cache............");
 			for (final Object container : entity.getContainerCollection())
 			{
 				final ContainerInterface containerInterface = (ContainerInterface) container;
