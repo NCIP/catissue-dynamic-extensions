@@ -343,7 +343,7 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 */
 	public void createCache(final Collection<EntityGroupInterface> entityGroups)
 	{
-	
+
 		 LOGGER.info("EntityGroupSize............:"+entityGroups);
 		for (final EntityGroupInterface entityGroup : entityGroups)
 		{
@@ -496,7 +496,7 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 * Adds all associations of given entity into cache
 	 * @param entity Entity to process
 	 */
-	private void createAssociationCache(final EntityInterface entity)
+	public void createAssociationCache(final EntityInterface entity)
 	{
 
 		LOGGER.info("Create Association Cache for Entity:"+entity);

@@ -186,6 +186,7 @@ public class UpdateCache extends HttpServlet
 			associationInterface.setTargetEntity(cache
 					.getEntityByIdForCacheUpdate(associationInterface.getTargetEntity().getId()));
 			hookEntity.addAssociation(associationInterface);
+			EntityCache.getInstance().createAssociationCache(hookEntity);
 			LOGGER.info(associationInterface.getTargetEntity().getName()
 					+ " associated successfully.");
 		}

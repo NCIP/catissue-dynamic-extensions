@@ -215,7 +215,7 @@ public abstract class AbstractXMIImporter
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(WebUIManagerConstants.ENTITY, hookEntityName);
 		map.put(WebUIManagerConstants.OPERATION, WebUIManagerConstants.UPDATE_CACHE);
-		map.put(WebUIManagerConstants.ASSOCIATION, intermodelAssociationCollection);
+		map.put(WebUIManagerConstants.ASSOCIATION, getDummyAssociations(intermodelAssociationCollection));
 		map.put(WebUIManagerConstants.ENTITY_GROUP, ((EntityInterface) mainContainerList.get(0)
 				.getAbstractEntity()).getEntityGroup());
 
@@ -228,6 +228,26 @@ public abstract class AbstractXMIImporter
 		{
 			LOGGER.error(exception.getCause());
 		}
+		catch (DynamicExtensionsSystemException e)
+		{
+			LOGGER.info("Problem in updating cache.");
+			LOGGER.error(e.getCause());
+		}
+		catch (DynamicExtensionsApplicationException e)
+		{
+			LOGGER.info("Problem in updating cache.");
+			LOGGER.error(e.getCause());
+		}
+	}
+
+	private Collection<AssociationInterface>  getDummyAssociations(Set<AssociationInterface> intermodelAssociationCollection2) throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
+		Collection<AssociationInterface> dummyAssociationCollection = new HashSet<AssociationInterface>();
+		for(AssociationInterface association:intermodelAssociationCollection2)
+		{
+			dummyAssociationCollection.add(createDummyAssociation(association));
+		}
+		return dummyAssociationCollection;
 	}
 
 	/**
@@ -926,8 +946,7 @@ public abstract class AbstractXMIImporter
 
 			//create an association without setting the source entity.
 			//Hook entity will be updated as the source on the server
-			intermodelAssociationCollection.add(createDummyAssociation(staticEntity,
-					(EntityInterface) containerInterface.getAbstractEntity()));
+			intermodelAssociationCollection.add(association);
 			queriesList.addAll(QueryBuilderFactory.getQueryBuilder().getQueryPartForAssociation(
 					association, revQueryList, true));
 		}
@@ -979,16 +998,19 @@ public abstract class AbstractXMIImporter
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	public AssociationInterface createDummyAssociation(EntityInterface staticEntity,
-			EntityInterface dynamicEntity) throws DynamicExtensionsSystemException,
+	public AssociationInterface createDummyAssociation(AssociationInterface originalAssociation) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
-		AssociationInterface association =createAssociation(staticEntity, dynamicEntity);
+		AssociationInterface association =createAssociation(originalAssociation.getEntity(), originalAssociation.getTargetEntity());
+		EntityInterface dummyEntityInterface = DomainObjectFactory.getInstance().createEntity();
+		dummyEntityInterface.setId(association.getTargetEntity().getId());
+		association.setTargetEntity(dummyEntityInterface);
 
 		//Create constraint properties for the created association.
 		ConstraintPropertiesInterface constProperts = AnnotationUtil.getDummyConstraintProperties(
-				staticEntity, dynamicEntity);
+				originalAssociation.getEntity(), association.getTargetEntity());
 		association.setConstraintProperties(constProperts);
+		association.setId(originalAssociation.getId());
 
 		return association;
 
