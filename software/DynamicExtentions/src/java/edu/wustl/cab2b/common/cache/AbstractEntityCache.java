@@ -343,18 +343,14 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 */
 	public void createCache(final Collection<EntityGroupInterface> entityGroups)
 	{
-
-		 LOGGER.info("EntityGroupSize............:"+entityGroups);
 		for (final EntityGroupInterface entityGroup : entityGroups)
 		{
-
-		  LOGGER.info("Started Caching EntityGroup............:"+entityGroup);
-		  cab2bEntityGroups.remove(entityGroup);
+			cab2bEntityGroups.remove(entityGroup);
 			cab2bEntityGroups.add(entityGroup);
 
 			for (final EntityInterface entity : entityGroup.getEntityCollection())
 			{
-      			addEntityToCache(entity);
+				addEntityToCache(entity);
 			}
 		}
 	}
