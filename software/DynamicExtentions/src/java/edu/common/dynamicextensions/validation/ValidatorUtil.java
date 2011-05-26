@@ -157,7 +157,7 @@ public class ValidatorUtil
 			{
 				SelectControl selectControl = (SelectControl) control;
 				List<NameValueBean> optionList = selectControl.getOptionList();
-				if (optionList != null && !optionList.isEmpty())
+				if (optionList != null && !optionList.isEmpty() && attributeValue instanceof String)
 				{
 					for (NameValueBean nameValueBean : optionList)
 					{
