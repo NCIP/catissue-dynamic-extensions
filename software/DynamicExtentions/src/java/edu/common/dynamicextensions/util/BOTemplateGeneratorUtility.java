@@ -50,7 +50,7 @@ public class BOTemplateGeneratorUtility
 	/**
 	 * Constant for setting batch size.
 	 */
-	private static final Integer BATCH_SIZE = 5;
+	private static final Integer BATCH_SIZE = 10000;
 
 	/**
 	 * constant string
