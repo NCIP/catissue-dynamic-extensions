@@ -50,13 +50,27 @@ public abstract class AbstractHandler extends HttpServlet implements WebUIManage
 	}
 
 	@Override
+	public void init() throws ServletException
+	{
+		super.init();
+		try
+		{
+			AuditManager.init("DynamicExtensionsAuditMetadata.xml");
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException
 	{
 		try
 		{
 			dyanamicObjectProcessor = new DyanamicObjectProcessor();
-			AuditManager.init("DynamicExtensionsAuditMetadata.xml");
+			//AuditManager.init("DynamicExtensionsAuditMetadata.xml");
 			paramaterObjectMap = readParameterMapFromRequest(req);
 			doPostImpl(req, resp);
 		}
@@ -69,9 +83,6 @@ public abstract class AbstractHandler extends HttpServlet implements WebUIManage
 	protected abstract void doPostImpl(HttpServletRequest req, HttpServletResponse resp)
 			throws DAOException, DynamicExtensionsApplicationException,
 			DynamicExtensionsSystemException;
-
-
-
 
 	public static Map<String, Object> readParameterMapFromRequest(HttpServletRequest req)
 			throws DynamicExtensionsApplicationException, IOException
@@ -207,6 +218,5 @@ public abstract class AbstractHandler extends HttpServlet implements WebUIManage
 
 		}
 	}
-
 
 }
