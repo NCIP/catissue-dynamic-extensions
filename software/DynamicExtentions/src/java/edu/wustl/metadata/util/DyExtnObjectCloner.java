@@ -328,7 +328,7 @@ public class DyExtnObjectCloner extends ObjectCloner
 		 */
 		public EntityInterface getOrigObject() throws DynamicExtensionsCacheException
 		{
-			return EntityCache.getInstance().getEntityById(identifier);
+			return EntityCache.getInstance().getEntityByIdForCacheUpdate(identifier);
 		}
 	};
 
