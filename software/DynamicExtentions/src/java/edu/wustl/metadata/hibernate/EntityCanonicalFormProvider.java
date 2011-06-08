@@ -12,6 +12,6 @@ public class EntityCanonicalFormProvider extends AbstractMetadataCanonicalFormPr
 
     @Override
     protected EntityInterface getObjectFromEntityCache(Long identifier) throws DynamicExtensionsCacheException {
-        return EntityCache.getInstance().getEntityById(identifier);
+        return EntityCache.getInstance().getEntityByIdForCacheUpdate(identifier);
     }
 }
