@@ -197,21 +197,7 @@ jQuery(document).ready(
 
 	<body onload="loadPreviewForm('<%=request.getContextPath()%>');executeComboScriptsForSkipLogic();insertBreadCrumbForSubForm(<%=containerInterface.getId()%>,'<%=request.getSession().getAttribute("application_name")%>');setFocusOnLoad('<%=request.getAttribute("scrollPostion")%>');" onclick="window.parent.parent.detectApplicationUsageActivity()" onkeydown="window.parent.parent.detectApplicationUsageActivity()">
 		<html:form styleId="dataEntryForm" action="/ApplyDataEntryFormAction" enctype="multipart/form-data" method="post">
-		<%String successMessage = request.getParameter("ApplicationSuccessMsgs");
-				if(successMessage != null && !"null".equals(successMessage) && !"".equals(successMessage))
-				{
-			%>
-					<table border="0" cellpadding="3" cellspacing="3">
-						<tr>
-							<td><img src="images/uIEnhancementImages/error-green.gif"
-								alt="successful messages" width="16" height="16">
-							</td>
-							<td class="messagetextsuccess" nowrap="true"><font color="blue"><%=successMessage%></font></td>
-						</tr>
-					</table>
-			<%
-				}
-			%>
+
 		<c:if test='${showInDiv == "false"}'>
 			<div id="dataEntryFormDiv" style="position:absolute;overflow:auto;height:100%;width:100%;">
 			<div id="overDiv" style="position:absolute; visibility:hidden;"></div>
@@ -227,6 +213,25 @@ jQuery(document).ready(
 				</c:when>
 				<c:otherwise>
 					<table valign="top" align='center' width='100%' height="100%" border='0' cellspacing="0" cellpadding="0">
+					<%String successMessage = request.getParameter("ApplicationSuccessMsgs");
+				if(successMessage != null && !"null".equals(successMessage) && !"".equals(successMessage))
+				{
+			%>
+						<tr valign="top" height="4%">
+							<td>
+								<table>
+									<tr>
+										<td><img src="images/uIEnhancementImages/error-green.gif"
+											alt="successful messages" width="16" height="16">
+										</td>
+										 <td class="messagetextsuccess" nowrap="true"><font color="blue"><%=successMessage%></font></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+			<%
+				}
+			%>
 				</c:otherwise>
 			</c:choose>
 				<!-- Main Page heading -->
