@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.DataElementInterface;
@@ -185,5 +186,5 @@ public abstract class AttributeTypeInformation extends DynamicExtensionBaseDomai
 	{
 		return null;
 	}
-
+	
 }
