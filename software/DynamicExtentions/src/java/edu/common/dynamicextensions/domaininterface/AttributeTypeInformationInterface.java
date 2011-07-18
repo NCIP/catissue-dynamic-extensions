@@ -9,6 +9,7 @@
 package edu.common.dynamicextensions.domaininterface;
 
 import java.text.ParseException;
+import java.util.List;
 
 public interface AttributeTypeInformationInterface
 		extends
@@ -72,4 +73,6 @@ public interface AttributeTypeInformationInterface
 	 *
 	 */
 	String getDefaultValueAsString();
+	
+	List<String> getConditions();
 }
