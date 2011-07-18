@@ -2,6 +2,8 @@
 package edu.common.dynamicextensions.domain;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.common.dynamicextensions.domaininterface.NumericTypeInformationInterface;
 
@@ -107,4 +109,17 @@ public abstract class NumericAttributeTypeInformation extends AttributeTypeInfor
 	 */
 	public abstract String getFormattedValue(Double value)
 			throws ParseException;
+	
+	public List<String> getConditions() {
+		List<String> conditions = new ArrayList<String>();
+		conditions.add("Equals");
+		conditions.add("Not Equals");
+		conditions.add("Less than");
+		conditions.add("Less than or Equal to");
+		conditions.add("Greater than");
+		conditions.add("Greater than or Equal to");
+		conditions.add("Is Null");
+		conditions.add("Is Not Null");
+		return conditions;
+	}
 }

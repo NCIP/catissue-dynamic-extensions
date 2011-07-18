@@ -3,7 +3,9 @@ package edu.common.dynamicextensions.domain;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import edu.common.dynamicextensions.domaininterface.DateTypeInformationInterface;
@@ -141,4 +143,16 @@ public class DateAttributeTypeInformation extends AttributeTypeInformation
 		return defaultValue;
 	}
 
+	public List<String> getConditions() {
+		List<String> conditions = new ArrayList<String>();
+		conditions.add("Equals");
+		conditions.add("Not Equals");
+		conditions.add("Less than");
+		conditions.add("Less than or Equal to");
+		conditions.add("Greater than");
+		conditions.add("Greater than or Equal to");
+		conditions.add("Is Null");
+		conditions.add("Is Not Null");
+		return conditions;
+	}
 }

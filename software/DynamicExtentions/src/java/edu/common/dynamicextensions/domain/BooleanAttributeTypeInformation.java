@@ -1,6 +1,9 @@
 
 package edu.common.dynamicextensions.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.common.dynamicextensions.domaininterface.BooleanTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.BooleanValueInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
@@ -57,4 +60,10 @@ public class BooleanAttributeTypeInformation extends AttributeTypeInformation
 		return defaultValue;
 	}
 
+	public List<String> getConditions() {
+		List<String> conditions = new ArrayList<String>();
+		conditions.add("True");
+		conditions.add("False");
+		return conditions;
+	}
 }

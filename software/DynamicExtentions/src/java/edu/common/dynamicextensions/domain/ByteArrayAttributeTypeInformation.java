@@ -2,6 +2,7 @@
 package edu.common.dynamicextensions.domain;
 
 import java.sql.Clob;
+import java.util.List;
 
 import edu.common.dynamicextensions.domaininterface.ByteArrayTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
@@ -70,5 +71,10 @@ public class ByteArrayAttributeTypeInformation extends AttributeTypeInformation
 		return Clob.class;
 	}
 
-	
+	public List<String> getConditions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 }

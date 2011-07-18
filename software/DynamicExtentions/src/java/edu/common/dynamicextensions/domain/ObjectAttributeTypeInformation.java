@@ -1,6 +1,8 @@
 
 package edu.common.dynamicextensions.domain;
 
+import java.util.List;
+
 import edu.common.dynamicextensions.domaininterface.ObjectTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterface;
@@ -41,5 +43,12 @@ public class ObjectAttributeTypeInformation extends AttributeTypeInformation
 	{
 		return Object.class;
 	}
+
+	public List<String> getConditions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 
 }

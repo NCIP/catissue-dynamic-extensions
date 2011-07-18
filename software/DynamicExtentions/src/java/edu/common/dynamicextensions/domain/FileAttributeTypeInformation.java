@@ -4,6 +4,7 @@ package edu.common.dynamicextensions.domain;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import edu.common.dynamicextensions.domaininterface.FileTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
@@ -129,4 +130,11 @@ public class FileAttributeTypeInformation extends AttributeTypeInformation
 	{
 		return File.class;
 	}
+
+	public List<String> getConditions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 }

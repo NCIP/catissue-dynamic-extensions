@@ -1,6 +1,9 @@
 
 package edu.common.dynamicextensions.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.StringTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.StringValueInterface;
@@ -102,4 +105,15 @@ public class StringAttributeTypeInformation extends AttributeTypeInformation
 		return defaultValue;
 	}
 
+	public List<String> getConditions() {
+		List<String> conditions = new ArrayList<String>();
+		conditions.add("Starts With");
+		conditions.add("Ends With");
+		conditions.add("Equals");
+		conditions.add("Not Equals");
+		conditions.add("Contains");
+		conditions.add("Is Null");
+		conditions.add("Is Not Null");
+		return conditions;
+	}
 }
