@@ -1284,4 +1284,24 @@ public class CategoryCSVFileParser extends CategoryFileParser
 		return tagValueMap;
 	}
 
+	@Override
+	public boolean isProcessorClassPresent()
+	{
+		boolean flag = false;
+		Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
+		if (readLine() != null
+				&& readLine()[0].trim().toLowerCase(locale).startsWith(
+						CategoryCSVConstants.POST_PROCESSOR_CLASS.toLowerCase(locale)))
+		{
+			flag = true;
+		}
+		return flag;
+	}
+
+	public String getProcessorClass()
+	{
+		return readLine()[0].replace(CategoryCSVConstants.POST_PROCESSOR_CLASS, "").trim();
+
+	}
+
 }

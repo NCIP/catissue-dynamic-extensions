@@ -150,4 +150,9 @@ public class CategoryCSVConstants // NOPMD by gaurav_sawant
 	 * This keyword used to define the label for the form.
 	 */
 	public static final String FORM_TAG_VALUES = "FormTagValues:";
+
+	/**
+	 * This keyword used to define processor class for form, which will be invoked after data entry in that form.
+	 */
+	public static final String POST_PROCESSOR_CLASS = "PostProcessAction=";
 }

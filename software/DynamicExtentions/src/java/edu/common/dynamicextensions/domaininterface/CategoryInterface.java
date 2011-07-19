@@ -97,4 +97,7 @@ public interface CategoryInterface extends AbstractMetadataInterface
 	 */
 	AutoLoadXpath getAutoLoadXpath(String xpath);
 
+	void setProcessorClass(String processorClass);
+	String getProcessorClass();
+
 }

@@ -215,6 +215,11 @@ public abstract class CategoryFileParser extends FileReader
 	public abstract boolean hasTagValues();
 
 	/**
+	 * @return true/false
+	 */
+	public abstract boolean isProcessorClassPresent();
+
+	/**
 	 * @return
 	 */
 	public abstract boolean hasInsatanceInformation();
@@ -343,5 +348,7 @@ public abstract class CategoryFileParser extends FileReader
 	 * @return tag value Map
 	 */
 	public abstract Map<String, String> getTagValueMap();
+
+	public abstract String getProcessorClass();
 
 }

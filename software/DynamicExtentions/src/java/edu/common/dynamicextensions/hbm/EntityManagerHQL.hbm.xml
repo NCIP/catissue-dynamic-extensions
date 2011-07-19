@@ -395,4 +395,9 @@
 		select category.rootCategoryElement.entity.id,category.rootCategoryElement.containerCollection.id, category.name
 		from edu.common.dynamicextensions.domain.Category category
 	</query>
+	
+	<query name="getProcessorClassByContainerId">
+		select category.processorClass
+		from edu.common.dynamicextensions.domain.Category category where category.rootCategoryElement.containerCollection.id = ?
+	</query>
 </hibernate-mapping>

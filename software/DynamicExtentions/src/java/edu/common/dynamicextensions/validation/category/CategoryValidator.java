@@ -23,6 +23,7 @@ import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInte
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryPostProcessorInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ListBoxInterface;
@@ -815,6 +816,25 @@ public class CategoryValidator
 			throw new DynamicExtensionsSystemException(
 					"Category contains the attribute to populateFromXml but none of the "
 							+ "attribute has identifying XPath & concept code associated with it or its permissible values.");
+		}
+	}
+
+	public static void validateProcessorClass(String processorClass) throws DynamicExtensionsSystemException
+	{
+		try
+		{
+			Class processor = Class.forName(processorClass);
+			if (!CategoryPostProcessorInterface.class.isAssignableFrom(processor))
+			{
+				throw new DynamicExtensionsSystemException("Processor class " + processorClass
+						+ " does not implements " + CategoryPostProcessorInterface.class.getName()
+						+ " Interface.");
+			}
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new DynamicExtensionsSystemException("Processor class " + processorClass
+					+ "not found in classpath");
 		}
 	}
 }

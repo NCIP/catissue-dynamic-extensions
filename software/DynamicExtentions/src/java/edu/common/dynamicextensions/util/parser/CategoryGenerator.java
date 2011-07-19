@@ -140,6 +140,18 @@ public class CategoryGenerator
 
 				categoryFileParser.getCategoryValidator().setEntityGroupId(entityGroup.getId());
 				populateMainFormList(entityGroup);
+				// is precessor class given...
+				categoryFileParser.readNext();
+				if (categoryFileParser.isProcessorClassPresent())
+				{
+					 String processorClass = categoryFileParser.getProcessorClass();
+					 categoryValidator.validateProcessorClass(processorClass);
+					category.setProcessorClass(processorClass);
+				}
+				else
+				{
+					 category.setProcessorClass(null);
+				}
 
 				// 3: Get the path represented by ordered entity names.
 				categoryFileParser.readNext();

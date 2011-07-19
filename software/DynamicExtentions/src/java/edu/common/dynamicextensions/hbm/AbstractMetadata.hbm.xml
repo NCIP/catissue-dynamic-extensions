@@ -231,6 +231,13 @@
             insert="true"
             column="POPULATE_FROM_XML"
         />
+        <property
+            name="processorClass"
+            type="string"
+            update="true"
+            insert="true"
+            column="PROCESSOR_CLASS"
+        />
        <set
             name="autoLoadXpathCollection"
             table="DYEXTN_AUTO_LOADXPATH"

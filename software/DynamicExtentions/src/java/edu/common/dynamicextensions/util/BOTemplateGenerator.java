@@ -76,19 +76,19 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 	protected BulkOperationClass processRootCategoryElement(
 			CategoryEntityInterface rootCategoryEntity)
 	{
-		if (this.bulkOperationClass == null)
+		if (bulkOperationClass == null)
 		{
-			this.bulkOperationClass = new BulkOperationClass();
+			bulkOperationClass = new BulkOperationClass();
 		}
-		BOTemplateGeneratorUtility.setCommonAttributes(this.bulkOperationClass, this.category
+		BOTemplateGeneratorUtility.setCommonAttributes(bulkOperationClass, category
 				.getName());
 
-		this.bulkOperationClass.setCardinality(DEConstants.Cardinality.ONE.getValue().toString());
-		this.bulkOperationClass.setMaxNoOfRecords(MAX_RECORD);
-		this.bulkOperationClass.setClassName(BOTemplateGeneratorUtility
+		bulkOperationClass.setCardinality(DEConstants.Cardinality.ONE.getValue().toString());
+		bulkOperationClass.setMaxNoOfRecords(MAX_RECORD);
+		bulkOperationClass.setClassName(BOTemplateGeneratorUtility
 				.getRootCategoryEntityName(rootCategoryEntity.getName()));
 
-		return this.bulkOperationClass;
+		return bulkOperationClass;
 	}
 
 	protected void processCategoryEntity(CategoryEntityInterface categoryEntity, BulkOperationClass mainObject)
@@ -182,7 +182,7 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 	{
 		BulkOperationClass subBulkOperationClass = new BulkOperationClass();
 
-		BOTemplateGeneratorUtility.setCommonAttributes(subBulkOperationClass, this.category
+		BOTemplateGeneratorUtility.setCommonAttributes(subBulkOperationClass, category
 				.getName());
 
 		BOTemplateGeneratorUtility.setCardinality(categoryAssociation.getTargetCategoryEntity()
@@ -197,7 +197,7 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 	protected BulkOperationClass processMultiSelect(AssociationInterface association)
 	{
 		BulkOperationClass subBulkOperationClass = new BulkOperationClass();
-		BOTemplateGeneratorUtility.setCommonAttributes(subBulkOperationClass, this.category
+		BOTemplateGeneratorUtility.setCommonAttributes(subBulkOperationClass, category
 				.getName());
 		if(association.getTargetRole().getMaximumCardinality().getValue()==100)
 		{
@@ -266,16 +266,16 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 			throws DynamicExtensionsSystemException, BulkOperationException
 	{
 		//Step1: Iterate the given category and generate XML template data.
-		iterateCategory(this.bulkOperationClass);
+		iterateCategory(bulkOperationClass);
 		//Step2: Append generated XML template data to existing XML template.
 		final BulkOperationMetaData bulkMetaData = BOTemplateGeneratorUtility
-				.appnedCategoryTemplate(xmlFilePath, mappingXML, this.bulkOperationClass);
+				.appnedCategoryTemplate(xmlFilePath, mappingXML, bulkOperationClass);
 		//Step3: Write this template data in a file and store it in temporary directory.
 		File newDir = BOTemplateGeneratorUtility.saveXMLTemplateCopy(baseDir, mappingXML,
-				bulkMetaData, this.bulkOperationClass);
+				bulkMetaData, bulkOperationClass);
 		//Step4: Create CSV template for existing category.
 		final File csvFile = new File(newDir + File.separator
-				+ this.bulkOperationClass.getTemplateName() + DEConstants.CSV_SUFFIX);
+				+ bulkOperationClass.getTemplateName() + DEConstants.CSV_SUFFIX);
 		final String csvTemplateString = BOTemplateGeneratorUtility.createCSVTemplate(bulkMetaData,
 				csvFile);
 		//Step5: Save CSV template for existing category.
@@ -372,7 +372,7 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 	 */
 	public BulkOperationClass getBulkOperationClass()
 	{
-		return this.bulkOperationClass;
+		return bulkOperationClass;
 	}
 
 	/**

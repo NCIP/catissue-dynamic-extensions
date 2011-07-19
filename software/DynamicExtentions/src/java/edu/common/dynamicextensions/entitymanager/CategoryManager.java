@@ -63,6 +63,8 @@ import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
+import edu.wustl.dao.query.generator.DBTypes;
+import edu.wustl.dao.util.NamedQueryParam;
 import edu.wustl.metadata.util.DyExtnObjectCloner;
 
 /**
@@ -3661,5 +3663,23 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			throws DynamicExtensionsSystemException
 	{
 		return executeHQL("getAllStaticCategoryBeans", new HashMap());
+	}
+
+	public String getCategoryProcessorClass(Long rootContainerId)
+			throws DynamicExtensionsSystemException
+	{
+		String processorClass = null;
+
+		// Create a map of substitution parameters.
+		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
+		substParams.put("0", new NamedQueryParam(DBTypes.LONG, rootContainerId));
+
+		Collection processorClasses = executeHQL("getProcessorClassByContainerId", substParams);
+		if (processorClasses != null && !processorClasses.isEmpty())
+		{
+			processorClass = (String) processorClasses.iterator().next();
+		}
+
+		return processorClass;
 	}
 }

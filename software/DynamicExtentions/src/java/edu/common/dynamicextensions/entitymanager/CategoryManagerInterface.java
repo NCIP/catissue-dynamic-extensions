@@ -508,4 +508,6 @@ public interface CategoryManagerInterface
 	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
 	 */
 	Collection<NameValueBean> getAllStaticCategoryBeans() throws DynamicExtensionsSystemException;
+
+	String getCategoryProcessorClass(Long rootContainerId)throws DynamicExtensionsSystemException;
 }

@@ -15,6 +15,7 @@ import edu.common.dynamicextensions.domaininterface.CategoryInterface;
  */
 public class Category extends AbstractCategory implements CategoryInterface
 {
+	private String processorClass;
 
 	/**
 	 * is to be populated from XML (Lab Loading).
@@ -249,5 +250,17 @@ public class Category extends AbstractCategory implements CategoryInterface
 	public void setIsPopulateFromXml(boolean isPopulateFromXml)
 	{
 		this.isPopulateFromXml = isPopulateFromXml;
+	}
+
+	public String getProcessorClass()
+	{
+		// TODO Auto-generated method stub
+		return processorClass;
+	}
+
+	public void setProcessorClass(String processorClass)
+	{
+		this.processorClass=processorClass;
+
 	}
 }
