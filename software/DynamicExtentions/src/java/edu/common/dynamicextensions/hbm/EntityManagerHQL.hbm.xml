@@ -400,4 +400,8 @@
 		select category.processorClass
 		from edu.common.dynamicextensions.domain.Category category where category.rootCategoryElement.containerCollection.id = ?
 	</query>
+	
+	<query name="getMetadataContainerId">
+		select staticCategory.metadataContainerId from edu.common.dynamicextensions.domain.StaticCategory staticCategory where staticCategory.id = ?
+	</query>
 </hibernate-mapping>
