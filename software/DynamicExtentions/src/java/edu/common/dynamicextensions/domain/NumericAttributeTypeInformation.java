@@ -114,12 +114,14 @@ public abstract class NumericAttributeTypeInformation extends AttributeTypeInfor
 		List<String> conditions = new ArrayList<String>();
 		conditions.add("Equals");
 		conditions.add("Not Equals");
+		conditions.add("Between");
+		conditions.add("Not Between");
 		conditions.add("Less than");
 		conditions.add("Less than or Equal to");
 		conditions.add("Greater than");
 		conditions.add("Greater than or Equal to");
-		conditions.add("Is Null");
-		conditions.add("Is Not Null");
+		conditions.add("Is Present");
+		conditions.add("Is Not Present");
 		return conditions;
 	}
 }
