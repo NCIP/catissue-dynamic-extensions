@@ -111,9 +111,11 @@ public class StringAttributeTypeInformation extends AttributeTypeInformation
 		conditions.add("Ends With");
 		conditions.add("Equals");
 		conditions.add("Not Equals");
+		conditions.add("Between");
+		conditions.add("Not Between");
 		conditions.add("Contains");
-		conditions.add("Is Null");
-		conditions.add("Is Not Null");
+		conditions.add("Is Present");
+		conditions.add("Is Not Present");
 		return conditions;
 	}
 }
