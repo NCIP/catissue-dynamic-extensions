@@ -333,6 +333,14 @@
             insert="true"
             column="DataQuery"
         />
+		
+		<property
+            name="metadataContainerId"
+            type="long"
+            update="true"
+            insert="true"
+            column="METADATA_CONTAINER_ID"
+        />
 
         <set
             name="gridViewColumnList"
