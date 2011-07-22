@@ -31,6 +31,8 @@ public class StaticCategory extends AbstractCategory implements StaticCategoryIn
 	/** The data query. */
 	private String dataQuery;
 
+	private Long metadataContainerId;
+
 	/**
 	 * This method returns the form URL.
 	 * @hibernate.property name="formURL" type="string" column="FORM_URL" length="800"
@@ -49,7 +51,6 @@ public class StaticCategory extends AbstractCategory implements StaticCategoryIn
 		this.formURL = formURL;
 	}
 
-
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domaininterface.StaticCategoryInterface#getGridViewColumnList()
 	 */
@@ -58,7 +59,6 @@ public class StaticCategory extends AbstractCategory implements StaticCategoryIn
 		return gridViewColumnList;
 	}
 
-
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.domaininterface.StaticCategoryInterface#setGridViewColumnList(java.util.Collection)
 	 */
@@ -66,7 +66,6 @@ public class StaticCategory extends AbstractCategory implements StaticCategoryIn
 	{
 		this.gridViewColumnList = gridViewColumnList;
 	}
-
 
 	/**
 	 * Gets the data query.
@@ -78,7 +77,6 @@ public class StaticCategory extends AbstractCategory implements StaticCategoryIn
 		return dataQuery;
 	}
 
-
 	/**
 	 * Sets the data query.
 	 *
@@ -88,4 +86,15 @@ public class StaticCategory extends AbstractCategory implements StaticCategoryIn
 	{
 		this.dataQuery = dataQuery;
 	}
+
+	public Long getMetadataContainerId()
+	{
+		return metadataContainerId;
+	}
+
+	public void setMetadataContainerId(Long metadataContainerId)
+	{
+		this.metadataContainerId = metadataContainerId;
+	}
+
 }
