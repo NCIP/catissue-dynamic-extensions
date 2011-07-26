@@ -147,14 +147,14 @@ public class CategoryGenerator
 					 String processorClass = categoryFileParser.getProcessorClass();
 					 categoryValidator.validateProcessorClass(processorClass);
 					category.setProcessorClass(processorClass);
+					// 3: Get the path represented by ordered entity names.
+					categoryFileParser.readNext();
 				}
 				else
 				{
 					 category.setProcessorClass(null);
 				}
 
-				// 3: Get the path represented by ordered entity names.
-				categoryFileParser.readNext();
 				if (categoryFileParser.hasTagValues())
 				{
 					handleTagValues(category);
