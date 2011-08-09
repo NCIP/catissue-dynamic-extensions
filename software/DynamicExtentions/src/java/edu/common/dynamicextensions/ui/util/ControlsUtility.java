@@ -58,13 +58,15 @@ import edu.common.dynamicextensions.validation.ValidatorUtil;
 import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.util.global.CommonServiceLocator;
+import edu.wustl.dao.JDBCDAO;
+import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.query.generator.ColumnValueBean;
 
 /**
  * The Class ControlsUtility.
  */
 public class ControlsUtility
 {
-
 
 	/**
 	 * This method returns the prescribed date format for the given
@@ -467,13 +469,13 @@ public class ControlsUtility
 			NameValueBean nameValueBean;
 			for (PermissibleValueInterface permissibleValue : permissibleValueList)
 			{
-                if (permissibleValue instanceof DateValueInterface
-                        && attribute instanceof DateTypeInformationInterface)
-                {
-                    DateTypeInformationInterface dateAttribute = (DateTypeInformationInterface) attribute;
-                    nameValueBean = getPermissibleDateValue(permissibleValue,
-                            dateAttribute);
-                }				else if (permissibleValue instanceof DoubleValueInterface)
+				if (permissibleValue instanceof DateValueInterface
+						&& attribute instanceof DateTypeInformationInterface)
+				{
+					DateTypeInformationInterface dateAttribute = (DateTypeInformationInterface) attribute;
+					nameValueBean = getPermissibleDateValue(permissibleValue, dateAttribute);
+				}
+				else if (permissibleValue instanceof DoubleValueInterface)
 				{
 					nameValueBean = getPermissibleDoubleValue(permissibleValue);
 				}
@@ -1210,6 +1212,99 @@ public class ControlsUtility
 	 */
 	public static boolean isControlPresentInAddMore(String htmlControlName)
 	{
-		return htmlControlName.split("_").length > 5 ;
+		return htmlControlName.split("_").length > 5;
 	}
+
+	public static void getControlsFromContainer(List<NameValueBean> controls, Long containerId)
+			throws DynamicExtensionsSystemException
+	{
+		List<List<String>> child = getChild(containerId);
+		StringBuffer newIds = new StringBuffer();
+		String id = "";
+		newIds.append(containerId).append(", ");
+		for (List<String> innerList : child)
+		{
+			if (!checkForNull(2, innerList) && containerId.equals(Long.valueOf(innerList.get(2))))
+			{
+				newIds.append(innerList.get(0)).append(", ");
+			}
+			if (!checkForNull(1, innerList) && containerId.equals(Long.valueOf(innerList.get(0))))
+			{
+				newIds.append(innerList.get(1).toString()).append(", ");
+			}
+		}
+		if (newIds.length() > 1)
+		{
+			id = newIds.toString().substring(0, newIds.length() - 2);
+		}
+		List<List<String>> controlsList = getControlQuery(id);
+		for (List<String> list : controlsList)
+		{
+			if (!checkForNull(0, list))
+			{
+				Long containId = Long.valueOf(list.get(0));
+				if (!checkForNull(2, list) && !checkForNull(3, list)
+						&& containerId != Long.valueOf(list.get(2)))
+				{
+					getControlsFromContainer(controls, Long.valueOf(list.get(3)));
+				}
+				else if (checkForNull(4, list) || containerId != Long.valueOf(list.get(4)))
+				{
+					controls.add(new NameValueBean(list.get(1), containId));
+				}
+			}
+		}
+	}
+
+	private static List<List<String>> executeJDBCQuery(String sql,
+			List<ColumnValueBean> columnValueBeans) throws DynamicExtensionsSystemException
+	{
+		JDBCDAO jdbcDao = null;
+		List<List<String>> responseColl = new ArrayList<List<String>>();
+		try
+		{
+			jdbcDao = DynamicExtensionsUtility.getJDBCDAO(null);
+			responseColl = jdbcDao.executeQuery(sql, columnValueBeans);
+		}
+		catch (DAOException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
+		}
+		finally
+		{
+			DynamicExtensionsUtility.closeDAO(jdbcDao);
+		}
+		return responseColl;
+	}
+
+	private static boolean checkForNull(int index, List innerList)
+	{
+		if (innerList.get(index) != null)
+		{
+			String r = String.valueOf(innerList.get(index));
+			if (!r.equals(""))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static List<List<String>> getControlQuery(String id)
+			throws DynamicExtensionsSystemException
+	{
+		String sql = "select control.identifier,control.caption ,abstrCntrl.identifier,abstrCntrl.container_id, label.identifier,control.BASE_ABST_ATR_ID  from dyextn_control control left outer join  DYEXTN_LABEL label ON  control.identifier = label.IDENTIFIER left outer join dyextn_abstr_contain_ctr abstrCntrl ON control.identifier=abstrCntrl.identifier where control.container_id in ("
+				+ id + ")" + " order by control.SEQUENCE_NUMBER";
+		return executeJDBCQuery(sql, null);
+	}
+
+	private static List<List<String>> getChild(Long id) throws DynamicExtensionsSystemException
+	{
+		String sql = "select identifier,base_container_id,parent_container_id from dyextn_container decontainer where decontainer.parent_container_id = ? or decontainer.identifier=? order by decontainer.identifier desc";
+		List<ColumnValueBean> columnValueBeans = new ArrayList<ColumnValueBean>();
+		columnValueBeans.add(new ColumnValueBean(Long.valueOf(id)));
+		columnValueBeans.add(new ColumnValueBean(Long.valueOf(id)));
+		return executeJDBCQuery(sql, columnValueBeans);
+	}
+
 }
