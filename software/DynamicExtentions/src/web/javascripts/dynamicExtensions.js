@@ -3006,7 +3006,7 @@ function updateServerState(controlName, controlId, containerId)
 						vRecentControl.value = controlValue;
 					}
 				}
-				vRecentControl.className = "font_bl_nor" ;
+				//vRecentControl.className = "font_bl_nor" ;
 				vRecentControl.title = "";
 			}
 		}
