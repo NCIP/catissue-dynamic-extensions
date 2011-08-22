@@ -231,9 +231,10 @@ public interface CategoryHelperInterface
 	 * It will set the default control options for each type of control.
 	 * @param control control for which to set options.
 	 * @param controlType type of the control.
+	 * @param isLazyPvLoading in case of combobox is pv's to be loaded dynamically or not.
 	 * @throws DynamicExtensionsSystemException exception.
 	 */
-	void setDefaultControlsOptions(ControlInterface control, ControlEnum controlType)
+	void setDefaultControlsOptions(ControlInterface control, ControlEnum controlType,boolean isLazyPvLoading)
 			throws DynamicExtensionsSystemException;
 
 	/**

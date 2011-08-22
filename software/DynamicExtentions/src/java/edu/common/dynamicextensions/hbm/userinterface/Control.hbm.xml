@@ -445,6 +445,13 @@
             insert="true"
             column="NO_OF_COLUMNS"
         />
+        <property
+            name="isLazy"
+            type="boolean"
+            update="true"
+            insert="true"
+            column="IS_LAZY"
+        />
 
         </joined-subclass>
         <joined-subclass

@@ -51,6 +51,7 @@ import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.AbstractContainmentControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.CategoryAssociationControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.CheckBoxInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ComboBoxInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.DatePickerInterface;
@@ -1532,7 +1533,7 @@ public class CategoryHelper implements CategoryHelperInterface
 	 * @param controlType
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public void setDefaultControlsOptions(ControlInterface control, ControlEnum controlType)
+	public void setDefaultControlsOptions(ControlInterface control, ControlEnum controlType, boolean isLazyPvLoading)
 			throws DynamicExtensionsSystemException
 	{
 		try
@@ -1552,9 +1553,10 @@ public class CategoryHelper implements CategoryHelperInterface
 					selectControl.setIsReadOnly(false);
 					break;
 				case COMBO_BOX_CONTROL :
-					SelectInterface comboControl = (SelectInterface) control;
+					ComboBoxInterface comboControl = (ComboBoxInterface) control;
 					comboControl.setIsHidden(false);
 					comboControl.setIsReadOnly(false);
+					comboControl.setIsLazy(isLazyPvLoading);
 					break;
 				case DATE_PICKER_CONTROL :
 					DatePickerInterface datePickerControl = (DatePickerInterface) control;

@@ -365,11 +365,11 @@ public class CategoryGenerator
 						categoryHelper.updateCategoryAttributeForXmlPopulation(
 								(CategoryAttributeInterface) lastControl
 										.getAttibuteMetadataInterface(), category);
-
+						boolean isLazyPvLoading = categoryFileParser.isLazylyLoadPvs();
 						// Set default value for control's option.
 						// This is required in case of edit of category entity.
 						categoryHelper.setDefaultControlsOptions(lastControl, ControlEnum
-								.get(categoryFileParser.getControlType()));
+								.get(categoryFileParser.getControlType()),isLazyPvLoading);
 
 						final Map<String, String> controlOptions = categoryFileParser
 								.getControlOptions();

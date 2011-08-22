@@ -33,4 +33,11 @@ public interface ComboBoxInterface extends SelectInterface
 	 * @param columns The columns to set.
 	 */
 	void setColumns(Integer columns);
+
+	public boolean getIsLazy();
+
+	/**
+	 * @param columns The columns to set.
+	 */
+	public void setIsLazy(boolean  isLazy);
 }

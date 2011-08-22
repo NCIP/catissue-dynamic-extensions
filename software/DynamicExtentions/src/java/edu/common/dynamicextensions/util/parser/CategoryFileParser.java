@@ -350,5 +350,11 @@ public abstract class CategoryFileParser extends FileReader
 	public abstract Map<String, String> getTagValueMap();
 
 	public abstract String getProcessorClass();
+	/**
+	 * This method will check whether the pvs should be loaded lazyly or not.
+	 * This option is valid for only combobox not for any other control.
+	 * @return
+	 */
+	public abstract boolean isLazylyLoadPvs();
 
 }

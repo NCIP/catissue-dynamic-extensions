@@ -155,4 +155,9 @@ public class CategoryCSVConstants // NOPMD by gaurav_sawant
 	 * This keyword used to define processor class for form, which will be invoked after data entry in that form.
 	 */
 	public static final String POST_PROCESSOR_CLASS = "PostProcessAction=";
+
+	/**
+	 * This keyword used to define whether to load the PVs in case of combobox
+	 */
+	public static final String LAZY = "lazy";
 }

@@ -1303,5 +1303,23 @@ public class CategoryCSVFileParser extends CategoryFileParser
 		return readLine()[0].replace(CategoryCSVConstants.POST_PROCESSOR_CLASS, "").trim();
 
 	}
+	public boolean isLazylyLoadPvs()
+	{
+
+		boolean isLazy = false;
+		for (String string : readLine())
+		{
+			if (string.toLowerCase().startsWith(CategoryCSVConstants.LAZY))
+			{
+				if("true".equalsIgnoreCase(string.split("=")[1]))
+				{
+					isLazy = true;
+				}
+			}
+		}
+		return isLazy;
+
+	}
+
 
 }
