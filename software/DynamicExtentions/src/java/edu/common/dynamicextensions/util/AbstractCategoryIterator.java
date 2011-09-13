@@ -1,11 +1,19 @@
 
 package edu.common.dynamicextensions.util;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import edu.common.dynamicextensions.domain.userinterface.AbstractContainmentControl;
+import edu.common.dynamicextensions.domain.userinterface.ContainmentAssociationControl;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 
 /**
  * This is an abstract class for category iteration.
@@ -36,9 +44,54 @@ public abstract class AbstractCategoryIterator<T extends Object>
 	 */
 	public void iterateCategory(T object)
 	{
-		object = processRootCategoryElement(this.category.getRootCategoryElement());
-		processCategoryEntity(this.category.getRootCategoryElement(), object);
+		final CategoryEntityInterface catEntity = this.category.getRootCategoryElement();
 
+		object = processRootCategoryElement(catEntity);
+		final ContainerInterface container = (ContainerInterface)catEntity.getContainerCollection().iterator().next();
+		processContainer(container, object);
+
+	}
+
+	protected void processContainer(ContainerInterface container, T mainObject)
+	{
+
+		List<ControlInterface> controlCollection = new ArrayList<ControlInterface>(container
+				.getAllControlsUnderSameDisplayLabel());
+		List<Object> rowDataList = new ArrayList<Object>();
+		Collections.sort(controlCollection);
+		Collections.reverse(controlCollection);
+		for (ControlInterface control : controlCollection)
+		{
+
+			if(control instanceof ContainmentAssociationControl)
+			{
+				//category association
+				AbstractContainmentControl containmentControl = (AbstractContainmentControl) control;
+				T innnerObject = processCategoryAssociation((CategoryAssociationInterface)control.getBaseAbstractAttribute());
+				processContainer(containmentControl.getContainer(), innnerObject);
+				postprocessCategoryAssociation(innnerObject, mainObject);
+			}
+			else
+			{
+				//category attribute
+				CategoryAttributeInterface catAttribute =(CategoryAttributeInterface) control.getBaseAbstractAttribute();
+				if(catAttribute.getAbstractAttribute() instanceof AssociationInterface)
+				{
+					//multiselect attribute
+					AssociationInterface associationInterface = (AssociationInterface) catAttribute
+					.getAbstractAttribute();
+					T innnerObject = processMultiSelect(associationInterface);
+					processCategoryAttribute(catAttribute, mainObject);
+					postprocessCategoryAssociation(innnerObject, mainObject);
+				}
+				else
+				{
+					//normal attribtue
+					processCategoryAttribute(catAttribute, mainObject);
+				}
+			}
+
+		}
 	}
 
 	/**

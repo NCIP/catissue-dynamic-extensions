@@ -7,16 +7,22 @@ package edu.common.dynamicextensions.util;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import au.com.bytecode.opencsv.CSVReader;
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.PathAssociationRelationInterface;
+import edu.common.dynamicextensions.domain.userinterface.AbstractContainmentControl;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.bulkoperator.metadata.Attribute;
@@ -91,7 +97,7 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 		return bulkOperationClass;
 	}
 
-	protected void processCategoryEntity(CategoryEntityInterface categoryEntity, BulkOperationClass mainObject)
+	/*protected void processCategoryEntity(CategoryEntityInterface categoryEntity, BulkOperationClass mainObject)
 	{
 
 		for (CategoryAttributeInterface attributeInterface : categoryEntity
@@ -118,7 +124,54 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 			processCategoryEntity(categoryAssociation.getTargetCategoryEntity(), innnerObject);
 			postprocessCategoryAssociation(innnerObject, mainObject);
 		}
+	}*/
+
+	protected void processContainer(ContainerInterface container, BulkOperationClass mainObject)
+	{
+
+		List<ControlInterface> controlCollection = new ArrayList<ControlInterface>(container
+				.getAllControlsUnderSameDisplayLabel());
+		List<Object> rowDataList = new ArrayList<Object>();
+		Collections.sort(controlCollection);
+		Collections.reverse(controlCollection);
+		for (ControlInterface control : controlCollection)
+		{
+
+			if(control instanceof AbstractContainmentControl)
+			{
+				//category association
+				AbstractContainmentControl containmentControl = (AbstractContainmentControl) control;
+				BulkOperationClass innnerObject = processCategoryAssociation((CategoryAssociationInterface)control.getBaseAbstractAttribute());
+				processContainer(containmentControl.getContainer(), innnerObject);
+				postprocessCategoryAssociation(innnerObject, mainObject);
+			}
+			else
+			{
+				//category attribute
+				CategoryAttributeInterface catAttribute =(CategoryAttributeInterface) control.getBaseAbstractAttribute();
+				if(catAttribute!=null)
+
+				{
+				if(catAttribute.getAbstractAttribute() instanceof AssociationInterface)
+				{
+					//multiselect attribute
+					AssociationInterface associationInterface = (AssociationInterface) catAttribute
+					.getAbstractAttribute();
+					BulkOperationClass innnerObject = processMultiSelect(associationInterface);
+					processCategoryAttribute(catAttribute, innnerObject,mainObject);
+					postprocessCategoryAssociation(innnerObject, mainObject);
+				}
+				else
+				{
+					//normal attribtue
+					processCategoryAttribute(catAttribute, mainObject,mainObject);
+				}
+				}
+			}
+
+		}
 	}
+
 	/**
 	 * process each category entity attributes.
 	 * @param attribute category attribute.
