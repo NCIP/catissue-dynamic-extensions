@@ -345,7 +345,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		for(PermissibleValueInterface pv : dataElement.getPermissibleValues())
 		{
 			String value = pv.getValueAsObject().toString();
-			pvDataString.append("[\"").append(value).append("\",\"").append(value).append("\"],");
+			pvDataString.append("[\"").append(value).append("\",\"").append(DynamicExtensionsUtility.getUnEscapedStringValue(value)).append("\"],");
 		}
 		if(pvDataString.toString().endsWith(","))
 		{

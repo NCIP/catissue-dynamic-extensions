@@ -112,7 +112,7 @@ public class HandleSkipLogic
 					categoryPathInformation, skipLogicHelper);
 
 			// Step 4. Get the value of the condition //Create Source Skip Logic
-			Object conditionValue = fileParser.getConditionValue();
+			 String conditionValue =fileParser.getConditionValue();
 
 			// Step 5. Get control corresponding to Action
 			final List<ControlInterface> targetControls = getTargetControl(categoryPathInformation,
