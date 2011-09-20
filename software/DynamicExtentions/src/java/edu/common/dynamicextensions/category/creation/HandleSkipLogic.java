@@ -34,6 +34,7 @@ import edu.common.dynamicextensions.skiplogic.RelationalOperator;
 import edu.common.dynamicextensions.skiplogic.ShowAction;
 import edu.common.dynamicextensions.skiplogic.SkipLogic;
 import edu.common.dynamicextensions.skiplogic.SkipLogicUtility;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.common.dynamicextensions.util.parser.CategoryFileParser;
 import edu.wustl.common.util.logger.Logger;
@@ -112,8 +113,7 @@ public class HandleSkipLogic
 					categoryPathInformation, skipLogicHelper);
 
 			// Step 4. Get the value of the condition //Create Source Skip Logic
-			 String conditionValue =fileParser.getConditionValue();
-
+			 String conditionValue =DynamicExtensionsUtility.getEscapedStringValue(fileParser.getConditionValue());
 			// Step 5. Get control corresponding to Action
 			final List<ControlInterface> targetControls = getTargetControl(categoryPathInformation,
 					skipLogicHelper);
