@@ -5,6 +5,7 @@
 package edu.common.dynamicextensions.category.creation;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -16,6 +17,7 @@ import org.owasp.stinger.Stinger;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.entitymanager.CategoryManager;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.operations.CategoryOperations;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
@@ -130,6 +132,10 @@ public class CategoryProcessor
 			LOGGER.info("Form definition file " + filePath + " executed successfully.");
 			catNameVsExcep.put(filePath, null);
 			hibernateDAO.commit();
+		}
+		catch (FileNotFoundException ex)
+		{
+			catNameVsExcep.put(filePath, new DynamicExtensionsApplicationException("File not found at location:"+filePath));
 		}
 		catch (Exception ex)
 		{
