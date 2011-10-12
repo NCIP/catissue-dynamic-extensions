@@ -7,7 +7,7 @@
 	<!-- ALTER TABLE CATISSUE_PERMISSIBLE_VALUE -->
 	<changeSet id="1" author="DE" runOnChange="true">
 		<addColumn tableName="DYEXTN_COMBOBOX">
-			<column name="IS_LAZY" type="BOOLEAN" defaultValue="1" />
+			<column name="IS_LAZY" type="BOOLEAN" defaultValue="0" />
 		</addColumn>
 
 	</changeSet>
