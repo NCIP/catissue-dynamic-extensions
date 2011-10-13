@@ -25,7 +25,9 @@ import org.owasp.stinger.Stinger;
 import au.com.bytecode.opencsv.CSVReader;
 import edu.common.dynamicextensions.domain.FormControlNotes;
 import edu.common.dynamicextensions.domaininterface.FormControlNotesInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.common.dynamicextensions.validation.ValidatorUtil;
@@ -96,7 +98,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 				{
 					throw new DynamicExtensionsSystemException(ApplicationProperties
 							.getValue(CategoryConstants.MISSING_QUOTES)
-							+ " " + lineNumber);
+							+ Character.SPACE_SEPARATOR + lineNumber);
 				}
 				break;
 			}
@@ -157,7 +159,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 			StringBuffer entityPath = new StringBuffer();
 
 			StringTokenizer stringTokenizer = new StringTokenizer(entityNameAndPath.split("~")[1],
-					":");
+					Constants.COLON);
 			while (stringTokenizer.hasMoreTokens())
 			{
 				String entityName = stringTokenizer.nextToken();
@@ -176,8 +178,8 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	@Override
 	public String getDisplyLable()
 	{
-		return processEscapeCharacter(readLine()[0].split(":"), readLine()[0],
-				DEFAULT_ESCAPE_CHARACTER, ":")[1].trim();
+		return processEscapeCharacter(readLine()[0].split(Constants.COLON), readLine()[0],
+				DEFAULT_ESCAPE_CHARACTER, Constants.COLON)[1].trim();
 	}
 
 	/**
@@ -208,11 +210,10 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	 * @throws DAOException
 	 */
 	@Override
-	public String getEntityName() throws DynamicExtensionsSystemException, DAOException,
-			ClassNotFoundException
+	public String getEntityName() throws DynamicExtensionsSystemException
 	{
-		categoryValidator.validateEntityName(readLine()[0].split(":")[0].trim());
-		return readLine()[0].split(":")[0].trim();
+		categoryValidator.validateEntityName(readLine()[0].split(Constants.COLON)[0].trim());
+		return readLine()[0].split(Constants.COLON)[0].trim();
 	}
 
 	/**
@@ -221,7 +222,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	@Override
 	public String getAttributeName()
 	{
-		return readLine()[0].split(":")[1].trim();
+		return readLine()[0].split(Constants.COLON)[1].trim();
 	}
 
 	/**
@@ -290,8 +291,8 @@ public class CategoryCSVFileParser extends CategoryFileParser
 			{
 				String originalPVString = tokenOfCurrentline[i].substring(tokenOfCurrentline[i]
 						.indexOf('~') + 1);
-				String[] pvListString = processEscapeCharacter(originalPVString.split(":"),
-						originalPVString, DEFAULT_ESCAPE_CHARACTER, ":");
+				String[] pvListString = processEscapeCharacter(originalPVString.split(Constants.COLON),
+						originalPVString, DEFAULT_ESCAPE_CHARACTER, Constants.COLON);
 				listOfPermissibleValues.addAll(Arrays.asList(pvListString));
 			}
 		}
@@ -340,13 +341,16 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	/**
 	 * @return permissible values collection
 	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	@Override
-	public Set<String> getPermissibleValues() throws DynamicExtensionsSystemException
+	public Set<String> getPermissibleValues() throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
+	
 		//counter for to locate the start of the permissible values
 		String[] nextLine = readLine();
 		int counter;
+		//line no entity name attribute name 
 		boolean permissibleValuesPresent = false;
 		Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
 		for (counter = 0; counter < nextLine.length; counter++)
@@ -373,11 +377,11 @@ public class CategoryCSVFileParser extends CategoryFileParser
 		if (CategoryCSVConstants.PERMISSIBLE_VALUES.equalsIgnoreCase(permissibleValueKey))
 		{
 			String originalPVString = nextLine[counter].substring(indexOfTilda + 1);
-			String[] pvListString = processEscapeCharacter(originalPVString.split(":"),
-					originalPVString, DEFAULT_ESCAPE_CHARACTER, ":");
+			String[] pvListString = processEscapeCharacter(originalPVString.split(Constants.COLON),
+					originalPVString, DEFAULT_ESCAPE_CHARACTER, Constants.COLON);
 			for (String pv : pvListString)
 			{
-				pvSet.add(pv);
+				addPv(pvSet, pv);
 			}
 		}
 
@@ -394,7 +398,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 				{
 					if (!"".equals(line.trim()))//skip the line if it is blank
 					{
-						pvSet.add(line.trim());
+						addPv(pvSet,line.trim());
 					}
 					line = reader.readLine();
 				}
@@ -415,6 +419,26 @@ public class CategoryCSVFileParser extends CategoryFileParser
 			}
 		}
 		return pvSet;
+	}
+
+	/**
+	 * @param pvSet
+	 * @param pv
+	 * @throws DynamicExtensionsApplicationException
+	 * @throws DynamicExtensionsSystemException
+	 */
+	//Checks for double quotes in a pv
+	private void addPv(Set<String> pvSet, String pv) throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+	{
+		if(pv.contains(Constants.DOUBLE_QUOTES))
+		{
+			List<String> placeHoldersList=new ArrayList<String>();
+			placeHoldersList.add(pv);
+			placeHoldersList.add(getEntityName()+Character.SPACE_SEPARATOR+getAttributeName());
+			throw  new DynamicExtensionsApplicationException(ApplicationProperties.getValue("pv.validation.doubleQuotes",placeHoldersList));
+		}		
+		
+		pvSet.add(pv);
 	}
 
 	private void closeFileResource(BufferedReader reader, String filePath)
@@ -447,9 +471,9 @@ public class CategoryCSVFileParser extends CategoryFileParser
 		{
 			throw new DynamicExtensionsSystemException(ApplicationProperties
 					.getValue(CategoryConstants.LINE_NUMBER)
-					+ " "
+					+ Character.SPACE_SEPARATOR
 					+ getLineNumber()
-					+ " "
+					+ Character.SPACE_SEPARATOR
 					+ ApplicationProperties.getValue("readingFile")
 					+ getRelativeFilePath()
 					+ ". "
@@ -471,7 +495,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 			if (string.toLowerCase(locale).startsWith(
 					CategoryCSVConstants.PERMISSIBLE_VALUE_OPTIONS.toLowerCase(locale) + "~"))
 			{
-				String[] controlOptionsValue = string.split("~")[1].split(":");
+				String[] controlOptionsValue = string.split("~")[1].split(Constants.COLON);
 
 				for (String optionValue : controlOptionsValue)
 				{
@@ -577,8 +601,8 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	@Override
 	public String getTargetContainerCaption()
 	{
-		return processEscapeCharacter(readLine()[0].split(":"), readLine()[0],
-				DEFAULT_ESCAPE_CHARACTER, ":")[1].trim();
+		return processEscapeCharacter(readLine()[0].split(Constants.COLON), readLine()[0],
+				DEFAULT_ESCAPE_CHARACTER, Constants.COLON)[1].trim();
 	}
 
 	/**
@@ -589,8 +613,8 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	public String getMultiplicity() throws DynamicExtensionsSystemException
 	{
 		categoryValidator.validateMultiplicity();
-		return processEscapeCharacter(readLine()[0].split(":"), readLine()[0],
-				DEFAULT_ESCAPE_CHARACTER, ":")[2].trim();
+		return processEscapeCharacter(readLine()[0].split(Constants.COLON), readLine()[0],
+				DEFAULT_ESCAPE_CHARACTER, Constants.COLON)[2].trim();
 	}
 
 	/**
@@ -609,8 +633,8 @@ public class CategoryCSVFileParser extends CategoryFileParser
 		boolean pasteButtonEnabled = true;
 		if (readLine() != null)
 		{
-			String[] tokens = processEscapeCharacter(readLine()[0].split(":"), readLine()[0],
-					DEFAULT_ESCAPE_CHARACTER, ":");
+			String[] tokens = processEscapeCharacter(readLine()[0].split(Constants.COLON), readLine()[0],
+					DEFAULT_ESCAPE_CHARACTER, Constants.COLON);
 
 			if (tokens.length >= 4)
 			{
@@ -682,7 +706,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 			if (string.trim().toLowerCase(locale).startsWith(
 					CategoryCSVConstants.RULES.toLowerCase(locale) + "~"))
 			{
-				String[] rulesValues = string.trim().split("~")[1].split(":");
+				String[] rulesValues = string.trim().split("~")[1].split(Constants.COLON);
 
 				for (String ruleValue : rulesValues)
 				{
@@ -853,7 +877,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	@Override
 	public String getRelatedAttributeName()
 	{
-		return readLine()[0].split("=")[0].split(":")[1].trim();
+		return readLine()[0].split("=")[0].split(Constants.COLON)[1].trim();
 	}
 
 	/* (non-Javadoc)
@@ -890,8 +914,8 @@ public class CategoryCSVFileParser extends CategoryFileParser
 						.split("~"), string, DEFAULT_ESCAPE_CHARACTER, "~")[1], lineNumber);
 
 				String stringNotes = string.substring(string.indexOf("~") + 1);
-				String[] notes = processEscapeCharacter(stringNotes.split(":"), stringNotes,
-						DEFAULT_ESCAPE_CHARACTER, ":");
+				String[] notes = processEscapeCharacter(stringNotes.split(Constants.COLON), stringNotes,
+						DEFAULT_ESCAPE_CHARACTER, Constants.COLON);
 				FormControlNotesInterface formControlNote = new FormControlNotes();
 				formControlNote.setNote(notes[0]);
 				controlNotes.add(formControlNote);
@@ -960,7 +984,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	public boolean hasSeparator()
 	{
 		boolean flag = false;
-		if (CategoryCSVConstants.SEPARATOR.equalsIgnoreCase(readLine()[0].split(":")[0].trim()))
+		if (CategoryCSVConstants.SEPARATOR.equalsIgnoreCase(readLine()[0].split(Constants.COLON)[0].trim()))
 		{
 			flag = true;
 		}
@@ -974,7 +998,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	@Override
 	public String getSeparator()
 	{
-		return readLine()[0].substring(readLine()[0].indexOf(":") + 2, readLine()[0].length() - 1);
+		return readLine()[0].substring(readLine()[0].indexOf(Constants.COLON) + 2, readLine()[0].length() - 1);
 	}
 
 	/**
@@ -1014,7 +1038,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 		{
 			if (string.toLowerCase(locale).startsWith(optionConstant.toLowerCase(locale) + "~"))
 			{
-				String[] controlOptionsValue = string.split("~")[1].split(":");
+				String[] controlOptionsValue = string.split("~")[1].split(Constants.COLON);
 
 				for (String optionValue : controlOptionsValue)
 				{
@@ -1031,7 +1055,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	@Override
 	public String getSkipLogicSourceAttributeClassName()
 	{
-		return readLine()[0].split(":")[0].trim();
+		return readLine()[0].split(Constants.COLON)[0].trim();
 	}
 
 	/**
@@ -1040,7 +1064,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	@Override
 	public String getSkipLogicSourceAttributeName()
 	{
-		return readLine()[0].split(":")[1].trim();
+		return readLine()[0].split(Constants.COLON)[1].trim();
 	}
 
 	/**
@@ -1049,7 +1073,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	@Override
 	public String getSkipLogicTargetAttributeClassName()
 	{
-		return readLine()[1].split("~")[1].split(":")[0].trim();
+		return readLine()[1].split("~")[1].split(Constants.COLON)[0].trim();
 	}
 
 	/**
@@ -1058,7 +1082,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	@Override
 	public String getSkipLogicTargetAttributeName()
 	{
-		return readLine()[1].split("~")[1].split(":")[1].trim();
+		return readLine()[1].split("~")[1].split(Constants.COLON)[1].trim();
 	}
 
 	/**
@@ -1067,7 +1091,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	@Override
 	public String getConditionValue()
 	{
-		return readLine()[0].split(":")[2].trim();
+		return readLine()[0].split(Constants.COLON)[2].trim();
 	}
 
 	/**
@@ -1221,9 +1245,9 @@ public class CategoryCSVFileParser extends CategoryFileParser
 					throw new DynamicExtensionsSystemException(ApplicationProperties
 							.getValue(CategoryConstants.CREATE_CAT_FAILS)
 							+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-							+ " "
+							+ Character.SPACE_SEPARATOR
 							+ getLineNumber()
-							+ " "
+							+ Character.SPACE_SEPARATOR
 							+ ApplicationProperties.getValue("readingFile")
 							+ getRelativeFilePath()
 							+ ". "
@@ -1258,7 +1282,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	 */
 	public String getTaggedValuesString()
 	{
-		return readLine()[0].split(":")[1].trim();
+		return readLine()[0].split(Constants.COLON)[1].trim();
 	}
 
 	/**
@@ -1273,7 +1297,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 			if (token.contains(CategoryCSVConstants.FORM_TAG_VALUES)
 					&& token.split(EQUAL_SIGN).length > 1)
 			{
-				tagValueMap.put(token.split(EQUAL_SIGN)[0].split(":")[1],
+				tagValueMap.put(token.split(EQUAL_SIGN)[0].split(Constants.COLON)[1],
 						token.split(EQUAL_SIGN)[1]);
 			}
 			else if (token.split(EQUAL_SIGN).length > 1)

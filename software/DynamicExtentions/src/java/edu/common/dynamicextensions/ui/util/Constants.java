@@ -62,4 +62,7 @@ public class Constants
 	public static final String SELECTED_VALUES = "selectedCoordinators";
 	public static final String ENCOUNTER_DATE="encounterDate";
 	public static final String PV_With_Nearest_Past_Date="PVWithNearestPastDate";
+	public static final String COLON=":";
+	public static final String DOUBLE_QUOTES="\"";
+	
 }

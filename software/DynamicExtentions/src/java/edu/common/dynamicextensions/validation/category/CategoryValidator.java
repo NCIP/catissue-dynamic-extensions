@@ -81,10 +81,10 @@ public class CategoryValidator
 		if (categoryFileParser.processEscapeCharacter(categoryFileParser.readLine()[0].split(":"),
 				categoryFileParser.readLine()[0], "\\", ":").length < 2)
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ getErrorMessageStart()
-					+ ApplicationProperties.getValue(CategoryConstants.MULT_UNDEFINED));
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ getErrorMessageStart()
+							+ ApplicationProperties.getValue(CategoryConstants.MULT_UNDEFINED));
 		}
 	}
 
@@ -94,21 +94,31 @@ public class CategoryValidator
 	 * @throws ClassNotFoundException
 	 * @throws DAOException
 	 */
-	public void validateEntityName(String entityName) throws DynamicExtensionsSystemException,
-			DAOException, ClassNotFoundException
+	public void validateEntityName(String entityName) throws DynamicExtensionsSystemException
 	{
 
 		String entityHQL = "select id from Entity entity where entity.entityGroup.id = "
 				+ entityGroupId + " and entity.name = '" + entityName + "'";
-		List entityIdList = DynamicExtensionsUtility.executeQuery(entityHQL);
-		if (entityIdList.isEmpty())
+		List entityIdList;
+		try
+		{
+			entityIdList = DynamicExtensionsUtility.executeQuery(entityHQL);
+			if (entityIdList.isEmpty())
+			{
+				String errorMessage = getErrorMessageStart()
+						+ ApplicationProperties.getValue(CategoryConstants.NO_ENTITY) + entityName;
+
+				throw new DynamicExtensionsSystemException(errorMessage);
+			}
+		}
+		catch (DAOException e)
 		{
 			String errorMessage = getErrorMessageStart()
 					+ ApplicationProperties.getValue(CategoryConstants.NO_ENTITY) + entityName;
 
 			throw new DynamicExtensionsSystemException(errorMessage);
 		}
-		// checkForNullRefernce(entityIdList.get(0), errorMessage);
+
 	}
 
 	/**
@@ -138,15 +148,14 @@ public class CategoryValidator
 		{
 			if (isImportPv != null && isImportPv.length > 0 && isImportPv[0])
 			{
-				throw new DynamicExtensionsSystemException(ApplicationProperties
-						.getValue(CategoryConstants.IMPORT_PV_FAILS)
-						+ message);
+				throw new DynamicExtensionsSystemException(
+						ApplicationProperties.getValue(CategoryConstants.IMPORT_PV_FAILS) + message);
 			}
 			else
 			{
-				throw new DynamicExtensionsSystemException(ApplicationProperties
-						.getValue(CategoryConstants.CREATE_CAT_FAILS)
-						+ message);
+				throw new DynamicExtensionsSystemException(
+						ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+								+ message);
 			}
 		}
 	}
@@ -167,9 +176,9 @@ public class CategoryValidator
 
 		if (attribute == null)
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue(CategoryConstants.NULL_ATTR));
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue(CategoryConstants.NULL_ATTR));
 		}
 
 		if (!rules.isEmpty())
@@ -214,8 +223,8 @@ public class CategoryValidator
 		String maxValue = (String) catMinMaxValues
 				.get(CategoryCSVConstants.MAX.toLowerCase(locale));
 		Map<String, String> values = new HashMap<String, String>();
-		Set<RuleInterface> attributeRules = new HashSet<RuleInterface>(attribute
-				.getRuleCollection());
+		Set<RuleInterface> attributeRules = new HashSet<RuleInterface>(
+				attribute.getRuleCollection());
 
 		for (RuleInterface rule : attributeRules)
 		{
@@ -262,18 +271,18 @@ public class CategoryValidator
 
 		if (attrTypeInfo == null)
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue(CategoryConstants.NULL_ATTR_TYPE_INFO)
-					+ attribute.getName());
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue(CategoryConstants.NULL_ATTR_TYPE_INFO)
+							+ attribute.getName());
 		}
 
 		if (!(attrTypeInfo instanceof NumericAttributeTypeInformation || attrTypeInfo instanceof DateAttributeTypeInformation))
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue(CategoryConstants.NON_NUM_RANGE)
-					+ attribute.getName());
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue(CategoryConstants.NON_NUM_RANGE)
+							+ attribute.getName());
 		}
 	}
 
@@ -302,10 +311,10 @@ public class CategoryValidator
 			}
 			catch (DynamicExtensionsValidationException e)
 			{
-				throw new DynamicExtensionsSystemException(ApplicationProperties
-						.getValue(CategoryConstants.CREATE_CAT_FAILS)
-						+ ApplicationProperties.getValue(e.getErrorCode(), e.getPlaceHolderList()),
-						e);
+				throw new DynamicExtensionsSystemException(
+						ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+								+ ApplicationProperties.getValue(e.getErrorCode(),
+										e.getPlaceHolderList()), e);
 			}
 		}
 		else
@@ -315,17 +324,17 @@ public class CategoryValidator
 			try
 			{
 				// Fix to support different date formats in DE :Pavan.
-				String dateFormat = getRuleDateInAttributeDateFormat(catAttrValue, attribute
-						.getAttributeTypeInformation(), attribute.getName());
+				String dateFormat = getRuleDateInAttributeDateFormat(catAttrValue,
+						attribute.getAttributeTypeInformation(), attribute.getName());
 				dateRangeValidator.validate((AttributeMetadataInterface) attribute, dateFormat,
 						values, attribute.getName());
 			}
 			catch (DynamicExtensionsValidationException e)
 			{
-				throw new DynamicExtensionsSystemException(ApplicationProperties
-						.getValue(CategoryConstants.CREATE_CAT_FAILS)
-						+ ApplicationProperties.getValue(e.getErrorCode(), e.getPlaceHolderList())
-						+ attribute.getName(), e);
+				throw new DynamicExtensionsSystemException(
+						ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+								+ ApplicationProperties.getValue(e.getErrorCode(),
+										e.getPlaceHolderList()) + attribute.getName(), e);
 			}
 		}
 	}
@@ -400,9 +409,9 @@ public class CategoryValidator
 	{
 		if (attribute == null)
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue(CategoryConstants.NULL_ATTR));
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue(CategoryConstants.NULL_ATTR));
 		}
 
 		if (attribute.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
@@ -413,11 +422,11 @@ public class CategoryValidator
 						&& ((rules == null || rules.isEmpty()) || (!rules
 								.containsKey(CategoryCSVConstants.ALLOW_FUTURE_DATE))))
 				{
-					throw new DynamicExtensionsSystemException(ApplicationProperties
-							.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties
-									.getValue(CategoryConstants.NO_OVERRIDE_FUTURE_DATE_RULE)
-							+ attribute.getName());
+					throw new DynamicExtensionsSystemException(
+							ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+									+ ApplicationProperties
+											.getValue(CategoryConstants.NO_OVERRIDE_FUTURE_DATE_RULE)
+									+ attribute.getName());
 				}
 			}
 		}
@@ -441,9 +450,9 @@ public class CategoryValidator
 	{
 		if (attribute == null)
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue(CategoryConstants.NULL_ATTR));
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue(CategoryConstants.NULL_ATTR));
 		}
 		if (attribute.getAttributeTypeInformation() instanceof DateAttributeTypeInformation
 				&& rules != null && rules.containsKey(CategoryConstants.ALLOW_FUTURE_DATE)
@@ -452,17 +461,18 @@ public class CategoryValidator
 			FutureDateValidator futureDateValidation = new FutureDateValidator();
 			try
 			{
-				String defaultDateValue = getRuleDateInAttributeDateFormat(value.replaceAll("/",
-						"-"), attribute.getAttributeTypeInformation(), attribute.getName());
+				String defaultDateValue = getRuleDateInAttributeDateFormat(
+						value.replaceAll("/", "-"), attribute.getAttributeTypeInformation(),
+						attribute.getName());
 				futureDateValidation.validate((AttributeMetadataInterface) attribute,
 						defaultDateValue, null, attribute.getName());
 			}
 			catch (DynamicExtensionsValidationException e)
 			{
-				throw new DynamicExtensionsSystemException(ApplicationProperties
-						.getValue(CategoryConstants.CREATE_CAT_FAILS)
-						+ ApplicationProperties.getValue(e.getErrorCode(), e.getPlaceHolderList()),
-						e);
+				throw new DynamicExtensionsSystemException(
+						ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+								+ ApplicationProperties.getValue(e.getErrorCode(),
+										e.getPlaceHolderList()), e);
 			}
 		}
 
@@ -479,9 +489,9 @@ public class CategoryValidator
 	{
 		if (attribute == null)
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue(CategoryConstants.NULL_ATTR));
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue(CategoryConstants.NULL_ATTR));
 		}
 
 		for (RuleInterface rule : attribute.getRuleCollection())
@@ -489,10 +499,11 @@ public class CategoryValidator
 			if (rule.getName().equalsIgnoreCase(CategoryCSVConstants.REQUIRED)
 					&& (rules == null || rules.isEmpty()))
 			{
-				throw new DynamicExtensionsSystemException(ApplicationProperties
-						.getValue(CategoryConstants.CREATE_CAT_FAILS)
-						+ ApplicationProperties.getValue(CategoryConstants.NO_OVERRIDE_REQ_RULE)
-						+ attribute.getName());
+				throw new DynamicExtensionsSystemException(
+						ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+								+ ApplicationProperties
+										.getValue(CategoryConstants.NO_OVERRIDE_REQ_RULE)
+								+ attribute.getName());
 			}
 		}
 	}
@@ -523,8 +534,8 @@ public class CategoryValidator
 			for (CategoryAssociationInterface categoryAssociationInterface : rootCategoryEntity
 					.getCategoryAssociationCollection())
 			{
-				if (categoryAssociationInterface.getTargetCategoryEntity().getEntity().equals(
-						rootEntityInterface))
+				if (categoryAssociationInterface.getTargetCategoryEntity().getEntity()
+						.equals(rootEntityInterface))
 				{
 					String errorMessage = getErrorMessageStart()
 							+ ApplicationProperties.getValue(CategoryConstants.ROOT_ENT_TWICE)
@@ -558,12 +569,12 @@ public class CategoryValidator
 					.getAttributeTypeInformation();
 			if (attrTypeInfo instanceof NumericAttributeTypeInformation)
 			{
-				throw new DynamicExtensionsSystemException(ApplicationProperties
-						.getValue(CategoryConstants.CREATE_CAT_FAILS)
-						+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-						+ categoryFileParser.getLineNumber()
-						+ ApplicationProperties.getValue(CategoryConstants.NO_TEXTAREA)
-						+ attribute.getName());
+				throw new DynamicExtensionsSystemException(
+						ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+								+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
+								+ categoryFileParser.getLineNumber()
+								+ ApplicationProperties.getValue(CategoryConstants.NO_TEXTAREA)
+								+ attribute.getName());
 			}
 		}
 	}
@@ -596,21 +607,21 @@ public class CategoryValidator
 			{
 				if (isMultiSelect == null || !isMultiSelect)
 				{
-					throw new DynamicExtensionsSystemException(ApplicationProperties
-							.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties
-									.getValue(CategoryConstants.NO_MULTI_SELECT_WITH_ACD)
-							+ attributeName);
+					throw new DynamicExtensionsSystemException(
+							ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+									+ ApplicationProperties
+											.getValue(CategoryConstants.NO_MULTI_SELECT_WITH_ACD)
+									+ attributeName);
 				}
 
 				Integer noOfRows = ((ListBoxInterface) control).getNoOfRows();
 				if (noOfRows != null && noOfRows > 4)
 				{
-					throw new DynamicExtensionsSystemException(ApplicationProperties
-							.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties
-									.getValue(CategoryConstants.NO_NOOFROWS_WITH_ACD)
-							+ attributeName);
+					throw new DynamicExtensionsSystemException(
+							ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+									+ ApplicationProperties
+											.getValue(CategoryConstants.NO_NOOFROWS_WITH_ACD)
+									+ attributeName);
 				}
 			}
 			abstractAttribute = entity.getAbstractAttributeByName(attributeName);
@@ -622,20 +633,20 @@ public class CategoryValidator
 							.getIsCollection();
 					if (isCollection != null && !isCollection)
 					{
-						throw new DynamicExtensionsSystemException(ApplicationProperties
-								.getValue(CategoryConstants.CREATE_CAT_FAILS)
-								+ ApplicationProperties
-										.getValue(CategoryConstants.INVALID_MULTI_SELECT)
-								+ attributeName);
+						throw new DynamicExtensionsSystemException(
+								ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+										+ ApplicationProperties
+												.getValue(CategoryConstants.INVALID_MULTI_SELECT)
+										+ attributeName);
 					}
 				}
 				else
 				{
-					throw new DynamicExtensionsSystemException(ApplicationProperties
-							.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties
-									.getValue(CategoryConstants.INVALID_MULTI_SELECT)
-							+ attributeName);
+					throw new DynamicExtensionsSystemException(
+							ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+									+ ApplicationProperties
+											.getValue(CategoryConstants.INVALID_MULTI_SELECT)
+									+ attributeName);
 
 				}
 			}
@@ -648,11 +659,11 @@ public class CategoryValidator
 				Boolean isCollection = ((AssociationInterface) abstractAttribute).getIsCollection();
 				if (isCollection != null && isCollection)
 				{
-					throw new DynamicExtensionsSystemException(ApplicationProperties
-							.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties
-									.getValue(CategoryConstants.INVALID_CONTROL_FOR_MULTI_SELECT)
-							+ attributeName);
+					throw new DynamicExtensionsSystemException(
+							ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+									+ ApplicationProperties
+											.getValue(CategoryConstants.INVALID_CONTROL_FOR_MULTI_SELECT)
+									+ attributeName);
 				}
 			}
 		}
@@ -669,9 +680,9 @@ public class CategoryValidator
 	{
 		if (lineAfterHeading.startsWith(CategoryConstants.HEADING))
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue("headingInfoRepeted") + lineNumber);
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue("headingInfoRepeted") + lineNumber);
 		}
 	}
 
@@ -687,9 +698,9 @@ public class CategoryValidator
 	{
 		if (note.length() > 255)
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue("noteNotAppropriate") + lineNumber);
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue("noteNotAppropriate") + lineNumber);
 		}
 	}
 
@@ -707,9 +718,9 @@ public class CategoryValidator
 				categoryFileParser.DEFAULT_ESCAPE_CHARACTER, "~");
 		if (strings.length < 2 || strings[1].length() > 255)
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue("headingNotAppropriate") + lineNumber);
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue("headingNotAppropriate") + lineNumber);
 		}
 	}
 
@@ -731,18 +742,19 @@ public class CategoryValidator
 				if (!DynamicExtensionsUtility.isNumeric(minValue)
 						|| !DynamicExtensionsUtility.isNumeric(maxValue))
 				{
-					throw new DynamicExtensionsSystemException(ApplicationProperties
-							.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties
-									.getValue(CategoryConstants.INCORRECT_NUMBER_RANGE)
-							+ attribute.getName());
+					throw new DynamicExtensionsSystemException(
+							ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+									+ ApplicationProperties
+											.getValue(CategoryConstants.INCORRECT_NUMBER_RANGE)
+									+ attribute.getName());
 				}
 				if (Double.parseDouble(minValue) > Double.parseDouble(maxValue))
 				{
-					throw new DynamicExtensionsSystemException(ApplicationProperties
-							.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties.getValue(CategoryConstants.INCORRECT_MINMAX)
-							+ attribute.getName());
+					throw new DynamicExtensionsSystemException(
+							ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+									+ ApplicationProperties
+											.getValue(CategoryConstants.INCORRECT_MINMAX)
+									+ attribute.getName());
 				}
 			}
 			else
@@ -752,11 +764,11 @@ public class CategoryValidator
 				int result = DynamicExtensionsUtility.compareDates(minValue, maxValue, datePattern);
 				if (result == 1 || result == -2)
 				{
-					throw new DynamicExtensionsSystemException(ApplicationProperties
-							.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties
-									.getValue(CategoryConstants.INCORRECT_MINMAX_DATE)
-							+ attribute.getName());
+					throw new DynamicExtensionsSystemException(
+							ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+									+ ApplicationProperties
+											.getValue(CategoryConstants.INCORRECT_MINMAX_DATE)
+									+ attribute.getName());
 				}
 			}
 		}
@@ -819,7 +831,8 @@ public class CategoryValidator
 		}
 	}
 
-	public static void validateProcessorClass(String processorClass) throws DynamicExtensionsSystemException
+	public static void validateProcessorClass(String processorClass)
+			throws DynamicExtensionsSystemException
 	{
 		try
 		{

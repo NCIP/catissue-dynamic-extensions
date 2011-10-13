@@ -9,6 +9,7 @@ import java.util.Set;
 import org.owasp.stinger.Stinger;
 
 import edu.common.dynamicextensions.domaininterface.FormControlNotesInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.FileReader;
 import edu.common.dynamicextensions.validation.category.CategoryValidator;
@@ -130,8 +131,9 @@ public abstract class CategoryFileParser extends FileReader
 	 * Gets the permissible values.
 	 * @return the permissible values
 	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
+	 * @throws DynamicExtensionsApplicationException 
 	 */
-	public abstract Set<String> getPermissibleValues() throws DynamicExtensionsSystemException;
+	public abstract Set<String> getPermissibleValues() throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
 
 
 	/**
