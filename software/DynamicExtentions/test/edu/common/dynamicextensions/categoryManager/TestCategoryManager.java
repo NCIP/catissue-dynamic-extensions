@@ -2021,7 +2021,8 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 		dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity, 0);
 		List<String> errorList = new ArrayList<String>();
-		ValidatorUtil.validateEntity(dataValue, errorList, (ContainerInterface) rootCatEntity
+		ValidatorUtil validatorUtil = new ValidatorUtil();
+		validatorUtil.validateEntity(dataValue, errorList, (ContainerInterface) rootCatEntity
 				.getContainerCollection().iterator().next(), true);
 		if (errorList.isEmpty())
 		{

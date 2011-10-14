@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
+import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.NumericAttributeTypeInformation;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
@@ -127,7 +128,7 @@ public class FormulaCalculator
 					.getCategoryEntity())) && (calculatedAttribute.getCategoryEntity()
 					.getNumberOfEntries() == -1)))
 			{
-				errorList.addAll(ValidatorUtil.validateAttributes(calculatedAttribute,
+				errorList.addAll(DomainObjectFactory.getInstance().getValidatorInstance(null).validateAttributes(calculatedAttribute,
 						attributeValueNode.getValue(), attributeValueNode.getKey().getName()));
 			}
 			else
@@ -468,9 +469,10 @@ public class FormulaCalculator
 		List<String> errorList = new ArrayList<String>();
 		Set<Map.Entry<BaseAbstractAttributeInterface, Object>> attributeSet = attributeValueMap
 				.entrySet();
+		ValidatorUtil validatorUtil = DomainObjectFactory.getInstance().getValidatorInstance(null);
 		for (Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode : attributeSet)
 		{
-			errorList.addAll(ValidatorUtil.validateAttributes(attributeValueNode.getKey(),
+			errorList.addAll(validatorUtil.validateAttributes(attributeValueNode.getKey(),
 					attributeValueNode.getValue(), attributeValueNode.getKey().getName()));
 		}
 

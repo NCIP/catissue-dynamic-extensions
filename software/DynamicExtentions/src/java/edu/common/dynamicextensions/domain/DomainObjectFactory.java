@@ -92,6 +92,8 @@ import edu.common.dynamicextensions.util.IdGeneratorUtil;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.parser.CategoryCSVFileParser;
 import edu.common.dynamicextensions.util.parser.CategoryFileParser;
+import edu.common.dynamicextensions.validation.DraftValidatorUtil;
+import edu.common.dynamicextensions.validation.ValidatorUtil;
 
 /**
  * This is a singleton class which provides methods for generating domain
@@ -988,5 +990,19 @@ public class DomainObjectFactory
 	public StaticCategoryInterface createStaticCategory()
 	{
 		return new StaticCategory();
+	}
+	
+	/**
+	 * @param isDraft
+	 * @return
+	 */
+	public ValidatorUtil getValidatorInstance(String mode)
+	{
+		ValidatorUtil validatorUtil = new ValidatorUtil();
+		if(Boolean.parseBoolean(mode))
+		{
+			validatorUtil = new DraftValidatorUtil();
+		}
+		return validatorUtil;
 	}
 }

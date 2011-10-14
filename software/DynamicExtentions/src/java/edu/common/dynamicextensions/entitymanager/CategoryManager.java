@@ -550,7 +550,7 @@ public class CategoryManager extends AbstractMetadataManager implements
 				.getRootCategoryElement().getContainerCollection().toArray()[0];
 		Map<BaseAbstractAttributeInterface, Object> attributeToValueMap = DataValueMapUtility
 				.getAttributeToValueMap(dataValue, categoryInterface);
-		List<String> errorList = ValidatorUtil.validateEntity(
+		List<String> errorList = DomainObjectFactory.getInstance().getValidatorInstance(null).validateEntity(
 				attributeToValueMap, new ArrayList<String>(),
 				containerInterface, true);
 		if (errorList.isEmpty()) {

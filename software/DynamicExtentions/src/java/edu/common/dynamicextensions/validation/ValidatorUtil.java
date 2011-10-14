@@ -55,7 +55,7 @@ public class ValidatorUtil
 	 * @return listOfError if any
 	 * @throws DynamicExtensionsSystemException : Exception
 	 */
-	public static List<String> validateEntity(
+	public List<String> validateEntity(
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 			List<String> listOfError, ContainerInterface container, boolean validateNLevel)
 			throws DynamicExtensionsSystemException
@@ -111,7 +111,7 @@ public class ValidatorUtil
 	 * @throws DynamicExtensionsSystemException Throws when there is system exception.
 	 * dynamic extension process.
 	 */
-	private static void validateAssociationData(
+	private void validateAssociationData(
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap, List<String> errorList,
 			BaseAbstractAttributeInterface abstractAttribute, ContainerInterface container,
 			boolean validateNLevel) throws DynamicExtensionsSystemException
@@ -384,7 +384,7 @@ public class ValidatorUtil
 	 * @return errorList List of errors while validating.
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private static List<String> validateEntityAttributes(
+	private List<String> validateEntityAttributes(
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 			ContainerInterface containerInterface) throws DynamicExtensionsSystemException
 	{
@@ -410,7 +410,7 @@ public class ValidatorUtil
 	 * @param attributeValueNode Values entered for the attribute.
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private static void validateAttributeMetaData(ContainerInterface containerInterface,
+	private void validateAttributeMetaData(ContainerInterface containerInterface,
 			List<String> errorList,
 			Map.Entry<BaseAbstractAttributeInterface, Object> attributeValueNode)
 			throws DynamicExtensionsSystemException
@@ -436,14 +436,33 @@ public class ValidatorUtil
 	 * @return errorList List of errors.
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public static List<String> validateAttributes(BaseAbstractAttributeInterface abstractAttribute,
+	public List<String> validateAttributes(BaseAbstractAttributeInterface abstractAttribute,
 			Object val, String controlCaption) throws DynamicExtensionsSystemException
 	{
-		List<String> errorList = new ArrayList<String>();
-
 		//Bug: 9778 : modified to get explicit and implicit rules also in case of CategoryAttribute.
 		//Reviewer: Rajesh Patil
 		Collection<RuleInterface> attributeRuleCollection = getRuleCollection(abstractAttribute);
+		
+		return validateAttribute(abstractAttribute, val,
+				controlCaption,
+				attributeRuleCollection);
+
+	}
+
+	/**
+	 * @param abstractAttribute
+	 * @param val
+	 * @param controlCaption
+	 * @param attributeRuleCollection
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 */
+	protected static List<String> validateAttribute(
+			BaseAbstractAttributeInterface abstractAttribute, Object val,
+			String controlCaption,
+			Collection<RuleInterface> attributeRuleCollection)
+			throws DynamicExtensionsSystemException {
+		List<String> errorList = new ArrayList<String>();
 		if (attributeRuleCollection != null && !attributeRuleCollection.isEmpty())
 		{
 
@@ -749,4 +768,25 @@ public class ValidatorUtil
 		}
 
 	}
+	
+	/**
+	 * Retrieve rules for the given attribute.
+	 * @param abstractAttribute Attribute for which rules to be retrieve.
+	 * @return RuleInterface
+	 */
+	public static Collection<RuleInterface> getRuleCollectionExcludingRequiredRule(
+			BaseAbstractAttributeInterface abstractAttribute)
+	{
+		Collection<RuleInterface> attributeRuleCollection = getRuleCollection(abstractAttribute);
+		for (RuleInterface rule : attributeRuleCollection)
+		{
+			if (DEConstants.REQUIRED.equalsIgnoreCase(rule.getName()))
+			{
+				attributeRuleCollection.remove(rule);
+				break;
+			}
+		}
+		return attributeRuleCollection;
+	}
+	
 }

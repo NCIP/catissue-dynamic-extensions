@@ -371,6 +371,8 @@ public class DEConstants
 	public static final String AUDIT_TABLENAME = "tableName";
 
 	public static final String AUDIT_COL_NAME_MAP = "attributeColumnNameMap";
+	
+	public static final String REQUIRED = "required";
 
 
 }

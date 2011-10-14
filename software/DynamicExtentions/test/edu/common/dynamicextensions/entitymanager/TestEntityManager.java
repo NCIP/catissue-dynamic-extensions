@@ -2298,7 +2298,8 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 						.createDataValueMapForEntity(entity, 0);
 				Map map = dataValueMap;
 				List<String> errorList = new ArrayList<String>();
-				ValidatorUtil.validateEntity(dataValueMap, errorList, container, true);
+				ValidatorUtil validatorUtil = new ValidatorUtil();
+				validatorUtil.validateEntity(dataValueMap, errorList, container, true);
 				ContainerInterface containerInterface = (ContainerInterface) entity
 						.getContainerCollection().toArray()[0];
 				Long recordId = DynamicExtensionsUtility.insertDataUtility(null,
@@ -2406,7 +2407,8 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				Map<BaseAbstractAttributeInterface, Object> dataValueMap = mapGenerator
 						.createDataValueMapForEntity(entity, 0);
 				List<String> errorList = new ArrayList<String>();
-				ValidatorUtil.validateEntity(dataValueMap, errorList, container, true);
+				ValidatorUtil validatorUtil = new ValidatorUtil();
+				validatorUtil.validateEntity(dataValueMap, errorList, container, true);
 				if (errorList.isEmpty())
 				{
 					System.out.println("Record validated succesfully for entity " + entity);

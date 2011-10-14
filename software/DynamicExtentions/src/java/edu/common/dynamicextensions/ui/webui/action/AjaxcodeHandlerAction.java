@@ -25,6 +25,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
@@ -195,7 +196,7 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 		StringBuilder strAllError = new StringBuilder();
 		if (control instanceof ValidatableInterface)
 		{
-			List<String> lstError = ValidatorUtil.validateAttributes(control
+			List<String> lstError = DomainObjectFactory.getInstance().getValidatorInstance(null).validateAttributes(control
 					.getBaseAbstractAttribute(), controlValue[0], control.getCaption());
 			for (String strError : lstError)
 			{
@@ -977,7 +978,8 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 						}
 					}
 				}
-				errorList.addAll(ValidatorUtil.validateEntity(rowValueMap, new ArrayList<String>(),
+				ValidatorUtil validatorUtil = new ValidatorUtil();
+				errorList.addAll(validatorUtil.validateEntity(rowValueMap, new ArrayList<String>(),
 						containerInterface, false));
 				returnString.append(UserInterfaceiUtility.getContainerHTMLAsARow(
 						containerInterface, rwoIndex, null, containerInterface,

@@ -121,4 +121,6 @@ public interface WebUIManagerConstants
 	public static final String FILE_RECORD_QUERY_LIST = "fileRecordQueryList";
 	public static final String DYNAMIC_EXTENSIONS="dynamicExtensions";
 	public final String UPDATECACHE = "UpdateCache";
+	
+	public final String ISDRAFT = "isDraft";
 }

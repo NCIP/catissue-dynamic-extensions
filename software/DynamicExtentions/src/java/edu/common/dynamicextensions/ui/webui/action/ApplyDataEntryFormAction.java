@@ -24,6 +24,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 
+import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.FileAttributeRecordValue;
 import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.FileExtension;
@@ -271,7 +272,12 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 						+ WebUIManager.getOperationStatusParameterName() + "="
 						+ webUIManagerConstant + "&containerId=" + containerId;
 			}
-
+			
+			if(Boolean.parseBoolean(request.getParameter(WebUIManagerConstants.ISDRAFT)))
+			{
+				calllbackURL = calllbackURL + "&"+WebUIManagerConstants.ISDRAFT+"="+request.getParameter(WebUIManagerConstants.ISDRAFT);
+			}
+			
 			CacheManager.clearCache(request);
 			response.sendRedirect(calllbackURL);
 			isCallbackURL = true;
@@ -419,9 +425,8 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 
 		valueMap = generateAttributeValueMap(containerInterface, request, dataEntryForm, "",
 				valueMap, true, errorList);
-
-
-		errorList = ValidatorUtil.validateEntity(valueMap, errorList, containerInterface,false);
+		errorList = DomainObjectFactory.getInstance().getValidatorInstance(request.getParameter(WebUIManagerConstants.ISDRAFT)).validateEntity(valueMap, errorList, containerInterface,false);
+		
 		AbstractEntityInterface abstractEntityInterface = containerInterface.getAbstractEntity();
 		if (abstractEntityInterface instanceof CategoryEntityInterface)
 		{
