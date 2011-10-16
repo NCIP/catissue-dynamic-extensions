@@ -2162,10 +2162,10 @@ function showEditRecordPage(target)
     editRecordsForm.submit();
 }
 
-function showParentContainerInsertDataPage()
+function showParentContainerInsertDataPage(isDraft)
 {
 	getValues();
-    // document.getElementById('mode').value = "edit";
+    document.getElementById('isDraft').value = isDraft;
     document.getElementById('dataEntryOperation').value = "insertParentData";
     var dataEntryForm = document.getElementById('dataEntryForm');
     setWaitCursorforAllObjectHierarchy(dataEntryForm);
@@ -2297,12 +2297,70 @@ function calculateDefaultAttributesValue()
 	});
 }
 
-function setInsertDataOperation()
+function setInsertDataOperation(isDraft)
 {
 	getValues();
-    document.getElementById('dataEntryOperation').value = "";
-    var dataEntryForm = document.getElementById('dataEntryForm');
-    setWaitCursorforAllObjectHierarchy(dataEntryForm);
+	document.getElementById('isDraft').value = isDraft;
+    if(isDraft == 'true' || parent.document.getElementById('nSubmitButton').value == 'Save')
+	{
+		document.getElementById('dataEntryOperation').value = "";
+		var dataEntryForm = document.getElementById('dataEntryForm');
+		setWaitCursorforAllObjectHierarchy(dataEntryForm);
+		return true;
+	}
+	else
+	{
+		var str = $("dataEntryForm").serialize();
+		var selectedRowIndices = str.split('&');
+		var isAllDataEntered = true;
+		
+		for(i=0;i<selectedRowIndices.length;i++)
+		{
+			var controlName = selectedRowIndices[i].split('=')[0];
+			var controlValue = selectedRowIndices[i].split('=')[1];
+			//alert(controlName);
+			//alert(controlValue);
+			if((controlName.startsWith('Control_') && (controlValue == "" || controlValue == '' || controlValue == ' ' || controlValue == " " || controlValue == 'undefined'))  || (controlName.startsWith('comboControl_') && controlValue == "--Select--"))
+			{
+				isAllDataEntered = false;
+			}
+			else if(controlName.startsWith('Control_') || controlName.startsWith('comboControl_'))
+			{
+			//alert(isAllDataEntered);
+				var vControl =document.getElementById(controlName);
+				if(vControl != null)
+				{
+					vControl.className = "font_bl_nor";
+				}
+			}
+		}
+		if(isAllDataEntered == false)
+		{
+			for(i=0;i<selectedRowIndices.length;i++)
+			{
+				var controlName = selectedRowIndices[i].split('=')[0];
+				var controlValue = selectedRowIndices[i].split('=')[1];
+				if((controlName.startsWith('Control_') && (controlValue == "" || controlValue == '' || controlValue == ' ' || controlValue == " " || controlValue == 'undefined'))  || (controlName.startsWith('comboControl_') && controlValue == "--Select--"))
+				{
+					var vRecentControl=document.getElementById(controlName);
+					vRecentControl.className = "font_bl_nor_error";
+					isAllDataEntered = false;
+				}
+			}
+			var vConfirm= confirm("There are incomplete fields on this form. Are you sure you want to save a final draft?");
+			if(vConfirm)
+			{
+				document.getElementById('dataEntryOperation').value = "";
+				var dataEntryForm = document.getElementById('dataEntryForm');
+				setWaitCursorforAllObjectHierarchy(dataEntryForm);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
 }
 
 function changeValueForCheckBox(checkbox)

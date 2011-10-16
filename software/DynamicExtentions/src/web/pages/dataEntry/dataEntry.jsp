@@ -336,7 +336,7 @@ jQuery(document).ready(
 												<c:choose>
 													<c:when test='${showFormPreview=="true"}'>
 														<td align='center'>
-														<html:submit styleClass="actionButton" onclick="showParentContainerInsertDataPage()">
+														<html:submit styleClass="actionButton" onclick="showParentContainerInsertDataPage('false')">
 															<bean:message key="buttons.back" />
 														</html:submit>
 														</td>
@@ -346,13 +346,19 @@ jQuery(document).ready(
 
 														<c:if test='${(isTopLevelEntity=="false")}'>
 															<td align='center'>
-																<input type="image" id="btnDESubmit" src="<%=request.getContextPath()%>/images/de/b_submit.gif" width="62" height="21" align="middle" onClick="return showParentContainerInsertDataPage()"/>
+																<input type="image" id="btnDESubmit" src="<%=request.getContextPath()%>/images/de/b_submit.gif" width="62" height="21" align="middle" onClick="return showParentContainerInsertDataPage('false')"/>
+															</td>
+															<td align='center'>
+																<input type="image" id="btnDEDraft" src="<%=request.getContextPath()%>/images/de/b_calculate.gif" width="62" height="21" align="middle" onClick="return showParentContainerInsertDataPage('true');"/>
 															</td>
 														</c:if>
 
 														<c:if test='${(mode=="edit") && (isTopLevelEntity=="true")}'>
 															<td align='center'>
-																<input type="image" id="btnDESubmit" src="<%=request.getContextPath()%>/images/de/b_submit.gif" width="62" height="21" align="middle" onClick="return setInsertDataOperation()"/>
+																<input type="image" id="btnDESubmit" src="<%=request.getContextPath()%>/images/de/b_submit.gif" width="62" height="21" align="middle" onClick="return setInsertDataOperation('false')"/>
+															</td>
+															<td align='center'>
+																<input type="image" id="btnDEDraft" src="<%=request.getContextPath()%>/images/de/b_calculate.gif" width="62" height="21" align="middle" onClick="return setInsertDataOperation('true')"/>
 															</td>
 														<!-- BUG 7662 FIXED. Each Cancel should take you one level up in the containment hierarchy and finally the Cancel on Main Class should take you to the Add Records page.-->
 														</c:if>
@@ -390,6 +396,7 @@ jQuery(document).ready(
 			<html:hidden styleId='entitySaved' property="entitySaved"/>
 			<html:hidden property="containerId" styleId="dataEntryForm" value="<%=containerInterface.getId().toString()%>"/>
 			<input type="hidden" id="childContainerId" name="childContainerId" value=""/>
+			<input type="hidden" id="isDraft" name="isDraft" value="false"/>
 			<input type="hidden" id="childRowId" name="childRowId" value=""/>
 			<input type="hidden" id="dataEntryOperation" name="dataEntryOperation" value="<%=dataEntryOperation%>"/>
 			<input type="hidden" id="isShowTemplateRecord" name="isShowTemplateRecord" value="<%=isShowTemplateRecord%>"/>
