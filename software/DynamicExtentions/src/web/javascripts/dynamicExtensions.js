@@ -2308,7 +2308,7 @@ function setInsertDataOperation(isDraft)
 		setWaitCursorforAllObjectHierarchy(dataEntryForm);
 		return true;
 	}
-	else
+	else if( parent.document.getElementById('nSubmitButton').value == 'Save As Final')
 	{
 		var str = $("dataEntryForm").serialize();
 		var selectedRowIndices = str.split('&');
@@ -2320,7 +2320,7 @@ function setInsertDataOperation(isDraft)
 			var controlValue = selectedRowIndices[i].split('=')[1];
 			//alert(controlName);
 			//alert(controlValue);
-			if((controlName.startsWith('Control_') && (controlValue == "" || controlValue == '' || controlValue == ' ' || controlValue == " " || controlValue == 'undefined'))  || (controlName.startsWith('comboControl_') && controlValue == "--Select--"))
+			if(controlName.startsWith('Control_') && (controlValue == "" || controlValue == '' || controlValue == ' ' || controlValue == " " || controlValue == 'undefined'))
 			{
 				isAllDataEntered = false;
 			}
@@ -2360,6 +2360,14 @@ function setInsertDataOperation(isDraft)
 				return false;
 			}
 		}
+		else
+		{
+			document.getElementById('dataEntryOperation').value = "";
+			var dataEntryForm = document.getElementById('dataEntryForm');
+			setWaitCursorforAllObjectHierarchy(dataEntryForm);
+			return true;
+		}
+		
 	}
 }
 
