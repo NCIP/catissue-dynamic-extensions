@@ -793,7 +793,11 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 		}
 		else if (control instanceof ComboBoxInterface)
 		{
-			String value = request.getParameter("combo" + controlName);
+			String value = request.getParameter("combo"+controlName);
+			if(value== null)
+			{
+				value = request.getParameter(controlName);	
+			}
 			if ((value != null) && value.equalsIgnoreCase("undefined"))
 			{
 				value = "1";
