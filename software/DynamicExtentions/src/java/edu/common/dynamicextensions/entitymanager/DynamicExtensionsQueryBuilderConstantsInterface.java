@@ -29,6 +29,8 @@ public interface DynamicExtensionsQueryBuilderConstantsInterface
 	String DEFAULT_KEYWORD = " DEFAULT ";
 	String DELETE_KEYWORD = " DELETE FROM ";
 	String WHERE_KEYWORD = " WHERE ";
+	String OREDR_BY = " ORDER BY ";
+	
 	String SELECT_KEYWORD = " SELECT ";
 	String COUNT_KEYWORD = "COUNT";
 	String FROM_KEYWORD = " FROM ";

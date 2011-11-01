@@ -52,7 +52,6 @@ import edu.common.dynamicextensions.util.DataValueMapUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.FormulaCalculator;
 import edu.common.dynamicextensions.util.global.ErrorConstants;
-import edu.common.dynamicextensions.validation.ValidatorUtil;
 import edu.common.dynamicextensions.validation.category.CategoryValidator;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.beans.NameValueBean;
@@ -3169,7 +3168,7 @@ public class CategoryManager extends AbstractMetadataManager implements
 						.getTgtForiegnKeyColumnProperties().getName();
 				selRecIdQuery = SELECT_KEYWORD + RECORD_ID + FROM_KEYWORD
 						+ catEntTblName + WHERE_KEYWORD + tgtFkColName + EQUAL
-						+ QUESTION_MARK;
+						+ QUESTION_MARK + OREDR_BY + RECORD_ID;
 
 				final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 				queryDataList.add(new ColumnValueBean(tgtFkColName,
