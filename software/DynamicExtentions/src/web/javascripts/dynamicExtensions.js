@@ -2301,7 +2301,7 @@ function setInsertDataOperation(isDraft)
 {
 	getValues();
 	document.getElementById('isDraft').value = isDraft;
-    if(isDraft == 'true' || parent.document.getElementById('nSubmitButton').value == 'Save')
+    	if(isDraft == 'true' || parent.document.getElementById('nSubmitButton').value == 'Save')
 	{
 		document.getElementById('dataEntryOperation').value = "";
 		var dataEntryForm = document.getElementById('dataEntryForm');
@@ -2310,27 +2310,86 @@ function setInsertDataOperation(isDraft)
 	}
 	else if( parent.document.getElementById('nSubmitButton').value == 'Save As Final')
 	{
+		//Serialize only sucessfull attributes, i.e selected attributes
 		var str = $("dataEntryForm").serialize();
+		//Add unchecked checkboxes to serialize String.
+		jQuery('input:checkbox', dataEntryForm).each(			
+			function() {     
+	    			if (this.checked) {
+	    			}
+	    			else {
+					str += "&"+this.name+"=";
+	    			}
+			}
+		);
+		//Add unchecked checkboxes to serialize String.
+		var isRadioControlAdded="";
+		jQuery('input:radio', dataEntryForm).each(			
+			function() {    
+				if(isRadioControlAdded != this.name)
+				{
+					isRadioControlAdded = this.name; 
+					var radioControlName = this.name+"=";
+		    			if (str.indexOf(radioControlName)== -1) 
+					{
+					
+						str += "&"+radioControlName;
+		    			}
+				}
+			}
+		);
+
+		//Handled ListBox control
+		var isSelectControlAdded="";
+		var selectControls = document.getElementsByTagName("select");
+		for(var i =0;i<selectControls.length;i++)
+		{
+			if(isSelectControlAdded != selectControls[i].name)
+			{
+				isSelectControlAdded = selectControls[i].name; 
+				var selectControlName = selectControls[i].name+"=";
+	    			if (str.indexOf(selectControlName)== -1) 
+				{
+				
+					str += "&"+selectControlName;
+	    			}
+			}
+		}
+		
 		var selectedRowIndices = str.split('&');
 		var isAllDataEntered = true;
-		
+
 		for(i=0;i<selectedRowIndices.length;i++)
 		{
 			var controlName = selectedRowIndices[i].split('=')[0];
 			var controlValue = selectedRowIndices[i].split('=')[1];
 			//alert(controlName);
 			//alert(controlValue);
-			if(controlName.startsWith('Control_') && (controlValue == "" || controlValue == '' || controlValue == ' ' || controlValue == " " || controlValue == 'undefined'))
+			
+			var combocontrol = "combo"+controlName;
+			if(controlName.startsWith('Control_') && (controlValue == "" || controlValue == '' || controlValue == ' ' || controlValue == " " || controlValue == 'undefined' || controlValue == "dd-MM-yyyy" || controlValue == "dd/MM/yyyy" || controlValue == "dd-MM-yyyy HH:mm" || controlValue == "dd/MM/yyyy HH:mm" || controlValue == "MM-dd-yyyy" || controlValue == "MM/dd/yyyy" || controlValue == "MM-dd-yyyy HH:mm" || controlValue == "MM/dd/yyyy HH:mm" || controlValue == "MM-yyyy" || controlValue == "MM/yyyy" || controlValue == "yyyy"))
 			{
 				isAllDataEntered = false;
 			}
-			else if(controlName.startsWith('Control_') || controlName.startsWith('comboControl_'))
+			else if(controlName.startsWith('Control_') && str.indexOf(combocontrol) == -1)
 			{
-			//alert(isAllDataEntered);
 				var vControl =document.getElementById(controlName);
 				if(vControl != null)
 				{
-					vControl.className = "font_bl_nor";
+					vControl.parentNode.className = "formRequiredLabel_withoutBorder";
+				}
+				else
+				{
+					vControl=document.getElementsByName(controlName);
+					vControl[0].parentNode.className = "formRequiredLabel_withoutBorder";
+				}
+			}
+			else if (controlName.startsWith('comboControl_'))
+			{
+				var vControl =document.getElementById(controlName);
+				if(vControl != null)
+				{
+					vControl.parentNode.parentNode.className = "formRequiredLabel_withoutBorder";
 				}
 			}
 		}
@@ -2340,10 +2399,24 @@ function setInsertDataOperation(isDraft)
 			{
 				var controlName = selectedRowIndices[i].split('=')[0];
 				var controlValue = selectedRowIndices[i].split('=')[1];
-				if((controlName.startsWith('Control_') && (controlValue == "" || controlValue == '' || controlValue == ' ' || controlValue == " " || controlValue == 'undefined'))  || (controlName.startsWith('comboControl_') && controlValue == "--Select--"))
+				if(controlName.startsWith('Control_') && (controlValue == "" || controlValue == '' || controlValue == ' ' || controlValue == " " || controlValue == 'undefined' || controlValue == "dd-MM-yyyy" || controlValue == "dd/MM/yyyy" || controlValue == "dd-MM-yyyy HH:mm" || controlValue == "dd/MM/yyyy HH:mm" || controlValue == "MM-dd-yyyy" || controlValue == "MM/dd/yyyy" || controlValue == "MM-dd-yyyy HH:mm" || controlValue == "MM/dd/yyyy HH:mm" || controlValue == "MM-yyyy" || controlValue == "MM/yyyy" || controlValue == "yyyy") && str.indexOf(combocontrol) == -1)
 				{
 					var vRecentControl=document.getElementById(controlName);
-					vRecentControl.className = "font_bl_nor_error";
+					if(vRecentControl == null)
+					{
+						vRecentControl=document.getElementsByName(controlName);
+						vRecentControl[0].parentNode.className = "font_bl_highlight_red";
+					}
+					else
+					{
+						vRecentControl.parentNode.className = "font_bl_highlight_red";
+						isAllDataEntered = false;
+					}
+				}
+				else if(controlName.startsWith('comboControl_') && (controlValue == "--Select--" || controlValue == ""))
+				{
+					var vRecentControl=document.getElementById(controlName);
+					vRecentControl.parentNode.parentNode.className = "font_bl_highlight_red";
 					isAllDataEntered = false;
 				}
 			}
