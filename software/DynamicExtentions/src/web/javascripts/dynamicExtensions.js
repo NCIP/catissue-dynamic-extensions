@@ -2318,7 +2318,11 @@ function setInsertDataOperation(isDraft)
 	    			if (this.checked) {
 	    			}
 	    			else {
-					str += "&"+this.name+"=";
+					if (str.indexOf(this.name)== -1) 
+					{
+					
+						str += "&"+this.name+"=";
+		    			}
 	    			}
 			}
 		);
@@ -2368,20 +2372,25 @@ function setInsertDataOperation(isDraft)
 			
 			var combocontrol = "combo"+controlName;
 			if(controlName.startsWith('Control_') && (controlValue == "" || controlValue == '' || controlValue == ' ' || controlValue == " " || controlValue == 'undefined' || controlValue == "dd-MM-yyyy" || controlValue == "dd/MM/yyyy" || controlValue == "dd-MM-yyyy HH:mm" || controlValue == "dd/MM/yyyy HH:mm" || controlValue == "MM-dd-yyyy" || controlValue == "MM/dd/yyyy" || controlValue == "MM-dd-yyyy HH:mm" || controlValue == "MM/dd/yyyy HH:mm" || controlValue == "MM-yyyy" || controlValue == "MM/yyyy" || controlValue == "yyyy"))
-			{
-				isAllDataEntered = false;
+			{	
+				if(isVisible(document.getElementById(controlName)))
+				{
+					isAllDataEntered = false;
+				}
 			}
 			else if(controlName.startsWith('Control_') && str.indexOf(combocontrol) == -1)
 			{
 				var vControl =document.getElementById(controlName);
 				if(vControl != null)
 				{
-					vControl.parentNode.className = "formRequiredLabel_withoutBorder";
+					//vControl.parentNode.className = "formRequiredLabel_withoutBorder";
+					vControl.parentNode.style.border="";
 				}
 				else
 				{
 					vControl=document.getElementsByName(controlName);
-					vControl[0].parentNode.className = "formRequiredLabel_withoutBorder";
+					//vControl[0].parentNode.className = "formRequiredLabel_withoutBorder";
+					vControl[0].parentNode.style.border="";
 				}
 			}
 			else if (controlName.startsWith('comboControl_'))
@@ -2389,7 +2398,8 @@ function setInsertDataOperation(isDraft)
 				var vControl =document.getElementById(controlName);
 				if(vControl != null)
 				{
-					vControl.parentNode.parentNode.className = "formRequiredLabel_withoutBorder";
+					vControl.parentNode.parentNode.style.border="";
+					//vControl.parentNode.parentNode.className = "formRequiredLabel_withoutBorder";
 				}
 			}
 		}
@@ -2405,18 +2415,21 @@ function setInsertDataOperation(isDraft)
 					if(vRecentControl == null)
 					{
 						vRecentControl=document.getElementsByName(controlName);
-						vRecentControl[0].parentNode.className = "font_bl_highlight_red";
+						//vRecentControl[0].parentNode.className = "font_bl_highlight_red";
+						vRecentControl[0].parentNode.style.border="1px solid red";
 					}
-					else
+					else if (isVisible(vRecentControl))
 					{
-						vRecentControl.parentNode.className = "font_bl_highlight_red";
+						//vRecentControl.parentNode.className = "font_bl_highlight_red";
+						vRecentControl.parentNode.style.border="1px solid red";
 						isAllDataEntered = false;
 					}
 				}
 				else if(controlName.startsWith('comboControl_') && (controlValue == "--Select--" || controlValue == ""))
 				{
 					var vRecentControl=document.getElementById(controlName);
-					vRecentControl.parentNode.parentNode.className = "font_bl_highlight_red";
+					//vRecentControl.parentNode.parentNode.className = "font_bl_highlight_red";
+					vRecentControl.parentNode.parentNode.style.border="1px solid red";
 					isAllDataEntered = false;
 				}
 			}
@@ -2441,6 +2454,27 @@ function setInsertDataOperation(isDraft)
 			return true;
 		}
 		
+	}
+}
+
+function isVisible(obj)
+{
+	var cnode = obj
+	try{
+		while(cnode){
+			if(cnode.nodeName){
+				if(cnode.nodeName.toLowerCase()=="body"){
+					return true;
+				}
+			}
+			if(cnode.style.display=="none" || cnode.style.visibility=="hidden"){
+				return false;
+			}
+			cnode = cnode.parentNode;
+		}
+		return true;
+	}catch(ex){
+		return false;
 	}
 }
 
