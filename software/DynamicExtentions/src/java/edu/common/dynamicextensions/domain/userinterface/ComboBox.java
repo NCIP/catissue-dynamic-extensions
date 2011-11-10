@@ -172,17 +172,17 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				htmlString.append(textComponent);
 				htmlString.append( "',id:'");
 				htmlString.append( textComponent);
-				htmlString.append( "', displayField:'excerpt',valueField: 'id',typeAhead: 'false',pageSize:15,forceSelection: 'true',queryParam : 'query',");
+				htmlString.append( "', displayField:'excerpt',valueField: 'id',typeAhead: 'false',");
 				if(getIsLazy())
 				{
-					htmlString.append("mode:'remote',");
+					htmlString.append("pageSize:15,mode:'remote',");
 				}
 				else
 				{
 					htmlString.append("mode:'local',");
 
 				}
-				htmlString.append( "triggerAction: 'all',minChars : ");
+				htmlString.append( "forceSelection: 'true',queryParam : 'query',triggerAction: 'all',minChars : ");
 				htmlString.append(minQueryChar);
 				htmlString.append(",queryDelay:500,lazyInit:true");
 				htmlString.append(isDisabled);
@@ -236,10 +236,10 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 			htmlString.append( "',id:'");
 			htmlString.append( textComponent);
 			htmlString.append( "', displayField:'excerpt',valueField: 'id',");
-			htmlString.append( "typeAhead: 'false',pageSize:15,forceSelection: 'true',queryParam : 'query',");
+			htmlString.append( "typeAhead: 'false',forceSelection: 'true',queryParam : 'query',");
 			if(getIsLazy() || getIsSkipLogicTargetControl())
 			{
-				htmlString.append("mode:'remote',");
+				htmlString.append("pageSize:15,mode:'remote',");
 			}
 			else
 			{
