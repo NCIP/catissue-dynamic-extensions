@@ -1358,7 +1358,7 @@
 	<target name="release.forms" description="To release forms locked for model updates">
 
 		<antcall target="setupClassExecutionEnvironment" />
-		<java failonerror="true" classname="edu.common.dynamicextensions.util.CacheTask" fork="yes">
+		<java failonerror="true" classname="edu.common.dynamicextensions.util.CacheTask" fork="yes" maxmemory="1024m">
 			<arg value="${entity.group.name}" />
 			<arg value="${Application.url}/" />
 
