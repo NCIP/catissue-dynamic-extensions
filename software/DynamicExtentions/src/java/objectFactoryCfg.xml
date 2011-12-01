@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<object-factory-cfg>
+    <exclude-tables>
+        <table name="CATISSUE_AUDIT_EVENT"/>
+        <table name="CATISSUE_AUDIT_EVENT_DETAILS"/>
+        <table name="CATISSUE_AUDIT_EVENT_LOG"/>
+        <table name="CATISSUE_DATA_AUDIT_EVENT_LOG"/>
+        <table name="CATISSUE_LOGIN_AUDIT_EVENT_LOG"/>
+        <table name="DYEXTN_SQL_AUDIT"/>
+    </exclude-tables>
+</object-factory-cfg>
+
+
+
+
+
+

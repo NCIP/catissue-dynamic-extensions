@@ -12,7 +12,10 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
+import org.hibernate.SessionFactory;
 
+import edu.common.dynamicextensions.domain.EntityGroup;
+import edu.common.dynamicextensions.domain.Category;
 import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
@@ -46,6 +49,12 @@ import edu.wustl.cab2b.server.util.DynamicExtensionUtility;
 import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dynamicextensions.caching.ObjectFactory;
+import edu.wustl.dynamicextensions.caching.ObjectFactoryCfg;
+import edu.wustl.dynamicextensions.caching.impl.ObjectFactoryCfgImpl;
+import edu.wustl.dynamicextensions.caching.impl.ObjectFactoryImpl;
+import edu.wustl.dynamicextensions.caching.util.HibernateDaoHelper;
+
 
 /**
  * This is an abstract class for caching metadata.
@@ -155,6 +164,8 @@ public abstract class AbstractEntityCache implements IEntityCache
 
 	/** This set contains all the entity id which are in use. */
 	protected Set<Long> entitiesInUse = new HashSet<Long>();
+	
+	private ObjectFactory objFactory;	
 
 	/**
 	 * This method gives the singleton cache object. If cache is not present then it
@@ -181,41 +192,21 @@ public abstract class AbstractEntityCache implements IEntityCache
 
 	public final synchronized void cacheSkipLogic()
 	{
-		HibernateDAO hibernateDAO = null;
 		try
 		{
-			hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
-			Collection<SkipLogic> allSkipLogics = DynamicExtensionUtility
-					.getSkipLogicsDefinedForCategories(hibernateDAO);
-			for (SkipLogic skipLogic : allSkipLogics)
-			{
-				containerIdVsSkipLogic.put(skipLogic.getContainerIdentifier(), skipLogic);
+			Collection<SkipLogic> allSkipLogics = (Collection<SkipLogic>)objFactory.getObjects(SkipLogic.class.getName());
+			if (allSkipLogics != null) {
+			    for (SkipLogic skipLogic : allSkipLogics) {
+				    containerIdVsSkipLogic.put(skipLogic.getContainerIdentifier(), skipLogic);
+				}
+				LOGGER.info("Number of skip logics: " + allSkipLogics.size());
 			}
+			objFactory.removeObjects(SkipLogic.class.getName());			
 		}
-		catch (final DAOException e)
+		catch (final Exception e)
 		{
 			LOGGER.error(ERROR_CREATING_CACHE + e.getMessage());
 			throw new RuntimeException(EXCEPTION_CREATING_CACHE, e);
-		}
-		catch (DynamicExtensionsSystemException e)
-		{
-			LOGGER.error(ERROR_CREATING_CACHE + e.getMessage());
-			throw new RuntimeException(EXCEPTION_CREATING_CACHE, e);
-		}
-		finally
-		{
-			try
-			{
-				DynamicExtensionsUtility.closeDAO(hibernateDAO);
-			}
-			catch (final DynamicExtensionsSystemException e)
-			{
-				LOGGER.error("Exception encountered while closing session In EntityCache."
-						+ e.getMessage());
-				throw new RuntimeException(
-						"Exception encountered while closing session In EntityCache.", e);
-			}
-
 		}
 	}
 
@@ -238,15 +229,16 @@ public abstract class AbstractEntityCache implements IEntityCache
 		try
 		{
 			hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
-			entityGroups = DynamicExtensionUtility.getSystemGeneratedEntityGroups(hibernateDAO);
-			createCache(entityGroups);
+			SessionFactory sessionFactory = HibernateDaoHelper.getSessionFactory(hibernateDAO);
+			ObjectFactoryCfg objFactoryCfg = ObjectFactoryCfgImpl.getObjectFactoryCfg();
+			objFactory = ObjectFactoryImpl.createObjectFactory(objFactoryCfg, sessionFactory);
+            objFactory.createObjects(EntityGroup.class.getName(), SkipLogic.class.getName(), Category.class.getName());			
+			entityGroups = (Collection<EntityGroupInterface>)objFactory.getObjects(EntityGroup.class.getName());
+			createCache(entityGroups);			
+			LOGGER.info("Number of entity groups is: " + entityGroups.size());
+			objFactory.removeObjects(EntityGroup.class.getName());						
 		}
-		catch (final DAOException e)
-		{
-			LOGGER.error("Error while Creating EntityCache. Error: " + e.getMessage());
-			throw new RuntimeException("Exception encountered while creating EntityCache!!", e);
-		}
-		catch (DynamicExtensionsSystemException e)
+		catch (final Exception e)
 		{
 			LOGGER.error("Error while Creating EntityCache. Error: " + e.getMessage());
 			throw new RuntimeException("Exception encountered while creating EntityCache!!", e);
@@ -287,17 +279,25 @@ public abstract class AbstractEntityCache implements IEntityCache
 	{
 		try
 		{
-			HibernateDAO hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
-			deCategories = DynamicExtensionUtility.getAllCacheableCategories(hibernateDAO);
-			addCategoriesToCache(deCategories);
+		    System.err.println("Received call in loadCategories....");
+			Collection<CategoryInterface> categories = (Collection<CategoryInterface>)objFactory.getObjects(Category.class.getName());
+			deCategories.clear();
+			if (categories != null) {
+			    System.err.println("Categories is not null");
+			    for (CategoryInterface category : categories) {
+				    if (category.getIsCacheable()) {
+					    deCategories.add(category);
+					}
+				}
+			}
+            addCategoriesToCache(deCategories);
+			LOGGER.info("Number of DE categories is: " + deCategories.size());
+			System.err.println("Number of DE categories is: " + deCategories.size());
+			objFactory.removeObjects(Category.class.getName());			
 		}
-		catch (final DAOException e)
+		catch (final Exception e)
 		{
-			LOGGER.error("Error while Creating EntityCache. Error: " + e.getMessage());
-			throw new RuntimeException("Exception encountered while creating EntityCache!!", e);
-		}
-		catch (DynamicExtensionsSystemException e)
-		{
+		    System.err.println("Received error in loadCategories");
 			LOGGER.error("Error while Creating EntityCache. Error: " + e.getMessage());
 			throw new RuntimeException("Exception encountered while creating EntityCache!!", e);
 		}
@@ -783,9 +783,13 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 */
 	public void addEntityToCache(final EntityInterface entity)
 	{
-
 	   LOGGER.info("Add Entity................"+entity);
-
+	   
+	   /*if (entity.getContainerCollection() != null) {
+	       LOGGER.info("Clearing the entity container collection...");
+		   entity.getContainerCollection().clear();
+	   }*/
+	   
 		if ((entity.getContainerCollection() == null) || entity.getContainerCollection().isEmpty())
 		{
 			LOGGER.info("Create EntityCache........");
@@ -793,7 +797,11 @@ public abstract class AbstractEntityCache implements IEntityCache
 		}
 		else
 		{
-
+		    //
+			// This part of code is now redundant. If above trick doesn't save much memory,
+			// we'll have a quick way to revert to previous setup.
+			// PLEASE REMOVE THIS CODE IF ABOVE TRICK DOES WORK
+			//
 			LOGGER.info("Add Entity Container to Cache............");
 			for (final Object container : entity.getContainerCollection())
 			{
@@ -1124,5 +1132,12 @@ public abstract class AbstractEntityCache implements IEntityCache
 
 		}
 		return categoryInterface;
+	}
+
+	//
+	// TODO: Move this piece of code to DbUtil
+	//
+	public Object getPropertyValue(String objectType, String propertyName, Long objectId) {
+	    return objFactory.getPropertyValue(objectType, propertyName, objectId);
 	}
 }

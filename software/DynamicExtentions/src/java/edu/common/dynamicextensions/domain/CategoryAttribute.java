@@ -431,7 +431,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	 * @hibernate.collection-one-to-many class="edu.common.dynamicextensions.domain.PermissibleValue"
 	 * @return Returns the dataElementCollection.
 	 */
-	private Collection<PermissibleValueInterface> getSkipLogicPermissibleValuesCollection()
+	public Collection<PermissibleValueInterface> getSkipLogicPermissibleValuesCollection()
 	{
 		return skipLogicpermissibleValuesCollection;
 	}
@@ -439,7 +439,7 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	/**
 	 * @param defaultPermissibleValuesColl the defaultPermissibleValuesCollection to set
 	 */
-	private void setSkipLogicPermissibleValuesCollection(
+	public void setSkipLogicPermissibleValuesCollection(
 			Collection<PermissibleValueInterface> skipLogicpermissibleValuesCollection)
 	{
 		this.skipLogicpermissibleValuesCollection = skipLogicpermissibleValuesCollection;

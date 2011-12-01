@@ -96,8 +96,13 @@ public abstract class DynamicExtensionBaseDomainObject extends AbstractDomainObj
 	 */
 	public int hashCode()
 	{
+	    if (getId() != null) {
+		    return getId().hashCode();
+		} 
+		
+		return super.hashCode();
 
-		return 1;
+		//return 1;
 		//				int hashCode = 0;
 		//
 		//		if (getId() != null)
