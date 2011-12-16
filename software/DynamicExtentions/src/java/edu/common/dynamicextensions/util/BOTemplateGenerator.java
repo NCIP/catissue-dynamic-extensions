@@ -128,12 +128,12 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 
 	protected void processContainer(ContainerInterface container, BulkOperationClass mainObject)
 	{
-
 		List<ControlInterface> controlCollection = new ArrayList<ControlInterface>(container
-				.getAllControlsUnderSameDisplayLabel());
+				.getAllControls());
 		List<Object> rowDataList = new ArrayList<Object>();
 		Collections.sort(controlCollection);
 		Collections.reverse(controlCollection);
+		processChildContainers(container, mainObject);
 		for (ControlInterface control : controlCollection)
 		{
 
@@ -169,6 +169,22 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 				}
 			}
 
+
+
+		}
+	}
+
+	private void processChildContainers(ContainerInterface container, BulkOperationClass mainObject)
+	{
+		for(ContainerInterface  childContainer : container.getChildContainerCollection())
+		{
+			final CategoryAssociationInterface association = (CategoryAssociationInterface)container.getAbstractEntity().getAssociation(childContainer.getAbstractEntity());
+			if(association!=null)
+			{
+				BulkOperationClass innnerObject = processCategoryAssociation(association);
+				processContainer(childContainer, innnerObject);
+				postprocessCategoryAssociation(innnerObject, mainObject);
+			}
 		}
 	}
 
