@@ -56,6 +56,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.DatePickerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.FileUploadInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.LabelInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.MultiSelectCheckBoxInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.RadioButtonInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.SelectInterface;
@@ -1606,7 +1607,7 @@ public class CategoryHelper implements CategoryHelperInterface
 			int yPosition)
 	{
 		ControlInterface controlInterface = container.getControlByPosition(xPosition, yPosition);
-		if (controlInterface == null)
+		if (controlInterface == null || !(controlInterface instanceof LabelInterface))
 		{
 			controlInterface = DomainObjectFactory.getInstance().createLabelControl();
 		}

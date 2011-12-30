@@ -2301,7 +2301,7 @@ function setInsertDataOperation(isDraft)
 {
 	getValues();
 	document.getElementById('isDraft').value = isDraft;
-    	if(isDraft == 'true' || parent.document.getElementById('nSubmitButton').value == 'Save')
+    if(isDraft == 'true' || parent.document.getElementById('nSubmitButton').value == 'Save')
 	{
 		document.getElementById('dataEntryOperation').value = "";
 		var dataEntryForm = document.getElementById('dataEntryForm');
@@ -2917,6 +2917,20 @@ function getIframeDocument(iframe)
 
 function getSkipLogicControl(controlName, controlId, containerId)
 {
+	// select all values in list box before form is submitted.
+	for (f = 0; f < document.forms[0].elements.length; ++f )
+	{
+		var fld = document.forms[0].elements[f];
+		if (fld.id.startsWith('protocolCoordId_Control_'))
+		{
+			var lbOptions = document.getElementById(fld.id);
+			for (i = lbOptions.options.length-1; i >= 0; i--)
+			{
+				lbOptions.options[i].selected=true;
+			}
+		}
+	}
+	
 	if(document.getElementById('isDirty')!=null)
 	{
 		document.getElementById('isDirty').value = true;
