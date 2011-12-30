@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.sql.Blob;
-import java.sql.SQLException;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -145,7 +145,7 @@ public class PrimitiveCondition implements Condition
             throw new DynamicExtensionsSystemException(
                     "Error occured while reading Object value from file", e);
         }
-        catch (SQLException e)
+        catch (Exception e)
         {
             LOGGER.error("Error occured while reading Blob Object from database", e);
             throw new DynamicExtensionsSystemException(
@@ -291,7 +291,7 @@ public class PrimitiveCondition implements Condition
     // retrieve property values from DB
     //
     private byte[] getObjectValueBytes()
-    throws SQLException
+    throws Exception
     {
         byte[] bytes = null;
         boolean onceAttempted = false;
@@ -301,7 +301,7 @@ public class PrimitiveCondition implements Condition
                 int length = (int)objectValue.length();
                 bytes = objectValue.getBytes(1, length);
                 break;
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 if (onceAttempted) {
                     throw e;
                 }
