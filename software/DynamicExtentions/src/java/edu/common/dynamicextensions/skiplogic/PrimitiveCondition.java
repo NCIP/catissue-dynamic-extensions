@@ -302,6 +302,10 @@ public class PrimitiveCondition implements Condition
                 bytes = objectValue.getBytes(1, length);
                 break;
             } catch (Exception e) {
+            	//Refreshing the Blob object
+            	//Changes Made For Bug#21875 Cannot access a form on UI (If the category is run as Edit Case and has Skip Logic ) 
+            	LOGGER.debug("Refreshing the Blob object.");
+            	LOGGER.debug("SkipLogic object Id :: "+identifier);
                 if (onceAttempted) {
                     throw e;
                 }
