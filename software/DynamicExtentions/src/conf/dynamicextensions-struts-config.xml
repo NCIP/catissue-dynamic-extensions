@@ -259,6 +259,12 @@ PUBLIC
 		<action path="/DownloadPVVersionAction" type="edu.common.dynamicextensions.ui.webui.action.DownloadPVVersionAction"
 			validate="false" scope="request">
 		</action>
+		<action path="/DisplayFormDataInGrid" 
+			type="edu.common.dynamicextensions.ui.webui.action.ForwardAction"
+			validate="false"
+			scope="request">
+			<forward name="success" path="/pages/de/Blank.jsp" />
+		</action>
 	</action-mappings>
 
 	<message-resources parameter="ApplicationResources" />
