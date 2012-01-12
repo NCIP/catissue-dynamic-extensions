@@ -263,7 +263,7 @@ PUBLIC
 			type="edu.common.dynamicextensions.ui.webui.action.ForwardAction"
 			validate="false"
 			scope="request">
-			<forward name="success" path="/pages/de/Blank.jsp" />
+			<forward name="success" path="/pages/de/DisplayFormDataInGrid.jsp" />
 		</action>
 	</action-mappings>
 
