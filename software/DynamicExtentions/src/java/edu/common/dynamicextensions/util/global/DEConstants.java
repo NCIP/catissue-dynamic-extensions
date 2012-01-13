@@ -374,5 +374,9 @@ public class DEConstants
 	
 	public static final String REQUIRED = "required";
 
-
+	public static final String SESSION_DATA = "sessionDataBean";
+	
+	public static final String FORM_CONTEXT_ID = "formContextId";
+	
+	public static final String RECORD_ID_FROM_FORM_CONTEXT_ID = "record.id.from.form.context.id";
 }
