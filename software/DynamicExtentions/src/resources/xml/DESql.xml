@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<SqlQuery>
+	<query>
+		<Name>record.id.from.form.context.id</Name>
+		<Value>select identifier from dyextn_abstract_record_entry where abstract_form_context_id = ?</Value>
+	</query>
+</SqlQuery>

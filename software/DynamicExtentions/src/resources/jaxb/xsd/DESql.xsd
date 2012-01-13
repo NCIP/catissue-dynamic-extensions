@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+xmlns:jxb="http://java.sun.com/xml/ns/jaxb" jxb:version="2.0">
+<xsd:element name="SqlQuery">
+<xsd:complexType >
+	<xsd:sequence>
+	<!--updated/added associations -->
+		<xsd:element minOccurs="0" maxOccurs="unbounded" name="query" type="query" />
+	</xsd:sequence>
+</xsd:complexType>
+</xsd:element>
+<xsd:complexType name="query">
+	<xsd:sequence>
+		<xsd:element name="name" type="xsd:string"></xsd:element>
+		<xsd:element name="value" type="xsd:string"></xsd:element>
+	</xsd:sequence>
+</xsd:complexType>
+
+
+</xsd:schema>
