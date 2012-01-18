@@ -60,10 +60,6 @@ public class VelocityManager
 		return velocityManager;
 	}
 
-	/**
-	 * initializes velocityEngine
-	 * @throws Exception
-	 */
 	private void initializeVelocityEngine() throws Exception
 	{
 		velocityEngine = new VelocityEngine();
