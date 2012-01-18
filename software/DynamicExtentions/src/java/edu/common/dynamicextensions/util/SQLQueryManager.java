@@ -13,11 +13,18 @@ import org.xml.sax.SAXException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.jaxb.sql.Query;
 import edu.common.dynamicextensions.jaxb.sql.SqlQuery;
+import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.xml.XMLToObjectConverter;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
+
+/**
+ * This class contains method for query execution.Gets query from xml file. 
+ * @author amol pujari
+ *
+ */
 
 public class SQLQueryManager
 {
@@ -27,15 +34,17 @@ public class SQLQueryManager
 
 	private SQLQueryManager() throws JAXBException, SAXException
 	{
-		URL xsdFileUrl = Thread.currentThread().getContextClassLoader().getResource("DESql.xsd");
-//		URL xsdFileUrl = new URL("D:/Amol/workspace/DynamicExtension_1.7/software/DynamicExtentions/src/resources/jaxb/xsd/DESql.xsd");
+		URL xsdFileUrl = Thread.currentThread().getContextClassLoader().getResource(DEConstants.DESQL_XSD_FILENAME);
 		XMLToObjectConverter converter = new XMLToObjectConverter(SqlQuery.class.getPackage()
 				.getName(), xsdFileUrl);
 		SqlQuery sqlQuery = (SqlQuery)converter.getJavaObject(Thread.currentThread()
-				.getContextClassLoader().getResourceAsStream("DESql.xml"));
+				.getContextClassLoader().getResourceAsStream(DEConstants.DESQL_XML_FILENAME));
 		initializeSqlQueryMap(sqlQuery);
 	}
 
+	/**
+	 * @param sqlQuery
+	 */
 	private static void initializeSqlQueryMap(SqlQuery sqlQuery)
 	{
 		for (Query query : sqlQuery.getQuery())
@@ -53,11 +62,28 @@ public class SQLQueryManager
 		return sqlQueryLoader;
 	}
 
-	public static String getSQL(String key)
+	/**
+	 * Gets query from the xml depending on the key provided
+	 * @param key
+	 * @return
+	 */
+	public String getSQL(String key)
 	{
 		return sqlQueryMap.get(key).getValue();
 	}
 
+	/**
+	 * 
+	 * Replaces values in the query and execute it
+	 * @param queryKey
+	 * @param columnValueBeans
+	 * @param sessionDataBean
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 * @throws JAXBException
+	 * @throws SAXException
+	 * @throws DAOException
+	 */
 	public static List<?> executeQuery(String queryKey, List<ColumnValueBean> columnValueBeans,
 			SessionDataBean sessionDataBean) throws DynamicExtensionsSystemException, JAXBException, SAXException, DAOException 
 	{

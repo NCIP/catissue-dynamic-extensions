@@ -64,5 +64,6 @@ public class Constants
 	public static final String PV_With_Nearest_Past_Date="PVWithNearestPastDate";
 	public static final String COLON=":";
 	public static final String DOUBLE_QUOTES="\"";
-	
+	public static final String CONTENT_TYPE_XML = "text/xml";
+	public static final String VM_TEMPLATE_FILENAME_FOR_FORM_DATA_GRID ="displayFormDataInGridTemplate.vm";
 }
