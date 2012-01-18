@@ -259,12 +259,20 @@ PUBLIC
 		<action path="/DownloadPVVersionAction" type="edu.common.dynamicextensions.ui.webui.action.DownloadPVVersionAction"
 			validate="false" scope="request">
 		</action>
+		
+		<!-- Display Form Data in Grid -->
+		<action path="/LoadDisplayFormDataInGrid" 
+			type="edu.common.dynamicextensions.ui.webui.action.LoadDisplayFormDataInGridAction"
+			validate="false"
+			scope="request">
+		</action>
 		<action path="/DisplayFormDataInGrid" 
-			type="edu.common.dynamicextensions.ui.webui.action.DisplayFormDataInGridAction"
+			type="edu.common.dynamicextensions.ui.webui.action.ForwardAction"
 			validate="false"
 			scope="request">
 			<forward name="success" path="/pages/de/DisplayFormDataInGrid.jsp" />
 		</action>
+		
 	</action-mappings>
 
 	<message-resources parameter="ApplicationResources" />

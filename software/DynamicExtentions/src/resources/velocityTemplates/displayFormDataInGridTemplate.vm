@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<rows>
+	#set($srno=1)
+	#foreach( $gridData in $gridPopulateObjectList )
+		<row id="$gridData.identifier">
+			<cell>$srno</cell>
+			<cell><![CDATA[$gridData.username]]></cell>
+			<cell><![CDATA[$gridData.lastUpdated]]></cell>
+		</row>
+		#set($srno=$srno+1)
+	#end
+</rows>
