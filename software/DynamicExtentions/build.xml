@@ -1,7 +1,7 @@
 <?xml version ="1.0"?>
 
 <!--Ant Script for create Build for caTISSUE Core -->
-<project name="DynamicExtensions" default="compile" >
+<project name="DynamicExtensions" default="compile">
 
 	<!--define require dir and Properties -->
 	<property file="src/conf/DynamicExtensions.properties" />
@@ -22,12 +22,12 @@
 	<property name="javadoc.zip" value="DynamicExtensionsJavaDoc.zip" />
 	<property name="resource.dir" value="src/resources" />
 	<property name="testCases.hookEntity.dir" value="${base.dir}/test/edu/hostApp" />
-	<property name="cacore_deployable" value="${base.dir}"/>
-	<property name="cacore.location" value="${cacore_deployable}"/>
+	<property name="cacore_deployable" value="${base.dir}" />
+	<property name="cacore.location" value="${cacore_deployable}" />
 
-	<property name="tempWar.dir" value="${base.dir}/binaries/tempWar"/>
-	<property name="jboss.deploy.dir" value="${jboss.home.dir}/server/default/deploy"/>
-	<property name="test.war.name" value="dynamicExtensions${default.prifix.war}test.war"/>
+	<property name="tempWar.dir" value="${base.dir}/binaries/tempWar" />
+	<property name="jboss.deploy.dir" value="${jboss.home.dir}/server/default/deploy" />
+	<property name="test.war.name" value="dynamicExtensions${default.prifix.war}test.war" />
 
 
 	<property name="hbm.dir" value="${src.dir}/edu/common/dynamicextensions/hbm" />
@@ -129,8 +129,8 @@
 		</javac>
 		<copy file="${target.dir}/TestHibernate.cfg.xml" tofile="${target.dir}/DynamicExtensionsHibernate.cfg.xml" overwrite="true" />
 		<copy file="${base.dir}/src/conf/DynamicExtensions.properties" tofile="${target.dir}/DynamicExtensions.properties" overwrite="true" />
-		<copy file="${test.dir}/mapping.xml" tofile="${target.dir}/mapping.xml" overwrite="true" failonerror="false"/>
-		<copy file="${test.dir}/sampleAuditablemetadata.xml" tofile="${target.dir}/sampleAuditablemetadata.xml" overwrite="true" failonerror="false"/>
+		<copy file="${test.dir}/mapping.xml" tofile="${target.dir}/mapping.xml" overwrite="true" failonerror="false" />
+		<copy file="${test.dir}/sampleAuditablemetadata.xml" tofile="${target.dir}/sampleAuditablemetadata.xml" overwrite="true" failonerror="false" />
 	</target>
 
 
@@ -246,7 +246,7 @@
 	</target>
 	<!-- Create dynamic extensions jar Begins-->
 
-	<target name="instrument" >
+	<target name="instrument">
 		<ant antfile="src/conf/cobertura.xml" target="instrument" />
 	</target>
 
@@ -299,6 +299,8 @@
 		<mkdir dir="${temp.dir}/web/taglibs" />
 		<mkdir dir="${temp.dir}/conf" />
 		<mkdir dir="${temp.dir}/binaries/DynamicExtensionsInterface" />
+		<mkdir dir="${temp.dir}/WEB-INF/classes" />
+		<mkdir dir="${temp.dir}/WEB-INf/lib" />
 
 		<copy todir="${temp.dir}/lib">
 			<fileset dir="${base.dir}/lib">
@@ -315,13 +317,24 @@
 				<include name="DynamicExtensionsAuditMetadata.xml" />
 				<include name="metadataQuery.xml" />
 			</fileset>
+		</copy>
+		<copy todir="${temp.dir}/WEB-INF/classes">
 			<fileset dir="${base.dir}/src/resources/jaxb/xsd">
-			    <include name="*.xsd"/>
+				<include name="*.xsd" />
+			</fileset>
+			<fileset dir="${base.dir}/src/resources/velocityTemplates">
+				<include name="*.vm" />
 			</fileset>
 		</copy>
+		<copy todir="${temp.dir}/WEB-INF/lib">
+			<fileset dir="${base.dir}/lib/server">
+				<include name="velocity-dep-1.5.jar"/>
+			</fileset>
+		</copy>
+
 		<copy todir="${temp.dir}/dem.war">
-					<fileset dir="${base.dir}/src/conf/dem.war">
-					 </fileset>
+			<fileset dir="${base.dir}/src/conf/dem.war">
+			</fileset>
 		</copy>
 		<copy todir="${temp.dir}/db">
 			<fileset dir="${base.dir}/db">
@@ -405,38 +418,38 @@
 	</target>
 
 	<target name="build.dem.war" depends="compile">
-		<property name="dem.war" value="dem.war"/>
-		<property name="dem.web-inf" value="dem.war/WEB-INF"/>
-		<property name="dem.classes" value="dem.war/WEB-INF/classes"/>
-		<property name="dem.lib" value="dem.war/WEB-INF/lib"/>
-		<property name="dem.meta-inf" value="dem.war/META-INF"/>
+		<property name="dem.war" value="dem.war" />
+		<property name="dem.web-inf" value="dem.war/WEB-INF" />
+		<property name="dem.classes" value="dem.war/WEB-INF/classes" />
+		<property name="dem.lib" value="dem.war/WEB-INF/lib" />
+		<property name="dem.meta-inf" value="dem.war/META-INF" />
 
 		<delete dir="dem.war" />
-		<mkdir dir="${dem.war}"/>
-		<mkdir dir="${dem.web-inf}"/>
-		<mkdir dir="${dem.classes}"/>
-		<mkdir dir="${dem.lib}"/>
-		<mkdir dir="${dem.meta-inf}"/>
-		<copy file="src/conf/dem.web.xml" tofile="${dem.web-inf}/web.xml"/>
+		<mkdir dir="${dem.war}" />
+		<mkdir dir="${dem.web-inf}" />
+		<mkdir dir="${dem.classes}" />
+		<mkdir dir="${dem.lib}" />
+		<mkdir dir="${dem.meta-inf}" />
+		<copy file="src/conf/dem.web.xml" tofile="${dem.web-inf}/web.xml" />
 		<copy todir="${dem.classes}">
 			<fileset dir="${target.dir}">
-				<include name="edu/common/dynamicextensions/dem/*.class"/>
-				<include name="OracleDAOProperties.xml"/>
-				<include name="ApplicationResources.properties"/>
-				<include name="ApplicationDAOProperties.xml"/>
-				<include name="OracleDAOProperties.xml"/>
-				<include name="OracleDAOProperties.xml"/>
+				<include name="edu/common/dynamicextensions/dem/*.class" />
+				<include name="OracleDAOProperties.xml" />
+				<include name="ApplicationResources.properties" />
+				<include name="ApplicationDAOProperties.xml" />
+				<include name="OracleDAOProperties.xml" />
+				<include name="OracleDAOProperties.xml" />
 			</fileset>
 		</copy>
-		<copy file="src/conf/demHibernate.cfg.xml" todir="${dem.classes}"/>
-		<copy file="src/conf/dem.web.xml" todir="${dem.classes}"/>
-		<copy file="src/conf/DynamicExtensionsAuditMetadata.xml" todir="${dem.classes}"/>
+		<copy file="src/conf/demHibernate.cfg.xml" todir="${dem.classes}" />
+		<copy file="src/conf/dem.web.xml" todir="${dem.classes}" />
+		<copy file="src/conf/DynamicExtensionsAuditMetadata.xml" todir="${dem.classes}" />
 
 		<copy todir="${dem.lib}">
 			<fileset dir="${lib.dir}">
-				<include name="commonpackage*.jar"/>
-				<include name="washu-commons*.jar"/>
-				<include name="DAO*.jar"/>
+				<include name="commonpackage*.jar" />
+				<include name="washu-commons*.jar" />
+				<include name="DAO*.jar" />
 			</fileset>
 		</copy>
 		<manifest file="${dem.meta-inf}/MANIFEST.MF">
@@ -497,7 +510,7 @@
 				<include name="**/*" />
 			</fileset>
 			<fileset dir="${interface.dir}">
-				<include name="DynamicExtensions.jar"/>
+				<include name="DynamicExtensions.jar" />
 			</fileset>
 		</copy>
 		<copy todir="${temp.dir}/WEB-INF">
@@ -508,7 +521,7 @@
 
 		<copy todir="${temp.dir}/WEB-INF/classes/" overwrite="true">
 			<fileset dir="src/resources/jaxb/xsd">
-				<include name="*.xsd"/>
+				<include name="*.xsd" />
 			</fileset>
 		</copy>
 
@@ -545,13 +558,13 @@
 			</fileset>
 		</copy>
 		<copy todir="${temp.dir}/WEB-INF" file="src/conf/dynamicextensions-struts-config.xml" />
-		<copy todir="${temp.dir}/WEB-INF" file="src/conf/stinger.xml"/>
+		<copy todir="${temp.dir}/WEB-INF" file="src/conf/stinger.xml" />
 		<copy todir="${temp.dir}" file="src/resources/ApplicationVersionInfo.txt" />
 	</target>
 	<!--Deploys the application war file at JBOSS server by coping it to deploy directory of application server-->
 	<target name="deploy" depends="build_app_war">
 		<!--delete file="${jboss.home.dir}/bin/cobertura.ser" /-->
-		<delete dir="${jboss.home.dir}/server/default/log" failonerror="false"/>
+		<delete dir="${jboss.home.dir}/server/default/log" failonerror="false" />
 		<copy file="dynamicExtensions.war" todir="${jboss.home.dir}/server/default/deploy" overwrite="true" />
 		<copy file="${interface.dir}/DynamicExtensions.jar" todir="${jboss.home.dir}/server/default/deploy/dynamicExtensions${default.prifix.war}test.war/WEB-INF/lib/" overwrite="true" />
 	</target>
@@ -897,17 +910,17 @@
 				<param name="sleep-time-seconds" value="240" />
 			</antcall>
 			<echo message="Shut down complete" /-->
-			<delete file="${jboss.home.dir}/bin/cobertura.ser"/>
+			<delete file="${jboss.home.dir}/bin/cobertura.ser" />
 			<antcall target="start-appserver" />
 			<antcall target="sleep">
 				<param name="sleep-time-seconds" value="300" />
 			</antcall>
 			<echo message="Junit started running" />
-			<antcall target="create.audit.tables"/>
+			<antcall target="create.audit.tables" />
 
-			<antcall target="import.static.and.test.model"/>
-			<antcall target="import.caTissueCoreModel"/>
-			<antcall target="import.GeneconnectModel"/>
+			<antcall target="import.static.and.test.model" />
+			<antcall target="import.caTissueCoreModel" />
+			<antcall target="import.GeneconnectModel" />
 
 			<!-- wars are generated in ${tempWar.dir} location -->
 
@@ -915,13 +928,13 @@
 				<fileset dir="${tempWar.dir}/test.war" />
 			</copy>
 
-			<copy file="./binaries/test/auditablemetadata.xml" tofile="${jboss.home.dir}/server/default/deploy/${test.war.name}/WEB-INF/classes/DynamicExtensionsAuditMetadata.xml" overwrite="true" failonerror="false"/>
+			<copy file="./binaries/test/auditablemetadata.xml" tofile="${jboss.home.dir}/server/default/deploy/${test.war.name}/WEB-INF/classes/DynamicExtensionsAuditMetadata.xml" overwrite="true" failonerror="false" />
 
 			<!-- Copy the latest DE jar in the war to ensure that the classes are compatible
 				Ideally the demwar shold contain the latest jars automatically.
 			-->
 			<copy todir="${jboss.home.dir}/server/default/deploy/${test.war.name}/WEB-INF/lib" overwrite="true">
-				<fileset dir="${interface.dir}" >
+				<fileset dir="${interface.dir}">
 					<include name="DynamicExtensions.jar" />
 				</fileset>
 			</copy>
@@ -930,14 +943,14 @@
 			<!-- This is to copy latest DE.jar in the entitygroupname.war/WEB-INF/lib folder present in JBoss deploy folder-->
 
 			<delete failonerror="false">
-				<fileset dir="${jboss.home.dir}/server/default/deploy/${test.war.name}/WEB-INF/lib" >
+				<fileset dir="${jboss.home.dir}/server/default/deploy/${test.war.name}/WEB-INF/lib">
 					<include name="washu-commons*" />
 					<include name="commonpackage*" />
 					<include name="DAO*" />
 				</fileset>
 			</delete>
 			<copy todir="${jboss.home.dir}/server/default/deploy/${test.war.name}/WEB-INF/lib" overwrite="true" failonerror="false">
-				<fileset dir="${lib.dir}" >
+				<fileset dir="${lib.dir}">
 					<include name="jep-2.4.1.jar" />
 					<include name="jaxb*" />
 					<include name="washu-commons*" />
@@ -965,7 +978,7 @@
 				</batchtest>
 
 				<classpath>
-					<fileset dir="${interface.dir}" >
+					<fileset dir="${interface.dir}">
 						<include name="DynamicExtensions.jar" />
 					</fileset>
 					<!--	<pathelement location="${junit.classes.dir}"/> -->
@@ -998,31 +1011,32 @@
 			</delete>-->
 		</target>
 
-	<!-- =================================
+		<!-- =================================
           target: name
          ================================= -->
-    <target name="create.audit.tables" description="create audit setup">
-    	<echo message="Create audit setup" />
-		<sql driver="${oracle.driver.string.DE}" url="${hibernate.connection.url}" userid="${hibernate.connection.username}" password="${hibernate.connection.password}" onerror="continue" rdbms="oracle">
-			<transaction src="${testCases.hookEntity.dir}/../../db/oracle/AuditOracleScript.sql"></transaction>
-			<transaction>commit;</transaction>
-			<classpath>
-				<fileset dir="${lib.dir}">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-		</sql>
-    </target>
+		<target name="create.audit.tables" description="create audit setup">
+			<echo message="Create audit setup" />
+			<sql driver="${oracle.driver.string.DE}" url="${hibernate.connection.url}" userid="${hibernate.connection.username}" password="${hibernate.connection.password}" onerror="continue" rdbms="oracle">
+				<transaction src="${testCases.hookEntity.dir}/../../db/oracle/AuditOracleScript.sql">
+				</transaction>
+				<transaction>commit;</transaction>
+				<classpath>
+					<fileset dir="${lib.dir}">
+						<include name="*.jar" />
+					</fileset>
+				</classpath>
+			</sql>
+		</target>
 
-	<target name="update.dem.hibernate.cfg">
+		<target name="update.dem.hibernate.cfg">
 			<echo message="Inside update dem.hibernate.cfg. ****************************************" />
-		<echo message="The hibernate cfg path is ${hibernate.cfg.location}" />
+			<echo message="The hibernate cfg path is ${hibernate.cfg.location}" />
 			<replace file="${hibernate.cfg.location}/demHibernate.cfg.xml">
 				<replacetoken>&lt;session-factory&gt;</replacetoken>
 				<replacevalue>
 					<![CDATA[
 					    	 <session-factory>
-					    	 <!--
+					<!--
 					]]>
 				</replacevalue>
 			</replace>
@@ -1031,28 +1045,28 @@
 				<replacevalue>
 					<![CDATA[
 					    	 -->
-					    	<property name="show_sql">false</property>
-					   	 	<!--property name="connection.datasource">java:/catissuecore</property>
+					<property name="show_sql">false</property>
+					<!--property name="connection.datasource">java:/catissuecore</property>
 					       	<property name="transaction.manager_lookup_class">org.hibernate.transaction.JBossTransactionManagerLookup</property-->
-					       	<property name="hibernate.jdbc.batch_size">0</property>
-					    	<property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
-					    	<property name="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
+					<property name="hibernate.jdbc.batch_size">0</property>
+					<property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+					<property name="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
 
-							<!-- oracle settings-->
+					<!-- oracle settings-->
 
-					  	    <property name="dialect">org.hibernate.dialect.Oracle9Dialect</property>
-					        <property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
-					        <property name="hibernate.query.substitutions">true 1,false 0</property>
+					<property name="dialect">org.hibernate.dialect.Oracle9Dialect</property>
+					<property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+					<property name="hibernate.query.substitutions">true 1,false 0</property>
 
-					        <property name="hibernate.connection.username">DE_NBUser</property>
-							<property name="hibernate.connection.password">DE_NBUser123</property>
-							<property name="hibernate.connection.url">jdbc:oracle:thin:@ps4153:1521:orclnew</property>
-							<!-- oracle settings end-->
-							<!-- My sql settings -->
+					<property name="hibernate.connection.username">DE_NBUser</property>
+					<property name="hibernate.connection.password">DE_NBUser123</property>
+					<property name="hibernate.connection.url">jdbc:oracle:thin:@ps4153:1521:orclnew</property>
+					<!-- oracle settings end-->
+					<!-- My sql settings -->
 					]]>
 				</replacevalue>
-	    	</replace>
-	</target>
+			</replace>
+		</target>
 
 		<!-- - - - - - - - - - - - - - - - - -
           target: import.static.and.test.model
@@ -1069,7 +1083,7 @@
 				<property name="Application.url" value="${Application.url}" />
 			</ant>
 
-			<antcall target="create.record.entry.table"/>
+			<antcall target="create.record.entry.table" />
 
 			<echo message="Static Model loaded Successfully" />
 			<echo message="Now importing the test model for junits" />
@@ -1101,14 +1115,14 @@
 			<echo message="Test Model Edited Successfully" />
 		</target>
 
-   		<target name="import.permissiblevalues">
-   			<echo message="Now importing Permissible Values for junits" />
+		<target name="import.permissiblevalues">
+			<echo message="Now importing Permissible Values for junits" />
 			<ant antfile="DEDeploy.xml" dir="./binaries/" target="import_permissible_values">
 				<property name="pv.dir" value="${test.edited.model.dir}" />
 				<property name="permissibleValuesFile" value="${test.edited.model.dir}/TestModel_pv.xml" />
 			</ant>
 			<echo message="Importing Permissible Values Successfully" />
-    	</target>
+		</target>
 
 
 		<target name="import.caTissueCoreModel" description="Import caTissue Core Model into database">
@@ -1140,7 +1154,7 @@
 		<target name="import.pvs.testcases" description="Import permissible values for testcases">
 			<java classname="edu.common.dynamicextensions.util.parser.DynamicallyImportPermissibleValues" fork="true" maxmemory="1024M">
 				<arg value="${permissibleValuesFile}" />
-				<arg value="${pv.dir}"/>
+				<arg value="${pv.dir}" />
 				<arg value="${Application.url}" />
 				<sysproperty key="net.sourceforge.cobertura.datafile" file="./cobertura/coverage.ser" />
 				<classpath>
@@ -1191,7 +1205,7 @@
 			<ant target="compile_test_cases" /-->
 			<!--<ant target="checkout_test_model" />-->
 
-			<copy file="src/conf/web.xml" tofile="src/conf/webBackup.xml" overwrite="true"/>
+			<copy file="src/conf/web.xml" tofile="src/conf/webBackup.xml" overwrite="true" />
 
 			<ant antfile="DEDeploy.xml" dir="./binaries/" target="updatecache">
 				<property name="webxml.path" value="../src/conf" />
@@ -1200,13 +1214,13 @@
 			<antcall target="deploy" />
 
 			<delete file="src/conf/web.xml" />
-			<copy file="src/conf/webBackup.xml" tofile="src/conf/web.xml" overwrite="true"/>
+			<copy file="src/conf/webBackup.xml" tofile="src/conf/web.xml" overwrite="true" />
 			<delete file="src/conf/webBackup.xml" />
 
 			<ant target="run_junit" />
-			<ant antfile="src/conf/cobertura.xml" target="coverage.report" >
+			<ant antfile="src/conf/cobertura.xml" target="coverage.report">
 				<property name="jboss.home.dir" value="${jboss.home.dir}" />
-				</ant>
+			</ant>
 			<ant antfile="src/conf/cobertura.xml" target="coverage.check" />
 		</target>
 
@@ -1220,7 +1234,7 @@
 				<then>
 					<exec dir="${basedir}/script" executable="sh" spawn="true">
 						<arg line="jbossStart.sh" />
-						<arg line="${jboss.home.dir}"/>
+						<arg line="${jboss.home.dir}" />
 					</exec>
 				</then>
 				<elseif>
@@ -1228,7 +1242,7 @@
 					<then>
 						<exec dir="${basedir}/script" executable="sh" spawn="true">
 							<arg line="jbossStart.sh" />
-							<arg line="${jboss.home.dir}"/>
+							<arg line="${jboss.home.dir}" />
 						</exec>
 					</then>
 				</elseif>
@@ -1251,8 +1265,8 @@
 				<contains substring="unix" casesensitive="no" string="${os.name}" />
 				<then>
 					<exec dir="${jboss.home.dir}/bin/" executable="sh" resolveexecutable="true" failonerror="false" failifexecutionfails="false">
-												<arg line="shutdown.sh -s 0.0.0.0:21099" />
-											</exec>
+						<arg line="shutdown.sh -s 0.0.0.0:21099" />
+					</exec>
 				</then>
 				<elseif>
 					<contains substring="Linux" casesensitive="no" string="${os.name}" />
@@ -1471,8 +1485,8 @@
 					<include name="cog-jglobus.jar" />
 					<include name="log4j.jar" />
 					<include name="DAO-1.1.9.5.jar" />
-					<include name="hibernate3.jar"/>
-					<include name="jaxb-api.jar"/>
+					<include name="hibernate3.jar" />
+					<include name="jaxb-api.jar" />
 				</fileset>
 				<fileset dir="${base.dir}/src/conf">
 					<include name="log4j.properties.template" />
@@ -1526,7 +1540,8 @@
 		<target name="create.record.entry.table.for.mysql" description="create table for recordEntry class for mysql">
 			<echo message="upgrading the DB For DynamicExtensions" />
 			<sql driver="${mysql.driver.string.DE}" url="${hibernate.connection.url}" userid="${hibernate.connection.username}" password="${hibernate.connection.password}" onerror="continue">
-				<transaction src="${testCases.hookEntity.dir}/db/mysql/create_hookEntity_mysql.sql"></transaction>
+				<transaction src="${testCases.hookEntity.dir}/db/mysql/create_hookEntity_mysql.sql">
+				</transaction>
 				<transaction>commit;</transaction>
 				<classpath>
 					<fileset dir="${lib.dir}">
@@ -1540,7 +1555,8 @@
 		<target name="create.record.entry.table.for.oracle" description="create table for recordEntry class for oracle">
 			<echo message="upgrading the DB For DynamicExtensions" />
 			<sql driver="${oracle.driver.string.DE}" url="${hibernate.connection.url}" userid="${hibernate.connection.username}" password="${hibernate.connection.password}" onerror="continue" rdbms="oracle">
-				<transaction src="${testCases.hookEntity.dir}/db/oracle/create_hookEntity_oracle.sql"></transaction>
+				<transaction src="${testCases.hookEntity.dir}/db/oracle/create_hookEntity_oracle.sql">
+				</transaction>
 				<transaction>commit;</transaction>
 				<classpath>
 					<fileset dir="${lib.dir}">
@@ -1550,11 +1566,11 @@
 			</sql>
 		</target>
 
-	<!-- =================================
+		<!-- =================================
           target: execute.testcase
          ================================= -->
-    <target name="execute.testcase" depends="db_initialized,generate_schema,generate_codecoverage_report" description="description">
+		<target name="execute.testcase" depends="db_initialized,generate_schema,generate_codecoverage_report" description="description">
 
-    </target>
+		</target>
 
 	</project>
