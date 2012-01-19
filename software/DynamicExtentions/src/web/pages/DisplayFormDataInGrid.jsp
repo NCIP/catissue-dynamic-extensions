@@ -26,8 +26,8 @@
 
 <body onload="doOnLoad();">
 <table border="1" height="100%" width="100%">
-	<tr style="valign: top;">
-		<td>
+	<tr>
+		<td style="vertical-align:top;">
 		<div id="displayFormDataGrid" style="height: 245px; width: 100%;"></div>
 		</td>
 	</tr>
