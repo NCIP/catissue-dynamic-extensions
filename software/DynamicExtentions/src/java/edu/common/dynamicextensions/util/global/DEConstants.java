@@ -378,6 +378,8 @@ public class DEConstants
 	
 	public static final String FORM_CONTEXT_ID = "formContextId";
 	
+	public static final String RECORD_ENTRY_ENTITY_ID = "recEntryEntityId";
+	
 	public static final String RECORD_ID_FROM_FORM_CONTEXT_ID = "record.id.from.form.context.id";
 	
 	public static final String DESQL_XSD_FILENAME = "DESql.xsd";

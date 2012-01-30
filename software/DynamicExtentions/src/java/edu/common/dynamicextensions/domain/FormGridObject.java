@@ -2,25 +2,25 @@
 package edu.common.dynamicextensions.domain;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class FormGridObject
 {
 
-	private Long identifier;
+	private Long recordEntryId;
 	private String username;
 	private String lastUpdated;
+	private String formURL;
 	private List<String> columns = new ArrayList<String>();
 
-	public Long getIdentifier()
+	public Long getRecordEntryId()
 	{
-		return identifier;
+		return recordEntryId;
 	}
 
-	public void setIdentifier(Long identifier)
+	public void setRecordEntryId(Long recordEntryId)
 	{
-		this.identifier = identifier;
+		this.recordEntryId = recordEntryId;
 	}
 
 	public List<String> getColumns()
@@ -43,16 +43,24 @@ public class FormGridObject
 		this.username = username;
 	}
 
-	
 	public String getLastUpdated()
 	{
 		return lastUpdated;
 	}
 
-	
 	public void setLastUpdated(String lastUpdated)
 	{
 		this.lastUpdated = lastUpdated;
+	}
+
+	public String getFormURL()
+	{
+		return formURL;
+	}
+
+	public void setFormURL(String formURL)
+	{
+		this.formURL = formURL;
 	}
 
 }

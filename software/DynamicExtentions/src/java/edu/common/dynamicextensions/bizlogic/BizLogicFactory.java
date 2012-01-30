@@ -59,9 +59,20 @@ public class BizLogicFactory
 	 */
 	public static AbstractBizLogic getBizLogic(String className)
 	{
-		AbstractBizLogic abstractBizLogic = null;
-
-		return abstractBizLogic;
+		AbstractBizLogic bizLogic;
+		if("edu.common.dynamicextensions.bizlogic.RecordEntryBizLogic".equals(className))
+		{
+			bizLogic = new RecordEntryBizLogic();
+		}
+		else if("edu.common.dynamicextensions.bizlogic.FormObjectGridDataBizLogic".equals(className))
+		{
+			bizLogic = new FormObjectGridDataBizLogic();
+		}
+		else
+		{
+			bizLogic = getDefaultBizLogic();
+		}
+		return bizLogic;
 	}
 
 }
