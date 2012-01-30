@@ -49,6 +49,7 @@ import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.CategoryHelperInterface.ControlEnum;
 import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.common.dynamicextensions.validation.category.CategoryValidator;
+import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.global.ApplicationProperties;
 
 /**
@@ -374,12 +375,17 @@ public class CategoryGenerator
 						final Map<String, String> controlOptions = categoryFileParser
 								.getControlOptions();
 
+						final List<NameValueBean> controlTaggedValue = categoryFileParser.getControlTaggedValues();
+						
 						if (commonControlOptions != null)
 						{
 							categoryHelper.setOptions(lastControl, commonControlOptions,
 									categoryFileParser.getLineNumber());
 						}
 						categoryHelper.setOptions(lastControl, controlOptions, categoryFileParser
+								.getLineNumber());
+						
+						categoryHelper.setControlTaggedValue(lastControl, controlTaggedValue, categoryFileParser
 								.getLineNumber());
 
 						setDefaultValue(lastControl);

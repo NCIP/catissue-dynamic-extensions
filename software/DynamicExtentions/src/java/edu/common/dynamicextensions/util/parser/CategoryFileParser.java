@@ -13,6 +13,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.FileReader;
 import edu.common.dynamicextensions.validation.category.CategoryValidator;
+import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.dao.exception.DAOException;
 
 /**
@@ -108,6 +109,8 @@ public abstract class CategoryFileParser extends FileReader
 	 * value as value for the property
 	 */
 	public abstract Map<String, String> getControlOptions();
+	
+	public abstract List<NameValueBean> getControlTaggedValues();
 
 	/**
 	 * @return getPermissibleValueOptions
@@ -350,7 +353,7 @@ public abstract class CategoryFileParser extends FileReader
 	 * @return tag value Map
 	 */
 	public abstract Map<String, String> getTagValueMap();
-
+	
 	public abstract String getProcessorClass();
 	/**
 	 * This method will check whether the pvs should be loaded lazyly or not.

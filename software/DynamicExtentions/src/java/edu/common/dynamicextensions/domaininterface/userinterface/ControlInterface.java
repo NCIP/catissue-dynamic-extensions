@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import edu.common.dynamicextensions.category.beans.UIProperty;
+import edu.common.dynamicextensions.domain.TaggedValue;
 import edu.common.dynamicextensions.domain.userinterface.Container;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
@@ -437,4 +438,8 @@ public interface ControlInterface extends DynamicExtensionBaseDomainObjectInterf
 	 * @return the error list
 	 */
 	List<String> getErrorList();
+	
+	public void setTaggedValues(Collection<TaggedValue> taggedValues);
+	
+	public Collection<TaggedValue> getTaggedValues();
 }

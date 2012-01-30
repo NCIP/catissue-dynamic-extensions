@@ -25,9 +25,11 @@ import edu.common.dynamicextensions.domain.CategoryEntity;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.PathAssociationRelationInterface;
 import edu.common.dynamicextensions.domain.PermissibleValue;
+import edu.common.dynamicextensions.domain.TaggedValue;
 import edu.common.dynamicextensions.domain.UserDefinedDE;
 import edu.common.dynamicextensions.domain.userinterface.ComboBox;
 import edu.common.dynamicextensions.domain.userinterface.Container;
+import edu.common.dynamicextensions.domain.userinterface.Control;
 import edu.common.dynamicextensions.domain.userinterface.Label;
 import edu.common.dynamicextensions.domain.userinterface.ListBox;
 import edu.common.dynamicextensions.domain.userinterface.MultiSelectCheckBox;
@@ -76,6 +78,7 @@ import edu.common.dynamicextensions.util.parser.CategoryFileParser;
 import edu.common.dynamicextensions.validation.ValidatorUtil;
 import edu.common.dynamicextensions.xmi.XMIConstants;
 import edu.wustl.cab2b.server.cache.EntityCache;
+import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.metadata.util.DyExtnObjectCloner;
@@ -806,6 +809,7 @@ public class CategoryHelper implements CategoryHelperInterface
 			BaseAbstractAttributeInterface baseAbstractAttribute)
 	{
 		ControlInterface control = getControl(container, baseAbstractAttribute);
+
 		TextFieldInterface textField = null;
 		if (control == null || control instanceof TextFieldInterface)
 		{
@@ -1120,6 +1124,31 @@ public class CategoryHelper implements CategoryHelperInterface
 					.getValue(CategoryConstants.CREATE_CAT_FAILS)
 					+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
 		}
+	}
+
+	/**
+	 * @param control
+	 * @param nextLine
+	 * @throws DynamicExtensionsSystemException 
+	 */
+	public void setControlTaggedValue(ControlInterface control, List<NameValueBean> options,
+			long lineNumber) throws DynamicExtensionsSystemException
+	{
+
+		if (options.isEmpty())
+		{
+			return;
+		}
+		for (NameValueBean entryObject : options)
+		{
+			Collection<TaggedValue> values = new HashSet<TaggedValue>();
+			TaggedValue tagValue = new TaggedValue();
+			tagValue.setKey(entryObject.getName());
+			tagValue.setValue(entryObject.getValue());
+			values.add(tagValue);
+			control.setTaggedValues(values);
+		}
+
 	}
 
 	/**
@@ -1534,8 +1563,8 @@ public class CategoryHelper implements CategoryHelperInterface
 	 * @param controlType
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public void setDefaultControlsOptions(ControlInterface control, ControlEnum controlType, boolean isLazyPvLoading)
-			throws DynamicExtensionsSystemException
+	public void setDefaultControlsOptions(ControlInterface control, ControlEnum controlType,
+			boolean isLazyPvLoading) throws DynamicExtensionsSystemException
 	{
 		try
 		{

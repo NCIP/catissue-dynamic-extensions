@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import edu.common.dynamicextensions.category.beans.UIProperty;
 import edu.common.dynamicextensions.category.enums.ControlEnum;
 import edu.common.dynamicextensions.domain.BaseAbstractAttribute;
 import edu.common.dynamicextensions.domain.DynamicExtensionBaseDomainObject;
+import edu.common.dynamicextensions.domain.TaggedValue;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
@@ -187,12 +189,13 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	public List<String> errorList=new ArrayList<String>();
 
 
-
+	protected Collection<TaggedValue> taggedValues = new HashSet<TaggedValue>();
 	/**
 	 *
 	 * @return
 	 */
 	public abstract boolean getIsEnumeratedControl();
+	
 
 	/**
 	 * @hibernate.property name="showLabel" type="boolean" column="SHOW_LABEL"
@@ -730,6 +733,8 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		this.isSkipLogic = isSkipLogic;
 	}
 
+	
+	
 	/**
 	 * @hibernate.property name="heading" type="string" column="HEADING" length="800"
 	 * @return Returns the caption.
@@ -767,6 +772,28 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	public void setFormNotes(List<FormControlNotesInterface> formNotes)
 	{
 		this.formNotes = formNotes;
+	}
+
+	/**
+	 * This method returns taggedValues
+	 * @hibernate.list name="taggedValues" table="DYEXTN_TAGGED_VALUE"
+	 * lazy="false" inverse="false" cascade="all-delete-orphan"
+	 * @hibernate.collection-key column="TAGGED_VALUE_CONTROL_ID"
+	 * @hibernate.collection-one-to-many class="edu.common.dynamicextensions.domain.TaggedValue"
+	 * @return taggedValues
+	 */
+	public Collection<TaggedValue> getTaggedValues()
+	{
+		return taggedValues;
+	}
+
+	
+	/**
+	 * @param taggedValues
+	 */
+	public void setTaggedValues(Collection<TaggedValue> taggedValues)
+	{
+		this.taggedValues = taggedValues;
 	}
 
 	/**
@@ -1333,4 +1360,6 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	{
 		this.errorList = errorList;
 	}
+	
+	
 }

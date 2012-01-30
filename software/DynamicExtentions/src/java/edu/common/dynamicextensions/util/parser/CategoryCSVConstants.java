@@ -160,4 +160,6 @@ public class CategoryCSVConstants // NOPMD by gaurav_sawant
 	 * This keyword used to define whether to load the PVs in case of combobox
 	 */
 	public static final String LAZY = "lazy";
+	
+	public static final String CONTROL_TAGGED_VALUE =  "controlTaggedValue";
 }

@@ -157,6 +157,8 @@
               />
         </list>
 
+		
+		
         <property
             name="YPosition"
             type="integer"
@@ -190,6 +192,23 @@
             insert="true"
             column="SOURCE_CONTROL_ID"
         />
+
+ 		<set
+            name="taggedValues"
+            table="DYEXTN_TAGGED_VALUE"
+            lazy="false"
+            inverse="false"
+            cascade="all-delete-orphan"
+        >
+
+              <key
+                  column="TAGGED_VALUE_CONTROL_ID"
+              />
+ 			
+              <one-to-many
+                  class="edu.common.dynamicextensions.domain.TaggedValue"
+              />
+        </set>
 
         <property
             name="isShowHide"
