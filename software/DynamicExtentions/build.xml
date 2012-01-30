@@ -294,7 +294,7 @@
 		<mkdir dir="${temp.dir}/web/javascripts/de" />
 		<mkdir dir="${temp.dir}/web/stylesheets/de" />
 		<mkdir dir="${temp.dir}/web/images/de" />
-		<mkdir dir="${temp.dir}/web/dhtml/de" />
+<!--	<mkdir dir="${temp.dir}/web/dhtml/de" /> -->
 		<mkdir dir="${temp.dir}/web/pages/de" />
 		<mkdir dir="${temp.dir}/web/taglibs" />
 		<mkdir dir="${temp.dir}/conf" />
@@ -362,8 +362,8 @@
 				<include name="**/*" />
 			</fileset>
 		</copy>
-		<copy todir="${temp.dir}/web/dhtml/de">
-			<fileset dir="src/web/dhtml">
+		<copy todir="${temp.dir}/web/dhtmlx_suite">
+			<fileset dir="src/web/dhtmlx_suite">
 				<include name="**/*" />
 			</fileset>
 		</copy>
@@ -381,6 +381,7 @@
 		</copy>
 		<copy todir="${temp.dir}/binaries/DynamicExtensionsInterface" file="binaries/DynamicExtensionsInterface/DynamicExtensions.jar">
 		</copy>
+		
 	</target>
 
 	<!-- Creates the WAR (Web Application Archive) file of the application -->
@@ -392,7 +393,7 @@
 				<include name="src/web/images/**/*" />
 				<include name="src/web/javascripts/**/*" />
 				<include name="src/web/pages/**/*" />
-				<include name="src/web/dhtml/**/*" />
+				<include name="src/web/dhtmlx_suite/**/*" />
 				<include name="src/web/runtime/**/*" />
 				<include name="src/web/taglibs/**/*" />
 				<include name="lib/server/**/*" />
@@ -498,7 +499,7 @@
 		<mkdir dir="${temp.dir}/WEB-INF/lib" />
 		<mkdir dir="${temp.dir}/stylesheets/de" />
 		<mkdir dir="${temp.dir}/javascripts/de" />
-		<mkdir dir="${temp.dir}/dhtml/de" />
+<!--	<mkdir dir="${temp.dir}/dhtml/de" /> -->
 		<mkdir dir="${temp.dir}/images/de" />
 		<copy todir="${temp.dir}/WEB-INF/classes">
 			<fileset dir="binaries/classes">
@@ -552,11 +553,18 @@
 				<include name="**/*" />
 			</fileset>
 		</copy>
-		<copy todir="${temp.dir}/dhtml/de">
+	<!--	<copy todir="${temp.dir}/dhtml/de">
 			<fileset dir="src/web/dhtml">
 				<include name="**/*" />
 			</fileset>
+			</copy>
+	-->
+		<copy todir="${temp.dir}/dhtmlx_suite">
+					<fileset dir="src/web/dhtmlx_suite">
+						<include name="**/*" />
+					</fileset>
 		</copy>
+		
 		<copy todir="${temp.dir}/WEB-INF" file="src/conf/dynamicextensions-struts-config.xml" />
 		<copy todir="${temp.dir}/WEB-INF" file="src/conf/stinger.xml" />
 		<copy todir="${temp.dir}" file="src/resources/ApplicationVersionInfo.txt" />
@@ -1573,4 +1581,5 @@
 
 		</target>
 
+	
 	</project>

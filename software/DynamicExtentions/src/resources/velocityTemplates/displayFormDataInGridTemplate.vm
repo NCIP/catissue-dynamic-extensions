@@ -2,10 +2,11 @@
 <rows>
 	#set($srno=1)
 	#foreach( $gridData in $gridPopulateObjectList )
-		<row id="$gridData.identifier">
+		<row id="$gridData.recordEntryId">
 			<cell>$srno</cell>
 			<cell><![CDATA[$gridData.username]]></cell>
 			<cell><![CDATA[$gridData.lastUpdated]]></cell>
+			<cell><![CDATA[$gridData.formURL]]></cell>
 		</row>
 		#set($srno=$srno+1)
 	#end
