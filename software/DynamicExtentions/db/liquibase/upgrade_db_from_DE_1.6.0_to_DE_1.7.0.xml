@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+<property name="int.type" value="bigint(20)" dbms="mysql" />
+<property name="int.type" value="number(19,0)" dbms="oracle" />
+
+
+	<!-- ALTER TABLE CATISSUE_PERMISSIBLE_VALUE -->
+	<changeSet id="1" author="DE" runOnChange="true">
+		<addColumn tableName="DYEXTN_TAGGED_VALUE">
+			<column name="TAGGED_VALUE_CONTROL_ID" type="${int.type}" />
+		</addColumn>
+	</changeSet>
+</databaseChangeLog>
