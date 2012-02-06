@@ -55,20 +55,6 @@ public class BOTemplateGeneratorUtility
 	private static final String CONTAINMENT = "containment";
 
 	/**
-	 * This method sets the common attribute properties.
-	 * @param bOClass BulkOperationClass object.
-	 */
-	public static void setCommonAttributes(BulkOperationClass bOClass, String templateName)
-	{
-		bOClass.setRoleName(BLANK_SPACE);
-		bOClass.setBatchSize(BATCH_SIZE);
-		bOClass.setParentRoleName(BLANK_SPACE);
-
-		bOClass.setRelationShipType(CONTAINMENT);
-		bOClass.setTemplateName(templateName);
-	}
-
-	/**
 	 * This method removes the last extra arrow operator.
 	 * @param buffer buffer to store resultant string.
 	 * @param delimiter delimiter to remove from buffer.

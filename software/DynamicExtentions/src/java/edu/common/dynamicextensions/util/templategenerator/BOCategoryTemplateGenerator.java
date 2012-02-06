@@ -23,6 +23,7 @@ import edu.wustl.bulkoperator.metadata.BulkOperationClass;
 import edu.wustl.bulkoperator.metadata.BulkOperationMetaData;
 import edu.wustl.bulkoperator.metadata.BulkOperationMetadataUtil;
 import edu.wustl.bulkoperator.metadata.HookingInformation;
+import edu.wustl.bulkoperator.util.BulkOperationConstants;
 import edu.wustl.bulkoperator.util.BulkOperationException;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
@@ -83,8 +84,7 @@ public class BOCategoryTemplateGenerator extends AbstractCategoryIterator<BulkOp
 		{
 			bulkOperationClass = new BulkOperationClass();
 		}
-		BOTemplateGeneratorUtility.setCommonAttributes(bulkOperationClass,templateName);
-
+		bulkOperationClass.setType(null);
 		bulkOperationClass.setCardinality(DEConstants.Cardinality.ONE.getValue().toString());
 		bulkOperationClass.setMaxNoOfRecords(MAX_RECORD);
 		bulkOperationClass.setClassName(BOTemplateGeneratorUtility
@@ -135,7 +135,7 @@ public class BOCategoryTemplateGenerator extends AbstractCategoryIterator<BulkOp
 			Attribute bulkOperationAttribute = new Attribute();
 			String name = attribute.getName().replace(" Category Attribute", "");
 			bulkOperationAttribute.setName(name);
-			bulkOperationAttribute.setBelongsTo("");
+			//bulkOperationAttribute.setBelongsTo("");
 			if(attribute.getAbstractAttribute().getName().equalsIgnoreCase(boObject.getClassName()))
 			{
 				bulkOperationAttribute.setCsvColumnName(getAttributename(parentObject.getClassName(),attribute.getAbstractAttribute().getName()));
@@ -148,7 +148,7 @@ public class BOCategoryTemplateGenerator extends AbstractCategoryIterator<BulkOp
 
 			final AttributeTypeInformationInterface attributeType = DynamicExtensionsUtility
 					.getBaseAttributeOfcategoryAttribute(attribute).getAttributeTypeInformation();
-			bulkOperationAttribute.setDataType(attributeType.getAttributeDataType().getName());
+			//bulkOperationAttribute.setDataType(attributeType.getAttributeDataType().getName());
 			handleDateFormat(bulkOperationAttribute, attributeType);
 
 			boObject.getAttributeCollection().add(bulkOperationAttribute);
@@ -201,8 +201,7 @@ public class BOCategoryTemplateGenerator extends AbstractCategoryIterator<BulkOp
 	{
 		BulkOperationClass subBulkOperationClass = new BulkOperationClass();
 
-		BOTemplateGeneratorUtility.setCommonAttributes(subBulkOperationClass, templateName);
-
+		subBulkOperationClass.setType(null);
 		BOTemplateGeneratorUtility.setCardinality(categoryAssociation.getTargetCategoryEntity()
 				.getNumberOfEntries(), subBulkOperationClass);
 		BOTemplateGeneratorUtility.setMaxNumberOfRecords(subBulkOperationClass);
@@ -215,7 +214,7 @@ public class BOCategoryTemplateGenerator extends AbstractCategoryIterator<BulkOp
 	protected BulkOperationClass processMultiSelect(AssociationInterface association)
 	{
 		BulkOperationClass subBulkOperationClass = new BulkOperationClass();
-		BOTemplateGeneratorUtility.setCommonAttributes(subBulkOperationClass, templateName);
+		subBulkOperationClass.setType(null);
 		if(association.getTargetRole().getMaximumCardinality().getValue()==100)
 		{
 			subBulkOperationClass.setCardinality(BOTemplateGeneratorUtility.MANY);
@@ -309,14 +308,17 @@ public class BOCategoryTemplateGenerator extends AbstractCategoryIterator<BulkOp
 		final BulkOperationMetaData bulkMetaData = metadataUtil.unmarshall(xmlFilePath, mappingXML);
 		BulkOperationClass rootBulkOperationClass = bulkMetaData.getBulkOperationClass().iterator()
 				.next();
-		final BulkOperationClass deCategoryBulkOperationClass = rootBulkOperationClass
-				.getDynExtCategoryAssociationCollection().iterator().next();
-		deCategoryBulkOperationClass.setTemplateName(bulkOperationClass.getTemplateName());
-		deCategoryBulkOperationClass.setClassName(category.getName());
-		deCategoryBulkOperationClass.getContainmentAssociationCollection().add(bulkOperationClass);
-		rootBulkOperationClass.setTemplateName(bulkOperationClass.getTemplateName());
+
+
+		rootBulkOperationClass.setClassName(category.getName());
+		rootBulkOperationClass.getContainmentAssociationCollection().add(bulkOperationClass);
+		rootBulkOperationClass.setType(BulkOperationConstants.CATEGORY_TYPE);
+		rootBulkOperationClass.setCardinality(null);
+		rootBulkOperationClass.setMaxNoOfRecords(null);
+		//rootBulkOperationClass.setTemplateName(bulkOperationClass.getTemplateName());
 		bulkMetaData.getBulkOperationClass().removeAll(bulkMetaData.getBulkOperationClass());
 		bulkMetaData.getBulkOperationClass().add(rootBulkOperationClass);
+		bulkMetaData.setTemplateName(category.getName());
 		return bulkMetaData;
 	}
 
@@ -330,9 +332,9 @@ public class BOCategoryTemplateGenerator extends AbstractCategoryIterator<BulkOp
 			throws DynamicExtensionsSystemException
 	{
 		StringBuffer csvStringBuffer = new StringBuffer();
-		final BulkOperationClass boObject = bulkMetaData.getBulkOperationClass().iterator().next()
-				.getDynExtCategoryAssociationCollection().iterator().next();
-		HookingInformation hookingInformation = boObject.getHookingInformation().iterator().next();
+		final BulkOperationClass boObject = bulkMetaData.getBulkOperationClass().iterator().next();
+
+		HookingInformation hookingInformation = boObject.getHookingInformation();
 		for (Attribute attribute : hookingInformation.getAttributeCollection())
 		{
 			csvStringBuffer.append(attribute.getCsvColumnName()).append(DEConstants.COMMA);

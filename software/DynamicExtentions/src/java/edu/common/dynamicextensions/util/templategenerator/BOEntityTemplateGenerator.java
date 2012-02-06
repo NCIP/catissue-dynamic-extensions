@@ -80,7 +80,6 @@ public class BOEntityTemplateGenerator extends AbstractEntityIterator<BulkOperat
 		{
 			bulkOperationClass = new BulkOperationClass();
 		}
-		BOTemplateGeneratorUtility.setCommonAttributes(bulkOperationClass, templateName);
 
 		bulkOperationClass.setCardinality(DEConstants.Cardinality.ONE.getValue().toString());
 		bulkOperationClass.setMaxNoOfRecords(MAX_RECORD);
@@ -121,14 +120,14 @@ public class BOEntityTemplateGenerator extends AbstractEntityIterator<BulkOperat
 		{
 			Attribute bulkOperationAttribute = new Attribute();
 			bulkOperationAttribute.setName(attribute.getName());
-			bulkOperationAttribute.setBelongsTo("");
+			//bulkOperationAttribute.setBelongsTo("");
 
 				bulkOperationAttribute.setCsvColumnName(getAttributename(boObject.getClassName(),attribute.getName()));
 
 			bulkOperationAttribute.setUpdateBasedOn(false);
 
 			final AttributeTypeInformationInterface attributeType =attribute.getAttributeTypeInformation();
-			bulkOperationAttribute.setDataType(attributeType.getAttributeDataType().getName());
+			//bulkOperationAttribute.setDataType(attributeType.getAttributeDataType().getName());
 			handleDateFormat(bulkOperationAttribute, attributeType);
 
 			boObject.getAttributeCollection().add(bulkOperationAttribute);
@@ -176,8 +175,7 @@ public class BOEntityTemplateGenerator extends AbstractEntityIterator<BulkOperat
 			AssociationInterface association)
 	{
 		BulkOperationClass subBulkOperationClass = new BulkOperationClass();
-
-		BOTemplateGeneratorUtility.setCommonAttributes(subBulkOperationClass, templateName);
+		subBulkOperationClass.setType(null);
 
 		BOTemplateGeneratorUtility.setCardinality(association.getTargetRole().getMaximumCardinality().getValue()
 				, subBulkOperationClass);
@@ -246,16 +244,17 @@ public class BOEntityTemplateGenerator extends AbstractEntityIterator<BulkOperat
 		final BulkOperationMetaData bulkMetaData = metadataUtil.unmarshall(xmlFilePath, mappingXML);
 		BulkOperationClass rootBulkOperationClass = bulkMetaData.getBulkOperationClass().iterator()
 				.next();
-		final BulkOperationClass deCategoryBulkOperationClass = rootBulkOperationClass
-				.getDynExtCategoryAssociationCollection().iterator().next();
-		rootBulkOperationClass.getDynExtCategoryAssociationCollection().clear();
-		deCategoryBulkOperationClass.setTemplateName(bulkOperationClass.getTemplateName());
-		deCategoryBulkOperationClass.setClassName(entity.getEntityGroup().getName());
-		deCategoryBulkOperationClass.getContainmentAssociationCollection().add(bulkOperationClass);
-		rootBulkOperationClass.setTemplateName(bulkOperationClass.getTemplateName());
-		rootBulkOperationClass.getDynExtEntityAssociationCollection().add(deCategoryBulkOperationClass);
+		rootBulkOperationClass.setClassName(entity.getName());
+		rootBulkOperationClass.getContainmentAssociationCollection().add(bulkOperationClass);
+		rootBulkOperationClass.setType(null);
+		rootBulkOperationClass.setCardinality(null);
+		rootBulkOperationClass.setMaxNoOfRecords(null);
+
 		bulkMetaData.getBulkOperationClass().removeAll(bulkMetaData.getBulkOperationClass());
 		bulkMetaData.getBulkOperationClass().add(rootBulkOperationClass);
+
+		bulkMetaData.setTemplateName(entity.getName());
+
 		return bulkMetaData;
 	}
 
@@ -271,7 +270,7 @@ public class BOEntityTemplateGenerator extends AbstractEntityIterator<BulkOperat
 		StringBuffer csvStringBuffer = new StringBuffer();
 		final BulkOperationClass boObject = bulkMetaData.getBulkOperationClass().iterator().next()
 				.getDynExtEntityAssociationCollection().iterator().next();
-		HookingInformation hookingInformation = boObject.getHookingInformation().iterator().next();
+		HookingInformation hookingInformation = boObject.getHookingInformation();
 		for (Attribute attribute : hookingInformation.getAttributeCollection())
 		{
 			csvStringBuffer.append(attribute.getCsvColumnName()).append(DEConstants.COMMA);
