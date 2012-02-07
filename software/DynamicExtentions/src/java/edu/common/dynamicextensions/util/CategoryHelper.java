@@ -1063,22 +1063,7 @@ public class CategoryHelper implements CategoryHelperInterface
 			}
 			for (Entry<String, String> entryObject : options.entrySet())
 			{
-				String optionString = entryObject.getKey();
-				String methodName = CategoryConstants.SET + optionString;
-
-				Class[] types = getParameterType(methodName, dyextnBaseDomainObject);
-				if (types.length < 1)
-				{
-					throw new DynamicExtensionsSystemException(ApplicationProperties
-							.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-							+ lineNumber
-							+ ApplicationProperties.getValue("incorrectControlOption")
-							+ optionString);
-				}
-				List<Object> values = new ArrayList<Object>();
-				values.add(getFormattedValues(types[0], entryObject.getValue()));
-
+				
 				if (CategoryConstants.ATRRIBUTE_TAG_VALUES.contains(entryObject.getKey()))
 				{
 					((ControlInterface) dyextnBaseDomainObject).getBaseAbstractAttribute()
@@ -1087,6 +1072,22 @@ public class CategoryHelper implements CategoryHelperInterface
 				}
 				else
 				{
+					String optionString = entryObject.getKey();
+					String methodName = CategoryConstants.SET + optionString;
+
+					Class[] types = getParameterType(methodName, dyextnBaseDomainObject);
+					if (types.length < 1)
+					{
+						throw new DynamicExtensionsSystemException(ApplicationProperties
+								.getValue(CategoryConstants.CREATE_CAT_FAILS)
+								+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
+								+ lineNumber
+								+ ApplicationProperties.getValue("incorrectControlOption")
+								+ optionString);
+					}
+					List<Object> values = new ArrayList<Object>();
+					values.add(getFormattedValues(types[0], entryObject.getValue()));
+
 					Method method;
 					method = dyextnBaseDomainObject.getClass().getMethod(methodName, types);
 					method.invoke(dyextnBaseDomainObject, values.toArray());
