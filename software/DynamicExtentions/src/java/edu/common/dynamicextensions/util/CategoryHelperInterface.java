@@ -304,8 +304,4 @@ public interface CategoryHelperInterface
 	void setDefaultValue(CategoryAttributeInterface categoryAttribute,
 			PermissibleValueInterface permissibleValue, boolean isNotAttributeTypeInfo)
 			throws DynamicExtensionsSystemException;
-
-	public void setControlTaggedValue(
-			ControlInterface control,
-			List<NameValueBean> options, long lineNumber) throws DynamicExtensionsSystemException ;
 }

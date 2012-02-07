@@ -1079,11 +1079,19 @@ public class CategoryHelper implements CategoryHelperInterface
 				List<Object> values = new ArrayList<Object>();
 				values.add(getFormattedValues(types[0], entryObject.getValue()));
 
-				Method method;
-
-				method = dyextnBaseDomainObject.getClass().getMethod(methodName, types);
-
-				method.invoke(dyextnBaseDomainObject, values.toArray());
+				if (CategoryConstants.ATRRIBUTE_TAG_VALUES.contains(entryObject.getKey()))
+				{
+					((ControlInterface) dyextnBaseDomainObject).getBaseAbstractAttribute()
+							.getTaggedValueCollection().add(
+									new TaggedValue(entryObject.getKey(), entryObject.getValue()));
+				}
+				else
+				{
+					Method method;
+					method = dyextnBaseDomainObject.getClass().getMethod(methodName, types);
+					method.invoke(dyextnBaseDomainObject, values.toArray());
+				}
+			
 			}
 		}
 		catch (SecurityException e)
@@ -1124,31 +1132,6 @@ public class CategoryHelper implements CategoryHelperInterface
 					.getValue(CategoryConstants.CREATE_CAT_FAILS)
 					+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
 		}
-	}
-
-	/**
-	 * @param control
-	 * @param nextLine
-	 * @throws DynamicExtensionsSystemException 
-	 */
-	public void setControlTaggedValue(ControlInterface control, List<NameValueBean> options,
-			long lineNumber) throws DynamicExtensionsSystemException
-	{
-
-		if (options.isEmpty())
-		{
-			return;
-		}
-		for (NameValueBean entryObject : options)
-		{
-			Collection<TaggedValue> values = new HashSet<TaggedValue>();
-			TaggedValue tagValue = new TaggedValue();
-			tagValue.setKey(entryObject.getName());
-			tagValue.setValue(entryObject.getValue());
-			values.add(tagValue);
-			control.setTaggedValues(values);
-		}
-
 	}
 
 	/**

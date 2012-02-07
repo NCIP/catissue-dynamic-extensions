@@ -22,6 +22,17 @@ import edu.common.dynamicextensions.domaininterface.TaggedValueInterface;
 public class TaggedValue extends DynamicExtensionBaseDomainObject implements TaggedValueInterface
 {
 
+	public TaggedValue()
+	{
+		
+	}
+	public TaggedValue(String key, String value)
+	{
+		super();
+		this.key = key;
+		this.value = value;
+	}
+
 	/**
 	 * DEfault serial id
 	 */

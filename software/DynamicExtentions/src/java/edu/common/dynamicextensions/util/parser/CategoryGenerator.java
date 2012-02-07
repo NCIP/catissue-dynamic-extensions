@@ -375,7 +375,6 @@ public class CategoryGenerator
 						final Map<String, String> controlOptions = categoryFileParser
 								.getControlOptions();
 
-						final List<NameValueBean> controlTaggedValue = categoryFileParser.getControlTaggedValues();
 						
 						if (commonControlOptions != null)
 						{
@@ -385,8 +384,6 @@ public class CategoryGenerator
 						categoryHelper.setOptions(lastControl, controlOptions, categoryFileParser
 								.getLineNumber());
 						
-						categoryHelper.setControlTaggedValue(lastControl, controlTaggedValue, categoryFileParser
-								.getLineNumber());
 
 						setDefaultValue(lastControl);
 

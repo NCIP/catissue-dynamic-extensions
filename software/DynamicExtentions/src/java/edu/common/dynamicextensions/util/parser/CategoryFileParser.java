@@ -110,7 +110,6 @@ public abstract class CategoryFileParser extends FileReader
 	 */
 	public abstract Map<String, String> getControlOptions();
 	
-	public abstract List<NameValueBean> getControlTaggedValues();
 
 	/**
 	 * @return getPermissibleValueOptions

@@ -1,6 +1,9 @@
 
 package edu.common.dynamicextensions.util.global;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * A class where constants are defined for category creation error messages.
  * @author mandar_shidhore
@@ -104,5 +107,8 @@ public class CategoryConstants
 
 	/** The Constant DEFAULT_VALUE. */
 	public static final String DEFAULT_VALUE = "defaultValue";
-
+	
+	public static final String SHOW_IN_GRID = "showInGrid";
+	
+	public static final List<String> ATRRIBUTE_TAG_VALUES = Arrays.asList(SHOW_IN_GRID);
 }
