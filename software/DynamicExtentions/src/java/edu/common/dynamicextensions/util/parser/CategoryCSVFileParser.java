@@ -1355,6 +1355,13 @@ public class CategoryCSVFileParser extends CategoryFileParser
 
 	}
 
+	/**
+	 * example:
+	 VitalInformation:height,textField,Height,options~Columns=8,controlTaggedValue~showInGrid=true:SQL=select * from catissue_user
+	 Tag values:
+	 1. showInGrid=true
+	 2. SQL=select * from catissue_user
+	 **/
 	@Override
 	public List<NameValueBean> getControlTaggedValues()
 	{
@@ -1365,11 +1372,15 @@ public class CategoryCSVFileParser extends CategoryFileParser
 			if (string.toLowerCase(locale).startsWith(
 					CategoryCSVConstants.CONTROL_TAGGED_VALUE.toLowerCase(locale) + TILDE))
 			{
-				String controlTaggedKeyValue = string.split(TILDE)[1];
-				NameValueBean controlTaggedValueBean = new NameValueBean();
-				controlTaggedValueBean.setName(controlTaggedKeyValue.split(EQUAL_SIGN)[0]);
-				controlTaggedValueBean.setValue(controlTaggedKeyValue.split(EQUAL_SIGN)[1]);
-				controlTaggedValueBeanList.add(controlTaggedValueBean);
+				String attributeTagValueList = string.split(TILDE)[1];
+				for(String keyValue :attributeTagValueList.split(":"))
+				{
+					NameValueBean controlTaggedValueBean = new NameValueBean();
+					controlTaggedValueBean.setName(keyValue.split(EQUAL_SIGN)[0]);
+					controlTaggedValueBean.setValue(keyValue.split(EQUAL_SIGN)[1]);
+					controlTaggedValueBeanList.add(controlTaggedValueBean);	
+				}
+				
 			}
 		}
 		return controlTaggedValueBeanList;
