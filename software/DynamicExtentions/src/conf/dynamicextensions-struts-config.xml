@@ -267,7 +267,7 @@ PUBLIC
 			scope="request">
 		</action>
 		<action path="/DisplayFormDataInGrid" 
-			type="edu.common.dynamicextensions.ui.webui.action.ForwardAction"
+			type="edu.common.dynamicextensions.ui.webui.action.DisplayFormDataInGridAction"
 			validate="false"
 			scope="request">
 			<forward name="success" path="/pages/de/DisplayFormDataInGrid.jsp" />

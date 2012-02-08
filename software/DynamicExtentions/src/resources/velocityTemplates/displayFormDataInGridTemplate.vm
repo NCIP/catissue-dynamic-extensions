@@ -3,10 +3,14 @@
 	#set($srno=1)
 	#foreach( $gridData in $gridPopulateObjectList )
 		<row id="$gridData.recordEntryId">
+			<cell></cell>
 			<cell>$srno</cell>
+			<cell><![CDATA[<a href='$gridData.formURL'>Edit</a>]]></cell>
 			<cell><![CDATA[$gridData.username]]></cell>
 			<cell><![CDATA[$gridData.lastUpdated]]></cell>
-			<cell><![CDATA[$gridData.formURL]]></cell>
+			#foreach( $dynamicColVal in $gridData.columns)
+				<cell><![CDATA[$dynamicColVal]]></cell>
+			#end
 		</row>
 		#set($srno=$srno+1)
 	#end
