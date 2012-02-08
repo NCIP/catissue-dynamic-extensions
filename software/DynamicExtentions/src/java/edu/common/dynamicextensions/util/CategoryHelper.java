@@ -834,7 +834,7 @@ public class CategoryHelper implements CategoryHelperInterface
 	 * @param baseAbstractAttribute
 	 * @return
 	 */
-	private ControlInterface getControl(ContainerInterface container,
+	public static ControlInterface getControl(ContainerInterface container,
 			BaseAbstractAttributeInterface baseAbstractAttribute)
 	{
 		ControlInterface controlInterface = null;
