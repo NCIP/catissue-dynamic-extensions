@@ -319,6 +319,11 @@
 			</fileset>
 		</copy>
 		<copy todir="${temp.dir}/WEB-INF/classes">
+			<fileset dir="${base.dir}/src/resources/xml">
+				<include name="*DESql.xml" />
+			</fileset>
+		</copy>
+		<copy todir="${temp.dir}/WEB-INF/classes">
 			<fileset dir="${base.dir}/src/resources/jaxb/xsd">
 				<include name="*.xsd" />
 			</fileset>
