@@ -49,8 +49,11 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 			gridObject
 					.setFormURL("LoadDataEntryFormAction.do?dataEntryOperation=insertParentData&containerIdentifier="
 							+ containerId + "&recordIdentifier=" + dynamicRecEntryId);
-			gridObject.setUsername((String) object.get(1));
-			gridObject.setLastUpdated((String) object.get(2));
+			if(object.size() > 1)
+			{
+				gridObject.setUsername((String) object.get(1));
+				gridObject.setLastUpdated((String) object.get(2));
+			}
 			gridObjectList.add(gridObject);
 		}
 
