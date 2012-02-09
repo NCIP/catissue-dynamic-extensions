@@ -272,6 +272,12 @@ PUBLIC
 			scope="request">
 			<forward name="success" path="/pages/de/DisplayFormDataInGrid.jsp" />
 		</action>
+		<action path="/LoadFormPrintPreview" 
+			type="edu.common.dynamicextensions.ui.webui.action.ForwardAction"
+			validate="false"
+			scope="request">
+			<forward name="success" path="/pages/de/grid/printPreview.jsp" />
+		</action>
 		
 	</action-mappings>
 

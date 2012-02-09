@@ -3571,3 +3571,28 @@ function onFormLoad(strFun,strParam)
 	var ret = eval(funcCall);
 	return ret;
 }
+
+
+function printForm()
+{
+	var urls="";
+
+	// 1: get all form URLs
+	for (var i=0; i<formDataGrid.getRowsNum(); i++)
+	{
+         // here i - index of the row in the grid
+		 id =formDataGrid.getRowId(i);
+		 urls = urls+ formDataGrid.cells(id,5).getValue().replace(new RegExp("&amp;", 'g'),"&")+"&mode=view&showInDiv=false,";
+	}
+	// 2: append URLs in request parameter
+	document.getElementById("formUrl").value = urls;
+	
+	if(urls!= '')
+	{
+		// 3: submit form to the URL
+		document.formGrid.action='LoadFormPrintPreview.do?'; 
+		document.formGrid.submit();
+	}
+	
+
+}
