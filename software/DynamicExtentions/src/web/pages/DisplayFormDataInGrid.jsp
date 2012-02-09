@@ -34,11 +34,11 @@ var formDataGrid;
 		{
 			formDataGrid = new dhtmlXGridObject('displayFormDataGrid');
 			formDataGrid.setImagePath("<%=request.getContextPath()%>/dhtmlx_suite/imgs/");
-			formDataGrid.setHeader("Select,Sr.No.,Operation,Username,Last Updated");
-			formDataGrid.setInitWidthsP("5,5,10,10,10");
-			formDataGrid.setColAlign("center,center,center,center,center");
-			formDataGrid.setColTypes("ch,ro,ro,ro,ro");
-			formDataGrid.attachHeader("#master_checkbox,,,,");
+			formDataGrid.setHeader("Select,Sr.No.,Operation,Username,Last Updated,deUrl");
+			formDataGrid.setInitWidthsP("5,5,10,10,10,0");
+			formDataGrid.setColAlign("center,center,center,center,center,center");
+			formDataGrid.setColTypes("ch,ro,ro,ro,ro,ro");
+			formDataGrid.attachHeader("#master_checkbox,,,,,");
 			formDataGrid.enableMultiselect(true);
 			formDataGrid.setSkin("dhx_skyblue");
 			formDataGrid.init();

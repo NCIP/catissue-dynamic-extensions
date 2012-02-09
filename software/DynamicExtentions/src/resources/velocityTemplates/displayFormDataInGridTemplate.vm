@@ -8,6 +8,7 @@
 			<cell><![CDATA[<a href='$gridData.formURL'>Edit</a>]]></cell>
 			<cell><![CDATA[$gridData.username]]></cell>
 			<cell><![CDATA[$gridData.lastUpdated]]></cell>
+			<cell><![CDATA[$gridData.deUrl]]></cell>
 			#foreach( $dynamicColVal in $gridData.columns)
 				<cell><![CDATA[$dynamicColVal]]></cell>
 			#end
