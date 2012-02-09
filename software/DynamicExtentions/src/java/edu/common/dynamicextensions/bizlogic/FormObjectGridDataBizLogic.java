@@ -25,6 +25,7 @@ import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.CategoryHelper;
+import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.bizlogic.DefaultBizLogic;
 import edu.wustl.common.exception.BizLogicException;
@@ -34,7 +35,7 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 {
 
 	public List<FormGridObject> getFormDataForGrid(Long formContextId, Long containerId,
-			String hookEntityId, SessionDataBean sessionDataBean, String formUrl,
+			String hookEntityId, SessionDataBean sessionDataBean, String formUrl,String deUrl, 
 			ContainerInterface containerInterface) throws DynamicExtensionsSystemException,
 			DAOException, JAXBException, SAXException, DynamicExtensionsApplicationException,
 			CacheException, BizLogicException
@@ -43,7 +44,7 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 
 		RecordEntryBizLogic recordEntryBizLogic = (RecordEntryBizLogic) BizLogicFactory
 				.getBizLogic(RecordEntryBizLogic.class.getName());
-
+		
 		DEIntegration deItegration = new DEIntegration();
 		Long dynamicRecEntryId = null;
 
@@ -65,6 +66,7 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 
 				dynamicRecEntryId = map.iterator().next();
 				gridObject.setFormURL(formUrl + "&recordId=" + dynamicRecEntryId);
+				gridObject.setDeUrl(deUrl+"&recordIdentifier="+dynamicRecEntryId);
 				gridObject.setColumns(getDisplayValue(dynamicRecEntryId.toString(),
 						containerInterface));
 				if (object.size() > 1)

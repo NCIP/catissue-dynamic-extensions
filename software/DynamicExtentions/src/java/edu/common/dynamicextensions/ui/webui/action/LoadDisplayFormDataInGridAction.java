@@ -42,6 +42,7 @@ public class LoadDisplayFormDataInGridAction extends BaseDynamicExtensionsAction
 		String hookEntityId = (String) session.getAttribute(DEConstants.RECORD_ENTRY_ENTITY_ID);
 		String containerId = (String) session.getAttribute(DEConstants.CONTAINER_ID);
 		String formUrl = (String) session.getAttribute(DEConstants.FORM_URL);
+		String deUrl = (String) session.getAttribute("deUrl");
 
 		FormObjectGridDataBizLogic displayFormDataInGridBizLogic = (FormObjectGridDataBizLogic) BizLogicFactory
 				.getBizLogic(FormObjectGridDataBizLogic.class.getName());
@@ -56,7 +57,7 @@ public class LoadDisplayFormDataInGridAction extends BaseDynamicExtensionsAction
 		
 		List<FormGridObject> gridObjectList = displayFormDataInGridBizLogic.getFormDataForGrid(Long
 				.valueOf(formContextId), Long.valueOf(containerId), hookEntityId, sessionDataBean,
-				formUrl,containerInterface);
+				formUrl,deUrl,containerInterface);
 		
 		String responseString = VelocityManager.getInstance().evaluate(gridObjectList,
 				Constants.VM_TEMPLATE_FILENAME_FOR_FORM_DATA_GRID);

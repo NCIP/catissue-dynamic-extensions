@@ -11,6 +11,7 @@ public class FormGridObject
 	private String username;
 	private String lastUpdated;
 	private String formURL;
+	private String deUrl;
 	private List<String> columns = new ArrayList<String>();
 
 	public Long getRecordEntryId()
@@ -61,6 +62,18 @@ public class FormGridObject
 	public void setFormURL(String formURL)
 	{
 		this.formURL = formURL;
+	}
+
+	
+	public String getDeUrl()
+	{
+		return deUrl;
+	}
+
+	
+	public void setDeUrl(String deUrl)
+	{
+		this.deUrl = deUrl;
 	}
 
 }

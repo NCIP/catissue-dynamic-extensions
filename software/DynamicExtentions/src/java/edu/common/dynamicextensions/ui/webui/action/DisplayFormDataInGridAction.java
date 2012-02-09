@@ -30,6 +30,7 @@ public class DisplayFormDataInGridAction extends BaseDynamicExtensionsAction
 		session.setAttribute(DEConstants.RECORD_ENTRY_ENTITY_ID, request
 				.getParameter(DEConstants.RECORD_ENTRY_ENTITY_ID));
 		session.setAttribute(DEConstants.FORM_URL, request.getParameter(DEConstants.FORM_URL));
+		session.setAttribute("deUrl", request.getParameter("deUrl"));
 		session.setAttribute("treeViewKey", request.getParameter("treeViewKey"));
 		final ContainerInterface containerInterface = LoadDisplayFormDataInGridAction
 				.getContainerInterface(request, request.getParameter(DEConstants.CONTAINER_ID));
