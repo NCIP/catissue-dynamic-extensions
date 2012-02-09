@@ -63,17 +63,11 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 			{
 				FormGridObject gridObject = new FormGridObject();
 				gridObject.setRecordEntryId(recordEntryIdValue);
-
 				dynamicRecEntryId = map.iterator().next();
 				gridObject.setFormURL(formUrl + "&recordId=" + dynamicRecEntryId);
 				gridObject.setDeUrl(deUrl+"&recordIdentifier="+dynamicRecEntryId);
 				gridObject.setColumns(getDisplayValue(dynamicRecEntryId.toString(),
 						containerInterface));
-				if (object.size() > 1)
-				{
-					gridObject.setUsername((String) object.get(1));
-					gridObject.setLastUpdated((String) object.get(2));
-				}
 				gridObjectList.add(gridObject);
 			}
 		}
