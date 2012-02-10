@@ -7,8 +7,9 @@
 			<cell>$srno</cell>
 			<cell><![CDATA[<a href='$gridData.formURL'>Edit</a>]]></cell>
 			<cell><![CDATA[$gridData.deUrl]]></cell>
-			#foreach( $dynamicColVal in $gridData.columns)
-				<cell><![CDATA[$dynamicColVal]]></cell>
+			#set ($map = ${gridData.columns})
+			#foreach ($header in $gridData.headers)
+				<cell><![CDATA[${map.get($header)}]]></cell>
 			#end
 		</row>
 		#set($srno=$srno+1)
