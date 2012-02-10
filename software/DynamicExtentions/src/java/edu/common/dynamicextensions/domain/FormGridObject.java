@@ -2,7 +2,9 @@
 package edu.common.dynamicextensions.domain;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FormGridObject
 {
@@ -10,7 +12,8 @@ public class FormGridObject
 	private Long recordEntryId;
 	private String formURL;
 	private String deUrl;
-	private List<String> columns = new ArrayList<String>();
+	private List<String> headers = new ArrayList<String>();
+	private Map<String, String> columns = new HashMap<String, String>();
 
 	public Long getRecordEntryId()
 	{
@@ -22,14 +25,14 @@ public class FormGridObject
 		this.recordEntryId = recordEntryId;
 	}
 
-	public List<String> getColumns()
+	public Map<String, String> getColumns()
 	{
 		return columns;
 	}
 
-	public void setColumns(List<String> columns)
+	public void setColumns(Map<String, String> map)
 	{
-		this.columns = columns;
+		this.columns = map;
 	}
 
 	public String getFormURL()
@@ -50,6 +53,18 @@ public class FormGridObject
 	public void setDeUrl(String deUrl)
 	{
 		this.deUrl = deUrl;
+	}
+
+	
+	public List<String> getHeaders()
+	{
+		return headers;
+	}
+
+	
+	public void setHeaders(List<String> headers)
+	{
+		this.headers = headers;
 	}
 
 }

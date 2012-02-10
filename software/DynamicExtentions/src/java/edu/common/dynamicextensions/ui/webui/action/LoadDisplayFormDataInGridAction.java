@@ -50,11 +50,10 @@ public class LoadDisplayFormDataInGridAction extends BaseDynamicExtensionsAction
 		SessionDataBean sessionDataBean = (SessionDataBean) request.getSession().getAttribute(
 				DEConstants.SESSION_DATA);
 
+		//remove containerInterface
 		final ContainerInterface containerInterface = getContainerInterface(request,containerId);
 		
-		List<String> headersList = FormObjectGridDataBizLogic.getDisplayHeader((CategoryEntityInterface)containerInterface.getAbstractEntity());
-		session.setAttribute("gridHeaders", headersList);
-		
+		//remove unnecessary arguments
 		List<FormGridObject> gridObjectList = displayFormDataInGridBizLogic.getFormDataForGrid(Long
 				.valueOf(formContextId), Long.valueOf(containerId), hookEntityId, sessionDataBean,
 				formUrl,deUrl,containerInterface);
