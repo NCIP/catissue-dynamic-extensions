@@ -51,11 +51,6 @@ var formDataGrid;
 <body onload="doOnLoad();">
 <table border="0" height="100%" width="100%">
 	<tr>
-		<td style="vertical-align: top;" colspan="2">
-		<div id="displayFormDataGrid" style="height: 95%; width: 100%;"></div>
-		</td>
-	</tr>
-	<tr>
 		<td>
 			<input type="button" value="Add Record" onclick="javascript:document.location.href = '${sessionScope.formUrl}';"/>
 		</td>
@@ -63,6 +58,12 @@ var formDataGrid;
 			<input type="button" align="left" value="Print" onclick="printForm();"/>
 		</td>
 	</tr>
+	<tr>
+		<td style="vertical-align: top;" colspan="2">
+		<div id="displayFormDataGrid" style="height: 380; width: 100%;"></div>
+		</td>
+	</tr>
+	
 </table>
 <input type="hidden" id="formUrl" name="formUrl"/>
 </body>
