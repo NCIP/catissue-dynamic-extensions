@@ -23,6 +23,7 @@ import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterfa
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.skiplogic.SkipLogic;
 import edu.common.dynamicextensions.ui.util.Constants;
@@ -218,10 +219,11 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 	 * @param container the container
 	 * @param valueMap the value map
 	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	private void executeSkipLogic(ContainerInterface container,
 			Map<BaseAbstractAttributeInterface, Object> valueMap)
-			throws DynamicExtensionsSystemException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		SkipLogic skipLogic = EntityCache.getInstance().getSkipLogicByContainerIdentifier(
 				container.getId());
@@ -250,11 +252,12 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 	 * @param controlName the control name
 	 * @return the appropriate data value map
 	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	@SuppressWarnings("unchecked")
 	private void skipLogicEvaluationForAddMore(ContainerInterface container,
 			ControlInterface control, Map<BaseAbstractAttributeInterface, Object> valueMap,
-			String controlName) throws DynamicExtensionsSystemException
+			String controlName) throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		for (Entry<BaseAbstractAttributeInterface, Object> entry : valueMap.entrySet())
 		{
