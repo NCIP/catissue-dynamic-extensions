@@ -7,6 +7,7 @@ import java.util.Map;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.AbstractContainmentControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
@@ -32,7 +33,7 @@ public abstract class AbstractContainmentControl extends Control
 	protected ContainerInterface container;
 
 	public String generateEditModeHTML(ContainerInterface container)
-			throws DynamicExtensionsSystemException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		ContainerInterface containerInterface = this.getContainer();
 		this.setIsSubControl(true);
@@ -68,7 +69,7 @@ public abstract class AbstractContainmentControl extends Control
 	}
 
 	public String generateViewModeHTML(ContainerInterface container)
-			throws DynamicExtensionsSystemException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		String subContainerHTML = "";
 		this.setIsSubControl(true);
