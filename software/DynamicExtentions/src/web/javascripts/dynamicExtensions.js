@@ -3582,7 +3582,7 @@ function printForm()
 	{
          // here i - index of the row in the grid
 		 id =formDataGrid.getRowId(i);
-		 urls = urls+ formDataGrid.cells(id,5).getValue().replace(new RegExp("&amp;", 'g'),"&")+"&mode=view&showInDiv=false,";
+		 urls = urls+ formDataGrid.cells(id,3).getValue().replace(new RegExp("&amp;", 'g'),"&")+"&mode=view&showInDiv=false,";
 	}
 	// 2: append URLs in request parameter
 	document.getElementById("formUrl").value = urls;
