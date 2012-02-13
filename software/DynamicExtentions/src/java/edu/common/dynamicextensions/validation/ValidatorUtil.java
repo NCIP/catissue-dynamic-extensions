@@ -83,8 +83,8 @@ public class ValidatorUtil
 								.getValue(), DynamicExtensionsUtility
 								.replaceHTMLSpecialCharacters(control.getCaption())));
 						checkForPermissibleValue(listOfError, control, abstractAttribute,
-								attributeValueNode.getValue(), (Date) container
-										.getContextParameter(Constants.ENCOUNTER_DATE));
+								attributeValueNode.getValue(),
+								(Date) container.getContextParameter(Constants.ENCOUNTER_DATE));
 					}
 				}
 				else if (abstractAttribute instanceof AssociationMetadataInterface)
@@ -234,39 +234,52 @@ public class ValidatorUtil
 	 * @param encounterDate Date value.
 	 * @return true if value is valid else false.
 	 * @throws ParseException thrown by getAttributeValueList.
+	 * 
+	 * 
+	 * Bypassed validation for sqlPvs
+	 * 
 	 */
 	private static boolean isValidPermissibleValue(Object attributeValue,
 			AttributeMetadataInterface attributeMetadataInterface, Date encounterDate)
 			throws ParseException
 	{
 		boolean isValuePresent = false;
-		if (attributeValue == null || "".equals(attributeValue.toString()))
+
+		if (attributeMetadataInterface.getTaggedValue(DEConstants.PV_TYPE)!= null)
 		{
 			isValuePresent = true;
-		}
-		else if (attributeValue instanceof ArrayList)
-		{//multiselect case
-			CategoryAttributeInterface attribute = (CategoryAttributeInterface) attributeMetadataInterface;
-			AttributeInterface attributeInterface = getMultiselectAtrribute((AssociationInterface) attribute
-					.getAbstractAttribute());
-			AttributeTypeInformationInterface attributeTypeInformation = attributeInterface
-					.getAttributeTypeInformation();
-			List<PermissibleValueInterface> enteredAttributeValueList = getAttributeValueList(
-					attributeValue, attributeTypeInformation);
-			isValuePresent = validatePVForMulstiSelect(enteredAttributeValueList,
-					attributeMetadataInterface, encounterDate);
+			return isValuePresent;
 		}
 		else
 		{
-			Collection<PermissibleValueInterface> permissibleValue = ((UserDefinedDE) attributeMetadataInterface
-					.getDataElement(encounterDate)).getPermissibleValueCollection();
-			AttributeTypeInformationInterface attributeTypeInformation = attributeMetadataInterface
-					.getAttributeTypeInformation();
-			PermissibleValue permissibleValueInterface = (PermissibleValue) attributeTypeInformation
-					.getPermissibleValueForString(attributeValue.toString());
-			if (permissibleValue.contains(permissibleValueInterface))
+			if (attributeValue == null || "".equals(attributeValue.toString()))
 			{
 				isValuePresent = true;
+			}
+			else if (attributeValue instanceof ArrayList)
+			{//multiselect case
+				CategoryAttributeInterface attribute = (CategoryAttributeInterface) attributeMetadataInterface;
+				AttributeInterface attributeInterface = getMultiselectAtrribute((AssociationInterface) attribute
+						.getAbstractAttribute());
+				AttributeTypeInformationInterface attributeTypeInformation = attributeInterface
+						.getAttributeTypeInformation();
+				List<PermissibleValueInterface> enteredAttributeValueList = getAttributeValueList(
+						attributeValue, attributeTypeInformation);
+				isValuePresent = validatePVForMulstiSelect(enteredAttributeValueList,
+						attributeMetadataInterface, encounterDate);
+			}
+			else
+			{
+				Collection<PermissibleValueInterface> permissibleValue = ((UserDefinedDE) attributeMetadataInterface
+						.getDataElement(encounterDate)).getPermissibleValueCollection();
+				AttributeTypeInformationInterface attributeTypeInformation = attributeMetadataInterface
+						.getAttributeTypeInformation();
+				PermissibleValue permissibleValueInterface = (PermissibleValue) attributeTypeInformation
+						.getPermissibleValueForString(attributeValue.toString());
+				if (permissibleValue.contains(permissibleValueInterface))
+				{
+					isValuePresent = true;
+				}
 			}
 		}
 
@@ -307,13 +320,20 @@ public class ValidatorUtil
 			AttributeMetadataInterface attributeMetadataInterface, Date encounterDate)
 	{
 		boolean isAllValuePresent = false;
-		if (((UserDefinedDE) attributeMetadataInterface.getDataElement(encounterDate))
-				.getPermissibleValueCollection().containsAll(enteredAttributeValueList)
-				|| enteredAttributeValueList.isEmpty())
+		if (attributeMetadataInterface.getTaggedValue(DEConstants.SQL_PVS) != null)
 		{
 			isAllValuePresent = true;
+			return isAllValuePresent;
 		}
-
+		else
+		{
+			if (((UserDefinedDE) attributeMetadataInterface.getDataElement(encounterDate))
+					.getPermissibleValueCollection().containsAll(enteredAttributeValueList)
+					|| enteredAttributeValueList.isEmpty())
+			{
+				isAllValuePresent = true;
+			}
+		}
 		return isAllValuePresent;
 	}
 
@@ -422,9 +442,10 @@ public class ValidatorUtil
 					(AttributeMetadataInterface) abstractAttribute, containerInterface);
 			if (control != null && control.getBaseAbstractAttribute() != null)
 			{
-				errorList.addAll(validateAttributes(abstractAttribute, attributeValueNode
-						.getValue(), DynamicExtensionsUtility.replaceHTMLSpecialCharacters(control
-						.getCaption())));
+				errorList
+						.addAll(validateAttributes(abstractAttribute,
+								attributeValueNode.getValue(), DynamicExtensionsUtility
+										.replaceHTMLSpecialCharacters(control.getCaption())));
 			}
 		}
 	}
@@ -442,10 +463,8 @@ public class ValidatorUtil
 		//Bug: 9778 : modified to get explicit and implicit rules also in case of CategoryAttribute.
 		//Reviewer: Rajesh Patil
 		Collection<RuleInterface> attributeRuleCollection = getRuleCollection(abstractAttribute);
-		
-		return validateAttribute(abstractAttribute, val,
-				controlCaption,
-				attributeRuleCollection);
+
+		return validateAttribute(abstractAttribute, val, controlCaption, attributeRuleCollection);
 
 	}
 
@@ -458,10 +477,10 @@ public class ValidatorUtil
 	 * @throws DynamicExtensionsSystemException
 	 */
 	protected static List<String> validateAttribute(
-			BaseAbstractAttributeInterface abstractAttribute, Object val,
-			String controlCaption,
+			BaseAbstractAttributeInterface abstractAttribute, Object val, String controlCaption,
 			Collection<RuleInterface> attributeRuleCollection)
-			throws DynamicExtensionsSystemException {
+			throws DynamicExtensionsSystemException
+	{
 		List<String> errorList = new ArrayList<String>();
 		if (attributeRuleCollection != null && !attributeRuleCollection.isEmpty())
 		{
@@ -730,7 +749,7 @@ public class ValidatorUtil
 			if (!attributeRule.getIsImplicitRule()
 					&& (DEConstants.ALLOW_FUTURE_DATE.equalsIgnoreCase(attributeRule.getName())
 							|| DEConstants.RANGE.equalsIgnoreCase(attributeRule.getName()) || DEConstants.DATE_RANGE
-							.equalsIgnoreCase(attributeRule.getName())))
+								.equalsIgnoreCase(attributeRule.getName())))
 			{
 				isConflictingRulePresent = true;
 			}
@@ -768,7 +787,7 @@ public class ValidatorUtil
 		}
 
 	}
-	
+
 	/**
 	 * Retrieve rules for the given attribute.
 	 * @param abstractAttribute Attribute for which rules to be retrieve.
@@ -788,5 +807,5 @@ public class ValidatorUtil
 		}
 		return attributeRuleCollection;
 	}
-	
+
 }
