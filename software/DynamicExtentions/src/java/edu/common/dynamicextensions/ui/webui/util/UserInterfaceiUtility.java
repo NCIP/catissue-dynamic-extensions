@@ -31,6 +31,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.AbstractContai
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.skiplogic.SkipLogic;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
@@ -88,11 +89,12 @@ public final class UserInterfaceiUtility
 	 *
 	 * @throws DynamicExtensionsSystemException the dynamic extensions
 	 *  system exception
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	public static String generateHTMLforGrid(ContainerInterface subContainer,
 			List<Map<BaseAbstractAttributeInterface, Object>> valueMaps, String dataEntryOperation,
 			ContainerInterface mainContainer, boolean isPasteEnable, final List<String> errorList)
-			throws DynamicExtensionsSystemException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		StringBuffer htmlForGrid = new StringBuffer(1404);
 
@@ -416,10 +418,11 @@ public final class UserInterfaceiUtility
 	 * @return the container html as a row
 	 *
 	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	public static String getContainerHTMLAsARow(ContainerInterface container, int rowId,
 			String dataEntryOperation, ContainerInterface mainContainer,
-			final List<String> errorList) throws DynamicExtensionsSystemException
+			final List<String> errorList) throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		StringBuffer contHtmlAsARow = new StringBuffer(96);
 		Map<BaseAbstractAttributeInterface, Object> containerValues = container
@@ -477,11 +480,12 @@ public final class UserInterfaceiUtility
 	 * @param containerValues the container values
 	 * @param control the control
 	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	private static void generateHTMLforControl(int rowId, String dataEntryOperation,
 			ContainerInterface mainContainer, StringBuffer contHtmlAsARow,
 			Map<BaseAbstractAttributeInterface, Object> containerValues,
-			final ControlInterface control) throws DynamicExtensionsSystemException
+			final ControlInterface control) throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		String controlHTML = "";
 		control.setDataEntryOperation(dataEntryOperation);
