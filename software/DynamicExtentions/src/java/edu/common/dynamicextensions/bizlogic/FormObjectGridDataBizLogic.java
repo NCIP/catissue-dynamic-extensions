@@ -14,7 +14,6 @@ import net.sf.ehcache.CacheException;
 import org.xml.sax.SAXException;
 
 import edu.common.dynamicextensions.DEIntegration.DEIntegration;
-import edu.common.dynamicextensions.domain.CategoryEntity;
 import edu.common.dynamicextensions.domain.FormGridObject;
 import edu.common.dynamicextensions.domaininterface.AssociationMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
@@ -28,8 +27,7 @@ import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.CategoryHelper;
-import edu.wustl.cab2b.common.cache.AbstractEntityCache;
-import edu.wustl.cab2b.server.cache.EntityCache;
+import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.bizlogic.DefaultBizLogic;
 import edu.wustl.common.exception.BizLogicException;
@@ -120,8 +118,8 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 					}
 				}
 			}
-			else if (("true").equalsIgnoreCase(baseAbstractAttributeInterface
-					.getTaggedValue("ShowInGrid")))
+			else if ((Boolean.TRUE.toString()).equalsIgnoreCase(baseAbstractAttributeInterface
+					.getTaggedValue(CategoryConstants.SHOW_IN_GRID)))
 			{
 				
 				String header1 =CategoryHelper.getControl(((ContainerInterface)((CategoryAttributeInterface)baseAbstractAttributeInterface).getCategoryEntity().getContainerCollection().iterator().next()), baseAbstractAttributeInterface).getCaption();
@@ -159,8 +157,8 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 		for (ControlInterface controlInterface : ((ContainerInterface) categoryEntityInterface
 				.getContainerCollection().iterator().next()).getControlCollection())
 		{
-			if (("true").equalsIgnoreCase(controlInterface.getBaseAbstractAttribute()
-					.getTaggedValue("ShowInGrid")))
+			if ((Boolean.TRUE.toString()).equalsIgnoreCase(controlInterface.getBaseAbstractAttribute()
+					.getTaggedValue(CategoryConstants.SHOW_IN_GRID)))
 			{
 				showInGridHeaders.add(controlInterface.getCaption());
 			}

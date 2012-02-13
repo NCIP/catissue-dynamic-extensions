@@ -108,7 +108,7 @@ public class CategoryConstants
 	/** The Constant DEFAULT_VALUE. */
 	public static final String DEFAULT_VALUE = "defaultValue";
 	
-	public static final String SHOW_IN_GRID = "showInGrid";
+	public static final String SHOW_IN_GRID = "showingrid";
 	
 	public static final List<String> ATRRIBUTE_TAG_VALUES = Arrays.asList(SHOW_IN_GRID);
 }
