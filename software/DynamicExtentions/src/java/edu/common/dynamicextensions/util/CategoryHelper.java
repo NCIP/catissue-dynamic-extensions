@@ -1067,7 +1067,7 @@ public class CategoryHelper implements CategoryHelperInterface
 				{
 					((ControlInterface) dyextnBaseDomainObject).getBaseAbstractAttribute()
 							.getTaggedValueCollection().add(
-									new TaggedValue(entryObject.getKey(), taggedValue));
+									new TaggedValue(taggedValue,entryObject.getValue()));
 				}
 				else
 				{
