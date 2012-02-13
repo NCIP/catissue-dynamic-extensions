@@ -9,11 +9,10 @@
 <script type="text/javascript" src="dhtmlx_suite/gridexcells/dhtmlxgrid_excell_grid.js"></script>
 <script type="text/javascript" src="dhtmlx_suite/ext/dhtmlxgrid_mcol.js"></script>
 <script type="text/javascript" src="dhtmlx_suite/ext/dhtmlxgrid_filter.js"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/dynamicExtensions.js" type="text/javascript"></script>
 
-<link rel="STYLESHEET" type="text/css"
-	href="dhtmlx_suite/css/dhtmlxgrid.css">
-<link rel="STYLESHEET" type="text/css"
-	href="dhtmlx_suite/skins/dhtmlxgrid_dhx_skyblue.css">
+<link rel="STYLESHEET" type="text/css"	href="dhtmlx_suite/css/dhtmlxgrid.css">
+<link rel="STYLESHEET" type="text/css"	href="dhtmlx_suite/skins/dhtmlxgrid_dhx_skyblue.css">
 
 <script>
 var formDataGrid;
@@ -47,11 +46,12 @@ var formDataGrid;
 	</script>
 </head>
 
+<form name="formGrid">
 
 <body onload="doOnLoad();">
 <table border="0" height="100%" width="100%">
 	<tr>
-		<td style="vertical-align: top;">
+		<td style="vertical-align: top;" colspan="2">
 		<div id="displayFormDataGrid" style="height: 95%; width: 100%;"></div>
 		</td>
 	</tr>
@@ -59,8 +59,13 @@ var formDataGrid;
 		<td>
 			<input type="button" value="Add Record" onclick="javascript:document.location.href = '${sessionScope.formUrl}';"/>
 		</td>
+		<td width="95%">
+			<input type="button" align="left" value="Print" onclick="printForm();"/>
+		</td>
 	</tr>
 </table>
-
+<input type="hidden" id="formUrl" name="formUrl"/>
 </body>
+
+</form>
 </html>
