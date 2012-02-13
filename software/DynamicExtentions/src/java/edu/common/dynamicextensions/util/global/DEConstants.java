@@ -389,7 +389,7 @@ public class DEConstants
 	public static final String DESQL_XML_FILENAME = "DESql.xml";
 	
 	public static final String SQL_PVS = "sqlPvs";
-	public static final String PV_TYPE = "pvType";
-	public static final String PV_PROCESSOR = "pvProcessor";
+	public static final String PV_TYPE = "pvtype";
+	public static final String PV_PROCESSOR = "pvprocessor";
 
 }
