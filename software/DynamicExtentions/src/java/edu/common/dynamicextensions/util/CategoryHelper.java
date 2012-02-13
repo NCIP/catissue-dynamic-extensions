@@ -29,6 +29,7 @@ import edu.common.dynamicextensions.domain.TaggedValue;
 import edu.common.dynamicextensions.domain.UserDefinedDE;
 import edu.common.dynamicextensions.domain.userinterface.ComboBox;
 import edu.common.dynamicextensions.domain.userinterface.Container;
+import edu.common.dynamicextensions.domain.userinterface.Control;
 import edu.common.dynamicextensions.domain.userinterface.Label;
 import edu.common.dynamicextensions.domain.userinterface.ListBox;
 import edu.common.dynamicextensions.domain.userinterface.MultiSelectCheckBox;
@@ -77,6 +78,7 @@ import edu.common.dynamicextensions.util.parser.CategoryFileParser;
 import edu.common.dynamicextensions.validation.ValidatorUtil;
 import edu.common.dynamicextensions.xmi.XMIConstants;
 import edu.wustl.cab2b.server.cache.EntityCache;
+import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.metadata.util.DyExtnObjectCloner;
@@ -1423,56 +1425,64 @@ public class CategoryHelper implements CategoryHelperInterface
 				.getAttributeTypeInformation();
 		UserDefinedDEInterface userDefinedDE = (UserDefinedDE) attributeTypeInformation
 				.getDataElement();
-
-		if (userDefinedDE == null)
-		{
-			LOGGER.error("Permissible values not defined for " + attribute.getName()
-					+ " at model level.");
-			throw new DynamicExtensionsSystemException("Permissible values not defined for "
-					+ attribute.getName() + " at model level.");
-		}
-
 		Set<PermissibleValueInterface> permissibleValues = new HashSet<PermissibleValueInterface>();
-		if (desiredPermissibleValues == null)
+
+		if(null == attribute.getTaggedValue(DEConstants.PV_TYPE))
 		{
-			permissibleValues.addAll(userDefinedDE.getPermissibleValueCollection());
-		}
-		else
-		{
-			Collection<PermissibleValueInterface> allPermissibleValues = userDefinedDE
-					.getPermissibleValueCollection();
-			for (PermissibleValueInterface pv : allPermissibleValues)
+			if (userDefinedDE == null)
 			{
-				if (desiredPermissibleValues.contains(DynamicExtensionsUtility
-						.getUnEscapedStringValue(pv.getValueAsObject().toString())))
+				LOGGER.error("Permissible values not defined for " + attribute.getName()
+						+ " at model level.");
+				throw new DynamicExtensionsSystemException("Permissible values not defined for "
+						+ attribute.getName() + " at model level.");
+			}
+
+			if (desiredPermissibleValues == null)
+			{
+				permissibleValues.addAll(userDefinedDE.getPermissibleValueCollection());
+			}
+			else
+			{
+				Collection<PermissibleValueInterface> allPermissibleValues = userDefinedDE
+						.getPermissibleValueCollection();
+				for (PermissibleValueInterface pv : allPermissibleValues)
 				{
-					permissibleValues.add(pv);
-					desiredPermissibleValues.remove(DynamicExtensionsUtility
-							.getUnEscapedStringValue(pv.getValueAsObject().toString()));
+					if (desiredPermissibleValues.contains(DynamicExtensionsUtility
+							.getUnEscapedStringValue(pv.getValueAsObject().toString())))
+					{
+						permissibleValues.add(pv);
+						desiredPermissibleValues.remove(DynamicExtensionsUtility
+								.getUnEscapedStringValue(pv.getValueAsObject().toString()));
+					}
 				}
 			}
-		}
-		StringBuffer missingPVList = new StringBuffer();
-		if (desiredPermissibleValues != null && !desiredPermissibleValues.isEmpty())
-		{
-			for (String pv : desiredPermissibleValues)
+			StringBuffer missingPVList = new StringBuffer();
+			if (desiredPermissibleValues != null && !desiredPermissibleValues.isEmpty())
 			{
-				missingPVList.append(pv).append(',');
+				for (String pv : desiredPermissibleValues)
+				{
+					missingPVList.append(pv).append(',');
+				}
 			}
+			if (missingPVList.length() > 0)
+			{
+				String pvList = missingPVList.substring(0, (missingPVList.length() - 1));
+				LOGGER.error("Permissible values subset defined for attribute " + attributeName
+						+ " is not correct.");
+				LOGGER
+						.error("Following Permissible values are not present at attribute level. Add them to attribute and then try again");
+				LOGGER.error(pvList);
+				throw new DynamicExtensionsSystemException(
+						"Permissible values subset defined for attribute " + attributeName
+								+ " is not correct. Please add " + pvList
+								+ " to model level Permissible values");
+			}
+			
 		}
-		if (missingPVList.length() > 0)
-		{
-			String pvList = missingPVList.substring(0, (missingPVList.length() - 1));
-			LOGGER.error("Permissible values subset defined for attribute " + attributeName
-					+ " is not correct.");
-			LOGGER
-					.error("Following Permissible values are not present at attribute level. Add them to attribute and then try again");
-			LOGGER.error(pvList);
-			throw new DynamicExtensionsSystemException(
-					"Permissible values subset defined for attribute " + attributeName
-							+ " is not correct. Please add " + pvList
-							+ " to model level Permissible values");
-		}
+		
+		
+		
+		
 		return permissibleValues;
 	}
 
