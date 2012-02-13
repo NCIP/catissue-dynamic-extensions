@@ -1061,12 +1061,13 @@ public class CategoryHelper implements CategoryHelperInterface
 			}
 			for (Entry<String, String> entryObject : options.entrySet())
 			{
+				String taggedValue = entryObject.getKey().toLowerCase();
 				
-				if (CategoryConstants.ATRRIBUTE_TAG_VALUES.contains(entryObject.getKey().toLowerCase()))
+				if (CategoryConstants.ATRRIBUTE_TAG_VALUES.contains(taggedValue))
 				{
 					((ControlInterface) dyextnBaseDomainObject).getBaseAbstractAttribute()
 							.getTaggedValueCollection().add(
-									new TaggedValue(entryObject.getKey(), entryObject.getValue()));
+									new TaggedValue(entryObject.getKey(), taggedValue));
 				}
 				else
 				{
