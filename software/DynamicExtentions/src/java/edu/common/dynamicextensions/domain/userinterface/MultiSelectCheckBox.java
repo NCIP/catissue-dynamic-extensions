@@ -12,6 +12,7 @@ import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.MultiSelectCheckBoxInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.Constants;
@@ -83,10 +84,11 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 	 * This method generates the HTML code to display the MultiselectCheckBox Control on the form.
 	 * @return HTML code for MultiselectCheckBox Control.
 	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	@Override
     protected String generateEditModeHTML(ContainerInterface container)
-			throws DynamicExtensionsSystemException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		String htmlString = "";
 		List<NameValueBean> nameValueBeans = null;
@@ -264,9 +266,11 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 	 * get all permissible values for this control
 	 * @param rowId
 	 * @return List of  all permissible values for this control
+	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	@Override
-    public List<String> getValueAsStrings()
+    public List<String> getValueAsStrings() throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		List<String> values = new ArrayList<String>();
 		Date encounterDate = (Date) getParentContainer().getContextParameter(

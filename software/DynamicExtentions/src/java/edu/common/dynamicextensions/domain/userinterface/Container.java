@@ -22,6 +22,7 @@ import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.AbstractContainmentControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.skiplogic.SkipLogic;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
@@ -422,9 +423,10 @@ public class Container extends DynamicExtensionBaseDomainObject
 	/**
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	public String generateContainerHTML(final String caption, final String dataEntryOperation)
-			throws DynamicExtensionsSystemException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		final StringBuffer containerHTML = new StringBuffer(128);
 
@@ -491,9 +493,10 @@ public class Container extends DynamicExtensionBaseDomainObject
 	/**
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	public String generateControlsHTML(final String caption, final String dataEntryOperation,
-			final ContainerInterface container) throws DynamicExtensionsSystemException
+			final ContainerInterface container) throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		final StringBuffer controlHTML = new StringBuffer(108);
 		final List<Object> values = new ArrayList<Object>();
@@ -682,6 +685,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 	 * @param isPasteEnable boolean value.
 	 * @return String value.
 	 * @throws DynamicExtensionsSystemException throw exception.
+	 * @throws DynamicExtensionsApplicationException 
 	 * @see edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface
 	 * #generateControlsHTMLAsGrid(java.util.List, java.lang.String,
 	 * edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface, boolean)
@@ -690,7 +694,7 @@ public class Container extends DynamicExtensionBaseDomainObject
 			final List<Map<BaseAbstractAttributeInterface, Object>> valueMaps,
 			final String dataEntryOperation, final ContainerInterface container,
 			boolean isPasteEnable, final List<String> errorList)
-			throws DynamicExtensionsSystemException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		return UserInterfaceiUtility.generateHTMLforGrid(this, valueMaps, dataEntryOperation,
 				container, isPasteEnable, errorList);

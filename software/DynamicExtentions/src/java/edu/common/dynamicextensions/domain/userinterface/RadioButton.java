@@ -16,6 +16,7 @@ import edu.common.dynamicextensions.domaininterface.FloatTypeInformationInterfac
 import edu.common.dynamicextensions.domaininterface.LongTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.RadioButtonInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.Constants;
@@ -39,10 +40,11 @@ public class RadioButton extends SelectControl implements RadioButtonInterface
 	 * This method generates the HTML code for RadioButton control on the HTML form
 	 * @return HTML code for RadioButton
 	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	@Override
     public String generateEditModeHTML(final ContainerInterface container)
-			throws DynamicExtensionsSystemException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		List<NameValueBean> nameValueBeanList = null;
 		String htmlString = "";
@@ -128,8 +130,10 @@ public class RadioButton extends SelectControl implements RadioButtonInterface
 	/**
 	 * Gets the default value for control.
 	 * @return the default value for control
+	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException 
 	 */
-	private String getDefaultValueForControl()
+	private String getDefaultValueForControl() throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		String defaultValue;
 		final Date encounterDate = (Date) getParentContainer().getContextParameter(
@@ -267,10 +271,12 @@ public class RadioButton extends SelectControl implements RadioButtonInterface
 	}
 
 	/**
+	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException 
 	 *
 	 */
 	@Override
-    public List<String> getValueAsStrings()
+    public List<String> getValueAsStrings() throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		List<String> values = new ArrayList<String>();
 		values.add(getDefaultValueForControl());

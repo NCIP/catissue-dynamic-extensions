@@ -16,6 +16,7 @@ import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ComboBoxInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.Constants;
@@ -23,6 +24,7 @@ import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.common.beans.NameValueBean;
+import edu.wustl.common.util.logger.Logger;
 
 /**
  * @version 1.0
@@ -63,7 +65,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	/**
 	 * @param columns The columns to set.
 	 */
-	public void setIsLazy(boolean  isLazy)
+	public void setIsLazy(boolean isLazy)
 	{
 		this.isLazy = isLazy;
 	}
@@ -92,10 +94,11 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	 * @return HTML code for ComboBox
 	 * @throws DynamicExtensionsSystemException
 	 *             if HTMLComponentName() fails.
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	@Override
-    public String generateEditModeHTML(final ContainerInterface container)
-			throws DynamicExtensionsSystemException
+	public String generateEditModeHTML(final ContainerInterface container)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		Date encounterDate = (Date) container.getContextParameter(Constants.ENCOUNTER_DATE);
 		this.encounterDate = encounterDate;
@@ -144,7 +147,8 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		}
 		if (getIsSkipLogicTargetControl() || getParentContainer().isAjaxRequest())
 		{
-			htmlString.append("<div id='").append(getHTMLComponentName()).append("_div' name='").append(getHTMLComponentName()).append("_div'>");
+			htmlString.append("<div id='").append(getHTMLComponentName()).append("_div' name='")
+					.append(getHTMLComponentName()).append("_div'>");
 		}
 
 		/*
@@ -161,19 +165,22 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					&& (!getIsSkipLogicTargetControl() && !"skipLogicAttributes"
 							.equals(getDataEntryOperation())))
 			{
-			//FIXME - Need to refactor the below code. Added method 'generateScriptTagForAutoComplete()' in super class
+				//FIXME - Need to refactor the below code. Added method 'generateScriptTagForAutoComplete()' in super class
 				//code to add the data source string
-				htmlString.append("<script ").append((((CategoryEntityInterface) getParentContainer().getAbstractEntity())
-							.getParentCategoryEntity() == null ? "" : " id='subformExtScript' "));
+				htmlString.append("<script ")
+						.append((((CategoryEntityInterface) getParentContainer()
+								.getAbstractEntity()).getParentCategoryEntity() == null
+								? ""
+								: " id='subformExtScript' "));
 				htmlString.append(" defer='defer'>");
-				htmlString.append(getDataSourceHtml(encounterDate,sourceHtmlComponentValues, parentContainerId, identifier,
-						categoryEntityName, attributeName));
+				htmlString.append(getDataSourceHtml(encounterDate, sourceHtmlComponentValues,
+						parentContainerId, identifier, categoryEntityName, attributeName));
 				htmlString.append("var combo = new Ext.form.ComboBox({store: ds,hiddenName: '");
 				htmlString.append(textComponent);
-				htmlString.append( "',id:'");
-				htmlString.append( textComponent);
-				htmlString.append( "', displayField:'excerpt',valueField: 'id',typeAhead: 'false',");
-				if(getIsLazy())
+				htmlString.append("',id:'");
+				htmlString.append(textComponent);
+				htmlString.append("', displayField:'excerpt',valueField: 'id',typeAhead: 'false',");
+				if (getIsLazy())
 				{
 					htmlString.append("pageSize:15,mode:'remote',");
 				}
@@ -182,62 +189,70 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					htmlString.append("mode:'local',");
 
 				}
-				htmlString.append( "forceSelection: 'true',queryParam : 'query',triggerAction: 'all',minChars : ");
+				htmlString
+						.append("forceSelection: 'true',queryParam : 'query',triggerAction: 'all',minChars : ");
 				htmlString.append(minQueryChar);
 				htmlString.append(",queryDelay:500,lazyInit:true");
 				htmlString.append(isDisabled);
-				htmlString.append( ",emptyText:\"");
-				htmlString.append( defaultValue);
-				htmlString.append( "\",hiddenValue:\"");
-				htmlString.append( defaultValue);
-				htmlString.append( "\",listWidth:240,");
-				htmlString.append( "tpl: getTpl(),/*'<tpl for=\".\"><div title=\"{excerpt}\" class=\"x-combo-list-item\">{excerpt}</div></tpl>',*/");
-				htmlString.append( "valueNotFoundText:'',selectOnFocus:'true',applyTo: '");
-				htmlString.append( htmlComponentName);
+				htmlString.append(",emptyText:\"");
+				htmlString.append(defaultValue);
+				htmlString.append("\",hiddenValue:\"");
+				htmlString.append(defaultValue);
+				htmlString.append("\",listWidth:240,");
+				htmlString
+						.append("tpl: getTpl(),/*'<tpl for=\".\"><div title=\"{excerpt}\" class=\"x-combo-list-item\">{excerpt}</div></tpl>',*/");
+				htmlString.append("valueNotFoundText:'',selectOnFocus:'true',applyTo: '");
+				htmlString.append(htmlComponentName);
 				htmlString.append("'});ds.setBaseParam('");
-				htmlString.append( DEConstants.COMBOBOX_IDENTIFER);
-				htmlString.append( "',combo.getId());");
+				htmlString.append(DEConstants.COMBOBOX_IDENTIFER);
+				htmlString.append("',combo.getId());");
 				htmlString.append("combo.setValue(combo.emptyText);");
-				htmlString.append("combo.on('blur',function(comboBox){if(comboBox.getValue()==''){comboBox.setValue(comboBox.emptyText);}});");
-				htmlString.append( "combo.on('focus',function(comboBox){if(comboBox.getValue()==''){comboBox.setRawValue(comboBox.emptyText);}});");
-				htmlString.append( "combo.on(\"select\", function() {");
-				htmlString.append( getOnchangeServerCall());
-				htmlString.append( "}); /*combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7 || Ext.isSafar){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{alert('in else');combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}}, {single: true});*/");
+				htmlString
+						.append("combo.on('blur',function(comboBox){if(comboBox.getValue()==''){comboBox.setValue(comboBox.emptyText);}});");
+				htmlString
+						.append("combo.on('focus',function(comboBox){if(comboBox.getValue()==''){comboBox.setRawValue(comboBox.emptyText);}});");
+				htmlString.append("combo.on(\"select\", function() {");
+				htmlString.append(getOnchangeServerCall());
+				htmlString
+						.append("}); /*combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7 || Ext.isSafar){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{alert('in else');combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}}, {single: true});*/");
 
-				htmlString.append("ds.on('load',function(storeObj){var count = storeObj.findExact('id',combo.emptyText);if(count!=-1){var tempVal = combo.emptyText;combo.reset();combo.setValue(tempVal);combo.emptyText='';}if (this.getAt(0) != null && this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50;} else {combo.typeAheadDelay=60000}});});");
-
+				htmlString
+						.append("ds.on('load',function(storeObj){var count = storeObj.findExact('id',combo.emptyText);if(count!=-1){var tempVal = combo.emptyText;combo.reset();combo.setValue(tempVal);combo.emptyText='';}if (this.getAt(0) != null && this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50;} else {combo.typeAheadDelay=60000}});});");
 
 				htmlString.append("</script>");
 
 			}
-			htmlString.append("<div id='auto_complete_dropdown'><input type='text' onmouseover=\"showToolTip('");
-			htmlString.append( htmlComponentName);
+			htmlString
+					.append("<div id='auto_complete_dropdown'><input type='text' onmouseover=\"showToolTip('");
+			htmlString.append(htmlComponentName);
 			htmlString.append("')\" id='");
 			htmlString.append(htmlComponentName);
 			htmlString.append("' name='");
 			htmlString.append(htmlComponentName);
-			htmlString.append( "' value =\"");
-			htmlString.append( defaultValue);
-			htmlString.append( "\" ");
-			htmlString.append( "' style='width:");
-			htmlString.append( (columnSize > 0 ? (columnSize + 1) : (Constants.DEFAULT_COLUMN_SIZE + 1)));
-			htmlString.append( "ex' size='");
-			htmlString.append( (columnSize > 0 ? columnSize : Constants.DEFAULT_COLUMN_SIZE));
-			htmlString.append( "'/>");
-			htmlString.append( "<div id='comboScript_");
-			htmlString.append( getHTMLComponentName());
-			htmlString.append( "' name='comboScript_");
-			htmlString.append( getHTMLComponentName());
-			htmlString.append( "' style='display:none'>");
-			htmlString.append( getDataSourceHtml(encounterDate,sourceHtmlComponentValues, parentContainerId, identifier,
-					categoryEntityName, attributeName));
-			htmlString.append( "var combo = new Ext.form.ComboBox({store: ds,hiddenName: '");
-			htmlString.append( textComponent);
-			htmlString.append( "',id:'");
-			htmlString.append( textComponent);
-			htmlString.append( "', displayField:'excerpt',valueField: 'id',");
-			htmlString.append( "typeAhead: 'false',forceSelection: 'true',queryParam : 'query',");
-			if(getIsLazy() || getIsSkipLogicTargetControl())
+			htmlString.append("' value =\"");
+			htmlString.append(defaultValue);
+			htmlString.append("\" ");
+			htmlString.append("' style='width:");
+			htmlString.append((columnSize > 0
+					? (columnSize + 1)
+					: (Constants.DEFAULT_COLUMN_SIZE + 1)));
+			htmlString.append("ex' size='");
+			htmlString.append((columnSize > 0 ? columnSize : Constants.DEFAULT_COLUMN_SIZE));
+			htmlString.append("'/>");
+			htmlString.append("<div id='comboScript_");
+			htmlString.append(getHTMLComponentName());
+			htmlString.append("' name='comboScript_");
+			htmlString.append(getHTMLComponentName());
+			htmlString.append("' style='display:none'>");
+			htmlString.append(getDataSourceHtml(encounterDate, sourceHtmlComponentValues,
+					parentContainerId, identifier, categoryEntityName, attributeName));
+			htmlString.append("var combo = new Ext.form.ComboBox({store: ds,hiddenName: '");
+			htmlString.append(textComponent);
+			htmlString.append("',id:'");
+			htmlString.append(textComponent);
+			htmlString.append("', displayField:'excerpt',valueField: 'id',");
+			htmlString.append("typeAhead: 'false',forceSelection: 'true',queryParam : 'query',");
+			if (getIsLazy() || getIsSkipLogicTargetControl())
 			{
 				htmlString.append("pageSize:15,mode:'remote',");
 			}
@@ -247,44 +262,50 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 
 			}
 			htmlString.append("triggerAction: 'all',minChars : ");
-			htmlString.append( minQueryChar);
-			htmlString.append( ",queryDelay:500,lazyInit:true");
-			htmlString.append( isDisabled);
-			htmlString.append( ",emptyText:\"");
-			htmlString.append( defaultValue);
-			htmlString.append( "\",hiddenValue:\"");
-			htmlString.append( defaultValue);
-			htmlString.append( "\",listWidth:240,width:165,tpl: getTpl(),valueNotFoundText:'',");
+			htmlString.append(minQueryChar);
+			htmlString.append(",queryDelay:500,lazyInit:true");
+			htmlString.append(isDisabled);
+			htmlString.append(",emptyText:\"");
+			htmlString.append(defaultValue);
+			htmlString.append("\",hiddenValue:\"");
+			htmlString.append(defaultValue);
+			htmlString.append("\",listWidth:240,width:165,tpl: getTpl(),valueNotFoundText:'',");
 			htmlString.append("selectOnFocus:'true',applyTo: '");
-			htmlString.append( htmlComponentName);
-			htmlString.append( "'});ds.setBaseParam('");
-			htmlString.append( DEConstants.COMBOBOX_IDENTIFER);
-			htmlString.append( "',combo.getId());");
+			htmlString.append(htmlComponentName);
+			htmlString.append("'});ds.setBaseParam('");
+			htmlString.append(DEConstants.COMBOBOX_IDENTIFER);
+			htmlString.append("',combo.getId());");
 			htmlString.append("combo.setValue(combo.emptyText);");
-			htmlString.append( "combo.on('blur',function(comboBox){if(comboBox.getValue()==''){comboBox.setValue(comboBox.emptyText);}});");
-			htmlString.append( "combo.on('focus',function(comboBox){if(comboBox.getValue()==''){comboBox.setRawValue(comboBox.emptyText);}});");
+			htmlString
+					.append("combo.on('blur',function(comboBox){if(comboBox.getValue()==''){comboBox.setValue(comboBox.emptyText);}});");
+			htmlString
+					.append("combo.on('focus',function(comboBox){if(comboBox.getValue()==''){comboBox.setRawValue(comboBox.emptyText);}});");
 			htmlString.append("combo.on(\"select\", function() {");
-			htmlString.append( getOnchangeServerCall());
-			htmlString.append( "}); /*combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7 || Ext.isSafar){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}}, {single: true});*/");
-					// +
-					// "ds.on('load',function(){if (this.getAt(0) != null) {if (this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50} else {combo.typeAheadDelay=60000}}});"
-			htmlString.append( "ds.on('load',function(storeObj){var count = storeObj.findExact('id',combo.emptyText);if(count!=-1){var tempVal = combo.emptyText;combo.reset();combo.setValue(tempVal);combo.emptyText='';}if (this.getAt(0) != null) {if (this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50} else {combo.typeAheadDelay=60000}}});");
-			htmlString.append( "});</div>");
-			htmlString.append( "<div name=\"comboHtml\" id=\"comboHtml\" style='display:none'>");
-			htmlString.append( "<div>");
-			htmlString.append( "<input type='text' onmouseover=\"showToolTip('");
-			htmlString.append( htmlComponentName);
-			htmlString.append( "')\" id='");
-			htmlString.append( htmlComponentName);
+			htmlString.append(getOnchangeServerCall());
+			htmlString
+					.append("}); /*combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7 || Ext.isSafar){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}}, {single: true});*/");
+			// +
+			// "ds.on('load',function(){if (this.getAt(0) != null) {if (this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50} else {combo.typeAheadDelay=60000}}});"
+			htmlString
+					.append("ds.on('load',function(storeObj){var count = storeObj.findExact('id',combo.emptyText);if(count!=-1){var tempVal = combo.emptyText;combo.reset();combo.setValue(tempVal);combo.emptyText='';}if (this.getAt(0) != null) {if (this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50} else {combo.typeAheadDelay=60000}}});");
+			htmlString.append("});</div>");
+			htmlString.append("<div name=\"comboHtml\" id=\"comboHtml\" style='display:none'>");
+			htmlString.append("<div>");
+			htmlString.append("<input type='text' onmouseover=\"showToolTip('");
+			htmlString.append(htmlComponentName);
+			htmlString.append("')\" id='");
+			htmlString.append(htmlComponentName);
 			htmlString.append("'  name='");
-			htmlString.append( htmlComponentName);
-			htmlString.append( "' value =\"");
-			htmlString.append( defaultValue);
-			htmlString.append( "\" style='width:");
-			htmlString.append( (columnSize > 0 ? (columnSize + 1) : (Constants.DEFAULT_COLUMN_SIZE + 1)));
-			htmlString.append( "ex' size='");
-			htmlString.append( (columnSize > 0 ? columnSize : Constants.DEFAULT_COLUMN_SIZE));
-			htmlString.append( "' class='font_bl_nor' />" + "</div>" + "</div>" + "</div>");
+			htmlString.append(htmlComponentName);
+			htmlString.append("' value =\"");
+			htmlString.append(defaultValue);
+			htmlString.append("\" style='width:");
+			htmlString.append((columnSize > 0
+					? (columnSize + 1)
+					: (Constants.DEFAULT_COLUMN_SIZE + 1)));
+			htmlString.append("ex' size='");
+			htmlString.append((columnSize > 0 ? columnSize : Constants.DEFAULT_COLUMN_SIZE));
+			htmlString.append("' class='font_bl_nor' />" + "</div>" + "</div>" + "</div>");
 
 		}
 		catch (UnsupportedEncodingException e)
@@ -293,63 +314,102 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		}
 		if (getIsSkipLogicTargetControl() || getParentContainer().isAjaxRequest())
 		{
-			htmlString.append("<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '");
+			htmlString
+					.append("<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '");
 			htmlString.append(getHTMLComponentName());
-			htmlString.append( "_div' />");
-			htmlString.append( "<input type='hidden' name='skipLogicControlScript' id='skipLogicControlScript' value = 'comboScript_");
-			htmlString.append( getHTMLComponentName() + "' />");
+			htmlString.append("_div' />");
+			htmlString
+					.append("<input type='hidden' name='skipLogicControlScript' id='skipLogicControlScript' value = 'comboScript_");
+			htmlString.append(getHTMLComponentName() + "' />");
 			htmlString.append("</div>");
 		}
 		return htmlString.toString();
 	}
 
-	private String getDataSourceHtml(Date encounterDate, StringBuffer sourceHtmlComponentValues, String parentContainerId, String identifier,
-			String categoryEntityName, String attributeName) throws UnsupportedEncodingException
+	private String getDataSourceHtml(Date encounterDate, StringBuffer sourceHtmlComponentValues,
+			String parentContainerId, String identifier, String categoryEntityName,
+			String attributeName) throws UnsupportedEncodingException,
+			DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
 		StringBuffer htmlString = new StringBuffer();
-		if(getIsLazy() || getIsSkipLogicTargetControl())
+		if (getIsLazy() || getIsSkipLogicTargetControl())
 		{
-		htmlString.append("Ext.onReady(function(){ var myUrl= \"DEComboDataAction.do?controlId=");
-		htmlString.append(identifier);
-		htmlString.append("~containerIdentifier=");
-		htmlString.append(parentContainerId);
-		htmlString.append("~sourceControlValues=");
-		htmlString.append(URLEncoder.encode(sourceHtmlComponentValues.toString(), "utf-8"));
-		htmlString.append("~categoryEntityName=");
-		htmlString.append(categoryEntityName);
-		htmlString.append("~attributeName=");
-		htmlString.append(attributeName);
+			htmlString
+					.append("Ext.onReady(function(){ var myUrl= \"DEComboDataAction.do?controlId=");
+			htmlString.append(identifier);
+			htmlString.append("~containerIdentifier=");
+			htmlString.append(parentContainerId);
+			htmlString.append("~sourceControlValues=");
+			htmlString.append(URLEncoder.encode(sourceHtmlComponentValues.toString(), "utf-8"));
+			htmlString.append("~categoryEntityName=");
+			htmlString.append(categoryEntityName);
+			htmlString.append("~attributeName=");
+			htmlString.append(attributeName);
 
-		htmlString.append("~encounterDate=");
-		htmlString.append(ControlsUtility.convertDateToString(encounterDate, "yyyy-MM-dd"));
-		htmlString.append("\";");
-		htmlString.append( "var ds = new Ext.data.Store({");
-		htmlString.append( "proxy: new Ext.data.HttpProxy({url: myUrl}),");
-		htmlString.append("reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, ");
-		htmlString.append("[{name: 'id', mapping: 'id'},{name: 'excerpt', mapping: 'field'}])});");
-		//end of code to add the data source string
+			htmlString.append("~encounterDate=");
+			htmlString.append(ControlsUtility.convertDateToString(encounterDate, "yyyy-MM-dd"));
+			htmlString.append("\";");
+			htmlString.append("var ds = new Ext.data.Store({");
+			htmlString.append("proxy: new Ext.data.HttpProxy({url: myUrl}),");
+			htmlString
+					.append("reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, ");
+			htmlString
+					.append("[{name: 'id', mapping: 'id'},{name: 'excerpt', mapping: 'field'}])});");
+			//end of code to add the data source string
 		}
 		else
 		{
 			StringBuffer pvDataString = createPvDataString(encounterDate);
 			htmlString.append("Ext.onReady(function(){ ");
 			htmlString.append("var combodata = ").append(pvDataString).append(";");
-			htmlString.append("var ds = new Ext.data.SimpleStore({fields: ['id','excerpt'],data : combodata });");
+			htmlString
+					.append("var ds = new Ext.data.SimpleStore({fields: ['id','excerpt'],data : combodata });");
 		}
 		return htmlString.toString();
 	}
 
-	private StringBuffer createPvDataString(Date encounterDate) {
-		UserDefinedDE dataElement = (UserDefinedDE)getAttibuteMetadataInterface().getDataElement(encounterDate);
+	/**
+	 * @param encounterDate
+	 * @return pvDataString
+	 * 
+	 * Bifurcated code to create extJS data store based on pvs retrieved from pvProcessor's query
+	 * @throws DynamicExtensionsApplicationException 
+	 * @throws DynamicExtensionsSystemException 
+	 */
+	private StringBuffer createPvDataString(Date encounterDate)
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+	{
+		UserDefinedDE dataElement = (UserDefinedDE) getAttibuteMetadataInterface().getDataElement(
+				encounterDate);
 		StringBuffer pvDataString = new StringBuffer("[");
-		for(PermissibleValueInterface pv : dataElement.getPermissibleValues())
+
+		if (ControlsUtility.isSQLPv(getAttibuteMetadataInterface()))
 		{
-			String value = pv.getValueAsObject().toString();
-			pvDataString.append("[\"").append(value).append("\",\"").append(DynamicExtensionsUtility.getUnEscapedStringValue(value)).append("\"],");
+			List<NameValueBean> pvs = ControlsUtility.getListOfPermissibleValues(
+					getAttibuteMetadataInterface(), encounterDate);
+
+			for (NameValueBean pv : pvs)
+			{
+				pvDataString.append("[\"").append(pv.getValue()).append("\",\"")
+						.append(pv.getName()).append("\"],");
+			}
+
 		}
-		if(pvDataString.toString().endsWith(","))
+
+		else
 		{
-			pvDataString.replace(pvDataString.length()-1, pvDataString.length(), "");
+			for (PermissibleValueInterface pv : dataElement.getPermissibleValues())
+			{
+				String value = pv.getValueAsObject().toString();
+				pvDataString.append("[\"").append(value).append("\",\"")
+						.append(DynamicExtensionsUtility.getUnEscapedStringValue(value))
+						.append("\"],");
+			}
+
+		}
+		if (pvDataString.toString().endsWith(","))
+		{
+			pvDataString.replace(pvDataString.length() - 1, pvDataString.length(), "");
 		}
 		pvDataString.append(']');
 		return pvDataString;
@@ -377,8 +437,8 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	}
 
 	@Override
-    protected String generateViewModeHTML(final ContainerInterface container)
-			throws DynamicExtensionsSystemException
+	protected String generateViewModeHTML(final ContainerInterface container)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		String htmlString = "&nbsp;";
 		Date encounterDate = (Date) container.getContextParameter(Constants.ENCOUNTER_DATE);
@@ -432,8 +492,11 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	/**
 	 * Gets the default value for control.
 	 * @return the default value for control
+	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException 
 	 */
-	private String getDefaultValueForControl()
+	private String getDefaultValueForControl() throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
 		String defaultValue;
 		if (value == null || value.toString().length() == 0)
@@ -463,9 +526,9 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 			{
 				defaultValue = "";
 			}
-			if(!"".equals(defaultValue))
+			if (!"".equals(defaultValue))
 			{
-				StringBuilder errorMessage=new StringBuilder();
+				StringBuilder errorMessage = new StringBuilder();
 				errorMessage.append('\'');
 				errorMessage.append(value);
 				errorMessage.append("' is not a valid value for '");
@@ -535,8 +598,11 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	/**
 	 * @param value
 	 * @return true if value is not present in the pv list
+	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	private boolean isInvalidValue(String value, Date encounterDate)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		List<NameValueBean> nameValueBeans = ControlsUtility.getListOfPermissibleValues(
 				getAttibuteMetadataInterface(), encounterDate);
@@ -553,10 +619,13 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	}
 
 	/**
+	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException 
 	 *
 	 */
 	@Override
-    public List<String> getValueAsStrings()
+	public List<String> getValueAsStrings() throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
 		List<String> values = new ArrayList<String>();
 		values.add(getDefaultValueForControl());
@@ -567,7 +636,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	 *
 	 */
 	@Override
-    public void setValueAsStrings(List<String> listOfValues)
+	public void setValueAsStrings(List<String> listOfValues)
 	{
 		if (!listOfValues.isEmpty())
 		{
@@ -579,7 +648,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	 *
 	 */
 	@Override
-    public boolean getIsEnumeratedControl()
+	public boolean getIsEnumeratedControl()
 	{
 		return true;
 	}
@@ -588,7 +657,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	 * Returns collection of key-value pairs.
 	 */
 	@Override
-    public Collection<UIProperty> getControlTypeValues()
+	public Collection<UIProperty> getControlTypeValues()
 	{
 		Collection<UIProperty> controlTypeValues = super.getControlTypeValues();
 		ComboBoxEnum[] uiPropertyValues = ComboBoxEnum.values();
@@ -607,7 +676,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 	 * Set collection of key-value pairs for a control.
 	 */
 	@Override
-    public void setControlTypeValues(Collection<UIProperty> uiProperties)
+	public void setControlTypeValues(Collection<UIProperty> uiProperties)
 	{
 		super.setControlTypeValues(uiProperties);
 		for (UIProperty uiProperty : uiProperties)

@@ -24,6 +24,7 @@ import edu.common.dynamicextensions.domaininterface.SkipLogicAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
@@ -354,9 +355,10 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	/**
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException  exception
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	public final String generateHTML(ContainerInterface container)
-			throws DynamicExtensionsSystemException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		String htmlString = "";
 
@@ -516,16 +518,18 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	/**
 	 * @return String html
 	 * @throws DynamicExtensionsSystemException exception
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	protected abstract String generateViewModeHTML(ContainerInterface container)
-			throws DynamicExtensionsSystemException;
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
 
 	/**
 	 * @return String html
 	 * @throws DynamicExtensionsSystemException exception
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	protected abstract String generateEditModeHTML(ContainerInterface container)
-			throws DynamicExtensionsSystemException;
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
 
 	/**
 	 * @return
@@ -538,8 +542,10 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	/**
 	 *
 	 * @return
+	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException 
 	 */
-	public abstract List<String> getValueAsStrings();
+	public abstract List<String> getValueAsStrings() throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
 
 	/**
 	 *
@@ -824,9 +830,10 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	}
 
 	/**
+	 * @throws DynamicExtensionsApplicationException 
 	 *
 	 */
-	private List<ControlInterface> setSkipLogicControlValues(List<String> values)
+	private List<ControlInterface> setSkipLogicControlValues(List<String> values) throws DynamicExtensionsApplicationException
 	{
 		List<ControlInterface> controlList = null;
 		try
@@ -862,21 +869,28 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		{
 			Logger.out.error(e.getMessage());
 		}
+		catch (DynamicExtensionsSystemException e)
+		{
+			// TODO Auto-generated catch block
+			Logger.out.error(e.getMessage());
+		}
 		return controlList;
 	}
 
 	/**
+	 * @throws DynamicExtensionsApplicationException 
 	 *
 	 */
-	public void setSkipLogicControls()
+	public void setSkipLogicControls() throws DynamicExtensionsApplicationException
 	{
 		setSkipLogicControlValues(null);
 	}
 
 	/**
+	 * @throws DynamicExtensionsApplicationException 
 	 *
 	 */
-	public List<ControlInterface> setSkipLogicControls(String[] valueArray)
+	public List<ControlInterface> setSkipLogicControls(String[] valueArray) throws DynamicExtensionsApplicationException
 	{
 		List<ControlInterface> controlList = null;
 		List<String> values = new ArrayList<String>();
@@ -889,9 +903,10 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	}
 
 	/**
+	 * @throws DynamicExtensionsApplicationException 
 	 *
 	 */
-	public List<ControlInterface> setSkipLogicControls(List<String> valueList)
+	public List<ControlInterface> setSkipLogicControls(List<String> valueList) throws DynamicExtensionsApplicationException
 	{
 		List<ControlInterface> controlList = null;
 		controlList = setSkipLogicControlValues(valueList);
@@ -1058,8 +1073,10 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	 *
 	 * @param rowId
 	 * @return
+	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException 
 	 */
-	protected String getSkipLogicDefaultValue()
+	protected String getSkipLogicDefaultValue() throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		String defaultValue = "";
 		List<String> values = getSourceSkipControl().getValueAsStrings();

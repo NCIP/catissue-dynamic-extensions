@@ -12,14 +12,17 @@ import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.DataElementInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ListBoxInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.beans.NameValueBean;
+import edu.wustl.dao.exception.DAOException;
 
 /**
  * @version 1.0
@@ -114,10 +117,11 @@ public class ListBox extends SelectControl implements ListBoxInterface
 	 * This method generates the HTML code to display the ListBox Control on the form.
 	 * @return HTML code for ListBox Control.
 	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	@Override
 	public String generateEditModeHTML(ContainerInterface container)
-			throws DynamicExtensionsSystemException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		StringBuffer htmlString = new StringBuffer(193);
 		List<NameValueBean> nameValueBeans = null;
@@ -377,10 +381,12 @@ public class ListBox extends SelectControl implements ListBoxInterface
 	}
 
 	/**
+	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException 
 	 *
 	 */
 	@Override
-	public List<String> getValueAsStrings()
+	public List<String> getValueAsStrings() throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		List<String> values = new ArrayList<String>();
 		AssociationInterface association = getBaseAbstractAttributeAssociation();
@@ -428,8 +434,21 @@ public class ListBox extends SelectControl implements ListBoxInterface
 				}
 			}
 		}
-		List<NameValueBean> nameValueBeans = ControlsUtility.getListOfPermissibleValues(
-				getAttibuteMetadataInterface(), encounterDate);
+		/*List<NameValueBean> nameValueBeans = ControlsUtility.getListOfPermissibleValues(
+				getAttibuteMetadataInterface(), encounterDate);*/
+		List<NameValueBean> nameValueBeans=null;
+		try
+		{
+			AttributeMetadataInterface attribMeta =getAttibuteMetadataInterface();
+			nameValueBeans = ControlsUtility.getListOfPermissibleValues(
+					getAttibuteMetadataInterface(), encounterDate);
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		boolean isInavlidVaue = true;
 		for (String value : values)
 		{
