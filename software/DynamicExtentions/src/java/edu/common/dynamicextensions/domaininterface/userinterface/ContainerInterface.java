@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.DynamicExtensionBaseDomainObjectInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 
 /**
@@ -145,18 +146,20 @@ public interface ContainerInterface extends DynamicExtensionBaseDomainObjectInte
 	 * @param dataEntryOperation Operation being performed.
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException  the dynamic extensions system exception
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	String generateContainerHTML(String caption, String dataEntryOperation)
-			throws DynamicExtensionsSystemException;
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
 
 	/**
 	 * This method generates HTML for container.
 	 * @param dataEntryOperation Operation being performed.
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException  the dynamic extensions system exception
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	String generateControlsHTML(String caption, String dataEntryOperation,
-			ContainerInterface container) throws DynamicExtensionsSystemException;
+			ContainerInterface container) throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
 
 	/**
 	 * This method generates HTML for control as grid.
@@ -166,10 +169,11 @@ public interface ContainerInterface extends DynamicExtensionBaseDomainObjectInte
 	 * @param isPasteEnable Whether past is enable or not.
 	 * @return Generated HTML string.
 	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	String generateControlsHTMLAsGrid(List<Map<BaseAbstractAttributeInterface, Object>> valueMap,
 			String dataEntryOperation, ContainerInterface container, boolean isPasteEnable,List<String> errorList)
-			throws DynamicExtensionsSystemException;
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
 
 	/**
 	 * This method gets attribute to value map for container.

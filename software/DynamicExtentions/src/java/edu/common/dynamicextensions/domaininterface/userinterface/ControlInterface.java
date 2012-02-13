@@ -12,6 +12,7 @@ import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterfa
 import edu.common.dynamicextensions.domaininterface.DynamicExtensionBaseDomainObjectInterface;
 import edu.common.dynamicextensions.domaininterface.FormControlNotesInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 
 /**
@@ -131,8 +132,9 @@ public interface ControlInterface extends DynamicExtensionBaseDomainObjectInterf
 	/**
 	 * @return return the HTML string for this type of a object
 	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException 
 	 */
-	String generateHTML(ContainerInterface container) throws DynamicExtensionsSystemException;
+	String generateHTML(ContainerInterface container) throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
 
 	/**
 	 * @return
@@ -282,22 +284,25 @@ public interface ControlInterface extends DynamicExtensionBaseDomainObjectInterf
 	 *
 	 * @param selectedPermissibleValue
 	 * @return
+	 * @throws DynamicExtensionsApplicationException 
 	 */
-	void setSkipLogicControls();
+	void setSkipLogicControls() throws DynamicExtensionsApplicationException;
 
 	/**
 	 *
 	 * @param rowId
 	 * @param valueArray
+	 * @throws DynamicExtensionsApplicationException 
 	 */
-	List<ControlInterface> setSkipLogicControls(String[] valueArray);
+	List<ControlInterface> setSkipLogicControls(String[] valueArray) throws DynamicExtensionsApplicationException;
 
 	/**
 	 *
 	 * @param rowId
 	 * @param valueArray
+	 * @throws DynamicExtensionsApplicationException 
 	 */
-	List<ControlInterface> setSkipLogicControls(List<String> valueList);
+	List<ControlInterface> setSkipLogicControls(List<String> valueList) throws DynamicExtensionsApplicationException;
 
 	/**
 	 *
@@ -320,8 +325,10 @@ public interface ControlInterface extends DynamicExtensionBaseDomainObjectInterf
 	/**
 	 *
 	 * @return
+	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException 
 	 */
-	List<String> getValueAsStrings();
+	List<String> getValueAsStrings() throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
 
 	/**
 	 *

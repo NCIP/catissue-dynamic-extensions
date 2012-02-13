@@ -10,6 +10,7 @@ import java.util.Set;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 
 /**
@@ -80,7 +81,7 @@ public class ConditionStatements
 	}
 
 	public void evaluateConditions(Map<BaseAbstractAttributeInterface, Object> objectValueState,
-			ContainerInterface controllingContainer) throws DynamicExtensionsSystemException
+			ContainerInterface controllingContainer) throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		boolean conditionSatisfied = false;
 		for (Condition condition : listOfConditions)

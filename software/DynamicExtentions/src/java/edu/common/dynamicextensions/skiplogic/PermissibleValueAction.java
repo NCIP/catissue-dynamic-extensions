@@ -9,6 +9,8 @@ import edu.common.dynamicextensions.domain.userinterface.SelectControl;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 
 
@@ -71,8 +73,10 @@ public class PermissibleValueAction implements Action
 	/**
 	 * Perform action.
 	 * @param container the container
+	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException 
 	 */
-	public void performAction(ControlInterface control)
+	public void performAction(ControlInterface control) throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		SelectControl selectControl = (SelectControl) control;
 		selectControl.setOptionList(ControlsUtility.getPermissibleValues(listOfPermissibleValues, control.getAttibuteMetadataInterface()));

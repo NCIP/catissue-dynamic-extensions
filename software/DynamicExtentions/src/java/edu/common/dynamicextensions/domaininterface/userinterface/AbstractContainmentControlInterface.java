@@ -1,6 +1,7 @@
 
 package edu.common.dynamicextensions.domaininterface.userinterface;
 
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 
 public interface AbstractContainmentControlInterface extends ControlInterface
@@ -26,14 +27,14 @@ public interface AbstractContainmentControlInterface extends ControlInterface
 	 * @throws DynamicExtensionsSystemException
 	 */
 	String generateEditModeHTML(ContainerInterface container)
-			throws DynamicExtensionsSystemException;
+			throws DynamicExtensionsSystemException,DynamicExtensionsApplicationException;
 
 	/**
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 */
 	String generateViewModeHTML(ContainerInterface container)
-			throws DynamicExtensionsSystemException;
+			throws DynamicExtensionsSystemException,DynamicExtensionsApplicationException;
 
 	/**
 	 * @see edu.common.dynamicextensions.domaininterface.userinterface.ContainmentAssociationControlInterface#generateLinkHTML()

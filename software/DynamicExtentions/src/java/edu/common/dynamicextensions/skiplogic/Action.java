@@ -5,6 +5,8 @@ package edu.common.dynamicextensions.skiplogic;
 
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 
 
 /**
@@ -21,8 +23,10 @@ public interface Action
 	/**
 	 * Perform action.
 	 * @param control dependent control
+	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException 
 	 */
-	void performAction(ControlInterface control);
+	void performAction(ControlInterface control) throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
 
 
 	/**

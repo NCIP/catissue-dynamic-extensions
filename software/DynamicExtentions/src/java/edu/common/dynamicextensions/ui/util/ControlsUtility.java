@@ -19,6 +19,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
 import edu.common.dynamicextensions.domain.BooleanAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.CategoryAttribute;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
@@ -54,11 +55,15 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.webui.util.ControlInformationObject;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.validation.ValidatorUtil;
 import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.dao.JDBCDAO;
+import edu.wustl.dao.connectionmanager.IConnectionManager;
+import edu.wustl.dao.daofactory.DAOConfigFactory;
+import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
 
@@ -124,9 +129,12 @@ public class ControlsUtility
 	 * @param sourceControlValue the source control value
 	 * @param encounterDate date of encounter of the visit.
 	 * @return List of pair of Name and its corresponding Value.
+	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	public static List<NameValueBean> populateListOfValues(ControlInterface control,
 			List<String> sourceControlValue, Date encounterDate)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		List<NameValueBean> nameValueBeanList = new ArrayList<NameValueBean>();
 		BaseAbstractAttributeInterface attribute = control.getBaseAbstractAttribute();
@@ -135,7 +143,6 @@ public class ControlsUtility
 			AttributeMetadataInterface attributeMetadataInterface = null;
 			if (attribute instanceof AttributeMetadataInterface)
 			{
-
 				attributeMetadataInterface = (AttributeMetadataInterface) attribute;
 				nameValueBeanList.addAll(getPermissibleValuesForAbstractMetadata(attribute,
 						control, encounterDate));
@@ -200,8 +207,53 @@ public class ControlsUtility
 		return nameValueBeanList;
 	}
 
+	/**
+	 * @param String query
+	 * @return List<NameValueBean> dynPvList
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
+	 * 
+	 * Retrieves list of pvs based on the query provided
+	 */
+	public static List<NameValueBean> populateSQLPvs(String query)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
+		List<NameValueBean> dynPvList = new ArrayList<NameValueBean>();
+		JDBCDAO jDbcdao = DynamicExtensionsUtility.getJDBCDAO();
+		try
+		{
+			List dataList = jDbcdao.executeQuery(query);
+
+			for (int i = 0; i < dataList.size(); i++)
+			{
+				NameValueBean nm = new NameValueBean();
+				List objArr = (List) dataList.get(i);
+				nm.setName(objArr.get(1));
+				nm.setValue(objArr.get(0));
+				dynPvList.add(nm);
+			}
+		}
+		catch (Exception e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage() + " while executing " + query);
+		}
+		finally
+		{
+			try
+			{
+				jDbcdao.closeSession();
+			}
+			catch (Exception e)
+			{
+				throw new DynamicExtensionsSystemException(e.getMessage());
+			}
+		}
+		return dynPvList;
+	}
+
 	private static List<NameValueBean> getPermissibleValuesForAbstractMetadata(
 			BaseAbstractAttributeInterface attribute, ControlInterface control, Date encounterDate)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		List<NameValueBean> nameValueBeanList = new ArrayList<NameValueBean>();
 		AttributeMetadataInterface attributeMetadataInterface = (AttributeMetadataInterface) attribute;
@@ -435,9 +487,12 @@ public class ControlsUtility
 	 *            the attribute
 	 * @param encounterDate date of encounter of the visit.
 	 * @return List of NameValueBean
+	 * @throws DynamicExtensionsSystemException 
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	public static List<NameValueBean> getListOfPermissibleValues(
 			AttributeMetadataInterface attribute, Date encounterDate)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		List<PermissibleValueInterface> permissibleValueList = new ArrayList<PermissibleValueInterface>();
 		DataElementInterface dataElement = attribute.getDataElement(encounterDate);
@@ -458,48 +513,62 @@ public class ControlsUtility
 	 * @param attribute
 	 *            the attribute
 	 * @return the permissible values
+	 * @throws DynamicExtensionsSystemException 
+	 * 
+	 * Bifurcated code to retrieve pvs dynamically from the sql stored in the pvProcessor tagged value
+	 * @throws DynamicExtensionsApplicationException 
+	 * 
 	 */
 	public static List<NameValueBean> getPermissibleValues(
 			Collection<PermissibleValueInterface> permissibleValueList,
-			AttributeMetadataInterface attribute)
+			AttributeMetadataInterface attribute) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
 		List<NameValueBean> nameValueBeanList = new ArrayList<NameValueBean>();
 		if (permissibleValueList != null)
 		{
-			NameValueBean nameValueBean;
-			for (PermissibleValueInterface permissibleValue : permissibleValueList)
+			if (isSQLPv(attribute))
 			{
-				if (permissibleValue instanceof DateValueInterface
-						&& attribute instanceof DateTypeInformationInterface)
+				nameValueBeanList.addAll(populateSQLPvs(((AttributeMetadataInterface) attribute)
+						.getTaggedValue(DEConstants.PV_PROCESSOR)));
+			}
+			else
+			{
+				NameValueBean nameValueBean;
+				for (PermissibleValueInterface permissibleValue : permissibleValueList)
 				{
-					DateTypeInformationInterface dateAttribute = (DateTypeInformationInterface) attribute;
-					nameValueBean = getPermissibleDateValue(permissibleValue, dateAttribute);
+					if (permissibleValue instanceof DateValueInterface
+							&& attribute instanceof DateTypeInformationInterface)
+					{
+						DateTypeInformationInterface dateAttribute = (DateTypeInformationInterface) attribute;
+						nameValueBean = getPermissibleDateValue(permissibleValue, dateAttribute);
+					}
+					else if (permissibleValue instanceof DoubleValueInterface)
+					{
+						nameValueBean = getPermissibleDoubleValue(permissibleValue);
+					}
+					else if (permissibleValue instanceof FloatValueInterface)
+					{
+						nameValueBean = getPermissibleFloatValue(permissibleValue);
+					}
+					else if (permissibleValue instanceof LongValueInterface)
+					{
+						nameValueBean = getPermissibleLongValue(permissibleValue);
+					}
+					else if (permissibleValue instanceof IntegerValueInterface)
+					{
+						nameValueBean = getPermissibleIntegerValue(permissibleValue);
+					}
+					else if (permissibleValue instanceof BooleanValueInterface)
+					{
+						nameValueBean = getPermissibleBooleanValue(permissibleValue);
+					}
+					else
+					{
+						nameValueBean = getPermissibleStringValue(permissibleValue);
+					}
+					nameValueBeanList.add(nameValueBean);
 				}
-				else if (permissibleValue instanceof DoubleValueInterface)
-				{
-					nameValueBean = getPermissibleDoubleValue(permissibleValue);
-				}
-				else if (permissibleValue instanceof FloatValueInterface)
-				{
-					nameValueBean = getPermissibleFloatValue(permissibleValue);
-				}
-				else if (permissibleValue instanceof LongValueInterface)
-				{
-					nameValueBean = getPermissibleLongValue(permissibleValue);
-				}
-				else if (permissibleValue instanceof IntegerValueInterface)
-				{
-					nameValueBean = getPermissibleIntegerValue(permissibleValue);
-				}
-				else if (permissibleValue instanceof BooleanValueInterface)
-				{
-					nameValueBean = getPermissibleBooleanValue(permissibleValue);
-				}
-				else
-				{
-					nameValueBean = getPermissibleStringValue(permissibleValue);
-				}
-				nameValueBeanList.add(nameValueBean);
 			}
 		}
 		return nameValueBeanList;
@@ -890,12 +959,14 @@ public class ControlsUtility
 	 *            the is copy paste
 	 * @throws DynamicExtensionsSystemException
 	 *             the dynamic extensions system exception
+	 * @throws DynamicExtensionsApplicationException 
 	 */
 	private static void setValueMapForEnumeratedControls(Integer rowId,
 			boolean isSameContainerControl, boolean cardinality,
 			Map<BaseAbstractAttributeInterface, Object> fullValueMap,
 			Map.Entry<BaseAbstractAttributeInterface, Object> entry, ControlInterface control,
-			boolean isCopyPaste) throws DynamicExtensionsSystemException
+			boolean isCopyPaste) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
 		Integer currentRowId = rowId;
 		if (rowId == null && isSameContainerControl && cardinality)
@@ -906,8 +977,8 @@ public class ControlsUtility
 		Object value = null;
 		List<Object> values = new ArrayList<Object>();
 		getAttributeValueForSkipLogicAttributesFromValueMap(fullValueMap, fullValueMap, control
-				.getSourceSkipControl().getBaseAbstractAttribute(), false, values, Integer
-				.valueOf(currentRowId), Integer.valueOf(currentRowId));
+				.getSourceSkipControl().getBaseAbstractAttribute(), false, values,
+				Integer.valueOf(currentRowId), Integer.valueOf(currentRowId));
 
 		if (!values.isEmpty())
 		{
@@ -977,9 +1048,10 @@ public class ControlsUtility
 			{
 				AssociationInterface association = (AssociationInterface) ((CategoryAttributeInterface) control
 						.getBaseAbstractAttribute()).getAbstractAttribute();
-				attribute = (AttributeMetadataInterface) EntityManagerUtil.filterSystemAttributes(
-						association.getTargetEntity().getAbstractAttributeCollection()).iterator()
-						.next();
+				attribute = (AttributeMetadataInterface) EntityManagerUtil
+						.filterSystemAttributes(
+								association.getTargetEntity().getAbstractAttributeCollection())
+						.iterator().next();
 			}
 			else
 			{
@@ -1189,8 +1261,8 @@ public class ControlsUtility
 			DateFormat dateFormat;
 			if (datePattern == null)
 			{
-				dateFormat = new SimpleDateFormat(ProcessorConstants.DATE_ONLY_FORMAT, Locale
-						.getDefault());
+				dateFormat = new SimpleDateFormat(ProcessorConstants.DATE_ONLY_FORMAT,
+						Locale.getDefault());
 				encounterDateAsString = dateFormat.format(date);
 			}
 			else
@@ -1305,6 +1377,12 @@ public class ControlsUtility
 		columnValueBeans.add(new ColumnValueBean(Long.valueOf(id)));
 		columnValueBeans.add(new ColumnValueBean(Long.valueOf(id)));
 		return executeJDBCQuery(sql, columnValueBeans);
+	}
+
+	public static Boolean isSQLPv(AttributeMetadataInterface attributeInterface)
+	{
+		return (null != attributeInterface.getTaggedValue(DEConstants.PV_TYPE) && DEConstants.SQL_PVS
+				.equalsIgnoreCase(attributeInterface.getTaggedValue(DEConstants.PV_TYPE)));
 	}
 
 }

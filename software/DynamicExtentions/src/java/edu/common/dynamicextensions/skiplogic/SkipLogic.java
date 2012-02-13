@@ -8,6 +8,7 @@ import java.util.Map;
 
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 
 
@@ -50,8 +51,9 @@ public class SkipLogic
 	 * @param controllingContainer the container
 	 * @param mainContainer
 	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException 
 	 */
-	public void evaluateSkipLogic(ContainerInterface controllingContainer, Map<BaseAbstractAttributeInterface, Object> dataValueMap) throws DynamicExtensionsSystemException
+	public void evaluateSkipLogic(ContainerInterface controllingContainer, Map<BaseAbstractAttributeInterface, Object> dataValueMap) throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		for (ConditionStatements conditionStatement : listOfconditionStatements)
 		{
