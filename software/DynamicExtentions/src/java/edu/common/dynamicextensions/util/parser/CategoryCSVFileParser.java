@@ -1042,21 +1042,25 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	 */
 	private void populateOptionsMap(Map<String, String> controlOptions, String optionConstant)
 	{
-		Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
-		for (String string : readLine())
-		{
-			if (string.toLowerCase(locale).startsWith(optionConstant.toLowerCase(locale) + "~"))
-			{
-				String[] controlOptionsValue = string.split("~")[1].split(Constants.COLON);
+	Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
+	for (String string : readLine())
+	{
+	// Removes the double quote that gets saved with the query in case pvProcessor is specified.
+	string=string.replaceAll(DEFAULT_ESCAPE_CHARACTER, "");
 
-				for (String optionValue : controlOptionsValue)
-				{
-					controlOptions.put(optionValue.split("=")[0], optionValue.split("=")[1]);
-				}
-			}
-		}
+	if (string.toLowerCase(locale).startsWith(optionConstant.toLowerCase(locale) + "~"))
+	{
+	String[] controlOptionsValue = string.split("~")[1].split(Constants.COLON);
+
+	for (String optionValue : controlOptionsValue)
+	{
+	controlOptions.put(optionValue.split("=")[0], optionValue.split("=")[1]);
+	}
+	}
+	}
 
 	}
+
 
 	/**
 	 * @return Skip Logic Source Attribute ClassName
