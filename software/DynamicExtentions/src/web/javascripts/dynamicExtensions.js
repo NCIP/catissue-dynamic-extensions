@@ -1606,17 +1606,63 @@ function removeCheckedRow(containerId)
 								}
 								break;
 							}
+							else if(childNodes2[i].id !=null && childNodes2[i].id.indexOf('_div') != -1 && childNodes2[i].hasChildNodes && childNodes2[i].childNodes[0]!=null && childNodes2[i].childNodes[0].id == 'auto_complete_dropdown')
+							{
+								var oldName = childNodes2[i].childNodes[0].childNodes[0].childNodes[0].id;
+								if(oldName == undefined)
+								{
+									oldName = 'combo'+childNodes2[i].childNodes[0].childNodes[1].childNodes[0].childNodes[0].id;
+								}
+
+								if(Ext.getCmp(oldName) != undefined)
+								{
+									eval(Ext.getCmp(oldName).destroy());
+								}
+								oldName = replaceAll(oldName,"combo","");
+								var newName = oldName+"_"+rowIndex;
+								
+								var newScript = replaceAll(document.getElementById(childNodes2[i].childNodes[2].value).innerHTML,
+										oldName, newName);
+
+								var comboValue = "";
+								var comboId = getComboControlName(cell);
+								if ( comboId != null)
+								{
+									comboValue = document.getElementById(comboId).value;
+								}
+
+								cell.innerHTML = replaceAll(childNodes2[i].childNodes[0].childNodes[1].innerHTML,
+													oldName, newName);
+
+								eval(newScript);
+								// Added code to catch blur event
+								// to set Combobox value to its empty text if it
+								// is blank.
+								if (comboValue != '')
+								{
+									var comboObj = Ext.getCmp("combo" + newName);
+									comboObj.emptyText = comboValue;
+									comboObj.setRawValue(comboValue);
+									document.getElementById("combo" + newName).value = comboValue;
+									comboObj.on("blur",function(comboBox){
+										if(comboBox.getValue()==""){
+											comboBox.setValue(comboBox.emptyText);
+										}
+									})
+								}
+								break;
+							}
 						}
 
 					}
-                    if (childObjectName != null && childObjectName.indexOf('_') != -1)
+                    if (childObjectName != null && childObjectName.indexOf('_') != -1 || (childNode.id !=null && childNode.hasChildNodes && childNode.childNodes[0]!=null && childNode.id.indexOf('_div') != -1 && childNode.childNodes[0].name != null && childNode.childNodes[0].name.indexOf('_') != -1))
                     {
-            			if (childObjectName.indexOf('_div') != -1)
+            			if (childNode.id !=null && childNode.id.indexOf('_div') != -1)
             			{
-            				if (childObject.hasChildNodes)
+            				if (childNode.hasChildNodes && childNode.childNodes[0]!=null)
             				{
-            					childObject = childObject.childNodes[0];
-            					childObjectName = childObject.name;
+            					childObject = childNode.childNodes[0];
+								childObjectName = childNode.childNodes[0].name;
             				}
             			}
     					if (childObjectName != null
@@ -2300,6 +2346,63 @@ function calculateDefaultAttributesValue()
 function setInsertDataOperation(isDraft)
 {
 	getValues();
+	var iframe = document.getElementById("skipLogicIframe");
+	if (iframe != null)
+	{
+		var iframeDocument = getIframeDocument(iframe);
+		if (iframeDocument != null)
+		{
+			var skipLogicHideControlsArray =  iframeDocument.getElementsByName("skipLogicHideControls");
+			if (skipLogicHideControlsArray != null)
+			{
+				var len = skipLogicHideControlsArray.length;
+				for(var inputIndex = 0; inputIndex < len; inputIndex++)
+				{
+					var skipLogicHideControl = skipLogicHideControlsArray[inputIndex];
+					if (skipLogicHideControl != null)
+					{
+						var skipLogicHideControlValue = skipLogicHideControl.value;
+						var skipLogicHideControlObject = document.getElementById(skipLogicHideControlValue);
+						if (skipLogicHideControlObject != null && skipLogicHideControlObject.style.display == 'none')
+						{							
+							if(skipLogicHideControlObject.id.indexOf('_row_div') != -1)
+							{
+								var skipLControlName = skipLogicHideControlObject.id.split('_row_div')[0];
+								if(document.getElementById(skipLControlName)!=null && document.getElementById(skipLControlName)!='undefined')
+								{
+									//Change value of control if control type is textfield or textArea, datepicker, checkbox
+									document.getElementById(skipLControlName).value="";
+									//Get combobox control
+									var comboskipLControlName = "combo"+skipLControlName;
+									if (document.getElementById(comboskipLControlName) != null && document.getElementById(comboskipLControlName) != 'undefined')
+									{
+										//Change value of control if control type is combobox
+										document.getElementById(comboskipLControlName).value="";
+									}
+								}
+								else
+								{
+									//change value of control if control type is radiobutton, multiselectCheckbox and listBox
+									var skipLControls = document.getElementsByName(skipLControlName);
+									if(skipLControls != null && skipLControls != 'undefined' && skipLControls.length > 0)
+									{
+										for(var i=0;i<skipLControls.length;i++)
+										{
+											var skipLControlsDoc = skipLControls[i];
+											if(skipLControlsDoc.checked != 'undefined')
+											{
+												skipLControlsDoc.checked = false;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 	document.getElementById('isDraft').value = isDraft;
     if(isDraft == 'true' || parent.document.getElementById('nSubmitButton').value == 'Save')
 	{

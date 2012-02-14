@@ -86,11 +86,7 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 		{
 			bulkOperationClass = new BulkOperationClass();
 		}
-		BOTemplateGeneratorUtility.setCommonAttributes(bulkOperationClass, category
-				.getName());
-
-		bulkOperationClass.setCardinality(DEConstants.Cardinality.ONE.getValue().toString());
-		bulkOperationClass.setMaxNoOfRecords(MAX_RECORD);
+		bulkOperationClass.setType(null);
 		bulkOperationClass.setClassName(BOTemplateGeneratorUtility
 				.getRootCategoryEntityName(rootCategoryEntity.getName()));
 
@@ -200,7 +196,7 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 		{
 			Attribute bulkOperationAttribute = new Attribute();
 			bulkOperationAttribute.setName(attribute.getAbstractAttribute().getName());
-			bulkOperationAttribute.setBelongsTo("");
+			//bulkOperationAttribute.setBelongsTo("");
 			if(attribute.getAbstractAttribute().getName().equalsIgnoreCase(boObject.getClassName()))
 			{
 				bulkOperationAttribute.setCsvColumnName(BOTemplateGeneratorUtility.getAttributename(parentObject.getClassName(),attribute.getAbstractAttribute().getName()));
@@ -213,7 +209,7 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 
 			final AttributeTypeInformationInterface attributeType = DynamicExtensionsUtility
 					.getBaseAttributeOfcategoryAttribute(attribute).getAttributeTypeInformation();
-			bulkOperationAttribute.setDataType(attributeType.getAttributeDataType().getName());
+			//bulkOperationAttribute.setDataType(attributeType.getAttributeDataType().getName());
 			handleDateFormat(bulkOperationAttribute, attributeType);
 
 			boObject.getAttributeCollection().add(bulkOperationAttribute);
@@ -251,9 +247,7 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 	{
 		BulkOperationClass subBulkOperationClass = new BulkOperationClass();
 
-		BOTemplateGeneratorUtility.setCommonAttributes(subBulkOperationClass, category
-				.getName());
-
+		subBulkOperationClass.setType(null);
 		BOTemplateGeneratorUtility.setCardinality(categoryAssociation.getTargetCategoryEntity()
 				.getNumberOfEntries(), subBulkOperationClass);
 		BOTemplateGeneratorUtility.setMaxNumberOfRecords(subBulkOperationClass);
@@ -266,8 +260,7 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 	protected BulkOperationClass processMultiSelect(AssociationInterface association)
 	{
 		BulkOperationClass subBulkOperationClass = new BulkOperationClass();
-		BOTemplateGeneratorUtility.setCommonAttributes(subBulkOperationClass, category
-				.getName());
+		subBulkOperationClass.setType(null);
 		if(association.getTargetRole().getMaximumCardinality().getValue()==100)
 		{
 			subBulkOperationClass.setCardinality(BOTemplateGeneratorUtility.MANY);
@@ -338,13 +331,15 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 		iterateCategory(bulkOperationClass);
 		//Step2: Append generated XML template data to existing XML template.
 		final BulkOperationMetaData bulkMetaData = BOTemplateGeneratorUtility
-				.appnedCategoryTemplate(xmlFilePath, mappingXML, bulkOperationClass);
+				.appnedCategoryTemplate(xmlFilePath, mappingXML, bulkOperationClass,category.getName());
+
+
 		//Step3: Write this template data in a file and store it in temporary directory.
 		File newDir = BOTemplateGeneratorUtility.saveXMLTemplateCopy(baseDir, mappingXML,
-				bulkMetaData, bulkOperationClass);
+				bulkMetaData);
 		//Step4: Create CSV template for existing category.
 		final File csvFile = new File(newDir + File.separator
-				+ bulkOperationClass.getTemplateName() + DEConstants.CSV_SUFFIX);
+				+ bulkMetaData.getTemplateName() + DEConstants.CSV_SUFFIX);
 		final String csvTemplateString = BOTemplateGeneratorUtility.createCSVTemplate(bulkMetaData,
 				csvFile);
 		//Step5: Save CSV template for existing category.
@@ -359,6 +354,7 @@ public class BOTemplateGenerator extends AbstractCategoryIterator<BulkOperationC
 	{
 		try
 		{
+			//args=new String[] {"Lymphoma_Labs 2.0","src/resources/xml/Participant.xml","src/resources/xml/mapping.xml"};
 			validateArguments(args);
 			if (new File(args[0]).exists())
 			{

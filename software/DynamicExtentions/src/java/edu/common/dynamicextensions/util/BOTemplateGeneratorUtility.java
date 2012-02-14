@@ -17,6 +17,7 @@ import edu.wustl.bulkoperator.metadata.BulkOperationClass;
 import edu.wustl.bulkoperator.metadata.BulkOperationMetaData;
 import edu.wustl.bulkoperator.metadata.BulkOperationMetadataUtil;
 import edu.wustl.bulkoperator.metadata.HookingInformation;
+import edu.wustl.bulkoperator.util.BulkOperationConstants;
 import edu.wustl.bulkoperator.util.BulkOperationException;
 
 /**
@@ -57,19 +58,7 @@ public class BOTemplateGeneratorUtility
 	 */
 	private static final String CONTAINMENT = "containment";
 
-	/**
-	 * This method sets the common attribute properties.
-	 * @param bOClass BulkOperationClass object.
-	 */
-	public static void setCommonAttributes(BulkOperationClass bOClass, String templateName)
-	{
-		bOClass.setRoleName(BLANK_SPACE);
-		bOClass.setBatchSize(BATCH_SIZE);
-		bOClass.setParentRoleName(BLANK_SPACE);
 
-		bOClass.setRelationShipType(CONTAINMENT);
-		bOClass.setTemplateName(templateName);
-	}
 
 	/**
 	 * This method removes the last extra arrow operator.
@@ -145,20 +134,25 @@ public class BOTemplateGeneratorUtility
 	 * @throws BulkOperationException throws BulkOperationMetaData
 	 */
 	public static BulkOperationMetaData appnedCategoryTemplate(String xmlFilePath,
-			String mappingXML, BulkOperationClass bulkOperationClass) throws BulkOperationException
+			String mappingXML, BulkOperationClass bulkOperationClass,String templateName) throws BulkOperationException
 	{
 		BulkOperationMetadataUtil metadataUtil = new BulkOperationMetadataUtil();
 		final BulkOperationMetaData bulkMetaData = metadataUtil.unmarshall(xmlFilePath, mappingXML);
 		BulkOperationClass rootBulkOperationClass = bulkMetaData.getBulkOperationClass().iterator()
 				.next();
-		final BulkOperationClass deCategoryBulkOperationClass = rootBulkOperationClass
-				.getDynExtCategoryAssociationCollection().iterator().next();
-		deCategoryBulkOperationClass.setTemplateName(bulkOperationClass.getTemplateName());
-		deCategoryBulkOperationClass.setClassName(bulkOperationClass.getTemplateName());
-		deCategoryBulkOperationClass.getContainmentAssociationCollection().add(bulkOperationClass);
-		rootBulkOperationClass.setTemplateName(bulkOperationClass.getTemplateName());
+
+		//deCategoryBulkOperationClass.setTemplateName(bulkOperationClass.getTemplateName());
+		rootBulkOperationClass.setClassName(templateName);
+		rootBulkOperationClass.setType(BulkOperationConstants.CATEGORY_TYPE);
+		rootBulkOperationClass.setCardinality(null);
+		rootBulkOperationClass.setMaxNoOfRecords(null);
+		rootBulkOperationClass.getContainmentAssociationCollection().add(bulkOperationClass);
+		//rootBulkOperationClass.setTemplateName(bulkOperationClass.getTemplateName());
 		bulkMetaData.getBulkOperationClass().removeAll(bulkMetaData.getBulkOperationClass());
 		bulkMetaData.getBulkOperationClass().add(rootBulkOperationClass);
+
+		bulkMetaData.setBatchSize(BATCH_SIZE);
+		bulkMetaData.setTemplateName(templateName);
 		return bulkMetaData;
 	}
 
@@ -172,9 +166,9 @@ public class BOTemplateGeneratorUtility
 			throws DynamicExtensionsSystemException
 	{
 		StringBuffer csvStringBuffer = new StringBuffer();
-		final BulkOperationClass boObject = bulkMetaData.getBulkOperationClass().iterator().next()
-				.getDynExtCategoryAssociationCollection().iterator().next();
-		HookingInformation hookingInformation = boObject.getHookingInformation().iterator().next();
+		final BulkOperationClass boObject = bulkMetaData.getBulkOperationClass().iterator().next();
+
+		HookingInformation hookingInformation = boObject.getHookingInformation();
 		for (Attribute attribute : hookingInformation.getAttributeCollection())
 		{
 			csvStringBuffer.append(attribute.getCsvColumnName()).append(DEConstants.COMMA);
@@ -241,7 +235,7 @@ public class BOTemplateGeneratorUtility
 	 * @throws DynamicExtensionsSystemException throws DynamicExtensionsSystemException.
 	 */
 	public static File saveXMLTemplateCopy(String baseDir, String mappingXML,
-			final BulkOperationMetaData bulkMetaData, BulkOperationClass bulkOperationClass)
+			final BulkOperationMetaData bulkMetaData)
 			throws DynamicExtensionsSystemException
 	{
 		File newDir = new File(baseDir + File.separator + DEConstants.TEMPLATE_DIR);
@@ -251,7 +245,7 @@ public class BOTemplateGeneratorUtility
 		}
 		try
 		{
-			final String pathname = newDir + File.separator + bulkOperationClass.getTemplateName()
+			final String pathname = newDir + File.separator + bulkMetaData.getTemplateName()
 					+ DEConstants.XML_SUFFIX;
 			MarshalUtility.marshalObject(mappingXML, bulkMetaData, new FileWriter(
 					new File(pathname)));

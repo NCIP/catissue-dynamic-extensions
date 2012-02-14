@@ -241,7 +241,7 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 	{
 		String identifier = "";
 		identifier = request.getParameter("containerIdentifier");
-		if (identifier == null || identifier.equals(""))
+		if (identifier == null || identifier.equals("") || "null".equalsIgnoreCase(identifier))
 		{
 			identifier = (String) request.getAttribute("containerIdentifier");
 		}
@@ -289,7 +289,7 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 		ContainerInterface containerInterface = (ContainerInterface) CacheManager
 				.getObjectFromCache(request, DEConstants.CONTAINER_INTERFACE);
 		final String containerIdentifier = getContainerId(request);
-		if (containerIdentifier != null || containerInterface == null)
+		if ((containerIdentifier != null || containerInterface == null) && DynamicExtensionsUtility.isNumeric(containerIdentifier))
 		{
 			UserInterfaceiUtility.clearContainerStack(request);
 

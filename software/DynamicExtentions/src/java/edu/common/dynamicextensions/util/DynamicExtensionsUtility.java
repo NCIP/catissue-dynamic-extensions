@@ -191,6 +191,16 @@ public class DynamicExtensionsUtility
 		}
 		return containerInterface;
 	}
+	
+	/**
+	 * Checks if the given string object is not null and not empty string.
+	 * @param value the object name.
+	 * @return true, if checks if is not empty string.
+	 */
+	public static boolean isNotEmptyString(final Object value)
+	{
+		return value != null && !"".equals(value);
+	}
 
 	/**
 	 * This method returns the containerInterface object.

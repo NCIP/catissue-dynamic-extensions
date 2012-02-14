@@ -3,14 +3,18 @@ package edu.common.dynamicextensions.messages;
 
 import java.io.StringReader;
 import java.net.MalformedURLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
@@ -26,7 +30,9 @@ import org.xml.sax.InputSource;
 
 import edu.common.dynamicextensions.domain.AutoLoadXpath;
 import edu.common.dynamicextensions.domain.CategoryEntity;
+import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
+import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
@@ -320,7 +326,6 @@ public class XmlMessageProcessor
 		/**
 		 * Baljeet's changes begin
 		 */
-
 		//Create a Map of category entity V/s  category entity XPath , by iterating over category object
 		Map<CategoryEntityInterface, String> categoryEntityXPathMap = new HashMap<CategoryEntityInterface, String>();
 
@@ -403,7 +408,7 @@ public class XmlMessageProcessor
 				//Here String in getTaggedValue method needs to be replaced with some constant
 				String identifyingXpath = categoryAttr.getAbstractAttribute().getTaggedValue(
 						XMIConstants.TAGGED_NAME_IDENTIFYING_XPATH);
-				if (!"".equals(identifyingXpath))
+				if (identifyingXpath!=null && !"".equals(identifyingXpath))
 				{
 					categoryEntityXPathMap.put(categoryEntity, identifyingXpath);
 					//Add this XPath to Map and break as there will be same XPath for all attributes of a category entity
@@ -694,6 +699,26 @@ public class XmlMessageProcessor
 				value = getPermissibleValueForConceptCode(catAttribute.getAllPermissibleValues(),
 						value, catAttribute.getName());
 			}
+			value = getValueForDateAttribute(catAttribute, value);
+		}
+		return value;
+	}
+
+	private String getValueForDateAttribute(CategoryAttributeInterface catAttribute, String value)
+	{
+		if(catAttribute.getAbstractAttribute() instanceof AttributeInterface)
+		{
+			AttributeInterface abstractAttr = (AttributeInterface)catAttribute.getAbstractAttribute();
+			if(abstractAttr.getAttributeTypeInformation() instanceof DateAttributeTypeInformation)
+			{
+				Calendar xmlDate = DatatypeConverter.parseDateTime(value);
+				DateAttributeTypeInformation dateType  = (DateAttributeTypeInformation) abstractAttr.getAttributeTypeInformation();
+				String format = DynamicExtensionsUtility.getDateFormat(dateType.getFormat());
+
+				SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.getDefault());
+				value = formatter.format(xmlDate.getTime());
+			}
+
 		}
 		return value;
 	}
