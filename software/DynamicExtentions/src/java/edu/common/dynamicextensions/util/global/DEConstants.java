@@ -146,7 +146,8 @@ public class DEConstants
 	public static final int CONTROL_DEFAULT_VALUE = 10;
 	public static final String ATTRIBUTE_IDENTIFIER = "attributeIdentifier";
 	public static final String RECORD_IDENTIFIER = "recordIdentifier";
-
+	public static final String RECORD_IDENTIFIER_URL_PARAM = "&recordIdentifier=";
+	
 	public static final String JAVA_UTIL_COLLECTION_CLASS = "java.util.Collection";
 	public static final String GET_ID = "getId";
 	public static final String INVALID_CONTROL_VALUE = "errors.invalidInputForControl";
@@ -363,7 +364,9 @@ public class DEConstants
 	public static final String IDENTIFIER_COL_NAME = "IDENTIFIER";
 
 	public static final String RECORD_ID = "recordId";
-
+	
+	public static final String RECORD_ID_URL_PARAM = "&recordId=";
+	
 	public static final String AUDIT_INSERT = "INSERT";
 
 	public static final String AUDIT_UPDATE = "UPDATE";
@@ -382,7 +385,11 @@ public class DEConstants
 	
 	public static final String FORM_URL = "formUrl"; 
 	
+	public static final String DE_URL = "deUrl";
+	
 	public static final String RECORD_ID_FROM_FORM_CONTEXT_ID = "record.id.from.form.context.id";
+	
+	public static final String CONTAINER_ID_FROM_FORM_CONTEXT_ID = "container.id.from.form.context.id";
 	
 	public static final String DESQL_XSD_FILENAME = "DESql.xsd";
 	

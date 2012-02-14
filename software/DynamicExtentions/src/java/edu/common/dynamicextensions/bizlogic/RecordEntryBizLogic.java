@@ -22,9 +22,9 @@ import edu.wustl.dao.query.generator.ColumnValueBean;
 public class RecordEntryBizLogic extends DefaultBizLogic
 {
 
-	public List<?> getRecordEntryId(Long formContextId, Long containerId, String hookEntityId,
-			SessionDataBean sessionDataBean) throws DynamicExtensionsSystemException, DAOException,
-			JAXBException, SAXException, DynamicExtensionsApplicationException, CacheException
+	public List<?> getRecordEntryId(Long formContextId, SessionDataBean sessionDataBean)
+			throws DynamicExtensionsSystemException, DAOException, JAXBException, SAXException,
+			DynamicExtensionsApplicationException, CacheException
 	{
 
 		List<ColumnValueBean> columnValueBeans = new ArrayList<ColumnValueBean>();

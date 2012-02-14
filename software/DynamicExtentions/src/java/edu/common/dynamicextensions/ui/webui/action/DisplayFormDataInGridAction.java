@@ -12,7 +12,11 @@ import org.apache.struts.action.ActionMapping;
 import edu.common.dynamicextensions.bizlogic.FormObjectGridDataBizLogic;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
+import edu.common.dynamicextensions.entitymanager.CategoryManager;
+import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.wustl.cab2b.server.cache.EntityCache;
+import edu.wustl.common.beans.SessionDataBean;
 
 public class DisplayFormDataInGridAction extends BaseDynamicExtensionsAction
 {
@@ -22,20 +26,26 @@ public class DisplayFormDataInGridAction extends BaseDynamicExtensionsAction
 			HttpServletRequest request, HttpServletResponse response) throws Exception
 	{
 		HttpSession session = request.getSession();
+		SessionDataBean sessionDataBean = (SessionDataBean) session
+				.getAttribute(DEConstants.SESSION_DATA);
 
-		session.setAttribute(DEConstants.FORM_CONTEXT_ID, request
+		request.setAttribute(DEConstants.FORM_CONTEXT_ID, request
 				.getParameter(DEConstants.FORM_CONTEXT_ID));
-		session.setAttribute(DEConstants.CONTAINER_ID, request
-				.getParameter(DEConstants.CONTAINER_ID));
-		session.setAttribute(DEConstants.RECORD_ENTRY_ENTITY_ID, request
+		request.setAttribute(DEConstants.RECORD_ENTRY_ENTITY_ID, request
 				.getParameter(DEConstants.RECORD_ENTRY_ENTITY_ID));
-		session.setAttribute(DEConstants.FORM_URL, request.getParameter(DEConstants.FORM_URL));
-		session.setAttribute("deUrl", request.getParameter("deUrl"));
-		session.setAttribute("treeViewKey", request.getParameter("treeViewKey"));
-		final ContainerInterface containerInterface = LoadDisplayFormDataInGridAction
-				.getContainerInterface(request, request.getParameter(DEConstants.CONTAINER_ID));
+		request.setAttribute(DEConstants.FORM_URL, request.getParameter(DEConstants.FORM_URL));
+		request.setAttribute(DEConstants.DE_URL, request.getParameter(DEConstants.DE_URL));
+
+		session.setAttribute(Constants.TREEVIEWKEY, request.getParameter(Constants.TREEVIEWKEY));
+		
+		Long containerId = CategoryManager.getInstance().getContainerIdByFormContextId(
+				Long.valueOf(request.getParameter(DEConstants.FORM_CONTEXT_ID)), sessionDataBean);
+		
+		final ContainerInterface containerInterface = EntityCache.getInstance().getContainerById(
+				containerId);
+
 		request
-				.setAttribute("gridHeaders", FormObjectGridDataBizLogic
+				.setAttribute(Constants.GRID_HEADERS, FormObjectGridDataBizLogic
 						.getDisplayHeader((CategoryEntityInterface) containerInterface
 								.getAbstractEntity()));
 		return mapping.findForward(DEConstants.SUCCESS);

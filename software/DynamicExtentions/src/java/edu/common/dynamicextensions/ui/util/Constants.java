@@ -66,4 +66,6 @@ public class Constants
 	public static final String DOUBLE_QUOTES="\"";
 	public static final String CONTENT_TYPE_XML = "text/xml";
 	public static final String VM_TEMPLATE_FILENAME_FOR_FORM_DATA_GRID ="displayFormDataInGridTemplate.vm";
+	public static final String GRID_HEADERS = "gridHeaders";
+	public static final String TREEVIEWKEY = "treeViewKey";
 }

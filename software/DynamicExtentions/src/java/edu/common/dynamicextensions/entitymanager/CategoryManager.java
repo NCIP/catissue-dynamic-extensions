@@ -1,3 +1,4 @@
+
 package edu.common.dynamicextensions.entitymanager;
 
 import java.sql.ResultSet;
@@ -13,6 +14,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Map.Entry;
+
+import javax.xml.bind.JAXBException;
+
+import org.xml.sax.SAXException;
 
 import edu.common.dynamicextensions.DEIntegration.DEIntegration;
 import edu.common.dynamicextensions.domain.AbstractAttribute;
@@ -51,6 +56,8 @@ import edu.common.dynamicextensions.util.CategoryHelperInterface;
 import edu.common.dynamicextensions.util.DataValueMapUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.FormulaCalculator;
+import edu.common.dynamicextensions.util.SQLQueryManager;
+import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.global.ErrorConstants;
 import edu.common.dynamicextensions.validation.category.CategoryValidator;
 import edu.wustl.cab2b.server.cache.EntityCache;
@@ -70,12 +77,11 @@ import edu.wustl.metadata.util.DyExtnObjectCloner;
  * @author mandar_shidhore
  * @author kunal_kamble
  */
-public class CategoryManager extends AbstractMetadataManager implements
-		CategoryManagerInterface {
+public class CategoryManager extends AbstractMetadataManager implements CategoryManagerInterface
+{
 
 	/** The Constant LOGGER. */
-	private static final Logger LOGGER = Logger
-			.getCommonLogger(CategoryManager.class);
+	private static final Logger LOGGER = Logger.getCommonLogger(CategoryManager.class);
 
 	/**
 	 * Static instance of the CategoryManager.
@@ -100,7 +106,8 @@ public class CategoryManager extends AbstractMetadataManager implements
 	/**
 	 * Empty Constructor.
 	 */
-	protected CategoryManager() {
+	protected CategoryManager()
+	{
 		super();
 	}
 
@@ -109,8 +116,10 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * 
 	 * @return entityManager singleton instance of the Entity Manager.
 	 */
-	public static synchronized CategoryManagerInterface getInstance() {
-		if (categoryManager == null) {
+	public static synchronized CategoryManagerInterface getInstance()
+	{
+		if (categoryManager == null)
+		{
 			categoryManager = new CategoryManager();
 			DynamicExtensionsUtility.initialiseApplicationVariables();
 			queryBuilder = QueryBuilderFactory.getQueryBuilder();
@@ -130,9 +139,10 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 */
 
 	public CategoryInterface getCategoryById(final Long identifier)
-			throws DynamicExtensionsSystemException {
-		CategoryInterface category = (CategoryInterface) getObjectByIdentifier(
-				Category.class.getName(), identifier.toString());
+			throws DynamicExtensionsSystemException
+	{
+		CategoryInterface category = (CategoryInterface) getObjectByIdentifier(Category.class
+				.getName(), identifier.toString());
 		return category;
 	}
 
@@ -163,11 +173,11 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @return category attribute interface with given identifier.
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public CategoryAttributeInterface getCategoryAttributeById(
-			final Long identifier) throws DynamicExtensionsSystemException {
+	public CategoryAttributeInterface getCategoryAttributeById(final Long identifier)
+			throws DynamicExtensionsSystemException
+	{
 		CategoryAttributeInterface categoryAttribute = (CategoryAttributeInterface) getObjectByIdentifier(
-				CategoryAttributeInterface.class.getName(), identifier
-						.toString());
+				CategoryAttributeInterface.class.getName(), identifier.toString());
 		return categoryAttribute;
 	}
 
@@ -180,21 +190,30 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public CategoryInterface getCategoryByName(final String name)
-			throws DynamicExtensionsSystemException {
+			throws DynamicExtensionsSystemException
+	{
 		HibernateDAO dao = DynamicExtensionsUtility.getHibernateDAO();
 		Collection<CategoryInterface> categoryColl = null;
-		try {
+		try
+		{
 			categoryColl = dao
 					.executeQuery("from edu.common.dynamicextensions.domain.Category where name = '"
 							+ name + "'");
-		} catch (DAOException e) {
+		}
+		catch (DAOException e)
+		{
 			LOGGER.error("Error occured in closing DAO .", e.getCause());
-		} finally {
+		}
+		finally
+		{
 			DynamicExtensionsUtility.closeDAO(dao);
 		}
-		if (categoryColl != null && !categoryColl.isEmpty()) {
+		if (categoryColl != null && !categoryColl.isEmpty())
+		{
 			return categoryColl.iterator().next();
-		} else {
+		}
+		else
+		{
 			return null;
 		}
 	}
@@ -208,11 +227,11 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @return category association with given identifier.
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public CategoryAssociationInterface getCategoryAssociationById(
-			final Long identifier) throws DynamicExtensionsSystemException {
+	public CategoryAssociationInterface getCategoryAssociationById(final Long identifier)
+			throws DynamicExtensionsSystemException
+	{
 		CategoryAssociationInterface categoryAssociation = (CategoryAssociationInterface) getObjectByIdentifier(
-				CategoryAssociationInterface.class.getName(), identifier
-						.toString());
+				CategoryAssociationInterface.class.getName(), identifier.toString());
 		return categoryAssociation;
 	}
 
@@ -222,7 +241,8 @@ public class CategoryManager extends AbstractMetadataManager implements
 
 	@Override
 	protected void logFatalError(final Exception exception,
-			final AbstractMetadataInterface abstractMetadata) {
+			final AbstractMetadataInterface abstractMetadata)
+	{
 		// TODO Auto-generated method stub
 	}
 
@@ -235,34 +255,49 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 *             , DynamicExtensionsApplicationException
 	 */
 	public void persistCategory(final CategoryInterface category)
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException {
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
 		HibernateDAO hibernateDAO = null;
 		Stack<String> revQueries = null;
-		try {
+		try
+		{
 			hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
-			revQueries = persistDynamicExtensionObjectForCategory(category,
-					hibernateDAO);
+			revQueries = persistDynamicExtensionObjectForCategory(category, hibernateDAO);
 			hibernateDAO.commit();
-		} catch (DynamicExtensionsSystemException ex) {
-			try {
-				((CategoryManager) CategoryManager.getInstance())
-						.rollbackQueries(revQueries, null, ex, hibernateDAO);
-			} catch (DynamicExtensionsSystemException e) {
+		}
+		catch (DynamicExtensionsSystemException ex)
+		{
+			try
+			{
+				((CategoryManager) CategoryManager.getInstance()).rollbackQueries(revQueries, null,
+						ex, hibernateDAO);
+			}
+			catch (DynamicExtensionsSystemException e)
+			{
 				throw new DynamicExtensionsSystemException(e.getMessage(), e);
 			}
 
-		} catch (DAOException ex) {
-			try {
-				((CategoryManager) CategoryManager.getInstance())
-						.rollbackQueries(revQueries, null, ex, hibernateDAO);
-			} catch (DynamicExtensionsSystemException e) {
+		}
+		catch (DAOException ex)
+		{
+			try
+			{
+				((CategoryManager) CategoryManager.getInstance()).rollbackQueries(revQueries, null,
+						ex, hibernateDAO);
+			}
+			catch (DynamicExtensionsSystemException e)
+			{
 				throw new DynamicExtensionsSystemException(e.getMessage(), e);
 			}
-		} finally {
-			try {
+		}
+		finally
+		{
+			try
+			{
 				DynamicExtensionsUtility.closeDAO(hibernateDAO);
-			} catch (DynamicExtensionsSystemException e) {
+			}
+			catch (DynamicExtensionsSystemException e)
+			{
 				LOGGER.error(e.getMessage());
 				LOGGER.error("Error occured in closing DAO .", e.getCause());
 			}
@@ -279,10 +314,10 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 *             , DynamicExtensionsApplicationException
 	 * @throws DAOException
 	 */
-	public CategoryInterface persistCategoryMetadata(
-			final CategoryInterface category, HibernateDAO hibernateDAO)
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException, DAOException {
+	public CategoryInterface persistCategoryMetadata(final CategoryInterface category,
+			HibernateDAO hibernateDAO) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException, DAOException
+	{
 		CategoryValidator.validateCategoryForConceptCodes(category);
 		persistObject(category, hibernateDAO);
 		EntityCache.getInstance().addCategoryToCache(category);
@@ -299,11 +334,10 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * edu.wustl.common.dao.HibernateDAO, java.util.List)
 	 */
 	@Override
-	protected void preProcess(
-			final DynamicExtensionBaseDomainObjectInterface dyExtBsDmnObj,
+	protected void preProcess(final DynamicExtensionBaseDomainObjectInterface dyExtBsDmnObj,
 			final List<String> revQueries, final List<String> queries)
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException {
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
 		final CategoryInterface category = (CategoryInterface) dyExtBsDmnObj;
 
 		getDynamicQueryList(category, revQueries, queries);
@@ -319,36 +353,39 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	protected List<String> getDynamicQueryList(
-			final CategoryInterface category, final List<String> revQueries,
-			final List<String> queries)
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException {
+	protected List<String> getDynamicQueryList(final CategoryInterface category,
+			final List<String> revQueries, final List<String> queries)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
 		final List<CategoryEntityInterface> catEntities = new ArrayList<CategoryEntityInterface>();
 
 		// Use HashMap instead of List to ensure entity list contains unique
 		// entity only.
 		HashMap<String, CategoryEntityInterface> catEntObjects = new HashMap<String, CategoryEntityInterface>();
-		DynamicExtensionsUtility.getUnsavedCategoryEntityList(category
-				.getRootCategoryElement(), catEntObjects);
+		DynamicExtensionsUtility.getUnsavedCategoryEntityList(category.getRootCategoryElement(),
+				catEntObjects);
 		Iterator<String> keySetIter = catEntObjects.keySet().iterator();
-		while (keySetIter.hasNext()) {
+		while (keySetIter.hasNext())
+		{
 			catEntities.add(catEntObjects.get(keySetIter.next()));
 		}
 
-		for (final CategoryEntityInterface categoryEntity : catEntities) {
-			final List<String> createQueries = queryBuilder
-					.getCreateCategoryQueryList(categoryEntity, revQueries);
-			if ((createQueries != null) && !createQueries.isEmpty()) {
+		for (final CategoryEntityInterface categoryEntity : catEntities)
+		{
+			final List<String> createQueries = queryBuilder.getCreateCategoryQueryList(
+					categoryEntity, revQueries);
+			if ((createQueries != null) && !createQueries.isEmpty())
+			{
 				queries.addAll(createQueries);
 			}
 		}
 
-		for (final CategoryEntityInterface categoryEntity : catEntities) {
-			final List<String> createQueries = queryBuilder
-					.getUpdateCategoryEntityQueryList(categoryEntity,
-							revQueries);
-			if ((createQueries != null) && !createQueries.isEmpty()) {
+		for (final CategoryEntityInterface categoryEntity : catEntities)
+		{
+			final List<String> createQueries = queryBuilder.getUpdateCategoryEntityQueryList(
+					categoryEntity, revQueries);
+			if ((createQueries != null) && !createQueries.isEmpty())
+			{
 				queries.addAll(createQueries);
 			}
 		}
@@ -357,38 +394,43 @@ public class CategoryManager extends AbstractMetadataManager implements
 		// entity only.
 		final List<CategoryEntityInterface> savedCatEntities = new ArrayList<CategoryEntityInterface>();
 		catEntObjects = new HashMap<String, CategoryEntityInterface>();
-		DynamicExtensionsUtility.getSavedCategoryEntityList(category
-				.getRootCategoryElement(), catEntObjects);
+		DynamicExtensionsUtility.getSavedCategoryEntityList(category.getRootCategoryElement(),
+				catEntObjects);
 		keySetIter = catEntObjects.keySet().iterator();
-		while (keySetIter.hasNext()) {
+		while (keySetIter.hasNext())
+		{
 			savedCatEntities.add(catEntObjects.get(keySetIter.next()));
 		}
 
 		HibernateDAO hibernateDAO = null;
-		try {
+		try
+		{
 			hibernateDAO = DynamicExtensionsUtility.getHibernateDAO();
 
-			for (final CategoryEntityInterface categoryEntity : savedCatEntities) {
-				final CategoryEntity dbaseCopy = (CategoryEntity) hibernateDAO
-						.retrieveById(CategoryEntity.class.getCanonicalName(),
-								categoryEntity.getId());
+			for (final CategoryEntityInterface categoryEntity : savedCatEntities)
+			{
+				final CategoryEntity dbaseCopy = (CategoryEntity) hibernateDAO.retrieveById(
+						CategoryEntity.class.getCanonicalName(), categoryEntity.getId());
 
 				// Only for category entity for which table is getting created.
-				if (dbaseCopy.isCreateTable()) {
-					final List<String> updateQueries = queryBuilder
-							.getUpdateEntityQueryList(
-									(CategoryEntity) categoryEntity, dbaseCopy,
-									revQueries);
+				if (dbaseCopy.isCreateTable())
+				{
+					final List<String> updateQueries = queryBuilder.getUpdateEntityQueryList(
+							(CategoryEntity) categoryEntity, dbaseCopy, revQueries);
 
-					if ((updateQueries != null) && !updateQueries.isEmpty()) {
+					if ((updateQueries != null) && !updateQueries.isEmpty())
+					{
 						queries.addAll(updateQueries);
 					}
 				}
 			}
-		} catch (final DAOException exception) {
-			throw new DynamicExtensionsSystemException(
-					"Not able to retrieve Object.", exception);
-		} finally {
+		}
+		catch (final DAOException exception)
+		{
+			throw new DynamicExtensionsSystemException("Not able to retrieve Object.", exception);
+		}
+		finally
+		{
 			DynamicExtensionsUtility.closeDAO(hibernateDAO);
 		}
 
@@ -402,9 +444,9 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * postProcess(java.util.List, java.util.List, java.util.Stack)
 	 */
 	@Override
-	protected void postProcess(final List<String> queries,
-			final List<String> revQueries, final Stack<String> rlbkQryStack)
-			throws DynamicExtensionsSystemException {
+	protected void postProcess(final List<String> queries, final List<String> revQueries,
+			final Stack<String> rlbkQryStack) throws DynamicExtensionsSystemException
+	{
 		queryBuilder.executeQueries(queries, revQueries, rlbkQryStack);
 	}
 
@@ -422,9 +464,9 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 *             , Object>,SessionDataBean,Long...)} instead
 	 */
 	public Long insertData(final CategoryInterface category,
-			final Map<BaseAbstractAttributeInterface, Object> dataValue,
-			final Long... userId) throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException {
+			final Map<BaseAbstractAttributeInterface, Object> dataValue, final Long... userId)
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+	{
 		return insertData(category, dataValue, null, userId);
 	}
 
@@ -439,14 +481,12 @@ public class CategoryManager extends AbstractMetadataManager implements
 	public Long insertData(final CategoryInterface category,
 			final Map<BaseAbstractAttributeInterface, Object> dataValue,
 			SessionDataBean sessionDataBean, final Long... userId)
-			throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException {
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+	{
 		final List<Map<BaseAbstractAttributeInterface, Object>> dataValMaps = new ArrayList<Map<BaseAbstractAttributeInterface, Object>>();
 		dataValMaps.add(dataValue);
-		final Long identifier = (((userId != null) && (userId.length > 0)) ? userId[0]
-				: null);
-		final List<Long> recordIds = insertData(category, dataValMaps,
-				sessionDataBean, identifier);
+		final Long identifier = (((userId != null) && (userId.length > 0)) ? userId[0] : null);
+		final List<Long> recordIds = insertData(category, dataValMaps, sessionDataBean, identifier);
 
 		return recordIds.get(0);
 	}
@@ -464,11 +504,11 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 *             #insertData(CategoryInterface,List<Map<BaseAbstractAttributeInterface
 	 *             , Object>>,SessionDataBean,Long...)} instead
 	 */
-	public List<Long> insertData(
-			final CategoryInterface category,
+	public List<Long> insertData(final CategoryInterface category,
 			final List<Map<BaseAbstractAttributeInterface, Object>> dataValMaps,
 			final Long... userId) throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException {
+			DynamicExtensionsSystemException
+	{
 		return insertData(category, dataValMaps, null, userId);
 	}
 
@@ -480,36 +520,39 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * (edu.common.dynamicextensions.domaininterface.CategoryInterface,
 	 * java.util.List)
 	 */
-	public List<Long> insertData(
-			final CategoryInterface category,
+	public List<Long> insertData(final CategoryInterface category,
 			final List<Map<BaseAbstractAttributeInterface, Object>> dataValMaps,
 			SessionDataBean sessionDataBean, final Long... userId)
-			throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException {
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+	{
 		final List<Long> recordIds = new ArrayList<Long>();
 
 		JDBCDAO jdbcDao = null;
-		try {
+		try
+		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO(sessionDataBean);
-			final Long identifier = (((userId != null) && (userId.length > 0)) ? userId[0]
-					: null);
+			final Long identifier = (((userId != null) && (userId.length > 0)) ? userId[0] : null);
 
-			for (final Map<BaseAbstractAttributeInterface, Object> dataValMap : dataValMaps) {
-				final Long recordId = insertDataForHierarchy(category
-						.getRootCategoryElement(), dataValMap, jdbcDao,
-						sessionDataBean, identifier);
+			for (final Map<BaseAbstractAttributeInterface, Object> dataValMap : dataValMaps)
+			{
+				final Long recordId = insertDataForHierarchy(category.getRootCategoryElement(),
+						dataValMap, jdbcDao, sessionDataBean, identifier);
 				recordIds.add(recordId);
 			}
 			jdbcDao.commit();
-		} catch (final DAOException e) {
+		}
+		catch (final DAOException e)
+		{
 			DynamicExtensionsUtility.rollBackDAO(jdbcDao);
-			throw new DynamicExtensionsSystemException(
-					"Error while inserting data", e);
-		} catch (final SQLException e) {
+			throw new DynamicExtensionsSystemException("Error while inserting data", e);
+		}
+		catch (final SQLException e)
+		{
 			DynamicExtensionsUtility.rollBackDAO(jdbcDao);
-			throw new DynamicExtensionsSystemException(
-					"Error while inserting data", e);
-		} finally {
+			throw new DynamicExtensionsSystemException("Error while inserting data", e);
+		}
+		finally
+		{
 			DynamicExtensionsUtility.closeDAO(jdbcDao);
 		}
 
@@ -528,9 +571,9 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 *             Object>,SessionDataBean)} instead
 	 */
 	public Long insertData(final CategoryInterface categoryInterface,
-			final Map<String, Object> dataValue)
-			throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException, ParseException {
+			final Map<String, Object> dataValue) throws DynamicExtensionsApplicationException,
+			DynamicExtensionsSystemException, ParseException
+	{
 		return insertData(categoryInterface, dataValue, null);
 	}
 
@@ -542,30 +585,32 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 */
 	public Long insertData(final CategoryInterface categoryInterface,
 			final Map<String, Object> dataValue, SessionDataBean sessionDataBean)
-			throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException, ParseException {
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException,
+			ParseException
+	{
 		Long recordIdentifier = null;
 		ContainerInterface containerInterface = (ContainerInterface) categoryInterface
 				.getRootCategoryElement().getContainerCollection().toArray()[0];
 		Map<BaseAbstractAttributeInterface, Object> attributeToValueMap = DataValueMapUtility
 				.getAttributeToValueMap(dataValue, categoryInterface);
-		List<String> errorList = DomainObjectFactory.getInstance().getValidatorInstance(null).validateEntity(
-				attributeToValueMap, new ArrayList<String>(),
-				containerInterface, true);
-		if (errorList.isEmpty()) {
-			Long recordId = insertData(categoryInterface, attributeToValueMap,
-					sessionDataBean);
-			recordIdentifier = categoryManager
-					.getEntityRecordIdByRootCategoryEntityRecordId(recordId,
-							categoryInterface.getRootCategoryElement()
-									.getTableProperties().getName());
-		} else {
+		List<String> errorList = DomainObjectFactory.getInstance().getValidatorInstance(null)
+				.validateEntity(attributeToValueMap, new ArrayList<String>(), containerInterface,
+						true);
+		if (errorList.isEmpty())
+		{
+			Long recordId = insertData(categoryInterface, attributeToValueMap, sessionDataBean);
+			recordIdentifier = categoryManager.getEntityRecordIdByRootCategoryEntityRecordId(
+					recordId, categoryInterface.getRootCategoryElement().getTableProperties()
+							.getName());
+		}
+		else
+		{
 			StringBuffer buffer = new StringBuffer();
 			int count = 1;
 			Iterator<String> errorListIterator = errorList.iterator();
-			while (errorListIterator.hasNext()) {
-				buffer.append(count).append(')').append(
-						errorListIterator.next());
+			while (errorListIterator.hasNext())
+			{
+				buffer.append(count).append(')').append(errorListIterator.next());
 				count++;
 			}
 			throw new DynamicExtensionsApplicationException(buffer.toString());
@@ -586,20 +631,20 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws SQLException
 	 */
-	private Long insertDataForHierarchy(
-			final CategoryEntityInterface catEntity,
-			final Map<BaseAbstractAttributeInterface, Object> dataValue,
-			final JDBCDAO jdbcDao, SessionDataBean sessionDataBean,
-			final Long... userId) throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException, SQLException {
+	private Long insertDataForHierarchy(final CategoryEntityInterface catEntity,
+			final Map<BaseAbstractAttributeInterface, Object> dataValue, final JDBCDAO jdbcDao,
+			SessionDataBean sessionDataBean, final Long... userId)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
+			SQLException
+	{
 		final List<CategoryEntityInterface> catEntities = getParentEntityList(catEntity);
 		final Map<CategoryEntityInterface, Map<BaseAbstractAttributeInterface, Object>> entityValMap = initialiseEntityValueMap(dataValue);
 		Long parentRecId = null;
 		Long parntCatRecId = null;
-		final Long identifier = (((userId != null) && (userId.length > 0)) ? userId[0]
-				: null);
+		final Long identifier = (((userId != null) && (userId.length > 0)) ? userId[0] : null);
 
-		for (final CategoryEntityInterface categoryEntity : catEntities) {
+		for (final CategoryEntityInterface categoryEntity : catEntities)
+		{
 			final Map<BaseAbstractAttributeInterface, Object> valueMap = entityValMap
 					.get(categoryEntity);
 
@@ -607,23 +652,22 @@ public class CategoryManager extends AbstractMetadataManager implements
 			// attribute map to value map.
 			CategoryEntity parntCatEntity = (CategoryEntity) categoryEntity
 					.getParentCategoryEntity();
-			while ((parntCatEntity != null) && !parntCatEntity.isCreateTable()) {
+			while ((parntCatEntity != null) && !parntCatEntity.isCreateTable())
+			{
 				final Map<BaseAbstractAttributeInterface, Object> innerValMap = entityValMap
 						.get(parntCatEntity);
 
-				if (innerValMap != null) {
+				if (innerValMap != null)
+				{
 					valueMap.putAll(innerValMap);
 				}
 
-				parntCatEntity = (CategoryEntity) parntCatEntity
-						.getParentCategoryEntity();
+				parntCatEntity = (CategoryEntity) parntCatEntity.getParentCategoryEntity();
 			}
 
-			parentRecId = insertDataForSingleCategoryEntity(categoryEntity,
-					valueMap, dataValue, jdbcDao, parentRecId, sessionDataBean,
-					identifier);
-			parntCatRecId = getRootCategoryRecordId(categoryEntity,
-					parentRecId, jdbcDao);
+			parentRecId = insertDataForSingleCategoryEntity(categoryEntity, valueMap, dataValue,
+					jdbcDao, parentRecId, sessionDataBean, identifier);
+			parntCatRecId = getRootCategoryRecordId(categoryEntity, parentRecId, jdbcDao);
 		}
 
 		return parntCatRecId;
@@ -637,13 +681,12 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws SQLException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private Long getRootCategoryRecordId(
-			final CategoryEntityInterface catEntity, final Long parentRecId,
-			final JDBCDAO jdbcDao) throws SQLException,
-			DynamicExtensionsSystemException {
+	private Long getRootCategoryRecordId(final CategoryEntityInterface catEntity,
+			final Long parentRecId, final JDBCDAO jdbcDao) throws SQLException,
+			DynamicExtensionsSystemException
+	{
 		final CategoryInterface category = catEntity.getCategory();
-		final CategoryEntityInterface rootCatEntity = category
-				.getRootCategoryElement();
+		final CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 
 		final StringBuffer query = new StringBuffer(SELECT_KEYWORD);
 		query.append(WHITESPACE);
@@ -662,9 +705,10 @@ public class CategoryManager extends AbstractMetadataManager implements
 		queryDataList.add(new ColumnValueBean(RECORD_ID, parentRecId));
 		Long rootCERecId = null;
 
-		final List<Long> results = getResultIDList(query.toString(),
-				IDENTIFIER, jdbcDao, queryDataList);
-		if (!results.isEmpty()) {
+		final List<Long> results = getResultIDList(query.toString(), IDENTIFIER, jdbcDao,
+				queryDataList);
+		if (!results.isEmpty())
+		{
 			rootCERecId = results.get(0);
 		}
 
@@ -685,33 +729,30 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws SQLException
 	 */
-	private Long insertDataForSingleCategoryEntity(
-			CategoryEntityInterface catEntity,
+	private Long insertDataForSingleCategoryEntity(CategoryEntityInterface catEntity,
 			final Map<BaseAbstractAttributeInterface, Object> dataValue,
-			final Map<BaseAbstractAttributeInterface, Object> fullDataValue,
-			final JDBCDAO jdbcDao, final Long parentRecId,
-			SessionDataBean sessionDataBean, final Long... userId)
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException, SQLException {
+			final Map<BaseAbstractAttributeInterface, Object> fullDataValue, final JDBCDAO jdbcDao,
+			final Long parentRecId, SessionDataBean sessionDataBean, final Long... userId)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
+			SQLException
+	{
 
 		final Map<String, Long> keyMap = new HashMap<String, Long>();
 		final Map<String, Long> fullKeyMap = new HashMap<String, Long>();
 		final Map<String, List<Long>> records = new HashMap<String, List<Long>>();
-		Long identifier = (((userId != null) && (userId.length > 0)) ? userId[0]
-				: null);
+		Long identifier = (((userId != null) && (userId.length > 0)) ? userId[0] : null);
 
 		HibernateDAO hibernateDao = null;
 		List<FileQueryBean> fileAttrQueryList = new ArrayList<FileQueryBean>();
-		try {
-			hibernateDao = DynamicExtensionsUtility
-					.getHibernateDAO(sessionDataBean);
-			if (catEntity == null) {
-				throw new DynamicExtensionsSystemException(
-						"Input to insert data is null");
+		try
+		{
+			hibernateDao = DynamicExtensionsUtility.getHibernateDAO(sessionDataBean);
+			if (catEntity == null)
+			{
+				throw new DynamicExtensionsSystemException("Input to insert data is null");
 			}
 			final CategoryInterface category = catEntity.getCategory();
-			final CategoryEntityInterface rootCatEntity = category
-					.getRootCategoryElement();
+			final CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 
 			// If root category entity does not have any attribute, or all its
 			// category attributes
@@ -720,47 +761,44 @@ public class CategoryManager extends AbstractMetadataManager implements
 			// insert this identifier as record identifier in category entity
 			// table.
 			if ((rootCatEntity.getCategoryAttributeCollection().size() == 0)
-					|| isAllRelatedCategoryAttributesCollection(rootCatEntity)) {
+					|| isAllRelatedCategoryAttributesCollection(rootCatEntity))
+			{
 				// Insert blank record in all parent entity tables of root
 				// category entity so use insertDataForHeirarchy and add all
 				// keys to keymap, recordmap, fullkeymap.
 				final Map<AbstractAttributeInterface, Object> attributes = new HashMap<AbstractAttributeInterface, Object>();
-				final EntityManagerInterface entityManager = EntityManager
-						.getInstance();
+				final EntityManagerInterface entityManager = EntityManager.getInstance();
 				EntityInterface rootEntity = catEntity.getEntity();
 				// Long entityId =
 				// entityManager.insertDataForHeirarchy(catEntity.getEntity(),
 				// attributes,
 				// jdbcDao, identifier);
-				final Long entityId = entityManager.insertData(rootEntity,
-						attributes, hibernateDao, fileAttrQueryList,
-						sessionDataBean, identifier);
+				final Long entityId = entityManager.insertData(rootEntity, attributes,
+						hibernateDao, fileAttrQueryList, sessionDataBean, identifier);
 
-				final Long catEntId = entityManagerUtil
-						.getNextIdentifier(rootCatEntity.getTableProperties()
-								.getName());
+				final Long catEntId = entityManagerUtil.getNextIdentifier(rootCatEntity
+						.getTableProperties().getName());
 
-				putRecordIdsInMap(catEntity, entityId, fullKeyMap, keyMap,
-						records);
+				putRecordIdsInMap(catEntity, entityId, fullKeyMap, keyMap, records);
 				// Query to insert record into category entity table.
 				final String insertQuery = INSERT_INTO_KEYWORD
 						+ rootCatEntity.getTableProperties().getName()
-						+ " (IDENTIFIER, ACTIVITY_STATUS, " + RECORD_ID
-						+ ") VALUES (?,?,?)";
+						+ " (IDENTIFIER, ACTIVITY_STATUS, " + RECORD_ID + ") VALUES (?,?,?)";
 				// creating the column value beans according to DAO1.1.5
 				final LinkedList<ColumnValueBean> colValBeanList = createColumnValueBeanListForDataEntry(
 						catEntId, entityId);
 
-				DynamicExtensionsUtility.executeUpdateQuery(insertQuery,
-						identifier, jdbcDao, colValBeanList);
-				logDebug("insertData", "categoryEntityTableInsertQuery is : "
-						+ insertQuery);
-			} else if (rootCatEntity.getCategoryAttributeCollection().size() > 0
-					&& !isAllRelatedCategoryAttributesCollection(rootCatEntity)) {
+				DynamicExtensionsUtility.executeUpdateQuery(insertQuery, identifier, jdbcDao,
+						colValBeanList);
+				logDebug("insertData", "categoryEntityTableInsertQuery is : " + insertQuery);
+			}
+			else if (rootCatEntity.getCategoryAttributeCollection().size() > 0
+					&& !isAllRelatedCategoryAttributesCollection(rootCatEntity))
+			{
 				addMissingAttributeInValueMap(dataValue, rootCatEntity);
 			}
-			String rootCatEntName = DynamicExtensionsUtility
-					.getCategoryEntityName(catEntity.getName());
+			String rootCatEntName = DynamicExtensionsUtility.getCategoryEntityName(catEntity
+					.getName());
 			final boolean areMultplRecrds = false;
 			final boolean isNoCatAttrPrsnt = false;
 
@@ -777,50 +815,55 @@ public class CategoryManager extends AbstractMetadataManager implements
 			final Map<CategoryAssociationInterface, Object> catAssociations = new HashMap<CategoryAssociationInterface, Object>();
 
 			for (Entry<BaseAbstractAttributeInterface, Object> dataValueEntry : dataValue
-					.entrySet()) {
-				final BaseAbstractAttributeInterface obj = dataValueEntry
-						.getKey();
-				if (obj instanceof CategoryAttributeInterface) {
-					catAttributes.put((CategoryAttributeInterface) obj,
-							dataValueEntry.getValue());
-				} else {
-					catAssociations.put((CategoryAssociationInterface) obj,
-							dataValueEntry.getValue());
+					.entrySet())
+			{
+				final BaseAbstractAttributeInterface obj = dataValueEntry.getKey();
+				if (obj instanceof CategoryAttributeInterface)
+				{
+					catAttributes.put((CategoryAttributeInterface) obj, dataValueEntry.getValue());
+				}
+				else
+				{
+					catAssociations.put((CategoryAssociationInterface) obj, dataValueEntry
+							.getValue());
 				}
 			}
 
 			// Insert records for category attributes.
-			insertRecordsForCategoryEntityTree(entityFKColName,
-					catEntFKColName, srcCatEntityId, srcEntityId, catEntity,
-					catAttributes, keyMap, fullKeyMap, records,
-					areMultplRecrds, isNoCatAttrPrsnt, jdbcDao, hibernateDao,
-					false, null, identifier, fileAttrQueryList, sessionDataBean);
+			insertRecordsForCategoryEntityTree(entityFKColName, catEntFKColName, srcCatEntityId,
+					srcEntityId, catEntity, catAttributes, keyMap, fullKeyMap, records,
+					areMultplRecrds, isNoCatAttrPrsnt, jdbcDao, hibernateDao, false, null,
+					identifier, fileAttrQueryList, sessionDataBean);
 
 			// Insert records for category associations.
-			insertRecordsForCategoryEntityTree(entityFKColName,
-					catEntFKColName, srcCatEntityId, srcEntityId, catEntity,
-					catAssociations, keyMap, fullKeyMap, records,
-					areMultplRecrds, isNoCatAttrPrsnt, jdbcDao, hibernateDao,
-					false, null, identifier, fileAttrQueryList, sessionDataBean);
+			insertRecordsForCategoryEntityTree(entityFKColName, catEntFKColName, srcCatEntityId,
+					srcEntityId, catEntity, catAssociations, keyMap, fullKeyMap, records,
+					areMultplRecrds, isNoCatAttrPrsnt, jdbcDao, hibernateDao, false, null,
+					identifier, fileAttrQueryList, sessionDataBean);
 
 			final Long rootCERecId = getRootCategoryEntityRecordId(category
-					.getRootCategoryElement(), fullKeyMap.get(rootCatEntName),
-					jdbcDao);
+					.getRootCategoryElement(), fullKeyMap.get(rootCatEntName), jdbcDao);
 
-			insertRecordsForRelatedAttributes(fullDataValue, rootCERecId,
-					category.getRootCategoryElement(), records, jdbcDao,
-					hibernateDao, identifier);
+			insertRecordsForRelatedAttributes(fullDataValue, rootCERecId, category
+					.getRootCategoryElement(), records, jdbcDao, hibernateDao, identifier);
 			hibernateDao.commit();
 			executeFileRecordQueryList(fileAttrQueryList);
-			if (parentRecId == null) {
+			if (parentRecId == null)
+			{
 				identifier = keyMap.get(rootCatEntName);
-			} else {
+			}
+			else
+			{
 				identifier = parentRecId;
 			}
-		} catch (final DAOException e) {
+		}
+		catch (final DAOException e)
+		{
 			throw new DynamicExtensionsApplicationException(
 					"Exception encountered while inserting records!", e);
-		} finally {
+		}
+		finally
+		{
 			DynamicExtensionsUtility.closeDAO(hibernateDao);
 		}
 
@@ -837,11 +880,14 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 */
 	private void addMissingAttributeInValueMap(
 			final Map<BaseAbstractAttributeInterface, Object> dataValue,
-			final CategoryEntityInterface rootCatEntity) {
+			final CategoryEntityInterface rootCatEntity)
+	{
 		for (CategoryAttributeInterface categoryAttribute : rootCatEntity
-				.getCategoryAttributeCollection()) {
+				.getCategoryAttributeCollection())
+		{
 			if (!categoryAttribute.getIsRelatedAttribute()
-					&& !dataValue.containsKey(categoryAttribute)) {
+					&& !dataValue.containsKey(categoryAttribute))
+			{
 				dataValue.put(categoryAttribute, "");
 			}
 		}
@@ -862,19 +908,21 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @param records
 	 *            map of entity vs List of record id
 	 */
-	private void putRecordIdsInMap(CategoryEntityInterface catEntity,
-			Long entityId, final Map<String, Long> fullKeyMap,
-			final Map<String, Long> keyMap, Map<String, List<Long>> records) {
+	private void putRecordIdsInMap(CategoryEntityInterface catEntity, Long entityId,
+			final Map<String, Long> fullKeyMap, final Map<String, Long> keyMap,
+			Map<String, List<Long>> records)
+	{
 
 		EntityInterface rootEntity = catEntity.getEntity();
-		long instanceId = CategoryGenerationUtil
-				.getInstanceIdOfCategoryEntity(catEntity);
-		while (rootEntity != null) {
+		long instanceId = CategoryGenerationUtil.getInstanceIdOfCategoryEntity(catEntity);
+		while (rootEntity != null)
+		{
 			String entityName = rootEntity.getName() + "[" + instanceId + "]";
 			keyMap.put(entityName, entityId);
 			fullKeyMap.put(entityName, entityId);
 			List<Long> recordIds = records.get(entityName);
-			if (recordIds == null) {
+			if (recordIds == null)
+			{
 				recordIds = new ArrayList<Long>();
 			}
 			recordIds.add(entityId);
@@ -898,63 +946,63 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 */
 	private void insertAllParentRelatedCategoryAttributesCollection(
 			final Map<BaseAbstractAttributeInterface, Object> valueMap,
-			final CategoryEntityInterface rootCatEntity,
-			final Map<String, List<Long>> records,
-			final HibernateDAO hibernateDao) throws SQLException,
-			DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException {
-		try {
+			final CategoryEntityInterface rootCatEntity, final Map<String, List<Long>> records,
+			final HibernateDAO hibernateDao) throws SQLException, DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
+	{
+		try
+		{
 			final Map<BaseAbstractAttribute, Object> attrVsValues = new HashMap<BaseAbstractAttribute, Object>();
 			// Get all attributes including parent's attributes.
 			final Collection<CategoryAttributeInterface> catAttributes = rootCatEntity
 					.getAllCategoryAttributes();
-			for (final CategoryAttributeInterface catAttribute : catAttributes) {
+			for (final CategoryAttributeInterface catAttribute : catAttributes)
+			{
 				if (((catAttribute.getIsRelatedAttribute() != null) && catAttribute
 						.getIsRelatedAttribute())
-						&& (!catAttribute.getAbstractAttribute().getEntity()
-								.equals(rootCatEntity.getEntity()))) {
+						&& (!catAttribute.getAbstractAttribute().getEntity().equals(
+								rootCatEntity.getEntity())))
+				{
 					// In case of related attributes, check if it is parent's
 					// attribute.
-					final AttributeInterface attribute = catAttribute
-							.getAbstractAttribute().getEntity()
-							.getAttributeByName(
-									catAttribute.getAbstractAttribute()
-											.getName());
+					final AttributeInterface attribute = catAttribute.getAbstractAttribute()
+							.getEntity().getAttributeByName(
+									catAttribute.getAbstractAttribute().getName());
 
 					// Fetch column names and column values for related category
 					// attributes.
-					populateColumnNamesAndValues(valueMap, attribute,
-							catAttribute, attrVsValues);
+					populateColumnNamesAndValues(valueMap, attribute, catAttribute, attrVsValues);
 
 					// String entTableName =
 					// attribute.getEntity().getTableProperties().getName();
-					final List<Long> recordIds = records
-							.get(DynamicExtensionsUtility
-									.getCategoryEntityName(rootCatEntity
-											.getName()));
-					if ((recordIds != null)) {
-						for (final Long identifer : recordIds) {
+					final List<Long> recordIds = records.get(DynamicExtensionsUtility
+							.getCategoryEntityName(rootCatEntity.getName()));
+					if ((recordIds != null))
+					{
+						for (final Long identifer : recordIds)
+						{
 							String packageName = null;
-							packageName = getPackageName(rootCatEntity
-									.getEntity(), packageName);
+							packageName = getPackageName(rootCatEntity.getEntity(), packageName);
 
 							final String entityClassName = packageName + "."
 									+ rootCatEntity.getEntity().getName();
-							final Object object = hibernateDao.retrieveById(
-									entityClassName, identifer);
+							final Object object = hibernateDao.retrieveById(entityClassName,
+									identifer);
 							Object clonedObject = cloner.clone(object);
 							for (Entry<BaseAbstractAttribute, Object> attrValueEntry : attrVsValues
-									.entrySet()) {
-								setRelatedAttributeValues(entityClassName,
-										attrValueEntry.getKey(), attrValueEntry
-												.getValue(), object);
+									.entrySet())
+							{
+								setRelatedAttributeValues(entityClassName, attrValueEntry.getKey(),
+										attrValueEntry.getValue(), object);
 							}
 							hibernateDao.update(object, clonedObject);
 						}
 					}
 				}
 			}
-		} catch (final Exception e) {
+		}
+		catch (final Exception e)
+		{
 			throw new DynamicExtensionsApplicationException(
 					ErrorConstants.ERROR_ENCNTR_INSERTING_REC, e);
 		}
@@ -972,14 +1020,18 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws DynamicExtensionsApplicationException
 	 */
 	private void setRelatedAttributeValues(final String entityClassName,
-			final BaseAbstractAttribute attr, final Object value,
-			final Object object) throws DynamicExtensionsApplicationException {
-		final String dataType = ((AttributeMetadataInterface) attr)
-				.getAttributeTypeInformation().getDataType();
-		try {
-			setObjectProperty((AbstractAttribute) attr, dataType, Class
-					.forName(entityClassName), value.toString(), object);
-		} catch (final Exception e) {
+			final BaseAbstractAttribute attr, final Object value, final Object object)
+			throws DynamicExtensionsApplicationException
+	{
+		final String dataType = ((AttributeMetadataInterface) attr).getAttributeTypeInformation()
+				.getDataType();
+		try
+		{
+			setObjectProperty((AbstractAttribute) attr, dataType, Class.forName(entityClassName),
+					value.toString(), object);
+		}
+		catch (final Exception e)
+		{
 			throw new DynamicExtensionsApplicationException(
 					ErrorConstants.ERROR_ENCNTR_INSERTING_REC, e);
 		}
@@ -993,14 +1045,16 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @return true if all category attributes are related attributes, false
 	 *         otherwise
 	 */
-	private boolean isAllRelatedCategoryAttributesCollection(
-			final CategoryEntityInterface catEntity) {
+	private boolean isAllRelatedCategoryAttributesCollection(final CategoryEntityInterface catEntity)
+	{
 		final Collection<CategoryAttributeInterface> catAttributes = catEntity
 				.getAllCategoryAttributes();
 		boolean flag = true;
-		for (final CategoryAttributeInterface catAttribute : catAttributes) {
+		for (final CategoryAttributeInterface catAttribute : catAttributes)
+		{
 			if ((catAttribute.getIsRelatedAttribute() == null)
-					|| !catAttribute.getIsRelatedAttribute()) {
+					|| !catAttribute.getIsRelatedAttribute())
+			{
 				flag = false;
 				break;
 			}
@@ -1018,12 +1072,14 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 *         otherwise
 	 */
 	private boolean isAllRelatedCategoryAttributesCollection(
-			final Map<CategoryAttributeInterface, Object> catAttributes) {
+			final Map<CategoryAttributeInterface, Object> catAttributes)
+	{
 		boolean flag = true;
-		for (final CategoryAttributeInterface catAttribute : catAttributes
-				.keySet()) {
+		for (final CategoryAttributeInterface catAttribute : catAttributes.keySet())
+		{
 			if ((catAttribute.getIsRelatedAttribute() == null)
-					|| !catAttribute.getIsRelatedAttribute()) {
+					|| !catAttribute.getIsRelatedAttribute())
+			{
 				flag = false;
 				break;
 			}
@@ -1041,20 +1097,27 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @return
 	 */
 	private boolean isAllRelatedInvisibleCategoryAttributesCollection(
-			final CategoryEntityInterface catEntity) {
+			final CategoryEntityInterface catEntity)
+	{
 		boolean returnValue = true;
 		final Collection<CategoryAttributeInterface> catAttributes = catEntity
 				.getAllCategoryAttributes();
-		if ((catAttributes == null) || catAttributes.isEmpty()) {
+		if ((catAttributes == null) || catAttributes.isEmpty())
+		{
 			returnValue = false;
-		} else {
-			for (final CategoryAttributeInterface catAttribute : catAttributes) {
+		}
+		else
+		{
+			for (final CategoryAttributeInterface catAttribute : catAttributes)
+			{
 				if ((catAttribute.getIsRelatedAttribute() == null)
-						|| !catAttribute.getIsRelatedAttribute()) {
+						|| !catAttribute.getIsRelatedAttribute())
+				{
 					returnValue = false;
-				} else if (catAttribute.getIsRelatedAttribute()
-						&& ((catAttribute.getIsVisible() != null) && catAttribute
-								.getIsVisible())) {
+				}
+				else if (catAttribute.getIsRelatedAttribute()
+						&& ((catAttribute.getIsVisible() != null) && catAttribute.getIsVisible()))
+				{
 					returnValue = false;
 				}
 			}
@@ -1077,13 +1140,12 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws DynamicExtensionsApplicationException
 	 */
 	private void insertRecordsForRelatedAttributes(
-			final Map<BaseAbstractAttributeInterface, Object> valueMap,
-			final Long rootRecordId,
-			final CategoryEntityInterface rootCatEntity,
-			final Map<String, List<Long>> records, final JDBCDAO jdbcDao,
-			final HibernateDAO hibernateDao, final Long identifier)
+			final Map<BaseAbstractAttributeInterface, Object> valueMap, final Long rootRecordId,
+			final CategoryEntityInterface rootCatEntity, final Map<String, List<Long>> records,
+			final JDBCDAO jdbcDao, final HibernateDAO hibernateDao, final Long identifier)
 			throws SQLException, DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException {
+			DynamicExtensionsApplicationException
+	{
 		final CategoryInterface category = rootCatEntity.getCategory();
 
 		// Get a collection of category entities having a collection of related
@@ -1093,30 +1155,31 @@ public class CategoryManager extends AbstractMetadataManager implements
 
 		// Call this method for root category entity's parent's related
 		// attributes.
-		insertAllParentRelatedCategoryAttributesCollection(valueMap,
-				rootCatEntity, records, hibernateDao);
+		insertAllParentRelatedCategoryAttributesCollection(valueMap, rootCatEntity, records,
+				hibernateDao);
 
-		for (final CategoryEntityInterface categoryEntity : catEntWithRA) {
+		for (final CategoryEntityInterface categoryEntity : catEntWithRA)
+		{
 			final Map<BaseAbstractAttribute, Object> attrVsValues = new HashMap<BaseAbstractAttribute, Object>();
 			// Fetch column names and column values for related category
 			// attributes.
-			getColumnNamesAndValuesForRelatedCategoryAttributes(valueMap,
-					categoryEntity, records, hibernateDao, attrVsValues);
+			getColumnNamesAndValuesForRelatedCategoryAttributes(valueMap, categoryEntity, records,
+					hibernateDao, attrVsValues);
 
 			final CategoryAssociationInterface catAssociation = getCategoryAssociationWithTreeParentCategoryEntity(
-					categoryEntity.getTreeParentCategoryEntity(),
-					categoryEntity);
+					categoryEntity.getTreeParentCategoryEntity(), categoryEntity);
 
-			if ((catAssociation == null)
-					&& categoryEntity.equals(rootCatEntity)) {
+			if ((catAssociation == null) && categoryEntity.equals(rootCatEntity))
+			{
 				// insert records for related category attributes of root
 				// category entity.
-				insertRelatedAttributeRecordsForRootCategoryEntity(
-						categoryEntity, records, hibernateDao, attrVsValues);
-			} else if (catAssociation != null) {
-				insertRelatedAttributeRecordsForCategoryEntity(categoryEntity,
-						catAssociation, rootRecordId, records, jdbcDao,
-						identifier, attrVsValues, hibernateDao);
+				insertRelatedAttributeRecordsForRootCategoryEntity(categoryEntity, records,
+						hibernateDao, attrVsValues);
+			}
+			else if (catAssociation != null)
+			{
+				insertRelatedAttributeRecordsForCategoryEntity(categoryEntity, catAssociation,
+						rootRecordId, records, jdbcDao, identifier, attrVsValues, hibernateDao);
 			}
 		}
 	}
@@ -1144,27 +1207,30 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 */
 	private void getColumnNamesAndValuesForRelatedCategoryAttributes(
 			final Map<BaseAbstractAttributeInterface, Object> valueMap,
-			final CategoryEntityInterface catEntity,
-			final Map<String, List<Long>> records,
-			final HibernateDAO hibernateDao,
-			final Map<BaseAbstractAttribute, Object> attrVsValues)
+			final CategoryEntityInterface catEntity, final Map<String, List<Long>> records,
+			final HibernateDAO hibernateDao, final Map<BaseAbstractAttribute, Object> attrVsValues)
 			throws DynamicExtensionsSystemException, SQLException,
-			DynamicExtensionsApplicationException {
+			DynamicExtensionsApplicationException
+	{
 		final Collection<CategoryAttributeInterface> catAttributes = catEntity
 				.getCategoryAttributeCollection();
-		for (final CategoryAttributeInterface catAttribute : catAttributes) {
+		for (final CategoryAttributeInterface catAttribute : catAttributes)
+		{
 			if ((catAttribute.getIsRelatedAttribute() != null)
-					&& catAttribute.getIsRelatedAttribute()) {
-				final AttributeInterface attribute = catAttribute
-						.getAbstractAttribute().getEntity().getAttributeByName(
+					&& catAttribute.getIsRelatedAttribute())
+			{
+				final AttributeInterface attribute = catAttribute.getAbstractAttribute()
+						.getEntity().getAttributeByName(
 								catAttribute.getAbstractAttribute().getName());
 
-				if (catAttribute.getAbstractAttribute() instanceof AssociationInterface) {
-					populateAndInsertRecordForRelatedMultiSelectCategoryAttribute(
-							catAttribute, attribute, records, hibernateDao);
-				} else {
-					populateColumnNamesAndValues(valueMap, attribute,
-							catAttribute, attrVsValues);
+				if (catAttribute.getAbstractAttribute() instanceof AssociationInterface)
+				{
+					populateAndInsertRecordForRelatedMultiSelectCategoryAttribute(catAttribute,
+							attribute, records, hibernateDao);
+				}
+				else
+				{
+					populateColumnNamesAndValues(valueMap, attribute, catAttribute, attrVsValues);
 				}
 			}
 		}
@@ -1184,59 +1250,56 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws DynamicExtensionsApplicationException
 	 */
 	private void populateAndInsertRecordForRelatedMultiSelectCategoryAttribute(
-			final CategoryAttributeInterface catAttribute,
-			final AttributeInterface attribute,
-			final Map<String, List<Long>> records,
-			final HibernateDAO hibernateDao)
+			final CategoryAttributeInterface catAttribute, final AttributeInterface attribute,
+			final Map<String, List<Long>> records, final HibernateDAO hibernateDao)
 			throws DynamicExtensionsSystemException, SQLException,
-			DynamicExtensionsApplicationException {
-		try {
+			DynamicExtensionsApplicationException
+	{
+		try
+		{
 			final AssociationInterface association = (AssociationInterface) catAttribute
 					.getAbstractAttribute();
 			final EntityInterface targetEntity = association.getTargetEntity();
 
 			final List<Long> ids = records.get(DynamicExtensionsUtility
-					.getCategoryEntityName(catAttribute.getCategoryEntity()
-							.getName()));
+					.getCategoryEntityName(catAttribute.getCategoryEntity().getName()));
 
-			if (ids != null) {
-				for (final Long id : ids) {
+			if (ids != null)
+			{
+				for (final Long id : ids)
+				{
 					String packageName = null;
-					packageName = getPackageName(association.getEntity(),
-							packageName);
+					packageName = getPackageName(association.getEntity(), packageName);
 
 					final String sourceObjectClassName = packageName + "."
 							+ association.getEntity().getName();
 					final String targetObjectClassName = packageName + "."
 							+ association.getTargetEntity().getName();
 
-					final Object sourceObject = hibernateDao.retrieveById(
-							sourceObjectClassName, id);
+					final Object sourceObject = hibernateDao
+							.retrieveById(sourceObjectClassName, id);
 					Object clonedSourceObject = cloner.clone(sourceObject);
 					Object targetObject = null;
 
 					// Create a new instance.
-					targetObject = createObjectForClass(packageName + "."
-							+ targetEntity.getName());
+					targetObject = createObjectForClass(packageName + "." + targetEntity.getName());
 
-					final Object defaultvalue = catAttribute
-							.getDefaultValue(null);
+					final Object defaultvalue = catAttribute.getDefaultValue(null);
 					setRelatedAttributeValues(targetObjectClassName,
-							(BaseAbstractAttribute) attribute, defaultvalue,
-							targetObject);
+							(BaseAbstractAttribute) attribute, defaultvalue, targetObject);
 
 					hibernateDao.insert(targetObject);
 
-					addTargetObject(sourceObject, targetObject,
-							targetObjectClassName, association);
-					addSourceObject(sourceObject, targetObject,
-							sourceObjectClassName, association);
+					addTargetObject(sourceObject, targetObject, targetObjectClassName, association);
+					addSourceObject(sourceObject, targetObject, sourceObjectClassName, association);
 					hibernateDao.update(sourceObject, clonedSourceObject);
 
 					hibernateDao.update(targetObject);
 				}
 			}
-		} catch (final Exception e) {
+		}
+		catch (final Exception e)
+		{
 			throw new DynamicExtensionsApplicationException(
 					ErrorConstants.ERROR_ENCNTR_INSERTING_REC, e);
 		}
@@ -1261,11 +1324,10 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 */
 	private void populateColumnNamesAndValues(
 			final Map<BaseAbstractAttributeInterface, Object> valueMap,
-			final AttributeInterface attribute,
-			final CategoryAttributeInterface catAttribute,
+			final AttributeInterface attribute, final CategoryAttributeInterface catAttribute,
 			final Map<BaseAbstractAttribute, Object> attrVsValues)
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException {
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
 		String defaultValue = null;
 		final AttributeTypeInformationInterface attrTypeInfo = attribute
 				.getAttributeTypeInformation();
@@ -1274,28 +1336,29 @@ public class CategoryManager extends AbstractMetadataManager implements
 		// getting set
 		// as if it is read only then skip it, do not set in query.
 		if (!((attrTypeInfo instanceof DateAttributeTypeInformation) && (catAttribute
-				.getDefaultValue(null) == null))) {
+				.getDefaultValue(null) == null)))
+		{
 			defaultValue = catAttribute.getDefaultValue(null);
 			// Setting the default value to empty string since null value not
 			// updated in db for numeric and string values.
-			if (defaultValue == null) {
+			if (defaultValue == null)
+			{
 				defaultValue = "";
 			}
-			if ((catAttribute.getIsCalculated() != null)
-					&& catAttribute.getIsCalculated()) {
+			if ((catAttribute.getIsCalculated() != null) && catAttribute.getIsCalculated())
+			{
 				final FormulaCalculator formulaCalculator = new FormulaCalculator();
-				final String formulaResultValue = formulaCalculator
-						.evaluateFormula(valueMap, catAttribute, catAttribute
-								.getCategoryEntity().getCategory(), 1);
-				if (formulaResultValue != null) {
+				final String formulaResultValue = formulaCalculator.evaluateFormula(valueMap,
+						catAttribute, catAttribute.getCategoryEntity().getCategory(), 1);
+				if (formulaResultValue != null)
+				{
 					defaultValue = formulaResultValue;
 				}
 			}
 
 			// Replace any single and double quotes value with a proper escape
 			// character.
-			defaultValue = DynamicExtensionsUtility
-					.getEscapedStringValue(defaultValue);
+			defaultValue = DynamicExtensionsUtility.getEscapedStringValue(defaultValue);
 
 		}
 		attrVsValues.put((BaseAbstractAttribute) attribute, defaultValue);
@@ -1311,19 +1374,21 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 *         entity passed
 	 */
 	private CategoryAssociationInterface getCategoryAssociationWithTreeParentCategoryEntity(
-			final CategoryEntityInterface treeParent,
-			final CategoryEntityInterface catEntity) {
+			final CategoryEntityInterface treeParent, final CategoryEntityInterface catEntity)
+	{
 		CategoryAssociationInterface categoryAssociation = null;
 		// for root category entity, its tree parent category entity will be
 		// null.
-		if (treeParent != null) {
+		if (treeParent != null)
+		{
 			final Collection<CategoryAssociationInterface> catAssociations = treeParent
 					.getCategoryAssociationCollection();
 
-			for (final CategoryAssociationInterface catAssociation : catAssociations) {
+			for (final CategoryAssociationInterface catAssociation : catAssociations)
+			{
 				if ((catAssociation.getTargetCategoryEntity() != null)
-						&& catAssociation.getTargetCategoryEntity().equals(
-								catEntity)) {
+						&& catAssociation.getTargetCategoryEntity().equals(catEntity))
+				{
 					categoryAssociation = catAssociation;
 					break;
 				}
@@ -1347,37 +1412,38 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws DynamicExtensionsApplicationException
 	 */
 	private void insertRelatedAttributeRecordsForRootCategoryEntity(
-			final CategoryEntityInterface rootCatEntity,
-			final Map<String, List<Long>> records,
-			final HibernateDAO hibernateDao,
-			final Map<BaseAbstractAttribute, Object> attrVsValues)
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException {
-		try {
+			final CategoryEntityInterface rootCatEntity, final Map<String, List<Long>> records,
+			final HibernateDAO hibernateDao, final Map<BaseAbstractAttribute, Object> attrVsValues)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
+		try
+		{
 			final List<Long> recordIds = records.get(DynamicExtensionsUtility
 					.getCategoryEntityName(rootCatEntity.getName()));
-			if (recordIds != null) {
-				for (final Long identifer : recordIds) {
+			if (recordIds != null)
+			{
+				for (final Long identifer : recordIds)
+				{
 					String packageName = null;
-					packageName = getPackageName(rootCatEntity.getEntity(),
-							packageName);
+					packageName = getPackageName(rootCatEntity.getEntity(), packageName);
 					// Update entity query.
 					final String entityClassName = packageName + "."
 							+ rootCatEntity.getEntity().getName();
 
-					final Object object = hibernateDao.retrieveById(
-							entityClassName, identifer);
+					final Object object = hibernateDao.retrieveById(entityClassName, identifer);
 					Object colnedObject = cloner.clone(object);
 					for (Entry<BaseAbstractAttribute, Object> attrValueEntry : attrVsValues
-							.entrySet()) {
-						setRelatedAttributeValues(entityClassName,
-								attrValueEntry.getKey(), attrValueEntry
-										.getValue(), object);
+							.entrySet())
+					{
+						setRelatedAttributeValues(entityClassName, attrValueEntry.getKey(),
+								attrValueEntry.getValue(), object);
 					}
 					hibernateDao.update(object, colnedObject);
 				}
 			}
-		} catch (final Exception e) {
+		}
+		catch (final Exception e)
+		{
 			throw new DynamicExtensionsApplicationException(
 					ErrorConstants.ERROR_ENCNTR_INSERTING_REC, e);
 		}
@@ -1401,72 +1467,67 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 */
 	private void insertRelatedAttributeRecordsForCategoryEntity(
 			final CategoryEntityInterface catEntity,
-			final CategoryAssociationInterface catAssociation,
-			final Long rootRecId, final Map<String, List<Long>> records,
-			final JDBCDAO jdbcDao, final Long userId,
-			final Map<BaseAbstractAttribute, Object> attrVsValues,
-			final HibernateDAO hibernateDao) throws SQLException,
-			DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException {
-		try {
-			final String catEntTblName = catEntity.getTableProperties()
-					.getName();
+			final CategoryAssociationInterface catAssociation, final Long rootRecId,
+			final Map<String, List<Long>> records, final JDBCDAO jdbcDao, final Long userId,
+			final Map<BaseAbstractAttribute, Object> attrVsValues, final HibernateDAO hibernateDao)
+			throws SQLException, DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
+	{
+		try
+		{
+			final String catEntTblName = catEntity.getTableProperties().getName();
 			final String catEntFK = catAssociation.getConstraintProperties()
-					.getTgtEntityConstraintKeyProperties()
-					.getTgtForiegnKeyColumnProperties().getName();
+					.getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties()
+					.getName();
 
 			List<Long> srcEntityId = records.get(DynamicExtensionsUtility
-					.getCategoryEntityName(catAssociation.getCategoryEntity()
-							.getName()));
-			final String catEntityName = DynamicExtensionsUtility
-					.getCategoryEntityName(catEntity.getName());
-			if (records.get(catEntityName) != null) {
+					.getCategoryEntityName(catAssociation.getCategoryEntity().getName()));
+			final String catEntityName = DynamicExtensionsUtility.getCategoryEntityName(catEntity
+					.getName());
+			if (records.get(catEntityName) != null)
+			{
 				final List<Long> recordIds = records.get(catEntityName);
-				for (final Long id : recordIds) {
+				for (final Long id : recordIds)
+				{
 					String packageName = null;
-					packageName = getPackageName(catEntity.getEntity(),
-							packageName);
+					packageName = getPackageName(catEntity.getEntity(), packageName);
 
 					final String entityClassName = packageName + "."
 							+ catEntity.getEntity().getName();
 
-					final Object object = hibernateDao.retrieveById(
-							entityClassName, id);
+					final Object object = hibernateDao.retrieveById(entityClassName, id);
 					Object clonedObject = cloner.clone(object);
 
 					for (Entry<BaseAbstractAttribute, Object> attrValueEntry : attrVsValues
-							.entrySet()) {
-						setRelatedAttributeValues(entityClassName,
-								attrValueEntry.getKey(), attrValueEntry
-										.getValue(), object);
+							.entrySet())
+					{
+						setRelatedAttributeValues(entityClassName, attrValueEntry.getKey(),
+								attrValueEntry.getValue(), object);
 					}
 
 					hibernateDao.update(object, clonedObject);
 
-					final String selectQuery = SELECT_KEYWORD + IDENTIFIER
-							+ FROM_KEYWORD + catEntTblName + WHERE_KEYWORD
-							+ RECORD_ID + EQUAL + QUESTION_MARK;
+					final String selectQuery = SELECT_KEYWORD + IDENTIFIER + FROM_KEYWORD
+							+ catEntTblName + WHERE_KEYWORD + RECORD_ID + EQUAL + QUESTION_MARK;
 					final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 					queryDataList.add(new ColumnValueBean(RECORD_ID, id));
-					final List<Long> resultIds = getResultIDList(selectQuery,
-							IDENTIFIER, jdbcDao, queryDataList);
-					if (resultIds.isEmpty()) {
-						final Long catEntId = entityManagerUtil
-								.getNextIdentifier(catEntTblName);
+					final List<Long> resultIds = getResultIDList(selectQuery, IDENTIFIER, jdbcDao,
+							queryDataList);
+					if (resultIds.isEmpty())
+					{
+						final Long catEntId = entityManagerUtil.getNextIdentifier(catEntTblName);
 
 						// Insert query for category entity table.
-						final String insertQuery = INSERT_INTO_KEYWORD
-								+ catEntTblName
-								+ " (IDENTIFIER, ACTIVITY_STATUS, " + RECORD_ID
-								+ ", " + catEntFK + ") VALUES (?,?,?,?)";
+						final String insertQuery = INSERT_INTO_KEYWORD + catEntTblName
+								+ " (IDENTIFIER, ACTIVITY_STATUS, " + RECORD_ID + ", " + catEntFK
+								+ ") VALUES (?,?,?,?)";
 
 						final LinkedList<ColumnValueBean> colValBeanList = createColumnValueBeanListForDataEntry(
 								catEntId, id);
-						final ColumnValueBean bean4 = new ColumnValueBean(
-								catEntFK, rootRecId);
+						final ColumnValueBean bean4 = new ColumnValueBean(catEntFK, rootRecId);
 						colValBeanList.add(bean4);
-						DynamicExtensionsUtility.executeUpdateQuery(
-								insertQuery, userId, jdbcDao, colValBeanList);
+						DynamicExtensionsUtility.executeUpdateQuery(insertQuery, userId, jdbcDao,
+								colValBeanList);
 					}
 				}
 
@@ -1476,132 +1537,123 @@ public class CategoryManager extends AbstractMetadataManager implements
 			// in all other cases the category entity name must available in map
 			// of records.
 			else if ((records.get(catEntityName) == null)
-					&& isAllRelatedInvisibleCategoryAttributesCollection(catEntity)) {
+					&& isAllRelatedInvisibleCategoryAttributesCollection(catEntity))
+			{
 				final PathInterface path = catEntity.getPath();
 
 				final Collection<PathAssociationRelationInterface> pathAssoRel = path
 						.getSortedPathAssociationRelationCollection();
-				for (final PathAssociationRelationInterface par : pathAssoRel) {
-					final AssociationInterface association = par
-							.getAssociation();
+				for (final PathAssociationRelationInterface par : pathAssoRel)
+				{
+					final AssociationInterface association = par.getAssociation();
 
 					if (association.getTargetEntity().getId() != null
-							&& (association.getTargetEntity().getId())
-									.equals(catEntity.getEntity().getId())) {
-						for (final Long sourceId : srcEntityId) {
+							&& (association.getTargetEntity().getId()).equals(catEntity.getEntity()
+									.getId()))
+					{
+						for (final Long sourceId : srcEntityId)
+						{
 							String packageName = null;
-							packageName = getPackageName(catEntity.getEntity(),
-									packageName);
+							packageName = getPackageName(catEntity.getEntity(), packageName);
 
-							final String sourceObjectClassName = packageName
-									+ "." + association.getEntity().getName();
-							final String targetObjectClassName = packageName
-									+ "." + catEntity.getEntity().getName();
-							final Object sourceObject = hibernateDao
-									.retrieveById(sourceObjectClassName,
-											sourceId);
-							Object clonedSourceObject = cloner
-									.clone(sourceObject);
+							final String sourceObjectClassName = packageName + "."
+									+ association.getEntity().getName();
+							final String targetObjectClassName = packageName + "."
+									+ catEntity.getEntity().getName();
+							final Object sourceObject = hibernateDao.retrieveById(
+									sourceObjectClassName, sourceId);
+							Object clonedSourceObject = cloner.clone(sourceObject);
 							// Create a new instance.
 							Object targetObject = createObjectForClass(targetObjectClassName);
 
 							for (Entry<BaseAbstractAttribute, Object> attrValueEntry : attrVsValues
-									.entrySet()) {
-								setRelatedAttributeValues(
-										targetObjectClassName, attrValueEntry
-												.getKey(), attrValueEntry
-												.getValue(), targetObject);
+									.entrySet())
+							{
+								setRelatedAttributeValues(targetObjectClassName, attrValueEntry
+										.getKey(), attrValueEntry.getValue(), targetObject);
 							}
 
 							// Put the target object in a collection and
 							// save it as a collection of the source object.
 
-							addTargetObject(sourceObject, targetObject,
-									targetObjectClassName, association);
+							addTargetObject(sourceObject, targetObject, targetObjectClassName,
+									association);
 
 							hibernateDao.insert(targetObject);
-							hibernateDao.update(sourceObject,
-									clonedSourceObject);
+							hibernateDao.update(sourceObject, clonedSourceObject);
 							final Long entityId = getObjectId(targetObject);
 							final Long catEntId = entityManagerUtil
 									.getNextIdentifier(catEntTblName);
 
 							// Insert query for category entity table.
-							final String insQryForCatEnt = INSERT_INTO_KEYWORD
-									+ catEntTblName
-									+ " (IDENTIFIER, ACTIVITY_STATUS, "
-									+ RECORD_ID + ", " + catEntFK
-									+ ") VALUES (?,?,?,?)";
+							final String insQryForCatEnt = INSERT_INTO_KEYWORD + catEntTblName
+									+ " (IDENTIFIER, ACTIVITY_STATUS, " + RECORD_ID + ", "
+									+ catEntFK + ") VALUES (?,?,?,?)";
 							final LinkedList<ColumnValueBean> colValBeanList = createColumnValueBeanListForDataEntry(
 									catEntId, entityId);
-							final ColumnValueBean bean4 = new ColumnValueBean(
-									catEntFK, rootRecId);
+							final ColumnValueBean bean4 = new ColumnValueBean(catEntFK, rootRecId);
 							colValBeanList.add(bean4);
-							DynamicExtensionsUtility.executeUpdateQuery(
-									insQryForCatEnt, userId, jdbcDao,
-									colValBeanList);
+							DynamicExtensionsUtility.executeUpdateQuery(insQryForCatEnt, userId,
+									jdbcDao, colValBeanList);
 						}
 
-					} else {
-						if (records.get(association.getTargetEntity().getName()
-								+ "[" + par.getTargetInstanceId() + "]") == null) {
+					}
+					else
+					{
+						if (records.get(association.getTargetEntity().getName() + "["
+								+ par.getTargetInstanceId() + "]") == null)
+						{
 							srcEntityId = new ArrayList<Long>();
-							for (final Long sourceId : srcEntityId) {
+							for (final Long sourceId : srcEntityId)
+							{
 								String packageName = null;
-								packageName = getPackageName(association
-										.getEntity(), packageName);
+								packageName = getPackageName(association.getEntity(), packageName);
 
-								final String sourceObjectClassName = packageName
-										+ "."
+								final String sourceObjectClassName = packageName + "."
 										+ association.getEntity().getName();
-								final String targetObjectClassName = packageName
-										+ "."
-										+ association.getTargetEntity()
-												.getName();
+								final String targetObjectClassName = packageName + "."
+										+ association.getTargetEntity().getName();
 
-								final Object sourceObject = hibernateDao
-										.retrieveById(sourceObjectClassName,
-												sourceId);
-								Object clonedSourceObject = cloner
-										.clone(sourceObject);
+								final Object sourceObject = hibernateDao.retrieveById(
+										sourceObjectClassName, sourceId);
+								Object clonedSourceObject = cloner.clone(sourceObject);
 								Object targetObject = null;
 								// Create a new instance.
 								targetObject = createObjectForClass(targetObjectClassName);
 
 								for (Entry<BaseAbstractAttribute, Object> attrValueEntry : attrVsValues
-										.entrySet()) {
-									setRelatedAttributeValues(
-											targetObjectClassName,
-											attrValueEntry.getKey(),
-											attrValueEntry.getValue(),
-											targetObject);
+										.entrySet())
+								{
+									setRelatedAttributeValues(targetObjectClassName, attrValueEntry
+											.getKey(), attrValueEntry.getValue(), targetObject);
 								}
 
 								// Put the target object in a collection and
 								// save it as a collection of the source object.
 
-								addTargetObject(sourceObject, targetObject,
-										targetObjectClassName, association);
+								addTargetObject(sourceObject, targetObject, targetObjectClassName,
+										association);
 
 								hibernateDao.insert(targetObject);
-								hibernateDao.update(sourceObject,
-										clonedSourceObject);
+								hibernateDao.update(sourceObject, clonedSourceObject);
 								final Long entityId = getObjectId(targetObject);
 								srcEntityId.add(entityId);
 							}
 
-							records.put(association.getTargetEntity().getName()
-									+ "[" + par.getTargetInstanceId() + "]",
-									srcEntityId);
-						} else {
-							srcEntityId = records.get(association
-									.getTargetEntity().getName()
-									+ "[" + par.getTargetInstanceId() + "]");
+							records.put(association.getTargetEntity().getName() + "["
+									+ par.getTargetInstanceId() + "]", srcEntityId);
+						}
+						else
+						{
+							srcEntityId = records.get(association.getTargetEntity().getName() + "["
+									+ par.getTargetInstanceId() + "]");
 						}
 					}
 				}
 			}
-		} catch (final Exception e) {
+		}
+		catch (final Exception e)
+		{
 			throw new DynamicExtensionsApplicationException(
 					ErrorConstants.ERROR_ENCNTR_INSERTING_REC, e);
 		}
@@ -1621,10 +1673,10 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 *             , Object>,Long,SessionDataBean,Long...)} instead
 	 */
 	public boolean editData(final CategoryEntityInterface rootCatEntity,
-			final Map<BaseAbstractAttributeInterface, Object> dataValue,
-			final Long recordId, final Long... userId)
-			throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException {
+			final Map<BaseAbstractAttributeInterface, Object> dataValue, final Long recordId,
+			final Long... userId) throws DynamicExtensionsApplicationException,
+			DynamicExtensionsSystemException
+	{
 		return editData(rootCatEntity, dataValue, recordId, null, userId);
 	}
 
@@ -1637,57 +1689,53 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * java.util.Map, java.lang.Long)
 	 */
 	public boolean editData(final CategoryEntityInterface rootCatEntity,
-			final Map<BaseAbstractAttributeInterface, Object> dataValue,
-			final Long recordId, SessionDataBean sessionDataBean,
-			final Long... userId) throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException {
+			final Map<BaseAbstractAttributeInterface, Object> dataValue, final Long recordId,
+			SessionDataBean sessionDataBean, final Long... userId)
+			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+	{
 		final CategoryInterface category = rootCatEntity.getCategory();
 		JDBCDAO jdbcDao = null;
 		Boolean isEdited = false;
 		HibernateDAO hibernateDao = null;
 		Long prevEntityId = null;
 		List<FileQueryBean> fileAttrQueryList = new ArrayList<FileQueryBean>();
-		try {
+		try
+		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO(sessionDataBean);
-			hibernateDao = DynamicExtensionsUtility
-					.getHibernateDAO(sessionDataBean);
-			final Long entityRecId = getRootCategoryEntityRecordId(
-					rootCatEntity, recordId, jdbcDao);
-			final Long identifier = (((userId != null) && (userId.length > 0)) ? userId[0]
-					: null);
+			hibernateDao = DynamicExtensionsUtility.getHibernateDAO(sessionDataBean);
+			final Long entityRecId = getRootCategoryEntityRecordId(rootCatEntity, recordId, jdbcDao);
+			final Long identifier = (((userId != null) && (userId.length > 0)) ? userId[0] : null);
 			final List<Long> entityRecIds = new ArrayList<Long>();
 			entityRecIds.add(entityRecId);
 
 			final Map<AbstractAttributeInterface, Object> rootCERecords = new HashMap<AbstractAttributeInterface, Object>();
 			populateRootEntityRecordMap(rootCatEntity, rootCERecords, dataValue);
 
-			final CategoryEntityRecord entityRecord = new CategoryEntityRecord(
-					rootCatEntity.getId(), rootCatEntity.getName());
+			final CategoryEntityRecord entityRecord = new CategoryEntityRecord(rootCatEntity
+					.getId(), rootCatEntity.getName());
 			prevEntityId = (Long) dataValue.get(entityRecord);
 			// Roll back queries for category entity records.
 			final Stack<String> rlbkQryStack = new Stack<String>();
 
 			// Clear all records from entity table.
-			final EntityManagerInterface entityManager = EntityManager
-					.getInstance();
-			isEdited = entityManager.editData(rootCatEntity.getEntity(),
-					rootCERecords, entityRecId, hibernateDao,
-					fileAttrQueryList, sessionDataBean, userId);
+			final EntityManagerInterface entityManager = EntityManager.getInstance();
+			isEdited = entityManager.editData(rootCatEntity.getEntity(), rootCERecords,
+					entityRecId, hibernateDao, fileAttrQueryList, sessionDataBean, userId);
 
 			// Clear all records from category entity table.
-			clearCategoryEntityData(rootCatEntity, recordId, rlbkQryStack,
-					identifier, jdbcDao);
-			if (isEdited) {
+			clearCategoryEntityData(rootCatEntity, recordId, rlbkQryStack, identifier, jdbcDao);
+			if (isEdited)
+			{
 				final Map<String, Long> keyMap = new HashMap<String, Long>();
 				final Map<String, Long> fullKeyMap = new HashMap<String, Long>();
 				final Map<String, List<Long>> recordsMap = new HashMap<String, List<Long>>();
 				final String catEntityName = DynamicExtensionsUtility
 						.getCategoryEntityName(rootCatEntity.getName());
-				putRecordIdsInMap(rootCatEntity, entityRecId, fullKeyMap,
-						keyMap, recordsMap);
+				putRecordIdsInMap(rootCatEntity, entityRecId, fullKeyMap, keyMap, recordsMap);
 
 				for (final CategoryAttributeInterface catAttribute : rootCatEntity
-						.getAllCategoryAttributes()) {
+						.getAllCategoryAttributes())
+				{
 					dataValue.remove(catAttribute);
 				}
 
@@ -1700,29 +1748,28 @@ public class CategoryManager extends AbstractMetadataManager implements
 				final Long srcEntityId = null;
 				isEdited = false;
 
-				editRecordsForCategoryEntityTree(catEntFKColName,
-						srcCatEntityId, srcEntityId, prevEntityId,
-						rootCatEntity, dataValue, keyMap, fullKeyMap,
-						recordsMap, areMultplRecrds, isNoCatAttrPrsnt, jdbcDao,
-						hibernateDao, isEdited, identifier, fileAttrQueryList,
-						sessionDataBean);
+				editRecordsForCategoryEntityTree(catEntFKColName, srcCatEntityId, srcEntityId,
+						prevEntityId, rootCatEntity, dataValue, keyMap, fullKeyMap, recordsMap,
+						areMultplRecrds, isNoCatAttrPrsnt, jdbcDao, hibernateDao, isEdited,
+						identifier, fileAttrQueryList, sessionDataBean);
 
-				final Long rootCatEntId = getRootCategoryEntityRecordId(
-						category.getRootCategoryElement(), fullKeyMap
-								.get(catEntityName), jdbcDao);
+				final Long rootCatEntId = getRootCategoryEntityRecordId(category
+						.getRootCategoryElement(), fullKeyMap.get(catEntityName), jdbcDao);
 
-				insertRecordsForRelatedAttributes(dataValue, rootCatEntId,
-						category.getRootCategoryElement(), recordsMap, jdbcDao,
-						hibernateDao, identifier);
+				insertRecordsForRelatedAttributes(dataValue, rootCatEntId, category
+						.getRootCategoryElement(), recordsMap, jdbcDao, hibernateDao, identifier);
 				jdbcDao.commit();
 				hibernateDao.commit();
 				executeFileRecordQueryList(fileAttrQueryList);
 			}
-		} catch (final Exception e) {
+		}
+		catch (final Exception e)
+		{
 			DynamicExtensionsUtility.rollBackDAO(jdbcDao);
-			throw new DynamicExtensionsSystemException(
-					"Error while editing data", e);
-		} finally {
+			throw new DynamicExtensionsSystemException("Error while editing data", e);
+		}
+		finally
+		{
 
 			DynamicExtensionsUtility.closeDAO(jdbcDao);
 			DynamicExtensionsUtility.closeDAO(hibernateDao);
@@ -1756,13 +1803,13 @@ public class CategoryManager extends AbstractMetadataManager implements
 			final CategoryEntityInterface categoryEnt, final Map dataValue,
 			final Map<String, Long> keyMap, final Map<String, Long> fullKeyMap,
 			final Map<String, List<Long>> records, boolean areMultplRecrds,
-			boolean isNoCatAttrPrsnt, final JDBCDAO jdbcDao,
-			final HibernateDAO hibernateDao, final Boolean isNewRecord,
-			final Long userId, List<FileQueryBean> fileAttrQueryList,
-			SessionDataBean sessionDataBean)
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException {
-		try {
+			boolean isNoCatAttrPrsnt, final JDBCDAO jdbcDao, final HibernateDAO hibernateDao,
+			final Boolean isNewRecord, final Long userId, List<FileQueryBean> fileAttrQueryList,
+			SessionDataBean sessionDataBean) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
+	{
+		try
+		{
 			Object value = null;
 			// Variable to check if record has been inserted for category
 			// entity.
@@ -1772,175 +1819,159 @@ public class CategoryManager extends AbstractMetadataManager implements
 			final Set uiColumnSet = dataValue.keySet();
 			final Iterator uiColumnSetIter = uiColumnSet.iterator();
 
-			while (uiColumnSetIter.hasNext()) {
+			while (uiColumnSetIter.hasNext())
+			{
 				final BaseAbstractAttribute attribute = (BaseAbstractAttribute) uiColumnSetIter
 						.next();
 				value = dataValue.get(attribute);
 
-				if (value == null) {
+				if (value == null)
+				{
 					continue;
 				}
 
 				Long entityId = null;
 
-				if ((attribute instanceof CategoryAttributeInterface)
-						&& !isCatEntRecIns) {
-					final String catEntTblName = categoryEnt
-							.getTableProperties().getName();
+				if ((attribute instanceof CategoryAttributeInterface) && !isCatEntRecIns)
+				{
+					final String catEntTblName = categoryEnt.getTableProperties().getName();
 
-					final EntityManagerInterface entityManager = EntityManager
-							.getInstance();
+					final EntityManagerInterface entityManager = EntityManager.getInstance();
 
-					if (isNoCatAttrPrsnt) {
+					if (isNoCatAttrPrsnt)
+					{
 						attributes = null;
-					} else {
+					}
+					else
+					{
 						attributes = createAttributeMap(dataValue);
 					}
 
-					if (srcEntityId == null) {
+					if (srcEntityId == null)
+					{
 						// Insert data for entity.
-						entityId = entityManager.insertData(categoryEnt
-								.getEntity(), attributes, hibernateDao,
-								fileAttrQueryList, sessionDataBean, userId);
+						entityId = entityManager.insertData(categoryEnt.getEntity(), attributes,
+								hibernateDao, fileAttrQueryList, sessionDataBean, userId);
 
 						srcEntityId = entityId;
 
-					} else {
+					}
+					else
+					{
 						entityId = srcEntityId;
 
 						// Edit data for entity.
-						entityManager.editData(categoryEnt.getEntity(),
-								attributes, entityId, hibernateDao,
-								fileAttrQueryList, sessionDataBean, userId);
+						entityManager.editData(categoryEnt.getEntity(), attributes, entityId,
+								hibernateDao, fileAttrQueryList, sessionDataBean, userId);
 					}
 
 					Long catEntId = null;
 
 					// Check whether table is created for category entity.
-					if (((CategoryEntity) categoryEnt).isCreateTable()) {
-						catEntId = entityManagerUtil
-								.getNextIdentifier(categoryEnt
-										.getTableProperties().getName());
+					if (((CategoryEntity) categoryEnt).isCreateTable())
+					{
+						catEntId = entityManagerUtil.getNextIdentifier(categoryEnt
+								.getTableProperties().getName());
 
 						// Insert query for category entity table.
-						final String insertQuery = INSERT_INTO_KEYWORD
-								+ catEntTblName + " (" + IDENTIFIER
-								+ ", ACTIVITY_STATUS, " + RECORD_ID
+						final String insertQuery = INSERT_INTO_KEYWORD + catEntTblName + " ("
+								+ IDENTIFIER + ", ACTIVITY_STATUS, " + RECORD_ID
 								+ ") VALUES (?,?,?)";
 						final LinkedList<ColumnValueBean> colValBeanList = createColumnValueBeanListForDataEntry(
 								catEntId, entityId);
-						DynamicExtensionsUtility.executeUpdateQuery(
-								insertQuery, userId, jdbcDao, colValBeanList);
+						DynamicExtensionsUtility.executeUpdateQuery(insertQuery, userId, jdbcDao,
+								colValBeanList);
 					}
 
-					if (catEntFKColName != null) {
-						if (((CategoryEntity) categoryEnt).isCreateTable()) {
+					if (catEntFKColName != null)
+					{
+						if (((CategoryEntity) categoryEnt).isCreateTable())
+						{
 							// Update query for category entity table.
-							final String updateQuery = UPDATE_KEYWORD
-									+ catEntTblName + " SET " + catEntFKColName
-									+ EQUAL + QUESTION_MARK + WHERE_KEYWORD
+							final String updateQuery = UPDATE_KEYWORD + catEntTblName + " SET "
+									+ catEntFKColName + EQUAL + QUESTION_MARK + WHERE_KEYWORD
 									+ IDENTIFIER + EQUAL + QUESTION_MARK;
-							final ColumnValueBean bean1 = new ColumnValueBean(
-									"catEntFKColName", srcCatEntityId);
-							final ColumnValueBean bean2 = new ColumnValueBean(
-									IDENTIFIER, catEntId);
+							final ColumnValueBean bean1 = new ColumnValueBean("catEntFKColName",
+									srcCatEntityId);
+							final ColumnValueBean bean2 = new ColumnValueBean(IDENTIFIER, catEntId);
 							final LinkedList<ColumnValueBean> colValBeanList = new LinkedList<ColumnValueBean>();
 							colValBeanList.add(bean1);
 							colValBeanList.add(bean2);
-							DynamicExtensionsUtility.executeUpdateQuery(
-									updateQuery, userId, jdbcDao,
-									colValBeanList);
+							DynamicExtensionsUtility.executeUpdateQuery(updateQuery, userId,
+									jdbcDao, colValBeanList);
 						}
 
 						final PathInterface paths = categoryEnt.getPath();
 						final List<PathAssociationRelationInterface> allPathAsso = paths
 								.getSortedPathAssociationRelationCollection();
-						for (final PathAssociationRelationInterface pathAssociation : allPathAsso) {
-							final StringBuffer entityName = new StringBuffer(
-									pathAssociation.getAssociation()
-											.getEntity().getName());
+						for (final PathAssociationRelationInterface pathAssociation : allPathAsso)
+						{
+							final StringBuffer entityName = new StringBuffer(pathAssociation
+									.getAssociation().getEntity().getName());
 							final String catEntityName = "["
-									+ pathAssociation.getSourceInstanceId()
-									+ "]";
+									+ pathAssociation.getSourceInstanceId() + "]";
 							entityName.append(catEntityName);
 
-							final StringBuffer targetEntName = new StringBuffer(
-									pathAssociation.getAssociation()
-											.getTargetEntity().getName());
+							final StringBuffer targetEntName = new StringBuffer(pathAssociation
+									.getAssociation().getTargetEntity().getName());
 							final String targetcatEntityName = "["
-									+ pathAssociation.getTargetInstanceId()
-									+ "]";
+									+ pathAssociation.getTargetInstanceId() + "]";
 							targetEntName.append(targetcatEntityName);
 
-							final Long sourceEntityId = fullKeyMap
-									.get(entityName.toString());
-							Long targetEntityId = fullKeyMap.get(targetEntName
-									.toString());
-							if (sourceEntityId != null) {
+							final Long sourceEntityId = fullKeyMap.get(entityName.toString());
+							Long targetEntityId = fullKeyMap.get(targetEntName.toString());
+							if (sourceEntityId != null)
+							{
 								previousEntityId = sourceEntityId;
 							}
 							if (targetEntityId == null
-									|| pathAssociation.getAssociation()
-											.getTargetEntity().getId() == categoryEnt
-											.getEntity().getId()) {
+									|| pathAssociation.getAssociation().getTargetEntity().getId() == categoryEnt
+											.getEntity().getId())
+							{
 								targetEntityId = entityId;
 							}
 
-							final AssociationInterface asso = pathAssociation
-									.getAssociation();
+							final AssociationInterface asso = pathAssociation.getAssociation();
 							String packageName = null;
-							packageName = getPackageName(asso.getEntity(),
-									packageName);
+							packageName = getPackageName(asso.getEntity(), packageName);
 
-							final StringBuffer sourceObjectClassName = new StringBuffer(
-									packageName);
-							final EntityInterface sourceEntity = asso
-									.getEntity();
-							sourceObjectClassName.append('.').append(
-									sourceEntity.getName());
+							final StringBuffer sourceObjectClassName = new StringBuffer(packageName);
+							final EntityInterface sourceEntity = asso.getEntity();
+							sourceObjectClassName.append('.').append(sourceEntity.getName());
 
-							final StringBuffer targetObjectClassName = new StringBuffer(
-									packageName);
-							final EntityInterface targetEntity = asso
-									.getTargetEntity();
-							targetObjectClassName.append('.').append(
-									targetEntity.getName());
+							final StringBuffer targetObjectClassName = new StringBuffer(packageName);
+							final EntityInterface targetEntity = asso.getTargetEntity();
+							targetObjectClassName.append('.').append(targetEntity.getName());
 
-							final Object sourceObject = hibernateDao
-									.retrieveById(sourceObjectClassName
-											.toString(), previousEntityId);
-							Object clonedSourceObject = cloner
-									.clone(sourceObject);
+							final Object sourceObject = hibernateDao.retrieveById(
+									sourceObjectClassName.toString(), previousEntityId);
+							Object clonedSourceObject = cloner.clone(sourceObject);
 
-							final Object targetObject = hibernateDao
-									.retrieveById(targetObjectClassName
-											.toString(), targetEntityId);
-							Object clonedTargetObject = cloner
-									.clone(targetObject);
+							final Object targetObject = hibernateDao.retrieveById(
+									targetObjectClassName.toString(), targetEntityId);
+							Object clonedTargetObject = cloner.clone(targetObject);
 
-							addSourceObject(sourceObject, targetObject,
-									sourceObjectClassName.toString(), asso);
+							addSourceObject(sourceObject, targetObject, sourceObjectClassName
+									.toString(), asso);
 
-							hibernateDao.update(targetObject,
-									clonedTargetObject);
+							hibernateDao.update(targetObject, clonedTargetObject);
 							// Get the associated object(s).
-							addTargetObject(sourceObject, targetObject,
-									targetObjectClassName.toString(), asso);
-							hibernateDao.update(sourceObject,
-									clonedSourceObject);
+							addTargetObject(sourceObject, targetObject, targetObjectClassName
+									.toString(), asso);
+							hibernateDao.update(sourceObject, clonedSourceObject);
 						}
 					}
 
 					CategoryEntityInterface catEntity = categoryEnt;
-					putRecordIdsInMap(catEntity, entityId, fullKeyMap, keyMap,
-							records);
+					putRecordIdsInMap(catEntity, entityId, fullKeyMap, keyMap, records);
 
 					isCatEntRecIns = true;
-				} else if (attribute instanceof CategoryAssociationInterface) {
+				}
+				else if (attribute instanceof CategoryAssociationInterface)
+				{
 					final CategoryAssociationInterface catAssociation = (CategoryAssociationInterface) attribute;
 
-					final PathInterface path = catAssociation
-							.getTargetCategoryEntity().getPath();
+					final PathInterface path = catAssociation.getTargetCategoryEntity().getPath();
 					final Collection<PathAssociationRelationInterface> pathAssoRel = path
 							.getSortedPathAssociationRelationCollection();
 
@@ -1952,105 +1983,97 @@ public class CategoryManager extends AbstractMetadataManager implements
 					final Map<CategoryAttributeInterface, Object> catAttributes = new HashMap<CategoryAttributeInterface, Object>();
 					final Map<CategoryAssociationInterface, Object> catAssociations = new HashMap<CategoryAssociationInterface, Object>();
 
-					for (final Map<BaseAbstractAttributeInterface, Object> valueMap : mapsOfCntaindEnt) {
+					for (final Map<BaseAbstractAttributeInterface, Object> valueMap : mapsOfCntaindEnt)
+					{
 						// isNewRecord = false;
 
 						Long currentEntityId = null;
 
-						final Set<BaseAbstractAttributeInterface> keySet = valueMap
-								.keySet();
-						final Iterator<BaseAbstractAttributeInterface> iter = keySet
-								.iterator();
-						while (iter.hasNext()) {
+						final Set<BaseAbstractAttributeInterface> keySet = valueMap.keySet();
+						final Iterator<BaseAbstractAttributeInterface> iter = keySet.iterator();
+						while (iter.hasNext())
+						{
 							final Object obj = iter.next();
-							if (obj instanceof CategoryAttributeInterface) {
-								catAttributes.put(
-										(CategoryAttributeInterface) obj,
-										valueMap.get(obj));
-							} else if (obj instanceof CategoryEntityRecord) {
+							if (obj instanceof CategoryAttributeInterface)
+							{
+								catAttributes.put((CategoryAttributeInterface) obj, valueMap
+										.get(obj));
+							}
+							else if (obj instanceof CategoryEntityRecord)
+							{
 								currentEntityId = (Long) valueMap.get(obj);
-							} else if (obj instanceof CategoryAssociationInterface) {
-								catAssociations.put(
-										(CategoryAssociationInterface) obj,
-										valueMap.get(obj));
+							}
+							else if (obj instanceof CategoryAssociationInterface)
+							{
+								catAssociations.put((CategoryAssociationInterface) obj, valueMap
+										.get(obj));
 							}
 						}
 
-						final EntityInterface entity = catAssociation
-								.getTargetCategoryEntity().getEntity();
+						final EntityInterface entity = catAssociation.getTargetCategoryEntity()
+								.getEntity();
 
 						boolean areIntermediateRecords = false;
 						Long intermediateEntityId = null;
 
-						for (final PathAssociationRelationInterface par : pathAssoRel) {
-							final AssociationInterface association = par
-									.getAssociation();
+						for (final PathAssociationRelationInterface par : pathAssoRel)
+						{
+							final AssociationInterface association = par.getAssociation();
 							fKeyColName = association.getConstraintProperties()
 									.getTgtEntityConstraintKeyProperties()
-									.getTgtForiegnKeyColumnProperties()
-									.getName();
+									.getTgtForiegnKeyColumnProperties().getName();
 
-							if (association.getTargetEntity().getId() == entity
-									.getId()) {
-								if ((intermediateEntityId == null)
-										&& (currentEntityId != null)) {
+							if (association.getTargetEntity().getId() == entity.getId())
+							{
+								if ((intermediateEntityId == null) && (currentEntityId != null))
+								{
 									final String query = SELECT_KEYWORD
 											+ fKeyColName
 											+ FROM_KEYWORD
-											+ association.getTargetEntity()
-													.getTableProperties()
-													.getName() + WHERE_KEYWORD
-											+ IDENTIFIER + EQUAL
+											+ association.getTargetEntity().getTableProperties()
+													.getName() + WHERE_KEYWORD + IDENTIFIER + EQUAL
 											+ QUESTION_MARK;
 
 									final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
-									queryDataList.add(new ColumnValueBean(
-											IDENTIFIER, currentEntityId));
-									final List<Long> ids = getResultIDList(
-											query, fKeyColName, jdbcDao,
-											queryDataList);
-									if ((ids != null) && !ids.isEmpty()) {
+									queryDataList.add(new ColumnValueBean(IDENTIFIER,
+											currentEntityId));
+									final List<Long> ids = getResultIDList(query, fKeyColName,
+											jdbcDao, queryDataList);
+									if ((ids != null) && !ids.isEmpty())
+									{
 										intermediateEntityId = ids.get(0);
 									}
 
-									fullKeyMap.put(association
-											.getTargetEntity().getName()
-											+ "["
-											+ par.getTargetInstanceId()
-											+ "]", currentEntityId);
+									fullKeyMap.put(association.getTargetEntity().getName() + "["
+											+ par.getTargetInstanceId() + "]", currentEntityId);
 
-									keyMap.put(association.getTargetEntity()
-											.getName()
-											+ "["
-											+ par.getTargetInstanceId()
-											+ "]", currentEntityId);
+									keyMap.put(association.getTargetEntity().getName() + "["
+											+ par.getTargetInstanceId() + "]", currentEntityId);
 
-									fullKeyMap.put(association.getEntity()
-											.getName()
-											+ "["
-											+ par.getSourceInstanceId()
-											+ "]", intermediateEntityId);
+									fullKeyMap
+											.put(association.getEntity().getName() + "["
+													+ par.getSourceInstanceId() + "]",
+													intermediateEntityId);
 
-									keyMap.put(association.getEntity()
-											.getName()
-											+ "["
-											+ par.getSourceInstanceId()
-											+ "]", intermediateEntityId);
+									keyMap
+											.put(association.getEntity().getName() + "["
+													+ par.getSourceInstanceId() + "]",
+													intermediateEntityId);
 								}
 
-							} else {
+							}
+							else
+							{
 								areIntermediateRecords = true;
 
 								// This means new record needs to be inserted.
-								if (currentEntityId == null) {
+								if (currentEntityId == null)
+								{
 									// Get the record identifier from the
 									// intermediate table.
-									intermediateEntityId = fullKeyMap
-											.get(association.getTargetEntity()
-													.getName()
-													+ "["
-													+ par.getTargetInstanceId()
-													+ "]");
+									intermediateEntityId = fullKeyMap.get(association
+											.getTargetEntity().getName()
+											+ "[" + par.getTargetInstanceId() + "]");
 
 									// The add more button could open up a link
 									// that contains an entity
@@ -2061,29 +2084,21 @@ public class CategoryManager extends AbstractMetadataManager implements
 									// table and then the identifier from this
 									// table should be used as a FK
 									// in usual way.
-									if (intermediateEntityId == null) {
+									if (intermediateEntityId == null)
+									{
 										String packageName = null;
-										packageName = getPackageName(
-												association.getEntity(),
+										packageName = getPackageName(association.getEntity(),
 												packageName);
 
-										String sourceObjectClassName = packageName
-												+ "."
-												+ association.getEntity()
-														.getName();
+										String sourceObjectClassName = packageName + "."
+												+ association.getEntity().getName();
 
-										final String targetObjectClassName = packageName
-												+ "."
-												+ association.getTargetEntity()
-														.getName();
+										final String targetObjectClassName = packageName + "."
+												+ association.getTargetEntity().getName();
 
-										Long sourceObjId = fullKeyMap
-												.get(association.getEntity()
-														.getName()
-														+ "["
-														+ par
-																.getSourceInstanceId()
-														+ "]");
+										Long sourceObjId = fullKeyMap.get(association.getEntity()
+												.getName()
+												+ "[" + par.getSourceInstanceId() + "]");
 
 										// In case of inherited association, the
 										// 'fullKeyMap' will not
@@ -2092,181 +2107,151 @@ public class CategoryManager extends AbstractMetadataManager implements
 										// belongs. Hence go up the hierarchy
 										// till the parent is found
 										// and use its identifier
-										if (sourceObjId == null) {
+										if (sourceObjId == null)
+										{
 											EntityInterface sourceEntity = catAssociation
-													.getCategoryEntity()
-													.getEntity();
+													.getCategoryEntity().getEntity();
 
-											while (sourceEntity
-													.getParentEntity() != null) {
+											while (sourceEntity.getParentEntity() != null)
+											{
 												final EntityInterface parentEntity = sourceEntity
 														.getParentEntity();
-												if (parentEntity.getId() == association
-														.getEntity().getId()) {
+												if (parentEntity.getId() == association.getEntity()
+														.getId())
+												{
 													sourceObjId = fullKeyMap
-															.get(catAssociation
-																	.getCategoryEntity()
-																	.getEntity()
-																	.getName()
+															.get(catAssociation.getCategoryEntity()
+																	.getEntity().getName()
 																	+ "["
-																	+ par
-																			.getSourceInstanceId()
+																	+ par.getSourceInstanceId()
 																	+ "]");
 													break;
-												} else {
+												}
+												else
+												{
 													sourceEntity = parentEntity;
 												}
 											}
 
 											sourceObjectClassName = packageName
 													+ "."
-													+ catAssociation
-															.getCategoryEntity()
-															.getEntity()
-															.getName();
+													+ catAssociation.getCategoryEntity()
+															.getEntity().getName();
 										}
 
-										final Object sourceObject = hibernateDao
-												.retrieveById(
-														sourceObjectClassName,
-														sourceObjId);
-										Object clonedSourceObject = cloner
-												.clone(sourceObject);
+										final Object sourceObject = hibernateDao.retrieveById(
+												sourceObjectClassName, sourceObjId);
+										Object clonedSourceObject = cloner.clone(sourceObject);
 
 										Object targetObject = null;
 
-										String sourceRoleName = association
-												.getSourceRole().getName();
-										sourceRoleName = sourceRoleName
-												.substring(0, 1).toUpperCase()
-												+ sourceRoleName
-														.substring(
-																1,
-																sourceRoleName
-																		.length());
+										String sourceRoleName = association.getSourceRole()
+												.getName();
+										sourceRoleName = sourceRoleName.substring(0, 1)
+												.toUpperCase()
+												+ sourceRoleName.substring(1, sourceRoleName
+														.length());
 
-										String targetRoleName = association
-												.getTargetRole().getName();
-										targetRoleName = targetRoleName
-												.substring(0, 1).toUpperCase()
-												+ targetRoleName
-														.substring(
-																1,
-																targetRoleName
-																		.length());
+										String targetRoleName = association.getTargetRole()
+												.getName();
+										targetRoleName = targetRoleName.substring(0, 1)
+												.toUpperCase()
+												+ targetRoleName.substring(1, targetRoleName
+														.length());
 
 										// Create a new instance.
 										targetObject = createObjectForClass(targetObjectClassName);
 										hibernateDao.insert(targetObject);
-										Object clonedTargetObject = cloner
-												.clone(targetObject);
+										Object clonedTargetObject = cloner.clone(targetObject);
 
-										addTargetObject(sourceObject,
-												targetObject,
-												targetObjectClassName,
-												association);
+										addTargetObject(sourceObject, targetObject,
+												targetObjectClassName, association);
 
-										hibernateDao.update(sourceObject,
-												clonedSourceObject);
-										addSourceObject(sourceObject,
-												targetObject,
-												sourceObjectClassName,
-												association);
+										hibernateDao.update(sourceObject, clonedSourceObject);
+										addSourceObject(sourceObject, targetObject,
+												sourceObjectClassName, association);
 
-										hibernateDao.update(targetObject,
-												clonedTargetObject);
+										hibernateDao.update(targetObject, clonedTargetObject);
 										final Long insertedObjectId = getObjectId(targetObject);
 
 										intermediateEntityId = insertedObjectId;
 
-										fullKeyMap.put(association
-												.getTargetEntity().getName()
-												+ "["
-												+ par.getTargetInstanceId()
-												+ "]", intermediateEntityId);
+										fullKeyMap.put(association.getTargetEntity().getName()
+												+ "[" + par.getTargetInstanceId() + "]",
+												intermediateEntityId);
 									}
-								} else {
+								}
+								else
+								{
 
-									final Long fKeyColData = fullKeyMap
-											.get(association.getEntity()
-													.getName()
-													+ "["
-													+ par.getSourceInstanceId()
-													+ "]");
+									final Long fKeyColData = fullKeyMap.get(association.getEntity()
+											.getName()
+											+ "[" + par.getSourceInstanceId() + "]");
 									final String query = SELECT_KEYWORD
 											+ IDENTIFIER
 											+ FROM_KEYWORD
-											+ association.getTargetEntity()
-													.getTableProperties()
-													.getName() + WHERE_KEYWORD
-											+ fKeyColName + EQUAL
-											+ QUESTION_MARK;
+											+ association.getTargetEntity().getTableProperties()
+													.getName() + WHERE_KEYWORD + fKeyColName
+											+ EQUAL + QUESTION_MARK;
 									final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
-									queryDataList.add(new ColumnValueBean(
-											fKeyColName, fKeyColData));
-									final List<Long> ids = getResultIDList(
-											query, IDENTIFIER, jdbcDao,
-											queryDataList);
-									if ((ids != null) && !ids.isEmpty()) {
-										if (ids.size() == 1) {
+									queryDataList
+											.add(new ColumnValueBean(fKeyColName, fKeyColData));
+									final List<Long> ids = getResultIDList(query, IDENTIFIER,
+											jdbcDao, queryDataList);
+									if ((ids != null) && !ids.isEmpty())
+									{
+										if (ids.size() == 1)
+										{
 											intermediateEntityId = ids.get(0);
-										} else {
-											intermediateEntityId = fullKeyMap
-													.get(association
-															.getTargetEntity()
-															.getName()
-															+ "["
-															+ par
-																	.getTargetInstanceId()
-															+ "]");
+										}
+										else
+										{
+											intermediateEntityId = fullKeyMap.get(association
+													.getTargetEntity().getName()
+													+ "[" + par.getTargetInstanceId() + "]");
 										}
 									}
 
-									if (intermediateEntityId != null) {
-										fullKeyMap.put(association
-												.getTargetEntity().getName()
-												+ "["
-												+ par.getTargetInstanceId()
-												+ "]", intermediateEntityId);
+									if (intermediateEntityId != null)
+									{
+										fullKeyMap.put(association.getTargetEntity().getName()
+												+ "[" + par.getTargetInstanceId() + "]",
+												intermediateEntityId);
 
-										keyMap.put(association
-												.getTargetEntity().getName()
-												+ "["
-												+ par.getTargetInstanceId()
-												+ "]", intermediateEntityId);
+										keyMap.put(association.getTargetEntity().getName() + "["
+												+ par.getTargetInstanceId() + "]",
+												intermediateEntityId);
 									}
 								}
 							}
 						}
 
-						final String selectQuery = SELECT_KEYWORD
-								+ IDENTIFIER
-								+ FROM_KEYWORD
-								+ catAssociation.getCategoryEntity()
-										.getTableProperties().getName()
-								+ WHERE_KEYWORD + RECORD_ID + EQUAL
-								+ QUESTION_MARK;
+						final String selectQuery = SELECT_KEYWORD + IDENTIFIER + FROM_KEYWORD
+								+ catAssociation.getCategoryEntity().getTableProperties().getName()
+								+ WHERE_KEYWORD + RECORD_ID + EQUAL + QUESTION_MARK;
 						final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
-						queryDataList.add(new ColumnValueBean(RECORD_ID,
-								previousEntityId));
-						final List<Long> identifiers = getResultIDList(
-								selectQuery, IDENTIFIER, jdbcDao, queryDataList);
+						queryDataList.add(new ColumnValueBean(RECORD_ID, previousEntityId));
+						final List<Long> identifiers = getResultIDList(selectQuery, IDENTIFIER,
+								jdbcDao, queryDataList);
 
 						Long resultId = null;
-						if ((identifiers != null) && !identifiers.isEmpty()) {
+						if ((identifiers != null) && !identifiers.isEmpty())
+						{
 							resultId = identifiers.get(0);
 						}
 
 						final Long srcCategoryEntId = resultId;
 
-						final String catEntFKClmnName = catAssociation
-								.getConstraintProperties()
+						final String catEntFKClmnName = catAssociation.getConstraintProperties()
 								.getTgtEntityConstraintKeyProperties()
 								.getTgtForiegnKeyColumnProperties().getName();
 
-						if (mapsOfCntaindEnt.size() > 1) {
+						if (mapsOfCntaindEnt.size() > 1)
+						{
 							areMultplRecrds = true;
-						} else {
+						}
+						else
+						{
 							areMultplRecrds = false;
 						}
 
@@ -2276,74 +2261,66 @@ public class CategoryManager extends AbstractMetadataManager implements
 						// attributes, then create a dummy
 						// category attribute so as to link the records.
 						if (catAttributes.isEmpty()
-								|| isAllRelatedCategoryAttributesCollection(catAttributes)) {
+								|| isAllRelatedCategoryAttributesCollection(catAttributes))
+						{
 							isNoCatAttrPrsnt = true;
 							final CategoryAttributeInterface dummyCatAttr = DomainObjectFactory
 									.getInstance().createCategoryAttribute();
-							dummyCatAttr.setCategoryEntity(catAssociation
-									.getTargetCategoryEntity());
+							dummyCatAttr
+									.setCategoryEntity(catAssociation.getTargetCategoryEntity());
 							catAttributes.put(dummyCatAttr, "");
 
-							if (areIntermediateRecords) {
-								editRecordsForCategoryEntityTree(
-										catEntFKClmnName, srcCategoryEntId,
-										currentEntityId, intermediateEntityId,
-										catAssociation
-												.getTargetCategoryEntity(),
-										catAttributes, keyMap, fullKeyMap,
-										records, areMultplRecrds,
-										isNoCatAttrPrsnt, jdbcDao,
-										hibernateDao, isNewRecord, userId,
-										fileAttrQueryList, sessionDataBean);
-							} else {
-								editRecordsForCategoryEntityTree(
-										catEntFKClmnName, srcCategoryEntId,
-										currentEntityId, previousEntityId,
-										catAssociation
-												.getTargetCategoryEntity(),
-										catAttributes, keyMap, fullKeyMap,
-										records, areMultplRecrds,
-										isNoCatAttrPrsnt, jdbcDao,
-										hibernateDao, isNewRecord, userId,
-										fileAttrQueryList, sessionDataBean);
+							if (areIntermediateRecords)
+							{
+								editRecordsForCategoryEntityTree(catEntFKClmnName,
+										srcCategoryEntId, currentEntityId, intermediateEntityId,
+										catAssociation.getTargetCategoryEntity(), catAttributes,
+										keyMap, fullKeyMap, records, areMultplRecrds,
+										isNoCatAttrPrsnt, jdbcDao, hibernateDao, isNewRecord,
+										userId, fileAttrQueryList, sessionDataBean);
+							}
+							else
+							{
+								editRecordsForCategoryEntityTree(catEntFKClmnName,
+										srcCategoryEntId, currentEntityId, previousEntityId,
+										catAssociation.getTargetCategoryEntity(), catAttributes,
+										keyMap, fullKeyMap, records, areMultplRecrds,
+										isNoCatAttrPrsnt, jdbcDao, hibernateDao, isNewRecord,
+										userId, fileAttrQueryList, sessionDataBean);
 							}
 
 							isNoCatAttrPrsnt = false;
-						} else {
-							if (areIntermediateRecords) {
-								editRecordsForCategoryEntityTree(
-										catEntFKClmnName, srcCategoryEntId,
-										currentEntityId, intermediateEntityId,
-										catAssociation
-												.getTargetCategoryEntity(),
-										catAttributes, keyMap, fullKeyMap,
-										records, areMultplRecrds,
-										isNoCatAttrPrsnt, jdbcDao,
-										hibernateDao, isNewRecord, userId,
-										fileAttrQueryList, sessionDataBean);
-							} else {
-								editRecordsForCategoryEntityTree(
-										catEntFKClmnName, srcCategoryEntId,
-										currentEntityId, previousEntityId,
-										catAssociation
-												.getTargetCategoryEntity(),
-										catAttributes, keyMap, fullKeyMap,
-										records, areMultplRecrds,
-										isNoCatAttrPrsnt, jdbcDao,
-										hibernateDao, isNewRecord, userId,
-										fileAttrQueryList, sessionDataBean);
+						}
+						else
+						{
+							if (areIntermediateRecords)
+							{
+								editRecordsForCategoryEntityTree(catEntFKClmnName,
+										srcCategoryEntId, currentEntityId, intermediateEntityId,
+										catAssociation.getTargetCategoryEntity(), catAttributes,
+										keyMap, fullKeyMap, records, areMultplRecrds,
+										isNoCatAttrPrsnt, jdbcDao, hibernateDao, isNewRecord,
+										userId, fileAttrQueryList, sessionDataBean);
+							}
+							else
+							{
+								editRecordsForCategoryEntityTree(catEntFKClmnName,
+										srcCategoryEntId, currentEntityId, previousEntityId,
+										catAssociation.getTargetCategoryEntity(), catAttributes,
+										keyMap, fullKeyMap, records, areMultplRecrds,
+										isNoCatAttrPrsnt, jdbcDao, hibernateDao, isNewRecord,
+										userId, fileAttrQueryList, sessionDataBean);
 							}
 						}
 
 						catAttributes.clear();
 
 						// Insert data for category associations.
-						if (currentEntityId == null) {
-							currentEntityId = fullKeyMap
-									.get(DynamicExtensionsUtility
-											.getCategoryEntityName(catAssociation
-													.getTargetCategoryEntity()
-													.getName()));
+						if (currentEntityId == null)
+						{
+							currentEntityId = fullKeyMap.get(DynamicExtensionsUtility
+									.getCategoryEntityName(catAssociation.getTargetCategoryEntity()
+											.getName()));
 						}
 
 						// The previous entity id (prevEntityId) will now be
@@ -2351,24 +2328,23 @@ public class CategoryManager extends AbstractMetadataManager implements
 						// the present entity id (currentEntityId) to do the
 						// data entry
 						// for category associations of current entity.
-						editRecordsForCategoryEntityTree(catEntFKClmnName,
-								srcCategoryEntId, currentEntityId,
-								currentEntityId, catAssociation
-										.getTargetCategoryEntity(),
-								catAssociations, keyMap, fullKeyMap, records,
-								areMultplRecrds, isNoCatAttrPrsnt, jdbcDao,
-								hibernateDao, isNewRecord, userId,
-								fileAttrQueryList, sessionDataBean);
+						editRecordsForCategoryEntityTree(catEntFKClmnName, srcCategoryEntId,
+								currentEntityId, currentEntityId, catAssociation
+										.getTargetCategoryEntity(), catAssociations, keyMap,
+								fullKeyMap, records, areMultplRecrds, isNoCatAttrPrsnt, jdbcDao,
+								hibernateDao, isNewRecord, userId, fileAttrQueryList,
+								sessionDataBean);
 						catAssociations.clear();
 
 						fullKeyMap.putAll(keyMap);
-						keyMap.remove(DynamicExtensionsUtility
-								.getCategoryEntityName(catAssociation
-										.getTargetCategoryEntity().getName()));
+						keyMap.remove(DynamicExtensionsUtility.getCategoryEntityName(catAssociation
+								.getTargetCategoryEntity().getName()));
 					}
 				}
 			}
-		} catch (final Exception e) {
+		}
+		catch (final Exception e)
+		{
 			throw new DynamicExtensionsApplicationException(
 					"Exception encountered while inserting records!", e);
 		}
@@ -2395,20 +2371,18 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	private void insertRecordsForCategoryEntityTree(
-			final String entityFKColName, final String catEntFKColName,
-			final Long srcCatEntityId, final Long srcEntityId,
+	private void insertRecordsForCategoryEntityTree(final String entityFKColName,
+			final String catEntFKColName, final Long srcCatEntityId, final Long srcEntityId,
 			final CategoryEntityInterface categoryEnt, final Map dataValue,
 			final Map<String, Long> keyMap, final Map<String, Long> fullKeyMap,
 			final Map<String, List<Long>> records, boolean areMultplRecrds,
-			boolean isNoCatAttrPrsnt, final JDBCDAO jdbcDao,
-			final HibernateDAO hibernateDao, final boolean isEditMode,
-			final AssociationInterface lastAsso, final Long userId,
-			List<FileQueryBean> fileAttrQueryList,
-			SessionDataBean sessionDataBean)
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException {
-		try {
+			boolean isNoCatAttrPrsnt, final JDBCDAO jdbcDao, final HibernateDAO hibernateDao,
+			final boolean isEditMode, final AssociationInterface lastAsso, final Long userId,
+			List<FileQueryBean> fileAttrQueryList, SessionDataBean sessionDataBean)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
+		try
+		{
 			Object value = null;
 
 			// Variable to check if record has been inserted for category
@@ -2419,87 +2393,88 @@ public class CategoryManager extends AbstractMetadataManager implements
 			final Set uiColumnSet = dataValue.keySet();
 			final Iterator uiColumnSetIter = uiColumnSet.iterator();
 
-			while (uiColumnSetIter.hasNext()) {
+			while (uiColumnSetIter.hasNext())
+			{
 				final BaseAbstractAttribute attribute = (BaseAbstractAttribute) uiColumnSetIter
 						.next();
 				value = dataValue.get(attribute);
 
-				if (value == null) {
+				if (value == null)
+				{
 					continue;
 				}
 
-				if ((attribute instanceof CategoryAttributeInterface)
-						&& !isCatEntRecIns) {
-					final String catEntTblName = categoryEnt
-							.getTableProperties().getName();
+				if ((attribute instanceof CategoryAttributeInterface) && !isCatEntRecIns)
+				{
+					final String catEntTblName = categoryEnt.getTableProperties().getName();
 
 					Long entityId = null;
-					final EntityManagerInterface entityManager = EntityManager
-							.getInstance();
+					final EntityManagerInterface entityManager = EntityManager.getInstance();
 
-					if (isNoCatAttrPrsnt) {
+					if (isNoCatAttrPrsnt)
+					{
 						attributes = null;
-					} else {
+					}
+					else
+					{
 						attributes = createAttributeMap(dataValue);
 					}
 					final String catEntName = DynamicExtensionsUtility
 							.getCategoryEntityName(((CategoryAttribute) attribute)
 									.getCategoryEntity().getName());
-					if ((keyMap.get(catEntName) != null) && !areMultplRecrds) {
+					if ((keyMap.get(catEntName) != null) && !areMultplRecrds)
+					{
 						entityId = keyMap.get(catEntName);
 
 						// Edit data for entity hierarchy.
-						entityManager.editData(categoryEnt.getEntity(),
-								attributes, entityId, hibernateDao,
-								fileAttrQueryList, sessionDataBean, userId);
-					} else {
-						entityId = entityManager.insertData(categoryEnt
-								.getEntity(), attributes, hibernateDao,
-								fileAttrQueryList, sessionDataBean, userId);
+						entityManager.editData(categoryEnt.getEntity(), attributes, entityId,
+								hibernateDao, fileAttrQueryList, sessionDataBean, userId);
+					}
+					else
+					{
+						entityId = entityManager.insertData(categoryEnt.getEntity(), attributes,
+								hibernateDao, fileAttrQueryList, sessionDataBean, userId);
 					}
 
 					Long catEntId = null;
 
 					// Check whether table is created for category entity.
-					if (((CategoryEntity) categoryEnt).isCreateTable()) {
-						catEntId = entityManagerUtil
-								.getNextIdentifier(categoryEnt
-										.getTableProperties().getName());
+					if (((CategoryEntity) categoryEnt).isCreateTable())
+					{
+						catEntId = entityManagerUtil.getNextIdentifier(categoryEnt
+								.getTableProperties().getName());
 
 						// Insert query for category entity table.
-						final String insertQuery = INSERT_INTO_KEYWORD
-								+ catEntTblName + " (" + IDENTIFIER
-								+ ", ACTIVITY_STATUS, " + RECORD_ID
+						final String insertQuery = INSERT_INTO_KEYWORD + catEntTblName + " ("
+								+ IDENTIFIER + ", ACTIVITY_STATUS, " + RECORD_ID
 								+ ") VALUES (?,?,?)";
 
 						final LinkedList<ColumnValueBean> colValBeanList = createColumnValueBeanListForDataEntry(
 								catEntId, entityId);
-						DynamicExtensionsUtility.executeUpdateQuery(
-								insertQuery, userId, jdbcDao, colValBeanList);
+						DynamicExtensionsUtility.executeUpdateQuery(insertQuery, userId, jdbcDao,
+								colValBeanList);
 					}
 
-					if ((catEntFKColName != null) && (entityFKColName != null)) {
-						if (((CategoryEntity) categoryEnt).isCreateTable()) {
+					if ((catEntFKColName != null) && (entityFKColName != null))
+					{
+						if (((CategoryEntity) categoryEnt).isCreateTable())
+						{
 							// Update query for category entity table.
-							final String updateQuery = UPDATE_KEYWORD
-									+ catEntTblName + " SET " + catEntFKColName
-									+ EQUAL + QUESTION_MARK + WHERE_KEYWORD
+							final String updateQuery = UPDATE_KEYWORD + catEntTblName + " SET "
+									+ catEntFKColName + EQUAL + QUESTION_MARK + WHERE_KEYWORD
 									+ IDENTIFIER + EQUAL + QUESTION_MARK;
-							final ColumnValueBean bean1 = new ColumnValueBean(
-									catEntFKColName, srcCatEntityId);
-							final ColumnValueBean bean2 = new ColumnValueBean(
-									IDENTIFIER, catEntId);
+							final ColumnValueBean bean1 = new ColumnValueBean(catEntFKColName,
+									srcCatEntityId);
+							final ColumnValueBean bean2 = new ColumnValueBean(IDENTIFIER, catEntId);
 							final LinkedList<ColumnValueBean> colValBeanList = new LinkedList<ColumnValueBean>();
 							colValBeanList.add(bean1);
 							colValBeanList.add(bean2);
-							DynamicExtensionsUtility.executeUpdateQuery(
-									updateQuery, userId, jdbcDao,
-									colValBeanList);
+							DynamicExtensionsUtility.executeUpdateQuery(updateQuery, userId,
+									jdbcDao, colValBeanList);
 						}
 
 						String packageName = null;
-						packageName = getPackageName(lastAsso.getEntity(),
-								packageName);
+						packageName = getPackageName(lastAsso.getEntity(), packageName);
 						final String sourceObjectClassName = packageName + "."
 								+ lastAsso.getEntity().getName();
 						final String targetObjectClassName = packageName + "."
@@ -2509,176 +2484,145 @@ public class CategoryManager extends AbstractMetadataManager implements
 						final Object targetObject = hibernateDao.retrieveById(
 								targetObjectClassName, entityId);
 						Object clonedTarget = cloner.clone(targetObject);
-						addSourceObject(sourceObject, targetObject,
-								sourceObjectClassName, lastAsso);
+						addSourceObject(sourceObject, targetObject, sourceObjectClassName, lastAsso);
 
 						hibernateDao.update(targetObject, clonedTarget);
 
 					}
 
 					CategoryEntityInterface catEntity = categoryEnt;
-					putRecordIdsInMap(catEntity, entityId, fullKeyMap, keyMap,
-							records);
+					putRecordIdsInMap(catEntity, entityId, fullKeyMap, keyMap, records);
 
 					isCatEntRecIns = true;
-				} else if (attribute instanceof CategoryAssociationInterface) {
+				}
+				else if (attribute instanceof CategoryAssociationInterface)
+				{
 					final CategoryAssociationInterface catAssociation = (CategoryAssociationInterface) attribute;
 
-					final PathInterface path = catAssociation
-							.getTargetCategoryEntity().getPath();
+					final PathInterface path = catAssociation.getTargetCategoryEntity().getPath();
 					final Collection<PathAssociationRelationInterface> pathAssoRel = path
 							.getSortedPathAssociationRelationCollection();
 
-					Long sourceEntityId = fullKeyMap
-							.get(DynamicExtensionsUtility
-									.getCategoryEntityName(catAssociation
-											.getCategoryEntity().getName()));
+					Long sourceEntityId = fullKeyMap.get(DynamicExtensionsUtility
+							.getCategoryEntityName(catAssociation.getCategoryEntity().getName()));
 
 					// Foreign key column name.
 					String fKeyColName = "";
 
-					final String selectQuery = SELECT_KEYWORD
-							+ IDENTIFIER
-							+ FROM_KEYWORD
-							+ catAssociation.getCategoryEntity()
-									.getTableProperties().getName()
+					final String selectQuery = SELECT_KEYWORD + IDENTIFIER + FROM_KEYWORD
+							+ catAssociation.getCategoryEntity().getTableProperties().getName()
 							+ WHERE_KEYWORD + RECORD_ID + EQUAL + QUESTION_MARK;
 					final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
-					queryDataList.add(new ColumnValueBean(RECORD_ID,
-							sourceEntityId));
-					final List<Long> identifiers = getResultIDList(selectQuery,
-							IDENTIFIER, jdbcDao, queryDataList);
+					queryDataList.add(new ColumnValueBean(RECORD_ID, sourceEntityId));
+					final List<Long> identifiers = getResultIDList(selectQuery, IDENTIFIER,
+							jdbcDao, queryDataList);
 
 					Long resultId = null;
-					if ((identifiers != null) && !identifiers.isEmpty()) {
+					if ((identifiers != null) && !identifiers.isEmpty())
+					{
 						resultId = identifiers.get(0);
 					}
 
 					final Long srcCategoryEntId = resultId;
 
-					final String catEntFKClmnName = catAssociation
-							.getConstraintProperties()
+					final String catEntFKClmnName = catAssociation.getConstraintProperties()
 							.getTgtEntityConstraintKeyProperties()
 							.getTgtForiegnKeyColumnProperties().getName();
 
-					final EntityInterface entity = catAssociation
-							.getTargetCategoryEntity().getEntity();
+					final EntityInterface entity = catAssociation.getTargetCategoryEntity()
+							.getEntity();
 
 					AssociationInterface lastAssociation = null;
-					for (final PathAssociationRelationInterface par : pathAssoRel) {
-						final AssociationInterface association = par
-								.getAssociation();
+					for (final PathAssociationRelationInterface par : pathAssoRel)
+					{
+						final AssociationInterface association = par.getAssociation();
 						lastAssociation = par.getAssociation();
 
 						fKeyColName = association.getConstraintProperties()
 								.getTgtEntityConstraintKeyProperties()
 								.getTgtForiegnKeyColumnProperties().getName();
 
-						if (association.getTargetEntity().getId() == entity
-								.getId()) {
-							sourceEntityId = fullKeyMap.get(association
-									.getEntity().getName()
-									+ "[" + par.getSourceInstanceId() + "]");
+						if (association.getTargetEntity().getId() == entity.getId())
+						{
+							sourceEntityId = fullKeyMap.get(association.getEntity().getName() + "["
+									+ par.getSourceInstanceId() + "]");
 
-							if (sourceEntityId == null) {
-								EntityInterface sourceEntity = catAssociation
-										.getCategoryEntity().getEntity();
-								while (sourceEntity.getParentEntity() != null) {
+							if (sourceEntityId == null)
+							{
+								EntityInterface sourceEntity = catAssociation.getCategoryEntity()
+										.getEntity();
+								while (sourceEntity.getParentEntity() != null)
+								{
 									final EntityInterface parentEntity = sourceEntity
 											.getParentEntity();
-									if (parentEntity.getId() == association
-											.getEntity().getId()) {
-										sourceEntityId = fullKeyMap
-												.get(catAssociation
-														.getCategoryEntity()
-														.getEntity().getName()
-														+ "["
-														+ par
-																.getSourceInstanceId()
-														+ "]");
+									if (parentEntity.getId() == association.getEntity().getId())
+									{
+										sourceEntityId = fullKeyMap.get(catAssociation
+												.getCategoryEntity().getEntity().getName()
+												+ "[" + par.getSourceInstanceId() + "]");
 										break;
-									} else {
+									}
+									else
+									{
 										sourceEntity = parentEntity;
 									}
 								}
 							}
-						} else {
-							if (fullKeyMap.get(association.getTargetEntity()
-									.getName()
-									+ "[" + par.getTargetInstanceId() + "]") == null) {
+						}
+						else
+						{
+							if (fullKeyMap.get(association.getTargetEntity().getName() + "["
+									+ par.getTargetInstanceId() + "]") == null)
+							{
 								String packageName = null;
-								packageName = getPackageName(association
-										.getEntity(), packageName);
-								final String sourceObjectClassName = packageName
-										+ "."
+								packageName = getPackageName(association.getEntity(), packageName);
+								final String sourceObjectClassName = packageName + "."
 										+ association.getEntity().getName();
-								final String targetObjectClassName = packageName
-										+ "."
-										+ association.getTargetEntity()
-												.getName();
-								Long Identifier = fullKeyMap
-										.get(association.getEntity().getName()
-												+ "["
-												+ par.getSourceInstanceId()
-												+ "]");
-								final Object sourceObject = hibernateDao
-										.retrieveById(sourceObjectClassName,
-												Identifier);
-								Object clonedSourceObject = cloner
-										.clone(sourceObject);
+								final String targetObjectClassName = packageName + "."
+										+ association.getTargetEntity().getName();
+								Long Identifier = fullKeyMap.get(association.getEntity().getName()
+										+ "[" + par.getSourceInstanceId() + "]");
+								final Object sourceObject = hibernateDao.retrieveById(
+										sourceObjectClassName, Identifier);
+								Object clonedSourceObject = cloner.clone(sourceObject);
 								Object targetObject = createObjectForClass(targetObjectClassName);
 
 								hibernateDao.insert(targetObject);
-								Object clonedTargetObject = cloner
-										.clone(targetObject);
-								addTargetObject(sourceObject, targetObject,
-										targetObjectClassName, association);
+								Object clonedTargetObject = cloner.clone(targetObject);
+								addTargetObject(sourceObject, targetObject, targetObjectClassName,
+										association);
 
-								hibernateDao.update(sourceObject,
-										clonedSourceObject);
-								addSourceObject(sourceObject, targetObject,
-										sourceObjectClassName, association);
+								hibernateDao.update(sourceObject, clonedSourceObject);
+								addSourceObject(sourceObject, targetObject, sourceObjectClassName,
+										association);
 
-								hibernateDao.update(targetObject,
-										clonedTargetObject);
+								hibernateDao.update(targetObject, clonedTargetObject);
 
 								final Long entityId = getObjectId(targetObject);
 
 								sourceEntityId = entityId;
 
-								fullKeyMap.put(
-										association.getTargetEntity().getName()
-												+ "["
-												+ par.getTargetInstanceId()
-												+ "]", sourceEntityId);
-								keyMap.put(
-										association.getTargetEntity().getName()
-												+ "["
-												+ par.getTargetInstanceId()
-												+ "]", sourceEntityId);
+								fullKeyMap.put(association.getTargetEntity().getName() + "["
+										+ par.getTargetInstanceId() + "]", sourceEntityId);
+								keyMap.put(association.getTargetEntity().getName() + "["
+										+ par.getTargetInstanceId() + "]", sourceEntityId);
 
-								List<Long> recIds = records
-										.get(association.getTargetEntity()
-												.getName()
-												+ "["
-												+ par.getTargetInstanceId()
-												+ "]");
-								if (recIds == null) {
+								List<Long> recIds = records.get(association.getTargetEntity()
+										.getName()
+										+ "[" + par.getTargetInstanceId() + "]");
+								if (recIds == null)
+								{
 									recIds = new ArrayList<Long>();
 								}
 								recIds.add(entityId);
-								records.put(
-										association.getTargetEntity().getName()
-												+ "["
-												+ par.getTargetInstanceId()
-												+ "]", recIds);
-							} else {
-								sourceEntityId = fullKeyMap
-										.get(association.getTargetEntity()
-												.getName()
-												+ "["
-												+ par.getTargetInstanceId()
-												+ "]");
+								records.put(association.getTargetEntity().getName() + "["
+										+ par.getTargetInstanceId() + "]", recIds);
+							}
+							else
+							{
+								sourceEntityId = fullKeyMap.get(association.getTargetEntity()
+										.getName()
+										+ "[" + par.getTargetInstanceId() + "]");
 							}
 						}
 					}
@@ -2688,27 +2632,31 @@ public class CategoryManager extends AbstractMetadataManager implements
 					final Map<CategoryAttributeInterface, Object> catAttributes = new HashMap<CategoryAttributeInterface, Object>();
 					final Map<CategoryAssociationInterface, Object> catAssociations = new HashMap<CategoryAssociationInterface, Object>();
 
-					for (final Map<BaseAbstractAttributeInterface, Object> valueMap : mapsOfCntaindEnt) {
-						final Set<BaseAbstractAttributeInterface> keySet = valueMap
-								.keySet();
-						final Iterator<BaseAbstractAttributeInterface> iter = keySet
-								.iterator();
-						while (iter.hasNext()) {
+					for (final Map<BaseAbstractAttributeInterface, Object> valueMap : mapsOfCntaindEnt)
+					{
+						final Set<BaseAbstractAttributeInterface> keySet = valueMap.keySet();
+						final Iterator<BaseAbstractAttributeInterface> iter = keySet.iterator();
+						while (iter.hasNext())
+						{
 							final Object obj = iter.next();
-							if (obj instanceof CategoryAttributeInterface) {
-								catAttributes.put(
-										(CategoryAttributeInterface) obj,
-										valueMap.get(obj));
-							} else {
-								catAssociations.put(
-										(CategoryAssociationInterface) obj,
-										valueMap.get(obj));
+							if (obj instanceof CategoryAttributeInterface)
+							{
+								catAttributes.put((CategoryAttributeInterface) obj, valueMap
+										.get(obj));
+							}
+							else
+							{
+								catAssociations.put((CategoryAssociationInterface) obj, valueMap
+										.get(obj));
 							}
 						}
 
-						if (mapsOfCntaindEnt.size() > 1) {
+						if (mapsOfCntaindEnt.size() > 1)
+						{
 							areMultplRecrds = true;
-						} else {
+						}
+						else
+						{
 							areMultplRecrds = false;
 						}
 
@@ -2718,55 +2666,53 @@ public class CategoryManager extends AbstractMetadataManager implements
 						// attributes, then create a dummy
 						// category attribute so as to link the records.
 						if (catAttributes.isEmpty()
-								|| isAllRelatedCategoryAttributesCollection(catAttributes)) {
+								|| isAllRelatedCategoryAttributesCollection(catAttributes))
+						{
 							isNoCatAttrPrsnt = true;
 							final CategoryAttributeInterface dummyCatAttr = DomainObjectFactory
 									.getInstance().createCategoryAttribute();
-							dummyCatAttr.setCategoryEntity(catAssociation
-									.getTargetCategoryEntity());
+							dummyCatAttr
+									.setCategoryEntity(catAssociation.getTargetCategoryEntity());
 							catAttributes.put(dummyCatAttr, "");
 
-							insertRecordsForCategoryEntityTree(fKeyColName,
-									catEntFKClmnName, srcCategoryEntId,
-									sourceEntityId, catAssociation
-											.getTargetCategoryEntity(),
-									catAttributes, keyMap, fullKeyMap, records,
-									areMultplRecrds, isNoCatAttrPrsnt, jdbcDao,
-									hibernateDao, isEditMode, lastAssociation,
-									userId, fileAttrQueryList, sessionDataBean);
+							insertRecordsForCategoryEntityTree(fKeyColName, catEntFKClmnName,
+									srcCategoryEntId, sourceEntityId, catAssociation
+											.getTargetCategoryEntity(), catAttributes, keyMap,
+									fullKeyMap, records, areMultplRecrds, isNoCatAttrPrsnt,
+									jdbcDao, hibernateDao, isEditMode, lastAssociation, userId,
+									fileAttrQueryList, sessionDataBean);
 
 							isNoCatAttrPrsnt = false;
-						} else {
-							insertRecordsForCategoryEntityTree(fKeyColName,
-									catEntFKClmnName, srcCategoryEntId,
-									sourceEntityId, catAssociation
-											.getTargetCategoryEntity(),
-									catAttributes, keyMap, fullKeyMap, records,
-									areMultplRecrds, isNoCatAttrPrsnt, jdbcDao,
-									hibernateDao, isEditMode, lastAssociation,
-									userId, fileAttrQueryList, sessionDataBean);
+						}
+						else
+						{
+							insertRecordsForCategoryEntityTree(fKeyColName, catEntFKClmnName,
+									srcCategoryEntId, sourceEntityId, catAssociation
+											.getTargetCategoryEntity(), catAttributes, keyMap,
+									fullKeyMap, records, areMultplRecrds, isNoCatAttrPrsnt,
+									jdbcDao, hibernateDao, isEditMode, lastAssociation, userId,
+									fileAttrQueryList, sessionDataBean);
 						}
 						catAttributes.clear();
 
 						// Insert data for category associations.
-						insertRecordsForCategoryEntityTree(fKeyColName,
-								catEntFKClmnName, srcCategoryEntId,
-								sourceEntityId, catAssociation
-										.getTargetCategoryEntity(),
-								catAssociations, keyMap, fullKeyMap, records,
-								areMultplRecrds, isNoCatAttrPrsnt, jdbcDao,
-								hibernateDao, isEditMode, lastAssociation,
-								userId, fileAttrQueryList, sessionDataBean);
+						insertRecordsForCategoryEntityTree(fKeyColName, catEntFKClmnName,
+								srcCategoryEntId, sourceEntityId, catAssociation
+										.getTargetCategoryEntity(), catAssociations, keyMap,
+								fullKeyMap, records, areMultplRecrds, isNoCatAttrPrsnt, jdbcDao,
+								hibernateDao, isEditMode, lastAssociation, userId,
+								fileAttrQueryList, sessionDataBean);
 						catAssociations.clear();
 
 						fullKeyMap.putAll(keyMap);
-						keyMap.remove(DynamicExtensionsUtility
-								.getCategoryEntityName(catAssociation
-										.getTargetCategoryEntity().getName()));
+						keyMap.remove(DynamicExtensionsUtility.getCategoryEntityName(catAssociation
+								.getTargetCategoryEntity().getName()));
 					}
 				}
 			}
-		} catch (final Exception e) {
+		}
+		catch (final Exception e)
+		{
 			throw new DynamicExtensionsApplicationException(
 					"Exception encountered while inserting records!", e);
 		}
@@ -2782,49 +2728,50 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws DAOException
 	 * @throws SQLException
 	 */
-	public List<Map<BaseAbstractAttributeInterface, Object>> getRecordByRecordEntryId(
-			Long formId, List<Long> recordEntryIdList, Long recordEntryStaticId)
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException, DAOException, SQLException {
+	public List<Map<BaseAbstractAttributeInterface, Object>> getRecordByRecordEntryId(Long formId,
+			List<Long> recordEntryIdList, Long recordEntryStaticId)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
+			DAOException, SQLException
+	{
 		List<Map<BaseAbstractAttributeInterface, Object>> recordMapList = new ArrayList<Map<BaseAbstractAttributeInterface, Object>>();
 		DEIntegration deIntegration = new DEIntegration();
 		JDBCDAO jdbcDao = null;
 		CategoryEntityInterface rootCatEntity = (CategoryEntityInterface) DynamicExtensionsUtility
-				.getContainerByIdentifier(formId.toString())
-				.getAbstractEntity();
-		try {
+				.getContainerByIdentifier(formId.toString()).getAbstractEntity();
+		try
+		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-			for (Long recordEntryId : recordEntryIdList) {
-				Collection recIdList = deIntegration
-						.getCategoryRecIdBasedOnHookEntityRecId(formId,
-								recordEntryId, recordEntryStaticId);
-				if (recIdList != null && !recIdList.isEmpty()) {
+			for (Long recordEntryId : recordEntryIdList)
+			{
+				Collection recIdList = deIntegration.getCategoryRecIdBasedOnHookEntityRecId(formId,
+						recordEntryId, recordEntryStaticId);
+				if (recIdList != null && !recIdList.isEmpty())
+				{
 					Long dynamicRecId = (Long) recIdList.iterator().next();
 					Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
 					Long categoryRecordId = getRootCategoryEntityRecordIdByEntityRecordId(
-							dynamicRecId, rootCatEntity.getTableProperties()
-									.getName());
-					if (categoryRecordId == null) {
+							dynamicRecId, rootCatEntity.getTableProperties().getName());
+					if (categoryRecordId == null)
+					{
 						throw new DynamicExtensionsSystemException(
-								"Exception in execution query :: "
-										+ "select IDENTIFIER from "
-										+ rootCatEntity.getTableProperties()
-												.getName()
+								"Exception in execution query :: " + "select IDENTIFIER from "
+										+ rootCatEntity.getTableProperties().getName()
 										+ " where record_Id = " + dynamicRecId);
 					}
-					retrieveRecords(rootCatEntity, dataValue, categoryRecordId,
-							jdbcDao);
+					retrieveRecords(rootCatEntity, dataValue, categoryRecordId, jdbcDao);
 					recordMapList.add(dataValue);
-				} else {
-					throw new DynamicExtensionsSystemException(
-							"Exception in execution query :: "
-									+ "Unhooked data present in database for recordEntryId "
-									+ recordEntryId + " formId :" + formId
-									+ " recordEntryStaticId : "
-									+ recordEntryStaticId);
+				}
+				else
+				{
+					throw new DynamicExtensionsSystemException("Exception in execution query :: "
+							+ "Unhooked data present in database for recordEntryId "
+							+ recordEntryId + " formId :" + formId + " recordEntryStaticId : "
+							+ recordEntryStaticId);
 				}
 			}
-		} finally {
+		}
+		finally
+		{
 			DynamicExtensionsUtility.closeDAO(jdbcDao);
 		}
 		return recordMapList;
@@ -2848,23 +2795,22 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws DAOException
 	 *             exception.
 	 */
-	public Long getCategoryRecordIdByRecordEntryId(Long formId,
-			Long recordEntryId, Long recordEntryStaticId)
-			throws DynamicExtensionsApplicationException,
-			DynamicExtensionsSystemException, DAOException {
+	public Long getCategoryRecordIdByRecordEntryId(Long formId, Long recordEntryId,
+			Long recordEntryStaticId) throws DynamicExtensionsApplicationException,
+			DynamicExtensionsSystemException, DAOException
+	{
 		Long categoryRecordId = null;
 		CategoryEntityInterface rootCatEntity = (CategoryEntityInterface) DynamicExtensionsUtility
-				.getContainerByIdentifier(formId.toString())
-				.getAbstractEntity();
+				.getContainerByIdentifier(formId.toString()).getAbstractEntity();
 
 		DEIntegration deIntegration = new DEIntegration();
-		Collection recIdList = deIntegration
-				.getCategoryRecIdBasedOnHookEntityRecId(formId, recordEntryId,
-						recordEntryStaticId);
-		if (recIdList != null && !recIdList.isEmpty()) {
+		Collection recIdList = deIntegration.getCategoryRecIdBasedOnHookEntityRecId(formId,
+				recordEntryId, recordEntryStaticId);
+		if (recIdList != null && !recIdList.isEmpty())
+		{
 			Long dynamicRecId = (Long) recIdList.iterator().next();
-			categoryRecordId = getRootCategoryEntityRecordIdByEntityRecordId(
-					dynamicRecId, rootCatEntity.getTableProperties().getName());
+			categoryRecordId = getRootCategoryEntityRecordIdByEntityRecordId(dynamicRecId,
+					rootCatEntity.getTableProperties().getName());
 		}
 		return categoryRecordId;
 
@@ -2883,16 +2829,19 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 */
 	public Map<BaseAbstractAttributeInterface, Object> getRecordById(
 			final CategoryEntityInterface rootCatEntity, final Long recordId)
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException {
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
 		Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
 
 		JDBCDAO jdbcDAO = null;
 
-		try {
+		try
+		{
 			jdbcDAO = DynamicExtensionsUtility.getJDBCDAO();
 			retrieveRecords(rootCatEntity, dataValue, recordId, jdbcDAO);
-		} finally {
+		}
+		finally
+		{
 			DynamicExtensionsUtility.closeDAO(jdbcDAO);
 		}
 
@@ -2914,9 +2863,10 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws SQLException
 	 */
 	public Map<BaseAbstractAttributeInterface, Object> getRecordById(
-			final CategoryEntityInterface rootCatEntity, final Long recordId,
-			JDBCDAO dao) throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException, SQLException {
+			final CategoryEntityInterface rootCatEntity, final Long recordId, JDBCDAO dao)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
+			SQLException
+	{
 		Map<BaseAbstractAttributeInterface, Object> dataValue = new HashMap<BaseAbstractAttributeInterface, Object>();
 
 		retrieveRecords(rootCatEntity, dataValue, recordId, dao);
@@ -2939,10 +2889,10 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 */
 	public Map<String, Map<String, Object>> getRelatedAttributeValues(
 			final CategoryEntityInterface rootCatEntity, final Long recordId)
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException, SQLException {
-		final CategoryManager categoreyManager = (CategoryManager) CategoryManager
-				.getInstance();
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
+			SQLException
+	{
+		final CategoryManager categoreyManager = (CategoryManager) CategoryManager.getInstance();
 
 		final Map<BaseAbstractAttributeInterface, Object> recordMap = categoreyManager
 				.getRecordById(rootCatEntity, recordId);
@@ -2961,45 +2911,46 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @param records
 	 * @param dataValue
 	 */
-	private void getMapOfRelatedAttributesValues(
-			final Map<String, Map<String, Object>> records,
-			final Map<BaseAbstractAttributeInterface, Object> dataValue) {
+	private void getMapOfRelatedAttributesValues(final Map<String, Map<String, Object>> records,
+			final Map<BaseAbstractAttributeInterface, Object> dataValue)
+	{
 		dataValue.keySet().iterator();
-		for (Entry<BaseAbstractAttributeInterface, Object> dataValueEntry : dataValue
-				.entrySet()) {
+		for (Entry<BaseAbstractAttributeInterface, Object> dataValueEntry : dataValue.entrySet())
+		{
 			BaseAbstractAttributeInterface obj = dataValueEntry.getKey();
 
-			if (obj instanceof CategoryAttributeInterface) {
+			if (obj instanceof CategoryAttributeInterface)
+			{
 				final CategoryAttributeInterface catAttr = (CategoryAttributeInterface) obj;
 
-				if ((catAttr.getIsRelatedAttribute() != null)
-						&& catAttr.getIsRelatedAttribute()
-						&& (catAttr.getIsVisible() != null)
-						&& !catAttr.getIsVisible()) {
+				if ((catAttr.getIsRelatedAttribute() != null) && catAttr.getIsRelatedAttribute()
+						&& (catAttr.getIsVisible() != null) && !catAttr.getIsVisible())
+				{
 					Map<String, Object> innerMap;
 
-					if (records.get(catAttr.getCategoryEntity().getName()) == null) {
+					if (records.get(catAttr.getCategoryEntity().getName()) == null)
+					{
 						innerMap = new HashMap<String, Object>();
-						innerMap.put(catAttr.getName(), dataValueEntry
-								.getValue());
-					} else {
-						innerMap = records.get(catAttr.getCategoryEntity()
-								.getName());
-						innerMap.put(catAttr.getName(), dataValueEntry
-								.getValue());
+						innerMap.put(catAttr.getName(), dataValueEntry.getValue());
+					}
+					else
+					{
+						innerMap = records.get(catAttr.getCategoryEntity().getName());
+						innerMap.put(catAttr.getName(), dataValueEntry.getValue());
 					}
 
-					records
-							.put(catAttr.getCategoryEntity().getName(),
-									innerMap);
+					records.put(catAttr.getCategoryEntity().getName(), innerMap);
 				}
-			} else {
+			}
+			else
+			{
 				final CategoryAssociationInterface catAssociation = (CategoryAssociationInterface) obj;
 
 				final List<Map<BaseAbstractAttributeInterface, Object>> mapsOfCntdRec = (List<Map<BaseAbstractAttributeInterface, Object>>) dataValue
 						.get(catAssociation);
 
-				for (final Map<BaseAbstractAttributeInterface, Object> map : mapsOfCntdRec) {
+				for (final Map<BaseAbstractAttributeInterface, Object> map : mapsOfCntdRec)
+				{
 					getMapOfRelatedAttributesValues(records, map);
 				}
 			}
@@ -3014,39 +2965,47 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 */
 	private void curateMapForRelatedAttributes(
 			final Map<BaseAbstractAttributeInterface, Object> curatedRecords,
-			final Map<BaseAbstractAttributeInterface, Object> dataValue) {
+			final Map<BaseAbstractAttributeInterface, Object> dataValue)
+	{
 		final Iterator<Map.Entry<BaseAbstractAttributeInterface, Object>> iter = dataValue
 				.entrySet().iterator();
-		while (iter.hasNext()) {
-			final Entry<BaseAbstractAttributeInterface, Object> nextEntryObject = iter
-					.next();
+		while (iter.hasNext())
+		{
+			final Entry<BaseAbstractAttributeInterface, Object> nextEntryObject = iter.next();
 			final Object obj = nextEntryObject.getKey();
 
-			if (obj instanceof CategoryAttributeInterface) {
+			if (obj instanceof CategoryAttributeInterface)
+			{
 				final CategoryAttributeInterface catAttr = (CategoryAttributeInterface) obj;
 
-				if ((catAttr.getIsRelatedAttribute() != null)
-						&& catAttr.getIsRelatedAttribute()
-						&& (catAttr.getIsVisible() != null)
-						&& catAttr.getIsVisible()) {
-					curatedRecords.put((BaseAbstractAttributeInterface) obj,
-							nextEntryObject.getValue());
-				} else if ((catAttr.getIsRelatedAttribute() != null)
-						&& !catAttr.getIsRelatedAttribute()) {
-					curatedRecords.put((BaseAbstractAttributeInterface) obj,
-							nextEntryObject.getValue());
+				if ((catAttr.getIsRelatedAttribute() != null) && catAttr.getIsRelatedAttribute()
+						&& (catAttr.getIsVisible() != null) && catAttr.getIsVisible())
+				{
+					curatedRecords.put((BaseAbstractAttributeInterface) obj, nextEntryObject
+							.getValue());
 				}
-			} else if (obj instanceof CategoryEntityRecord) {
+				else if ((catAttr.getIsRelatedAttribute() != null)
+						&& !catAttr.getIsRelatedAttribute())
+				{
+					curatedRecords.put((BaseAbstractAttributeInterface) obj, nextEntryObject
+							.getValue());
+				}
+			}
+			else if (obj instanceof CategoryEntityRecord)
+			{
 				final CategoryEntityRecord entityRecord = (CategoryEntityRecord) obj;
 				curatedRecords.put(entityRecord, nextEntryObject.getValue());
-			} else {
+			}
+			else
+			{
 				final CategoryAssociationInterface catAssociation = (CategoryAssociationInterface) obj;
 
 				final List<Map<BaseAbstractAttributeInterface, Object>> mapsOfCntdRec = (List) nextEntryObject
 						.getValue();
 				final List<Map<BaseAbstractAttributeInterface, Object>> innerRecList = new ArrayList<Map<BaseAbstractAttributeInterface, Object>>();
 
-				for (final Map<BaseAbstractAttributeInterface, Object> map : mapsOfCntdRec) {
+				for (final Map<BaseAbstractAttributeInterface, Object> map : mapsOfCntdRec)
+				{
 					final Map<BaseAbstractAttributeInterface, Object> innerRecords = new HashMap<BaseAbstractAttributeInterface, Object>();
 					curateMapForRelatedAttributes(innerRecords, map);
 					innerRecList.add(innerRecords);
@@ -3066,10 +3025,10 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws DynamicExtensionsApplicationException
 	 */
 	private void retrieveRecords(final CategoryEntityInterface catEntity,
-			final Map<BaseAbstractAttributeInterface, Object> dataValue,
-			long rootCatEntRecId, final JDBCDAO jdbcDAO)
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException {
+			final Map<BaseAbstractAttributeInterface, Object> dataValue, long rootCatEntRecId,
+			final JDBCDAO jdbcDAO) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
+	{
 		Long recordId = null;
 		String catEntTblName = "";
 		String selRecIdQuery = "";
@@ -3077,18 +3036,19 @@ public class CategoryManager extends AbstractMetadataManager implements
 		boolean isRecordIdNull = false;
 
 		// Only the root category entity has the category object set in it.
-		if (catEntity.getCategory() != null) {
+		if (catEntity.getCategory() != null)
+		{
 			catEntTblName = catEntity.getTableProperties().getName();
 
-			selRecIdQuery = SELECT_KEYWORD + RECORD_ID + FROM_KEYWORD
-					+ catEntTblName + WHERE_KEYWORD + IDENTIFIER + EQUAL
-					+ QUESTION_MARK;
+			selRecIdQuery = SELECT_KEYWORD + RECORD_ID + FROM_KEYWORD + catEntTblName
+					+ WHERE_KEYWORD + IDENTIFIER + EQUAL + QUESTION_MARK;
 			final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 			queryDataList.add(new ColumnValueBean(IDENTIFIER, rootCatEntRecId));
-			final List<Long> identifiers = getResultIDList(selRecIdQuery,
-					RECORD_ID, jdbcDAO, queryDataList);
+			final List<Long> identifiers = getResultIDList(selRecIdQuery, RECORD_ID, jdbcDAO,
+					queryDataList);
 
-			if ((identifiers != null) && !identifiers.isEmpty()) {
+			if ((identifiers != null) && !identifiers.isEmpty())
+			{
 				recordId = identifiers.get(0);
 			}
 		}
@@ -3098,36 +3058,38 @@ public class CategoryManager extends AbstractMetadataManager implements
 		// according to entity model and category data is inserted according to
 		// category model.
 		// In this case recordId can be NULL in category entity table.
-		if (recordId == null) {
+		if (recordId == null)
+		{
 			isRecordIdNull = true;
 			recordId = rootCatEntRecId;
 		}
 
 		final Map<AbstractAttributeInterface, Object> entityRecords = new HashMap<AbstractAttributeInterface, Object>();
-		entityRecords.putAll(EntityManager.getInstance().getEntityRecordById(
-				catEntity.getEntity(), recordId, jdbcDAO));
+		entityRecords.putAll(EntityManager.getInstance().getEntityRecordById(catEntity.getEntity(),
+				recordId, jdbcDAO));
 
 		// If root category entity has parent entity, then get data from parent
 		// entity table
 		// with same record id.
-		CategoryEntityInterface parentCatEnt = catEntity
-				.getParentCategoryEntity();
-		while (parentCatEnt != null) {
-			final Map<AbstractAttributeInterface, Object> innerValues = EntityManager
-					.getInstance().getEntityRecordById(
-							parentCatEnt.getEntity(), recordId, jdbcDAO);
-			if (innerValues != null) {
+		CategoryEntityInterface parentCatEnt = catEntity.getParentCategoryEntity();
+		while (parentCatEnt != null)
+		{
+			final Map<AbstractAttributeInterface, Object> innerValues = EntityManager.getInstance()
+					.getEntityRecordById(parentCatEnt.getEntity(), recordId, jdbcDAO);
+			if (innerValues != null)
+			{
 				entityRecords.putAll(innerValues);
 			}
 
 			parentCatEnt = parentCatEnt.getParentCategoryEntity();
 		}
 
-		if (!isAllRelatedInvisibleCategoryAttributesCollection(catEntity)) {
+		if (!isAllRelatedInvisibleCategoryAttributesCollection(catEntity))
+		{
 			for (final CategoryAttributeInterface catAttribute : catEntity
-					.getAllCategoryAttributes()) {
-				dataValue.put(catAttribute, entityRecords.get(catAttribute
-						.getAbstractAttribute()));
+					.getAllCategoryAttributes())
+			{
+				dataValue.put(catAttribute, entityRecords.get(catAttribute.getAbstractAttribute()));
 			}
 			final CategoryEntityRecord catEntityRecord = new CategoryEntityRecord(
 					catEntity.getId(), catEntity.getName());
@@ -3137,49 +3099,47 @@ public class CategoryManager extends AbstractMetadataManager implements
 
 		final Collection<CategoryAssociationInterface> catAssociations = new ArrayList<CategoryAssociationInterface>(
 				catEntity.getCategoryAssociationCollection());
-		for (final CategoryAssociationInterface catAssociation : catAssociations) {
-			final CategoryEntityInterface targetCatEnt = catAssociation
-					.getTargetCategoryEntity();
-			if ((targetCatEnt != null)
-					&& (((CategoryEntity) targetCatEnt).isCreateTable())) {
+		for (final CategoryAssociationInterface catAssociation : catAssociations)
+		{
+			final CategoryEntityInterface targetCatEnt = catAssociation.getTargetCategoryEntity();
+			if ((targetCatEnt != null) && (((CategoryEntity) targetCatEnt).isCreateTable()))
+			{
 				catEntTblName = targetCatEnt.getTableProperties().getName();
 
-				if (isRecordIdNull) {
-					final String selectQuery = SELECT_KEYWORD
-							+ IDENTIFIER
-							+ FROM_KEYWORD
-							+ catAssociation.getCategoryEntity()
-									.getTableProperties().getName()
+				if (isRecordIdNull)
+				{
+					final String selectQuery = SELECT_KEYWORD + IDENTIFIER + FROM_KEYWORD
+							+ catAssociation.getCategoryEntity().getTableProperties().getName()
 							+ WHERE_KEYWORD + RECORD_ID + EQUAL + QUESTION_MARK;
 					final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 					queryDataList.add(new ColumnValueBean(RECORD_ID, recordId));
 
-					final List<Long> identifiers = getResultIDList(selectQuery,
-							IDENTIFIER, jdbcDAO, queryDataList);
+					final List<Long> identifiers = getResultIDList(selectQuery, IDENTIFIER,
+							jdbcDAO, queryDataList);
 
-					if ((identifiers != null) && !identifiers.isEmpty()) {
+					if ((identifiers != null) && !identifiers.isEmpty())
+					{
 						rootCatEntRecId = identifiers.get(0);
 					}
 				}
 
-				final String tgtFkColName = catAssociation
-						.getConstraintProperties()
-						.getTgtEntityConstraintKeyProperties()
-						.getTgtForiegnKeyColumnProperties().getName();
-				selRecIdQuery = SELECT_KEYWORD + RECORD_ID + FROM_KEYWORD
-						+ catEntTblName + WHERE_KEYWORD + tgtFkColName + EQUAL
-						+ QUESTION_MARK + OREDR_BY + RECORD_ID;
+				final String tgtFkColName = catAssociation.getConstraintProperties()
+						.getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties()
+						.getName();
+				selRecIdQuery = SELECT_KEYWORD + RECORD_ID + FROM_KEYWORD + catEntTblName
+						+ WHERE_KEYWORD + tgtFkColName + EQUAL + QUESTION_MARK + OREDR_BY
+						+ RECORD_ID;
 
 				final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
-				queryDataList.add(new ColumnValueBean(tgtFkColName,
-						rootCatEntRecId));
+				queryDataList.add(new ColumnValueBean(tgtFkColName, rootCatEntRecId));
 
 				final List<Map<BaseAbstractAttributeInterface, Object>> innerRecords = new ArrayList<Map<BaseAbstractAttributeInterface, Object>>();
 				dataValue.put(catAssociation, innerRecords);
 
-				final List<Long> recordIds = getResultIDList(selRecIdQuery,
-						RECORD_ID, jdbcDAO, queryDataList);
-				for (final Long recId : recordIds) {
+				final List<Long> recordIds = getResultIDList(selRecIdQuery, RECORD_ID, jdbcDAO,
+						queryDataList);
+				for (final Long recId : recordIds)
+				{
 					final Map<BaseAbstractAttributeInterface, Object> innerRecord = new HashMap<BaseAbstractAttributeInterface, Object>();
 					innerRecords.add(innerRecord);
 
@@ -3195,26 +3155,28 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @return
 	 */
 	private Map<CategoryEntityInterface, Map<BaseAbstractAttributeInterface, Object>> initialiseEntityValueMap(
-			final Map<BaseAbstractAttributeInterface, ?> dataValue) {
+			final Map<BaseAbstractAttributeInterface, ?> dataValue)
+	{
 		final Map<CategoryEntityInterface, Map<BaseAbstractAttributeInterface, Object>> catEntRecords = new HashMap<CategoryEntityInterface, Map<BaseAbstractAttributeInterface, Object>>();
 
-		for (Entry<BaseAbstractAttributeInterface, ?> dataValueEntry : dataValue
-				.entrySet()) {
+		for (Entry<BaseAbstractAttributeInterface, ?> dataValueEntry : dataValue.entrySet())
+		{
 			CategoryEntityInterface categoryEntity = null;
-			BaseAbstractAttributeInterface baseAbstrAttr = dataValueEntry
-					.getKey();
-			if (baseAbstrAttr instanceof CategoryAttributeInterface) {
-				categoryEntity = ((CategoryAttributeInterface) baseAbstrAttr)
-						.getCategoryEntity();
-			} else {
-				categoryEntity = ((CategoryAssociationInterface) baseAbstrAttr)
-						.getCategoryEntity();
+			BaseAbstractAttributeInterface baseAbstrAttr = dataValueEntry.getKey();
+			if (baseAbstrAttr instanceof CategoryAttributeInterface)
+			{
+				categoryEntity = ((CategoryAttributeInterface) baseAbstrAttr).getCategoryEntity();
+			}
+			else
+			{
+				categoryEntity = ((CategoryAssociationInterface) baseAbstrAttr).getCategoryEntity();
 			}
 			final Object value = dataValueEntry.getValue();
 
 			Map<BaseAbstractAttributeInterface, Object> entDataValues = catEntRecords
 					.get(categoryEntity);
-			if (entDataValues == null) {
+			if (entDataValues == null)
+			{
 				entDataValues = new HashMap<BaseAbstractAttributeInterface, Object>();
 				catEntRecords.put(categoryEntity, entDataValues);
 			}
@@ -3229,7 +3191,8 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @return
 	 */
 	private List<CategoryEntityInterface> getParentEntityList(
-			final CategoryEntityInterface catEntity) {
+			final CategoryEntityInterface catEntity)
+	{
 		// As here the parent category entity whose table is not created is
 		// blocked so it is not added in list.
 		final List<CategoryEntityInterface> catEntities = new ArrayList<CategoryEntityInterface>();
@@ -3237,10 +3200,9 @@ public class CategoryManager extends AbstractMetadataManager implements
 
 		// Bug # 10265 - modified as per code review comment.
 		// Reviewer name - Rajesh Patil
-		CategoryEntityInterface categoryEnt = catEntity
-				.getParentCategoryEntity();
-		while ((categoryEnt != null)
-				&& ((CategoryEntity) categoryEnt).isCreateTable()) {
+		CategoryEntityInterface categoryEnt = catEntity.getParentCategoryEntity();
+		while ((categoryEnt != null) && ((CategoryEntity) categoryEnt).isCreateTable())
+		{
 			catEntities.add(0, categoryEnt);
 			categoryEnt = categoryEnt.getParentCategoryEntity();
 		}
@@ -3256,10 +3218,10 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @param rootEntRecords
 	 * @param attributeValues
 	 */
-	private void populateRootEntityRecordMap(
-			final CategoryEntityInterface rootCatEntity,
+	private void populateRootEntityRecordMap(final CategoryEntityInterface rootCatEntity,
 			final Map<AbstractAttributeInterface, Object> rootEntRecords,
-			final Map<BaseAbstractAttributeInterface, Object> attributeValues) {
+			final Map<BaseAbstractAttributeInterface, Object> attributeValues)
+	{
 		// Set of category data map entries.
 		final Set<Entry<BaseAbstractAttributeInterface, Object>> dataMapEntry = attributeValues
 				.entrySet();
@@ -3270,10 +3232,12 @@ public class CategoryManager extends AbstractMetadataManager implements
 		BaseAbstractAttributeInterface baseAbstrAttr;
 		Object categoryValue;
 
-		for (final Entry<BaseAbstractAttributeInterface, Object> entry : dataMapEntry) {
+		for (final Entry<BaseAbstractAttributeInterface, Object> entry : dataMapEntry)
+		{
 			baseAbstrAttr = entry.getKey();
 			categoryValue = entry.getValue();
-			if (baseAbstrAttr instanceof CategoryAttributeInterface) {
+			if (baseAbstrAttr instanceof CategoryAttributeInterface)
+			{
 				catAttribute = (CategoryAttributeInterface) baseAbstrAttr;
 				abstrAttribute = catAttribute.getAbstractAttribute();
 				entityValue = categoryValue;
@@ -3281,10 +3245,12 @@ public class CategoryManager extends AbstractMetadataManager implements
 				// Add root cat entity and its parent category entity's
 				// attribute.
 				for (final CategoryAttributeInterface rootCECatAttr : rootCatEntity
-						.getAllCategoryAttributes()) {
+						.getAllCategoryAttributes())
+				{
 					if ((catAttribute == rootCECatAttr)
 							&& ((catAttribute.getIsRelatedAttribute() == null) || !catAttribute
-									.getIsRelatedAttribute())) {
+									.getIsRelatedAttribute()))
+					{
 						rootEntRecords.put(abstrAttribute, entityValue);
 					}
 				}
@@ -3292,11 +3258,14 @@ public class CategoryManager extends AbstractMetadataManager implements
 		}
 
 		for (final CategoryAssociationInterface catAssociation : rootCatEntity
-				.getCategoryAssociationCollection()) {
+				.getCategoryAssociationCollection())
+		{
 			// Add all root category entity's associations.
-			for (final AssociationInterface association : catAssociation
-					.getCategoryEntity().getEntity().getAssociationCollection()) {
-				if (!rootEntRecords.containsKey(association)) {
+			for (final AssociationInterface association : catAssociation.getCategoryEntity()
+					.getEntity().getAssociationCollection())
+			{
+				if (!rootEntRecords.containsKey(association))
+				{
 					rootEntRecords.put(association, new ArrayList());
 				}
 			}
@@ -3305,14 +3274,16 @@ public class CategoryManager extends AbstractMetadataManager implements
 			// i.e. associations between root category entity's parent entity
 			// and another class
 			// whose category association is created.
-			EntityInterface entity = catAssociation.getCategoryEntity()
-					.getEntity();
-			while (entity.getParentEntity() != null) {
-				for (final AssociationInterface association : entity
-						.getParentEntity().getAssociationCollection()) {
-					if ((association.getTargetEntity() == catAssociation
-							.getTargetCategoryEntity().getEntity())
-							&& !rootEntRecords.containsKey(association)) {
+			EntityInterface entity = catAssociation.getCategoryEntity().getEntity();
+			while (entity.getParentEntity() != null)
+			{
+				for (final AssociationInterface association : entity.getParentEntity()
+						.getAssociationCollection())
+				{
+					if ((association.getTargetEntity() == catAssociation.getTargetCategoryEntity()
+							.getEntity())
+							&& !rootEntRecords.containsKey(association))
+					{
 						rootEntRecords.put(association, new ArrayList());
 					}
 				}
@@ -3331,54 +3302,52 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws SQLException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private void clearCategoryEntityData(
-			final CategoryEntityInterface categoryEnt, final Long recordId,
-			final Stack<String> rlbkQryStack, final Long userId,
-			final JDBCDAO jdbcDao) throws DynamicExtensionsSystemException {
+	private void clearCategoryEntityData(final CategoryEntityInterface categoryEnt,
+			final Long recordId, final Stack<String> rlbkQryStack, final Long userId,
+			final JDBCDAO jdbcDao) throws DynamicExtensionsSystemException
+	{
 		final CategoryEntityInterface catEntity = categoryEnt;
 
 		for (final CategoryAssociationInterface catAssociation : catEntity
-				.getCategoryAssociationCollection()) {
+				.getCategoryAssociationCollection())
+		{
 			final String colName = catAssociation.getConstraintProperties()
-					.getTgtEntityConstraintKeyProperties()
-					.getTgtForiegnKeyColumnProperties().getName();
-			if (catAssociation.getTargetCategoryEntity().getChildCategories()
-					.size() == 0) {
+					.getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties()
+					.getName();
+			if (catAssociation.getTargetCategoryEntity().getChildCategories().size() == 0)
+			{
 				final String deleteQuery = "DELETE FROM "
-						+ catAssociation.getTargetCategoryEntity()
-								.getTableProperties().getName() + " WHERE "
-						+ colName + EQUAL + QUESTION_MARK;
-				final ColumnValueBean bean1 = new ColumnValueBean(colName,
-						recordId);
+						+ catAssociation.getTargetCategoryEntity().getTableProperties().getName()
+						+ " WHERE " + colName + EQUAL + QUESTION_MARK;
+				final ColumnValueBean bean1 = new ColumnValueBean(colName, recordId);
 				final LinkedList<ColumnValueBean> colValBeanList = new LinkedList<ColumnValueBean>();
 				colValBeanList.add(bean1);
-				DynamicExtensionsUtility.executeUpdateQuery(deleteQuery,
-						userId, jdbcDao, colValBeanList);
+				DynamicExtensionsUtility.executeUpdateQuery(deleteQuery, userId, jdbcDao,
+						colValBeanList);
 				rlbkQryStack.push(deleteQuery);
-			} else {
+			}
+			else
+			{
 				final String selectQuery = "SELECT IDENTIFIER FROM "
-						+ catAssociation.getTargetCategoryEntity()
-								.getTableProperties().getName() + " WHERE "
-						+ colName + EQUAL + QUESTION_MARK;
+						+ catAssociation.getTargetCategoryEntity().getTableProperties().getName()
+						+ " WHERE " + colName + EQUAL + QUESTION_MARK;
 				final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 				queryDataList.add(new ColumnValueBean(colName, recordId));
-				final List<Long> recordIds = getResultIDList(selectQuery,
-						IDENTIFIER, jdbcDao, queryDataList);
-				for (final Long recId : recordIds) {
-					clearCategoryEntityData(catAssociation
-							.getTargetCategoryEntity(), recId, rlbkQryStack,
-							userId, jdbcDao);
+				final List<Long> recordIds = getResultIDList(selectQuery, IDENTIFIER, jdbcDao,
+						queryDataList);
+				for (final Long recId : recordIds)
+				{
+					clearCategoryEntityData(catAssociation.getTargetCategoryEntity(), recId,
+							rlbkQryStack, userId, jdbcDao);
 
 					final String deleteQuery = "DELETE FROM "
-							+ catAssociation.getTargetCategoryEntity()
-									.getTableProperties().getName()
-							+ " WHERE IDENTIFIER = ?";
-					final ColumnValueBean bean1 = new ColumnValueBean(
-							IDENTIFIER, recId);
+							+ catAssociation.getTargetCategoryEntity().getTableProperties()
+									.getName() + " WHERE IDENTIFIER = ?";
+					final ColumnValueBean bean1 = new ColumnValueBean(IDENTIFIER, recId);
 					final LinkedList<ColumnValueBean> colValBeanList = new LinkedList<ColumnValueBean>();
 					colValBeanList.add(bean1);
-					DynamicExtensionsUtility.executeUpdateQuery(deleteQuery,
-							userId, jdbcDao, colValBeanList);
+					DynamicExtensionsUtility.executeUpdateQuery(deleteQuery, userId, jdbcDao,
+							colValBeanList);
 					rlbkQryStack.push(deleteQuery);
 				}
 			}
@@ -3391,7 +3360,8 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @return Query Builder Object.
 	 */
 	@Override
-	protected DynamicExtensionBaseQueryBuilder getQueryBuilderInstance() {
+	protected DynamicExtensionBaseQueryBuilder getQueryBuilderInstance()
+	{
 		return queryBuilder;
 	}
 
@@ -3402,10 +3372,10 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws SQLException
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private Long getRootCategoryEntityRecordId(
-			final CategoryEntityInterface rootCatEntity, final Long recordId,
-			final JDBCDAO jdbcDao) throws SQLException,
-			DynamicExtensionsSystemException {
+	private Long getRootCategoryEntityRecordId(final CategoryEntityInterface rootCatEntity,
+			final Long recordId, final JDBCDAO jdbcDao) throws SQLException,
+			DynamicExtensionsSystemException
+	{
 		final StringBuffer query = new StringBuffer(SELECT_KEYWORD);
 		query.append(WHITESPACE);
 		query.append(RECORD_ID);
@@ -3423,9 +3393,10 @@ public class CategoryManager extends AbstractMetadataManager implements
 		Long rootCatEntRecId = null;
 		final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 		queryDataList.add(new ColumnValueBean(IDENTIFIER, recordId));
-		final List<Long> results = getResultIDList(query.toString(), RECORD_ID,
-				jdbcDao, queryDataList);
-		if (!results.isEmpty()) {
+		final List<Long> results = getResultIDList(query.toString(), RECORD_ID, jdbcDao,
+				queryDataList);
+		if (!results.isEmpty())
+		{
 			rootCatEntRecId = results.get(0);
 		}
 
@@ -3440,17 +3411,19 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * (edu.common.dynamicextensions.domaininterface.AttributeInterface,
 	 * java.util.List)
 	 */
-	public boolean isPermissibleValuesSubsetValid(
-			final UserDefinedDEInterface userDefinedDE,
-			final Map<String, Collection<SemanticPropertyInterface>> desiredPVs) {
+	public boolean isPermissibleValuesSubsetValid(final UserDefinedDEInterface userDefinedDE,
+			final Map<String, Collection<SemanticPropertyInterface>> desiredPVs)
+	{
 		boolean arePVsValid = true;
 
-		if (userDefinedDE != null) {
+		if (userDefinedDE != null)
+		{
 			final List<Object> attributePVs = new ArrayList<Object>();
 
 			final Collection<PermissibleValueInterface> permissibleValueCollection = userDefinedDE
 					.getPermissibleValueCollection();
-			for (final PermissibleValueInterface pv : permissibleValueCollection) {
+			for (final PermissibleValueInterface pv : permissibleValueCollection)
+			{
 				attributePVs.add(pv.getValueAsObject());
 			}
 
@@ -3469,45 +3442,68 @@ public class CategoryManager extends AbstractMetadataManager implements
 			final boolean allLongValues = CategoryGenerationUtil
 					.isAllPermissibleValuesLong(permissibleValueCollection);
 
-			if (allFloatValues && (desiredPVs != null)) {
+			if (allFloatValues && (desiredPVs != null))
+			{
 				final Set<String> permissibleValues = desiredPVs.keySet();
-				for (final String value : permissibleValues) {
-					if (!attributePVs.contains(Float.parseFloat(value))) {
+				for (final String value : permissibleValues)
+				{
+					if (!attributePVs.contains(Float.parseFloat(value)))
+					{
 						arePVsValid = false;
 					}
 				}
-			} else if (allDoubleValues && (desiredPVs != null)) {
+			}
+			else if (allDoubleValues && (desiredPVs != null))
+			{
 				final Set<String> permissibleValues = desiredPVs.keySet();
-				for (final String value : permissibleValues) {
-					if (!attributePVs.contains(Double.parseDouble(value))) {
+				for (final String value : permissibleValues)
+				{
+					if (!attributePVs.contains(Double.parseDouble(value)))
+					{
 						arePVsValid = false;
 					}
 				}
-			} else if (allIntegerValues && (desiredPVs != null)) {
+			}
+			else if (allIntegerValues && (desiredPVs != null))
+			{
 				final Set<String> permissibleValues = desiredPVs.keySet();
-				for (final String value : permissibleValues) {
-					if (!attributePVs.contains(Integer.parseInt(value))) {
+				for (final String value : permissibleValues)
+				{
+					if (!attributePVs.contains(Integer.parseInt(value)))
+					{
 						arePVsValid = false;
 					}
 				}
-			} else if (allShortValues && (desiredPVs != null)) {
+			}
+			else if (allShortValues && (desiredPVs != null))
+			{
 				final Set<String> permissibleValues = desiredPVs.keySet();
-				for (final String value : permissibleValues) {
-					if (!attributePVs.contains(Short.parseShort(value))) {
+				for (final String value : permissibleValues)
+				{
+					if (!attributePVs.contains(Short.parseShort(value)))
+					{
 						arePVsValid = false;
 					}
 				}
-			} else if (allLongValues && (desiredPVs != null)) {
+			}
+			else if (allLongValues && (desiredPVs != null))
+			{
 				final Set<String> permissibleValues = desiredPVs.keySet();
-				for (final String value : permissibleValues) {
-					if (!attributePVs.contains(Long.parseLong(value))) {
+				for (final String value : permissibleValues)
+				{
+					if (!attributePVs.contains(Long.parseLong(value)))
+					{
 						arePVsValid = false;
 					}
 				}
-			} else if (desiredPVs != null) {
+			}
+			else if (desiredPVs != null)
+			{
 				final Set<String> permissibleValues = desiredPVs.keySet();
-				for (final String value : permissibleValues) {
-					if (!attributePVs.contains(value)) {
+				for (final String value : permissibleValues)
+				{
+					if (!attributePVs.contains(value))
+					{
 						arePVsValid = false;
 					}
 				}
@@ -3528,35 +3524,44 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 *         name passed.
 	 * @throws SQLException
 	 */
-	private List<Long> getResultIDList(final String query,
-			final String columnName, final JDBCDAO jdbcDao,
-			final List<ColumnValueBean> queryDataList)
-			throws DynamicExtensionsSystemException {
+	private List<Long> getResultIDList(final String query, final String columnName,
+			final JDBCDAO jdbcDao, final List<ColumnValueBean> queryDataList)
+			throws DynamicExtensionsSystemException
+	{
 		final List<Long> recordIds = new ArrayList<Long>();
 		ResultSet resultSet = null;
 		Object value = null;
-		try {
+		try
+		{
 			resultSet = jdbcDao.getResultSet(query, queryDataList, null);
 
-			while (resultSet.next()) {
+			while (resultSet.next())
+			{
 				value = resultSet.getObject(columnName);
 				recordIds.add(Long.valueOf(value.toString()));
 			}
-		} catch (final DAOException e) {
-			throw new DynamicExtensionsSystemException(
-					ErrorConstants.ERROR_EXECUTING_QUERY, e);
-		} catch (final NumberFormatException e) {
-			throw new DynamicExtensionsSystemException(
-					ErrorConstants.ERROR_EXECUTING_QUERY, e);
-		} catch (final SQLException e) {
-			throw new DynamicExtensionsSystemException(
-					ErrorConstants.ERROR_EXECUTING_QUERY, e);
-		} finally {
-			try {
+		}
+		catch (final DAOException e)
+		{
+			throw new DynamicExtensionsSystemException(ErrorConstants.ERROR_EXECUTING_QUERY, e);
+		}
+		catch (final NumberFormatException e)
+		{
+			throw new DynamicExtensionsSystemException(ErrorConstants.ERROR_EXECUTING_QUERY, e);
+		}
+		catch (final SQLException e)
+		{
+			throw new DynamicExtensionsSystemException(ErrorConstants.ERROR_EXECUTING_QUERY, e);
+		}
+		finally
+		{
+			try
+			{
 				jdbcDao.closeStatement(resultSet);
-			} catch (final DAOException e) {
-				throw new DynamicExtensionsSystemException(
-						ErrorConstants.ERROR_EXECUTING_QUERY, e);
+			}
+			catch (final DAOException e)
+			{
+				throw new DynamicExtensionsSystemException(ErrorConstants.ERROR_EXECUTING_QUERY, e);
 			}
 		}
 		return recordIds;
@@ -3568,14 +3573,13 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public Long getEntityRecordIdByRootCategoryEntityRecordId(
-			final Long rootCategoryEntityRecordId,
-			final String rootCategoryTableName)
-			throws DynamicExtensionsSystemException {
+			final Long rootCategoryEntityRecordId, final String rootCategoryTableName)
+			throws DynamicExtensionsSystemException
+	{
 		final String query = "select record_Id from " + rootCategoryTableName
 				+ " where IDENTIFIER = ? ";
 		final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
-		queryDataList.add(new ColumnValueBean(IDENTIFIER,
-				rootCategoryEntityRecordId));
+		queryDataList.add(new ColumnValueBean(IDENTIFIER, rootCategoryEntityRecordId));
 		return getEntityRecordId(query, queryDataList);
 	}
 
@@ -3585,15 +3589,14 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public Long getRootCategoryEntityRecordIdByEntityRecordId(
-			final Long rootCategoryEntityRecordId,
-			final String rootCategoryTableName)
-			throws DynamicExtensionsSystemException {
+			final Long rootCategoryEntityRecordId, final String rootCategoryTableName)
+			throws DynamicExtensionsSystemException
+	{
 		final String query = "select IDENTIFIER from " + rootCategoryTableName
 				+ " where record_Id =?";
 
 		final List<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
-		queryDataList.add(new ColumnValueBean(RECORD_ID,
-				rootCategoryEntityRecordId));
+		queryDataList.add(new ColumnValueBean(RECORD_ID, rootCategoryEntityRecordId));
 		return getEntityRecordId(query, queryDataList);
 	}
 
@@ -3616,38 +3619,39 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 *                Exception.
 	 * 
 	 */
-	public long getRecordEntryIdByEntityRecordId(Long dynEntContainerId,
-			Long deRecordId, Long recordEntryStaticId)
-			throws DynamicExtensionsSystemException {
+	public long getRecordEntryIdByEntityRecordId(Long dynEntContainerId, Long deRecordId,
+			Long recordEntryStaticId) throws DynamicExtensionsSystemException
+	{
 
-		EntityInterface entity = EntityManager.getInstance()
-				.getCategoryRootEntityByContainerId(dynEntContainerId);
+		EntityInterface entity = EntityManager.getInstance().getCategoryRootEntityByContainerId(
+				dynEntContainerId);
 		EntityInterface staticEntity = null;
-		try {
-			staticEntity = EntityCache.getInstance().getEntityById(
-					recordEntryStaticId);
-		} catch (DynamicExtensionsCacheException e) {
+		try
+		{
+			staticEntity = EntityCache.getInstance().getEntityById(recordEntryStaticId);
+		}
+		catch (DynamicExtensionsCacheException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		AssociationInterface hookAssociation = null;
-		for (AssociationInterface association : staticEntity
-				.getAssociationCollection()) {
-			if (association.getTargetEntity().equals(entity)) {
+		for (AssociationInterface association : staticEntity.getAssociationCollection())
+		{
+			if (association.getTargetEntity().equals(entity))
+			{
 				hookAssociation = association;
 				break;
 			}
 		}
-		if (hookAssociation == null) {
+		if (hookAssociation == null)
+		{
 			throw new DynamicExtensionsSystemException(entity.getName()
-					+ " is not hooked with the given static entity id"
-					+ recordEntryStaticId);
+					+ " is not hooked with the given static entity id" + recordEntryStaticId);
 		}
 		String hookColName = hookAssociation.getConstraintProperties()
-				.getTgtEntityConstraintKeyProperties()
-				.getTgtForiegnKeyColumnProperties().getName();
-		String query = "select " + hookColName + " from "
-				+ entity.getTableProperties().getName()
+				.getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties().getName();
+		String query = "select " + hookColName + " from " + entity.getTableProperties().getName()
 				+ " where identifier = ?";
 		List<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 		queryDataList.add(new ColumnValueBean("identifier", deRecordId));
@@ -3660,33 +3664,40 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 */
-	private Long getEntityRecordId(final String query,
-			final List<ColumnValueBean> queryDataList)
-			throws DynamicExtensionsSystemException {
+	private Long getEntityRecordId(final String query, final List<ColumnValueBean> queryDataList)
+			throws DynamicExtensionsSystemException
+	{
 		ResultSet resultSet = null;
 		Long entityRecordId = null;
 		JDBCDAO jdbcDAO = null;
-		try {
+		try
+		{
 			jdbcDAO = DynamicExtensionsUtility.getJDBCDAO();
 			resultSet = jdbcDAO.getResultSet(query, queryDataList, null);
-			if (resultSet.next()) {
+			if (resultSet.next())
+			{
 				entityRecordId = resultSet.getLong(1);
 			}
-		} catch (final DAOException e) {
-			throw new DynamicExtensionsSystemException(
-					"Exception in query execution", e);
-		} catch (final SQLException e) {
-			throw new DynamicExtensionsSystemException(
-					"Exception in execution query :: " + query
-							+ " identifier :: "
-							+ queryDataList.get(0).getColumnValue(), e);
-		} finally {
-			try {
+		}
+		catch (final DAOException e)
+		{
+			throw new DynamicExtensionsSystemException("Exception in query execution", e);
+		}
+		catch (final SQLException e)
+		{
+			throw new DynamicExtensionsSystemException("Exception in execution query :: " + query
+					+ " identifier :: " + queryDataList.get(0).getColumnValue(), e);
+		}
+		finally
+		{
+			try
+			{
 				jdbcDAO.closeStatement(resultSet);
 				DynamicExtensionsUtility.closeDAO(jdbcDAO);
-			} catch (final DAOException e) {
-				throw new DynamicExtensionsSystemException(
-						"Exception in query execution", e);
+			}
+			catch (final DAOException e)
+			{
+				throw new DynamicExtensionsSystemException("Exception in query execution", e);
 			}
 		}
 		return entityRecordId;
@@ -3698,11 +3709,10 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @return
 	 */
 	private LinkedList<ColumnValueBean> createColumnValueBeanListForDataEntry(
-			final long identifier, final long recordId) {
-		final ColumnValueBean bean1 = new ColumnValueBean(IDENTIFIER,
-				identifier);
-		final ColumnValueBean bean2 = new ColumnValueBean("ACTIVITY_STATUS",
-				"ACTIVE");
+			final long identifier, final long recordId)
+	{
+		final ColumnValueBean bean1 = new ColumnValueBean(IDENTIFIER, identifier);
+		final ColumnValueBean bean2 = new ColumnValueBean("ACTIVITY_STATUS", "ACTIVE");
 		final ColumnValueBean bean3 = new ColumnValueBean(RECORD_ID, recordId);
 		final LinkedList<ColumnValueBean> colValBeanList = new LinkedList<ColumnValueBean>();
 		colValBeanList.add(bean1);
@@ -3717,17 +3727,18 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @return
 	 */
 	private Map<AbstractAttributeInterface, Object> createAttributeMap(
-			final Map<BaseAbstractAttributeInterface, Object> dataValue) {
+			final Map<BaseAbstractAttributeInterface, Object> dataValue)
+	{
 		final Map<AbstractAttributeInterface, Object> attributes = new HashMap<AbstractAttributeInterface, Object>();
 
 		final Iterator<Map.Entry<BaseAbstractAttributeInterface, Object>> mapEntrySetIter = dataValue
 				.entrySet().iterator();
-		while (mapEntrySetIter.hasNext()) {
-			final Entry<BaseAbstractAttributeInterface, Object> nextObject = mapEntrySetIter
-					.next();
-			final BaseAbstractAttributeInterface baseAbstractAttr = nextObject
-					.getKey();
-			if (baseAbstractAttr instanceof CategoryAttributeInterface) {
+		while (mapEntrySetIter.hasNext())
+		{
+			final Entry<BaseAbstractAttributeInterface, Object> nextObject = mapEntrySetIter.next();
+			final BaseAbstractAttributeInterface baseAbstractAttr = nextObject.getKey();
+			if (baseAbstractAttr instanceof CategoryAttributeInterface)
+			{
 				attributes.put(((CategoryAttributeInterface) baseAbstractAttr)
 						.getAbstractAttribute(), nextObject.getValue());
 			}
@@ -3744,8 +3755,8 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws DynamicExtensionsApplicationException
 	 */
 	public Collection<CategoryInterface> getAllCategories()
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException {
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
 		return getAllObjects(CategoryInterface.class.getName());
 	}
 
@@ -3755,7 +3766,8 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public Collection<CategoryAttributeInterface> getAllCalculatedCategoryAttributes()
-			throws DynamicExtensionsSystemException {
+			throws DynamicExtensionsSystemException
+	{
 		final Collection<CategoryAttributeInterface> categoryAttributes = executeHQL(
 				"getAllCalculatedCategoryAttributes", new HashMap());
 		return categoryAttributes;
@@ -3773,8 +3785,8 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 */
 	public Collection<CategoryAttributeInterface> updateCategoryAttributes(
 			final Collection<CategoryAttributeInterface> categoryAttributeCollection)
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException {
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
 		return updateCategoryAttributes(categoryAttributeCollection, null);
 	}
 
@@ -3787,21 +3799,25 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 */
 	public Collection<CategoryAttributeInterface> updateCategoryAttributes(
 			final Collection<CategoryAttributeInterface> categoryAttributeCollection,
-			SessionDataBean sessionDataBean)
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException {
+			SessionDataBean sessionDataBean) throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
+	{
 		HibernateDAO hibernateDAO = null;
-		try {
-			hibernateDAO = DynamicExtensionsUtility
-					.getHibernateDAO(sessionDataBean);
-			for (final CategoryAttributeInterface categoryAttributeInterface : categoryAttributeCollection) {
+		try
+		{
+			hibernateDAO = DynamicExtensionsUtility.getHibernateDAO(sessionDataBean);
+			for (final CategoryAttributeInterface categoryAttributeInterface : categoryAttributeCollection)
+			{
 				hibernateDAO.update(categoryAttributeInterface);
 			}
 			hibernateDAO.commit();
-		} catch (final DAOException e) {
-			throw new DynamicExtensionsSystemException(e.getMessage(), e,
-					DYEXTN_S_003);
-		} finally {
+		}
+		catch (final DAOException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e, DYEXTN_S_003);
+		}
+		finally
+		{
 			DynamicExtensionsUtility.closeDAO(hibernateDAO);
 		}
 		return categoryAttributeCollection;
@@ -3823,28 +3839,30 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 */
 	public Stack<String> persistDynamicExtensionObjectForCategory(
 			CategoryInterface categoryInterface, HibernateDAO hibernateDAO)
-			throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException {
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
 		List<String> revQueries = new LinkedList<String>();
 		List<String> queries = new ArrayList<String>();
 		Stack<String> rlbkQryStack = new Stack<String>();
 		CategoryHelperInterface categoryHelper = new CategoryHelper();
-		try {
+		try
+		{
 			CategoryEntityInterface categoryEntityInterface = categoryInterface
 					.getRootCategoryElement();
 
-			CategoryGenerationUtil.updateaEntityWithDBPVs(
-					categoryEntityInterface, categoryHelper, hibernateDAO);
+			CategoryGenerationUtil.updateaEntityWithDBPVs(categoryEntityInterface, categoryHelper,
+					hibernateDAO);
 
 			preProcess(categoryInterface, revQueries, queries);
 
-			saveDynamicExtensionObject(categoryInterface, hibernateDAO,
-					rlbkQryStack);
+			saveDynamicExtensionObject(categoryInterface, hibernateDAO, rlbkQryStack);
 
 			postProcess(queries, revQueries, rlbkQryStack);
 
 			EntityCache.getInstance().addCategoryToCache(categoryInterface);
-		} catch (DynamicExtensionsSystemException e) {
+		}
+		catch (DynamicExtensionsSystemException e)
+		{
 			executeRollbackQueries(rlbkQryStack, null, e);
 			LOGGER.error(e.getMessage());
 			throw e;
@@ -3863,40 +3881,60 @@ public class CategoryManager extends AbstractMetadataManager implements
 	 *             the dynamic extensions system exception
 	 */
 	public Collection<NameValueBean> getAllStaticCategoryBeans()
-			throws DynamicExtensionsSystemException {
+			throws DynamicExtensionsSystemException
+	{
 		return executeHQL("getAllStaticCategoryBeans", new HashMap());
 	}
 
 	public String getCategoryProcessorClass(Long rootContainerId)
-			throws DynamicExtensionsSystemException {
+			throws DynamicExtensionsSystemException
+	{
 		String processorClass = null;
 
 		// Create a map of substitution parameters.
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
-		substParams
-				.put("0", new NamedQueryParam(DBTypes.LONG, rootContainerId));
+		substParams.put("0", new NamedQueryParam(DBTypes.LONG, rootContainerId));
 
-		Collection processorClasses = executeHQL(
-				"getProcessorClassByContainerId", substParams);
-		if (processorClasses != null && !processorClasses.isEmpty()) {
+		Collection processorClasses = executeHQL("getProcessorClassByContainerId", substParams);
+		if (processorClasses != null && !processorClasses.isEmpty())
+		{
 			processorClass = (String) processorClasses.iterator().next();
 		}
 
 		return processorClass;
 	}
 
-	public Long getMetadataContainerId(Long categoryId)
-			throws DynamicExtensionsSystemException {
+	public Long getMetadataContainerId(Long categoryId) throws DynamicExtensionsSystemException
+	{
 		Long metadataContainerId = null;
 
 		Map<String, NamedQueryParam> substParams = new HashMap<String, NamedQueryParam>();
 		substParams.put("0", new NamedQueryParam(DBTypes.LONG, categoryId));
 
-		Collection metadataContainerIds = executeHQL("getMetadataContainerId",
-				substParams);
-		if (metadataContainerIds != null && !metadataContainerIds.isEmpty()) {
+		Collection metadataContainerIds = executeHQL("getMetadataContainerId", substParams);
+		if (metadataContainerIds != null && !metadataContainerIds.isEmpty())
+		{
 			metadataContainerId = (Long) metadataContainerIds.iterator().next();
 		}
 		return metadataContainerId;
 	}
+
+	public Long getContainerIdByFormContextId(Long formContextId,SessionDataBean sessionDataBean) throws DynamicExtensionsSystemException, DAOException, JAXBException, SAXException
+	{
+		Long containerId = null;
+		List<ColumnValueBean> columnValueBeans = new ArrayList<ColumnValueBean>();
+		columnValueBeans.add(new ColumnValueBean(formContextId));
+		  List<?> containerIds = SQLQueryManager.executeQuery(
+				DEConstants.CONTAINER_ID_FROM_FORM_CONTEXT_ID, columnValueBeans, sessionDataBean);
+		  Object containerIdentifier=containerIds.get(0);
+//		for (Object containerIdentifier : containerIds)
+//		{
+			ArrayList<?> object = (ArrayList<?>) containerIdentifier;
+			containerId = (Long.valueOf((String) object.get(0)));
+//			break;
+//		}
+
+		return  containerId;
+	}
+
 }

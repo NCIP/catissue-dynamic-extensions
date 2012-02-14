@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import javax.xml.bind.JAXBException;
+
+import org.xml.sax.SAXException;
+
 import net.sf.ehcache.CacheException;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
@@ -510,4 +514,9 @@ public interface CategoryManagerInterface
 	Collection<NameValueBean> getAllStaticCategoryBeans() throws DynamicExtensionsSystemException;
 
 	String getCategoryProcessorClass(Long rootContainerId)throws DynamicExtensionsSystemException;
+
+
+	Long getContainerIdByFormContextId(Long formContextId, SessionDataBean sessionDataBean) throws DynamicExtensionsSystemException, DAOException, JAXBException, SAXException;
+
+
 }

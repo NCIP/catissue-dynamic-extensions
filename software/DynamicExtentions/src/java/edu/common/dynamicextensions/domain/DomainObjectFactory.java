@@ -1005,4 +1005,9 @@ public class DomainObjectFactory
 		}
 		return validatorUtil;
 	}
+	
+	public FormGridObject createFormGridObject()
+	{
+		return new FormGridObject();
+	}
 }
