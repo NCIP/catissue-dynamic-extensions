@@ -3919,22 +3919,18 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		return metadataContainerId;
 	}
 
-	public Long getContainerIdByFormContextId(Long formContextId,SessionDataBean sessionDataBean) throws DynamicExtensionsSystemException, DAOException, JAXBException, SAXException
+	public Long getContainerIdByFormContextId(Long formContextId, SessionDataBean sessionDataBean)
+			throws DynamicExtensionsSystemException, DAOException, JAXBException, SAXException
 	{
 		Long containerId = null;
 		List<ColumnValueBean> columnValueBeans = new ArrayList<ColumnValueBean>();
 		columnValueBeans.add(new ColumnValueBean(formContextId));
-		  List<?> containerIds = SQLQueryManager.executeQuery(
+		List<?> containerIds = SQLQueryManager.executeQuery(
 				DEConstants.CONTAINER_ID_FROM_FORM_CONTEXT_ID, columnValueBeans, sessionDataBean);
-		  Object containerIdentifier=containerIds.get(0);
-//		for (Object containerIdentifier : containerIds)
-//		{
-			ArrayList<?> object = (ArrayList<?>) containerIdentifier;
-			containerId = (Long.valueOf((String) object.get(0)));
-//			break;
-//		}
-
-		return  containerId;
+		Object containerIdentifier = containerIds.get(0);
+		ArrayList<?> object = (ArrayList<?>) containerIdentifier;
+		containerId = (Long.valueOf((String) object.get(0)));
+		return containerId;
 	}
 
 }
