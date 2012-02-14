@@ -4,4 +4,8 @@
 		<name>record.id.from.form.context.id</name>
 		<value>select identifier from dyextn_abstract_record_entry where abstract_form_context_id = ?</value>
 	</query>
+	<query>
+		<name>container.id.from.form.context.id</name>
+		<value>select container_id from dyextn_abstract_form_context where identifier = ?</value>
+	</query>
 </SqlQuery>

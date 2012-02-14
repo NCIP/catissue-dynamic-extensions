@@ -26,7 +26,9 @@ var formDataGrid;
 			{
 				formDataGrid.insertColumn(numberOfCol+i,arr[i],"ro",10,"na","left","top",null,null);
 			}
-			formDataGrid.loadXML("LoadDisplayFormDataInGrid.do");
+			formUrl = encodeURIComponent('${param.formUrl}');
+			deUrl = encodeURIComponent('${param.deUrl}');
+			formDataGrid.loadXML("LoadDisplayFormDataInGrid.do?formContextId=${param.formContextId}&recEntryEntityId=${param.recEntryEntityId}&formUrl="+formUrl+"&deUrl="+deUrl);
 		}
 
 		function doOnLoad()
@@ -52,7 +54,7 @@ var formDataGrid;
 <table border="0" height="100%" width="100%">
 	<tr>
 		<td>
-			<input type="button" value="Add Record" onclick="javascript:document.location.href = '${sessionScope.formUrl}';"/>
+			<input type="button" value="Add Record" onclick="javascript:document.location.href = '${requestScope.formUrl}';"/>
 		</td>
 		<td width="95%">
 			<input type="button" align="left" value="Print" onclick="printForm();"/>
