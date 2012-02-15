@@ -35,7 +35,7 @@ var formDataGrid;
 		{
 			formDataGrid = new dhtmlXGridObject('displayFormDataGrid');
 			formDataGrid.setImagePath("<%=request.getContextPath()%>/dhtmlx_suite/imgs/");
-			formDataGrid.setHeader("Select,Sr.No.,Operation,deUrl");
+			formDataGrid.setHeader("SELECT,SR.NO.,OPERATION,deUrl");
 			formDataGrid.setInitWidthsP("5,5,10,0");
 			formDataGrid.setColAlign("center,center,center,center");
 			formDataGrid.setColTypes("ch,ro,ro,ro");
