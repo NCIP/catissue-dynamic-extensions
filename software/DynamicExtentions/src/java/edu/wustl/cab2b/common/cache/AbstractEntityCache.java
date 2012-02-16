@@ -14,8 +14,8 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 
-import edu.common.dynamicextensions.domain.EntityGroup;
 import edu.common.dynamicextensions.domain.Category;
+import edu.common.dynamicextensions.domain.EntityGroup;
 import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
@@ -45,10 +45,8 @@ import edu.wustl.cab2b.common.beans.MatchedClass;
 import edu.wustl.cab2b.common.beans.MatchedClassEntry;
 import edu.wustl.cab2b.common.exception.RuntimeException;
 import edu.wustl.cab2b.common.util.Utility;
-import edu.wustl.cab2b.server.util.DynamicExtensionUtility;
 import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.dao.HibernateDAO;
-import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dynamicextensions.caching.ObjectFactory;
 import edu.wustl.dynamicextensions.caching.ObjectFactoryCfg;
 import edu.wustl.dynamicextensions.caching.impl.ObjectFactoryCfgImpl;
@@ -199,7 +197,7 @@ public abstract class AbstractEntityCache implements IEntityCache
 			    for (SkipLogic skipLogic : allSkipLogics) {
 				    containerIdVsSkipLogic.put(skipLogic.getContainerIdentifier(), skipLogic);
 				}
-				LOGGER.info("Number of skip logics: " + allSkipLogics.size());
+				LOGGER.debug("Number of skip logics: " + allSkipLogics.size());
 			}
 			objFactory.removeObjects(SkipLogic.class.getName());			
 		}
@@ -235,7 +233,7 @@ public abstract class AbstractEntityCache implements IEntityCache
             objFactory.createObjects(EntityGroup.class.getName(), SkipLogic.class.getName(), Category.class.getName());			
 			entityGroups = (Collection<EntityGroupInterface>)objFactory.getObjects(EntityGroup.class.getName());
 			createCache(entityGroups);			
-			LOGGER.info("Number of entity groups is: " + entityGroups.size());
+			LOGGER.debug("Number of entity groups is: " + entityGroups.size());
 			objFactory.removeObjects(EntityGroup.class.getName());						
 		}
 		catch (final Exception e)
@@ -279,7 +277,6 @@ public abstract class AbstractEntityCache implements IEntityCache
 	{
 		try
 		{
-		    System.err.println("Received call in loadCategories....");
 			Collection<CategoryInterface> categories = (Collection<CategoryInterface>)objFactory.getObjects(Category.class.getName());
 			deCategories.clear();
 			if (categories != null) {
@@ -291,8 +288,7 @@ public abstract class AbstractEntityCache implements IEntityCache
 				}
 			}
             addCategoriesToCache(deCategories);
-			LOGGER.info("Number of DE categories is: " + deCategories.size());
-			System.err.println("Number of DE categories is: " + deCategories.size());
+			LOGGER.debug("Number of DE categories is: " + deCategories.size());
 			objFactory.removeObjects(Category.class.getName());			
 		}
 		catch (final Exception e)
@@ -439,7 +435,7 @@ public abstract class AbstractEntityCache implements IEntityCache
 	private void addContainerToCache(final ContainerInterface container)
 	{
 
-		LOGGER.info("Add Container to Cache.............."+container);
+		LOGGER.debug("Add Container to Cache.............."+container);
 		idVscontainers.put(container.getId(), container);
 		createControlCache(container.getControlCollection());
 		addAbstractEntityToCache(container.getAbstractEntity());
@@ -483,7 +479,7 @@ public abstract class AbstractEntityCache implements IEntityCache
 	private void createAttributeCache(final EntityInterface entity)
 	{
 
-	   LOGGER.info("Create Attribute Cache for Entity:"+entity);
+	   LOGGER.debug("Create Attribute Cache for Entity:"+entity);
 		for (final AttributeInterface attribute : entity.getAttributeCollection())
 		{
 			idVsAttribute.put(attribute.getId(), attribute);
@@ -497,11 +493,11 @@ public abstract class AbstractEntityCache implements IEntityCache
 	public void createAssociationCache(final EntityInterface entity)
 	{
 
-		LOGGER.info("Create Association Cache for Entity:"+entity);
+		LOGGER.debug("Create Association Cache for Entity:"+entity);
 
 		for (final AssociationInterface association : entity.getAssociationCollection())
 		{
-			LOGGER.info("Association......................"+association);
+			LOGGER.debug("Association......................"+association);
 			idVsAssociation.put(association.getId(), association);
 			if (!Utility.isInherited(association))
 			{
@@ -516,7 +512,7 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 */
 	private void createPermissibleValueCache(final EntityInterface entity)
 	{
-		LOGGER.info("Create PV Cache for Entity:"+entity);
+		LOGGER.debug("Create PV Cache for Entity:"+entity);
 		for (final AttributeInterface attribute : entity.getAttributeCollection())
 		{
 			for (final PermissibleValueInterface value : Utility.getPermissibleValues(attribute))
@@ -769,7 +765,7 @@ public abstract class AbstractEntityCache implements IEntityCache
 	private void createEntityCache(final EntityInterface entity)
 	{
 
-		LOGGER.info("create Entity Cache for............."+entity);
+		LOGGER.debug("create Entity Cache for............."+entity);
 		 idVsEntity.put(entity.getId(), entity);
 		 createAttributeCache(entity);
 		 createAssociationCache(entity);
@@ -783,7 +779,7 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 */
 	public void addEntityToCache(final EntityInterface entity)
 	{
-	   LOGGER.info("Add Entity................"+entity);
+	   LOGGER.debug("Add Entity................"+entity);
 	   
 	   /*if (entity.getContainerCollection() != null) {
 	       LOGGER.info("Clearing the entity container collection...");
@@ -792,7 +788,7 @@ public abstract class AbstractEntityCache implements IEntityCache
 	   
 		if ((entity.getContainerCollection() == null) || entity.getContainerCollection().isEmpty())
 		{
-			LOGGER.info("Create EntityCache........");
+			LOGGER.debug("Create EntityCache........");
 			createEntityCache(entity);
 		}
 		else
@@ -802,7 +798,7 @@ public abstract class AbstractEntityCache implements IEntityCache
 			// we'll have a quick way to revert to previous setup.
 			// PLEASE REMOVE THIS CODE IF ABOVE TRICK DOES WORK
 			//
-			LOGGER.info("Add Entity Container to Cache............");
+			LOGGER.debug("Add Entity Container to Cache............");
 			for (final Object container : entity.getContainerCollection())
 			{
 				final ContainerInterface containerInterface = (ContainerInterface) container;
@@ -997,11 +993,11 @@ public abstract class AbstractEntityCache implements IEntityCache
 	{
 		if (deCategories.contains(category))
 		{
-			LOGGER.info("adding category to cache" + category);
+			LOGGER.debug("adding category to cache" + category);
 			deCategories.remove(category);
 			deCategories.add(category);
 			createCategoryEntityCache(category.getRootCategoryElement());
-			LOGGER.info("adding category to cache done");
+			LOGGER.debug("adding category to cache done");
 		}
 
 	}

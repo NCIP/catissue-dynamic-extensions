@@ -140,7 +140,7 @@ public final class UserInterfaceiUtility
 			htmlForGrid.append("</td></tr>");
 		}
 
-		if (isPasteEnable)
+		if (isPasteEnable && WebUIManagerConstants.EDIT_MODE.equals(subContainer.getMode()))
 		{
 			htmlForGrid.append("<tr> <td width='59'><input type='button' "
 					+ "style='border: 0px; background-image: "
@@ -282,13 +282,6 @@ public final class UserInterfaceiUtility
 			htmlForGrid.append(identifier).append("')\" id='btnAddMore").append(identifier);
 			htmlForGrid.append("'/>" + "</td></tr></table>");
 
-			//stringBuffer.append("<button type='button' class='actionButton' id='removeRow' onclick=\"removeCheckedRow('" + subContainer.getId()
-			//		+ "')\">");
-			//stringBuffer.append(ApplicationProperties.getValue("buttons.delete"));
-			//stringBuffer.append("</button>");
-			//stringBuffer.append("<button type='button' class='actionButton' id='addMore' onclick=\"addRow('" + subContainer.getId() + "')\">");
-			//stringBuffer.append(ApplicationProperties.getValue("eav.button.AddRow"));
-			//stringBuffer.append("</button>");
 		}
 
 		htmlForGrid.append("</td></tr>");
