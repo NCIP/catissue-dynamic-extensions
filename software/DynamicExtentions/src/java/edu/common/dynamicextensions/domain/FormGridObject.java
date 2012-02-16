@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FormGridObject
+public class FormGridObject implements Comparable<FormGridObject>
 {
 
 	private Long recordEntryId;
@@ -65,6 +65,12 @@ public class FormGridObject
 	public void setHeaders(List<String> headers)
 	{
 		this.headers = headers;
+	}
+
+
+	public int compareTo(FormGridObject formGridObject)
+	{
+		return (int) -(formGridObject.getRecordEntryId() - this.recordEntryId);
 	}
 
 }

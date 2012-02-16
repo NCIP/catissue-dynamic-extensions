@@ -3,6 +3,7 @@ package edu.common.dynamicextensions.bizlogic;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,6 +103,7 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 				gridObjectList.add(gridObject);
 			}
 		}
+		Collections.sort(gridObjectList);
 		return gridObjectList;
 	}
 
