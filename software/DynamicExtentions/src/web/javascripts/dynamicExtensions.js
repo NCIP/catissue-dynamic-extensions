@@ -1,4 +1,6 @@
 var contextParam = "";
+var formGridDataInfo={deUrl:"clinicalStudyGrid",checkboxSelect:"select",formUrl:"formUrl"}
+
 function setContextParameter(contextParameter)
 {
 	contextParam = contextParameter;
@@ -2241,9 +2243,9 @@ function getValues()
 	}
 }
 /*
- * This attribute is added for live validation.
- * If value is not valid then do not display any other errors.
- * Display only live validation errors which is shown as toolTip.
+ * This attribute is added for live validation. If value is not valid then do
+ * not display any other errors. Display only live validation errors which is
+ * shown as toolTip.
  */
 var isValid = true;
 function calculateAttributes()
@@ -2370,19 +2372,24 @@ function setInsertDataOperation(isDraft)
 								var skipLControlName = skipLogicHideControlObject.id.split('_row_div')[0];
 								if(document.getElementById(skipLControlName)!=null && document.getElementById(skipLControlName)!='undefined')
 								{
-									//Change value of control if control type is textfield or textArea, datepicker, checkbox
+									// Change value of control if control type
+									// is textfield or textArea, datepicker,
+									// checkbox
 									document.getElementById(skipLControlName).value="";
-									//Get combobox control
+									// Get combobox control
 									var comboskipLControlName = "combo"+skipLControlName;
 									if (document.getElementById(comboskipLControlName) != null && document.getElementById(comboskipLControlName) != 'undefined')
 									{
-										//Change value of control if control type is combobox
+										// Change value of control if control
+										// type is combobox
 										document.getElementById(comboskipLControlName).value="";
 									}
 								}
 								else
 								{
-									//change value of control if control type is radiobutton, multiselectCheckbox and listBox
+									// change value of control if control type
+									// is radiobutton, multiselectCheckbox and
+									// listBox
 									var skipLControls = document.getElementsByName(skipLControlName);
 									if(skipLControls != null && skipLControls != 'undefined' && skipLControls.length > 0)
 									{
@@ -2413,9 +2420,9 @@ function setInsertDataOperation(isDraft)
 	}
 	else if( parent.document.getElementById('nSubmitButton').value == 'Save As Final')
 	{
-		//Serialize only sucessfull attributes, i.e selected attributes
+		// Serialize only sucessfull attributes, i.e selected attributes
 		var str = $("dataEntryForm").serialize();
-		//Add unchecked checkboxes to serialize String.
+		// Add unchecked checkboxes to serialize String.
 		jQuery('input:checkbox', dataEntryForm).each(			
 			function() {     
 	    			if (this.checked) {
@@ -2429,7 +2436,7 @@ function setInsertDataOperation(isDraft)
 	    			}
 			}
 		);
-		//Add unchecked radio to serialize String.
+		// Add unchecked radio to serialize String.
 		var isRadioControlAdded="";
 		jQuery('input:radio', dataEntryForm).each(			
 			function() {    
@@ -2446,7 +2453,7 @@ function setInsertDataOperation(isDraft)
 			}
 		);
 
-		//Handled ListBox control
+		// Handled ListBox control
 		var isSelectControlAdded="";
 		var selectControls = document.getElementsByTagName("select");
 		for(var i =0;i<selectControls.length;i++)
@@ -3192,12 +3199,13 @@ function updateServerState(controlName, controlId, containerId)
 			for(var i=0;i<controls.length;i++)
 			{
 				var obj = controls.item(i);
-				if(obj.checked && obj.type == "checkbox") //for multiSelect checkBox.
+				if(obj.checked && obj.type == "checkbox") // for multiSelect
+															// checkBox.
 				{
 					vControl = obj;
 					checkBoxValue = checkBoxValue + "~" + obj.value;
 				}
-				else if(obj.checked) //for radioButton
+				else if(obj.checked) // for radioButton
 				{
 					vControl = obj;
 					break;
@@ -3231,7 +3239,8 @@ function updateServerState(controlName, controlId, containerId)
 		}
 		controlValue = newValue.substring(0,newValue.length);
     }
-    if(vControl.type=="checkbox" && checkBoxValue != "") // for multiSelect checkBox
+    if(vControl.type=="checkbox" && checkBoxValue != "") // for multiSelect
+															// checkBox
 	{
 		controlValue = checkBoxValue.substring(1,checkBoxValue.length);
 	}
@@ -3289,7 +3298,7 @@ function updateServerState(controlName, controlId, containerId)
 						vRecentControl.value = controlValue;
 					}
 				}
-				//vRecentControl.className = "font_bl_nor" ;
+				// vRecentControl.className = "font_bl_nor" ;
 				vRecentControl.title = "";
 			}
 		}
@@ -3675,20 +3684,25 @@ function onFormLoad(strFun,strParam)
 	return ret;
 }
 
-
 function printForm()
 {
 	var urls="";
-
+	var checkedRow = formDataGrid.getCheckedRows(formDataGrid.getColIndexById(formGridDataInfo["checkboxSelect"])).split(",");
+	var colIndex = formDataGrid.getColIndexById(formGridDataInfo["deUrl"]);
+	
 	// 1: get all form URLs
-	for (var i=0; i<formDataGrid.getRowsNum(); i++)
+	for (var i=0; i<checkedRow.length; i++)
 	{
-         // here i - index of the row in the grid
-		 id =formDataGrid.getRowId(i);
-		 urls = urls+ formDataGrid.cells(id,3).getValue().replace(new RegExp("&amp;", 'g'),"&")+"&mode=view&showInDiv=false,";
+		try{
+		 urls = urls+ formDataGrid.cells(checkedRow[i],colIndex).getValue().replace(new RegExp("&amp;", 'g'),"&")+"&mode=view&showInDiv=false,";
+		 }
+		 catch(e)
+		 {
+			alert("Please select minimum one record for printing.");
+		 }
 	}
 	// 2: append URLs in request parameter
-	document.getElementById("formUrl").value = urls;
+	document.getElementById(formGridDataInfo["formUrl"]).value = urls;
 	
 	if(urls!= '')
 	{

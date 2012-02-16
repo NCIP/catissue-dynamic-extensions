@@ -6,6 +6,7 @@
 <script type="text/javascript" src="dhtmlx_suite/js/dhtmlxcommon.js"></script>
 <script type="text/javascript" src="dhtmlx_suite/js/dhtmlxgrid.js"></script>
 <script type="text/javascript" src="dhtmlx_suite/js/dhtmlxgridcell.js"></script>
+<script type="text/javascript" src="dhtmlx_suite/export/dhtmlxgrid_export.js"></script>
 <script type="text/javascript" src="dhtmlx_suite/gridexcells/dhtmlxgrid_excell_grid.js"></script>
 <script type="text/javascript" src="dhtmlx_suite/ext/dhtmlxgrid_mcol.js"></script>
 <script type="text/javascript" src="dhtmlx_suite/ext/dhtmlxgrid_filter.js"></script>
@@ -36,6 +37,7 @@ var formDataGrid;
 			formDataGrid = new dhtmlXGridObject('displayFormDataGrid');
 			formDataGrid.setImagePath("<%=request.getContextPath()%>/dhtmlx_suite/imgs/");
 			formDataGrid.setHeader("SELECT,SR.NO.,OPERATION,deUrl");
+			formDataGrid.setColumnIds("select,srno,operation,deUrl");
 			formDataGrid.setInitWidthsP("5,5,10,0");
 			formDataGrid.setColAlign("center,center,center,center");
 			formDataGrid.setColTypes("ch,ro,ro,ro");
