@@ -117,7 +117,7 @@ public interface CategoryHelperInterface
 	ControlInterface addOrUpdateControl(EntityInterface entity, String attributeName,
 			ContainerInterface container, ControlEnum controlType, String controlCaption,
 			String heading, List<FormControlNotesInterface> controlNotes,
-			Map<String, Object> rulesMap, Map<String, String> permValueOptions, long lineNumber,
+			Map<String, Object> rulesMap,Map<String, String> controlOptions, Map<String, String> permValueOptions, long lineNumber,
 			Set<String>... permissibleValues)
 			throws DynamicExtensionsSystemException;
 
