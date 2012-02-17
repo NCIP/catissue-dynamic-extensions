@@ -224,7 +224,8 @@ public class CategoryHelper implements CategoryHelperInterface
 	public ControlInterface addOrUpdateControl(EntityInterface entity, String attributeName,
 			ContainerInterface container, ControlEnum controlType, String controlCaption,
 			String heading, List<FormControlNotesInterface> controlNotes,
-			Map<String, Object> rulesMap, Map<String, String> permValueOptions, long lineNumber,
+			Map<String, Object> rulesMap, Map<String, String> controlOptions,
+			Map<String, String> permValueOptions, long lineNumber,
 			Set<String>... permissibleValueList) throws DynamicExtensionsSystemException
 	{
 		if (controlType == null)
@@ -249,7 +250,7 @@ public class CategoryHelper implements CategoryHelperInterface
 
 		ControlInterface control = createOrUpdateControl(controlType, controlCaption, heading,
 				controlNotes, container, categoryAttribute, permValueOptions, lineNumber,
-				permissibleValueNameList);
+				permissibleValueNameList, controlOptions);
 		return control;
 	}
 
@@ -435,7 +436,8 @@ public class CategoryHelper implements CategoryHelperInterface
 			String heading, List<FormControlNotesInterface> controlNotes,
 			ContainerInterface container, CategoryAttributeInterface categoryAttribute,
 			Map<String, String> permValueOptions, long lineNumber,
-			Set<String> permissibleValueNameList) throws DynamicExtensionsSystemException
+			Set<String> permissibleValueNameList, Map<String, String> controlOptions)
+			throws DynamicExtensionsSystemException
 	{
 		ControlInterface control = null;
 		EntityInterface entity = categoryAttribute.getAbstractAttribute().getEntity();
@@ -446,16 +448,20 @@ public class CategoryHelper implements CategoryHelperInterface
 				control = createOrUpdateTextFieldControl(container, categoryAttribute);
 				break;
 			case LIST_BOX_CONTROL :
-				control = createOrUpdateSelectControl(container, categoryAttribute,
+				control = createOrUpdateSelectControl(
+						container,
+						categoryAttribute,
 						createPermissibleValuesList(entity, attributeName, lineNumber,
 								permissibleValueNameList), controlType, permValueOptions,
-						lineNumber);
+						lineNumber, controlOptions);
 				break;
 			case COMBO_BOX_CONTROL :
-				control = createOrUpdateSelectControl(container, categoryAttribute,
+				control = createOrUpdateSelectControl(
+						container,
+						categoryAttribute,
 						createPermissibleValuesList(entity, attributeName, lineNumber,
 								permissibleValueNameList), controlType, permValueOptions,
-						lineNumber);
+						lineNumber, controlOptions);
 				break;
 			case DATE_PICKER_CONTROL :
 				control = createOrUpdateDatePickerControl(container, categoryAttribute);
@@ -467,7 +473,9 @@ public class CategoryHelper implements CategoryHelperInterface
 				control = createOrUpdateTextAreaControl(container, categoryAttribute);
 				break;
 			case RADIO_BUTTON_CONTROL :
-				control = createOrUpdateRadioButtonControl(container, categoryAttribute,
+				control = createOrUpdateRadioButtonControl(
+						container,
+						categoryAttribute,
 						createPermissibleValuesList(entity, attributeName, lineNumber,
 								permissibleValueNameList), permValueOptions, lineNumber);
 				break;
@@ -477,10 +485,12 @@ public class CategoryHelper implements CategoryHelperInterface
 			case LABEL_CONTROL :
 				break;
 			case MULTISELECT_CHECKBOX_CONTROL :
-				control = createOrUpdateSelectControl(container, categoryAttribute,
+				control = createOrUpdateSelectControl(
+						container,
+						categoryAttribute,
 						createPermissibleValuesList(entity, attributeName, lineNumber,
 								permissibleValueNameList), controlType, permValueOptions,
-						lineNumber);
+						lineNumber, controlOptions);
 				break;
 			default :
 				throw new DynamicExtensionsSystemException("ERROR: INCORRECT CONTROL TYPE");
@@ -859,8 +869,8 @@ public class CategoryHelper implements CategoryHelperInterface
 	private SelectInterface createOrUpdateSelectControl(ContainerInterface container,
 			BaseAbstractAttributeInterface baseAbstractAttribute,
 			Set<PermissibleValueInterface> permissibleValues, ControlEnum controlType,
-			Map<String, String> permValueOptions, long lineNumber)
-			throws DynamicExtensionsSystemException
+			Map<String, String> permValueOptions, long lineNumber,
+			Map<String, String> controlOptions) throws DynamicExtensionsSystemException
 	{
 		CategoryAttribute categoryAttribute = (CategoryAttribute) baseAbstractAttribute;
 		ControlInterface control = getControl(container, baseAbstractAttribute);
@@ -910,13 +920,26 @@ public class CategoryHelper implements CategoryHelperInterface
 			}
 		}
 
+		if (!controlOptions.containsKey(DEConstants.PV_TYPE))
+		{
+			populatePermissibleValues(permissibleValues, permValueOptions, lineNumber,
+					categoryAttribute);
+		}
+
+		return selectControl;
+	}
+
+	private void populatePermissibleValues(Set<PermissibleValueInterface> permissibleValues,
+			Map<String, String> permValueOptions, long lineNumber,
+			CategoryAttribute categoryAttribute) throws DynamicExtensionsSystemException
+	{
 		if (categoryAttribute.getId() != null
 				&& isDataEntered(categoryAttribute.getCategoryEntity())
 				&& checkForRemovedPermissibleValues(categoryAttribute, permissibleValues))
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue(CategoryConstants.PV_EDIT));
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue(CategoryConstants.PV_EDIT));
 		}
 
 		// Set permissible values
@@ -932,9 +955,9 @@ public class CategoryHelper implements CategoryHelperInterface
 		if (attributeTypeInformation.getDefaultValue() != null)
 		{
 			//categoryAttribute.setDefaultValue(attributeTypeInformation.getDefaultValue());
-			setDefaultValue(categoryAttribute, attributeTypeInformation.getDefaultValue(), false);
+			setDefaultValue(categoryAttribute, attributeTypeInformation.getDefaultValue(),
+					false);
 		}
-		return selectControl;
 	}
 
 	/**
@@ -1019,14 +1042,13 @@ public class CategoryHelper implements CategoryHelperInterface
 
 		if (isPermissibleValueRemoved)
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-					+ categoryFileParser.getLineNumber()
-					+ ApplicationProperties.getValue(CategoryConstants.PV_EDIT)
-					+ "\nORIGINAL PV SET FOR CATEGORY ATTRIBUE "
-					+ categoryAttribute.getName()
-					+ ":" + getExistingPvList(existingPv));
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
+							+ categoryFileParser.getLineNumber()
+							+ ApplicationProperties.getValue(CategoryConstants.PV_EDIT)
+							+ "\nORIGINAL PV SET FOR CATEGORY ATTRIBUE "
+							+ categoryAttribute.getName() + ":" + getExistingPvList(existingPv));
 		}
 		return isPermissibleValueRemoved;
 	}
@@ -1064,12 +1086,12 @@ public class CategoryHelper implements CategoryHelperInterface
 			for (Entry<String, String> entryObject : options.entrySet())
 			{
 				String taggedValue = entryObject.getKey().toLowerCase();
-				
+
 				if (CategoryConstants.ATRRIBUTE_TAG_VALUES.contains(taggedValue))
 				{
 					((ControlInterface) dyextnBaseDomainObject).getBaseAbstractAttribute()
-							.getTaggedValueCollection().add(
-									new TaggedValue(taggedValue,entryObject.getValue()));
+							.getTaggedValueCollection()
+							.add(new TaggedValue(taggedValue, entryObject.getValue()));
 				}
 				else
 				{
@@ -1079,12 +1101,13 @@ public class CategoryHelper implements CategoryHelperInterface
 					Class[] types = getParameterType(methodName, dyextnBaseDomainObject);
 					if (types.length < 1)
 					{
-						throw new DynamicExtensionsSystemException(ApplicationProperties
-								.getValue(CategoryConstants.CREATE_CAT_FAILS)
-								+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-								+ lineNumber
-								+ ApplicationProperties.getValue("incorrectControlOption")
-								+ optionString);
+						throw new DynamicExtensionsSystemException(
+								ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+										+ ApplicationProperties
+												.getValue(CategoryConstants.LINE_NUMBER)
+										+ lineNumber
+										+ ApplicationProperties.getValue("incorrectControlOption")
+										+ optionString);
 					}
 					List<Object> values = new ArrayList<Object>();
 					values.add(getFormattedValues(types[0], entryObject.getValue()));
@@ -1093,46 +1116,45 @@ public class CategoryHelper implements CategoryHelperInterface
 					method = dyextnBaseDomainObject.getClass().getMethod(methodName, types);
 					method.invoke(dyextnBaseDomainObject, values.toArray());
 				}
-			
+
 			}
 		}
 		catch (SecurityException e)
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
 		}
 		catch (NoSuchMethodException e)
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-					+ lineNumber
-					+ ApplicationProperties.getValue("incorrectOption"), e);
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
+							+ lineNumber + ApplicationProperties.getValue("incorrectOption"), e);
 		}
 		catch (IllegalArgumentException e)
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
 		}
 		catch (IllegalAccessException e)
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
 		}
 		catch (InvocationTargetException e)
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
 		}
 		catch (InstantiationException e)
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
 		}
 	}
 
@@ -1353,9 +1375,9 @@ public class CategoryHelper implements CategoryHelperInterface
 				&& checkForRemovedPermissibleValues(((CategoryAttribute) baseAbstractAttribute),
 						permissibleValues))
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue(CategoryConstants.PV_EDIT));
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue(CategoryConstants.PV_EDIT));
 		}
 
 		UserDefinedDEInterface userDefinedDE = (UserDefinedDEInterface) ((CategoryAttribute) baseAbstractAttribute)
@@ -1427,7 +1449,7 @@ public class CategoryHelper implements CategoryHelperInterface
 				.getDataElement();
 		Set<PermissibleValueInterface> permissibleValues = new HashSet<PermissibleValueInterface>();
 
-		if(null == attribute.getTaggedValue(DEConstants.PV_TYPE))
+		if (null == attribute.getTaggedValue(DEConstants.PV_TYPE))
 		{
 			if (userDefinedDE == null)
 			{
@@ -1469,20 +1491,16 @@ public class CategoryHelper implements CategoryHelperInterface
 				String pvList = missingPVList.substring(0, (missingPVList.length() - 1));
 				LOGGER.error("Permissible values subset defined for attribute " + attributeName
 						+ " is not correct.");
-				LOGGER
-						.error("Following Permissible values are not present at attribute level. Add them to attribute and then try again");
+				LOGGER.error("Following Permissible values are not present at attribute level. Add them to attribute and then try again");
 				LOGGER.error(pvList);
 				throw new DynamicExtensionsSystemException(
 						"Permissible values subset defined for attribute " + attributeName
 								+ " is not correct. Please add " + pvList
 								+ " to model level Permissible values");
 			}
-			
+
 		}
-		
-		
-		
-		
+
 		return permissibleValues;
 	}
 
@@ -1759,17 +1777,17 @@ public class CategoryHelper implements CategoryHelperInterface
 
 			if (catAttribute.getIsRelatedAttribute() && !category.getIsPopulateFromXml())
 			{
-				throw new DynamicExtensionsSystemException(ApplicationProperties
-						.getValue(CategoryConstants.CREATE_CAT_FAILS)
-						+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-						+ " "
-						+ categoryFileParser.getLineNumber()
-						+ " "
-						+ ApplicationProperties.getValue("readingFile")
-						+ categoryFileParser.getRelativeFilePath()
-						+ ". "
-						+ ApplicationProperties
-								.getValue("dyExtn.category.relatedAttribute.PopulateFromXML"));
+				throw new DynamicExtensionsSystemException(
+						ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+								+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
+								+ " "
+								+ categoryFileParser.getLineNumber()
+								+ " "
+								+ ApplicationProperties.getValue("readingFile")
+								+ categoryFileParser.getRelativeFilePath()
+								+ ". "
+								+ ApplicationProperties
+										.getValue("dyExtn.category.relatedAttribute.PopulateFromXML"));
 			}
 			String xpath = catAttribute.getAbstractAttribute().getTaggedValue(
 					XMIConstants.TAGGED_NAME_IDENTIFYING_XPATH);
@@ -1822,16 +1840,13 @@ public class CategoryHelper implements CategoryHelperInterface
 				XMIConstants.TAGGED_NAME_VALUE_XPATH);
 		if (taggedValue == null || "".equals(taggedValue.trim()))
 		{
-			throw new DynamicExtensionsSystemException(ApplicationProperties
-					.getValue(CategoryConstants.CREATE_CAT_FAILS)
-					+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-					+ " "
-					+ categoryFileParser.getLineNumber()
-					+ " "
-					+ ApplicationProperties.getValue("readingFile")
-					+ categoryFileParser.getRelativeFilePath()
-					+ ". "
-					+ ApplicationProperties.getValue("dyExtn.category.noXPathPresent"));
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER) + " "
+							+ categoryFileParser.getLineNumber() + " "
+							+ ApplicationProperties.getValue("readingFile")
+							+ categoryFileParser.getRelativeFilePath() + ". "
+							+ ApplicationProperties.getValue("dyExtn.category.noXPathPresent"));
 		}
 
 	}
@@ -1906,12 +1921,13 @@ public class CategoryHelper implements CategoryHelperInterface
 
 					if (valueInterface == null)
 					{
-						throw new DynamicExtensionsSystemException(ApplicationProperties
-								.getValue(CategoryConstants.CREATE_CAT_FAILS)
-								+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-								+ categoryFileParser.getLineNumber()
-								+ ApplicationProperties
-										.getValue(CategoryConstants.PV_INVALID_DEFAULT_VALUE));
+						throw new DynamicExtensionsSystemException(
+								ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+										+ ApplicationProperties
+												.getValue(CategoryConstants.LINE_NUMBER)
+										+ categoryFileParser.getLineNumber()
+										+ ApplicationProperties
+												.getValue(CategoryConstants.PV_INVALID_DEFAULT_VALUE));
 					}
 					else
 					{
