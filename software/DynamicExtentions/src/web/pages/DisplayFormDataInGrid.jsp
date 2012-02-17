@@ -32,13 +32,46 @@ var formDataGrid;
 			var numberOfCol = formDataGrid.getColumnsNum();
 			for(i=0;i<arr.length;i++)
 			{
-				formDataGrid.insertColumn(numberOfCol+i,arr[i],"ro",10,"na","left","top",null,null);
+				gridHeaderObject = arr[i].split("=");
+				formDataGrid.insertColumn(numberOfCol+i,gridHeaderObject[0],"ro",10,getDataType(gridHeaderObject[1]),"left","top",null,null);
 			}
 			formUrl = encodeURIComponent('${param.formUrl}');
 			deUrl = encodeURIComponent('${param.deUrl}');
+			
 			formDataGrid.loadXML("LoadDisplayFormDataInGrid.do?formContextId=${param.formContextId}&recEntryEntityId=${param.recEntryEntityId}&formUrl="+formUrl+"&deUrl="+deUrl);
+			
 		}
 
+		function date_custom(a,b,order){ 
+            a=a.split("-")
+            b=b.split("-")
+            if (a[2]==b[2]){
+                if (a[1]==b[1])
+                    return (a[0]>b[0]?1:-1)*(order=="asc"?1:-1);
+                else
+                    return (a[1]>b[1]?1:-1)*(order=="asc"?1:-1);
+            } else
+                 return (a[2]>b[2]?1:-1)*(order=="asc"?1:-1);
+        }
+
+		
+		function getDataType(dataType)
+		{
+			if(dataType == "Date")
+			{
+				return "date_custom";
+			}
+			else if(dataType == "Integer" || dataType == "Long" || dataType == "Double" || dataType == "Short" || dataType == "Float")
+			{
+				return "int";
+			}
+			else
+			{
+				return "str";
+			}
+
+		}
+		
 		function doOnLoad()
 		{
 			if(navigator.appName.match("Microsoft Internet Explorer"))
@@ -53,6 +86,8 @@ var formDataGrid;
 			formDataGrid.setInitWidthsP("10,10,0");
 			formDataGrid.setColAlign("center,center,center");
 			formDataGrid.setColTypes("ch,ro,ro");
+			formDataGrid.enableStableSorting(true);
+			formDataGrid.setDateFormat('%m-%d-%Y');
 			formDataGrid.enableMultiselect(true);
 			formDataGrid.setSkin("dhx_skyblue");
 			formDataGrid.init();

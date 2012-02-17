@@ -1,17 +1,15 @@
 <?xml version="1.0" ?>
 <rows>
-	#set($srno=1)
 	#foreach( $gridData in $gridPopulateObjectList )
 		<row id="$gridData.recordEntryId">
 			<cell></cell>
-			<cell>$srno</cell>
 			<cell><![CDATA[<a href='$gridData.formURL'>Edit</a>]]></cell>
 			<cell><![CDATA[$gridData.deUrl]]></cell>
 			#set ($map = ${gridData.columns})
-			#foreach ($header in $gridData.headers)
-				<cell><![CDATA[${map.get($header)}]]></cell>
+			#set ($headerMap = ${gridData.headers})
+			#foreach ($header in $headerMap.entrySet())
+				<cell><![CDATA[${map.get($header.key)}]]></cell>
 			#end
 		</row>
-		#set($srno=$srno+1)
 	#end
 </rows>

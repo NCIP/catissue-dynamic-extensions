@@ -86,7 +86,7 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 
 			Collection<Long> map = deItegration.getDynamicRecordFromStaticId(recordEntryIdValue
 					.toString(), containerId, hookEntityId);
-			List<String> headers = getDisplayHeader((CategoryEntityInterface) containerInterface
+			Map<String,String> headers = getDisplayHeader((CategoryEntityInterface) containerInterface
 					.getAbstractEntity());
 			if (!map.isEmpty())
 			{
@@ -187,9 +187,10 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 	 * @param categoryEntityInterface
 	 * @return
 	 */
-	public static List<String> getDisplayHeader(CategoryEntityInterface categoryEntityInterface)
+	public static Map<String, String> getDisplayHeader(
+			CategoryEntityInterface categoryEntityInterface)
 	{
-		List<String> showInGridHeaders = new ArrayList<String>();
+		Map<String, String> showInGridHeaders = new HashMap<String, String>();
 
 		for (ControlInterface controlInterface : ((ContainerInterface) categoryEntityInterface
 				.getContainerCollection().iterator().next()).getControlCollection())
@@ -197,13 +198,15 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 			if ((Boolean.TRUE.toString()).equalsIgnoreCase(controlInterface
 					.getBaseAbstractAttribute().getTaggedValue(CategoryConstants.SHOW_IN_GRID)))
 			{
-				showInGridHeaders.add(controlInterface.getCaption());
+				String dataType = controlInterface.getAttibuteMetadataInterface()
+						.getAttributeTypeInformation().getDataType();
+				showInGridHeaders.put(controlInterface.getCaption(), dataType);
 			}
 		}
 
 		for (CategoryEntityInterface categoryEntity : categoryEntityInterface.getChildCategories())
 		{
-			showInGridHeaders.addAll(getDisplayHeader(categoryEntity));
+			showInGridHeaders.putAll(getDisplayHeader(categoryEntity));
 		}
 		return showInGridHeaders;
 	}
