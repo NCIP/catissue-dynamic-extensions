@@ -350,10 +350,14 @@ public class CategoryGenerator
 							getCategoryValidator().validateControlInSingleLine(controlType,
 									controlXPosition, container);
 						}*/
+						
+						final Map<String, String> controlOptions = categoryFileParser
+								.getControlOptions();
+
 						lastControl = categoryHelper.addOrUpdateControl(entityInterface,
 								attributeName, container, ControlEnum.get(controlType),
 								categoryFileParser.getControlCaption(), heading, controlNotes,
-								rules, permissibleValueOptions, categoryFileParser.getLineNumber(),
+								rules,controlOptions, permissibleValueOptions, categoryFileParser.getLineNumber(),
 								permissibleValues);
 
 						// Set default value for attribute's IsRelatedAttribute
@@ -372,8 +376,6 @@ public class CategoryGenerator
 						categoryHelper.setDefaultControlsOptions(lastControl, ControlEnum
 								.get(categoryFileParser.getControlType()),isLazyPvLoading);
 
-						final Map<String, String> controlOptions = categoryFileParser
-								.getControlOptions();
 
 						
 						if (commonControlOptions != null)
