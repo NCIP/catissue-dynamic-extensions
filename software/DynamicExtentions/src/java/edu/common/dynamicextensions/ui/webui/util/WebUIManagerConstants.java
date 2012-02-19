@@ -123,4 +123,6 @@ public interface WebUIManagerConstants
 	public final String UPDATECACHE = "UpdateCache";
 	
 	public final String ISDRAFT = "isDraft";
+
+	String OVERRIDE_CAPTION = "OverrideCaption";
 }

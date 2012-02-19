@@ -126,7 +126,7 @@ public class LoadDataEntryFormProcessor
 	 * @throws DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	public Map<BaseAbstractAttributeInterface, Object> getValueMapFromRecordId(
+	public static Map<BaseAbstractAttributeInterface, Object> getValueMapFromRecordId(
 			AbstractEntityInterface entityInterface, String recordIdentifier)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{

@@ -68,4 +68,5 @@ public class Constants
 	public static final String VM_TEMPLATE_FILENAME_FOR_FORM_DATA_GRID ="displayFormDataInGridTemplate.vm";
 	public static final String GRID_HEADERS = "gridHeaders";
 	public static final String TREEVIEWKEY = "treeViewKey";
+	public static final String MAP_FOR_VALIDATION = "MapForValidation";
 }

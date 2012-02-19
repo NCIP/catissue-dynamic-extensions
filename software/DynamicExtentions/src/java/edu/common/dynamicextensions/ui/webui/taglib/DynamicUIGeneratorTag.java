@@ -17,6 +17,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
+import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.util.logger.Logger;
 
@@ -108,7 +109,7 @@ public class DynamicUIGeneratorTag extends TagSupport
 		try
 		{
 			final String caption = (String) pageContext.getSession()
-			.getAttribute("OverrideCaption");
+			.getAttribute(WebUIManagerConstants.OVERRIDE_CAPTION);
 			this.container.setShowRequiredFieldWarningMessage(Boolean.valueOf(pageContext
 					.getSession().getAttribute("mandatory_Message").toString()));
 			final String operation = pageContext.getRequest().getParameter("dataEntryOperation");
@@ -121,8 +122,8 @@ public class DynamicUIGeneratorTag extends TagSupport
 			DynamicExtensionsUtility.setEncounterDateToChildContainer(container,
 					contextParameter);
 			Map<Long, ContainerInterface> containerMap = new HashMap<Long, ContainerInterface>();
-			setValidationMap(containerMap, container);
-			pageContext.getSession().setAttribute("MapForValidation", containerMap);
+			TagUtility.setValidationMap(containerMap, container);
+			pageContext.getSession().setAttribute(Constants.MAP_FOR_VALIDATION, containerMap);
 			final JspWriter out = pageContext.getOut();
 			container.setPreviousValueMap(previousDataMap);
 			out.println(this.container.generateContainerHTML(caption, operation));
@@ -143,28 +144,6 @@ public class DynamicUIGeneratorTag extends TagSupport
 		return EVAL_PAGE;
 	}
 
-	/**
-	 *
-	 * @param containerMap
-	 * @param container
-	 */
-	private void setValidationMap(Map<Long, ContainerInterface> containerMap,
-			ContainerInterface container)
-	{
-		containerMap.put(container.getId(), container);
-		for (ControlInterface control : container.getAllControlsUnderSameDisplayLabel())
-		{
-			if (control instanceof AbstractContainmentControlInterface)
-			{
-				final ContainerInterface containmentContainer = ((AbstractContainmentControl) control)
-						.getContainer();
-				setValidationMap(containerMap, containmentContainer);
-			}
-		}
-		for (ContainerInterface childContainer : container.getChildContainerCollection())
-		{
-			setValidationMap(containerMap, childContainer);
-		}
-	}
+	
 
 }

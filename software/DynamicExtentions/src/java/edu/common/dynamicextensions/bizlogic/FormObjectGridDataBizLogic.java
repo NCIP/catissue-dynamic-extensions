@@ -96,8 +96,7 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 				dynamicRecEntryId = map.iterator().next();
 				gridObject
 						.setFormURL(formUrl + DEConstants.RECORD_ID_URL_PARAM + dynamicRecEntryId);//formUrl is used when we need to open the form in edit mode
-				gridObject.setDeUrl(deUrl + DEConstants.RECORD_IDENTIFIER_URL_PARAM
-						+ dynamicRecEntryId);//deUrl is used when we want to print the form
+				gridObject.setDeUrl(containerId+","+dynamicRecEntryId);//deUrl is used when we want to print the form
 				gridObject.setColumns(getDisplayValue(dynamicRecEntryId.toString(),
 						containerInterface));
 				gridObject.setHeaders(headers);

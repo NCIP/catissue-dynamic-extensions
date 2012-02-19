@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,12 +19,17 @@ import org.apache.struts.upload.MultipartRequestWrapper;
 
 import edu.common.dynamicextensions.domain.AbstractEntity;
 import edu.common.dynamicextensions.domain.BaseAbstractAttribute;
+import edu.common.dynamicextensions.domain.DoubleAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.FileAttributeRecordValue;
+import edu.common.dynamicextensions.domain.FloatAttributeTypeInformation;
+import edu.common.dynamicextensions.domain.NumericAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.userinterface.AbstractContainmentControl;
 import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationMetadataInterface;
+import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
+import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.FormControlNotesInterface;
 import edu.common.dynamicextensions.domaininterface.RoleInterface;
@@ -36,6 +42,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.skiplogic.SkipLogic;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.metadata.util.DyExtnObjectCloner;
@@ -677,6 +684,97 @@ public final class UserInterfaceiUtility
 					&& !wrapper.getRequest().getParameterMap().isEmpty())
 			{
 				wrapper.getRequest().getParameterMap().clear();
+			}
+		}
+	}
+	
+	/**
+	 * Append number of zeroes to the output depending on precision entered while creating the attribute of double type.
+	 * @param recordMap
+	 * @param processedAttributes
+	 */
+	public static void addPrecisionZeroes(final Map<BaseAbstractAttributeInterface, Object> recordMap,
+			final Set<AttributeInterface> processedAttributes)
+	{
+		// If the value is 1.48 and precision entered for it is 3, make it appear as 1.480
+		for (Entry<BaseAbstractAttributeInterface, Object> entryObject : recordMap.entrySet())
+		{
+			BaseAbstractAttributeInterface object = entryObject.getKey();
+
+			if (object instanceof AttributeInterface)
+			{
+				final AttributeInterface currentAttribute = (AttributeInterface) object;
+
+				final AttributeTypeInformationInterface attributeTypeInformation = currentAttribute
+						.getAttributeTypeInformation();
+
+				if (attributeTypeInformation instanceof NumericAttributeTypeInformation)
+				{
+					if (processedAttributes.contains(currentAttribute))
+					{
+						return;
+					}
+					else
+					{
+						processedAttributes.add(currentAttribute);
+					}
+					final int decimalPlaces = ((NumericAttributeTypeInformation) attributeTypeInformation)
+							.getDecimalPlaces();
+					String value = (String) entryObject.getValue();
+					if (value.contains(".") && !value.contains("E"))
+					{
+						final int placesAfterDecimal = value.length() - (value.indexOf('.') + 1);
+
+						if (placesAfterDecimal != decimalPlaces)
+						{
+							StringBuilder val = new StringBuilder(value);
+							for (int j = decimalPlaces; j > placesAfterDecimal; j--)
+							{
+								val.append("0");
+							}
+							value = val.toString();
+							recordMap.put(currentAttribute, value);
+						}
+					}
+					else
+                    {
+                        if ((attributeTypeInformation instanceof DoubleAttributeTypeInformation
+                                || attributeTypeInformation instanceof FloatAttributeTypeInformation)
+                                && value.length() != 0 && !value.contains("E"))
+                        {
+                            if (decimalPlaces != 0)
+                            {
+                                value = new StringBuilder(value).append(".")
+                                        .toString();
+                            }
+
+                            for (int i = 0; i < decimalPlaces; i++)
+                            {
+                                value = new StringBuilder(value).append("0")
+                                        .toString();
+                            }
+                            recordMap.put(currentAttribute, value);
+                        }
+                    }
+				}
+			}
+			else if (object instanceof AssociationInterface)
+			{
+				final AssociationMetadataInterface association = (AssociationMetadataInterface) object;
+				if (association.getAssociationType() != null)
+				{
+					final String associationType = association.getAssociationType().getValue();
+					if (associationType != null && entryObject.getValue() != null
+							&& associationType.equals(AssociationType.CONTAINTMENT.getValue()))
+					{
+						final List<Map<BaseAbstractAttributeInterface, Object>> innerRecordsList = (List<Map<BaseAbstractAttributeInterface, Object>>) entryObject
+								.getValue();
+						for (final Map<BaseAbstractAttributeInterface, Object> innerMap : innerRecordsList)
+						{
+							addPrecisionZeroes(innerMap, processedAttributes);
+						}
+					}
+				}
 			}
 		}
 	}

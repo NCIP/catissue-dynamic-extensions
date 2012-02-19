@@ -106,7 +106,7 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 			}
 
 			final Set<AttributeInterface> attributes = new HashSet<AttributeInterface>();
-			addPrecisionZeroes(recordMap, attributes);
+			UserInterfaceiUtility.addPrecisionZeroes(recordMap, attributes);
 			updateStacks(request, dataEntryForm, containerStack, valueMapStack, scrollTopStack);
 
 			if (!containerStack.isEmpty() && !valueMapStack.isEmpty())
@@ -408,95 +408,6 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 		}
 	}
 
-	/**
-	 * Append number of zeroes to the output depending on precision entered while creating the attribute of double type.
-	 * @param recordMap
-	 * @param processedAttributes
-	 */
-	private void addPrecisionZeroes(final Map<BaseAbstractAttributeInterface, Object> recordMap,
-			final Set<AttributeInterface> processedAttributes)
-	{
-		// If the value is 1.48 and precision entered for it is 3, make it appear as 1.480
-		for (Entry<BaseAbstractAttributeInterface, Object> entryObject : recordMap.entrySet())
-		{
-			BaseAbstractAttributeInterface object = entryObject.getKey();
-
-			if (object instanceof AttributeInterface)
-			{
-				final AttributeInterface currentAttribute = (AttributeInterface) object;
-
-				final AttributeTypeInformationInterface attributeTypeInformation = currentAttribute
-						.getAttributeTypeInformation();
-
-				if (attributeTypeInformation instanceof NumericAttributeTypeInformation)
-				{
-					if (processedAttributes.contains(currentAttribute))
-					{
-						return;
-					}
-					else
-					{
-						processedAttributes.add(currentAttribute);
-					}
-					final int decimalPlaces = ((NumericAttributeTypeInformation) attributeTypeInformation)
-							.getDecimalPlaces();
-					String value = (String) entryObject.getValue();
-					if (value.contains(".") && !value.contains("E"))
-					{
-						final int placesAfterDecimal = value.length() - (value.indexOf('.') + 1);
-
-						if (placesAfterDecimal != decimalPlaces)
-						{
-							StringBuilder val = new StringBuilder(value);
-							for (int j = decimalPlaces; j > placesAfterDecimal; j--)
-							{
-								val.append("0");
-							}
-							value = val.toString();
-							recordMap.put(currentAttribute, value);
-						}
-					}
-					else
-                    {
-                        if ((attributeTypeInformation instanceof DoubleAttributeTypeInformation
-                                || attributeTypeInformation instanceof FloatAttributeTypeInformation)
-                                && value.length() != 0 && !value.contains("E"))
-                        {
-                            if (decimalPlaces != 0)
-                            {
-                                value = new StringBuilder(value).append(".")
-                                        .toString();
-                            }
-
-                            for (int i = 0; i < decimalPlaces; i++)
-                            {
-                                value = new StringBuilder(value).append("0")
-                                        .toString();
-                            }
-                            recordMap.put(currentAttribute, value);
-                        }
-                    }
-				}
-			}
-			else if (object instanceof AssociationInterface)
-			{
-				final AssociationMetadataInterface association = (AssociationMetadataInterface) object;
-				if (association.getAssociationType() != null)
-				{
-					final String associationType = association.getAssociationType().getValue();
-					if (associationType != null && entryObject.getValue() != null
-							&& associationType.equals(AssociationType.CONTAINTMENT.getValue()))
-					{
-						final List<Map<BaseAbstractAttributeInterface, Object>> innerRecordsList = (List<Map<BaseAbstractAttributeInterface, Object>>) entryObject
-								.getValue();
-						for (final Map<BaseAbstractAttributeInterface, Object> innerMap : innerRecordsList)
-						{
-							addPrecisionZeroes(innerMap, processedAttributes);
-						}
-					}
-				}
-			}
-		}
-	}
+	
 
 }
