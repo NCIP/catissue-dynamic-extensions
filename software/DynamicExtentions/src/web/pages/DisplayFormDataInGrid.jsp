@@ -24,7 +24,7 @@
 
 <script>
 var formDataGrid;
-
+var header = "#master_checkbox,,,";
 		function addColumnsToGrid()
 		{
 			var gridHeaders = '${requestScope.gridHeaders}';
@@ -34,7 +34,9 @@ var formDataGrid;
 			{
 				gridHeaderObject = arr[i].split("=");
 				formDataGrid.insertColumn(numberOfCol+i,gridHeaderObject[0],"ro",10,getDataType(gridHeaderObject[1]),"left","top",null,null);
+				header = getFilterType(gridHeaderObject[1],header);
 			}
+			formDataGrid.attachHeader(header.substring(0,header.length-1),["text-align:center;padding-right:10px;"]);
 			formUrl = encodeURIComponent('${param.formUrl}');
 			deUrl = encodeURIComponent('${param.deUrl}');
 			
@@ -42,6 +44,19 @@ var formDataGrid;
 			
 		}
 
+		function getFilterType(dataType,header)
+		{
+			if(dataType.match("pv"))
+			{
+				header = header + "#select_filter,";
+			}
+			else
+			{
+				header =  header + "#text_filter,";
+			}
+			return header;
+		}
+		
 		function date_custom(a,b,order){ 
             a=a.split("-")
             b=b.split("-")
@@ -81,7 +96,7 @@ var formDataGrid;
 			formDataGrid = new dhtmlXGridObject('displayFormDataGrid');
 			formDataGrid.setImagePath("<%=request.getContextPath()%>/dhtmlx_suite/imgs/");
 			formDataGrid.setHeader("SELECT,OPERATION,deUrl",null,["text-align:center;","text-align:center;","text-align:center"]);
-			formDataGrid.attachHeader("#master_checkbox,,",["text-align:center;padding-right:10px;","text-align:center;","text-align:center;"]);
+			//formDataGrid.attachHeader("#master_checkbox,,",["text-align:center;padding-right:10px;","text-align:center;","text-align:center;"]);
 			formDataGrid.setColumnIds("select,operation,deUrl");
 			formDataGrid.setInitWidthsP("10,10,0");
 			formDataGrid.setColAlign("center,center,center");
@@ -103,13 +118,12 @@ var formDataGrid;
 	<tr>
 		<td><input type="button" value="Add Record"
 			onclick="javascript:document.location.href = '${requestScope.formUrl}';" />
-			<input type="button" align="left" value="Print"
-			onclick="printForm();" />
+		<input type="button" align="left" value="Print" onclick="printForm();" />
 		</td>
 	</tr>
 	<tr>
 		<td style="vertical-align: top;">
-		<div id="displayFormDataGrid" style="height:100%; width: 100%;"></div>
+		<div id="displayFormDataGrid" style="height: 100%; width: 100%;"></div>
 		</td>
 	</tr>
 

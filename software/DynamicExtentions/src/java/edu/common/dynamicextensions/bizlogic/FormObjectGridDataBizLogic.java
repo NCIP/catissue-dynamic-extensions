@@ -22,6 +22,7 @@ import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterfa
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
+import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.entitymanager.CategoryManager;
@@ -86,7 +87,7 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 
 			Collection<Long> map = deItegration.getDynamicRecordFromStaticId(recordEntryIdValue
 					.toString(), containerId, hookEntityId);
-			Map<String,String> headers = getDisplayHeader((CategoryEntityInterface) containerInterface
+			Map<String, String> headers = getDisplayHeader((CategoryEntityInterface) containerInterface
 					.getAbstractEntity());
 			if (!map.isEmpty())
 			{
@@ -192,14 +193,24 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 	{
 		Map<String, String> showInGridHeaders = new HashMap<String, String>();
 
+		String dataType;
 		for (ControlInterface controlInterface : ((ContainerInterface) categoryEntityInterface
 				.getContainerCollection().iterator().next()).getControlCollection())
 		{
 			if ((Boolean.TRUE.toString()).equalsIgnoreCase(controlInterface
 					.getBaseAbstractAttribute().getTaggedValue(CategoryConstants.SHOW_IN_GRID)))
 			{
-				String dataType = controlInterface.getAttibuteMetadataInterface()
+				dataType = controlInterface.getAttibuteMetadataInterface()
 						.getAttributeTypeInformation().getDataType();
+				UserDefinedDEInterface userDefinedDEInterface = ((UserDefinedDEInterface) (controlInterface
+						.getAttibuteMetadataInterface().getDataElement(null)));
+				if (userDefinedDEInterface != null)
+				{
+					if (!userDefinedDEInterface.getPermissibleValues().isEmpty())
+					{
+						dataType = dataType + DEConstants.PV_POSTFIX;
+					}
+				}
 				showInGridHeaders.put(controlInterface.getCaption(), dataType);
 			}
 		}
