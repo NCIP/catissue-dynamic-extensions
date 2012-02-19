@@ -289,7 +289,7 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 		ContainerInterface containerInterface = (ContainerInterface) CacheManager
 				.getObjectFromCache(request, DEConstants.CONTAINER_INTERFACE);
 		final String containerIdentifier = getContainerId(request);
-		if ((containerIdentifier != null || containerInterface == null) && DynamicExtensionsUtility.isNumeric(containerIdentifier))
+		if ((containerIdentifier != null || containerInterface == null) && DynamicExtensionsUtility.isNumericDigit(containerIdentifier))
 		{
 			UserInterfaceiUtility.clearContainerStack(request);
 

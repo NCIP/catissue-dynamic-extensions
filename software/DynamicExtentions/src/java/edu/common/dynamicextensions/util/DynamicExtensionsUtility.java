@@ -729,6 +729,31 @@ public class DynamicExtensionsUtility
 	}
 
 	/**
+	 * Checks that the input String contains only numeric digits also allowed zero as valid value.
+	 *
+	 * @param numString The string whose characters are to be checked.
+	 *
+	 * @return false if the String contains any alphabet else returns true.
+	 */
+	public static boolean isNumericDigit(String numString)
+	{
+		boolean isNumeric = false;
+		try
+		{
+			long longValue = Long.parseLong(numString);
+			if (longValue >= 0)
+			{
+				isNumeric ^= true;
+			}
+		}
+		catch (NumberFormatException exp)
+		{
+			isNumeric = false;
+		}
+		return isNumeric;
+	}
+	
+	/**
 	 * @return day form Calendar.
 	 */
 	public static int getCurrentDay()

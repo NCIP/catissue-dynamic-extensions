@@ -353,7 +353,7 @@ public class ClearSkipLogic {
 			}
 			// Check for child categories
 			applySkipLogicCorrectionForChildCategories(skipLogicCategory.getRootCategoryElement(), recordMap, stringBuilder);
-			editData(containerInterface, recordId, recordMap);
+			editData(containerInterface, recordId, recordMap, stringBuilder);
 		}
 	}
 
@@ -366,10 +366,11 @@ public class ClearSkipLogic {
 	 * @throws MalformedURLException
 	 */
 	private static void editData(ContainerInterface containerInterface,	Long recordId,
-			final Map<BaseAbstractAttributeInterface, Object> recordMap)
+			final Map<BaseAbstractAttributeInterface, Object> recordMap, StringBuilder stringBuilder)
 			throws MalformedURLException {
 		if(isMapUpdated)
 		{
+			stringBuilder.append("Category Record Id :: "+recordId+newLine);
 			String entityGroupName = containerInterface.getAbstractEntity().getEntityGroup().getName();
 			Map<String, Object> clientmap = new HashMap<String, Object>();
 			DataEditClient dataEditClient = new DataEditClient();
