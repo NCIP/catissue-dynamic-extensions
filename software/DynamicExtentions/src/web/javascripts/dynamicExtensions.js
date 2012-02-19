@@ -3694,7 +3694,7 @@ function printForm()
 	for (var i=0; i<checkedRow.length; i++)
 	{
 		try{
-		 urls = urls+ formDataGrid.cells(checkedRow[i],colIndex).getValue()":";
+		 urls = urls+ formDataGrid.cells(checkedRow[i],colIndex).getValue()+":";
 		 }
 		 catch(e)
 		 {
