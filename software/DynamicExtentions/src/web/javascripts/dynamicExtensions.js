@@ -1,5 +1,5 @@
 var contextParam = "";
-var formGridDataInfo={deUrl:"clinicalStudyGrid",checkboxSelect:"select",formUrl:"formUrl"}
+var formGridDataInfo={deUrl:"deUrl",checkboxSelect:"select",formUrl:"formUrl"}
 
 function setContextParameter(contextParameter)
 {
