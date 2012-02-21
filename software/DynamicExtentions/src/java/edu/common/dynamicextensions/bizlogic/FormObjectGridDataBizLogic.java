@@ -96,7 +96,7 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 				dynamicRecEntryId = map.iterator().next();
 				gridObject
 						.setFormURL(formUrl + DEConstants.RECORD_ID_URL_PARAM + dynamicRecEntryId);//formUrl is used when we need to open the form in edit mode
-				gridObject.setDeUrl(containerId+","+dynamicRecEntryId);//deUrl is used when we want to print the form
+				gridObject.setDeUrl(containerId + "," + dynamicRecEntryId);//deUrl is used when we want to print the form
 				gridObject.setColumns(getDisplayValue(dynamicRecEntryId.toString(),
 						containerInterface));
 				gridObject.setHeaders(headers);
@@ -196,21 +196,26 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 		for (ControlInterface controlInterface : ((ContainerInterface) categoryEntityInterface
 				.getContainerCollection().iterator().next()).getControlCollection())
 		{
-			if ((Boolean.TRUE.toString()).equalsIgnoreCase(controlInterface
-					.getBaseAbstractAttribute().getTaggedValue(CategoryConstants.SHOW_IN_GRID)))
+			BaseAbstractAttributeInterface baseAbstractAttribute = controlInterface
+					.getBaseAbstractAttribute();
+			if (baseAbstractAttribute != null)
 			{
-				dataType = controlInterface.getAttibuteMetadataInterface()
-						.getAttributeTypeInformation().getDataType();
-				UserDefinedDEInterface userDefinedDEInterface = ((UserDefinedDEInterface) (controlInterface
-						.getAttibuteMetadataInterface().getDataElement(null)));
-				if (userDefinedDEInterface != null)
+				if ((Boolean.TRUE.toString()).equalsIgnoreCase(baseAbstractAttribute
+						.getTaggedValue(CategoryConstants.SHOW_IN_GRID)))
 				{
-					if (!userDefinedDEInterface.getPermissibleValues().isEmpty())
+					dataType = controlInterface.getAttibuteMetadataInterface()
+							.getAttributeTypeInformation().getDataType();
+					UserDefinedDEInterface userDefinedDEInterface = ((UserDefinedDEInterface) (controlInterface
+							.getAttibuteMetadataInterface().getDataElement(null)));
+					if (userDefinedDEInterface != null)
 					{
-						dataType = dataType + DEConstants.PV_POSTFIX;
+						if (!userDefinedDEInterface.getPermissibleValues().isEmpty())
+						{
+							dataType = dataType + DEConstants.PV_POSTFIX;
+						}
 					}
+					showInGridHeaders.put(controlInterface.getCaption(), dataType);
 				}
-				showInGridHeaders.put(controlInterface.getCaption(), dataType);
 			}
 		}
 
