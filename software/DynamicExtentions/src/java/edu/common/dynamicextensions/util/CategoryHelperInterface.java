@@ -162,7 +162,7 @@ public interface CategoryHelperInterface
 	 */
 	Set<PermissibleValueInterface> createPermissibleValuesList(EntityInterface entity,
 			String attributeName, Long lineNo,
-			Set<String> desiredPermissibleValues)
+			Set<String> desiredPermissibleValues,Map<String, String> controlOptions)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException;
 
 	/**
