@@ -451,8 +451,9 @@ public class CategoryHelper implements CategoryHelperInterface
 				control = createOrUpdateSelectControl(
 						container,
 						categoryAttribute,
+
 						createPermissibleValuesList(entity, attributeName, lineNumber,
-								permissibleValueNameList), controlType, permValueOptions,
+								permissibleValueNameList,controlOptions), controlType, permValueOptions,
 						lineNumber, controlOptions);
 				break;
 			case COMBO_BOX_CONTROL :
@@ -460,7 +461,7 @@ public class CategoryHelper implements CategoryHelperInterface
 						container,
 						categoryAttribute,
 						createPermissibleValuesList(entity, attributeName, lineNumber,
-								permissibleValueNameList), controlType, permValueOptions,
+								permissibleValueNameList,controlOptions), controlType, permValueOptions,
 						lineNumber, controlOptions);
 				break;
 			case DATE_PICKER_CONTROL :
@@ -477,7 +478,7 @@ public class CategoryHelper implements CategoryHelperInterface
 						container,
 						categoryAttribute,
 						createPermissibleValuesList(entity, attributeName, lineNumber,
-								permissibleValueNameList), permValueOptions, lineNumber);
+								permissibleValueNameList,controlOptions), permValueOptions, lineNumber);
 				break;
 			case CHECK_BOX_CONTROL :
 				control = createOrUpdateCheckBoxControl(container, categoryAttribute);
@@ -489,7 +490,7 @@ public class CategoryHelper implements CategoryHelperInterface
 						container,
 						categoryAttribute,
 						createPermissibleValuesList(entity, attributeName, lineNumber,
-								permissibleValueNameList), controlType, permValueOptions,
+								permissibleValueNameList,controlOptions), controlType, permValueOptions,
 						lineNumber, controlOptions);
 				break;
 			default :
@@ -1438,7 +1439,7 @@ public class CategoryHelper implements CategoryHelperInterface
 	 * @throws DynamicExtensionsSystemException
 	 */
 	public Set<PermissibleValueInterface> createPermissibleValuesList(EntityInterface entity,
-			String attributeName, Long lineNo, Set<String> desiredPermissibleValues)
+			String attributeName, Long lineNo, Set<String> desiredPermissibleValues,Map<String, String> controlOptions)
 			throws DynamicExtensionsSystemException
 	{
 
@@ -1449,7 +1450,7 @@ public class CategoryHelper implements CategoryHelperInterface
 				.getDataElement();
 		Set<PermissibleValueInterface> permissibleValues = new HashSet<PermissibleValueInterface>();
 
-		if (null == attribute.getTaggedValue(DEConstants.PV_TYPE))
+		if (!controlOptions.containsKey(DEConstants.PV_TYPE))
 		{
 			if (userDefinedDE == null)
 			{
