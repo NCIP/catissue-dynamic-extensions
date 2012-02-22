@@ -50,9 +50,10 @@ can not be clubbed together with style class specified for the print media --%>
   <label class="NonPrintable" style='font-family: arial,helvetica,verdana,sans-serif;font-size: 1em;font-weight: bold;'>Print Preview</label>
 </body>
 
-<c:forEach var="url" items="${fn:split(param.formUrl, ':')}">
+<c:forEach var="url" items="${fn:split(param.formUrl, ':')}" varStatus="status">
     <dynamicExtensions:dynamicUIGeneratorFromId containerId="${fn:split(url,',')[0]}" formRecordId="${fn:split(url,',')[1]}" mode="view"/>
-	<div style="page-break-before: always">&nbsp;</div>
+	<c:if test="${not status.last}"><div style="page-break-before: always">&nbsp;</div></c:if>
+	
 </c:forEach>
 
 <script type="text/javascript" defer="defer">
