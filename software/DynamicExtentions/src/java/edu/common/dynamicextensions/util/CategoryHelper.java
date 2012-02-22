@@ -1887,6 +1887,25 @@ public class CategoryHelper implements CategoryHelperInterface
 		}
 		return conceptCodeColl;
 	}
+	
+	public static void convertPVTagsToLowerCase(Map<String,String> options)
+	{
+		String pvType="pvType";
+		String pvProcessor="pvProcessor";
+		if(options.containsKey(pvType))
+		{	
+			String value=options.get(pvType);
+			options.remove(pvType);
+			options.put(DEConstants.PV_TYPE, value);
+		}
+		if(options.containsKey(pvProcessor))
+		{
+			String value=options.get(pvProcessor);
+			options.remove(pvProcessor);
+			options.put(DEConstants.PV_PROCESSOR, value);
+		}
+		return;
+	}
 
 	/**
 	* @param categoryAttribute
