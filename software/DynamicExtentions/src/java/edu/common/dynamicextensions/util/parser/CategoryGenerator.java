@@ -353,6 +353,8 @@ public class CategoryGenerator
 						
 						final Map<String, String> controlOptions = categoryFileParser
 								.getControlOptions();
+						
+						CategoryHelper.convertPVTagsToLowerCase(controlOptions);
 
 						lastControl = categoryHelper.addOrUpdateControl(entityInterface,
 								attributeName, container, ControlEnum.get(controlType),
