@@ -3698,7 +3698,7 @@ function printForm()
 		 }
 		 catch(e)
 		 {
-			alert("Please select minimum one record for printing.");
+			alert("Please select at least one record for printing.");
 		 }
 	}
 	// 2: append URLs in request parameter
