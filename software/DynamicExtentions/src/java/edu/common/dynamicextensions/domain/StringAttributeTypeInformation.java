@@ -8,6 +8,7 @@ import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.StringTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.StringValueInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterface;
+import edu.common.dynamicextensions.util.global.DEConstants;
 
 /**
  * @version 1.0
@@ -107,13 +108,13 @@ public class StringAttributeTypeInformation extends AttributeTypeInformation
 
 	public List<String> getConditions() {
 		List<String> conditions = new ArrayList<String>();
-		conditions.add("Starts With");
-		conditions.add("Ends With");
-		conditions.add("Equals");
-		conditions.add("Not Equals");
-		conditions.add("Contains");
-		conditions.add("Is Present");
-		conditions.add("Is Not Present");
+		conditions.add(DEConstants.STARTS_WITH);
+		conditions.add(DEConstants.ENDS_WITH);
+		conditions.add(DEConstants.EQUALS);
+		conditions.add(DEConstants.NOT_EQUALS);
+		conditions.add(DEConstants.CONTAINS);
+		conditions.add(DEConstants.IS_PRESENT);
+		conditions.add(DEConstants.IS_NOT_PRESENT);
 		return conditions;
 	}
 }

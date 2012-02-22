@@ -8,6 +8,7 @@ import edu.common.dynamicextensions.domaininterface.BooleanTypeInformationInterf
 import edu.common.dynamicextensions.domaininterface.BooleanValueInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterface;
+import edu.common.dynamicextensions.util.global.DEConstants;
 
 /**
  * @version 1.0
@@ -62,8 +63,8 @@ public class BooleanAttributeTypeInformation extends AttributeTypeInformation
 
 	public List<String> getConditions() {
 		List<String> conditions = new ArrayList<String>();
-		conditions.add("True");
-		conditions.add("False");
+		conditions.add(DEConstants.TRUE);
+		conditions.add(DEConstants.FALSE);
 		return conditions;
 	}
 }

@@ -403,4 +403,17 @@ public class DEConstants
 	
 	public static final String PV_POSTFIX = "_pv";
 	
+	public static final String EQUALS = "Equals";
+	public static final String NOT_EQUALS ="Not Equals";
+	public static final String BETWEEN = "Between";
+	public static final String LESS_THAN = "Less than";
+	public static final String LESS_THAN_OR_EQUAL_TO ="Less than or Equal to";
+	public static final String GREATER_THAN = "Greater than";
+	public static final String GREATER_THAN_OR_EQUAL_TO = "Greater than or Equal to";
+	public static final String IS_PRESENT = "Is Present";
+	public static final String IS_NOT_PRESENT = "Is Not Present";
+	public static final String STARTS_WITH = "Starts With";
+	public static final String ENDS_WITH = "Ends With";
+	public static final String CONTAINS = "Contains";
+	
 }

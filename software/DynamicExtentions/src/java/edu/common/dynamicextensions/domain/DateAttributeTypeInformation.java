@@ -14,6 +14,7 @@ import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerConstantsInterface;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.global.CommonServiceLocator;
 
@@ -145,16 +146,15 @@ public class DateAttributeTypeInformation extends AttributeTypeInformation
 
 	public List<String> getConditions() {
 		List<String> conditions = new ArrayList<String>();
-		conditions.add("Equals");
-		conditions.add("Not Equals");
-		conditions.add("Between");
-		conditions.add("Not Between");
-		conditions.add("Less than");
-		conditions.add("Less than or Equal to");
-		conditions.add("Greater than");
-		conditions.add("Greater than or Equal to");
-		conditions.add("Is Present");
-		conditions.add("Is Not Present");
+		conditions.add(DEConstants.EQUALS);
+		conditions.add(DEConstants.NOT_EQUALS);
+		conditions.add(DEConstants.BETWEEN);
+		conditions.add(DEConstants.LESS_THAN);
+		conditions.add(DEConstants.LESS_THAN_OR_EQUAL_TO);
+		conditions.add(DEConstants.GREATER_THAN);
+		conditions.add(DEConstants.GREATER_THAN_OR_EQUAL_TO);
+		conditions.add(DEConstants.IS_PRESENT);
+		conditions.add(DEConstants.IS_NOT_PRESENT);
 		return conditions;
 	}
 }
