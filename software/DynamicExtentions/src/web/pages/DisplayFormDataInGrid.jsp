@@ -29,19 +29,21 @@ var header = "#master_checkbox,,,";
 		{
 			var gridHeaders = '${requestScope.gridHeaders}';
 			var arr = gridHeaders.substring(1,gridHeaders.length-1).split(",");
-			var numberOfCol = formDataGrid.getColumnsNum();
-			for(i=0;i<arr.length;i++)
+			if(arr != "")
 			{
-				gridHeaderObject = arr[i].split("=");
-				formDataGrid.insertColumn(numberOfCol+i,gridHeaderObject[0],"ro",10,getDataType(gridHeaderObject[1]),"left","top",null,null);
-				header = getFilterType(gridHeaderObject[1],header);
+				var numberOfCol = formDataGrid.getColumnsNum();
+				for(i=0;i<arr.length;i++)
+				{
+					gridHeaderObject = arr[i].split("=");
+					formDataGrid.insertColumn(numberOfCol+i,gridHeaderObject[0],"ro",10,getDataType(gridHeaderObject[1]),"center","top",null,null);
+					header = getFilterType(gridHeaderObject[1],header);
+				}
+				formDataGrid.attachHeader(header.substring(0,header.length-1),["text-align:center;padding-right:10px;"]);
 			}
-			formDataGrid.attachHeader(header.substring(0,header.length-1),["text-align:center;padding-right:10px;"]);
 			formUrl = encodeURIComponent('${param.formUrl}');
 			deUrl = encodeURIComponent('${param.deUrl}');
 			
 			formDataGrid.loadXML("LoadDisplayFormDataInGrid.do?formContextId=${param.formContextId}&recEntryEntityId=${param.recEntryEntityId}&formUrl="+formUrl+"&deUrl="+deUrl);
-			
 		}
 
 		function getFilterType(dataType,header)
@@ -72,11 +74,11 @@ var header = "#master_checkbox,,,";
 		
 		function getDataType(dataType)
 		{
-			if(dataType == "Date")
+			if(dataType.match("Date"))
 			{
 				return "date_custom";
 			}
-			else if(dataType == "Integer" || dataType == "Long" || dataType == "Double" || dataType == "Short" || dataType == "Float")
+			else if(dataType.match("Integer") || dataType.match("Long") || dataType.match("Double") || dataType.match("Short") || dataType.match("Float"))
 			{
 				return "int";
 			}
@@ -96,7 +98,6 @@ var header = "#master_checkbox,,,";
 			formDataGrid = new dhtmlXGridObject('displayFormDataGrid');
 			formDataGrid.setImagePath("<%=request.getContextPath()%>/dhtmlx_suite/imgs/");
 			formDataGrid.setHeader("SELECT,OPERATION,deUrl",null,["text-align:center;","text-align:center;","text-align:center"]);
-			//formDataGrid.attachHeader("#master_checkbox,,",["text-align:center;padding-right:10px;","text-align:center;","text-align:center;"]);
 			formDataGrid.setColumnIds("select,operation,deUrl");
 			formDataGrid.setInitWidthsP("10,10,0");
 			formDataGrid.setColAlign("center,center,center");
@@ -123,7 +124,7 @@ var header = "#master_checkbox,,,";
 	</tr>
 	<tr>
 		<td style="vertical-align: top;">
-		<div id="displayFormDataGrid" style="height: 100%; width: 100%;"></div>
+		<div id="displayFormDataGrid" style="height: 98%; width: 100%;"></div>
 		</td>
 	</tr>
 
