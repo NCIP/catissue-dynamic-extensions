@@ -15,11 +15,21 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import javax.xml.bind.JAXBException;
+
+import net.sf.ehcache.CacheException;
+
+import org.xml.sax.SAXException;
+
+import edu.common.dynamicextensions.DEIntegration.DEIntegration;
+import edu.common.dynamicextensions.bizlogic.BizLogicFactory;
+import edu.common.dynamicextensions.bizlogic.RecordEntryBizLogic;
 import edu.common.dynamicextensions.domain.Association;
 import edu.common.dynamicextensions.domain.CategoryEntityRecord;
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
+import edu.common.dynamicextensions.domaininterface.AssociationMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
@@ -30,9 +40,15 @@ import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.AbstractContainmentControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.entitymanager.CategoryManager;
+import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.common.dynamicextensions.xmi.exporter.XMIExporterUtility;
+import edu.wustl.cab2b.server.cache.EntityCache;
+import edu.wustl.dao.exception.DAOException;
 
 /**
  * @author kunal_kamble
@@ -672,4 +688,179 @@ public final class DataValueMapUtility
 		}
 		return flag;
 	}
+
+	public static List<Map<String, String>> getValues(long formContextId, List<String> captionList)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
+			CacheException
+	{
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		DEIntegration deItegration = new DEIntegration();
+		Long dynamicRecEntryId = null;
+
+		Long containerId;
+		try
+		{
+			containerId = CategoryManager.getInstance().getContainerIdByFormContextId(
+					formContextId, null);
+			final ContainerInterface containerInterface = EntityCache.getInstance()
+					.getContainerById(containerId);
+			Long hookEntityId = XMIExporterUtility.getHookEntity(
+					containerInterface.getAbstractEntity().getEntityGroup()).getId();
+
+			populateFilteredMap(formContextId, captionList, list, deItegration, dynamicRecEntryId,
+					containerId, containerInterface, hookEntityId);
+
+		}
+		catch (DAOException e)
+		{
+
+			throw new DynamicExtensionsSystemException("Problem loading data for formContextId"
+					+ formContextId);
+		}
+		catch (JAXBException e)
+		{
+
+			throw new DynamicExtensionsSystemException("Problem loading data for formContextId"
+					+ formContextId);
+		}
+		catch (SAXException e)
+		{
+
+			throw new DynamicExtensionsSystemException("Problem loading data for formContextId"
+					+ formContextId);
+		}
+
+		return list;
+	}
+
+	private static void populateFilteredMap(long formContextId, List<String> captionList,
+			List<Map<String, String>> list, DEIntegration deItegration, Long dynamicRecEntryId,
+			Long containerId, final ContainerInterface containerInterface, Long hookEntityId)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
+			CacheException
+	{
+		try
+		{
+			RecordEntryBizLogic recordEntryBizLogic = (RecordEntryBizLogic) BizLogicFactory
+					.getBizLogic(RecordEntryBizLogic.class.getName());
+			List<?> recordEntryIds = recordEntryBizLogic.getRecordEntryId(formContextId, null);
+
+			for (Object recordEntryId : recordEntryIds)
+			{
+				ArrayList<?> object = (ArrayList<?>) recordEntryId;
+
+				Long recordEntryIdValue = (Long.valueOf((String) object.get(0)));
+
+				Collection<Long> map = deItegration.getDynamicRecordFromStaticId(recordEntryIdValue
+						.toString(), containerId, hookEntityId.toString());
+				if (!map.isEmpty())
+				{
+					Map<String, String> map2 = getDisplayValue(dynamicRecEntryId.toString(),
+							containerInterface, captionList);
+					map2.put(DEConstants.IDENTIFIER, dynamicRecEntryId.toString());
+					list.add(map2);
+				}
+			}
+		}
+		catch (DAOException e)
+		{
+			throw new DynamicExtensionsSystemException("Problem loading data for formContextId"
+					+ formContextId);
+		}
+		catch (JAXBException e)
+		{
+
+			throw new DynamicExtensionsSystemException("Problem loading data for formContextId"
+					+ formContextId);
+		}
+		catch (SAXException e)
+		{
+
+			throw new DynamicExtensionsSystemException("Problem loading data for formContextId"
+					+ formContextId);
+		}
+	}
+
+	/**
+	 * This method returns
+	 * @param recordIdentifier
+	 * @param containerInterface
+	 * @param captionList 
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 * @throws DynamicExtensionsApplicationException
+	 */
+	public static Map<String, String> getDisplayValue(String recordIdentifier,
+			ContainerInterface containerInterface, List<String> captionList)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
+		CategoryEntityInterface categoryEntityInterface = (CategoryEntityInterface) containerInterface
+				.getAbstractEntity();
+		CategoryManagerInterface categoryManagerInterface = CategoryManager.getInstance();
+		Long recordId = categoryManagerInterface.getRootCategoryEntityRecordIdByEntityRecordId(Long
+				.valueOf(recordIdentifier), categoryEntityInterface.getTableProperties().getName());
+		Map<BaseAbstractAttributeInterface, Object> recordMap = categoryManagerInterface
+				.getRecordById(categoryEntityInterface, recordId);
+		return populateDisplayValue(recordMap, captionList);
+	}
+
+	/**
+	 * populates the map with respective attribute name and it's value. Map<AttributeName,value>
+	 * @param recordMap
+	 * @param captionList 
+	 * @return
+	 */
+
+	@SuppressWarnings("unchecked")
+	private static Map<String, String> populateDisplayValue(
+			Map<BaseAbstractAttributeInterface, Object> recordMap, List<String> captionList)
+	{
+		Map<String, String> showInGridValues = new HashMap<String, String>();
+
+		for (BaseAbstractAttributeInterface baseAbstractAttributeInterface : recordMap.keySet())
+		{
+
+			String controlCaption = CategoryHelper
+					.getControlCaption(baseAbstractAttributeInterface);
+
+			if (baseAbstractAttributeInterface instanceof AssociationMetadataInterface)
+			{
+				CategoryAssociationInterface categoryAssociationInterface = (CategoryAssociationInterface) baseAbstractAttributeInterface;
+				if (categoryAssociationInterface.getTargetCategoryEntity().getNumberOfEntries() == 1)
+				{
+					for (Map<BaseAbstractAttributeInterface, Object> record : (List<Map<BaseAbstractAttributeInterface, Object>>) recordMap
+							.get(baseAbstractAttributeInterface))
+					{
+						showInGridValues.putAll(populateDisplayValue(record, captionList));
+					}
+				}
+			}
+			else if (captionList.contains(controlCaption))
+			{
+
+				addValueAsString(recordMap, showInGridValues, baseAbstractAttributeInterface,
+						controlCaption);
+			}
+		}
+		return showInGridValues;
+	}
+
+	private static void addValueAsString(Map<BaseAbstractAttributeInterface, Object> recordMap,
+			Map<String, String> showInGridValues,
+			BaseAbstractAttributeInterface baseAbstractAttributeInterface, String controlCaption)
+	{
+		if (recordMap.get(baseAbstractAttributeInterface) instanceof ArrayList<?>)
+		{
+			Map<Object, Object> map = ((Map<Object, Object>) ((ArrayList) recordMap
+					.get(baseAbstractAttributeInterface)).get(0));
+			Object key = map.keySet().iterator().next();
+			showInGridValues.put(controlCaption, map.get(key).toString());
+		}
+		else
+		{
+			showInGridValues.put(controlCaption, recordMap.get(baseAbstractAttributeInterface)
+					.toString());
+		}
+	}
+
 }

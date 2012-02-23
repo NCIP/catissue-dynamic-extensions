@@ -211,7 +211,7 @@ public class XMIExporter
 		if (XMIConstants.XMI_VERSION_1_1.equalsIgnoreCase(xmiVersion)
 				&& !XMIConstants.NONE.equalsIgnoreCase(hookEntityName))
 		{
-			staticEntity = XMIExporterUtility.getHookEntityName(entityGroup);
+			staticEntity = XMIExporterUtility.getHookEntity(entityGroup);
 			XMIExporterUtility.addHookEntitiesToGroup(staticEntity, entityGroup);
 		}
 		exportXMI(entityGroup, null);

@@ -65,8 +65,7 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 		List<FormGridObject> gridObjectList = new ArrayList<FormGridObject>();
 		DomainObjectFactory factory = DomainObjectFactory.getInstance();
 
-		RecordEntryBizLogic recordEntryBizLogic = (RecordEntryBizLogic) BizLogicFactory
-				.getBizLogic(RecordEntryBizLogic.class.getName());
+		
 
 		DEIntegration deItegration = new DEIntegration();
 		Long dynamicRecEntryId = null;
@@ -76,6 +75,8 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 		final ContainerInterface containerInterface = EntityCache.getInstance().getContainerById(
 				containerId);
 
+		RecordEntryBizLogic recordEntryBizLogic = (RecordEntryBizLogic) BizLogicFactory
+		.getBizLogic(RecordEntryBizLogic.class.getName());
 		List<?> recordEntryIds = recordEntryBizLogic.getRecordEntryId(formContextId,
 				sessionDataBean);
 

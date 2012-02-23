@@ -29,7 +29,6 @@ import edu.common.dynamicextensions.domain.TaggedValue;
 import edu.common.dynamicextensions.domain.UserDefinedDE;
 import edu.common.dynamicextensions.domain.userinterface.ComboBox;
 import edu.common.dynamicextensions.domain.userinterface.Container;
-import edu.common.dynamicextensions.domain.userinterface.Control;
 import edu.common.dynamicextensions.domain.userinterface.Label;
 import edu.common.dynamicextensions.domain.userinterface.ListBox;
 import edu.common.dynamicextensions.domain.userinterface.MultiSelectCheckBox;
@@ -78,7 +77,6 @@ import edu.common.dynamicextensions.util.parser.CategoryFileParser;
 import edu.common.dynamicextensions.validation.ValidatorUtil;
 import edu.common.dynamicextensions.xmi.XMIConstants;
 import edu.wustl.cab2b.server.cache.EntityCache;
-import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.metadata.util.DyExtnObjectCloner;
@@ -1967,4 +1965,14 @@ public class CategoryHelper implements CategoryHelperInterface
 		}
 	}
 
+	public static String getControlCaption(
+			BaseAbstractAttributeInterface baseAbstractAttributeInterface)
+	{
+		String controlCaption = CategoryHelper
+		.getControl(
+				((ContainerInterface) ((CategoryAttributeInterface) baseAbstractAttributeInterface)
+						.getCategoryEntity().getContainerCollection().iterator()
+						.next()), baseAbstractAttributeInterface).getCaption();
+		return controlCaption;
+	}
 }

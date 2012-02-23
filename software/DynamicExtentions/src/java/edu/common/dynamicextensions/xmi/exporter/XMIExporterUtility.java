@@ -183,7 +183,7 @@ public class XMIExporterUtility
 	 * @return
 	 * @throws DynamicExtensionsSystemException
 	 */
-	public static EntityInterface getHookEntityName(final EntityGroupInterface entityGroup)
+	public static EntityInterface getHookEntity(final EntityGroupInterface entityGroup)
 			throws DynamicExtensionsSystemException
 	{
 		final EntityManagerInterface entityManager = EntityManager.getInstance();
