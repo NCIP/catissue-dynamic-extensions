@@ -46,7 +46,6 @@ import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.global.DEConstants;
-import edu.common.dynamicextensions.xmi.exporter.XMIExporterUtility;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.dao.exception.DAOException;
 
@@ -689,7 +688,7 @@ public final class DataValueMapUtility
 		return flag;
 	}
 
-	public static List<Map<String, String>> getValues(long formContextId, List<String> captionList)
+	public static List<Map<String, String>> getValues(long formContextId, Long hookEntityId,List<String> captionList)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
 			CacheException
 	{
@@ -704,8 +703,6 @@ public final class DataValueMapUtility
 					formContextId, null);
 			final ContainerInterface containerInterface = EntityCache.getInstance()
 					.getContainerById(containerId);
-			Long hookEntityId = XMIExporterUtility.getHookEntity(
-					containerInterface.getAbstractEntity().getEntityGroup()).getId();
 
 			populateFilteredMap(formContextId, captionList, list, deItegration, dynamicRecEntryId,
 					containerId, containerInterface, hookEntityId);
