@@ -29,6 +29,7 @@ public class RecordEntryBizLogic extends DefaultBizLogic
 
 		List<ColumnValueBean> columnValueBeans = new ArrayList<ColumnValueBean>();
 		columnValueBeans.add(new ColumnValueBean(formContextId));
+		columnValueBeans.add(new ColumnValueBean("Disabled"));
 		List<?> recordEntryIds = SQLQueryManager.executeQuery(
 				DEConstants.RECORD_ID_FROM_FORM_CONTEXT_ID, columnValueBeans, sessionDataBean);
 
