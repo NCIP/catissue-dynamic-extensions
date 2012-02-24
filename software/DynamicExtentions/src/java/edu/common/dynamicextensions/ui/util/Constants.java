@@ -69,4 +69,5 @@ public class Constants
 	public static final String GRID_HEADERS = "gridHeaders";
 	public static final String TREEVIEWKEY = "treeViewKey";
 	public static final String MAP_FOR_VALIDATION = "MapForValidation";
+	public static final String DISABLED = "Disabled";
 }

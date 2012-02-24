@@ -58,7 +58,7 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 	 * @throws BizLogicException
 	 */
 	public List<FormGridObject> getFormDataForGrid(Long formContextId, String hookEntityId,
-			SessionDataBean sessionDataBean, String formUrl, String deUrl)
+			SessionDataBean sessionDataBean, String formUrl, String deUrl,Long hookObjectRecordId)
 			throws DynamicExtensionsSystemException, DAOException, JAXBException, SAXException,
 			DynamicExtensionsApplicationException, CacheException, BizLogicException
 	{
@@ -77,9 +77,17 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 
 		RecordEntryBizLogic recordEntryBizLogic = (RecordEntryBizLogic) BizLogicFactory
 		.getBizLogic(RecordEntryBizLogic.class.getName());
-		List<?> recordEntryIds = recordEntryBizLogic.getRecordEntryId(formContextId,
-				sessionDataBean);
-
+		List<?> recordEntryIds;
+		if(hookObjectRecordId != null)
+		{
+			recordEntryIds= recordEntryBizLogic.getRecordEntryId(formContextId,
+				sessionDataBean,hookObjectRecordId);
+		}
+		else
+		{
+			recordEntryIds = recordEntryBizLogic.getRecordEntryId(formContextId,
+					sessionDataBean);
+		}
 		for (Object recordEntryId : recordEntryIds)
 		{
 			ArrayList<?> object = (ArrayList<?>) recordEntryId;

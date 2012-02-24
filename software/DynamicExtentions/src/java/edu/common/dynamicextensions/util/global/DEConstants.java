@@ -386,9 +386,10 @@ public class DEConstants
 	public static final String FORM_URL = "formUrl"; 
 	
 	public static final String DE_URL = "deUrl";
+	public static final String HOOK_OBJECT_RECORD_ID = "hookObjectRecordId";
 	
 	public static final String RECORD_ID_FROM_FORM_CONTEXT_ID = "record.id.from.form.context.id";
-	
+	public static final String RECORD_ID_FOR_PARTICIPANT_FROM_FORM_CONTEXT_ID = "record.id.for.participant.from.form.context.id";
 	public static final String CONTAINER_ID_FROM_FORM_CONTEXT_ID = "container.id.from.form.context.id";
 	
 	public static final String DESQL_XSD_FILENAME = "DESql.xsd";
