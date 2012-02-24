@@ -28,18 +28,9 @@ public class DisplayFormDataInGridAction extends BaseDynamicExtensionsAction
 		HttpSession session = request.getSession();
 		SessionDataBean sessionDataBean = (SessionDataBean) session
 				.getAttribute(DEConstants.SESSION_DATA);
-
-		request.setAttribute(DEConstants.FORM_CONTEXT_ID, request
-				.getParameter(DEConstants.FORM_CONTEXT_ID));
-		request.setAttribute(DEConstants.RECORD_ENTRY_ENTITY_ID, request
-				.getParameter(DEConstants.RECORD_ENTRY_ENTITY_ID));
-		request.setAttribute(DEConstants.FORM_URL, request.getParameter(DEConstants.FORM_URL));
-		request.setAttribute(DEConstants.DE_URL, request.getParameter(DEConstants.DE_URL));
-
-		session.setAttribute(Constants.TREEVIEWKEY, request.getParameter(Constants.TREEVIEWKEY));
-		
 		Long containerId = CategoryManager.getInstance().getContainerIdByFormContextId(
-				Long.valueOf(request.getParameter(DEConstants.FORM_CONTEXT_ID)), sessionDataBean);
+				(Long) request.getAttribute(DEConstants.FORM_CONTEXT_ID),
+				sessionDataBean);
 		
 		final ContainerInterface containerInterface = EntityCache.getInstance().getContainerById(
 				containerId);
