@@ -40,12 +40,26 @@ var header = "#master_checkbox,,,";
 				}
 				formDataGrid.attachHeader(header.substring(0,header.length-1),["text-align:center;padding-right:10px;"]);
 			}
-			formUrl = encodeURIComponent('${param.formUrl}');
-			deUrl = encodeURIComponent('${param.deUrl}');
-			
-			formDataGrid.loadXML("LoadDisplayFormDataInGrid.do?formContextId=${param.formContextId}&recEntryEntityId=${param.recEntryEntityId}&formUrl="+formUrl+"&deUrl="+deUrl);
+			formUrl = encodeURIComponent('${requestScope.formUrl}');
+			deUrl = encodeURIComponent('${requestScope.deUrl}');
+			formDataGrid.loadXML("LoadDisplayFormDataInGrid.do?formContextId=${requestScope.formContextId}&recEntryEntityId=${requestScope.recEntryEntityId}&formUrl="+formUrl+"&deUrl="+deUrl+"&hookObjectRecordId=${requestScope.hookObjectRecordId}",filter);
 		}
 
+		function filter()
+		{
+			if('${requestScope.formUrl}' == "")
+			{
+				var today = new Date(); 
+				var dd = today.getDate();
+				var mm = today.getMonth()+1;//January is 0!
+				var yyyy = today.getFullYear(); 
+				if(dd<10){dd='0'+dd} 
+				if(mm<10){mm='0'+mm} 
+				var today = mm+'-'+dd+'-'+yyyy; 
+				formDataGrid.filterBy(5,today,true);
+			}
+		}
+		
 		function getFilterType(dataType,header)
 		{
 			if(dataType.match("pv"))
@@ -108,6 +122,11 @@ var header = "#master_checkbox,,,";
 			formDataGrid.setSkin("dhx_skyblue");
 			formDataGrid.init();
 			addColumnsToGrid();
+			if('${requestScope.formUrl}' == "")
+			{
+				document.getElementById("addRecord").style.display = "none";
+				formDataGrid.setColumnHidden(1,true);
+			}
 		}
 	</script>
 </head>
@@ -117,7 +136,7 @@ var header = "#master_checkbox,,,";
 <body onload="doOnLoad();">
 <table border="0" id="table" height="98%" width="100%">
 	<tr>
-		<td><input type="button" value="Add Record"
+		<td><input type="button" value="Add Record" id="addRecord"
 			onclick="javascript:document.location.href = '${requestScope.formUrl}';" />
 		<input type="button" align="left" value="Print" onclick="printForm();" />
 		</td>
