@@ -817,8 +817,7 @@ public final class DataValueMapUtility
 		for (BaseAbstractAttributeInterface baseAbstractAttributeInterface : recordMap.keySet())
 		{
 
-			String controlCaption = CategoryHelper
-					.getControlCaption(baseAbstractAttributeInterface);
+			
 
 			if (baseAbstractAttributeInterface instanceof AssociationMetadataInterface)
 			{
@@ -832,11 +831,17 @@ public final class DataValueMapUtility
 					}
 				}
 			}
-			else if (captionList.contains(controlCaption))
+			else if (baseAbstractAttributeInterface instanceof BaseAbstractAttributeInterface)
 			{
+				String controlCaption = CategoryHelper
+				.getControlCaption(baseAbstractAttributeInterface);
 
-				addValueAsString(recordMap, showInGridValues, baseAbstractAttributeInterface,
-						controlCaption);
+				if( captionList.contains(controlCaption))
+				{
+					addValueAsString(recordMap, showInGridValues, baseAbstractAttributeInterface,
+							controlCaption);	
+				}
+				
 			}
 		}
 		return showInGridValues;
