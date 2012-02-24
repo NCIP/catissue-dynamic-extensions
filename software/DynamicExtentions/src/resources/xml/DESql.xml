@@ -8,4 +8,8 @@
 		<name>container.id.from.form.context.id</name>
 		<value>select container_id from dyextn_abstract_form_context where identifier = ?</value>
 	</query>
+	<query>
+		<name>record.id.for.participant.from.form.context.id</name>
+		<value>select absrec.identifier from dyextn_abstract_record_entry absrec join CATISUE_CLIN_STUDY_RECORD_NTRY hookrec on (hookrec.identifier = absrec.identifier) join CATISSUE_EVENT_ENTRY evententry on (evententry.identifier = hookrec.EVENT_ENTRY_ID) join CATISSUE_CLINICAL_STUDY_REG csr on (evententry.CLINICAL_STUDY_REG_ID=csr.IDENTIFIER) where csr.PARTICIPANT_ID = ? and abstract_form_context_id = ? and ACTIVITY_STATUS!=?</value>
+	</query>
 </SqlQuery>
