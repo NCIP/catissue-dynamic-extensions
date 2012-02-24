@@ -112,7 +112,7 @@ var header = "#master_checkbox,,,";
 	</script>
 </head>
 
-<form name="formGrid">
+<form name="formGrid" target="_blank">
 
 <body onload="doOnLoad();">
 <table border="0" id="table" height="98%" width="100%">
