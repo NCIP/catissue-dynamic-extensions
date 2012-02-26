@@ -181,31 +181,11 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 			{
 				UserInterfaceiUtility.clearContainerStack(request);
 			}
-			String containerIdentifier = getContainerId(request);
-			if(DynamicExtensionsUtility.isNumericDigit(containerIdentifier))
-			{
-				actionForward = mapping.findForward(DEConstants.SUCCESS);
-			}
+			actionForward = mapping.findForward(DEConstants.SUCCESS);
 		}
 		return actionForward;
 	}
-	
-	/**
-	 * This method returns the Container Identifier form the given request.
-	 * @param request HttpServletRequest
-	 * @return the Container Identifier
-	 */
-	private String getContainerId(final HttpServletRequest request)
-	{
-		String identifier = "";
-		identifier = request.getParameter("containerIdentifier");
-		if (identifier == null || identifier.equals("") || "null".equalsIgnoreCase(identifier))
-		{
-			identifier = (String) request.getAttribute("containerIdentifier");
-		}
-		return identifier;
-	}
-	
+
 	/**
 	 * @throws DynamicExtensionsApplicationException
 	 * @throws DynamicExtensionsSystemException
