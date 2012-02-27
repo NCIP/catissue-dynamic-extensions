@@ -2137,7 +2137,11 @@
 				<param name="liquibase.file" value="${liquibase.dir}/upgrade_db_from_DE_1.5.1_to_DE_1.6.0.xml" />
 			</antcall>
 		</target>
-		
+		<target name="upgrade_db_from_DE_1.6.0_to_DE_1.7.0" description="upgrade db from DE v 1.6.0 to DE v 1.7.0">
+			<antcall target="execuetLiquibase">
+				<param name="liquibase.file" value="${liquibase.dir}/upgrade_db_from_DE_1.6.0_to_DE_1.7.0.xml" />
+			</antcall>
+		</target>		
 		<target name="execuetLiquibase">
 			<delete dir="${de.temp.dir}" failonerror="no" />
 			<mkdir dir="${de.temp.dir}" />
