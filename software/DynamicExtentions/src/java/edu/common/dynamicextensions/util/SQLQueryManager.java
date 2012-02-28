@@ -89,7 +89,9 @@ public class SQLQueryManager
 	{
 		JDBCDAO jdbcDao = DynamicExtensionsUtility.getJDBCDAO(sessionDataBean);
 		String query = SQLQueryManager.getInstance().getSQL(queryKey);
-		return jdbcDao.executeQuery(query, columnValueBeans);
+		List<?> results = jdbcDao.executeQuery(query, columnValueBeans);
+		jdbcDao.closeSession();
+		return results;
 	}
 
 }
