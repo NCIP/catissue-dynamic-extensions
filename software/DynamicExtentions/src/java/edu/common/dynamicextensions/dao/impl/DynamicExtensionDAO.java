@@ -34,6 +34,21 @@ public final class DynamicExtensionDAO
 	private String appName;
 
 	/**
+	 * Host Application Name
+	 */
+	private String hostAppName;
+
+	public String getHostAppName()
+	{
+		return hostAppName;
+	}
+
+	public void setHostAppName(Properties props)
+	{
+		this.hostAppName = props.getProperty("host.app.name");
+	}
+
+	/**
 	 *No argument constructor.
 	 *Here all the properties are set
 	 */

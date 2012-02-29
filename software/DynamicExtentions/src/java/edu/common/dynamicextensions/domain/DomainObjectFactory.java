@@ -88,6 +88,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ViewInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleParameterInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.IdGeneratorUtil;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.common.dynamicextensions.util.parser.CategoryCSVFileParser;
@@ -1010,4 +1011,50 @@ public class DomainObjectFactory
 	{
 		return new FormGridObject();
 	}
+	
+	public AttributeInterface createAttribute(String attributeType)
+	{
+		AttributeInterface attribute =  null;
+		if (attributeType != null)
+		{
+			if (attributeType.equalsIgnoreCase(ProcessorConstants.DATATYPE_STRING) || attributeType.equalsIgnoreCase(String.class.getName()))
+			{
+				attribute = createStringAttribute();
+			}
+			else if (attributeType.equalsIgnoreCase(ProcessorConstants.DATATYPE_DATE)|| attributeType.equalsIgnoreCase(Date.class.getName()))
+			{
+				attribute = createDateAttribute();
+			}
+			else if (attributeType.equalsIgnoreCase(ProcessorConstants.DATATYPE_BOOLEAN)|| attributeType.equalsIgnoreCase(Boolean.class.getName()))
+			{
+				attribute = createBooleanAttribute();
+			}
+			else if (attributeType.equalsIgnoreCase(ProcessorConstants.DATATYPE_BYTEARRAY))
+			{
+				attribute = createByteArrayAttribute();
+			}
+			else if (attributeType.equalsIgnoreCase(ProcessorConstants.DATATYPE_FILE))
+			{
+				attribute = createFileAttribute();
+			}
+			else if (attributeType.equalsIgnoreCase(ProcessorConstants.DATATYPE_INTEGER)|| attributeType.equalsIgnoreCase(Integer.class.getName()))
+			{
+				attribute = createIntegerAttribute();
+			}
+			else if (attributeType.equalsIgnoreCase(ProcessorConstants.DATATYPE_LONG)||attributeType.equalsIgnoreCase(Long.class.getName()))
+			{
+				attribute = createLongAttribute();
+			}
+			else if (attributeType.equalsIgnoreCase(ProcessorConstants.DATATYPE_FLOAT)||attributeType.equalsIgnoreCase(Long.class.getName()))
+			{
+				attribute = createFloatAttribute();
+			}
+			else if (attributeType.equalsIgnoreCase(ProcessorConstants.DATATYPE_DOUBLE)||attributeType.equalsIgnoreCase(Double.class.getName()))
+			{
+				attribute = createDoubleAttribute();
+			}
+		}
+		return attribute;
+	}
+		
 }

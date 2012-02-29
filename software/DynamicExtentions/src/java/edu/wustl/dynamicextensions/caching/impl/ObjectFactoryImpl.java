@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -29,7 +30,6 @@ import edu.wustl.dynamicextensions.caching.metadata.impl.hbm.ClassMetadataMapImp
 import edu.wustl.dynamicextensions.caching.pool.ObjectPool;
 import edu.wustl.dynamicextensions.caching.pool.impl.ObjectPoolImpl;
 import edu.wustl.dynamicextensions.caching.util.ReflectionUtil;
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -113,7 +113,7 @@ public class ObjectFactoryImpl implements ObjectFactory {
         
         String idColumnName = idMetadata.getColumnName();        
         String tableName = null, columnName = null;        
-        List<PropertyMetadata> propertiesMetadata = classMetadata.getPropertiesMetadata();
+        Collection<PropertyMetadata> propertiesMetadata = classMetadata.getPropertiesMetadata();
         for (PropertyMetadata propertyMetadata : propertiesMetadata) {
             if (propertyMetadata.getPropertyName().equals(propertyName)) {
                 tableName  = propertyMetadata.getColumnTableName();

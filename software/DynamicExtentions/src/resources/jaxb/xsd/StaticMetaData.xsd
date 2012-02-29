@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:jxb="http://java.sun.com/xml/ns/jaxb" jxb:version="2.0">
+	<xsd:element name="staticMetaData" type="staticMetaData" />
+	<xsd:complexType name="staticMetaData">
+		<xsd:sequence>
+		
+			<!--updated/added classes  -->
+			<xsd:element maxOccurs="unbounded" name="entity" type="entity" />
+			
+			<!--updated/added associations -->
+			<xsd:element minOccurs="0" maxOccurs="unbounded" name="association"
+				type="association" />
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="association">
+		<xsd:sequence>
+			<xsd:element name="sourceEntityName" type="xsd:string" />
+			<xsd:element name="targetEntityName" type="xsd:string" />
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="entity">
+		<xsd:sequence>
+			<xsd:element name="activityStatus"  minOccurs="0" type="xsd:string" />
+			<xsd:element name="name" type="xsd:string" />
+			<xsd:element minOccurs="0" maxOccurs="unbounded" name="attribute"
+				type="attribute" />
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="attribute">
+		<xsd:sequence>
+			<xsd:element name="activityStatus" minOccurs="0"  type="xsd:string" />
+			<xsd:element name="name" type="xsd:string" />
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

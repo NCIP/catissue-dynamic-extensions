@@ -1,8 +1,9 @@
 package edu.wustl.dynamicextensions.caching.metadata.impl.hbm;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.persister.entity.AbstractEntityPersister;
@@ -26,14 +27,17 @@ public class ClassMetadataImpl implements ClassMetadata {
         
     private PropertyMetadata idMetadata;
     
-    private List<PropertyMetadata> propertiesMetadata = new ArrayList<PropertyMetadata>();
+    private Map<String, PropertyMetadata> propertiesMetadata = new HashMap<String, PropertyMetadata>();
+    
+    private Map<String, PropertyMetadata> associationMetadata = new HashMap<String, PropertyMetadata>();
     
     public ClassMetadataImpl(AbstractEntityPersister persister) {
-        try {
-            this.persister = persister;      
-            isAbstract = ReflectionUtil.isAbstract(persister.getEntityName());
-            entityMetamodel = getEntityMetamodel(persister);
-            initialiazePropertiesMetadata();            
+		try
+		{
+			this.persister = persister;
+			isAbstract = ReflectionUtil.isAbstract(persister.getEntityName());
+			entityMetamodel = getEntityMetamodel(persister);
+			initialiazePropertiesMetadata();       
         } catch (Exception e) {
             throw new RuntimeException(e);
         }        
@@ -63,14 +67,19 @@ public class ClassMetadataImpl implements ClassMetadata {
         return entityMetamodel.getSuperclass();
     }
     
-    public List<PropertyMetadata> getPropertiesMetadata() {
-        return propertiesMetadata;
+    public Collection<PropertyMetadata> getPropertiesMetadata() {
+        return propertiesMetadata.values();
     }
         
     private void initialiazePropertiesMetadata() {
         idMetadata = new PropertyMetadataImpl(this, persister.getIdentifierPropertyName(), persister, true);
         for (String propertyName : persister.getPropertyNames()) {
-            propertiesMetadata.add(new PropertyMetadataImpl(this, propertyName, persister));
+        	PropertyMetadataImpl propertyMetadataImpl =new PropertyMetadataImpl(this, propertyName, persister); 
+            propertiesMetadata.put(propertyName,propertyMetadataImpl);
+            if(propertyMetadataImpl.isAssociation())
+            {
+            	associationMetadata.put(propertyMetadataImpl.getAssociatedClassType(), propertyMetadataImpl);
+            }
         }
     }
     
@@ -90,4 +99,14 @@ public class ClassMetadataImpl implements ClassMetadata {
         
         throw new RuntimeException("Entity metamodel information not present for " + persister.getEntityName());
     }
+
+	public PropertyMetadata getProperty(String name)
+	{
+		return propertiesMetadata.get(name);
+	}
+	
+	public PropertyMetadata getAssociation(String targetEntityName)
+	{
+		return associationMetadata.get(targetEntityName);
+	}
 }

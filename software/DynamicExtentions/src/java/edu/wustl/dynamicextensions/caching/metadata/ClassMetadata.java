@@ -1,6 +1,6 @@
 package edu.wustl.dynamicextensions.caching.metadata;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -20,5 +20,9 @@ public interface ClassMetadata {
     
     public String getParentClassName();
     
-    public List<PropertyMetadata> getPropertiesMetadata();
+    public Collection<PropertyMetadata> getPropertiesMetadata();
+    
+    public PropertyMetadata getProperty(String name);
+
+	public PropertyMetadata getAssociation(String targetEntityName);
 }
