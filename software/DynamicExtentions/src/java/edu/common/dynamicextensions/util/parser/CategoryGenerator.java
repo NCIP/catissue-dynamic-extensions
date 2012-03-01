@@ -382,10 +382,10 @@ public class CategoryGenerator
 						
 						if (commonControlOptions != null)
 						{
-							categoryHelper.setOptions(lastControl, commonControlOptions,
+							categoryHelper.setControlOptions(lastControl, commonControlOptions,
 									categoryFileParser.getLineNumber());
 						}
-						categoryHelper.setOptions(lastControl, controlOptions, categoryFileParser
+						categoryHelper.setControlOptions(lastControl, controlOptions, categoryFileParser
 								.getLineNumber());
 						
 

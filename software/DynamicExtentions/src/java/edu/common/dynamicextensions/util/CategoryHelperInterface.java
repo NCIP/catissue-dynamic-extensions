@@ -304,4 +304,7 @@ public interface CategoryHelperInterface
 	void setDefaultValue(CategoryAttributeInterface categoryAttribute,
 			PermissibleValueInterface permissibleValue, boolean isNotAttributeTypeInfo)
 			throws DynamicExtensionsSystemException;
+	
+	void setControlOptions(ControlInterface dyextnBaseDomainObject, Map<String, String> commonControlOptions,
+			long lineNumber) throws DynamicExtensionsSystemException;
 }

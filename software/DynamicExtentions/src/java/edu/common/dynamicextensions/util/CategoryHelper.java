@@ -48,6 +48,7 @@ import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.FormControlNotesInterface;
 import edu.common.dynamicextensions.domaininterface.PathInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
+import edu.common.dynamicextensions.domaininterface.TaggedValueInterface;
 import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.AbstractContainmentControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.CategoryAssociationControlInterface;
@@ -1073,6 +1074,62 @@ public class CategoryHelper implements CategoryHelperInterface
 	 * @param nextLine
 	 * @throws DynamicExtensionsSystemException
 	 */
+	public void setControlOptions(ControlInterface dyextnBaseDomainObject,
+			Map<String, String> options, long lineNumber) throws DynamicExtensionsSystemException
+	{
+		try
+		{
+			if (options.isEmpty())
+			{
+				return;
+			}
+				Iterator<TaggedValueInterface> tagValueIterator = dyextnBaseDomainObject.getBaseAbstractAttribute()
+						.getTaggedValueCollection().iterator();
+				
+				while(tagValueIterator.hasNext())
+				{
+					tagValueIterator.next();
+					tagValueIterator.remove();
+				}
+			for (Entry<String, String> entryObject : options.entrySet())
+			{
+				String taggedValue = entryObject.getKey().toLowerCase();
+
+				if (CategoryConstants.ATRRIBUTE_TAG_VALUES.contains(taggedValue))
+				{
+					((ControlInterface) dyextnBaseDomainObject).getBaseAbstractAttribute()
+					.getTaggedValueCollection()
+					.add(new TaggedValue(taggedValue, entryObject.getValue()));
+				}
+
+
+			}
+		}
+		catch (SecurityException e)
+		{
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
+		}
+		
+		catch (IllegalArgumentException e)
+		{
+			throw new DynamicExtensionsSystemException(
+					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
+							+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
+		}
+		
+	}
+	
+	
+	
+	
+	/**
+	 * @param dyextnBaseDomainObject
+	 * @param options
+	 * @param lineNumber
+	 * @throws DynamicExtensionsSystemException
+	 */
 	public void setOptions(DynamicExtensionBaseDomainObjectInterface dyextnBaseDomainObject,
 			Map<String, String> options, long lineNumber) throws DynamicExtensionsSystemException
 	{
@@ -1083,17 +1140,7 @@ public class CategoryHelper implements CategoryHelperInterface
 				return;
 			}
 			for (Entry<String, String> entryObject : options.entrySet())
-			{
-				String taggedValue = entryObject.getKey().toLowerCase();
-
-				if (CategoryConstants.ATRRIBUTE_TAG_VALUES.contains(taggedValue))
-				{
-					((ControlInterface) dyextnBaseDomainObject).getBaseAbstractAttribute()
-							.getTaggedValueCollection()
-							.add(new TaggedValue(taggedValue, entryObject.getValue()));
-				}
-				else
-				{
+			{	
 					String optionString = entryObject.getKey();
 					String methodName = CategoryConstants.SET + optionString;
 
@@ -1116,7 +1163,6 @@ public class CategoryHelper implements CategoryHelperInterface
 					method.invoke(dyextnBaseDomainObject, values.toArray());
 				}
 
-			}
 		}
 		catch (SecurityException e)
 		{

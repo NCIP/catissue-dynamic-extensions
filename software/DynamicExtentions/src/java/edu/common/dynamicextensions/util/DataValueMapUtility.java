@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 
@@ -47,6 +47,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.cab2b.server.cache.EntityCache;
+import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.dao.exception.DAOException;
 
 /**
@@ -688,23 +689,22 @@ public final class DataValueMapUtility
 		return flag;
 	}
 
-	public static List<Map<String, String>> getValues(long formContextId, Long hookEntityId,List<String> captionList)
+	public static List<Map<String, String>> getValues(long formContextId, Long hookEntityId,List<String> captionList,SessionDataBean sessionDataBean)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
 			CacheException
 	{
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		DEIntegration deItegration = new DEIntegration();
-		Long dynamicRecEntryId = null;
 
 		Long containerId;
 		try
 		{
 			containerId = CategoryManager.getInstance().getContainerIdByFormContextId(
-					formContextId, null);
+					formContextId, sessionDataBean);
 			final ContainerInterface containerInterface = EntityCache.getInstance()
 					.getContainerById(containerId);
 
-			populateFilteredMap(formContextId, captionList, list, deItegration, dynamicRecEntryId,
+			populateFilteredMap(formContextId, captionList, list, deItegration,
 					containerId, containerInterface, hookEntityId);
 
 		}
@@ -731,7 +731,7 @@ public final class DataValueMapUtility
 	}
 
 	private static void populateFilteredMap(long formContextId, List<String> captionList,
-			List<Map<String, String>> list, DEIntegration deItegration, Long dynamicRecEntryId,
+			List<Map<String, String>> list, DEIntegration deItegration,
 			Long containerId, final ContainerInterface containerInterface, Long hookEntityId)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
 			CacheException
@@ -750,8 +750,11 @@ public final class DataValueMapUtility
 
 				Collection<Long> map = deItegration.getDynamicRecordFromStaticId(recordEntryIdValue
 						.toString(), containerId, hookEntityId.toString());
+				Long dynamicRecEntryId = null;
+ 
 				if (!map.isEmpty())
 				{
+					dynamicRecEntryId=map.iterator().next();
 					Map<String, String> map2 = getDisplayValue(dynamicRecEntryId.toString(),
 							containerInterface, captionList);
 					map2.put(DEConstants.IDENTIFIER, dynamicRecEntryId.toString());
@@ -831,7 +834,7 @@ public final class DataValueMapUtility
 					}
 				}
 			}
-			else if (baseAbstractAttributeInterface instanceof BaseAbstractAttributeInterface)
+			else if (baseAbstractAttributeInterface instanceof CategoryAttributeInterface)
 			{
 				String controlCaption = CategoryHelper
 				.getControlCaption(baseAbstractAttributeInterface);
