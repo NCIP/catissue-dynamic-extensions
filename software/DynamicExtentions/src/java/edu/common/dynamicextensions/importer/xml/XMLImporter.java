@@ -46,7 +46,7 @@ public class XMLImporter
 
 	private static void validate(String[] args) throws DynamicExtensionsApplicationException
 	{
-		if(args.length > 2)
+		if(args.length < 3 )
 		{
 			throw new DynamicExtensionsApplicationException("Infufficient parametres");
 		}
