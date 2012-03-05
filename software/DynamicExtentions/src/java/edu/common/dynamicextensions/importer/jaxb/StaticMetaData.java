@@ -13,7 +13,6 @@ import java.util.List;
 
 import javax.xml.bind.annotation.AccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -44,7 +43,6 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class StaticMetaData {
 
-	@XmlAttribute(required = true)
     protected List<Entity> entity;
     protected List<Association> association;
 
