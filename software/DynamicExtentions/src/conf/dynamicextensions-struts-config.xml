@@ -167,7 +167,7 @@ PUBLIC
 			<forward name="failure" path="/pages/de/ErrorPage.jsp" />
 		</action>
 		<action path="/LoadDataEntryFormAction"
-		    type="edu.common.dynamicextensions.ui.webui.action.LoadDataEntryFormAction"
+		    type="edu.common.dynamicextensions.action.core.LoadDataEntryFormAction"
 		    name="dataEntryForm"
 			validate="false"
 			input="/LoadDataEntryFormAction.do"
@@ -177,7 +177,7 @@ PUBLIC
 			<forward name="LoadFormControls" path="/LoadFormControlsAction.do" />
 		</action>
 		<action path="/ApplyDataEntryFormAction"
-		    type="edu.common.dynamicextensions.ui.webui.action.ApplyDataEntryFormAction"
+		    type="edu.common.dynamicextensions.action.core.ApplyDataEntryFormAction"
 		    name="dataEntryForm"
 			validate="false"
 			input="/LoadDataEntryFormAction.do"
@@ -196,7 +196,7 @@ PUBLIC
 			<forward name="success" path="/LoadDataEntryFormAction.do?showFormPreview=flase" />
 		</action>
 		<action path="/AjaxcodeHandlerAction"
-		    type="edu.common.dynamicextensions.ui.webui.action.AjaxcodeHandlerAction"
+		    type="edu.common.dynamicextensions.action.core.AjaxcodeHandlerAction"
 		    name="formDefinitionForm"
 			validate="false"
 			input="/LoadFormDefinitionAction.do"
@@ -204,7 +204,7 @@ PUBLIC
 			<forward name="success" path="/LoadFormDefinitionAction.do" />
 		</action>
 		<action path="/UploadFileAction"
-		    type="edu.common.dynamicextensions.ui.webui.action.UploadFileAction"
+		    type="edu.common.dynamicextensions.action.core.UploadFileAction"
 		    name="controlsForm"
 			validate="false"
 			input="/LoadFormDefinitionAction.do"
@@ -212,7 +212,7 @@ PUBLIC
 			<forward name="success" path="/pages/de/FetchXMLString.jsp"/>
 		</action>
 		<action path="/DeleteRecordAction"
-			type="edu.common.dynamicextensions.ui.webui.action.DeleteRecordAction"
+			type="edu.common.dynamicextensions.action.core.DeleteRecordAction"
 			name="recordListForm"
 			validate="false"
 			input="/LoadRecordListAction.do"
@@ -220,7 +220,7 @@ PUBLIC
 			<forward name="success" path="/LoadRecordListAction.do" />
 		</action>
 		<action path="/DeleteRecordEntryAction"
-			type="edu.common.dynamicextensions.ui.webui.action.DeleteRecordEntryAction"
+			type="edu.common.dynamicextensions.action.core.DeleteRecordEntryAction"
 			name="dataEntryForm"
 			validate="false"
 			scope="request">
@@ -235,39 +235,39 @@ PUBLIC
 		</action>
 
 		<action path="/CreateCategoryAction"
-		type="edu.common.dynamicextensions.ui.webui.action.CreateCategoryAction"
+		type="edu.common.dynamicextensions.action.core.CreateCategoryAction"
 		validate="false"
 		scope="request">
 		</action>
 
 	<action path="/CreateCategoryMetadataAction"
-		type="edu.common.dynamicextensions.ui.webui.action.CategoryMetadataAction"
+		type="edu.common.dynamicextensions.action.core.CategoryMetadataAction"
 		validate="false"
 		scope="request">
 		</action>
 
 		<action path="/UploadFile"
-		type="edu.common.dynamicextensions.ui.webui.action.UploadFileToDB"
+		type="edu.common.dynamicextensions.action.core.UploadFileToDB"
 		name="FileUploadForm"
 		validate="false"
 		scope="request">
 		</action>
 
-		<action path="/ImportPVAction" type="edu.common.dynamicextensions.ui.webui.action.ImportPVAction"
+		<action path="/ImportPVAction" type="edu.common.dynamicextensions.action.core.ImportPVAction"
 			validate="false" scope="request">
 		</action>
-		<action path="/DownloadPVVersionAction" type="edu.common.dynamicextensions.ui.webui.action.DownloadPVVersionAction"
+		<action path="/DownloadPVVersionAction" type="edu.common.dynamicextensions.action.core.DownloadPVVersionAction"
 			validate="false" scope="request">
 		</action>
 		
 		<!-- Display Form Data in Grid -->
 		<action path="/LoadDisplayFormDataInGrid" 
-			type="edu.common.dynamicextensions.ui.webui.action.LoadDisplayFormDataInGridAction"
+			type="edu.common.dynamicextensions.action.core.LoadDisplayFormDataInGridAction"
 			validate="false"
 			scope="request">
 		</action>
 		<action path="/DisplayFormDataInGrid" 
-			type="edu.common.dynamicextensions.ui.webui.action.DisplayFormDataInGridAction"
+			type="edu.common.dynamicextensions.action.core.DisplayFormDataInGridAction"
 			validate="false"
 			scope="request">
 			<forward name="success" path="/pages/de/DisplayFormDataInGrid.jsp" />

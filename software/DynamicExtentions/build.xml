@@ -134,71 +134,18 @@
 	</target>
 
 
-	<!-- Create the Applet JAR Begins-->
-	<target name="applet_jar" depends="compile">
-		<delete>
-			<fileset dir="${applet.dir}">
-				<exclude name="**/CVS*" />
-				<exclude name="**/java.policy.applet*" />
-			</fileset>
-		</delete>
-
-		<copy todir="${applet.dir}">
-			<fileset dir="${target.dir}">
-				<include name="**/QueryTree.class" />
-				<include name="**/NodeSelectionListener.class" />
-				<include name="**/StorageLocationViewListener.class" />
-				<include name="**/TissueSiteTreeNodeListener.class" />
-			</fileset>
-		</copy>
-		<copy todir="${applet.dir}/edu/wustl/catissuecore/query">
-			<fileset dir="${target.dir}/edu/wustl/catissuecore/query">
-				<include name="**/QueryTreeNodeMap.class" />
-				<include name="**/TreeNodeData.class" />
-			</fileset>
-		</copy>
-		<copy todir="${applet.dir}/edu/wustl/catissuecore/storage">
-			<fileset dir="${target.dir}/edu/wustl/catissuecore/storage">
-				<include name="**/GenerateTree.class" />
-				<include name="**/StorageContainerGridObject.class" />
-				<include name="**/StorageContainerTreeNode.class" />
-			</fileset>
-		</copy>
-		<copy todir="${applet.dir}/edu/wustl/catissuecore/tissuesite">
-			<fileset dir="${target.dir}/edu/wustl/catissuecore/tissuesite">
-				<include name="**/TissueSiteTreeNode.class" />
-			</fileset>
-		</copy>
-		<copy todir="${applet.dir}/edu/wustl/catissuecore/util/global">
-			<fileset dir="${target.dir}/edu/wustl/catissuecore/util/global">
-				<include name="**/Constants.class" />
-			</fileset>
-		</copy>
-		<copy todir="${applet.dir}/edu/wustl/catissuecore/vo">
-			<fileset dir="${target.dir}/edu/wustl/catissuecore/vo">
-				<include name="**/TreeNode.class" />
-				<include name="**/TreeNodeFactory.class" />
-			</fileset>
-		</copy>
-
-		<jar taskname="buildJar" jarfile="${applet.dir}/QueryTree.jar">
-			<fileset dir="${applet.dir}">
-				<exclude name="**/CVS*" />
-				<exclude name="**/java.policy.applet*" />
-			</fileset>
-		</jar>
-	</target>
-	<!-- Create the Applet JAR Ends-->
+	
 
 
 	<!-- Create dynamic extensions jar Begins-->
-	<target name="create_dyn_ext_interface_jar" depends="compile">
+	<target name="build:jar:local:extensions" depends="compile">
 		<delete file="${interface.dir}/DynamicExtensions.jar" />
 		<jar taskname="buildJar" jarfile="${interface.dir}/DynamicExtensions.jar">
 
 			<fileset dir="${target.dir}">
 				<include name="**/*.*" />
 				<include name="**/*.*" />
+				<exclude name="**/edu/common/dynamicextensions/action/core/*.*" />
 				<exclude name="**/log4j.properties" />
 				<exclude name="**/server.properties" />
 				<exclude name="**/uicontrols-captions.properties" />
@@ -250,30 +197,8 @@
 		<ant antfile="src/conf/cobertura.xml" target="instrument" />
 	</target>
 
-
-
-	<target name="create_dyn_ext_interface_sourcezip" depends="compile">
-		<delete file="${interface.src.dir}/DynamicExtensions-src.zip" />
-		<zip destfile="${interface.src.dir}/DynamicExtensions-src.zip">
-			<fileset dir="${src.dir}">
-				<include name="**/domain/**/*.java" />
-				<include name="**/domaininterface/**/*.java" />
-				<include name="**/entitymanager/**.java" />
-				<include name="**/dynamicextensions/bizlogic/**/*.java" />
-				<include name="**/exception/*.java" />
-				<include name="**/hbm/**/*.*" />
-				<include name="**/dynamicextensions/util/**/*.java" />
-				<include name="**/common/util/**/*.java" />
-				<include name="*.properties" />
-				<include name="*.xml" />
-			</fileset>
-			<fileset dir="${test.dir}">
-			</fileset>
-		</zip>
-	</target>
-
 	<!-- Creates the Dynamic Extensions zip of the application -->
-	<target name="create_dynamic_extensions_zip" depends="create_dyn_ext_interface_jar,version_info,init_zip">
+	<target name="create_dynamic_extensions_zip" depends="build:jar:core,version_info,init_zip">
 		<delete file="binaries/dynamicextensions.zip" />
 		<zip destfile="binaries/dynamicextensions.zip">
 			<fileset dir="${temp.dir}">
@@ -387,40 +312,6 @@
 		<copy todir="${temp.dir}/binaries/DynamicExtensionsInterface" file="binaries/DynamicExtensionsInterface/DynamicExtensions.jar">
 		</copy>
 		
-	</target>
-
-	<!-- Creates the WAR (Web Application Archive) file of the application -->
-	<target name="build_war" depends="compile">
-		<delete file="dynamicExtensions.war" />
-		<war destfile="dynamicExtensions.war" webxml="src/conf/web.xml">
-			<fileset dir="${base.dir}">
-				<include name="src/web/stylesheets/**/*" />
-				<include name="src/web/images/**/*" />
-				<include name="src/web/javascripts/**/*" />
-				<include name="src/web/pages/**/*" />
-				<include name="src/web/dhtmlx_suite/**/*" />
-				<include name="src/web/runtime/**/*" />
-				<include name="src/web/taglibs/**/*" />
-				<include name="lib/server/**/*" />
-				<exclude name="**/dom4j.jar" />
-				<exclude name="**/jboss-common-jdbc-wrapper.jar" />
-				<exclude name="**/jboss.jar" />
-				<include name="**/log4j.jar" />
-				<include name="binaries/classes/**/*" />
-				<include name="src/conf/web.xml" />
-				<include name="src/conf/dynamicextensions-struts-config.xml" />
-				<include name="src/resources/ApplicationVersionInfo.txt" />
-			</fileset>
-			<manifest>
-				<section name="${DynamicExtensions.jar.details}">
-					<attribute name="Version" value="${DynamicExtensions.jar.version}" />
-					<attribute name="Built-By" value="${user.name}" />
-					<attribute name="Build-on" value="${TODAY_IND}" />
-					<attribute name="SVN-URL" value="${dist.revision}" />
-				</section>
-			</manifest>
-		</war>
-		<copy file="dynamicExtensions.war" todir="${dist.dir}/build" overwrite="true" />
 	</target>
 
 	<target name="build.dem.war" depends="compile">
@@ -808,60 +699,6 @@
 		<target name="dist" depends="generate_schema" description="Creates the distribution unit">
 
 		</target>
-
-
-		<target name="create_installable_zip" depends="build_app_war">
-			<property name="zip.dir" value="${base.dir}/binaries/caTISSUE_Core_Installable" />
-			<delete file="${base.dir}/caTissue_Core_Installable.zip" />
-			<delete dir="${base.dir}/binaries/caTissue_Core_Installable" />
-			<mkdir dir="${zip.dir}" />
-			<copy file="caelmir.war" todir="${zip.dir}" overwrite="true" />
-			<!--<copy file="catissuecorecsm.war" todir="${zip.dir}" overwrite="true"/>-->
-			<copy file="caelmir-ds.xml" todir="${zip.dir}" overwrite="true" />
-			<copy file="caELMIRInstall.properties" todir="${zip.dir}" overwrite="true" />
-			<copy file="deploy.xml" todir="${zip.dir}" overwrite="true" />
-
-			<copy todir="${zip.dir}/caelmir-properties" overwrite="true">
-				<fileset dir="${base.dir}/caelmir-properties" />
-			</copy>
-
-			<copy todir="${zip.dir}/lib" overwrite="true">
-				<fileset file="${base.dir}/lib/extra/ant-contrib.jar" />
-				<fileset file="${base.dir}/lib/server/mysql-connector-java-3.0.16-ga-bin.jar" />
-				<fileset file="${base.dir}/lib/server/oracleDriver.jar" />
-			</copy>
-
-			<copy todir="${zip.dir}/configuration" overwrite="true">
-				<fileset file="${base.dir}/Accessibility.txt" />
-				<fileset file="${base.dir}/ContactUs.txt" />
-				<fileset file="${base.dir}/Disclaimer.txt" />
-				<fileset file="${base.dir}/PrivacyNotice.txt" />
-			</copy>
-
-			<copy todir="${zip.dir}/SQL" overwrite="true">
-				<fileset dir="${base.dir}/db" />
-			</copy>
-			<delete dir="${zip.dir}/db/db-upgrade" />
-
-			<copy file="MySql_DB_Creation.sql" todir="${zip.dir}" overwrite="true" />
-			<copy file="Oracle_DB_Creation.sql" todir="${zip.dir}" overwrite="true" />
-			<copy file="Sample-log4j.xml" todir="${zip.dir}" overwrite="true" />
-			<copy file="Sample-login-config.xml" todir="${zip.dir}" overwrite="true" />
-			<copy file="Sample-properties-service.xml" todir="${zip.dir}" overwrite="true" />
-
-			<copy todir="${zip.dir}/images" overwrite="true">
-				<fileset file="${base.dir}/src/web/images/InstitutionLogo.gif" />
-			</copy>
-
-			<!--	<copy todir="${zip.dir}/caTISSUECore caCORE Client" overwrite="true">
-			<fileset dir="${base.dir}/binaries/caTISSUECore caCORE Client"/>
-		</copy>-->
-
-			<zip destfile="${base.dir}/binaries/caTissue_Core_Installable.zip" basedir="${zip.dir}">
-			</zip>
-			<delete dir="${zip.dir}" />
-		</target>
-
 
 
 		<!-- Create dynamic extensions jar Begins-->
@@ -1582,9 +1419,34 @@
 		<!-- =================================
           target: execute.testcase
          ================================= -->
-		<target name="execute.testcase" depends="db_initialized,generate_schema,generate_codecoverage_report" description="description">
-
-		</target>
+		<target name="execute.testcase" depends="db_initialized,generate_schema,generate_codecoverage_report" description="description"/>
 
 	
+	<!-- Create dynamic extensions jar Begins-->
+		<target name="build:jar:core" depends="compile" description="generates the jar with core action classes">
+			<delete file="${interface.dir}/DynamicExtensions.jar" />
+			<jar taskname="buildJar" jarfile="${interface.dir}/DynamicExtensions.jar">
+
+				<fileset dir="${target.dir}">
+					<include name="**/*.*" />
+					<include name="**/*.*" />
+					<exclude name="**/log4j.properties" />
+					<exclude name="**/server.properties" />
+					<exclude name="**/uicontrols-captions.properties" />
+					<exclude name="**/edu/hostApp/**/*.*" />
+					<exclude name="**/edu/common/dynamicextensions/ui/webui/action/*.*" />
+					<exclude name="**/*Test*.class" />
+					<exclude name="**/TestHibernate.cfg.xml" />
+					<exclude name="**/*ApplicationDAOProperties.xml" />
+				</fileset>
+				<manifest>
+					<section name="${DynamicExtensions.jar.details}">
+						<attribute name="Version" value="${DynamicExtensions.jar.version}" />
+						<attribute name="Built-By" value="${user.name}" />
+						<attribute name="Build-on" value="${TODAY_IND}" />
+						<attribute name="SVN-URL" value="${dist.revision}" />
+					</section>
+				</manifest>
+			</jar>
+		</target>
 	</project>
