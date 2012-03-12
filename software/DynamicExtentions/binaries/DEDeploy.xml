@@ -2182,4 +2182,51 @@
 				</else>
 			</if>
 		</target>
+	
+	<target name="merge:web:xml">
+		<replace file="${host.web.xml}">
+			<replacetoken>&lt;/web-app&gt;</replacetoken>
+			<replacevalue>
+				<![CDATA[
+				    	 	<listener>
+				<listener-class>edu.common.dynamicextensions.util.listener.DynamicExtensionsServletContextListener</listener-class>
+				</listener>
+				<servlet>
+					<servlet-name>UpdateCache</servlet-name>
+					<servlet-class>edu.common.dynamicextensions.ui.webui.action.UpdateCache</servlet-class>
+				</servlet>
+	
+				<servlet-mapping>
+					<servlet-name>UpdateCache</servlet-name>
+					<url-pattern>/UpdateCache</url-pattern>
+				</servlet-mapping>
+				<servlet>
+					<servlet-name>DynamicExtensionsInterfaceAction</servlet-name>
+					<servlet-class>edu.common.dynamicextensions.interfaceactions.DynamicExtensionsInterfaceAction</servlet-class>
+				</servlet>
+				<servlet>
+					<servlet-name>DownloadFileAction</servlet-name>
+					<servlet-class>edu.common.dynamicextensions.ui.webui.action.DownloadFileAction</servlet-class>
+				</servlet>
+				<servlet-mapping>
+					<servlet-name>DynamicExtensionsInterfaceAction</servlet-name>
+					<url-pattern>/DynamicExtensionsInterfaceAction</url-pattern>
+				</servlet-mapping>
+				<servlet-mapping>
+					<servlet-name>DownloadFileAction</servlet-name>
+					<url-pattern>/DownloadFileAction</url-pattern>
+				</servlet-mapping>
+				<taglib>
+					<taglib-uri>/WEB-INF/dynamicExtensions.tld</taglib-uri>
+					<taglib-location>/WEB-INF/dynamicExtensions.tld</taglib-location>
+				</taglib>
+				<context-param>
+					<param-name>ResourceBundleParamName</param-name>
+					<param-value>resourcebundleclass</param-value>
+				</context-param>
+			</web-app>
+				]]>
+			</replacevalue>
+		</replace>
+	</target>
 </project>
