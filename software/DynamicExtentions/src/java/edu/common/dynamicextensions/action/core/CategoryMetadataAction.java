@@ -12,12 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
 
 import edu.common.dynamicextensions.client.CategoryCreatorConstants;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
@@ -44,7 +42,7 @@ import edu.wustl.common.util.logger.LoggerConfig;
  * @author pavan_kalantri
  *
  */
-public class CategoryMetadataAction extends BaseDynamicExtensionsAction
+public class CategoryMetadataAction extends HttpServlet
 {
 
 	static
@@ -69,8 +67,9 @@ public class CategoryMetadataAction extends BaseDynamicExtensionsAction
 	 * @param response response object
 	 * @return ActionForward action forward null.
 	 */
-	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException
 	{
 		LOGGER.info("In create category Metadata action");
 		try
@@ -88,7 +87,6 @@ public class CategoryMetadataAction extends BaseDynamicExtensionsAction
 		{
 			LOGGER.error("Exception occured while creating category", e);
 		}
-		return null;
 	}
 
 	/**

@@ -12,13 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBException;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
 
 import edu.common.dynamicextensions.client.PermissibleValuesClient;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
@@ -34,9 +32,14 @@ import edu.wustl.common.util.logger.LoggerConfig;
  * @author gaurav_mehta
  *
  */
-public class DownloadPVVersionAction extends BaseDynamicExtensionsAction
+public class DownloadPVVersionAction extends HttpServlet
 {
 
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7606212938202748026L;
 
 	static
 	{
@@ -48,8 +51,8 @@ public class DownloadPVVersionAction extends BaseDynamicExtensionsAction
 
 
 	@Override
-    public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException
 	{
 		final String pvDir = CommonServiceLocator.getInstance().getAppHome() + File.separator + "pvDir"
 				+ EntityCache.getInstance().getNextIdForCategoryFileGeneration();
@@ -74,7 +77,6 @@ public class DownloadPVVersionAction extends BaseDynamicExtensionsAction
 		{
 			DirOperationsUtility.getInstance().deleteDirectory(new File(pvDir));
 		}
-		return null;
 	}
 
 	/**

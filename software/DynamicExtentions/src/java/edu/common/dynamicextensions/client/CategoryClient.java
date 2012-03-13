@@ -65,7 +65,7 @@ public class CategoryClient extends AbstractClient
 			DirOperationsUtility.validateFolderSizeForUpload(args[0], 500000000L);
 			this.zipFile = ZipUtility.zipFolder(args[0], "tempCategoryDir.zip");
 			String url = HTTPSConnection.getCorrectedApplicationURL(args[1])
-					+ "/CreateCategoryAction.do?";
+					+ "/CreateCategoryAction?";
 			String catFilename = "";
 			if (args.length > 2 && !"".equals(args[2].trim()))
 			{

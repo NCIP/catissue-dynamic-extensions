@@ -58,7 +58,7 @@ public class PermissibleValuesClient extends AbstractClient
 		StringBuffer url = new StringBuffer(35);
 
 		url.append(HTTPSConnection.getCorrectedApplicationURL(args[1]));
-		url.append("/ImportPVAction.do?");
+		url.append("/ImportPVAction?");
 		url.append(startFolder);
 		url.append('=');
 		url.append(folderName);

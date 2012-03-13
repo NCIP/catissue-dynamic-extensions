@@ -2216,6 +2216,80 @@
 					<servlet-name>DownloadFileAction</servlet-name>
 					<url-pattern>/DownloadFileAction</url-pattern>
 				</servlet-mapping>
+
+				<servlet>
+					<servlet-name>CreateCategoryAction</servlet-name>
+					<servlet-class>edu.common.dynamicextensions.action.core.CreateCategoryAction</servlet-class>
+				</servlet>
+				<servlet-mapping>
+					<servlet-name>CreateCategoryAction</servlet-name>
+					<url-pattern>/CreateCategoryAction</url-pattern>
+				</servlet-mapping>
+				
+				<servlet>
+					<servlet-name>CreateCategoryMetadataAction</servlet-name>
+					<servlet-class>edu.common.dynamicextensions.action.core.CategoryMetadataAction</servlet-class>
+				</servlet>
+				<servlet-mapping>
+					<servlet-name>CreateCategoryMetadataAction</servlet-name>
+					<url-pattern>/CreateCategoryMetadataAction</url-pattern>
+				</servlet-mapping>
+				
+
+				<servlet>
+					<servlet-name>AjaxcodeHandlerAction</servlet-name>
+					<servlet-class>edu.common.dynamicextensions.action.core.AjaxcodeHandlerAction</servlet-class>
+				</servlet>
+				<servlet-mapping>
+					<servlet-name>AjaxcodeHandlerAction</servlet-name>
+					<url-pattern>/AjaxcodeHandlerAction</url-pattern>
+				</servlet-mapping>
+			
+				<servlet>
+					<servlet-name>DownloadPVVersionAction</servlet-name>
+					<servlet-class>edu.common.dynamicextensions.action.core.DownloadPVVersionAction</servlet-class>
+				</servlet>
+				<servlet-mapping>
+					<servlet-name>DownloadPVVersionAction</servlet-name>
+					<url-pattern>/DownloadPVVersionAction</url-pattern>
+				</servlet-mapping>
+
+				<servlet>
+					<servlet-name>ImportPVAction</servlet-name>
+					<servlet-class>edu.common.dynamicextensions.action.core.ImportPVAction</servlet-class>
+				</servlet>
+				<servlet-mapping>
+					<servlet-name>ImportPVAction</servlet-name>
+					<url-pattern>/ImportPVAction</url-pattern>
+				</servlet-mapping>
+
+				<servlet>
+					<servlet-name>LoadDisplayFormDataInGrid</servlet-name>
+					<servlet-class>edu.common.dynamicextensions.action.core.LoadDisplayFormDataInGridAction</servlet-class>
+				</servlet>
+				<servlet-mapping>
+					<servlet-name>LoadDisplayFormDataInGrid</servlet-name>
+					<url-pattern>/LoadDisplayFormDataInGrid</url-pattern>
+				</servlet-mapping>
+
+				<servlet>
+					<servlet-name>UploadFile</servlet-name>
+					<servlet-class>edu.common.dynamicextensions.action.core.UploadFileToDB</servlet-class>
+				</servlet>
+				<servlet-mapping>
+					<servlet-name>UploadFile</servlet-name>
+					<url-pattern>/UploadFile</url-pattern>
+				</servlet-mapping>
+				
+				<servlet>
+					<servlet-name>DEComboDataAction</servlet-name>
+					<servlet-class>edu.common.dynamicextensions.action.core.DEComboDataAction</servlet-class>
+				</servlet>
+				<servlet-mapping>
+					<servlet-name>DEComboDataAction</servlet-name>
+					<url-pattern>/DEComboDataAction</url-pattern>
+				</servlet-mapping>
+				
 				<taglib>
 					<taglib-uri>/WEB-INF/dynamicExtensions.tld</taglib-uri>
 					<taglib-location>/WEB-INF/dynamicExtensions.tld</taglib-location>

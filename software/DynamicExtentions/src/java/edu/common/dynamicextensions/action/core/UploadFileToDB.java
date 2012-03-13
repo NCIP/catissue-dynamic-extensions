@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,9 +15,6 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,9 +25,13 @@ import edu.wustl.common.util.logger.Logger;
 /**
  * The Class UploadFileToDB.
  */
-public class UploadFileToDB extends BaseDynamicExtensionsAction
+public class UploadFileToDB  extends HttpServlet
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -331996445389885677L;
 	/** The Constant LOGGER. */
 	private static final Logger LOGGER = Logger.getCommonLogger(UploadFileToDB.class);
 
@@ -44,8 +47,9 @@ public class UploadFileToDB extends BaseDynamicExtensionsAction
 	 *
 	 * @see org.apache.struts.actions.DispatchAction#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
-	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException
 	{
 		long identifier;
 
@@ -83,7 +87,6 @@ public class UploadFileToDB extends BaseDynamicExtensionsAction
 		{
 			LOGGER.info("Error occured while uploading file to database", e);
 		}
-		return null;
 	}
 
 	/**

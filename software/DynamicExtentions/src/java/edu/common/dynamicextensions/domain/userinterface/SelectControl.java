@@ -182,7 +182,7 @@ public abstract class SelectControl extends Control
 		String attributeName = getBaseAbstractAttribute().getName();
 		StringBuffer comboStringBuffer = new StringBuffer(700);
 		comboStringBuffer
-				.append("var myUrl= \"DEComboDataAction.do?controlId=")
+				.append("var myUrl= \"DEComboDataAction?controlId=")
 				.append(controlId)
 				.append("~containerIdentifier=")
 				.append(parentContainerId)

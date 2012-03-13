@@ -15,12 +15,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
 import org.owasp.stinger.Stinger;
 import org.owasp.stinger.rules.RuleSet;
 
@@ -42,8 +41,13 @@ import edu.wustl.common.util.logger.LoggerConfig;
  * @author gaurav_mehta
  *
  */
-public class ImportPVAction extends BaseDynamicExtensionsAction
+public class ImportPVAction extends HttpServlet
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5953287634203730394L;
 
 	private static final String IMPORT_PV_METHOD_NAME = "importPvVersionValues";
 
@@ -58,8 +62,9 @@ public class ImportPVAction extends BaseDynamicExtensionsAction
 	/** The Constant XML. */
 	private static final String XML = "xml";
 
-	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException
 	{
 		String pvDir = CommonServiceLocator.getInstance().getAppHome() + File.separator + "pvDir"
 				+ EntityCache.getInstance().getNextIdForCategoryFileGeneration();
@@ -93,7 +98,6 @@ public class ImportPVAction extends BaseDynamicExtensionsAction
 		{
 			DirOperationsUtility.getInstance().deleteDirectory(new File(pvDir));
 		}
-		return null;
 	}
 
 	/**
@@ -108,7 +112,7 @@ public class ImportPVAction extends BaseDynamicExtensionsAction
 	{
 		try
 		{
-			ServletContext servletContext = servlet.getServletContext();
+			ServletContext servletContext = getServletContext();
 			String config = servletContext.getRealPath("WEB-INF") + "/stinger.xml";
 			Stinger stinger = new Stinger(new RuleSet(config, servletContext), servletContext);
 			List<String> successMessage = null;
@@ -149,7 +153,7 @@ public class ImportPVAction extends BaseDynamicExtensionsAction
 	{
 		if (ApplicationProperties.getValue("import.pv.version.implementation") != null)
 		{
-			return callHostImplementation(file, pvDir,stinger);
+			return callHostImplementation(file, pvDir, stinger);
 		}
 		else
 		{
@@ -161,7 +165,7 @@ public class ImportPVAction extends BaseDynamicExtensionsAction
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<String> callHostImplementation(String file, String pvDir,Stinger stinger)
+	private List<String> callHostImplementation(String file, String pvDir, Stinger stinger)
 			throws DynamicExtensionsSystemException
 	{
 		try

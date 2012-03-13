@@ -18,12 +18,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
 
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
@@ -66,8 +64,13 @@ import edu.wustl.common.util.logger.Logger;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
+public class AjaxcodeHandlerAction extends HttpServlet
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8401969881356504210L;
 
 	/**
 	 *
@@ -88,9 +91,8 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 	 * @throws DynamicExtensionsApplicationException
 	 */
 	@Override
-	public ActionForward execute(final ActionMapping mapping, final ActionForm form,
-			final HttpServletRequest request, final HttpServletResponse response)
-			throws DynamicExtensionsApplicationException
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException
 	{
 		String returnXML = "";
 		String containerId = request.getParameter("containerId");
@@ -162,17 +164,11 @@ public class AjaxcodeHandlerAction extends BaseDynamicExtensionsAction
 
 			}
 			sendResponse(returnXML, response);
-			return null;
 		}
 		catch (final Exception e)
 		{
 			Logger.out.error(e.getMessage());
-			final String actionForwardString = catchException(e, request);
-			if ((actionForwardString == null) || (actionForwardString.equals("")))
-			{
-				return mapping.getInputForward();
-			}
-			return null;
+			
 		}
 	}
 

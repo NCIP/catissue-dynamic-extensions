@@ -11,12 +11,11 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
 import org.owasp.stinger.Stinger;
 import org.owasp.stinger.rules.RuleSet;
 
@@ -42,8 +41,13 @@ import edu.wustl.common.util.logger.LoggerConfig;
  * @author pavan_kalantri
  *
  */
-public class CreateCategoryAction extends BaseDynamicExtensionsAction
+public class CreateCategoryAction extends HttpServlet
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5064276283619866691L;
 
 	static
 	{
@@ -65,8 +69,8 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 	 * @see org.apache.struts.actions.DispatchAction#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
-	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException
 	{
 		LOGGER.info("In create category action");
 		Map<String, Exception> catNameVsExcep = new HashMap<String, Exception>();
@@ -77,7 +81,7 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 			DownloadUtility.downloadZipFile(request, tempDirName, "categoryZip.zip");
 			List<String> fileNamesList = getCategoryFileNames(request, tempDirName);
 
-			ServletContext servletContext = this.servlet.getServletContext();
+			ServletContext servletContext = this.getServletContext();
 			String config = servletContext.getRealPath("WEB-INF") + "/stinger.xml";
 			Stinger stinger = new Stinger(new RuleSet(config, servletContext), servletContext);
 
@@ -109,7 +113,6 @@ public class CreateCategoryAction extends BaseDynamicExtensionsAction
 		{
 			DirOperationsUtility.getInstance().deleteDirectory(new File(tempDirName));
 		}
-		return null;
 	}
 
 	/**

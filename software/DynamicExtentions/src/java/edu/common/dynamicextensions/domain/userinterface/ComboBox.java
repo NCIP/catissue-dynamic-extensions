@@ -24,7 +24,6 @@ import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.common.beans.NameValueBean;
-import edu.wustl.common.util.logger.Logger;
 
 /**
  * @version 1.0
@@ -335,7 +334,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		if (getIsLazy() || getIsSkipLogicTargetControl())
 		{
 			htmlString
-					.append("Ext.onReady(function(){ var myUrl= \"DEComboDataAction.do?controlId=");
+					.append("Ext.onReady(function(){ var myUrl= \"DEComboDataAction?controlId=");
 			htmlString.append(identifier);
 			htmlString.append("~containerIdentifier=");
 			htmlString.append(parentContainerId);

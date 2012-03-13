@@ -56,7 +56,7 @@ public class DownloadPVVersionClient extends AbstractClient
 
 		final StringBuffer url = new StringBuffer(50);
 		url.append(HTTPSConnection.getCorrectedApplicationURL(args[1]));
-		url.append("/DownloadPVVersionAction.do?");
+		url.append("/DownloadPVVersionAction?");
 		url.append(START_FOLDER);
 		url.append('=');
 		url.append(folderName);

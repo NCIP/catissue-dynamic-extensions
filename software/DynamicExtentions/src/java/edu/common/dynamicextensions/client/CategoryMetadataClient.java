@@ -114,7 +114,7 @@ public class CategoryMetadataClient extends AbstractClient
 		try
 		{
 			String url = HTTPSConnection.getCorrectedApplicationURL(args[1])
-					+ "/CreateCategoryMetadataAction.do?";
+					+ "/CreateCategoryMetadataAction?";
 			String catName = URLEncoder.encode(getCategoryFilenameString(args[0]), "UTF-8");
 			serverUrl = new URL(url + "categoryName=" + catName);
 		}

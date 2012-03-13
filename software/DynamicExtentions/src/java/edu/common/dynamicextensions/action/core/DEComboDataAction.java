@@ -1,6 +1,7 @@
 
-package edu.common.dynamicextensions.util.global;
+package edu.common.dynamicextensions.action.core;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,13 +11,13 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.Map.Entry;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
@@ -24,14 +25,15 @@ import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
+import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.skiplogic.SkipLogic;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
-import edu.common.dynamicextensions.ui.webui.action.BaseDynamicExtensionsAction;
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.global.CommonServiceLocator;
@@ -41,15 +43,20 @@ import edu.wustl.common.util.global.CommonServiceLocator;
  * This action is called in the auto complete dropdown combo box
  *
  */
-public class DEComboDataAction extends BaseDynamicExtensionsAction
+public class DEComboDataAction  extends HttpServlet
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2453832389303155156L;
 	/** The Constant CONTROL_ID. */
 	private static final String CONTROL_ID = "controlId";
 
 	@SuppressWarnings("unchecked")
-	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws Exception
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException
 	{
 		String limit = request.getParameter("limit");
 		String query = request.getParameter("query");
@@ -88,6 +95,7 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 
 		ContainerInterface container = (ContainerInterface) getContainerFromUserSesion(request,
 				containerId);
+		try{
 		if (container == null)
 		{
 			container = EntityCache.getInstance().getContainerById(Long.valueOf(containerId));
@@ -129,8 +137,21 @@ public class DEComboDataAction extends BaseDynamicExtensionsAction
 		response.flushBuffer();
 		PrintWriter out = response.getWriter();
 		out.write(mainJsonObject.toString());
-
-		return null;
+		}
+		catch(DynamicExtensionsCacheException e)
+		{
+			throw new ServletException(e);
+		}
+		catch (JSONException e)
+		{
+			throw new ServletException(e);
+		}
+		catch (DynamicExtensionsSystemException e)
+		{
+			throw new ServletException(e);}
+		catch (DynamicExtensionsApplicationException e)
+		{
+			throw new ServletException(e);}
 	}
 
 	/**
