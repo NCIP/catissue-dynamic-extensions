@@ -71,4 +71,10 @@ public class Constants
 	public static final String MAP_FOR_VALIDATION = "MapForValidation";
 	public static final String ACTIVE = "Active";
 	public static final String DISABLED = "Disabled";
+	public static final String CONTAINER_IDENTIFIER = "containerIdentifier";
+	public static final String INSERT_PARENT_DATA = "insertParentData";
+	public static final String INSERT_CHILD_DATA = "insertChildData";
+	public static final String DATA_ENTRY_OPERATION = "dataEntryOperation";
+	public static final String DATA_ENTRY_FORM = "dataEntryForm";
+	public static final String MANDATORY_MESSAGE = "mandatoryMessage";
 }

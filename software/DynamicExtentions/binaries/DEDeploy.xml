@@ -2289,6 +2289,15 @@
 					<servlet-name>DEComboDataAction</servlet-name>
 					<url-pattern>/DEComboDataAction</url-pattern>
 				</servlet-mapping>
+
+				<servlet>
+					<servlet-name>LoadDataEntryFormAction</servlet-name>
+					<servlet-class>edu.common.dynamicextensions.action.core.LoadDataEntryFormAction</servlet-class>
+				</servlet>
+				<servlet-mapping>
+					<servlet-name>LoadDataEntryFormAction</servlet-name>
+					<url-pattern>/LoadDataEntryFormAction</url-pattern>
+				</servlet-mapping>
 				
 				<taglib>
 					<taglib-uri>/WEB-INF/dynamicExtensions.tld</taglib-uri>

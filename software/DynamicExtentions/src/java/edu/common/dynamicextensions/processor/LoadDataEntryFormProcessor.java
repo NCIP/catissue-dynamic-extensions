@@ -56,19 +56,15 @@ public class LoadDataEntryFormProcessor
 	 * @throws DynamicExtensionsSystemException DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException DynamicExtensionsApplicationException
 	 */
-	public ContainerInterface loadDataEntryForm(AbstractActionForm actionForm,
+	public ContainerInterface updateFormBean(AbstractActionForm actionForm,
 			ContainerInterface containerInterface,
-			Map<BaseAbstractAttributeInterface, Object> valueMap, String mode,
+			Map<BaseAbstractAttributeInterface, Object> valueMap,
 			String recordIdentifier) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
 		DataEntryForm dataEntryForm = (DataEntryForm) actionForm;
 
-		if (mode != null)// && mode.equalsIgnoreCase(WebUIManagerConstants.VIEW_MODE))
-		{
-			containerInterface.setMode(mode);
-		}
-
+		containerInterface.setMode(dataEntryForm.getMode());
 		if (valueMap != null && !valueMap.isEmpty())
 		{
 			cleanContainer(containerInterface);

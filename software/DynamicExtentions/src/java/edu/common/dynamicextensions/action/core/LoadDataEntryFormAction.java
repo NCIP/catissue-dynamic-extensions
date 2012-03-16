@@ -1,134 +1,42 @@
 
 package edu.common.dynamicextensions.action.core;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
+import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-
-import edu.common.dynamicextensions.domain.userinterface.AbstractContainmentControl;
-import edu.common.dynamicextensions.domaininterface.AssociationMetadataInterface;
-import edu.common.dynamicextensions.domaininterface.AttributeInterface;
-import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
-import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
-import edu.common.dynamicextensions.domaininterface.userinterface.AbstractContainmentControlInterface;
-import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
-import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
-import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
-import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
-import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.processor.LoadDataEntryFormProcessor;
-import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
-import edu.common.dynamicextensions.ui.webui.util.CacheManager;
-import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
-import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
-import edu.common.dynamicextensions.util.DataValueMapUtility;
-import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
-import edu.common.dynamicextensions.util.global.DEConstants;
-import edu.wustl.common.actionForm.AbstractActionForm;
 
 /**
  * @author sujay_narkar, chetan_patil, suhas_khot
  *
  */
-public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
+public class LoadDataEntryFormAction extends HttpServlet
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5063171858302339258L;
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
+			IOException
+	{
+		doPost(req, resp);
+	}
 	/* (non-Javadoc)
 	 * @see org.apache.struts.actions.DispatchAction#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
-    public ActionForward execute(final ActionMapping mapping, final ActionForm form,
-			final HttpServletRequest request, final HttpServletResponse response)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException
 	{
-		final DataEntryForm dataEntryForm = (DataEntryForm) form;
-		String onFormLoadMethodCall = request.getParameter(DEConstants.ON_FORM_LOAD);
-	    if(onFormLoadMethodCall!=null)
-	    {
-		  request.getSession().setAttribute(DEConstants.ON_FORM_LOAD, onFormLoadMethodCall);
-	    }
-		try
+		
+		/*try
 		{
-			cacheCallBackURL(request);
-			final ContainerInterface containerInterface = getContainerInterface(request);
-
-			String recordId = request.getParameter("recordIdentifier");
-			if (recordId == null)
-			{
-				recordId = "";
-			}
-			final LoadDataEntryFormProcessor loadDataEntryFormProcessor = LoadDataEntryFormProcessor
-					.getInstance();
-			final Map<BaseAbstractAttributeInterface, Object> recordMap = loadDataEntryFormProcessor
-					.getValueMapFromRecordId(containerInterface.getAbstractEntity(), recordId);
-			Stack<ContainerInterface> containerStack = (Stack<ContainerInterface>) CacheManager
-					.getObjectFromCache(request, DEConstants.CONTAINER_STACK);
-			Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack = (Stack<Map<BaseAbstractAttributeInterface, Object>>) CacheManager
-					.getObjectFromCache(request, DEConstants.VALUE_MAP_STACK);
-
-			Stack<Long> scrollTopStack = (Stack<Long>) CacheManager.getObjectFromCache(request,
-					DEConstants.SCROLL_TOP_STACK);
-
-			if (containerStack == null)
-			{
-				containerStack = new Stack<ContainerInterface>();
-				CacheManager.addObjectToCache(request, DEConstants.CONTAINER_STACK, containerStack);
-				valueMapStack = new Stack<Map<BaseAbstractAttributeInterface, Object>>();
-				CacheManager.addObjectToCache(request, DEConstants.VALUE_MAP_STACK, valueMapStack);
-				scrollTopStack = new Stack<Long>();
-				CacheManager
-						.addObjectToCache(request, DEConstants.SCROLL_TOP_STACK, scrollTopStack);
-				updateScrollTop(request, scrollTopStack);
-				UserInterfaceiUtility.addContainerInfo(containerStack, containerInterface,
-						valueMapStack, recordMap);
-			}
-			else
-			{
-				dataEntryForm.setPreviousDataMap(valueMapStack.peek());
-			}
-
-			final Set<AttributeInterface> attributes = new HashSet<AttributeInterface>();
-			UserInterfaceiUtility.addPrecisionZeroes(recordMap, attributes);
-			updateStacks(request, dataEntryForm, containerStack, valueMapStack, scrollTopStack);
-
-			if (!containerStack.isEmpty() && !valueMapStack.isEmpty())
-			{
-				String mode = request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME);
-				if (mode == null || !mode.equals(""))
-				{
-					mode = dataEntryForm.getMode();
-				}
-
-				loadDataEntryFormProcessor.loadDataEntryForm((AbstractActionForm) form,
-						containerStack.peek(), valueMapStack.peek(), mode, recordId);
-			}
-
-			updateTopLevelEntitiyInfo(containerStack, dataEntryForm);
-
-			if (dataEntryForm.getErrorList().isEmpty())
-			{
-				clearFormValues(dataEntryForm);
-			}
-			if (valueMapStack.peek() != null && !valueMapStack.peek().isEmpty())
-			{
-				DataValueMapUtility.updateDataValueMapDataLoading(valueMapStack.peek(),
-						containerStack.peek());
-			}
-			UserInterfaceiUtility.setContainerValueMap(containerStack.peek(), valueMapStack.peek());
-			updateContainerMap(request, containerInterface);
-			updateApplicationErrorMsgs(request, dataEntryForm);
-			return getForward(mapping, request);
+		
 		}
 		catch (DynamicExtensionsCacheException cacheException)
 		{
@@ -137,270 +45,12 @@ public class LoadDataEntryFormAction extends BaseDynamicExtensionsAction
 			dataEntryForm.setErrorList(list);
 			return mapping.findForward(WebUIManagerConstants.CACHE_ERROR);
 		}
-
-	}
-
-	/**
-	 * @param mapping
-	 * @param request
-	 * @return
-	 */
-	private ActionForward getForward(final ActionMapping mapping, final HttpServletRequest request)
-	{
-		return mapping.findForward(request.getParameter("treePreview") == null
-				? "Success"
-				: "treePreview");
-	}
-
-	/**
-	 * @param request
-	 * @param dataEntryForm
-	 */
-	private void updateApplicationErrorMsgs(HttpServletRequest request, DataEntryForm dataEntryForm)
-	{
-		if (request.getParameter(DEConstants.APPLICATION_ERROR_MSGS) != null
-				&& !"".equals(request.getParameter(DEConstants.APPLICATION_ERROR_MSGS)))
-		{
-			List<String> applicationErrorMsgs = new ArrayList<String>();
-			applicationErrorMsgs.add(request.getParameter(DEConstants.APPLICATION_ERROR_MSGS));
-			dataEntryForm.setErrorList(applicationErrorMsgs);
-		}
-	}
-
-	/**
-	 * removes old container map and add the new one to the session
-	 * @param request
-	 * @param containerInterface
-	 */
-	private void updateContainerMap(final HttpServletRequest request,
-			final ContainerInterface containerInterface)
-	{
-		request.getSession().removeAttribute(WebUIManagerConstants.CONTAINER_MAP);
-
-		Map<String, ContainerInterface> containerMap = new HashMap<String, ContainerInterface>();
-		addContainersToMap(containerMap, containerInterface);
-
-		request.getSession().setAttribute(WebUIManagerConstants.CONTAINER_MAP, containerMap);
-	}
-
-	/**
-	 * Populate the map with the all the containers
-	 * @param containerMap
-	 * @param mainContainer
-	 */
-	private void addContainersToMap(Map<String, ContainerInterface> containerMap,
-			ContainerInterface mainContainer)
-	{
-		for (ControlInterface controlInterface : mainContainer.getAllControls())
-		{
-			if (controlInterface instanceof AbstractContainmentControl)
-			{
-				ContainerInterface container = ((AbstractContainmentControl) controlInterface)
-						.getContainer();
-				addContainersToMap(containerMap, container);
-				containerMap.put(container.getId() == null ? null : container.getId().toString(),
-						container);
-			}
-		}
-		for (ContainerInterface childContainer : mainContainer.getChildContainerCollection())
-		{
-			addContainersToMap(containerMap, childContainer);
-			containerMap.put(childContainer.getId().toString(), childContainer);
-		}
-	}
-
-	/**
-	* This method update scroll top value
-	* @param request HttpServletRequest
-	* @param scrollTopStack scroll stack
-	*/
-	private void updateScrollTop(final HttpServletRequest request, Stack<Long> scrollTopStack)
-	{
-		Long scrollTop = 0L;
-		if (request.getParameter(DEConstants.SCROLL_TOP) != null
-				&& !request.getParameter(DEConstants.SCROLL_TOP).equals(""))
-		{
-			scrollTop = Long.valueOf(request.getParameter(DEConstants.SCROLL_TOP));
-		}
-		scrollTopStack.push(scrollTop);
-	}
-
-	/**
-	 * This method returns the Container Identifier form the given request.
-	 * @param request HttpServletRequest
-	 * @return the Container Identifier
-	 */
-	private String getContainerId(final HttpServletRequest request)
-	{
-		String identifier = "";
-		identifier = request.getParameter("containerIdentifier");
-		if (identifier == null || identifier.equals("") || "null".equalsIgnoreCase(identifier))
-		{
-			identifier = (String) request.getAttribute("containerIdentifier");
-		}
-		return identifier;
-	}
-
-	/**
-	 * This method flushes the values of the DataEntryForm ActionForm.
-	 * @param form DataEntryForm ActionForm
-	 */
-	private void clearFormValues(final ActionForm form)
-	{
-		final DataEntryForm dataEntryForm = (DataEntryForm) form;
-		dataEntryForm.setChildRowId("");
-		dataEntryForm.setChildContainerId("");
-	}
-
-	/**
-	 *
-	 * @param request
-	 */
-	private void cacheCallBackURL(final HttpServletRequest request)
-	{
-		final String callBackURL = request
-				.getParameter(WebUIManagerConstants.CALLBACK_URL_PARAM_NAME);
-		if (callBackURL != null && !callBackURL.equals(""))
-		{
-			final String userId = request.getParameter(WebUIManagerConstants.USER_ID);
-			CacheManager.clearCache(request);
-			CacheManager.addObjectToCache(request, DEConstants.CALLBACK_URL, callBackURL);
-			CacheManager.addObjectToCache(request, WebUIManagerConstants.USER_ID, userId);
-		}
-	}
-
-	/**
-	*
-	* @param request
-	* @return
-	* @throws DynamicExtensionsSystemException
-	* @throws DynamicExtensionsApplicationException
-	*/
-	private ContainerInterface getContainerInterface(final HttpServletRequest request)
-			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
-	{
-		ContainerInterface containerInterface = (ContainerInterface) CacheManager
-				.getObjectFromCache(request, DEConstants.CONTAINER_INTERFACE);
-		final String containerIdentifier = getContainerId(request);
-		if ((containerIdentifier != null || containerInterface == null) && DynamicExtensionsUtility.isNumericDigit(containerIdentifier))
-		{
-			UserInterfaceiUtility.clearContainerStack(request);
-
-			final Long containerId = Long.valueOf(containerIdentifier);
-
-			if (containerId == -1)
-			{
-				containerInterface = (ContainerInterface) ((CategoryEntityInterface) request
-						.getSession().getAttribute("categoryEntity")).getContainerCollection()
-						.iterator().next();
-			}
-			else
-			{
-				containerInterface = DynamicExtensionsUtility
-						.getClonedContainerFromCache(containerId.toString());
-			}
-			containerInterface.getContainerValueMap().clear();
-			DynamicExtensionsUtility.cleanContainerControlsValue(containerInterface);
-
-			CacheManager.addObjectToCache(request, DEConstants.CONTAINER_INTERFACE,
-					containerInterface);
-		}
-
-		return containerInterface;
-	}
-
-	/**
-	 *
-	 * @param containerStack
-	 * @param dataEntryForm
-	 */
-	private void updateTopLevelEntitiyInfo(final Stack<ContainerInterface> containerStack,
-			final DataEntryForm dataEntryForm)
-	{
-		if (containerStack.size() > 1)
-		{
-			dataEntryForm.setIsTopLevelEntity(false);
-		}
-		else
-		{
-			dataEntryForm.setIsTopLevelEntity(true);
-		}
-	}
-
-	/**
-	 *
-	 * @param form
-	 * @param containerStack
-	 * @param valueMapStack
-	 */
-	private void updateStacks(final HttpServletRequest request, final DataEntryForm dataEntryForm,
-			final Stack<ContainerInterface> containerStack,
-			final Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack,
-			final Stack<Long> scrollTopStack)
-	{
-		final String dataEntryOperation = dataEntryForm.getDataEntryOperation();
-		Long scrollPos = 0L;
-		if (dataEntryOperation != null && dataEntryOperation.equalsIgnoreCase("insertChildData")
-				&& dataEntryForm.getErrorList().isEmpty())
-        {
-            request.setAttribute(DEConstants.SCROLL_POSITION, scrollPos);
-            updateScrollTop(request, scrollTopStack);
-            final String childContainerId = dataEntryForm.getChildContainerId();
-            final AbstractContainmentControlInterface associationControl = UserInterfaceiUtility
-                    .getAssociationControl(containerStack.peek(),
-                            childContainerId);
-
-            final Map<BaseAbstractAttributeInterface, Object> containerValueMap = valueMapStack
-                    .peek();
-            final AssociationMetadataInterface association = (AssociationMetadataInterface) associationControl
-                    .getBaseAbstractAttribute();
-            final List<Map<BaseAbstractAttributeInterface, Object>> childContainerValueMapList = (List<Map<BaseAbstractAttributeInterface, Object>>) containerValueMap
-                    .get(association);
-
-            Map<BaseAbstractAttributeInterface, Object> childContainerValueMap;
-            if (associationControl.isCardinalityOneToMany())
-            {
-                childContainerValueMap = childContainerValueMapList.get(Integer
-                        .parseInt(dataEntryForm.getChildRowId()) - 1);
-            } else
-            {
-                childContainerValueMap = childContainerValueMapList.get(0);
-            }
-
-            final ContainerInterface childContainer = associationControl
-                    .getContainer();
-            UserInterfaceiUtility.addContainerInfo(containerStack,
-                    childContainer, valueMapStack, childContainerValueMap);
-        }
-		else if (dataEntryOperation != null
-				&& dataEntryOperation.equalsIgnoreCase("insertParentData"))
-		{
-			scrollPos = scrollTopStack.peek();
-			request.setAttribute(DEConstants.SCROLL_POSITION, scrollPos);
-			final List<String> errorList = dataEntryForm.getErrorList();
-			if (errorList != null && errorList.isEmpty() && containerStack != null
-					&& !containerStack.isEmpty() && valueMapStack != null
-					&& !valueMapStack.isEmpty())
-			{
-				UserInterfaceiUtility.removeContainerInfo(containerStack, valueMapStack);
-				removeScrollInfo(scrollTopStack, errorList);
-			}
-		}
-	}
-
-	/**
-	* @param scrollTopStack
-	* @param errorList
-	*/
-	public static void removeScrollInfo(Stack<Long> scrollTopStack, final List<String> errorList)
-	{
-		if (errorList != null && errorList.isEmpty() && scrollTopStack != null
-				&& !scrollTopStack.isEmpty())
-		{
-			scrollTopStack.pop();
-		}
+*/
+		String destination = "/pages/de/dataEntry/dataEntry.jsp";
+		 
+		RequestDispatcher rd = getServletContext().getRequestDispatcher(destination);
+		rd.forward(request, response);
 	}
 
 	
-
 }

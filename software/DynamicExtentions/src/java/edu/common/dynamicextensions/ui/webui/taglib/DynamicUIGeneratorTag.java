@@ -2,23 +2,20 @@
 package edu.common.dynamicextensions.ui.webui.taglib;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import edu.common.dynamicextensions.domain.userinterface.AbstractContainmentControl;
-import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
-import edu.common.dynamicextensions.domaininterface.userinterface.AbstractContainmentControlInterface;
-import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
-import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.ui.util.Constants;
-import edu.common.dynamicextensions.ui.util.ControlsUtility;
-import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
-import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.ui.webui.util.ContainerUtility;
+import edu.common.dynamicextensions.ui.webui.util.FormCache;
+import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
+import edu.common.dynamicextensions.util.DataValueMapUtility;
 import edu.wustl.common.util.logger.Logger;
 
 public class DynamicUIGeneratorTag extends TagSupport
@@ -27,64 +24,12 @@ public class DynamicUIGeneratorTag extends TagSupport
 	/**
 	 *
 	 */
-	public Map<String,Object> contextParameter = new HashMap<String,Object>();
+
 	private static final long serialVersionUID = 1L;
-
-	protected transient ContainerInterface container = null;
-
-	protected Map<BaseAbstractAttributeInterface, Object> previousDataMap;
-
-	/**
-	 * Returns the previous data map.
-	 * @return Map of BaseAbstractAttributeInterface to Object value.
-	 */
-	public Map<BaseAbstractAttributeInterface, Object> getPreviousDataMap()
-	{
-		return previousDataMap;
-	}
-
-	/**
-	 * Set the old BaseAbstractAttributeInterface to Object value.
-	 * @param previousDataMap Map of BaseAbstractAttributeInterface to Object value.
-	 */
-	public void setPreviousDataMap(final Map<BaseAbstractAttributeInterface, Object> previousDataMap)
-	{
-		this.previousDataMap = previousDataMap;
-	}
-
-	/**
-	 * Returns the ContainerInterface.
-	 * @return ContainerInterface
-	 */
-	public ContainerInterface getContainerInterface()
-	{
-		return container;
-	}
-
-	/**
-	 * Set ContainerInterface.
-	 * @param container ContainerInterface
-	 */
-	public void setContainerInterface(final ContainerInterface container)
-	{
-		this.container = container;
-	}
-
-	/**
-	 * Validates all the attributes passed to the tag
-	 * @return boolean - true if all the attributes passed to the tag are valid
-	 * @since TODO
-	 */
-	private boolean isDataValid()
-	{
-		boolean isDataValid = true;
-		if (this.getContainerInterface() == null)
-		{
-			Logger.out.debug("Container interface is null");
-			isDataValid = false;
-		}
-		return isDataValid;
-	}
+	private Long recordIdentifier;
+	private Long containerIdentifier;
+	private String mode;
+	private FormCache formCache;
 
 	/**
 	 * This method contains no operations.
@@ -102,31 +47,12 @@ public class DynamicUIGeneratorTag extends TagSupport
 	 */
 	public int doEndTag()
 	{
-		if (!isDataValid())
-		{
-			return EVAL_PAGE;
-		}
+
 		try
 		{
-			final String caption = (String) pageContext.getSession()
-			.getAttribute(WebUIManagerConstants.OVERRIDE_CAPTION);
-			this.container.setShowRequiredFieldWarningMessage(Boolean.valueOf(pageContext
-					.getSession().getAttribute("mandatory_Message").toString()));
-			final String operation = pageContext.getRequest().getParameter("dataEntryOperation");
-			final String encounterDate=pageContext.getRequest().getParameter(Constants.ENCOUNTER_DATE);
-			if(container.getContextParameter(Constants.ENCOUNTER_DATE)== null)
-			{
-				contextParameter.put(Constants.ENCOUNTER_DATE, ControlsUtility.getFormattedDate(encounterDate));
-				container.setContextParameter(contextParameter);
-			}
-			DynamicExtensionsUtility.setEncounterDateToChildContainer(container,
-					contextParameter);
-			Map<Long, ContainerInterface> containerMap = new HashMap<Long, ContainerInterface>();
-			TagUtility.setValidationMap(containerMap, container);
-			pageContext.getSession().setAttribute(Constants.MAP_FOR_VALIDATION, containerMap);
-			final JspWriter out = pageContext.getOut();
-			container.setPreviousValueMap(previousDataMap);
-			out.println(this.container.generateContainerHTML(caption, operation));
+			formCache = new FormCache((HttpServletRequest) pageContext.getRequest());
+			formCache.onFormLoad();
+			generateHTML();
 		}
 		catch (final DynamicExtensionsSystemException e)
 		{
@@ -139,11 +65,60 @@ public class DynamicUIGeneratorTag extends TagSupport
 		catch (DynamicExtensionsApplicationException e)
 		{
 			// TODO Auto-generated catch block
-			Logger.out.debug("IOException. No response generated."+e.getMessage());
-			}
+			Logger.out.debug("IOException. No response generated." + e.getMessage());
+		}
 		return EVAL_PAGE;
 	}
 
-	
+	private void generateHTML() throws IOException, DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
+	{
+		ContainerUtility containerUtility = new ContainerUtility((HttpServletRequest) pageContext
+				.getRequest(), formCache.getContainer());
+
+		htmlGenerationPreProcess();
+
+		final JspWriter out = pageContext.getOut();
+		out.println(containerUtility.generateHTML());
+	}
+
+	private void htmlGenerationPreProcess()
+	{
+		formCache.getContainer().setPreviousValueMap(formCache.getValueMapStack().peek());
+		final Set<AttributeInterface> attributes = new HashSet<AttributeInterface>();
+		UserInterfaceiUtility.addPrecisionZeroes(formCache.getValueMapStack().peek(), attributes);
+		DataValueMapUtility.updateDataValueMapDataLoading(formCache.getValueMapStack().peek(),
+				formCache.getContainer());
+	}
+
+	public Long getRecordIdentifier()
+	{
+		return recordIdentifier;
+	}
+
+	public void setRecordIdentifier(Long formRecordId)
+	{
+		this.recordIdentifier = formRecordId;
+	}
+
+	public Long getContainerIdentifier()
+	{
+		return containerIdentifier;
+	}
+
+	public void setContainerIdentifier(Long containerId)
+	{
+		this.containerIdentifier = containerId;
+	}
+
+	public String getMode()
+	{
+		return mode;
+	}
+
+	public void setMode(String mode)
+	{
+		this.mode = mode;
+	}
 
 }

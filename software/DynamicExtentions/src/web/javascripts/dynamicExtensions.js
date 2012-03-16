@@ -2214,7 +2214,6 @@ function showParentContainerInsertDataPage(isDraft)
 {
 	getValues();
     document.getElementById('isDraft').value = isDraft;
-    document.getElementById('dataEntryOperation').value = "insertParentData";
     var dataEntryForm = document.getElementById('dataEntryForm');
     setWaitCursorforAllObjectHierarchy(dataEntryForm);
 }
@@ -2659,7 +2658,6 @@ function selectAllCheckBoxes(selectAllchkboxes, elements)
 
 function cancelInsertData()
 {
-    document.getElementById('dataEntryOperation').value = document.getElementById('operation_mode').value;
     document.getElementById('mode').value = "cancel";
     var dataEntryForm = document.getElementById('dataEntryForm');
     setWaitCursorforAllObjectHierarchy(dataEntryForm);

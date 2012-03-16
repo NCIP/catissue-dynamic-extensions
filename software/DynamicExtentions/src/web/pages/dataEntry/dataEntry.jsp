@@ -4,16 +4,16 @@
 
 
 <%-- TagLibs --%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ page isELIgnored ="false" %> 
+
 <%@ taglib uri="/WEB-INF/dynamicExtensions.tld" prefix="dynamicExtensions" %>
 
 <%-- Imports --%>
 <%@ page language="java" contentType="text/html;charset=iso-8859-1" %>
-<%@ page import="org.apache.struts.action.ActionErrors" %>
-<%@ page import="org.apache.struts.action.ActionMessages" %>
 <%@ page import="edu.common.dynamicextensions.util.global.DEConstants" %>
 
 <%-- Stylesheet --%>
@@ -47,61 +47,19 @@
 <script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/ajaxupload.js"></script>
 
 
-<c:set var="containerInterface" value="${dataEntryForm.containerInterface}"/>
-<jsp:useBean id="containerInterface" type="edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface"/>
 
-<c:set var="previousDataMap" value="${dataEntryForm.previousDataMap}"/>
-<jsp:useBean id="previousDataMap" type="java.util.Map"/>
-
-<c:set var="showFormPreview" value="${dataEntryForm.showFormPreview}"/>
-<jsp:useBean id="showFormPreview" type="java.lang.String"/>
-
-<c:set var="errorList" value="${dataEntryForm.errorList}"/>
-<jsp:useBean id="errorList" type="java.util.List"/>
-
-<c:set var="dataEntryOperation" value="${dataEntryForm.dataEntryOperation}"/>
-<jsp:useBean id="dataEntryOperation" type="java.lang.String"/>
-
-<c:set var="isShowTemplateRecord" value="${dataEntryForm.isShowTemplateRecord}"/>
-<jsp:useBean id="isShowTemplateRecord" type="java.lang.String"/>
-
-<c:set var="recordIdentifier123" value="${dataEntryForm.recordIdentifier}" />
-<jsp:useBean id="recordIdentifier123" type="java.lang.String"/>
-
-
-<c:set var="mode" value="${dataEntryForm.mode}" />
-<jsp:useBean id="mode" type="java.lang.String"/>
-
-<c:set var="isTopLevelEntity" value="${dataEntryForm.isTopLevelEntity}" />
-<jsp:useBean id="isTopLevelEntity" type="java.lang.Boolean"/>
-
-<c:if test="${param.application == 'clinportal'}">
-	<c:set var="application_name" value="${param.application}" scope="session"/>
-</c:if>
-
-<c:if test="${param.showInDiv == 'false'}">
-	<c:set var="showInDiv" value="${param.showInDiv}" scope="session"/>
-</c:if>
-<c:if test="${showInDiv == 'null' || showInDiv == null || param.showInDiv == 'true'}">
-	<c:set var="showInDiv" value="true" scope="session"/>
-</c:if>
-
-<c:if test="${param.mandatoryMessage == 'false'}">
-	<c:set var="mandatory_Message" value="${param.mandatoryMessage}" scope="session"/>
-</c:if>
-<c:if test="${mandatory_Message == 'null' || mandatory_Message == null || param.mandatoryMessage == 'true'}">
-	<c:set var="mandatory_Message" value="true" scope="session"/>
-</c:if>
 
 <c:if test="${sessionScope.onFormLoad != null }">
  <script>
  var strFun = "window.parent."+'<%=request.getSession().getAttribute(DEConstants.ON_FORM_LOAD)%>';
- var deRecId = "<%=recordIdentifier123%>";
- var strParam = "<%=isTopLevelEntity%>" + "," + deRecId;
+ var deRecId = "${param.recordIdentifier123}";
+ var strParam = "${requestScope.isTopLevelEntity}" + "," + deRecId;
 
  onFormLoad(strFun,strParam);
 </script>
  </c:if>
+
+	
 <script language="JavaScript" >
 		resetTimeoutCounter();
 </script>
@@ -195,20 +153,20 @@ jQuery(document).ready(
 		</script>
 	</head>
 
-	<body onload="loadPreviewForm('<%=request.getContextPath()%>');executeComboScriptsForSkipLogic();insertBreadCrumbForSubForm(<%=containerInterface.getId()%>,'<%=request.getSession().getAttribute("application_name")%>');setFocusOnLoad('<%=request.getAttribute("scrollPostion")%>');" onclick="window.parent.parent.detectApplicationUsageActivity()" onkeydown="window.parent.parent.detectApplicationUsageActivity()">
+	<body onload="loadPreviewForm('<%=request.getContextPath()%>');executeComboScriptsForSkipLogic();insertBreadCrumbForSubForm(${param.containerIdentifier},'<%=request.getSession().getAttribute("application_name")%>');setFocusOnLoad('<%=request.getAttribute("scrollPostion")%>');" onclick="window.parent.parent.detectApplicationUsageActivity()" onkeydown="window.parent.parent.detectApplicationUsageActivity()">
 		<html:form styleId="dataEntryForm" action="/ApplyDataEntryFormAction" enctype="multipart/form-data" method="post">
 
-		<c:if test='${showInDiv == "false"}'>
+		<c:if test='${param.showInDiv == "false"}'>
 			<div id="dataEntryFormDiv" style="position:absolute;overflow:auto;height:100%;width:100%;">
 			<div id="overDiv" style="position:absolute; visibility:hidden;"></div>
 		</c:if>
-		<c:if test='${showInDiv == "null" || showInDiv == "true"}'>
+		<c:if test='${param.showInDiv == "null" || showInDiv == "true"}'>
 			<div id="dataEntryFormDiv" style="position:absolute;overflow:auto;height:100%;width:100%;z-index:1000;">
 			<div id="overDiv" style="position:absolute; visibility:hidden; z-index:1000;"></div>
 		</c:if>
 
 			<c:choose>
-				<c:when test='${showFormPreview == "true"}'>
+				<c:when test='${param.showFormPreview == "true"}'>
 					<table valign="top" style="border-right:1px" align='center' width='100%' height="100%" border='0' cellspacing="0" cellpadding="0" class="tbBorders1" >
 				</c:when>
 				<c:otherwise>
@@ -235,7 +193,7 @@ jQuery(document).ready(
 				</c:otherwise>
 			</c:choose>
 				<!-- Main Page heading -->
-				<c:if test='${showFormPreview == "true"}'>
+				<c:if test='${param.showFormPreview == "true"}'>
 				<tr height="7%">
 					<td class="formFieldNoBorders">
 							<bean:message key="app.title.MainPageTitle" />
@@ -246,7 +204,7 @@ jQuery(document).ready(
 				<tr valign="top" height="93%">
 					<td>
 						<table valign="top" summary="" align='center' width='100%' cellspacing="0" cellpadding="0" border="0">
-							<c:if test='${showFormPreview == "true"}'>
+							<c:if test='${param.showFormPreview == "true"}'>
 								<tr valign="top">
 									<td height="20" class="tabMenuItem" onmouseover="changeMenuStyle(this,'tabMenuItemOver'),showCursor()" onmouseout="changeMenuStyle(this,'tabMenuItem'),hideCursor()" onclick="alert('This page is still under construction and will be available in the next release');">
 										<bean:message key="app.title.DefineGroupTabTitle" />
@@ -266,34 +224,30 @@ jQuery(document).ready(
 							</c:if>
 							<tr valign="top">
 								<td colspan="7">
-									<div id ='error_div' style="display:none"><%=errorList.isEmpty()?"":errorList%></div>
+									<div id ='error_div' style="display:none">${param.errorList}</div>
 									<table  align='center' width='100%'>
 										<tr>
-											<%
-												if(errorList.size() != 0)
-												{
-											%>
-												<table border="0" align="center" cellpadding="1" cellspacing="0" class="td_color_6e81a6">
-                                              		<tr>
-													<td>
-													<table width="100%" height="30"  border="0" cellpadding="4" cellspacing="4" class="td_color_FFFFCC">
-													<c:forEach items="${errorList}" var="error">
-														<jsp:useBean id="error" type="java.lang.String"/>
-														 <tr>
-														<th align="center" class="font_bl_nor"><img src="<%=request.getContextPath()%>/images/de/ic_error.gif" alt="Error" width="28" height="25" hspace="3" align="absmiddle">
-															<c:out value="${error}"/><br />
-													</c:forEach>
-														</th>
-                                                    	</tr>
-                                                	</table>
-													</td>
-													</tr>
-												</table>
-											<%
-												} else {
-
-
-											%>		<logic:messagesPresent message="true">
+											<c:choose>
+  												<c:when test="${empty status.last}">
+													<table border="0" align="center" cellpadding="1" cellspacing="0" class="td_color_6e81a6">
+	                                              		<tr>
+														<td>
+														<table width="100%" height="30"  border="0" cellpadding="4" cellspacing="4" class="td_color_FFFFCC">
+														<c:forEach items="${errorList}" var="error">
+															<jsp:useBean id="error" type="java.lang.String"/>
+															 <tr>
+															<th align="center" class="font_bl_nor"><img src="<%=request.getContextPath()%>/images/de/ic_error.gif" alt="Error" width="28" height="25" hspace="3" align="absmiddle">
+																<c:out value="${error}"/><br />
+														</c:forEach>
+															</th>
+	                                                    	</tr>
+	                                                	</table>
+														</td>
+														</tr>
+													</table>
+											</c:when>
+											<c:otherwise>
+ 												<logic:messagesPresent message="true">
 													<table border="0" align="center" cellpadding="1" cellspacing="0" class="td_color_6e81a6">
 														<tr>
 															<td><table width="100%" height="30"  border="0"		cellpadding="4" cellspacing="4"			class="td_color_FFFFCC">
@@ -311,17 +265,17 @@ jQuery(document).ready(
 															</tr>
 														</table>
 													    </logic:messagesPresent>
-													<%
+													</c:otherwise>
+												</c:choose>
 
-												}
-											%>
                                           </tr>
 
 										<tr>
 											<td valign="top">
 												<dynamicExtensions:dynamicUIGenerator
-												containerInterface="<%=containerInterface%>"
-												previousDataMap="<%=previousDataMap%>"/>
+												containerIdentifier="${param.containerIdentifier}"
+												recordIdentifier="${param.recordIdentifier}"
+												mode="${param.mode}"/>
 											</td>
 										</tr>
 									</table>
@@ -343,7 +297,20 @@ jQuery(document).ready(
 													</c:when>
 													<c:otherwise>
 														<html:hidden styleId='isEdit' property="isEdit" value=""/>
-
+														
+														
+														<c:choose>
+															<c:when test="${fn:length(sessionScope.cacheMap['containerStack']) gt 1}">
+																<c:set var="isTopLevelEntity" value="false" scope="request"/>
+																
+															</c:when>
+															<c:otherwise>
+																<c:set var="isTopLevelEntity" value="true" scope="request"/>
+																<script>															
+														</script>
+															</c:otherwise>	
+														</c:choose>
+														
 														<c:if test='${(isTopLevelEntity=="false")}'>
 															<td align='center'>
 																<input type="image" id="btnDESubmit" src="<%=request.getContextPath()%>/images/de/b_submit.gif" width="62" height="21" align="middle" onClick="return showParentContainerInsertDataPage('false')"/>
@@ -353,7 +320,7 @@ jQuery(document).ready(
 															</td>
 														</c:if>
 
-														<c:if test='${(mode=="edit") && (isTopLevelEntity=="true")}'>
+														<c:if test='${(param.mode=="edit" || param.mode=="") && (isTopLevelEntity=="true")}'>
 															<td align='center'>
 																<input type="image" id="btnDESubmit" src="<%=request.getContextPath()%>/images/de/b_submit.gif" width="62" height="21" align="middle" onClick="return setInsertDataOperation('false')"/>
 															</td>
@@ -362,19 +329,19 @@ jQuery(document).ready(
 															</td>
 														<!-- BUG 7662 FIXED. Each Cancel should take you one level up in the containment hierarchy and finally the Cancel on Main Class should take you to the Add Records page.-->
 														</c:if>
-															<input type="hidden" id="operation_mode" value="insertChildData"/>
+														
+														<input type="hidden" id="dataEntryOperation" name="dataEntryOperation" value="insertChildData"/>
 														<c:if test='${(isTopLevelEntity=="true")}'>
 															<script>
-															document.getElementById('operation_mode').value = "insertParentData";
+															document.getElementById('dataEntryOperation').value = "insertParentData";
 															</script>
 														</c:if>
-
-														<c:if test='${!((mode=="view") && (isTopLevelEntity=="false"))}'>
+														<c:if test='${!((param.mode=="view") && (isTopLevelEntity=="false"))}'>
 															<td align='center'>
 																<input type="button" id="btnDECancel" style="border: 0px; background-image: url(<%=request.getContextPath()%>/images/de/b_cancel.gif); height: 21px; width: 62px;" align="middle" onClick="cancelInsertData()"/>
 															</td>
 														</c:if>
-														<c:if test='${(recordIdentifier123 != "") && (recordIdentifier123 != "null") && (isTopLevelEntity == "true") }'>
+														<c:if test='${(param.recordIdentifier123 != "") && (param.recordIdentifier123 != "null") && (isTopLevelEntity == "true") }'>
 														 <td><input type="button" id="btnDEDelete" style="border: 0px; background-image: url(<%=request.getContextPath()%>/images/de/b_delete2.gif); height: 21px; width: 62px;" align="middle" onClick="return deleteRecordEntry()"/></td>
 
 
@@ -392,29 +359,41 @@ jQuery(document).ready(
 			</table>
 
 
+			
 			<html:hidden styleId='recordIdentifier' property="recordIdentifier"/>
 			<html:hidden styleId='entitySaved' property="entitySaved"/>
-			<html:hidden property="containerId" styleId="dataEntryForm" value="<%=containerInterface.getId().toString()%>"/>
+			<input type="hidden" id="containerIdentifier" name="containerIdentifier" value="${param.containerIdentifier}"/>
+			
 			<input type="hidden" id="childContainerId" name="childContainerId" value=""/>
 			<input type="hidden" id="isDraft" name="isDraft" value="false"/>
+			<input type="hidden" id="recordIdentifier123" name="recordIdentifier123" value="{param.recordIdentifier123}"/>
 			<input type="hidden" id="childRowId" name="childRowId" value=""/>
-			<input type="hidden" id="dataEntryOperation" name="dataEntryOperation" value="<%=dataEntryOperation%>"/>
-			<input type="hidden" id="isShowTemplateRecord" name="isShowTemplateRecord" value="<%=isShowTemplateRecord%>"/>
-			<input type="hidden" id="showFormPreview" name="showFormPreview" value="<%=showFormPreview%>"/>
-			<input type="hidden" id="mode" name="mode" value="<%=mode%>"/>
+			
+			<input type="hidden" id="isShowTemplateRecord" name="isShowTemplateRecord" value="${param.isShowTemplateRecord}"/>
+			<input type="hidden" id="showFormPreview" name="showFormPreview" value="${param.showFormPreview}"/>
+			<input type="hidden" id="mode" name="mode" />
+			<c:if test='${param.mode == ""}'>
+				<script>
+					document.getElementById('mode').value = "edit";
+				</script>
+			</c:if>
 			<input type="hidden" id="breadCrumbPosition" name="breadCrumbPosition" value=""/>
 			<input type="hidden" id="isDirty" name="isDirty" value="false"/>
-			<input type="hidden" id="isShowInDiv" name="isShowInDiv" value="true"/>
-			<input type="hidden" id="scrollTop" name="scrollTop" value="null"/>
-			<input type="hidden" id="encounterDate" name="encounterDate" value="<%=request.getParameter("encounterDate")%>"/>
+			<input type="hidden" id="isShowInDiv" name="isShowInDiv" value="${param.isShowInDiv}"/>
+			<input type="hidden" id="scrollTop" name="scrollTop" value="${param.scrollTop}"/>
+			<input type="hidden" id="encounterDate" name="encounterDate" value="${param.encounterDate}"/>
+			<input type="hidden" id="mandatoryMessage" name="mandatoryMessage" value="${param.mandatoryMessage}"/>
+			<input type="hidden" id="showInDiv" name="showInDiv" value="${param.showInDiv}"/>
 			<input type="hidden" id="operation" name="operation" value=""/>
+			
+														
 			</div>
 			<c:if test="${requestScope.isDirty == 'true' || requestScope.isDirty == true}">
 				<script>
 					document.getElementById('isDirty').value = true;
 				</script>
 			</c:if>
-			<c:if test='${(showInDiv=="false")}'>
+			<c:if test='${(param.showInDiv=="false")}'>
 				<script>
 					document.getElementById('submit_cancel_td').style.display="none";
 					document.getElementById('isShowInDiv').value = false;
@@ -428,3 +407,4 @@ jQuery(document).ready(
 		</script>
 	</body>
 </html>
+

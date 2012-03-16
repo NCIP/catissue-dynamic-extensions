@@ -94,17 +94,22 @@
 	     <name>dynamicUIGenerator</name>
 	     <tag-class>edu.common.dynamicextensions.ui.webui.taglib.DynamicUIGeneratorTag</tag-class>
 	     <attribute>
-				<name>containerInterface</name>
+				<name>containerIdentifier</name>
 				<required>true</required>
 				<rtexprvalue>true</rtexprvalue>
-	    		<type>edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface</type>
+	    		<type>java.lang.Integer</type>
 	     </attribute>
-
 	     <attribute>
-				<name>previousDataMap</name>
-				<required>false</required>
+				<name>recordIdentifier</name>
+				<required>true</required>
 				<rtexprvalue>true</rtexprvalue>
-	    		<type>java.util.Map</type>
+	    		<type>java.lang.Integer</type>
+	     </attribute>
+	     <attribute>
+				<name>mode</name>
+				<required>true</required>
+				<rtexprvalue>true</rtexprvalue>
+	    		<type>java.lang.String</type>
 	     </attribute>
 	</tag>
 

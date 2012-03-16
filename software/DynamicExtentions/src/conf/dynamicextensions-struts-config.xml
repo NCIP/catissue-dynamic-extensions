@@ -85,7 +85,7 @@ PUBLIC
 			input="/DynamicExtensionHomePage.do"
 			scope="request">
 			<forward name="success" path="/LoadGroupDefinitionAction.do" />
-			<forward name="insertData" path="/LoadDataEntryFormAction.do" />
+			<forward name="insertData" path="/LoadDataEntryFormAction" />
 		</action>
 		<action path="/LoadFormDefinitionAction"
 		    type="edu.common.dynamicextensions.ui.webui.action.LoadFormDefinitionAction"
@@ -130,7 +130,7 @@ PUBLIC
 			input="/LoadFormControlsAction.do"
 			scope="request">
 			<forward name="success" path="/LoadFormControlsAction.do" />
-			<forward name="loadFormPreviewAction" path="/LoadDataEntryFormAction.do?showFormPreview=true" />
+			<forward name="loadFormPreviewAction" path="/LoadDataEntryFormAction?showFormPreview=true" />
 		</action>
 		<action path="/ShowPreviewAction"
 		    type="edu.common.dynamicextensions.ui.webui.action.ShowPreviewAction"
@@ -166,34 +166,25 @@ PUBLIC
 			<forward name="success" path="/DynamicExtensionHomePage.do" />
 			<forward name="failure" path="/pages/de/ErrorPage.jsp" />
 		</action>
-		<action path="/LoadDataEntryFormAction"
-		    type="edu.common.dynamicextensions.action.core.LoadDataEntryFormAction"
-		    name="dataEntryForm"
-			validate="false"
-			input="/LoadDataEntryFormAction.do"
-			scope="request">
-			<forward name="Success" path="/pages/de/dataEntry/dataEntry.jsp" />
-			<forward name="cacheError" path="/pages/de/error.jsp" />
-			<forward name="LoadFormControls" path="/LoadFormControlsAction.do" />
-		</action>
+		
 		<action path="/ApplyDataEntryFormAction"
 		    type="edu.common.dynamicextensions.action.core.ApplyDataEntryFormAction"
 		    name="dataEntryForm"
 			validate="false"
-			input="/LoadDataEntryFormAction.do"
+			input="/LoadDataEntryFormAction"
 			scope="request">
-			<forward name="success" path="/LoadDataEntryFormAction.do" />
-			<forward name="loadChildContainer" path="/LoadDataEntryFormAction.do" />
-			<forward name="loadParentContainer" path="/LoadDataEntryFormAction.do" />
+			<forward name="success" path="/LoadDataEntryFormAction" />
+			<forward name="loadChildContainer" path="/LoadDataEntryFormAction" />
+			<forward name="loadParentContainer" path="/LoadDataEntryFormAction" />
 			<forward name="showDynamicExtensionsHomePage" path="/DynamicExtensionHomePage.do" />
 		</action>
 		<action path="/DynamicExtensionsInterfaceAction"
 		    type="edu.common.dynamicextensions.interfaceactions.DynamicExtensionsInterfaceAction"
 		    name="dataEntryForm"
 			validate="false"
-			input="/LoadDataEntryFormAction.do"
+			input="/LoadDataEntryFormAction"
 			scope="request">
-			<forward name="success" path="/LoadDataEntryFormAction.do?showFormPreview=flase" />
+			<forward name="success" path="/LoadDataEntryFormAction?showFormPreview=flase" />
 		</action>
 		
 		<action path="/UploadFileAction"
@@ -210,7 +201,7 @@ PUBLIC
 			name="dataEntryForm"
 			validate="false"
 			scope="request">
-			<forward name="success" path="/LoadDataEntryFormAction.do" />
+			<forward name="success" path="/LoadDataEntryFormAction" />
 		</action>
 
 

@@ -106,8 +106,8 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 			try
 			{
 				DataEntryForm dataEntryForm = (DataEntryForm) form;
-				String mode = dataEntryForm.getMode();
-				if ((mode != null) && (mode.equals("edit")))
+				String mode = request.getParameter("mode");
+				if ((mode != null) && mode.equals("edit"))
 				{
 					populateAndValidateValues(containerStack, valueMapStack, request, dataEntryForm,ControlsUtility.getFormattedDate(encounterDate));
 					errorList = dataEntryForm.getErrorList();
