@@ -4,7 +4,9 @@
 
 
 <%-- TagLibs --%>
-
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -14,6 +16,8 @@
 
 <%-- Imports --%>
 <%@ page language="java" contentType="text/html;charset=iso-8859-1" %>
+<%@ page import="org.apache.struts.action.ActionErrors" %>
+<%@ page import="org.apache.struts.action.ActionMessages" %>
 <%@ page import="edu.common.dynamicextensions.util.global.DEConstants" %>
 
 <%-- Stylesheet --%>
@@ -360,7 +364,7 @@ jQuery(document).ready(
 
 
 			
-			<html:hidden styleId='recordIdentifier' property="recordIdentifier"/>
+			<html:hidden styleId='recordIdentifier' property="recordIdentifier" value="${param.recordIdentifier}"/>
 			<html:hidden styleId='entitySaved' property="entitySaved"/>
 			<input type="hidden" id="containerIdentifier" name="containerIdentifier" value="${param.containerIdentifier}"/>
 			
@@ -371,7 +375,7 @@ jQuery(document).ready(
 			
 			<input type="hidden" id="isShowTemplateRecord" name="isShowTemplateRecord" value="${param.isShowTemplateRecord}"/>
 			<input type="hidden" id="showFormPreview" name="showFormPreview" value="${param.showFormPreview}"/>
-			<input type="hidden" id="mode" name="mode" />
+			<input type="hidden" id="mode" name="mode" value="${param.mode}"/>
 			<c:if test='${param.mode == ""}'>
 				<script>
 					document.getElementById('mode').value = "edit";

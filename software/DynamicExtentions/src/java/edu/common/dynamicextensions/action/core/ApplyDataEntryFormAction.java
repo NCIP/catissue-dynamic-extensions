@@ -112,7 +112,10 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 					populateAndValidateValues(containerStack, valueMapStack, request, dataEntryForm,ControlsUtility.getFormattedDate(encounterDate));
 					errorList = dataEntryForm.getErrorList();
 				}
-
+				if(!isAjaxAction(request) && "calculateAttributes".equals(request.getParameter(Constants.DATA_ENTRY_OPERATION)))
+				{
+					errorList = updateStack(request, containerStack, valueMapStack, dataEntryForm);
+				}
 				actionForward = getMappingForwardAction(mapping, dataEntryForm, errorList, mode);
 				if (((actionForward != null) && actionForward.getName().equals(
 						"showDynamicExtensionsHomePage"))
@@ -183,6 +186,37 @@ public class ApplyDataEntryFormAction extends BaseDynamicExtensionsAction
 			actionForward = mapping.findForward(DEConstants.SUCCESS);
 		}
 		return actionForward;
+	}
+
+	private List<String> updateStack(HttpServletRequest request,
+			Stack<ContainerInterface> containerStack,
+			Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack,
+			DataEntryForm dataEntryForm)
+	{
+		List<String> errorList;
+		errorList = dataEntryForm.getErrorList();
+		Long scrollPos = 0L;
+		Stack<Long> scrollTopStack = (Stack<Long>) CacheManager.getObjectFromCache(request,
+				DEConstants.SCROLL_TOP_STACK);
+		scrollPos = scrollTopStack.peek();
+		request.setAttribute(DEConstants.SCROLL_POSITION, scrollPos);
+		if (errorList != null && errorList.isEmpty() && containerStack != null
+				&& !containerStack.isEmpty() && valueMapStack != null
+				&& !valueMapStack.isEmpty())
+		{
+			UserInterfaceiUtility.removeContainerInfo(containerStack, valueMapStack);
+			if (errorList != null && errorList.isEmpty() && scrollTopStack != null
+					&& !scrollTopStack.isEmpty())
+			{
+				scrollTopStack.pop();
+			}
+		}
+		return errorList;
+	}
+
+	private boolean isAjaxAction(HttpServletRequest request)
+	{
+		return "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
 	}
 
 	/**

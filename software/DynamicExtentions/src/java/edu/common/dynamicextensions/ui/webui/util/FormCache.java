@@ -129,7 +129,7 @@ public class FormCache
 		scrollTopStack = (Stack<Long>) CacheManager.getObjectFromCache(request,
 				DEConstants.SCROLL_TOP_STACK);
 
-		if (containerStack == null)
+		if (containerStack == null || containerStack.isEmpty())
 		{
 			recordMap = LoadDataEntryFormProcessor.getValueMapFromRecordId(container
 					.getAbstractEntity(), recordId);
@@ -280,14 +280,18 @@ public class FormCache
 			final Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack,
 			final Stack<Long> scrollTopStack)
 	{
-		final String dataEntryOperation = request.getParameter(Constants.DATA_ENTRY_OPERATION);
+		String dataEntryOperation = request.getParameter(Constants.DATA_ENTRY_OPERATION);
+		if(request.getParameter(DEConstants.CALLBACK_URL) != null)
+		{
+			dataEntryOperation = null;
+		}
 		Long scrollPos = 0L;
 		if (dataEntryOperation != null && dataEntryOperation.equalsIgnoreCase(Constants.INSERT_CHILD_DATA)
 				&& dataEntryForm.getErrorList().isEmpty())
        {
            request.setAttribute(DEConstants.SCROLL_POSITION, scrollPos);
            updateScrollTop(request, scrollTopStack);
-           final String childContainerId = dataEntryForm.getChildContainerId();
+           final String childContainerId = request.getParameter(Constants.CHILD_CONTAINER_ID);
            final AbstractContainmentControlInterface associationControl = UserInterfaceiUtility
                    .getAssociationControl(containerStack.peek(),
                            childContainerId);
