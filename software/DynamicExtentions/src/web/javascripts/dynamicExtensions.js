@@ -724,7 +724,7 @@ function addDynamicData(recordIdentifier)
             document.getElementById('recordIdentifier').value = recordIdentifier;
             document.getElementById('isEdit').value = "true";
         }
-        dataEntryForm.action= contextParam + "/ApplyDataEntryFormAction.do";
+        dataEntryForm.action= contextParam + "/ApplyDataEntryFormAction";
         setWaitCursorforAllObjectHierarchy(dataEntryForm);
     }
 }
@@ -2147,7 +2147,7 @@ function evaluateFormulaForAttribute(controlName)
 		// because we are
 		// assigning a reference to the function and not actually calling it
 		request.onreadystatechange = handlerFunction;
-		request.open("POST", "ApplyDataEntryFormAction.do", true);
+		request.open("POST", "ApplyDataEntryFormAction", true);
 		request.setRequestHeader("Content-Type",
 				"application/x-www-form-urlencoded");
 		request.send(encodeURI("&dataEntryOperation=evaluateFormula&selectedControlId="
@@ -2196,7 +2196,7 @@ function showChildContainerInsertDataPage(containerId,ths)
     }
     else if(mode == "view" || mode == "edit")
     {
-        dataEntryForm.action= contextParam + "/ApplyDataEntryFormAction.do?scrollTop="+document.getElementById('dataEntryFormDiv').scrollTop;
+        dataEntryForm.action= contextParam + "/ApplyDataEntryFormAction?scrollTop="+document.getElementById('dataEntryFormDiv').scrollTop;
         document.getElementById('scrollTop').value = document.getElementById('dataEntryFormDiv').scrollTop;
     }
     setWaitCursorforAllObjectHierarchy(dataEntryForm);
@@ -2254,7 +2254,7 @@ function calculateAttributes()
 	jQuery.ajax(
 	{
 				type :"POST",
-				url :"ApplyDataEntryFormAction.do",
+				url :"ApplyDataEntryFormAction",
 				dataType: "html",
 				data :str,
 				success : function(htmlresult)
@@ -2306,7 +2306,7 @@ function calculateDefaultAttributesValue()
 	jQuery.ajax(
 	{
 				type :"POST",
-				url :"ApplyDataEntryFormAction.do",
+				url :"ApplyDataEntryFormAction",
 				dataType: "html",
 				data :str,
 				success : function(htmlresult)
@@ -3056,7 +3056,7 @@ function getSkipLogicControl(controlName, controlId, containerId)
 	jQuery.ajax(
 	{
 				type :"POST",
-				url :"ApplyDataEntryFormAction.do",
+				url :"ApplyDataEntryFormAction",
 				dataType: "html",
 				data :str,
 				success : function(htmlresult)

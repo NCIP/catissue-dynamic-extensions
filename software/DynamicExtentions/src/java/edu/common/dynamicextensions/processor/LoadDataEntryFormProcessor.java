@@ -74,8 +74,6 @@ public class LoadDataEntryFormProcessor
 		DynamicExtensionsUtility.setAllInContextContainers(containerInterface,
 				processedContainersList);
 
-		dataEntryForm.setContainerInterface(containerInterface);
-
 		if (dataEntryForm.getErrorList() == null)
 		{
 			List<String> errorList = new ArrayList<String>();

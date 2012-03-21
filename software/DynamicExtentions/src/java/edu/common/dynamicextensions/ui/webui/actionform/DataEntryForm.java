@@ -2,12 +2,8 @@
 package edu.common.dynamicextensions.ui.webui.actionform;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
-import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.wustl.common.actionForm.AbstractActionForm;
 import edu.wustl.common.domain.AbstractDomainObject;
@@ -36,10 +32,6 @@ public class DataEntryForm extends AbstractActionForm
 	/**
 	 *
 	 */
-	protected ContainerInterface containerInterface;
-	/**
-	 *
-	 */
 	protected String recordIdentifier;
 	/**
 	 *
@@ -53,10 +45,6 @@ public class DataEntryForm extends AbstractActionForm
 	 *
 	 */
 	protected String mode = WebUIManagerConstants.EDIT_MODE;
-	/**
-	 *
-	 */
-	protected Map<String, Object> valueMap = new HashMap<String, Object>();
 	/**
 	 *
 	 */
@@ -78,18 +66,6 @@ public class DataEntryForm extends AbstractActionForm
 
 	protected String containerId;
 
-	private Map<BaseAbstractAttributeInterface, Object> previousDataMap = new HashMap<BaseAbstractAttributeInterface, Object>();
-
-	public Map<BaseAbstractAttributeInterface, Object> getPreviousDataMap()
-	{
-		return previousDataMap;
-	}
-
-
-	public void setPreviousDataMap(final Map<BaseAbstractAttributeInterface, Object> previousValueMap)
-	{
-		this.previousDataMap = previousValueMap;
-	}
 	/**
 	 * @return the containerId
 	 */
@@ -104,42 +80,6 @@ public class DataEntryForm extends AbstractActionForm
 	public void setContainerId(final String containerId)
 	{
 		this.containerId = containerId;
-	}
-
-	/**
-	 *
-	 * @param key
-	 * @param value
-	 */
-	public void setValue(final String key, final Object value)
-	{
-		valueMap.put(key, value);
-	}
-
-	/**
-	 *
-	 * @param key
-	 * @return
-	 */
-	public Object getValue(final String key)
-	{
-		return valueMap.get(key);
-	}
-
-	/**
-	 * @return Returns the valueMap.
-	 */
-	public Map<String, Object> getValueMap()
-	{
-		return valueMap;
-	}
-
-	/**
-	 * @param valueMap The valueMap to set.
-	 */
-	public void setValueMap(final Map<String, Object> valueMap)
-	{
-		this.valueMap = valueMap;
 	}
 
 	/**
@@ -164,22 +104,6 @@ public class DataEntryForm extends AbstractActionForm
 	protected void reset()
 	{
 		//TODO empty method
-	}
-
-	/**
-	 * @return Returns the container.
-	 */
-	public ContainerInterface getContainerInterface()
-	{
-		return containerInterface;
-	}
-
-	/**
-	 * @param container The container to set.
-	 */
-	public void setContainerInterface(final ContainerInterface container)
-	{
-		this.containerInterface = container;
 	}
 
 	/**
@@ -361,6 +285,7 @@ public class DataEntryForm extends AbstractActionForm
 		// TODO Auto-generated method stub
 
 	}
+
 	/**
 	 *
 	 * @return
@@ -369,6 +294,7 @@ public class DataEntryForm extends AbstractActionForm
 	{
 		return isShowTemplateRecord;
 	}
+
 	/**
 	 *
 	 * @param isShowTemplateRecord

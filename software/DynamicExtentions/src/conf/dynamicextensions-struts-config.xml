@@ -167,17 +167,7 @@ PUBLIC
 			<forward name="failure" path="/pages/de/ErrorPage.jsp" />
 		</action>
 		
-		<action path="/ApplyDataEntryFormAction"
-		    type="edu.common.dynamicextensions.action.core.ApplyDataEntryFormAction"
-		    name="dataEntryForm"
-			validate="false"
-			input="/LoadDataEntryFormAction"
-			scope="request">
-			<forward name="success" path="/LoadDataEntryFormAction" />
-			<forward name="loadChildContainer" path="/LoadDataEntryFormAction" />
-			<forward name="loadParentContainer" path="/LoadDataEntryFormAction" />
-			<forward name="showDynamicExtensionsHomePage" path="/DynamicExtensionHomePage.do" />
-		</action>
+		
 		<action path="/DynamicExtensionsInterfaceAction"
 		    type="edu.common.dynamicextensions.interfaceactions.DynamicExtensionsInterfaceAction"
 		    name="dataEntryForm"

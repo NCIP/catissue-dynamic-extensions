@@ -57,7 +57,6 @@ public class LoadFormPreviewAction extends BaseDynamicExtensionsAction
 			Map<BaseAbstractAttributeInterface, Object> recordMap = new HashMap<BaseAbstractAttributeInterface, Object>();
 			UserInterfaceiUtility.addContainerInfo(containerStack, containerInterface,
 					valueMapStack, recordMap);
-			dataEntryForm.setContainerInterface(containerInterface);
 		}
 		else if (dataEntryOperation != null
 				&& dataEntryOperation.equalsIgnoreCase("insertChildData"))
@@ -70,17 +69,13 @@ public class LoadFormPreviewAction extends BaseDynamicExtensionsAction
 			Map<BaseAbstractAttributeInterface, Object> childContainerValueMap = new HashMap<BaseAbstractAttributeInterface, Object>();
 			UserInterfaceiUtility.addContainerInfo(containerStack, childContainer, valueMapStack,
 					childContainerValueMap);
-			dataEntryForm.setContainerInterface(childContainer);
 
 		}
 		else if (dataEntryOperation != null
 				&& dataEntryOperation.equalsIgnoreCase("insertParentData"))
 		{
 			UserInterfaceiUtility.removeContainerInfo(containerStack, valueMapStack);
-			if (!containerStack.isEmpty())
-			{
-				dataEntryForm.setContainerInterface(containerStack.peek());
-			}
+			
 		}
 
 		ActionForward forwardTo;

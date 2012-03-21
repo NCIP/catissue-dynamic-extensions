@@ -4,9 +4,6 @@
 
 
 <%-- TagLibs --%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -16,8 +13,6 @@
 
 <%-- Imports --%>
 <%@ page language="java" contentType="text/html;charset=iso-8859-1" %>
-<%@ page import="org.apache.struts.action.ActionErrors" %>
-<%@ page import="org.apache.struts.action.ActionMessages" %>
 <%@ page import="edu.common.dynamicextensions.util.global.DEConstants" %>
 
 <%-- Stylesheet --%>
@@ -158,7 +153,7 @@ jQuery(document).ready(
 	</head>
 
 	<body onload="loadPreviewForm('<%=request.getContextPath()%>');executeComboScriptsForSkipLogic();insertBreadCrumbForSubForm(${param.containerIdentifier},'<%=request.getSession().getAttribute("application_name")%>');setFocusOnLoad('<%=request.getAttribute("scrollPostion")%>');" onclick="window.parent.parent.detectApplicationUsageActivity()" onkeydown="window.parent.parent.detectApplicationUsageActivity()">
-		<html:form styleId="dataEntryForm" action="/ApplyDataEntryFormAction" enctype="multipart/form-data" method="post">
+		<form id="dataEntryForm" action="ApplyDataEntryFormAction" method="post">
 
 		<c:if test='${param.showInDiv == "false"}'>
 			<div id="dataEntryFormDiv" style="position:absolute;overflow:auto;height:100%;width:100%;">
@@ -364,8 +359,13 @@ jQuery(document).ready(
 
 
 			
-			<html:hidden styleId='recordIdentifier' property="recordIdentifier" value="${param.recordIdentifier}"/>
-			<html:hidden styleId='entitySaved' property="entitySaved"/>
+			<input type="hidden" id='recordIdentifier' name='recordIdentifier'  value="${param.recordIdentifier}"/>
+			<c:if test='${empty param.recordIdentifier}'>
+				<script>
+					document.getElementById('recordIdentifier').value = "${requestScope.dataEntryForm.recordIdentifier}";
+				</script>
+			</c:if>
+			<input type="hidden" id='entitySaved' />
 			<input type="hidden" id="containerIdentifier" name="containerIdentifier" value="${param.containerIdentifier}"/>
 			
 			<input type="hidden" id="childContainerId" name="childContainerId" value=""/>
@@ -376,11 +376,13 @@ jQuery(document).ready(
 			<input type="hidden" id="isShowTemplateRecord" name="isShowTemplateRecord" value="${param.isShowTemplateRecord}"/>
 			<input type="hidden" id="showFormPreview" name="showFormPreview" value="${param.showFormPreview}"/>
 			<input type="hidden" id="mode" name="mode" value="${param.mode}"/>
-			<c:if test='${param.mode == ""}'>
+			
+			<c:if test='${empty param.mode}'>
 				<script>
 					document.getElementById('mode').value = "edit";
 				</script>
 			</c:if>
+			
 			<input type="hidden" id="breadCrumbPosition" name="breadCrumbPosition" value=""/>
 			<input type="hidden" id="isDirty" name="isDirty" value="false"/>
 			<input type="hidden" id="isShowInDiv" name="isShowInDiv" value="${param.isShowInDiv}"/>
@@ -404,7 +406,7 @@ jQuery(document).ready(
 				</script>
 			</c:if>
 
-		</html:form>
+		</form>
 		<iframe style="display:none" src="about:blank" id="skipLogicIframe" name="skipLogicIframe" onload=""></iframe>
 		<script type="text/javascript" defer="defer">
 			calculateDefaultAttributesValue();

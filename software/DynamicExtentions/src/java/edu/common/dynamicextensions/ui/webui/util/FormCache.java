@@ -9,6 +9,7 @@ import java.util.Stack;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 
 import edu.common.dynamicextensions.domain.userinterface.AbstractContainmentControl;
@@ -134,9 +135,12 @@ public class FormCache
 			recordMap = LoadDataEntryFormProcessor.getValueMapFromRecordId(container
 					.getAbstractEntity(), recordId);
 			initStack();
+		}else
+		{
+			updateStacks(request, dataEntryForm, containerStack, valueMapStack, scrollTopStack);			
 		}
 
-		updateStacks(request, dataEntryForm, containerStack, valueMapStack, scrollTopStack);
+
 		
 		loadDataEntryFormProcessor.updateFormBean((AbstractActionForm) dataEntryForm,
 				containerStack.peek(), valueMapStack.peek(), recordId);
@@ -280,18 +284,13 @@ public class FormCache
 			final Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack,
 			final Stack<Long> scrollTopStack)
 	{
-		String dataEntryOperation = request.getParameter(Constants.DATA_ENTRY_OPERATION);
-		if(request.getParameter(DEConstants.CALLBACK_URL) != null)
-		{
-			dataEntryOperation = null;
-		}
 		Long scrollPos = 0L;
-		if (dataEntryOperation != null && dataEntryOperation.equalsIgnoreCase(Constants.INSERT_CHILD_DATA)
-				&& dataEntryForm.getErrorList().isEmpty())
+		final String childContainerId = request.getParameter(Constants.CHILD_CONTAINER_ID);
+		if (dataEntryForm.getErrorList().isEmpty() && !StringUtils.isEmpty(childContainerId))
        {
            request.setAttribute(DEConstants.SCROLL_POSITION, scrollPos);
            updateScrollTop(request, scrollTopStack);
-           final String childContainerId = request.getParameter(Constants.CHILD_CONTAINER_ID);
+           
            final AbstractContainmentControlInterface associationControl = UserInterfaceiUtility
                    .getAssociationControl(containerStack.peek(),
                            childContainerId);
@@ -318,20 +317,7 @@ public class FormCache
            UserInterfaceiUtility.addContainerInfo(containerStack,
                    childContainer, valueMapStack, childContainerValueMap);
        }
-		else if (dataEntryOperation != null
-				&& dataEntryOperation.equalsIgnoreCase(Constants.INSERT_PARENT_DATA))
-		{
-			scrollPos = scrollTopStack.peek();
-			request.setAttribute(DEConstants.SCROLL_POSITION, scrollPos);
-			final List<String> errorList = dataEntryForm.getErrorList();
-			if (errorList != null && errorList.isEmpty() && containerStack != null
-					&& !containerStack.isEmpty() && valueMapStack != null
-					&& !valueMapStack.isEmpty())
-			{
-				UserInterfaceiUtility.removeContainerInfo(containerStack, valueMapStack);
-				removeScrollInfo(scrollTopStack, errorList);
-			}
-		}
+		
 	}
 
 	/**
