@@ -18,9 +18,10 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ApplyDataEntryFormProcessor;
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
+import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.common.beans.SessionDataBean;
 
-public class FormSubmitManager
+public class FormManager
 {
 
 	/**
@@ -37,14 +38,18 @@ public class FormSubmitManager
 	 * @throws SQLException
 	 * @throws MalformedURLException
 	 */
-	public String storeParentContainer(
-			Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack,
-			Stack<ContainerInterface> containerStack, HttpServletRequest request,
-			String recordIdentifier, String isShowTemplateRecord) throws NumberFormatException,
+	public String persistFormData(HttpServletRequest request) throws NumberFormatException,
 			DynamicExtensionsApplicationException, DynamicExtensionsSystemException, SQLException,
 			MalformedURLException
 	{
-		String identifier = recordIdentifier;
+		String recordIdentifier = request.getParameter(DEConstants.RECORD_IDENTIFIER);
+		String isShowTemplateRecord = request.getParameter("isShowTemplateRecord");
+		
+		Stack<ContainerInterface> containerStack = (Stack<ContainerInterface>) CacheManager
+				.getObjectFromCache(request, DEConstants.CONTAINER_STACK);
+		Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack = (Stack<Map<BaseAbstractAttributeInterface, Object>>) CacheManager
+				.getObjectFromCache(request, DEConstants.VALUE_MAP_STACK);
+
 		Map<BaseAbstractAttributeInterface, Object> rootValueMap = valueMapStack.firstElement();
 		ContainerInterface rootContainerInterface = containerStack.firstElement();
 		DataValueMapUtility.updateDataValueMapForDataEntry(rootValueMap, rootContainerInterface);
@@ -61,13 +66,13 @@ public class FormSubmitManager
 		String messageKey = "app.successfulDataInsertionMessage";
 		SessionDataBean sessionDataBean = (SessionDataBean) request.getSession().getAttribute(
 				"sessionData");
-		if (identifier != null
-				&& !identifier.equals("")
+		if (recordIdentifier != null
+				&& !recordIdentifier.equals("")
 				&& (isShowTemplateRecord == null || isShowTemplateRecord != null
 						&& !isShowTemplateRecord.equals("true")))
 		{
 			Boolean edited = applyDataEntryFormProcessor.editDataEntryForm(rootContainerInterface,
-					rootValueMap, Long.valueOf(identifier), sessionDataBean);
+					rootValueMap, Long.valueOf(recordIdentifier), sessionDataBean);
 			if (edited.booleanValue())
 			{
 				saveMessages(request, getMessageString(messageKey));
@@ -75,12 +80,12 @@ public class FormSubmitManager
 		}
 		else
 		{
-			identifier = applyDataEntryFormProcessor.insertDataEntryForm(rootContainerInterface,
+			recordIdentifier = applyDataEntryFormProcessor.insertDataEntryForm(rootContainerInterface,
 					rootValueMap, sessionDataBean);
 			saveMessages(request, getMessageString(messageKey));
 		}
 
-		return identifier;
+		return recordIdentifier;
 	}
 
 	/**
@@ -98,5 +103,29 @@ public class FormSubmitManager
 	{
 		// TODO Auto-generated method stub
 
+	}
+	
+	public void onBreadCrumbClick(HttpServletRequest request,String containerSize)
+	{
+		Stack<ContainerInterface> containerStack = (Stack<ContainerInterface>) CacheManager
+				.getObjectFromCache(request, DEConstants.CONTAINER_STACK);
+		Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack = (Stack<Map<BaseAbstractAttributeInterface, Object>>) CacheManager
+				.getObjectFromCache(request, DEConstants.VALUE_MAP_STACK);
+
+		long containerStackSize = Long.valueOf(containerSize);
+		if ((request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME) != null)
+				&& (request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME).trim().length() > 0)
+				&& (DEConstants.CANCEL.equalsIgnoreCase(request
+						.getParameter(WebUIManagerConstants.MODE_PARAM_NAME)) || WebUIManagerConstants.EDIT_MODE
+						.equalsIgnoreCase(request
+								.getParameter(WebUIManagerConstants.MODE_PARAM_NAME))))
+		{
+			containerStackSize = containerStackSize + 1;
+		}
+		while (containerStack.size() != containerStackSize)
+		{
+			containerStack.pop();
+			valueMapStack.pop();
+		}
 	}
 }

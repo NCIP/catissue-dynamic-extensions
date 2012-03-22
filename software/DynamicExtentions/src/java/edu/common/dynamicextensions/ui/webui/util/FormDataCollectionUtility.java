@@ -46,7 +46,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.Constants;
-import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
+import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.FormulaCalculator;
 import edu.common.dynamicextensions.util.global.DEConstants;
@@ -68,7 +68,7 @@ public class FormDataCollectionUtility
 	 */
 	private Map<BaseAbstractAttributeInterface, Object> generateAttributeValueMap(
 			ContainerInterface containerInterface, HttpServletRequest request,
-			DataEntryForm dataEntryForm, String rowId,
+			String rowId,
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 			Boolean processOneToMany, List<String> errorList) throws FileNotFoundException,
 			IOException, DynamicExtensionsSystemException
@@ -113,7 +113,7 @@ public class FormDataCollectionUtility
 							CategoryAttributeInterface categoryAttribute = (CategoryAttributeInterface) abstractAttribute;
 							if (categoryAttribute.getAbstractAttribute() instanceof AssociationMetadataInterface)
 							{
-								collectAssociationValues(request, dataEntryForm, controlName
+								collectAssociationValues(request, controlName
 										.toString(), control, attributeValueMap, processOneToMany,
 										errorList);
 							}
@@ -131,7 +131,7 @@ public class FormDataCollectionUtility
 					}
 					else if (abstractAttribute instanceof AssociationMetadataInterface)
 					{
-						collectAssociationValues(request, dataEntryForm, controlName.toString(),
+						collectAssociationValues(request, controlName.toString(),
 								control, attributeValueMap, processOneToMany, errorList);
 					}
 				}
@@ -152,7 +152,7 @@ public class FormDataCollectionUtility
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
-	private void collectAssociationValues(HttpServletRequest request, DataEntryForm dataEntryForm,
+	private void collectAssociationValues(HttpServletRequest request, 
 			String controlName, ControlInterface control,
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 			Boolean processOneToMany, List<String> errorList)
@@ -177,7 +177,7 @@ public class FormDataCollectionUtility
 				if (targetContainer.getId() != null)
 				{
 					associationValueMaps = collectOneToManyContainmentValues(request,
-							dataEntryForm, targetContainer.getId().toString(), control,
+							 targetContainer.getId().toString(), control,
 							associationValueMaps, errorList);
 				}
 			}
@@ -195,7 +195,7 @@ public class FormDataCollectionUtility
 					oneToOneValueMap = associationValueMaps.get(0);
 				}
 
-				generateAttributeValueMap(targetContainer, request, dataEntryForm, "",
+				generateAttributeValueMap(targetContainer, request, "",
 						oneToOneValueMap, false, errorList);
 			}
 
@@ -277,7 +277,7 @@ public class FormDataCollectionUtility
 	 * @throws FileNotFoundException
 	 */
 	private List<Map<BaseAbstractAttributeInterface, Object>> collectOneToManyContainmentValues(
-			HttpServletRequest request, DataEntryForm dataEntryForm, String containerId,
+			HttpServletRequest request, String containerId,
 			ControlInterface control,
 			List<Map<BaseAbstractAttributeInterface, Object>> oneToManyContainmentValueList,
 			List<String> errorList) throws FileNotFoundException, DynamicExtensionsSystemException,
@@ -305,7 +305,7 @@ public class FormDataCollectionUtility
 				oneToManyContainmentValueList.add(attributeValueMapForSingleRow);
 			}
 			generateAttributeValueMap(containmentAssociationControl.getContainer(), request,
-					dataEntryForm, counterStr, attributeValueMapForSingleRow, false, errorList);
+					counterStr, attributeValueMapForSingleRow, false, errorList);
 		}
 
 		return oneToManyContainmentValueList;
@@ -577,24 +577,30 @@ public class FormDataCollectionUtility
 
 	/**
 	 * This method gathers the values form the Dynamic UI and validate them using Validation framework
-	 * @param containerStack Stack of Container which has the current Container at its top.
-	 * @param valueMapStack Stack of Map of Attribute-Value pair which has Map for current Container at its top.
+	 * @param containerInterface2 Stack of Container which has the current Container at its top.
+	 * @param map Stack of Map of Attribute-Value pair which has Map for current Container at its top.
 	 * @param request HttpServletRequest which is required to collect the values from UI form.
 	 * @param dataEntryForm
 	 * @param ERROR_LIST List to store the validation error/warning messages which will be displayed on the UI.
+	 * @return 
 	 * @throws FileNotFoundException if improper value is entered for FileUpload control.
 	 * @throws DynamicExtensionsSystemException
 	 * @throws IOException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	public void populateAndValidateValues(Stack<ContainerInterface> containerStack,
-			Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack,
-			HttpServletRequest request, DataEntryForm dataEntryForm, Date encounterDate)
+	public List<String> populateAndValidateValues(HttpServletRequest request)
 			throws FileNotFoundException, DynamicExtensionsSystemException, IOException,
 			DynamicExtensionsApplicationException
 	{
-		ContainerInterface containerInterface = containerStack.peek();
 
+		Stack<ContainerInterface> containerStack = (Stack<ContainerInterface>) CacheManager
+				.getObjectFromCache(request, DEConstants.CONTAINER_STACK);
+		Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack = (Stack<Map<BaseAbstractAttributeInterface, Object>>) CacheManager
+				.getObjectFromCache(request, DEConstants.VALUE_MAP_STACK);
+
+		ContainerInterface containerInterface = containerStack.peek();
+		Map<BaseAbstractAttributeInterface, Object> valueMap = valueMapStack.peek();
+		Date encounterDate =ControlsUtility.getFormattedDate(request.getParameter(Constants.ENCOUNTER_DATE));
 		Map<String, Object> contextParameter = new HashMap<String, Object>();
 		contextParameter.put(Constants.ENCOUNTER_DATE, encounterDate);
 		containerInterface.setContextParameter(contextParameter);
@@ -603,17 +609,15 @@ public class FormDataCollectionUtility
 		List processedContainersList = new ArrayList<ContainerInterface>();
 		DynamicExtensionsUtility.setAllInContextContainers(containerInterface,
 				processedContainersList);
-		Map<BaseAbstractAttributeInterface, Object> valueMap = valueMapStack.peek();
 
-		List<String> errorList = dataEntryForm.getErrorList();
+		List<String> errorList = new ArrayList<String>();
 		if (errorList == null)
 		{
 			errorList = new ArrayList<String>();
 		}
 
 		
-		valueMap = generateAttributeValueMap(containerInterface, request,
-				dataEntryForm, "", valueMap, true, errorList);
+		valueMap = generateAttributeValueMap(containerInterface, request,"", valueMap, true, errorList);
 		errorList = DomainObjectFactory.getInstance().getValidatorInstance(
 				request.getParameter(WebUIManagerConstants.ISDRAFT)).validateEntity(valueMap,
 				errorList, containerInterface, false);
@@ -628,6 +632,7 @@ public class FormDataCollectionUtility
 		//Remove duplicate error messages by converting an error message list to hashset.
 		HashSet<String> hashSet = new HashSet<String>(errorList);
 
-		dataEntryForm.setErrorList(new LinkedList<String>(hashSet));
+		errorList = new LinkedList<String>(hashSet);
+		return errorList;
 	}
 }

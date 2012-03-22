@@ -13,20 +13,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.ui.util.Constants;
-import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
 import edu.common.dynamicextensions.ui.webui.util.FormDataCollectionUtility;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManager;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
-import edu.common.dynamicextensions.util.FormSubmitManager;
+import edu.common.dynamicextensions.util.FormManager;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.common.util.logger.Logger;
 
@@ -42,85 +42,68 @@ public class ApplyDataEntryFormAction extends HttpServlet
 	 */
 	private static final long serialVersionUID = -8750223990174751784L;
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
-			IOException
-	{
-		doPost(req, resp);
-	}
-
 	/* (non-Javadoc)
 	 * @see org.apache.struts.actions.DispatchAction#execute(org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 * 1: collect values from UI
+	 * 2: Update stack
+	 * 3: forward 
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException
 	{
-		FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
-		FormSubmitManager formSubmitManager = new FormSubmitManager();
+
 		String actionForward = null;
 		boolean isCallbackURL = false;
 		List<String> errorList = null;
-		if ((request.getParameter(DEConstants.IS_DIRTY) != null)
-				&& request.getParameter(DEConstants.IS_DIRTY).equalsIgnoreCase(DEConstants.TRUE))
-		{
-			request.setAttribute(DEConstants.IS_DIRTY, DEConstants.TRUE);
-		}
-		Stack<ContainerInterface> containerStack = (Stack<ContainerInterface>) CacheManager
-				.getObjectFromCache(request, DEConstants.CONTAINER_STACK);
-		Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack = (Stack<Map<BaseAbstractAttributeInterface, Object>>) CacheManager
-				.getObjectFromCache(request, DEConstants.VALUE_MAP_STACK);
-		String containerSize = request.getParameter(DEConstants.BREAD_CRUMB_POSITION);
-		String encounterDate = request.getParameter(Constants.ENCOUNTER_DATE);
-		if (((containerStack != null) && !containerStack.isEmpty())
-				&& ((valueMapStack != null) && !valueMapStack.isEmpty()))
-		{
-			try
-			{
-				DataEntryForm dataEntryForm = poulateDataEntryForm(request);
-				request.setAttribute("dataEntryForm", dataEntryForm);
-				String mode = request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME);
-				
-				if ((mode != null) && mode.equals("edit"))
-				{
-					collectionUtility.populateAndValidateValues(containerStack, valueMapStack, request,
-							dataEntryForm, ControlsUtility.getFormattedDate(encounterDate));
-					errorList = dataEntryForm.getErrorList();
-				}
-				if (!isAjaxAction(request)
-						&& "calculateAttributes".equals(request
-								.getParameter(Constants.DATA_ENTRY_OPERATION)))
-				{
-					errorList = updateStack(request, containerStack, valueMapStack, dataEntryForm);
-				}
-				actionForward = getMappingForwardAction(dataEntryForm, errorList, mode);
-				if (((actionForward != null) && actionForward.equals(
-						"/DynamicExtensionHomePage.do"))
-						&& ((mode != null) && mode.equals("cancel")))
-				{
-					String recordIdentifier = dataEntryForm.getRecordIdentifier();
-					isCallbackURL = redirectCallbackURL(request, response, recordIdentifier,
-							WebUIManagerConstants.CANCELLED, dataEntryForm.getContainerId());
-				}
 
-				if ((actionForward == null) && (errorList != null) && errorList.isEmpty())
-				{
-					String recordIdentifier = formSubmitManager.storeParentContainer(valueMapStack, containerStack,
-							request, dataEntryForm.getRecordIdentifier(), dataEntryForm
-									.getIsShowTemplateRecord());
-					isCallbackURL = redirectCallbackURL(request, response, recordIdentifier,
-							WebUIManagerConstants.SUCCESS, dataEntryForm.getContainerId());
-				}
-				if ((containerSize != null) && (!containerSize.trim().equals("")))
-				{
-					handleBreadCrumbClick(request, containerStack, valueMapStack, containerSize);
-				}
-			}
-			catch (Exception exception)
+		DataEntryForm dataEntryForm = poulateDataEntryForm(request);
+		updateRequestParameter(request, dataEntryForm);
+
+		try
+		{
+
+			String mode = request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME);
+
+			if ((mode != null) && mode.equals("edit"))
 			{
-				Logger.out.error(exception.getMessage());
-				/*return getExceptionActionForward(exception, mapping, request);*/
+				FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
+				errorList = collectionUtility.populateAndValidateValues(request);
 			}
+			
+			//remove stack if data is submitted for the subform.
+			if (!isAjaxAction(request)
+					&& "calculateAttributes".equals(request
+							.getParameter(Constants.DATA_ENTRY_OPERATION)) && errorList.isEmpty())
+			{
+				updateStack(request, dataEntryForm);
+			}
+			actionForward = getMappingForwardAction(dataEntryForm, errorList, mode);
+			if (((actionForward != null) && actionForward.equals("/DynamicExtensionHomePage.do"))
+					&& ((mode != null) && mode.equals("cancel")))
+			{
+				String recordIdentifier = dataEntryForm.getRecordIdentifier();
+				isCallbackURL = redirectCallbackURL(request, response, recordIdentifier,
+						WebUIManagerConstants.CANCELLED, dataEntryForm.getContainerId());
+			}
+
+			FormManager formManager = new FormManager();
+			if ((actionForward == null) && (errorList != null) && errorList.isEmpty())
+			{
+				String recordIdentifier = formManager.persistFormData(request);
+				isCallbackURL = redirectCallbackURL(request, response, recordIdentifier,
+						WebUIManagerConstants.SUCCESS, dataEntryForm.getContainerId());
+			}
+			String breadCrumbPosition = request.getParameter(DEConstants.BREAD_CRUMB_POSITION);
+			if (!StringUtils.isEmpty(breadCrumbPosition))
+			{
+				formManager.onBreadCrumbClick(request, breadCrumbPosition);
+			}
+		}
+		catch (Exception exception)
+		{
+			Logger.out.error(exception.getMessage());
+			/*return getExceptionActionForward(exception, mapping, request);*/
 		}
 		/* resets parameter map from the wrapper request object */
 		UserInterfaceiUtility.resetRequestParameterMap(request);
@@ -139,12 +122,23 @@ public class ApplyDataEntryFormAction extends HttpServlet
 
 			RequestDispatcher rd = getServletContext().getRequestDispatcher(actionForward);
 			rd.forward(request, response);
-		}else
+		}
+		else
 		{
 			RequestDispatcher rd = getServletContext().getRequestDispatcher(actionForward);
 			rd.forward(request, response);
 		}
 
+	}
+
+	private void updateRequestParameter(HttpServletRequest request, DataEntryForm dataEntryForm)
+	{
+		request.setAttribute("dataEntryForm", dataEntryForm);
+		if ((request.getParameter(DEConstants.IS_DIRTY) != null)
+				&& request.getParameter(DEConstants.IS_DIRTY).equalsIgnoreCase(DEConstants.TRUE))
+		{
+			request.setAttribute(DEConstants.IS_DIRTY, DEConstants.TRUE);
+		}
 	}
 
 	private DataEntryForm poulateDataEntryForm(HttpServletRequest request)
@@ -157,50 +151,23 @@ public class ApplyDataEntryFormAction extends HttpServlet
 		return dataEntryForm;
 	}
 
-	private void handleBreadCrumbClick(HttpServletRequest request,
-			Stack<ContainerInterface> containerStack,
-			Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack, String containerSize)
+	@SuppressWarnings("unchecked")
+	private void updateStack(HttpServletRequest request, DataEntryForm dataEntryForm)
 	{
-		long containerStackSize = Long.valueOf(containerSize);
-		if ((request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME) != null)
-				&& (request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME).trim().length() > 0)
-				&& (DEConstants.CANCEL.equalsIgnoreCase(request
-						.getParameter(WebUIManagerConstants.MODE_PARAM_NAME)) || WebUIManagerConstants.EDIT_MODE
-						.equalsIgnoreCase(request
-								.getParameter(WebUIManagerConstants.MODE_PARAM_NAME))))
-		{
-			containerStackSize = containerStackSize + 1;
-		}
-		while (containerStack.size() != containerStackSize)
-		{
-			containerStack.pop();
-			valueMapStack.pop();
-		}
-	}
+		Stack<ContainerInterface> containerStack = (Stack<ContainerInterface>) CacheManager
+				.getObjectFromCache(request, DEConstants.CONTAINER_STACK);
+		Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack = (Stack<Map<BaseAbstractAttributeInterface, Object>>) CacheManager
+				.getObjectFromCache(request, DEConstants.VALUE_MAP_STACK);
 
-	private List<String> updateStack(HttpServletRequest request,
-			Stack<ContainerInterface> containerStack,
-			Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack,
-			DataEntryForm dataEntryForm)
-	{
-		List<String> errorList;
-		errorList = dataEntryForm.getErrorList();
 		Long scrollPos = 0L;
 		Stack<Long> scrollTopStack = (Stack<Long>) CacheManager.getObjectFromCache(request,
 				DEConstants.SCROLL_TOP_STACK);
 		scrollPos = scrollTopStack.peek();
 		request.setAttribute(DEConstants.SCROLL_POSITION, scrollPos);
-		if (errorList != null && errorList.isEmpty() && containerStack != null
-				&& !containerStack.isEmpty() && valueMapStack != null && !valueMapStack.isEmpty())
-		{
-			UserInterfaceiUtility.removeContainerInfo(containerStack, valueMapStack);
-			if (errorList != null && errorList.isEmpty() && scrollTopStack != null
-					&& !scrollTopStack.isEmpty())
-			{
-				scrollTopStack.pop();
-			}
-		}
-		return errorList;
+
+		UserInterfaceiUtility.removeContainerInfo(containerStack, valueMapStack);
+		scrollTopStack.pop();
+
 	}
 
 	private boolean isAjaxAction(HttpServletRequest request)
@@ -291,8 +258,8 @@ public class ApplyDataEntryFormAction extends HttpServlet
 	 * @param mode Mode of the operation viz., edit, view, cancel
 	 * @return ActionForward
 	 */
-	private String getMappingForwardAction(
-			DataEntryForm dataEntryForm, List<String> errorList, String mode)
+	private String getMappingForwardAction(DataEntryForm dataEntryForm, List<String> errorList,
+			String mode)
 	{
 		String dataEntryOperation = dataEntryForm.getDataEntryOperation();
 		String actionForward = null;
@@ -345,9 +312,5 @@ public class ApplyDataEntryFormAction extends HttpServlet
 		}
 		return actionForward;
 	}
-
-	
-
-	
 
 }
