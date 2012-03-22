@@ -1,11 +1,9 @@
 
 package edu.common.dynamicextensions.action.core;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Stack;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,15 +11,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
-import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
+import edu.common.dynamicextensions.ui.webui.util.FormCache;
 import edu.common.dynamicextensions.ui.webui.util.FormDataCollectionUtility;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManager;
@@ -52,52 +50,70 @@ public class ApplyDataEntryFormAction extends HttpServlet
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException
 	{
-
-		String actionForward = null;
-		boolean isCallbackURL = false;
-		List<String> errorList = null;
-
-		DataEntryForm dataEntryForm = poulateDataEntryForm(request);
-		updateRequestParameter(request, dataEntryForm);
-
+		String mode = request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME);
 		try
 		{
+			if (mode.equals("cancel"))
+			{
+				handleCancel(request);
+			}
+			else if (FormDataCollectionUtility.isAjaxAction(request))
+			{
+				handleAjaxAction(request);
+			}
+			else if(Constants.INSERT_CHILD_DATA.equals(request.getParameter(Constants.DATA_ENTRY_OPERATION)))
+			{
+				DataEntryForm dataEntryForm = poulateDataEntryForm(request);
+				updateRequestParameter(request, dataEntryForm);
+				List<String> errorList = null;
+				if ((mode != null) && mode.equals("edit"))
+				{
+					FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
+					errorList = collectionUtility.populateAndValidateValues(request);
+				}
+				defaultForward(request, response);
+				
+			}else
+			{
+				boolean isMainForm  = FormCache.isMainForm(request);
+				
+				List<String> errorList = null;
+				DataEntryForm dataEntryForm = poulateDataEntryForm(request);
+				updateRequestParameter(request, dataEntryForm);
 
-			String mode = request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME);
+				if ((mode != null) && mode.equals("edit"))
+				{
+					FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
+					errorList = collectionUtility.populateAndValidateValues(request);
+				}
 
-			if ((mode != null) && mode.equals("edit"))
-			{
-				FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
-				errorList = collectionUtility.populateAndValidateValues(request);
-			}
-			
-			//remove stack if data is submitted for the subform.
-			if (!isAjaxAction(request)
-					&& "calculateAttributes".equals(request
-							.getParameter(Constants.DATA_ENTRY_OPERATION)) && errorList.isEmpty())
-			{
-				updateStack(request, dataEntryForm);
-			}
-			actionForward = getMappingForwardAction(dataEntryForm, errorList, mode);
-			if (((actionForward != null) && actionForward.equals("/DynamicExtensionHomePage.do"))
-					&& ((mode != null) && mode.equals("cancel")))
-			{
-				String recordIdentifier = dataEntryForm.getRecordIdentifier();
-				isCallbackURL = redirectCallbackURL(request, response, recordIdentifier,
-						WebUIManagerConstants.CANCELLED, dataEntryForm.getContainerId());
-			}
+				if ((errorList != null) && errorList.isEmpty())
+				{
+					
+					if (isMainForm)
+					{
+						FormManager formManager = new FormManager();
+						String recordIdentifier = formManager.persistFormData(request);
+						if (!redirectCallbackURL(request, response, recordIdentifier,
+								WebUIManagerConstants.SUCCESS, dataEntryForm.getContainerId()))
+						{
+							defaultForward(request, response);
+						}
+						UserInterfaceiUtility.clearContainerStack(request);
+					}else
+					{
+						defaultForward(request, response);
+					}
 
-			FormManager formManager = new FormManager();
-			if ((actionForward == null) && (errorList != null) && errorList.isEmpty())
-			{
-				String recordIdentifier = formManager.persistFormData(request);
-				isCallbackURL = redirectCallbackURL(request, response, recordIdentifier,
-						WebUIManagerConstants.SUCCESS, dataEntryForm.getContainerId());
-			}
-			String breadCrumbPosition = request.getParameter(DEConstants.BREAD_CRUMB_POSITION);
-			if (!StringUtils.isEmpty(breadCrumbPosition))
-			{
-				formManager.onBreadCrumbClick(request, breadCrumbPosition);
+				}
+				else
+				{
+					defaultForward(request, response);
+				}
+
+				/* resets parameter map from the wrapper request object */
+				UserInterfaceiUtility.resetRequestParameterMap(request);
+
 			}
 		}
 		catch (Exception exception)
@@ -105,29 +121,37 @@ public class ApplyDataEntryFormAction extends HttpServlet
 			Logger.out.error(exception.getMessage());
 			/*return getExceptionActionForward(exception, mapping, request);*/
 		}
-		/* resets parameter map from the wrapper request object */
-		UserInterfaceiUtility.resetRequestParameterMap(request);
 
-		if (isCallbackURL)
-		{
-			actionForward = null;
-		}
-		else if (actionForward == null)
-		{
-			if ((errorList != null) && errorList.isEmpty())
-			{
-				UserInterfaceiUtility.clearContainerStack(request);
-			}
-			actionForward = WebUIManagerConstants.LOAD_DATA_ENTRY_FORM_ACTION_URL;
+	}
 
-			RequestDispatcher rd = getServletContext().getRequestDispatcher(actionForward);
-			rd.forward(request, response);
-		}
-		else
-		{
-			RequestDispatcher rd = getServletContext().getRequestDispatcher(actionForward);
-			rd.forward(request, response);
-		}
+	/**
+	 * used for managing calculated attributes and the skip logic
+	 * @param request
+	 * @throws FileNotFoundException
+	 * @throws DynamicExtensionsSystemException
+	 * @throws IOException
+	 * @throws DynamicExtensionsApplicationException
+	 */
+	private void handleAjaxAction(HttpServletRequest request) throws FileNotFoundException,
+			DynamicExtensionsSystemException, IOException, DynamicExtensionsApplicationException
+	{
+		List<String> errorList = null;
+		FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
+		errorList = collectionUtility.populateAndValidateValues(request);
+	}
+
+	private void defaultForward(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException
+	{
+		String actionForward;
+		actionForward = WebUIManagerConstants.LOAD_DATA_ENTRY_FORM_ACTION_URL;
+		RequestDispatcher rd = getServletContext().getRequestDispatcher(actionForward);
+		rd.forward(request, response);
+	}
+
+	private void handleCancel(HttpServletRequest request)
+	{
+		// TODO Auto-generated method stub
 
 	}
 
@@ -149,30 +173,6 @@ public class ApplyDataEntryFormAction extends HttpServlet
 		dataEntryForm.setMode(request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME));
 		dataEntryForm.setDataEntryOperation(request.getParameter(Constants.DATA_ENTRY_OPERATION));
 		return dataEntryForm;
-	}
-
-	@SuppressWarnings("unchecked")
-	private void updateStack(HttpServletRequest request, DataEntryForm dataEntryForm)
-	{
-		Stack<ContainerInterface> containerStack = (Stack<ContainerInterface>) CacheManager
-				.getObjectFromCache(request, DEConstants.CONTAINER_STACK);
-		Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack = (Stack<Map<BaseAbstractAttributeInterface, Object>>) CacheManager
-				.getObjectFromCache(request, DEConstants.VALUE_MAP_STACK);
-
-		Long scrollPos = 0L;
-		Stack<Long> scrollTopStack = (Stack<Long>) CacheManager.getObjectFromCache(request,
-				DEConstants.SCROLL_TOP_STACK);
-		scrollPos = scrollTopStack.peek();
-		request.setAttribute(DEConstants.SCROLL_POSITION, scrollPos);
-
-		UserInterfaceiUtility.removeContainerInfo(containerStack, valueMapStack);
-		scrollTopStack.pop();
-
-	}
-
-	private boolean isAjaxAction(HttpServletRequest request)
-	{
-		return "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
 	}
 
 	/**
@@ -247,70 +247,6 @@ public class ApplyDataEntryFormAction extends HttpServlet
 	{
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	/**
-	 * This method sets dataentry operations parameters and returns the appropriate
-	 * ActionForward depending on the "mode" of the operation and validation errors.
-	 * @param mapping ActionMapping to get the ActionForward
-	 * @param dataEntryForm ActionForm
-	 * @param errorList List of validation error messages generated.
-	 * @param mode Mode of the operation viz., edit, view, cancel
-	 * @return ActionForward
-	 */
-	private String getMappingForwardAction(DataEntryForm dataEntryForm, List<String> errorList,
-			String mode)
-	{
-		String dataEntryOperation = dataEntryForm.getDataEntryOperation();
-		String actionForward = null;
-		if (dataEntryOperation != null)
-		{
-			if (errorList == null)
-			{
-				dataEntryForm.setErrorList(new ArrayList<String>());
-			}
-
-			if ("insertChildData".equals(dataEntryOperation))
-			{
-				if ((errorList != null) && !(errorList.isEmpty()))
-				{
-					actionForward = WebUIManagerConstants.LOAD_DATA_ENTRY_FORM_ACTION_URL;
-				}
-				else if ((mode != null) && (mode.equals("cancel")))
-				{
-					actionForward = WebUIManagerConstants.LOAD_DATA_ENTRY_FORM_ACTION_URL;
-				}
-				else
-				{
-					actionForward = WebUIManagerConstants.LOAD_DATA_ENTRY_FORM_ACTION_URL;
-				}
-			}
-			else if ("insertParentData".equals(dataEntryOperation))
-			{
-				if ((errorList != null) && !(errorList.isEmpty()))
-				{
-					actionForward = WebUIManagerConstants.LOAD_DATA_ENTRY_FORM_ACTION_URL;
-				}
-				else if ((mode != null) && (mode.equals("cancel")))
-				{
-					actionForward = "/DynamicExtensionHomePage.do";
-				}
-
-				else
-				{
-					actionForward = WebUIManagerConstants.LOAD_DATA_ENTRY_FORM_ACTION_URL;
-				}
-			}
-			else if ("calculateAttributes".equals(dataEntryOperation))
-			{
-				actionForward = WebUIManagerConstants.LOAD_DATA_ENTRY_FORM_ACTION_URL;
-			}
-			else if ("skipLogicAttributes".equals(dataEntryOperation))
-			{
-				actionForward = WebUIManagerConstants.LOAD_DATA_ENTRY_FORM_ACTION_URL;
-			}
-		}
-		return actionForward;
 	}
 
 }

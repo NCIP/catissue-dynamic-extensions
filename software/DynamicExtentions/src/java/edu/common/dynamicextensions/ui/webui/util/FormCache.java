@@ -407,5 +407,18 @@ public class FormCache
 	{
 		return containerStack.peek();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public static boolean isMainForm(HttpServletRequest request)
+	{
+		if( ((Stack)CacheManager.getObjectFromCache(request,
+				DEConstants.CONTAINER_STACK)).size() == 1)
+		{
+			return true;
+		}
+		return false;
+				
+				
+	}
 }
 

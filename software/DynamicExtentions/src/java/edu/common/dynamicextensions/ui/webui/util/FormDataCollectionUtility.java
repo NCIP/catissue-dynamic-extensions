@@ -67,8 +67,7 @@ public class FormDataCollectionUtility
 	 * @throws DynamicExtensionsSystemException
 	 */
 	private Map<BaseAbstractAttributeInterface, Object> generateAttributeValueMap(
-			ContainerInterface containerInterface, HttpServletRequest request,
-			String rowId,
+			ContainerInterface containerInterface, HttpServletRequest request, String rowId,
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 			Boolean processOneToMany, List<String> errorList) throws FileNotFoundException,
 			IOException, DynamicExtensionsSystemException
@@ -113,9 +112,8 @@ public class FormDataCollectionUtility
 							CategoryAttributeInterface categoryAttribute = (CategoryAttributeInterface) abstractAttribute;
 							if (categoryAttribute.getAbstractAttribute() instanceof AssociationMetadataInterface)
 							{
-								collectAssociationValues(request, controlName
-										.toString(), control, attributeValueMap, processOneToMany,
-										errorList);
+								collectAssociationValues(request, controlName.toString(), control,
+										attributeValueMap, processOneToMany, errorList);
 							}
 							else
 							{
@@ -131,8 +129,8 @@ public class FormDataCollectionUtility
 					}
 					else if (abstractAttribute instanceof AssociationMetadataInterface)
 					{
-						collectAssociationValues(request, controlName.toString(),
-								control, attributeValueMap, processOneToMany, errorList);
+						collectAssociationValues(request, controlName.toString(), control,
+								attributeValueMap, processOneToMany, errorList);
 					}
 				}
 			}
@@ -152,8 +150,8 @@ public class FormDataCollectionUtility
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
-	private void collectAssociationValues(HttpServletRequest request, 
-			String controlName, ControlInterface control,
+	private void collectAssociationValues(HttpServletRequest request, String controlName,
+			ControlInterface control,
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
 			Boolean processOneToMany, List<String> errorList)
 			throws DynamicExtensionsSystemException, FileNotFoundException, IOException
@@ -177,8 +175,8 @@ public class FormDataCollectionUtility
 				if (targetContainer.getId() != null)
 				{
 					associationValueMaps = collectOneToManyContainmentValues(request,
-							 targetContainer.getId().toString(), control,
-							associationValueMaps, errorList);
+							targetContainer.getId().toString(), control, associationValueMaps,
+							errorList);
 				}
 			}
 			else
@@ -195,8 +193,8 @@ public class FormDataCollectionUtility
 					oneToOneValueMap = associationValueMaps.get(0);
 				}
 
-				generateAttributeValueMap(targetContainer, request, "",
-						oneToOneValueMap, false, errorList);
+				generateAttributeValueMap(targetContainer, request, "", oneToOneValueMap, false,
+						errorList);
 			}
 
 			attributeValueMap.put(abstractAttribute, associationValueMaps);
@@ -277,8 +275,7 @@ public class FormDataCollectionUtility
 	 * @throws FileNotFoundException
 	 */
 	private List<Map<BaseAbstractAttributeInterface, Object>> collectOneToManyContainmentValues(
-			HttpServletRequest request, String containerId,
-			ControlInterface control,
+			HttpServletRequest request, String containerId, ControlInterface control,
 			List<Map<BaseAbstractAttributeInterface, Object>> oneToManyContainmentValueList,
 			List<String> errorList) throws FileNotFoundException, DynamicExtensionsSystemException,
 			IOException
@@ -600,7 +597,8 @@ public class FormDataCollectionUtility
 
 		ContainerInterface containerInterface = containerStack.peek();
 		Map<BaseAbstractAttributeInterface, Object> valueMap = valueMapStack.peek();
-		Date encounterDate =ControlsUtility.getFormattedDate(request.getParameter(Constants.ENCOUNTER_DATE));
+		Date encounterDate = ControlsUtility.getFormattedDate(request
+				.getParameter(Constants.ENCOUNTER_DATE));
 		Map<String, Object> contextParameter = new HashMap<String, Object>();
 		contextParameter.put(Constants.ENCOUNTER_DATE, encounterDate);
 		containerInterface.setContextParameter(contextParameter);
@@ -611,13 +609,10 @@ public class FormDataCollectionUtility
 				processedContainersList);
 
 		List<String> errorList = new ArrayList<String>();
-		if (errorList == null)
-		{
-			errorList = new ArrayList<String>();
-		}
-
 		
-		valueMap = generateAttributeValueMap(containerInterface, request,"", valueMap, true, errorList);
+
+		valueMap = generateAttributeValueMap(containerInterface, request, "", valueMap, true,
+				errorList);
 		errorList = DomainObjectFactory.getInstance().getValidatorInstance(
 				request.getParameter(WebUIManagerConstants.ISDRAFT)).validateEntity(valueMap,
 				errorList, containerInterface, false);
@@ -629,10 +624,53 @@ public class FormDataCollectionUtility
 			populateAttributeValueMapForCalculatedAttributes(valueMap, valueMap,
 					containerInterface, 0, containerInterface);
 		}
+
+		//remove stack if data is submitted for the subform.
+		if (isSubformSubmitted(request, errorList))
+		{
+			onSubFromSubmit(request);
+		}
 		//Remove duplicate error messages by converting an error message list to hashset.
+		return removeDuplicateErrorMessages(errorList);
+	}
+
+	private List<String> removeDuplicateErrorMessages(List<String> errorList)
+	{
 		HashSet<String> hashSet = new HashSet<String>(errorList);
 
 		errorList = new LinkedList<String>(hashSet);
 		return errorList;
 	}
+
+	private boolean isSubformSubmitted(HttpServletRequest request, List<String> errorList)
+	{
+		return !isAjaxAction(request)
+				&& "calculateAttributes".equals(request
+						.getParameter(Constants.DATA_ENTRY_OPERATION)) && errorList.isEmpty();
+	}
+
+	@SuppressWarnings("unchecked")
+	private void onSubFromSubmit(HttpServletRequest request)
+	{
+		Stack<ContainerInterface> containerStack = (Stack<ContainerInterface>) CacheManager
+				.getObjectFromCache(request, DEConstants.CONTAINER_STACK);
+		Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack = (Stack<Map<BaseAbstractAttributeInterface, Object>>) CacheManager
+				.getObjectFromCache(request, DEConstants.VALUE_MAP_STACK);
+
+		Long scrollPos = 0L;
+		Stack<Long> scrollTopStack = (Stack<Long>) CacheManager.getObjectFromCache(request,
+				DEConstants.SCROLL_TOP_STACK);
+		scrollPos = scrollTopStack.peek();
+		request.setAttribute(DEConstants.SCROLL_POSITION, scrollPos);
+
+		UserInterfaceiUtility.removeContainerInfo(containerStack, valueMapStack);
+		scrollTopStack.pop();
+
+	}
+
+	public static boolean isAjaxAction(HttpServletRequest request)
+	{
+		return "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+	}
+
 }
