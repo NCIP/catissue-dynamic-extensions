@@ -56,11 +56,11 @@ public class ApplyDataEntryFormAction extends HttpServlet
 			if (mode.equals("cancel"))
 			{
 				handleCancel(request);
-			}
+			}//handle all ajax action like calculated attributes and the skip logic attribute
 			else if (FormDataCollectionUtility.isAjaxAction(request))
 			{
 				handleAjaxAction(request);
-			}
+			}//handle details link clicks
 			else if(Constants.INSERT_CHILD_DATA.equals(request.getParameter(Constants.DATA_ENTRY_OPERATION)))
 			{
 				DataEntryForm dataEntryForm = poulateDataEntryForm(request);
@@ -73,14 +73,16 @@ public class ApplyDataEntryFormAction extends HttpServlet
 				}
 				defaultForward(request, response);
 				
-			}else
+			}else //form data submitted
 			{
+				//to check whether main form or subform submitted
 				boolean isMainForm  = FormCache.isMainForm(request);
 				
 				List<String> errorList = null;
 				DataEntryForm dataEntryForm = poulateDataEntryForm(request);
 				updateRequestParameter(request, dataEntryForm);
 
+				//value map updated only for edit mode
 				if ((mode != null) && mode.equals("edit"))
 				{
 					FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
@@ -99,6 +101,7 @@ public class ApplyDataEntryFormAction extends HttpServlet
 						{
 							defaultForward(request, response);
 						}
+						// clear all session data on successful data submission
 						UserInterfaceiUtility.clearContainerStack(request);
 					}else
 					{

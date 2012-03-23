@@ -58,7 +58,6 @@
 </script>
  </c:if>
 
-	
 <script language="JavaScript" >
 		resetTimeoutCounter();
 </script>
@@ -155,6 +154,16 @@ jQuery(document).ready(
 	<body onload="loadPreviewForm('<%=request.getContextPath()%>');executeComboScriptsForSkipLogic();insertBreadCrumbForSubForm(${param.containerIdentifier},'<%=request.getSession().getAttribute("application_name")%>');setFocusOnLoad('<%=request.getAttribute("scrollPostion")%>');" onclick="window.parent.parent.detectApplicationUsageActivity()" onkeydown="window.parent.parent.detectApplicationUsageActivity()">
 		<form id="dataEntryForm" action="ApplyDataEntryFormAction" method="post">
 
+		 
+		<input type="hidden" id="mode" name="mode" value="${param.mode}"/>
+		<c:set var="mode" value="${param.mode}"/>
+		<c:if test='${empty param.mode}'>
+			<script>
+				document.getElementById('mode').value = "edit";
+				<c:set var="mode" value="edit"/>
+			</script>
+		</c:if>
+			
 		<c:if test='${param.showInDiv == "false"}'>
 			<div id="dataEntryFormDiv" style="position:absolute;overflow:auto;height:100%;width:100%;">
 			<div id="overDiv" style="position:absolute; visibility:hidden;"></div>
@@ -274,7 +283,7 @@ jQuery(document).ready(
 												<dynamicExtensions:dynamicUIGenerator
 												containerIdentifier="${param.containerIdentifier}"
 												recordIdentifier="${param.recordIdentifier}"
-												mode="${param.mode}"/>
+												mode="${mode}"/>
 											</td>
 										</tr>
 									</table>
@@ -319,7 +328,7 @@ jQuery(document).ready(
 															</td>
 														</c:if>
 
-														<c:if test='${(param.mode=="edit" || param.mode=="") && (isTopLevelEntity=="true")}'>
+														<c:if test='${(mode=="edit") && (isTopLevelEntity=="true")}'>
 															<td align='center'>
 																<input type="image" id="btnDESubmit" src="<%=request.getContextPath()%>/images/de/b_submit.gif" width="62" height="21" align="middle" onClick="return setInsertDataOperation('false')"/>
 															</td>
@@ -365,24 +374,15 @@ jQuery(document).ready(
 					document.getElementById('recordIdentifier').value = "${requestScope.dataEntryForm.recordIdentifier}";
 				</script>
 			</c:if>
+			
 			<input type="hidden" id='entitySaved' />
 			<input type="hidden" id="containerIdentifier" name="containerIdentifier" value="${param.containerIdentifier}"/>
-			
 			<input type="hidden" id="childContainerId" name="childContainerId" value=""/>
 			<input type="hidden" id="isDraft" name="isDraft" value="false"/>
 			<input type="hidden" id="recordIdentifier123" name="recordIdentifier123" value="{param.recordIdentifier123}"/>
 			<input type="hidden" id="childRowId" name="childRowId" value=""/>
-			
 			<input type="hidden" id="isShowTemplateRecord" name="isShowTemplateRecord" value="${param.isShowTemplateRecord}"/>
 			<input type="hidden" id="showFormPreview" name="showFormPreview" value="${param.showFormPreview}"/>
-			<input type="hidden" id="mode" name="mode" value="${param.mode}"/>
-			
-			<c:if test='${empty param.mode}'>
-				<script>
-					document.getElementById('mode').value = "edit";
-				</script>
-			</c:if>
-			
 			<input type="hidden" id="breadCrumbPosition" name="breadCrumbPosition" value=""/>
 			<input type="hidden" id="isDirty" name="isDirty" value="false"/>
 			<input type="hidden" id="isShowInDiv" name="isShowInDiv" value="${param.isShowInDiv}"/>
