@@ -15,9 +15,11 @@ import org.apache.struts.action.ActionMapping;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.AbstractContainmentControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
+import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
 
 /**
@@ -42,8 +44,8 @@ public class LoadFormPreviewAction extends BaseDynamicExtensionsAction
 		Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack = (Stack<Map<BaseAbstractAttributeInterface, Object>>) CacheManager
 				.getObjectFromCache(request, DEConstants.VALUE_MAP_STACK);
 
-		DataEntryForm dataEntryForm = (DataEntryForm) form;
-
+		DataEntryForm dataEntryForm = DynamicExtensionsUtility.poulateDataEntryForm(request);
+		request.setAttribute(Constants.DATA_ENTRY_FORM, dataEntryForm);
 		String dataEntryOperation = dataEntryForm.getDataEntryOperation();
 
 		if (containerStack == null)

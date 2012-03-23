@@ -45,6 +45,7 @@ import java.util.regex.Pattern;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -107,6 +108,8 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
+import edu.common.dynamicextensions.ui.util.Constants;
+import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.global.CategoryConstants;
@@ -2980,5 +2983,15 @@ public class DynamicExtensionsUtility
 					"Error occured while opening the DAO session", e);
 		}
 		return hibernateDao;
+	}
+	
+	public static DataEntryForm poulateDataEntryForm(HttpServletRequest request)
+	{
+		DataEntryForm dataEntryForm = new DataEntryForm();
+		dataEntryForm.setContainerId(request.getParameter(DEConstants.CONTAINER_ID));
+		dataEntryForm.setRecordIdentifier(request.getParameter(DEConstants.RECORD_IDENTIFIER));
+		dataEntryForm.setMode(request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME));
+		dataEntryForm.setDataEntryOperation(request.getParameter(Constants.DATA_ENTRY_OPERATION));
+		return dataEntryForm;
 	}
 }

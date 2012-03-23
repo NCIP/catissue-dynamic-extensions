@@ -11,7 +11,6 @@ import java.util.Stack;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.struts.action.ActionForm;
 
 import edu.common.dynamicextensions.domain.userinterface.AbstractContainmentControl;
 import edu.common.dynamicextensions.domaininterface.AssociationMetadataInterface;
@@ -27,7 +26,6 @@ import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
-import edu.wustl.common.actionForm.AbstractActionForm;
 
 /**
  * This class is used for maintaining state of the form between the navigations
@@ -143,7 +141,7 @@ public class FormCache
 
 
 		
-		loadDataEntryFormProcessor.updateFormBean((AbstractActionForm) dataEntryForm,
+		loadDataEntryFormProcessor.updateFormBean(dataEntryForm,
 				containerStack.peek(), valueMapStack.peek(), recordId);
 		
 		if (dataEntryForm.getErrorList().isEmpty())
@@ -340,9 +338,8 @@ public class FormCache
 	 * This method flushes the values of the DataEntryForm ActionForm.
 	 * @param form DataEntryForm ActionForm
 	 */
-	private void clearFormValues(final ActionForm form)
+	private void clearFormValues(final DataEntryForm dataEntryForm)
 	{
-		final DataEntryForm dataEntryForm = (DataEntryForm) form;
 		dataEntryForm.setChildRowId("");
 		dataEntryForm.setChildContainerId("");
 	}

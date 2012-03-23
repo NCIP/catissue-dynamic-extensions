@@ -5,14 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
-import edu.wustl.common.actionForm.AbstractActionForm;
 import edu.wustl.common.domain.AbstractDomainObject;
 
 /**
  * @author sujay_narkar
  *
  */
-public class DataEntryForm extends AbstractActionForm
+public class DataEntryForm
 {
 
 	/**
@@ -271,19 +270,6 @@ public class DataEntryForm extends AbstractActionForm
 	public void setPreviewBack(final String previewBack)
 	{
 		this.previewBack = previewBack;
-	}
-
-	/**
-	 * This method set Identifier of newly added object by AddNew operation into FormBean
-	 * which initialized AddNew operation.
-	 * @param addNewFor - add New For.
-	 * @param addObjectIdentifier - Identifier of newly added object by AddNew operation
-	 */
-	@Override
-	public void setAddNewObjectIdentifier(final String addNewFor, final Long addObjectIdentifier)
-	{
-		// TODO Auto-generated method stub
-
 	}
 
 	/**

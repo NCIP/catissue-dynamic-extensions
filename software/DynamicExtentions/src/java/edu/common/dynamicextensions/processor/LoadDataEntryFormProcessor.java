@@ -21,7 +21,6 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
-import edu.wustl.common.actionForm.AbstractActionForm;
 
 /**
  * @author sujay_narkar
@@ -56,13 +55,12 @@ public class LoadDataEntryFormProcessor
 	 * @throws DynamicExtensionsSystemException DynamicExtensionsSystemException
 	 * @throws DynamicExtensionsApplicationException DynamicExtensionsApplicationException
 	 */
-	public ContainerInterface updateFormBean(AbstractActionForm actionForm,
+	public ContainerInterface updateFormBean(DataEntryForm dataEntryForm,
 			ContainerInterface containerInterface,
 			Map<BaseAbstractAttributeInterface, Object> valueMap,
 			String recordIdentifier) throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
-		DataEntryForm dataEntryForm = (DataEntryForm) actionForm;
 
 		containerInterface.setMode(dataEntryForm.getMode());
 		if (valueMap != null && !valueMap.isEmpty())

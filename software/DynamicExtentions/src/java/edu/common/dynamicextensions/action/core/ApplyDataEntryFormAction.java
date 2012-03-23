@@ -11,9 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.util.Constants;
@@ -24,6 +21,7 @@ import edu.common.dynamicextensions.ui.webui.util.FormDataCollectionUtility;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManager;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.FormManager;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.common.util.logger.Logger;
@@ -63,7 +61,7 @@ public class ApplyDataEntryFormAction extends HttpServlet
 			}//handle details link clicks
 			else if(Constants.INSERT_CHILD_DATA.equals(request.getParameter(Constants.DATA_ENTRY_OPERATION)))
 			{
-				DataEntryForm dataEntryForm = poulateDataEntryForm(request);
+				DataEntryForm dataEntryForm = DynamicExtensionsUtility.poulateDataEntryForm(request);
 				updateRequestParameter(request, dataEntryForm);
 				if ((mode != null) && mode.equals("edit"))
 				{
@@ -79,7 +77,7 @@ public class ApplyDataEntryFormAction extends HttpServlet
 				boolean isMainForm  = FormCache.isMainForm(request);
 				
 				HashSet<String> errorList = null;
-				DataEntryForm dataEntryForm = poulateDataEntryForm(request);
+				DataEntryForm dataEntryForm = DynamicExtensionsUtility.poulateDataEntryForm(request);
 				updateRequestParameter(request, dataEntryForm);
 
 				//value map updated only for edit mode
@@ -168,15 +166,7 @@ public class ApplyDataEntryFormAction extends HttpServlet
 		}
 	}
 
-	private DataEntryForm poulateDataEntryForm(HttpServletRequest request)
-	{
-		DataEntryForm dataEntryForm = new DataEntryForm();
-		dataEntryForm.setContainerId(request.getParameter(DEConstants.CONTAINER_ID));
-		dataEntryForm.setRecordIdentifier(request.getParameter(DEConstants.RECORD_IDENTIFIER));
-		dataEntryForm.setMode(request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME));
-		dataEntryForm.setDataEntryOperation(request.getParameter(Constants.DATA_ENTRY_OPERATION));
-		return dataEntryForm;
-	}
+	
 
 	/**
 	 * This method gets the Callback URL from cache, reforms it and redirect the response to it.
@@ -229,7 +219,7 @@ public class ApplyDataEntryFormAction extends HttpServlet
 	 * @param mapping ActionMapping to get ActionForward
 	 * @param request HttpServletRequest to save error messages in.
 	 * @return Appropriate ActionForward.
-	 */
+	 *//*
 	private ActionForward getExceptionActionForward(Exception exception, ActionMapping mapping,
 			HttpServletRequest request)
 	{
@@ -250,6 +240,6 @@ public class ApplyDataEntryFormAction extends HttpServlet
 	{
 		// TODO Auto-generated method stub
 		return null;
-	}
+	}*/
 
 }
