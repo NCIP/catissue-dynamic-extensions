@@ -857,7 +857,7 @@ function updateControlsSequence()
             controlSeqNos.value = gridItemIds;
         }
         // Open connection to servlet
-        request.open("POST","AjaxcodeHandlerAction.do",true);
+        request.open("POST","AjaxcodeHandlerAction",true);
         request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
         request.send(encodeURI("&ajaxOperation=updateControlsSequence&gridControlIds="+gridItemIds));
     }
@@ -1190,7 +1190,7 @@ function groupChanged(flagClearAttributeList)
     {
         var grpName  = document.getElementById('groupName').value;
 
-        request.open("POST","AjaxcodeHandlerAction.do",true);
+        request.open("POST","AjaxcodeHandlerAction",true);
         request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
         request.send(encodeURI("&ajaxOperation=changeGroup&grpName="+grpName));
     }
@@ -1273,7 +1273,7 @@ function formChanged(flagClearAttributeList)
 		 * request.send("&operation=changeForm&frmName="+frmName);
 		 */
 
-        request.open("POST","AjaxcodeHandlerAction.do",true);
+        request.open("POST","AjaxcodeHandlerAction",true);
         request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
         request.send(encodeURI("&ajaxOperation=changeForm&frmName="+frmName));
     }
@@ -1710,7 +1710,7 @@ function removeCheckedRow(containerId)
     request.onreadystatechange = handlerFunction;
     // send data to ActionServlet
     // Open connection to servlet
-    request.open("POST","AjaxcodeHandlerAction.do",true);
+    request.open("POST","AjaxcodeHandlerAction",true);
     request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     request.send(encodeURI("&ajaxOperation=deleteRowsForContainment&containerId=" + containerId+"&deletedRowIds="+deletedRowIds));
 }
@@ -1951,7 +1951,7 @@ function treeNodeSelected(fldName)
     request.onreadystatechange = handlerFunction;
 
     // Open connection to servlet
-    request.open("POST","AjaxcodeHandlerAction.do",true);
+    request.open("POST","AjaxcodeHandlerAction",true);
     request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     // var selectedFormName = document.getElementById(fldName).value;
     request.send(encodeURI("&ajaxOperation=selectFormNameFromTree&selectedFormName="+fldName));
@@ -1977,7 +1977,7 @@ function definedEntitySelected(fldname)
         request.onreadystatechange = handlerFunction;
 
         // Open connection to servlet
-        request.open("POST","AjaxcodeHandlerAction.do",true);
+        request.open("POST","AjaxcodeHandlerAction",true);
         request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
         request.send(encodeURI("&ajaxOperation=selectFormNameFromAssociationTree&selectedFormId="+fldname));
     }
@@ -2121,7 +2121,7 @@ function groupSelected(groupList)
 			// because we are
             // assigning a reference to the function and not actually calling it
             request.onreadystatechange = handlerFunction;
-            request.open("POST","AjaxcodeHandlerAction.do",true);
+            request.open("POST","AjaxcodeHandlerAction",true);
             request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
             request.send(encodeURI("&ajaxOperation=selectGroup&selectedGroupName="+groupName));
         }
@@ -3158,7 +3158,7 @@ function insertBreadCrumbForSubForm(containerId,applicationName)
 		var request = newXMLHTTPReq()
 		var handlerFunction = getReadyStateHandler(request,insertBreadCrumbForSubFormResponse,false);
 		request.onreadystatechange = handlerFunction;
-		request.open("POST","AjaxcodeHandlerAction.do",true);
+		request.open("POST","AjaxcodeHandlerAction",true);
 		request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
 		request.send(encodeURI("&ajaxOperation=breadCrumbOperation&breadCrumbOperation=prepareBreadCrumbLink&containerId="+containerId));
 	}
@@ -3242,7 +3242,7 @@ function updateServerState(controlName, controlId, containerId)
 	{
 		controlValue = checkBoxValue.substring(1,checkBoxValue.length);
 	}
-    request.open("POST","AjaxcodeHandlerAction.do",true);
+    request.open("POST","AjaxcodeHandlerAction",true);
     request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     request.onreadystatechange=function()
     {
@@ -3338,7 +3338,7 @@ function pasteDataPart(clipboardData,index,categoryEntityName)
     // no brackets after the function name and no parameters are passed because
 	// we are assigning a reference to the function and not actually calling it
     request.onreadystatechange = handlerFunction;
-    request.open("POST","AjaxcodeHandlerAction.do",true);
+    request.open("POST","AjaxcodeHandlerAction",true);
     request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     request.send(encodeURI("&ajaxOperation=pasteData&containerId="+conatinerId+"&cardinality="+cardinality+"&index="+index+"&clipboradData="+clipboardData+"&categoryEntityName="+categoryEntityName));
 }

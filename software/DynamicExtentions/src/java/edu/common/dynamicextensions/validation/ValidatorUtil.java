@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,14 +56,14 @@ public class ValidatorUtil
 	 * @return listOfError if any
 	 * @throws DynamicExtensionsSystemException : Exception
 	 */
-	public List<String> validateEntity(
+	public HashSet<String> validateEntity(
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
-			List<String> listOfError, ContainerInterface container, boolean validateNLevel)
+			HashSet<String> errorList, ContainerInterface container, boolean validateNLevel)
 			throws DynamicExtensionsSystemException
 	{
-		if (listOfError == null)
+		if (errorList == null)
 		{
-			listOfError = new ArrayList<String>();
+			errorList = new HashSet<String>();
 		}
 		Set<Map.Entry<BaseAbstractAttributeInterface, Object>> attributeSet = attributeValueMap
 				.entrySet();
@@ -79,10 +80,10 @@ public class ValidatorUtil
 									(AttributeMetadataInterface) abstractAttribute, container);
 					if (control != null)
 					{
-						listOfError.addAll(validateAttributes(abstractAttribute, attributeValueNode
+						errorList.addAll(validateAttributes(abstractAttribute, attributeValueNode
 								.getValue(), DynamicExtensionsUtility
 								.replaceHTMLSpecialCharacters(control.getCaption())));
-						checkForPermissibleValue(listOfError, control, abstractAttribute,
+						checkForPermissibleValue(errorList, control, abstractAttribute,
 								attributeValueNode.getValue(),
 								(Date) container.getContextParameter(Constants.ENCOUNTER_DATE));
 					}
@@ -91,13 +92,13 @@ public class ValidatorUtil
 				{
 					AssociationMetadataInterface association = (AssociationMetadataInterface) abstractAttribute;
 
-					validateAssociationData(attributeValueMap, listOfError, abstractAttribute,
+					validateAssociationData(attributeValueMap, errorList, abstractAttribute,
 							getContainerForAbstractAttribute(association), validateNLevel);
 				}
 			}
 		}
 
-		return listOfError;
+		return errorList;
 	}
 
 	/**
@@ -112,7 +113,7 @@ public class ValidatorUtil
 	 * dynamic extension process.
 	 */
 	private void validateAssociationData(
-			Map<BaseAbstractAttributeInterface, Object> attributeValueMap, List<String> errorList,
+			Map<BaseAbstractAttributeInterface, Object> attributeValueMap, HashSet<String> errorList,
 			BaseAbstractAttributeInterface abstractAttribute, ContainerInterface container,
 			boolean validateNLevel) throws DynamicExtensionsSystemException
 	{
@@ -146,7 +147,7 @@ public class ValidatorUtil
 	 * @param encounterDate Date value.
 	 * @throws DynamicExtensionsSystemException Throws when there is system exception.
 	 */
-	public static void checkForPermissibleValue(List<String> errorList, ControlInterface control,
+	public static void checkForPermissibleValue(HashSet<String> errorList, ControlInterface control,
 			BaseAbstractAttributeInterface abstractAttribute, Object attributeValue,
 			Date encounterDate) throws DynamicExtensionsSystemException
 	{

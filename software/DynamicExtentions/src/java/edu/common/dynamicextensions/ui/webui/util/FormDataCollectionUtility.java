@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -69,7 +68,7 @@ public class FormDataCollectionUtility
 	private Map<BaseAbstractAttributeInterface, Object> generateAttributeValueMap(
 			ContainerInterface containerInterface, HttpServletRequest request, String rowId,
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
-			Boolean processOneToMany, List<String> errorList) throws FileNotFoundException,
+			Boolean processOneToMany, HashSet<String> errorList) throws FileNotFoundException,
 			IOException, DynamicExtensionsSystemException
 	{
 
@@ -153,7 +152,7 @@ public class FormDataCollectionUtility
 	private void collectAssociationValues(HttpServletRequest request, String controlName,
 			ControlInterface control,
 			Map<BaseAbstractAttributeInterface, Object> attributeValueMap,
-			Boolean processOneToMany, List<String> errorList)
+			Boolean processOneToMany, HashSet<String> errorList)
 			throws DynamicExtensionsSystemException, FileNotFoundException, IOException
 	{
 		BaseAbstractAttributeInterface abstractAttribute = control.getBaseAbstractAttribute();
@@ -277,7 +276,7 @@ public class FormDataCollectionUtility
 	private List<Map<BaseAbstractAttributeInterface, Object>> collectOneToManyContainmentValues(
 			HttpServletRequest request, String containerId, ControlInterface control,
 			List<Map<BaseAbstractAttributeInterface, Object>> oneToManyContainmentValueList,
-			List<String> errorList) throws FileNotFoundException, DynamicExtensionsSystemException,
+			HashSet<String> errorList) throws FileNotFoundException, DynamicExtensionsSystemException,
 			IOException
 	{
 		AbstractContainmentControl containmentAssociationControl = (AbstractContainmentControl) control;
@@ -322,7 +321,7 @@ public class FormDataCollectionUtility
 	 */
 	private void collectAttributeValues(HttpServletRequest request, String controlName,
 			ControlInterface control,
-			Map<BaseAbstractAttributeInterface, Object> attributeValueMap, List<String> errorList)
+			Map<BaseAbstractAttributeInterface, Object> attributeValueMap, HashSet<String> errorList)
 			throws FileNotFoundException, IOException, DynamicExtensionsSystemException
 	{
 		BaseAbstractAttributeInterface abstractAttribute = control.getBaseAbstractAttribute();
@@ -456,7 +455,7 @@ public class FormDataCollectionUtility
 	 * @return true if valid file format, false otherwise
 	 */
 	private boolean checkValidFormat(ControlInterface control, String selectedFile,
-			List<String> errorList)
+			HashSet<String> errorList)
 	{
 
 		String selectedfileExt = "";
@@ -465,7 +464,7 @@ public class FormDataCollectionUtility
 		boolean isValidExtension = false;
 		if (errorList == null)
 		{
-			errorList = new ArrayList<String>();
+			errorList = new HashSet<String>();
 		}
 
 		AttributeTypeInformationInterface attributeTypeInformation = ((AttributeMetadataInterface) control
@@ -585,7 +584,7 @@ public class FormDataCollectionUtility
 	 * @throws IOException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	public List<String> populateAndValidateValues(HttpServletRequest request)
+	public HashSet<String> populateAndValidateValues(HttpServletRequest request)
 			throws FileNotFoundException, DynamicExtensionsSystemException, IOException,
 			DynamicExtensionsApplicationException
 	{
@@ -608,7 +607,8 @@ public class FormDataCollectionUtility
 		DynamicExtensionsUtility.setAllInContextContainers(containerInterface,
 				processedContainersList);
 
-		List<String> errorList = new ArrayList<String>();
+		HashSet<String> errorList = new HashSet<String>();
+		
 		
 
 		valueMap = generateAttributeValueMap(containerInterface, request, "", valueMap, true,
@@ -630,19 +630,13 @@ public class FormDataCollectionUtility
 		{
 			onSubFromSubmit(request);
 		}
-		//Remove duplicate error messages by converting an error message list to hashset.
-		return removeDuplicateErrorMessages(errorList);
-	}
-
-	private List<String> removeDuplicateErrorMessages(List<String> errorList)
-	{
-		HashSet<String> hashSet = new HashSet<String>(errorList);
-
-		errorList = new LinkedList<String>(hashSet);
+		request.setAttribute(DEConstants.ERRORS_LIST, errorList);
 		return errorList;
 	}
 
-	private boolean isSubformSubmitted(HttpServletRequest request, List<String> errorList)
+	
+
+	private boolean isSubformSubmitted(HttpServletRequest request, HashSet<String> errorList)
 	{
 		return !isAjaxAction(request)
 				&& "calculateAttributes".equals(request

@@ -3,6 +3,7 @@ package edu.common.dynamicextensions.ui.webui.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -135,7 +136,7 @@ public class FormCache
 			recordMap = LoadDataEntryFormProcessor.getValueMapFromRecordId(container
 					.getAbstractEntity(), recordId);
 			initStack();
-		}else
+		}else if(request.getAttribute(DEConstants.ERRORS_LIST) == null || ((HashSet)request.getAttribute(DEConstants.ERRORS_LIST)).isEmpty())
 		{
 			updateStacks(request, dataEntryForm, containerStack, valueMapStack, scrollTopStack);			
 		}
@@ -169,7 +170,7 @@ public class FormCache
 
 	private void initFormRecordId()
 	{
-		recordId = request.getParameter("recordIdentifier");
+		recordId = request.getParameter(DEConstants.RECORD_IDENTIFIER);
 		if (recordId == null)
 		{
 			recordId = "";

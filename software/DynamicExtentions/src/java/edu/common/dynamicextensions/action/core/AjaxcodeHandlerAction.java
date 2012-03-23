@@ -975,7 +975,7 @@ public class AjaxcodeHandlerAction extends HttpServlet
 					}
 				}
 				ValidatorUtil validatorUtil = new ValidatorUtil();
-				errorList.addAll(validatorUtil.validateEntity(rowValueMap, new ArrayList<String>(),
+				errorList.addAll(validatorUtil.validateEntity(rowValueMap, new HashSet<String>(),
 						containerInterface, false));
 				returnString.append(UserInterfaceiUtility.getContainerHTMLAsARow(
 						containerInterface, rwoIndex, null, containerInterface,

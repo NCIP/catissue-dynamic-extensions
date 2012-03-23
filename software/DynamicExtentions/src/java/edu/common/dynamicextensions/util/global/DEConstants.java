@@ -53,7 +53,7 @@ public class DEConstants
 
 	public static final String ENTITYGROUP_INTERFACE = "entityGroupInterface";
 	public static final String CURRENT_CONTAINER_NAME = "currentContainerName";
-	public static final String ERRORS_LIST = "errorsList";
+	public static final String ERRORS_LIST = "errorList";
 	public static final String SHOW_DYEXTN_HOMEPAGE = "showDynamicExtensionsHomePage";
 	public static final String SHOW_EDIT_RECORDS_PAGE = "showRecordListPage";
 	public static final String SUCCESS = "success";

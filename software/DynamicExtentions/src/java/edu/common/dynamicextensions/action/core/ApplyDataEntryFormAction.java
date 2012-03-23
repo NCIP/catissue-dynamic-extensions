@@ -3,7 +3,7 @@ package edu.common.dynamicextensions.action.core;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
+import java.util.HashSet;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -65,11 +65,11 @@ public class ApplyDataEntryFormAction extends HttpServlet
 			{
 				DataEntryForm dataEntryForm = poulateDataEntryForm(request);
 				updateRequestParameter(request, dataEntryForm);
-				List<String> errorList = null;
 				if ((mode != null) && mode.equals("edit"))
 				{
 					FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
-					errorList = collectionUtility.populateAndValidateValues(request);
+					collectionUtility.populateAndValidateValues(request);
+					
 				}
 				defaultForward(request, response);
 				
@@ -78,7 +78,7 @@ public class ApplyDataEntryFormAction extends HttpServlet
 				//to check whether main form or subform submitted
 				boolean isMainForm  = FormCache.isMainForm(request);
 				
-				List<String> errorList = null;
+				HashSet<String> errorList = null;
 				DataEntryForm dataEntryForm = poulateDataEntryForm(request);
 				updateRequestParameter(request, dataEntryForm);
 
@@ -87,6 +87,7 @@ public class ApplyDataEntryFormAction extends HttpServlet
 				{
 					FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
 					errorList = collectionUtility.populateAndValidateValues(request);
+					
 				}
 
 				if ((errorList != null) && errorList.isEmpty())
@@ -138,9 +139,8 @@ public class ApplyDataEntryFormAction extends HttpServlet
 	private void handleAjaxAction(HttpServletRequest request) throws FileNotFoundException,
 			DynamicExtensionsSystemException, IOException, DynamicExtensionsApplicationException
 	{
-		List<String> errorList = null;
 		FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
-		errorList = collectionUtility.populateAndValidateValues(request);
+		collectionUtility.populateAndValidateValues(request);
 	}
 
 	private void defaultForward(HttpServletRequest request, HttpServletResponse response)

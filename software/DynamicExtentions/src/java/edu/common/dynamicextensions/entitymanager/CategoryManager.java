@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -593,8 +594,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				.getRootCategoryElement().getContainerCollection().toArray()[0];
 		Map<BaseAbstractAttributeInterface, Object> attributeToValueMap = DataValueMapUtility
 				.getAttributeToValueMap(dataValue, categoryInterface);
-		List<String> errorList = DomainObjectFactory.getInstance().getValidatorInstance(null)
-				.validateEntity(attributeToValueMap, new ArrayList<String>(), containerInterface,
+		HashSet<String> errorList = DomainObjectFactory.getInstance().getValidatorInstance(null)
+				.validateEntity(attributeToValueMap, new HashSet<String>(), containerInterface,
 						true);
 		if (errorList.isEmpty())
 		{
