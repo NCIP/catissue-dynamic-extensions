@@ -11,12 +11,10 @@ package edu.common.dynamicextensions.entitymanager;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -2297,7 +2295,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				Map<BaseAbstractAttributeInterface, Object> dataValueMap = mapGenerator
 						.createDataValueMapForEntity(entity, 0);
 				Map map = dataValueMap;
-				List<String> errorList = new ArrayList<String>();
+				HashSet<String> errorList = new HashSet<String>();
 				ValidatorUtil validatorUtil = new ValidatorUtil();
 				validatorUtil.validateEntity(dataValueMap, errorList, container, true);
 				ContainerInterface containerInterface = (ContainerInterface) entity
@@ -2406,7 +2404,7 @@ public class TestEntityManager extends DynamicExtensionsBaseTestCase
 				System.out.println("Validating record for entity " + entity);
 				Map<BaseAbstractAttributeInterface, Object> dataValueMap = mapGenerator
 						.createDataValueMapForEntity(entity, 0);
-				List<String> errorList = new ArrayList<String>();
+				HashSet<String> errorList = new HashSet<String>();
 				ValidatorUtil validatorUtil = new ValidatorUtil();
 				validatorUtil.validateEntity(dataValueMap, errorList, container, true);
 				if (errorList.isEmpty())

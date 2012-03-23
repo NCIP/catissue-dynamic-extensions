@@ -7,7 +7,6 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -2020,7 +2019,7 @@ public class TestCategoryManager extends DynamicExtensionsBaseTestCase
 		Map<BaseAbstractAttributeInterface, Object> dataValue;
 		CategoryEntityInterface rootCatEntity = category.getRootCategoryElement();
 		dataValue = mapGenerator.createDataValueMapForCategory(rootCatEntity, 0);
-		List<String> errorList = new ArrayList<String>();
+		HashSet<String> errorList = new HashSet<String>();
 		ValidatorUtil validatorUtil = new ValidatorUtil();
 		validatorUtil.validateEntity(dataValue, errorList, (ContainerInterface) rootCatEntity
 				.getContainerCollection().iterator().next(), true);
