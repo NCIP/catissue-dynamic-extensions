@@ -24,7 +24,6 @@ import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.FormManager;
 import edu.common.dynamicextensions.util.global.DEConstants;
-import edu.wustl.common.util.logger.Logger;
 
 /**
  * It populates the Attribute values entered in the dynamically generated controls.
@@ -117,8 +116,7 @@ public class ApplyDataEntryFormAction extends HttpServlet
 		}
 		catch (Exception exception)
 		{
-			Logger.out.error(exception.getMessage());
-			/*return getExceptionActionForward(exception, mapping, request);*/
+			throw new ServletException(exception);
 		}
 
 	}
@@ -155,7 +153,7 @@ public class ApplyDataEntryFormAction extends HttpServlet
 
 	private void updateRequestParameter(HttpServletRequest request, DataEntryForm dataEntryForm)
 	{
-		request.setAttribute("dataEntryForm", dataEntryForm);
+		request.setAttribute(Constants.DATA_ENTRY_FORM, dataEntryForm);
 		if ((request.getParameter(DEConstants.IS_DIRTY) != null)
 				&& request.getParameter(DEConstants.IS_DIRTY).equalsIgnoreCase(DEConstants.TRUE))
 		{
@@ -205,34 +203,4 @@ public class ApplyDataEntryFormAction extends HttpServlet
 		}
 		return calllbackURL;
 	}
-
-	/**
-	 * This method gets the ActionForward on the Exception.
-	 * @param exception Exception instance
-	 * @param mapping ActionMapping to get ActionForward
-	 * @param request HttpServletRequest to save error messages in.
-	 * @return Appropriate ActionForward.
-	 *//*
-	private ActionForward getExceptionActionForward(Exception exception, ActionMapping mapping,
-			HttpServletRequest request)
-	{
-		ActionForward exceptionActionForward = null;
-		String actionForwardString = catchException(exception, request);
-		if ((actionForwardString == null) || (actionForwardString.equals("")))
-		{
-			exceptionActionForward = mapping.getInputForward();
-		}
-		else
-		{
-			exceptionActionForward = mapping.findForward(actionForwardString);
-		}
-		return exceptionActionForward;
-	}
-
-	private String catchException(Exception exception, HttpServletRequest request)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}*/
-
 }
