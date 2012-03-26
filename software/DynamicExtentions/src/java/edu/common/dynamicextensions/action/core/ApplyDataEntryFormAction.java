@@ -95,13 +95,10 @@ public class ApplyDataEntryFormAction extends HttpServlet
 					{
 						FormManager formManager = new FormManager();
 						String recordIdentifier = formManager.persistFormData(request);
-						if (!redirectCallbackURL(request, response, recordIdentifier,
-								WebUIManagerConstants.SUCCESS, dataEntryForm.getContainerId()))
-						{
-							defaultForward(request, response);
-						}
+						response.sendRedirect(getCallbackURL(request, response, recordIdentifier,
+								WebUIManagerConstants.SUCCESS, dataEntryForm.getContainerId()));
 						// clear all session data on successful data submission
-						UserInterfaceiUtility.clearContainerStack(request);
+						CacheManager.clearCache(request);
 					}else
 					{
 						defaultForward(request, response);
@@ -176,11 +173,10 @@ public class ApplyDataEntryFormAction extends HttpServlet
 	 * @return true if CallbackURL is redirected, false otherwise
 	 * @throws IOException
 	 */
-	private boolean redirectCallbackURL(HttpServletRequest request, HttpServletResponse response,
+	private String getCallbackURL(HttpServletRequest request, HttpServletResponse response,
 			String recordIdentifier, String webUIManagerConstant, String containerId)
 			throws IOException
 	{
-		boolean isCallbackURL = false;
 		String calllbackURL = (String) CacheManager.getObjectFromCache(request,
 				DEConstants.CALLBACK_URL);
 		if ((calllbackURL != null) && !calllbackURL.equals(""))
@@ -206,11 +202,8 @@ public class ApplyDataEntryFormAction extends HttpServlet
 						+ request.getParameter(WebUIManagerConstants.ISDRAFT);
 			}
 
-			CacheManager.clearCache(request);
-			response.sendRedirect(calllbackURL);
-			isCallbackURL = true;
 		}
-		return isCallbackURL;
+		return calllbackURL;
 	}
 
 	/**

@@ -388,24 +388,6 @@ public final class UserInterfaceiUtility
 		valueMaps.pop();
 	}
 
-	/**
-	 * Clear container stack.
-	 * @param request the request
-	 */
-	public static void clearContainerStack(final HttpServletRequest request)
-	{
-		ContainerInterface container = (ContainerInterface) CacheManager.getObjectFromCache(
-				request, DEConstants.CONTAINER_INTERFACE);
-		if (container != null && container.getId() != null)
-		{
-			request.setAttribute("containerIdentifier", container.getId().toString());
-		}
-
-		CacheManager.addObjectToCache(request, DEConstants.CONTAINER_STACK, null);
-		CacheManager.addObjectToCache(request, DEConstants.VALUE_MAP_STACK, null);
-		CacheManager.addObjectToCache(request, DEConstants.CONTAINER_INTERFACE, null);
-		CacheManager.addObjectToCache(request, "rootRecordIdentifier", null);
-	}
 
 	/**
 	 * Gets the container html as a row.

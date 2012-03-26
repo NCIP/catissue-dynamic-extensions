@@ -215,7 +215,7 @@ public class FormCache
 		final String containerIdentifier = getContainerId(request);
 		if (request.getParameter(WebUIManagerConstants.CALLBACK_URL_PARAM_NAME) != null)
 		{
-			UserInterfaceiUtility.clearContainerStack(request);
+			CacheManager.clearCache(request);
 
 			final Long containerId = Long.valueOf(containerIdentifier);
 
