@@ -276,8 +276,8 @@ public class FormDataCollectionUtility
 	private List<Map<BaseAbstractAttributeInterface, Object>> collectOneToManyContainmentValues(
 			HttpServletRequest request, String containerId, ControlInterface control,
 			List<Map<BaseAbstractAttributeInterface, Object>> oneToManyContainmentValueList,
-			HashSet<String> errorList) throws FileNotFoundException, DynamicExtensionsSystemException,
-			IOException
+			HashSet<String> errorList) throws FileNotFoundException,
+			DynamicExtensionsSystemException, IOException
 	{
 		AbstractContainmentControl containmentAssociationControl = (AbstractContainmentControl) control;
 		int currentSize = oneToManyContainmentValueList.size();
@@ -571,6 +571,14 @@ public class FormDataCollectionUtility
 		}
 	}
 
+	public HashSet<String> populateAndValidateValues(HttpServletRequest request)
+			throws FileNotFoundException, DynamicExtensionsSystemException, IOException,
+			DynamicExtensionsApplicationException
+	{
+		return populateAndValidateValues(request, request
+				.getParameter(WebUIManagerConstants.ISDRAFT));
+	}
+
 	/**
 	 * This method gathers the values form the Dynamic UI and validate them using Validation framework
 	 * @param containerInterface2 Stack of Container which has the current Container at its top.
@@ -584,7 +592,7 @@ public class FormDataCollectionUtility
 	 * @throws IOException
 	 * @throws DynamicExtensionsApplicationException
 	 */
-	public HashSet<String> populateAndValidateValues(HttpServletRequest request)
+	public HashSet<String> populateAndValidateValues(HttpServletRequest request, String isDraft)
 			throws FileNotFoundException, DynamicExtensionsSystemException, IOException,
 			DynamicExtensionsApplicationException
 	{
@@ -608,14 +616,11 @@ public class FormDataCollectionUtility
 				processedContainersList);
 
 		HashSet<String> errorList = new HashSet<String>();
-		
-		
 
 		valueMap = generateAttributeValueMap(containerInterface, request, "", valueMap, true,
 				errorList);
-		errorList = DomainObjectFactory.getInstance().getValidatorInstance(
-				request.getParameter(WebUIManagerConstants.ISDRAFT)).validateEntity(valueMap,
-				errorList, containerInterface, false);
+		errorList = DomainObjectFactory.getInstance().getValidatorInstance(isDraft).validateEntity(
+				valueMap, errorList, containerInterface, false);
 
 		AbstractEntityInterface abstractEntityInterface = containerInterface.getAbstractEntity();
 		if (abstractEntityInterface instanceof CategoryEntityInterface)
@@ -628,13 +633,15 @@ public class FormDataCollectionUtility
 		//remove stack if data is submitted for the subform.
 		if (isSubformSubmitted(request, errorList))
 		{
-			onSubFromSubmit(request);
+			popStack(request);
 		}
-		request.setAttribute(DEConstants.ERRORS_LIST, errorList);
+		if(!Boolean.valueOf(isDraft))
+		{
+			request.setAttribute(DEConstants.ERRORS_LIST, errorList);	
+		}
+		
 		return errorList;
 	}
-
-	
 
 	private boolean isSubformSubmitted(HttpServletRequest request, HashSet<String> errorList)
 	{
@@ -644,7 +651,7 @@ public class FormDataCollectionUtility
 	}
 
 	@SuppressWarnings("unchecked")
-	private void onSubFromSubmit(HttpServletRequest request)
+	public static void popStack(HttpServletRequest request)
 	{
 		Stack<ContainerInterface> containerStack = (Stack<ContainerInterface>) CacheManager
 				.getObjectFromCache(request, DEConstants.CONTAINER_STACK);

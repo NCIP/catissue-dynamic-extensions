@@ -1,7 +1,6 @@
 
 package edu.common.dynamicextensions.action.core;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashSet;
 
@@ -11,8 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
-import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
@@ -27,7 +24,7 @@ import edu.common.dynamicextensions.util.global.DEConstants;
 
 /**
  * It populates the Attribute values entered in the dynamically generated controls.
- * @author chetan_patil, suhas_khot
+ * @author chetan_patil, suhas_khot, Kunal
  */
 public class ApplyDataEntryFormAction extends HttpServlet
 {
@@ -50,34 +47,30 @@ public class ApplyDataEntryFormAction extends HttpServlet
 		String mode = request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME);
 		try
 		{
-			if (mode.equals("cancel"))
+			if (Constants.INSERT_CHILD_DATA.equals(request
+					.getParameter(Constants.DATA_ENTRY_OPERATION)))
 			{
-				handleCancel(request);
-			}//handle all ajax action like calculated attributes and the skip logic attribute
-			else if (FormDataCollectionUtility.isAjaxAction(request))
-			{
-				handleAjaxAction(request);
-				defaultForward(request, response);
-			}//handle details link clicks
-			else if(Constants.INSERT_CHILD_DATA.equals(request.getParameter(Constants.DATA_ENTRY_OPERATION)))
-			{
-				DataEntryForm dataEntryForm = DynamicExtensionsUtility.poulateDataEntryForm(request);
+				DataEntryForm dataEntryForm = DynamicExtensionsUtility
+						.poulateDataEntryForm(request);
 				updateRequestParameter(request, dataEntryForm);
 				if ((mode != null) && mode.equals("edit"))
 				{
 					FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
 					collectionUtility.populateAndValidateValues(request);
-					
+
 				}
 				defaultForward(request, response);
-				
-			}else //form data submitted
+
+			}
+			else
+			//form data submitted
 			{
 				//to check whether main form or subform submitted
-				boolean isMainForm  = FormCache.isMainForm(request);
-				
+				boolean isMainForm = FormCache.isMainForm(request);
+
 				HashSet<String> errorList = null;
-				DataEntryForm dataEntryForm = DynamicExtensionsUtility.poulateDataEntryForm(request);
+				DataEntryForm dataEntryForm = DynamicExtensionsUtility
+						.poulateDataEntryForm(request);
 				updateRequestParameter(request, dataEntryForm);
 
 				//value map updated only for edit mode
@@ -85,25 +78,17 @@ public class ApplyDataEntryFormAction extends HttpServlet
 				{
 					FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
 					errorList = collectionUtility.populateAndValidateValues(request);
-					
+
 				}
 
-				if ((errorList != null) && errorList.isEmpty())
+				if (((errorList != null) && errorList.isEmpty()) && isMainForm)
 				{
-					
-					if (isMainForm)
-					{
-						FormManager formManager = new FormManager();
-						String recordIdentifier = formManager.persistFormData(request);
-						response.sendRedirect(getCallbackURL(request, response, recordIdentifier,
-								WebUIManagerConstants.SUCCESS, dataEntryForm.getContainerId()));
-						// clear all session data on successful data submission
-						CacheManager.clearCache(request);
-					}else
-					{
-						defaultForward(request, response);
-					}
-
+					FormManager formManager = new FormManager();
+					String recordIdentifier = formManager.persistFormData(request);
+					response.sendRedirect(getCallbackURL(request, response, recordIdentifier,
+							WebUIManagerConstants.SUCCESS, dataEntryForm.getContainerId()));
+					// clear all session data on successful data submission
+					CacheManager.clearCache(request);
 				}
 				else
 				{
@@ -122,21 +107,6 @@ public class ApplyDataEntryFormAction extends HttpServlet
 
 	}
 
-	/**
-	 * used for managing calculated attributes and the skip logic
-	 * @param request
-	 * @throws FileNotFoundException
-	 * @throws DynamicExtensionsSystemException
-	 * @throws IOException
-	 * @throws DynamicExtensionsApplicationException
-	 */
-	private void handleAjaxAction(HttpServletRequest request) throws FileNotFoundException,
-			DynamicExtensionsSystemException, IOException, DynamicExtensionsApplicationException
-	{
-		FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
-		collectionUtility.populateAndValidateValues(request);
-	}
-
 	private void defaultForward(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException
 	{
@@ -144,12 +114,6 @@ public class ApplyDataEntryFormAction extends HttpServlet
 		actionForward = WebUIManagerConstants.LOAD_DATA_ENTRY_FORM_ACTION_URL;
 		RequestDispatcher rd = getServletContext().getRequestDispatcher(actionForward);
 		rd.forward(request, response);
-	}
-
-	private void handleCancel(HttpServletRequest request)
-	{
-		// TODO Auto-generated method stub
-
 	}
 
 	private void updateRequestParameter(HttpServletRequest request, DataEntryForm dataEntryForm)
@@ -161,8 +125,6 @@ public class ApplyDataEntryFormAction extends HttpServlet
 			request.setAttribute(DEConstants.IS_DIRTY, DEConstants.TRUE);
 		}
 	}
-
-	
 
 	/**
 	 * This method gets the Callback URL from cache, reforms it and redirect the response to it.

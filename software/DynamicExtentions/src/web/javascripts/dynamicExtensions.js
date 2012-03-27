@@ -2254,7 +2254,7 @@ function calculateAttributes()
 	jQuery.ajax(
 	{
 				type :"POST",
-				url :"ApplyDataEntryFormAction",
+				url :"UpdateServerStateAction",
 				dataType: "html",
 				data :str,
 				success : function(htmlresult)
@@ -2306,7 +2306,7 @@ function calculateDefaultAttributesValue()
 	jQuery.ajax(
 	{
 				type :"POST",
-				url :"ApplyDataEntryFormAction",
+				url :"UpdateServerStateAction",
 				dataType: "html",
 				data :str,
 				success : function(htmlresult)
@@ -2658,9 +2658,9 @@ function selectAllCheckBoxes(selectAllchkboxes, elements)
 
 function cancelInsertData()
 {
-    document.getElementById('mode').value = "cancel";
     var dataEntryForm = document.getElementById('dataEntryForm');
     setWaitCursorforAllObjectHierarchy(dataEntryForm);
+    dataEntryForm.action= contextParam + "/CancelFormData";
     dataEntryForm.submit();
 }
 
@@ -3056,7 +3056,7 @@ function getSkipLogicControl(controlName, controlId, containerId)
 	jQuery.ajax(
 	{
 				type :"POST",
-				url :"ApplyDataEntryFormAction",
+				url :"UpdateServerStateAction",
 				dataType: "html",
 				data :str,
 				success : function(htmlresult)

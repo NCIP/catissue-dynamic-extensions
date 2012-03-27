@@ -2308,6 +2308,16 @@
 					<url-pattern>/ApplyDataEntryFormAction</url-pattern>
 				</servlet-mapping>
 
+
+				<servlet>
+					<servlet-name>CancelFormData</servlet-name>
+					<servlet-class>edu.common.dynamicextensions.action.core.CancelActionServlet</servlet-class>
+				</servlet>
+				<servlet-mapping>
+					<servlet-name>CancelFormData</servlet-name>
+					<url-pattern>/CancelFormData</url-pattern>
+				</servlet-mapping>
+
 				<servlet>
 					<servlet-name>DEBreadCrumbAction</servlet-name>
 					<servlet-class>edu.common.dynamicextensions.action.core.BreadCrumbServlet</servlet-class>
@@ -2316,6 +2326,16 @@
 					<servlet-name>DEBreadCrumbAction</servlet-name>
 					<url-pattern>/DEBreadCrumbAction</url-pattern>
 				</servlet-mapping>
+				
+				<servlet>
+					<servlet-name>UpdateServerStateAction</servlet-name>
+					<servlet-class>edu.common.dynamicextensions.action.core.UpdateServerStateServlet</servlet-class>
+				</servlet>
+				<servlet-mapping>
+					<servlet-name>UpdateServerStateAction</servlet-name>
+					<url-pattern>/UpdateServerStateAction</url-pattern>
+				</servlet-mapping>
+				
 
 
 				<taglib>
