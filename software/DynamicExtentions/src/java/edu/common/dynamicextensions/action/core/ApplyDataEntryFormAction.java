@@ -57,6 +57,7 @@ public class ApplyDataEntryFormAction extends HttpServlet
 			else if (FormDataCollectionUtility.isAjaxAction(request))
 			{
 				handleAjaxAction(request);
+				defaultForward(request, response);
 			}//handle details link clicks
 			else if(Constants.INSERT_CHILD_DATA.equals(request.getParameter(Constants.DATA_ENTRY_OPERATION)))
 			{

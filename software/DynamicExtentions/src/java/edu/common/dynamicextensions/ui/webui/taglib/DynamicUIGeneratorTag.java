@@ -2,20 +2,15 @@
 package edu.common.dynamicextensions.ui.webui.taglib;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.util.ContainerUtility;
 import edu.common.dynamicextensions.ui.webui.util.FormCache;
-import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
-import edu.common.dynamicextensions.util.DataValueMapUtility;
 import edu.wustl.common.util.logger.Logger;
 
 public class DynamicUIGeneratorTag extends TagSupport
@@ -76,19 +71,9 @@ public class DynamicUIGeneratorTag extends TagSupport
 		ContainerUtility containerUtility = new ContainerUtility((HttpServletRequest) pageContext
 				.getRequest(), formCache.getContainer());
 
-		htmlGenerationPreProcess();
 
 		final JspWriter out = pageContext.getOut();
 		out.println(containerUtility.generateHTML());
-	}
-
-	private void htmlGenerationPreProcess()
-	{
-		formCache.getContainer().setPreviousValueMap(formCache.getValueMapStack().peek());
-		final Set<AttributeInterface> attributes = new HashSet<AttributeInterface>();
-		UserInterfaceiUtility.addPrecisionZeroes(formCache.getValueMapStack().peek(), attributes);
-		DataValueMapUtility.updateDataValueMapDataLoading(formCache.getValueMapStack().peek(),
-				formCache.getContainer());
 	}
 
 	public Long getRecordIdentifier()

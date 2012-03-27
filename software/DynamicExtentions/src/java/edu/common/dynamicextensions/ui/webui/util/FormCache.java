@@ -416,7 +416,28 @@ public class FormCache
 		}
 		return false;
 				
-				
 	}
+	
+	/**
+	 * @param request
+	 * @return top of the container stack
+	 */
+	public static ContainerInterface getTopContainer(HttpServletRequest request)
+	{
+		return ((Stack<ContainerInterface>) CacheManager.getObjectFromCache(request,
+				DEConstants.CONTAINER_STACK)).peek();
+	}
+	
+	/**
+	 * @param request
+	 * @return top of the data value map stack
+	 */
+	public static Map<BaseAbstractAttributeInterface, Object> getTopDataValueMap(HttpServletRequest request)
+	{
+		return ((Stack<Map<BaseAbstractAttributeInterface, Object>>) CacheManager
+				.getObjectFromCache(request, DEConstants.VALUE_MAP_STACK)).peek();
+	}
+
 }
+
 

@@ -1,16 +1,21 @@
 package edu.common.dynamicextensions.ui.webui.util;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import edu.common.dynamicextensions.domaininterface.AttributeInterface;
+import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.webui.taglib.TagUtility;
+import edu.common.dynamicextensions.util.DataValueMapUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 
 
@@ -53,8 +58,20 @@ public class ContainerUtility
 		request.getSession().setAttribute(Constants.MAP_FOR_VALIDATION, containerMap);
 	}
 	
+	private void htmlGenerationPreProcess()
+	{
+		ContainerInterface container= FormCache.getTopContainer(request);
+		Map<BaseAbstractAttributeInterface, Object> dataValueMap = FormCache.getTopDataValueMap(request);
+		container.setPreviousValueMap(dataValueMap);
+		final Set<AttributeInterface> attributes = new HashSet<AttributeInterface>();
+		UserInterfaceiUtility.addPrecisionZeroes(dataValueMap, attributes);
+		DataValueMapUtility.updateDataValueMapDataLoading(dataValueMap,
+				container);
+	}
+	
 	public String generateHTML() throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
+		htmlGenerationPreProcess();
 		this.container.setShowRequiredFieldWarningMessage(Boolean.valueOf(request.getParameter(Constants.MANDATORY_MESSAGE).toString()));
 		final String caption = (String) request.getSession().getAttribute(
 				WebUIManagerConstants.OVERRIDE_CAPTION);
