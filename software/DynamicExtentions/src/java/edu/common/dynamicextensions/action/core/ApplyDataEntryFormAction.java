@@ -2,7 +2,6 @@
 package edu.common.dynamicextensions.action.core;
 
 import java.io.IOException;
-import java.util.HashSet;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -44,21 +43,14 @@ public class ApplyDataEntryFormAction extends HttpServlet
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException
 	{
-		String mode = request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME);
+		
+		FormManager formManager = new FormManager();
 		try
 		{
-			if (Constants.INSERT_CHILD_DATA.equals(request
-					.getParameter(Constants.DATA_ENTRY_OPERATION)))
+			if (isDetailsLinkClicked(request))
 			{
-				DataEntryForm dataEntryForm = DynamicExtensionsUtility
-						.poulateDataEntryForm(request);
-				updateRequestParameter(request, dataEntryForm);
-				if ((mode != null) && mode.equals("edit"))
-				{
-					FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
-					collectionUtility.populateAndValidateValues(request);
-
-				}
+				
+				formManager.onDetailsLinkClicked(request);
 				defaultForward(request, response);
 
 			}
@@ -68,25 +60,20 @@ public class ApplyDataEntryFormAction extends HttpServlet
 				//to check whether main form or subform submitted
 				boolean isMainForm = FormCache.isMainForm(request);
 
-				HashSet<String> errorList = null;
-				DataEntryForm dataEntryForm = DynamicExtensionsUtility
-						.poulateDataEntryForm(request);
-				updateRequestParameter(request, dataEntryForm);
+				FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
+				collectionUtility.populateAndValidateValues(request);
 
-				//value map updated only for edit mode
-				if ((mode != null) && mode.equals("edit"))
+
+				if(isMainForm)
 				{
-					FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
-					errorList = collectionUtility.populateAndValidateValues(request);
-
-				}
-
-				if (((errorList != null) && errorList.isEmpty()) && isMainForm)
-				{
-					FormManager formManager = new FormManager();
-					String recordIdentifier = formManager.persistFormData(request);
-					response.sendRedirect(getCallbackURL(request, response, recordIdentifier,
-							WebUIManagerConstants.SUCCESS, dataEntryForm.getContainerId()));
+				
+					DataEntryForm dataEntryForm = DynamicExtensionsUtility
+							.poulateDataEntryForm(request);
+					long recordId = formManager.submitMainFormData(request);
+				
+					response.sendRedirect(getCallbackURL(request, response, String
+							.valueOf(recordId), WebUIManagerConstants.SUCCESS, dataEntryForm
+							.getContainerId()));
 					// clear all session data on successful data submission
 					CacheManager.clearCache(request);
 				}
@@ -107,6 +94,16 @@ public class ApplyDataEntryFormAction extends HttpServlet
 
 	}
 
+
+
+	private boolean isDetailsLinkClicked(HttpServletRequest request)
+	{
+		return Constants.INSERT_CHILD_DATA.equals(request
+				.getParameter(Constants.DATA_ENTRY_OPERATION));
+	}
+
+	
+
 	private void defaultForward(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException
 	{
@@ -116,15 +113,7 @@ public class ApplyDataEntryFormAction extends HttpServlet
 		rd.forward(request, response);
 	}
 
-	private void updateRequestParameter(HttpServletRequest request, DataEntryForm dataEntryForm)
-	{
-		request.setAttribute(Constants.DATA_ENTRY_FORM, dataEntryForm);
-		if ((request.getParameter(DEConstants.IS_DIRTY) != null)
-				&& request.getParameter(DEConstants.IS_DIRTY).equalsIgnoreCase(DEConstants.TRUE))
-		{
-			request.setAttribute(DEConstants.IS_DIRTY, DEConstants.TRUE);
-		}
-	}
+	
 
 	/**
 	 * This method gets the Callback URL from cache, reforms it and redirect the response to it.

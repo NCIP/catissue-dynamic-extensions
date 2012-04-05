@@ -1,22 +1,25 @@
 
 package edu.common.dynamicextensions.util;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Stack;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
 
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ApplyDataEntryFormProcessor;
+import edu.common.dynamicextensions.ui.util.Constants;
+import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
+import edu.common.dynamicextensions.ui.webui.util.FormDataCollectionUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.common.beans.SessionDataBean;
@@ -38,13 +41,11 @@ public class FormManager
 	 * @throws SQLException
 	 * @throws MalformedURLException
 	 */
-	public String persistFormData(HttpServletRequest request) throws NumberFormatException,
-			DynamicExtensionsApplicationException, DynamicExtensionsSystemException, SQLException,
-			MalformedURLException
+	public String persistFormData(HttpServletRequest request) throws  DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
 		String recordIdentifier = request.getParameter(DEConstants.RECORD_IDENTIFIER);
 		String isShowTemplateRecord = request.getParameter("isShowTemplateRecord");
-		
+
 		Stack<ContainerInterface> containerStack = (Stack<ContainerInterface>) CacheManager
 				.getObjectFromCache(request, DEConstants.CONTAINER_STACK);
 		Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack = (Stack<Map<BaseAbstractAttributeInterface, Object>>) CacheManager
@@ -63,9 +64,11 @@ public class FormManager
 			applyDataEntryFormProcessor.setUserId(Long.parseLong(userId.trim()));
 		}
 
-		String messageKey = "app.successfulDataInsertionMessage";
 		SessionDataBean sessionDataBean = (SessionDataBean) request.getSession().getAttribute(
 				"sessionData");
+		try{
+			
+		
 		if (recordIdentifier != null
 				&& !recordIdentifier.equals("")
 				&& (isShowTemplateRecord == null || isShowTemplateRecord != null
@@ -73,39 +76,29 @@ public class FormManager
 		{
 			Boolean edited = applyDataEntryFormProcessor.editDataEntryForm(rootContainerInterface,
 					rootValueMap, Long.valueOf(recordIdentifier), sessionDataBean);
-			if (edited.booleanValue())
-			{
-				saveMessages(request, getMessageString(messageKey));
-			}
+
 		}
 		else
 		{
-			recordIdentifier = applyDataEntryFormProcessor.insertDataEntryForm(rootContainerInterface,
-					rootValueMap, sessionDataBean);
-			saveMessages(request, getMessageString(messageKey));
+			recordIdentifier = applyDataEntryFormProcessor.insertDataEntryForm(
+					rootContainerInterface, rootValueMap, sessionDataBean);
 		}
-
+		}catch(MalformedURLException exception)
+		{
+			throw new DynamicExtensionsSystemException(exception.getMessage(),exception);
+		}
+		catch (NumberFormatException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(),e);
+		}
+		catch (SQLException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(),e);
+		}
 		return recordIdentifier;
 	}
 
-	/**
-	 * This method returns messages on successful saving of an Entity
-	 * @return ActionMessages ActionMessages
-	 */
-	private ActionMessages getMessageString(String messageKey)
-	{
-		ActionMessages actionMessages = new ActionMessages();
-		actionMessages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(messageKey));
-		return actionMessages;
-	}
-
-	private void saveMessages(HttpServletRequest request, ActionMessages messageString)
-	{
-		// TODO Auto-generated method stub
-
-	}
-	
-	public void onBreadCrumbClick(HttpServletRequest request,String containerSize)
+	public void onBreadCrumbClick(HttpServletRequest request, String containerSize)
 	{
 		Stack<ContainerInterface> containerStack = (Stack<ContainerInterface>) CacheManager
 				.getObjectFromCache(request, DEConstants.CONTAINER_STACK);
@@ -128,4 +121,52 @@ public class FormManager
 			valueMapStack.pop();
 		}
 	}
+
+	public void onDetailsLinkClicked(HttpServletRequest request) throws FileNotFoundException,
+			DynamicExtensionsSystemException, IOException, DynamicExtensionsApplicationException
+	{
+		DataEntryForm dataEntryForm = DynamicExtensionsUtility.poulateDataEntryForm(request);
+		updateRequestParameter(request, dataEntryForm);
+		FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
+		collectionUtility.populateAndValidateValues(request);
+	}
+	
+	private void updateRequestParameter(HttpServletRequest request, DataEntryForm dataEntryForm)
+	{
+		request.setAttribute(Constants.DATA_ENTRY_FORM, dataEntryForm);
+		if ((request.getParameter(DEConstants.IS_DIRTY) != null)
+				&& request.getParameter(DEConstants.IS_DIRTY).equalsIgnoreCase(DEConstants.TRUE))
+		{
+			request.setAttribute(DEConstants.IS_DIRTY, DEConstants.TRUE);
+		}
+	}
+	
+	public boolean isDetailsLinkClicked(HttpServletRequest request)
+	{
+		return Constants.INSERT_CHILD_DATA.equals(request
+				.getParameter(Constants.DATA_ENTRY_OPERATION));
+	}
+	
+	public long submitMainFormData(HttpServletRequest request) throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
+	{
+		HashSet<String> errorList = null;
+		DataEntryForm dataEntryForm = DynamicExtensionsUtility
+				.poulateDataEntryForm(request);
+		updateRequestParameter(request, dataEntryForm);
+
+		FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
+		errorList = collectionUtility.populateAndValidateValues(request);
+		
+		String recordIdentifier = null;
+		if (((errorList != null) && errorList.isEmpty()))
+		{
+			recordIdentifier = persistFormData(request);
+			
+		}else
+		{
+			throw new DynamicExtensionsApplicationException("Validation errors, please insert the values again");
+		}
+		return Long.valueOf(recordIdentifier);
+	}
+
 }

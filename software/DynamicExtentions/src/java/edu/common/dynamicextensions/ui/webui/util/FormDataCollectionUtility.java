@@ -572,11 +572,20 @@ public class FormDataCollectionUtility
 	}
 
 	public HashSet<String> populateAndValidateValues(HttpServletRequest request)
-			throws FileNotFoundException, DynamicExtensionsSystemException, IOException,
-			DynamicExtensionsApplicationException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
-		return populateAndValidateValues(request, request
-				.getParameter(WebUIManagerConstants.ISDRAFT));
+		String mode = request.getParameter(WebUIManagerConstants.MODE_PARAM_NAME);
+		
+
+		//value map updated only for edit mode
+		if ((mode != null) && mode.equals("edit"))
+		{
+			return populateAndValidateValues(request, request
+					.getParameter(WebUIManagerConstants.ISDRAFT));
+
+		}
+		return new HashSet<String>();
+		
 	}
 
 	/**
@@ -593,8 +602,7 @@ public class FormDataCollectionUtility
 	 * @throws DynamicExtensionsApplicationException
 	 */
 	public HashSet<String> populateAndValidateValues(HttpServletRequest request, String isDraft)
-			throws FileNotFoundException, DynamicExtensionsSystemException, IOException,
-			DynamicExtensionsApplicationException
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 
 		Stack<ContainerInterface> containerStack = (Stack<ContainerInterface>) CacheManager
@@ -617,8 +625,19 @@ public class FormDataCollectionUtility
 
 		HashSet<String> errorList = new HashSet<String>();
 
-		valueMap = generateAttributeValueMap(containerInterface, request, "", valueMap, true,
-				errorList);
+		try
+		{
+			valueMap = generateAttributeValueMap(containerInterface, request, "", valueMap, true,
+					errorList);
+		}
+		catch (FileNotFoundException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
+		}
+		catch (IOException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage(), e);
+		}
 		errorList = DomainObjectFactory.getInstance().getValidatorInstance(isDraft).validateEntity(
 				valueMap, errorList, containerInterface, false);
 
@@ -635,11 +654,11 @@ public class FormDataCollectionUtility
 		{
 			popStack(request);
 		}
-		if(!Boolean.valueOf(isDraft))
+		if (!Boolean.valueOf(isDraft))
 		{
-			request.setAttribute(DEConstants.ERRORS_LIST, errorList);	
+			request.setAttribute(DEConstants.ERRORS_LIST, errorList);
 		}
-		
+
 		return errorList;
 	}
 
