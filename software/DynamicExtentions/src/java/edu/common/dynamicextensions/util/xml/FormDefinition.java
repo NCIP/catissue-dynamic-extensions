@@ -10,7 +10,7 @@ package edu.common.dynamicextensions.util.xml;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.AccessType;
+import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -93,7 +93,7 @@ import javax.xml.bind.annotation.XmlType;
 * 
 * 
 */
-@XmlAccessorType(AccessType.FIELD)
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
  "form"
 })
@@ -189,7 +189,7 @@ public class FormDefinition {
   * 
   * 
   */
- @XmlAccessorType(AccessType.FIELD)
+ @XmlAccessorType(XmlAccessType.FIELD)
  @XmlType(name = "", propOrder = {
      "url",
      "tag",
@@ -366,7 +366,7 @@ public class FormDefinition {
       * 
       * 
       */
-     @XmlAccessorType(AccessType.FIELD)
+     @XmlAccessorType(XmlAccessType.FIELD)
      @XmlType(name = "", propOrder = {
          "gridDisplayColumn"
      })
@@ -426,7 +426,7 @@ public class FormDefinition {
           * 
           * 
           */
-         @XmlAccessorType(AccessType.FIELD)
+         @XmlAccessorType(XmlAccessType.FIELD)
          @XmlType(name = "", propOrder = {
              "columnName",
              "dispalyLabel",
@@ -535,7 +535,7 @@ public class FormDefinition {
       * 
       * 
       */
-     @XmlAccessorType(AccessType.FIELD)
+     @XmlAccessorType(XmlAccessType.FIELD)
      @XmlType(name = "", propOrder = {
          "name",
          "value"

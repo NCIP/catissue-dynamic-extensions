@@ -10,11 +10,10 @@ package edu.common.dynamicextensions.util.xml;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.bind.annotation.AccessType;
+
+import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
-import edu.common.dynamicextensions.util.xml.PropertyType;
-import edu.common.dynamicextensions.util.xml.PropertyType.Option;
 
 
 /**
@@ -47,7 +46,7 @@ import edu.common.dynamicextensions.util.xml.PropertyType.Option;
  * 
  * 
  */
-@XmlAccessorType(AccessType.FIELD)
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "propertyType", propOrder = {
     "option"
 })
@@ -105,7 +104,7 @@ public class PropertyType {
      * 
      * 
      */
-    @XmlAccessorType(AccessType.FIELD)
+    @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
         "key",
         "value"

@@ -8,12 +8,11 @@
 
 package edu.common.dynamicextensions.util.xml.formdefinition;
 
-import javax.xml.bind.annotation.AccessType;
+import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import edu.common.dynamicextensions.util.xml.formdefinition.Property;
 
 
 /**
@@ -36,7 +35,7 @@ import edu.common.dynamicextensions.util.xml.formdefinition.Property;
  * 
  * 
  */
-@XmlAccessorType(AccessType.FIELD)
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "Property")
 public class Property {

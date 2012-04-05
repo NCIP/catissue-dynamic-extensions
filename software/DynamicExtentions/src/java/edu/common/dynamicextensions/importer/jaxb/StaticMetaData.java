@@ -11,7 +11,7 @@ package edu.common.dynamicextensions.importer.jaxb;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.AccessType;
+import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  * 
  */
-@XmlAccessorType(AccessType.FIELD)
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "staticMetaData", propOrder = {
     "entity",
     "association"

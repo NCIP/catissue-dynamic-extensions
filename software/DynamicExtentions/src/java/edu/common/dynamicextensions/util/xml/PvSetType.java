@@ -10,13 +10,11 @@ package edu.common.dynamicextensions.util.xml;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.bind.annotation.AccessType;
+
+import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-import edu.common.dynamicextensions.util.xml.PropertyType;
-import edu.common.dynamicextensions.util.xml.PvSetType;
-import edu.common.dynamicextensions.util.xml.PvSetType.XmlPermissibleValues;
 
 
 /**
@@ -50,7 +48,7 @@ import edu.common.dynamicextensions.util.xml.PvSetType.XmlPermissibleValues;
  * 
  * 
  */
-@XmlAccessorType(AccessType.FIELD)
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "pvSetType", propOrder = {
     "defaultValue",
     "properties",
@@ -156,7 +154,7 @@ public class PvSetType {
      * 
      * 
      */
-    @XmlAccessorType(AccessType.FIELD)
+    @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
         "value"
     })

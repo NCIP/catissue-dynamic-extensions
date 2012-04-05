@@ -8,13 +8,11 @@
 
 package edu.common.dynamicextensions.util.xml.formdefinition;
 
-import javax.xml.bind.annotation.AccessType;
+import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import edu.common.dynamicextensions.util.xml.formdefinition.ControllingAttribute;
-import edu.common.dynamicextensions.util.xml.formdefinition.SkipLogic;
 
 
 /**
@@ -38,7 +36,7 @@ import edu.common.dynamicextensions.util.xml.formdefinition.SkipLogic;
  * 
  * 
  */
-@XmlAccessorType(AccessType.FIELD)
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "controllingAttribute"
 })

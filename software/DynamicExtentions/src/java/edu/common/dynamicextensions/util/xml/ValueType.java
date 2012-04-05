@@ -10,11 +10,10 @@ package edu.common.dynamicextensions.util.xml;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.bind.annotation.AccessType;
+
+import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
-import edu.common.dynamicextensions.util.xml.SourceType;
-import edu.common.dynamicextensions.util.xml.ValueType;
 
 
 /**
@@ -39,7 +38,7 @@ import edu.common.dynamicextensions.util.xml.ValueType;
  * 
  * 
  */
-@XmlAccessorType(AccessType.FIELD)
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "valueType", propOrder = {
     "oldName",
     "name",

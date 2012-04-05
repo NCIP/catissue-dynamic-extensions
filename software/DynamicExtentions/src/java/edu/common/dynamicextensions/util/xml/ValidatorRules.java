@@ -10,7 +10,7 @@ package edu.common.dynamicextensions.util.xml;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.AccessType;
+import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -69,7 +69,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  *
  */
-@XmlAccessorType(AccessType.FIELD)
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {"validationRule"})
 @XmlRootElement(name = "validator-rules")
 public class ValidatorRules
@@ -149,7 +149,7 @@ public class ValidatorRules
 	 *
 	 *
 	 */
-	@XmlAccessorType(AccessType.FIELD)
+	@XmlAccessorType(XmlAccessType.FIELD)
 	@XmlType(name = "", propOrder = {"errorKey", "param"})
 	public static class ValidationRule
 	{
@@ -316,7 +316,7 @@ public class ValidatorRules
 		 *
 		 *
 		 */
-		@XmlAccessorType(AccessType.FIELD)
+		@XmlAccessorType(XmlAccessType.FIELD)
 		@XmlType(name = "")
 		public static class ErrorKey
 		{
@@ -370,7 +370,7 @@ public class ValidatorRules
 		 *
 		 *
 		 */
-		@XmlAccessorType(AccessType.FIELD)
+		@XmlAccessorType(XmlAccessType.FIELD)
 		@XmlType(name = "")
 		public static class Param
 		{

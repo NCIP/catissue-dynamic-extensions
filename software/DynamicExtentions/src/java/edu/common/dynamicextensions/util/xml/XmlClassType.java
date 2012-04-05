@@ -10,12 +10,11 @@ package edu.common.dynamicextensions.util.xml;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.bind.annotation.AccessType;
+
+import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
-import edu.common.dynamicextensions.util.xml.AttributeType;
-import edu.common.dynamicextensions.util.xml.XmlClassType;
 
 
 /**
@@ -38,7 +37,7 @@ import edu.common.dynamicextensions.util.xml.XmlClassType;
  * 
  * 
  */
-@XmlAccessorType(AccessType.FIELD)
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "xmlClassType", propOrder = {
     "xmlDEAttribute"
 })
