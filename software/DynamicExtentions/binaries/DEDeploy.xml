@@ -2185,6 +2185,7 @@
 	
 	<target name="merge:web:xml">
 		<replace file="${host.web.xml}">
+			<replacefilter token="/WEB-INF/${clinportal.struts.config.file}" value="/WEB-INF/${clinportal.struts.config.file}, /WEB-INF/dynamicextensions-struts-config.xml" />
 			<replacetoken>&lt;/web-app&gt;</replacetoken>
 			<replacevalue>
 				<![CDATA[

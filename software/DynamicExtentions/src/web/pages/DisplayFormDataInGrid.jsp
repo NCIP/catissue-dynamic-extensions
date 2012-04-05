@@ -42,7 +42,7 @@ var header = "#master_checkbox,,,";
 			}
 			formUrl = encodeURIComponent('${requestScope.formUrl}');
 			deUrl = encodeURIComponent('${requestScope.deUrl}');
-			formDataGrid.loadXML("LoadDisplayFormDataInGrid.do?formContextId=${requestScope.formContextId}&recEntryEntityId=${requestScope.recEntryEntityId}&formUrl="+formUrl+"&deUrl="+deUrl+"&hookObjectRecordId=${requestScope.hookObjectRecordId}",filter);
+			formDataGrid.loadXML("LoadDisplayFormDataInGrid?formContextId=${requestScope.formContextId}&recEntryEntityId=${requestScope.recEntryEntityId}&formUrl="+formUrl+"&deUrl="+deUrl+"&hookObjectRecordId=${requestScope.hookObjectRecordId}",filter);
 		}
 
 		function filter()
