@@ -2258,6 +2258,14 @@
 					<url-pattern>/ImportPVAction</url-pattern>
 				</servlet-mapping>
 
+				<servlet>
+					<servlet-name>LoadDisplayFormDataInGrid</servlet-name>
+					<servlet-class>edu.common.dynamicextensions.action.core.LoadDisplayFormDataInGridAction</servlet-class>
+				</servlet>
+				<servlet-mapping>
+					<servlet-name>LoadDisplayFormDataInGrid</servlet-name>
+					<url-pattern>/LoadDisplayFormDataInGrid</url-pattern>
+				</servlet-mapping>
 
 				<servlet>
 					<servlet-name>UploadFile</servlet-name>
