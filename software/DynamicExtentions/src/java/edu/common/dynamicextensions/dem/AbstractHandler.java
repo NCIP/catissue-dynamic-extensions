@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.wustl.common.audit.AuditManager;
+import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
 import edu.wustl.dao.HibernateDAO;
@@ -55,6 +57,9 @@ public abstract class AbstractHandler extends HttpServlet implements WebUIManage
 		super.init();
 		try
 		{
+			ServletContext application = getServletConfig().getServletContext();  
+			String filePath = application.getRealPath("/WEB-INF/classes/ApplicationResources.properties");  
+			CommonServiceLocator.getInstance(filePath);
 			AuditManager.init("DynamicExtensionsAuditMetadata.xml");
 		}
 		catch (Exception e)
