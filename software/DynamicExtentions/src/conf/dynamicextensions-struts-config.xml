@@ -203,12 +203,7 @@ PUBLIC
 		
 		<!-- Display Form Data in Grid -->
 		
-		<action path="/DisplayFormDataInGrid" 
-			type="edu.common.dynamicextensions.action.core.DisplayFormDataInGridAction"
-			validate="false"
-			scope="request">
-			<forward name="success" path="/pages/de/DisplayFormDataInGrid.jsp" />
-		</action>
+		
 		<action path="/LoadFormPrintPreview" 
 			type="edu.common.dynamicextensions.ui.webui.action.ForwardAction"
 			validate="false"

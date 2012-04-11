@@ -41,7 +41,7 @@ public class LoadDisplayFormDataInGridAction extends HttpServlet
 
 	//This is an ajax call for loading the data in FormDataGrid
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException
 	{
 		Long formContextId = Long.valueOf(request.getParameter(DEConstants.FORM_CONTEXT_ID));
