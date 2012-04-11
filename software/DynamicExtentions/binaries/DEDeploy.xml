@@ -2159,6 +2159,12 @@
 			</if>
 		</target>
 	<target name="copy:common:jars">
+		<delete failonerror="false">
+			<fileset dir="${common.lib.dir}" >
+				<include name="commonpackage*.jar"/>
+				<include name="washu-commons*.jar"/>
+			</fileset>
+		</delete>
 		<copy overwrite="true" todir="${common.lib.dir}">
 			<fileset dir="${lib.dir.DE}">
 				<include name="axis-ant.jar"/>
