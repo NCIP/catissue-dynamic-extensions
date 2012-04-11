@@ -3705,7 +3705,7 @@ function printForm()
 	if(urls!= '')
 	{
 		// 3: submit form to the URL
-		document.formGrid.action='LoadFormPrintPreview.do?'; 
+		document.formGrid.action='pages/de/grid/printPreview.jsp'; 
 		document.formGrid.submit();
 	}
 	
