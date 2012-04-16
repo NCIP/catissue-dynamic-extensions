@@ -1653,7 +1653,7 @@
          ================================= -->
 	<target name="update.jars.in.caCORE.wars" description="Update project specific jars in caCORE war">
 
-		<delete>
+		<delete failonerror="false">
 			<fileset dir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib">
 					<exclude name="${entitygroupname}.jar"/>
 			</fileset>
@@ -2078,7 +2078,7 @@
 				<![CDATA[
 				    	 <servlet>
 							<servlet-name>UpdateCache</servlet-name>
-							<servlet-class>edu.common.dynamicextensions.ui.webui.action.UpdateCache</servlet-class>
+							<servlet-class>edu.common.dynamicextensions.action.core.UpdateCache</servlet-class>
 						</servlet>
 						<servlet-mapping>
 						<servlet-name>UpdateCache</servlet-name>
@@ -2204,7 +2204,7 @@
 				</listener>
 				<servlet>
 					<servlet-name>UpdateCache</servlet-name>
-					<servlet-class>edu.common.dynamicextensions.ui.webui.action.UpdateCache</servlet-class>
+					<servlet-class>edu.common.dynamicextensions.action.core.UpdateCache</servlet-class>
 				</servlet>
 	
 				<servlet-mapping>
