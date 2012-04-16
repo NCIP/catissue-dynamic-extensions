@@ -23,6 +23,7 @@ import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.XMLUtility;
 import edu.common.dynamicextensions.xmi.AnnotationUtil;
 import edu.common.dynamicextensions.xmi.PathObject;
+import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.JDBCDAO;
@@ -62,7 +63,7 @@ public class XMLImporter
 			jAXBElement = (JAXBElement) XMLUtility
 					.getJavaObjectForXML(xmlFileName, filePath, packageName, "StaticMetaData.xsd");
 			staticMetaData = (StaticMetaData) jAXBElement.getValue();
-			entityGroup = EntityGroupManager.getInstance().getEntityGroupByName(entityGroupName);
+			entityGroup = EntityCache.getInstance().getEntityGroupByName(entityGroupName);
 
 			if(hostApplicationDAO == null)
 			{
