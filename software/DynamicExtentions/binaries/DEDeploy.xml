@@ -1655,7 +1655,7 @@
 
 		<delete>
 			<fileset dir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib">
-					<include name="*.jar"/>
+					<exclude name="${entitygroupname}.jar"/>
 			</fileset>
 		</delete>
 		<!-- This is to copy latest DE.jar in the ${entitygroupname}.war/WEB-INF/lib folder present in JBoss deploy folder-->
