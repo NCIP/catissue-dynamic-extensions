@@ -1100,6 +1100,10 @@ public class CategoryHelper implements CategoryHelperInterface
 					((ControlInterface) dyextnBaseDomainObject).getBaseAbstractAttribute()
 					.getTaggedValueCollection()
 					.add(new TaggedValue(taggedValue, entryObject.getValue()));
+				}else
+				{
+					setControlProperty(dyextnBaseDomainObject, lineNumber,
+							entryObject);
 				}
 
 
@@ -1133,73 +1137,82 @@ public class CategoryHelper implements CategoryHelperInterface
 	public void setOptions(DynamicExtensionBaseDomainObjectInterface dyextnBaseDomainObject,
 			Map<String, String> options, long lineNumber) throws DynamicExtensionsSystemException
 	{
+		if (options.isEmpty())
+		{
+			return;
+		}
+		for (Entry<String, String> entryObject : options.entrySet())
+		{
+			setControlProperty(dyextnBaseDomainObject, lineNumber, entryObject);
+		}
+
+	}
+
+	private void setControlProperty(
+			DynamicExtensionBaseDomainObjectInterface dyextnBaseDomainObject, long lineNumber,
+			Entry<String, String> entryObject) throws DynamicExtensionsSystemException
+	{
 		try
 		{
-			if (options.isEmpty())
+
+			String optionString = entryObject.getKey();
+			String methodName = CategoryConstants.SET + optionString;
+
+			Class[] types = getParameterType(methodName, dyextnBaseDomainObject);
+			if (types.length < 1)
 			{
-				return;
+				throw new DynamicExtensionsSystemException(ApplicationProperties
+						.getValue(CategoryConstants.CREATE_CAT_FAILS)
+						+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
+						+ lineNumber
+						+ ApplicationProperties.getValue("incorrectControlOption")
+						+ optionString);
 			}
-			for (Entry<String, String> entryObject : options.entrySet())
-			{	
-					String optionString = entryObject.getKey();
-					String methodName = CategoryConstants.SET + optionString;
+			List<Object> values = new ArrayList<Object>();
+			values.add(getFormattedValues(types[0], entryObject.getValue()));
 
-					Class[] types = getParameterType(methodName, dyextnBaseDomainObject);
-					if (types.length < 1)
-					{
-						throw new DynamicExtensionsSystemException(
-								ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
-										+ ApplicationProperties
-												.getValue(CategoryConstants.LINE_NUMBER)
-										+ lineNumber
-										+ ApplicationProperties.getValue("incorrectControlOption")
-										+ optionString);
-					}
-					List<Object> values = new ArrayList<Object>();
-					values.add(getFormattedValues(types[0], entryObject.getValue()));
-
-					Method method;
-					method = dyextnBaseDomainObject.getClass().getMethod(methodName, types);
-					method.invoke(dyextnBaseDomainObject, values.toArray());
-				}
+			Method method;
+			method = dyextnBaseDomainObject.getClass().getMethod(methodName, types);
+			method.invoke(dyextnBaseDomainObject, values.toArray());
 
 		}
 		catch (SecurityException e)
 		{
-			throw new DynamicExtensionsSystemException(
-					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
+			throw new DynamicExtensionsSystemException(ApplicationProperties
+					.getValue(CategoryConstants.CREATE_CAT_FAILS)
+					+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
 		}
 		catch (NoSuchMethodException e)
 		{
-			throw new DynamicExtensionsSystemException(
-					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
-							+ lineNumber + ApplicationProperties.getValue("incorrectOption"), e);
+			throw new DynamicExtensionsSystemException(ApplicationProperties
+					.getValue(CategoryConstants.CREATE_CAT_FAILS)
+					+ ApplicationProperties.getValue(CategoryConstants.LINE_NUMBER)
+					+ lineNumber
+					+ ApplicationProperties.getValue("incorrectOption"), e);
 		}
 		catch (IllegalArgumentException e)
 		{
-			throw new DynamicExtensionsSystemException(
-					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
+			throw new DynamicExtensionsSystemException(ApplicationProperties
+					.getValue(CategoryConstants.CREATE_CAT_FAILS)
+					+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
 		}
 		catch (IllegalAccessException e)
 		{
-			throw new DynamicExtensionsSystemException(
-					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
+			throw new DynamicExtensionsSystemException(ApplicationProperties
+					.getValue(CategoryConstants.CREATE_CAT_FAILS)
+					+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
 		}
 		catch (InvocationTargetException e)
 		{
-			throw new DynamicExtensionsSystemException(
-					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
+			throw new DynamicExtensionsSystemException(ApplicationProperties
+					.getValue(CategoryConstants.CREATE_CAT_FAILS)
+					+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
 		}
 		catch (InstantiationException e)
 		{
-			throw new DynamicExtensionsSystemException(
-					ApplicationProperties.getValue(CategoryConstants.CREATE_CAT_FAILS)
-							+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
+			throw new DynamicExtensionsSystemException(ApplicationProperties
+					.getValue(CategoryConstants.CREATE_CAT_FAILS)
+					+ ApplicationProperties.getValue(CategoryConstants.CONTACT_ADMIN), e);
 		}
 	}
 
