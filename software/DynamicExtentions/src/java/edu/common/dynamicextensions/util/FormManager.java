@@ -164,6 +164,7 @@ public class FormManager
 			
 		}else
 		{
+			request.setAttribute(DEConstants.ERRORS_LIST, errorList);
 			throw new DynamicExtensionsApplicationException("Validation errors, please insert the values again");
 		}
 		return Long.valueOf(recordIdentifier);

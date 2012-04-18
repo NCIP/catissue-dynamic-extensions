@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
@@ -20,6 +21,7 @@ import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.FormManager;
 import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.wustl.common.util.logger.Logger;
 
 /**
  * It populates the Attribute values entered in the dynamically generated controls.
@@ -86,6 +88,10 @@ public class ApplyDataEntryFormAction extends HttpServlet
 				UserInterfaceiUtility.resetRequestParameterMap(request);
 
 			}
+		}
+		catch (DynamicExtensionsApplicationException e) {
+			Logger.out.error(e.getMessage());
+			defaultForward(request, response);
 		}
 		catch (Exception exception)
 		{
