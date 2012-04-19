@@ -71,7 +71,7 @@
 		<format property="TODAY_IND" pattern="d-MMMM-yyyy" locale="en,IND" />
 	</tstamp>
 
-	<loadfile property="dist.revision" srcFile="./.svn/entries">
+	<loadfile property="dist.revision" srcFile="../../.svn/entries">
 		<filterchain>
 			<headfilter lines="1" skip="4" />
 		</filterchain>
