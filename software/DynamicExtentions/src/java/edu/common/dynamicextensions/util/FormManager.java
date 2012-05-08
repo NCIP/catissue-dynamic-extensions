@@ -16,12 +16,15 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ApplyDataEntryFormProcessor;
+import edu.common.dynamicextensions.processor.ApplyDataEntryProcessorInterface;
+import edu.common.dynamicextensions.processor.InContextApplyDataEntryProcessor;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
 import edu.common.dynamicextensions.ui.webui.util.FormDataCollectionUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.common.dynamicextensions.util.global.Variables;
 import edu.wustl.common.beans.SessionDataBean;
 
 public class FormManager
@@ -54,8 +57,15 @@ public class FormManager
 		Map<BaseAbstractAttributeInterface, Object> rootValueMap = valueMapStack.firstElement();
 		ContainerInterface rootContainerInterface = containerStack.firstElement();
 		DataValueMapUtility.updateDataValueMapForDataEntry(rootValueMap, rootContainerInterface);
-		ApplyDataEntryFormProcessor applyDataEntryFormProcessor = ApplyDataEntryFormProcessor
-				.getInstance();
+		ApplyDataEntryProcessorInterface applyDataEntryFormProcessor;
+		if(Variables.jbossUrl.isEmpty())
+		{
+			
+			applyDataEntryFormProcessor = ApplyDataEntryFormProcessor
+			.getInstance();
+		}
+		
+		applyDataEntryFormProcessor = new InContextApplyDataEntryProcessor();
 
 		String userId = (String) CacheManager.getObjectFromCache(request,
 				WebUIManagerConstants.USER_ID);
@@ -83,18 +93,12 @@ public class FormManager
 			recordIdentifier = applyDataEntryFormProcessor.insertDataEntryForm(
 					rootContainerInterface, rootValueMap, sessionDataBean);
 		}
-		}catch(MalformedURLException exception)
-		{
-			throw new DynamicExtensionsSystemException(exception.getMessage(),exception);
 		}
 		catch (NumberFormatException e)
 		{
 			throw new DynamicExtensionsSystemException(e.getMessage(),e);
 		}
-		catch (SQLException e)
-		{
-			throw new DynamicExtensionsSystemException(e.getMessage(),e);
-		}
+		
 		return recordIdentifier;
 	}
 

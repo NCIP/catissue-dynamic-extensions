@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import edu.common.dynamicextensions.domain.Association;
 import edu.common.dynamicextensions.domain.FileAttributeRecordValue;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
@@ -822,4 +823,7 @@ public interface EntityManagerInterface
 	 */
 	public void disableEntityRecords(Long recordIdentifier, Stack<ContainerInterface> containerStack, SessionDataBean sessionDataBean)
 			throws DynamicExtensionsSystemException,DynamicExtensionsApplicationException;
+	
+	public void associateData(Long staticEntityId, Long dynamicEntityId, Association association,
+			String tmpPackageName, HibernateDAO hibernateDao) throws DynamicExtensionsSystemException;
 }

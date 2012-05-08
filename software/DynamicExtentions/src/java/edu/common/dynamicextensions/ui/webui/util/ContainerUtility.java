@@ -72,7 +72,10 @@ public class ContainerUtility
 	public String generateHTML() throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		htmlGenerationPreProcess();
-		this.container.setShowRequiredFieldWarningMessage(Boolean.valueOf(request.getParameter(Constants.MANDATORY_MESSAGE).toString()));
+		if(request.getParameter(Constants.MANDATORY_MESSAGE) != null)
+		{
+			this.container.setShowRequiredFieldWarningMessage(Boolean.valueOf(request.getParameter(Constants.MANDATORY_MESSAGE).toString()));
+		}
 		final String caption = (String) request.getSession().getAttribute(
 				WebUIManagerConstants.OVERRIDE_CAPTION);
 		final String operation = request.getParameter(Constants.DATA_ENTRY_OPERATION);

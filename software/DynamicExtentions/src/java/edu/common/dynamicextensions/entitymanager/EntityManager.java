@@ -1727,6 +1727,52 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 		}
 	}
 
+	public void associateData(Long staticEntityId, Long dynamicEntityId, Association association,
+			String tmpPackageName, HibernateDAO hibernateDao)
+			throws DynamicExtensionsSystemException
+	{
+		try
+		{
+			Object staticEntity = hibernateDao
+					.retrieveById(tmpPackageName
+							+ "."
+							+ association.getEntity().getName().substring(
+									association.getEntity().getName().lastIndexOf(".") + 1),
+							staticEntityId);
+			Object oldStaticEntity = cloner.clone(staticEntity);
+
+			Object dynamicEntity = hibernateDao.retrieveById(tmpPackageName + "."
+					+ association.getTargetEntity().getName(), dynamicEntityId);
+			Object oldDynamicEntity = cloner.clone(dynamicEntity);
+
+			String sourceRoleName = EntityManagerUtil.getHookAssociationSrcRoleName(association
+					.getEntity(), association.getTargetEntity());
+			Set<Object> containedObjects = (Set<Object>) invokeGetterMethod(
+					staticEntity.getClass(),
+					association.getTargetEntity().getName() + "Collection", staticEntity);
+			containedObjects.add(dynamicEntity);
+
+			invokeSetterMethod(staticEntity.getClass(), association.getTargetEntity().getName()
+					+ "Collection", Class.forName("java.util.Collection"), staticEntity,
+					containedObjects);
+
+			invokeSetterMethod(dynamicEntity.getClass(), sourceRoleName, staticEntity.getClass(),
+					dynamicEntity, staticEntity);
+
+			hibernateDao.update(dynamicEntity, oldDynamicEntity);
+			hibernateDao.update(staticEntity, oldStaticEntity);
+			hibernateDao.commit();
+		}
+		catch (ClassNotFoundException classNotFoundException)
+		{
+			throw new DynamicExtensionsSystemException("Problem associating data ", classNotFoundException);
+		}
+		catch (DAOException e)
+		{
+			throw new DynamicExtensionsSystemException("Problem associating data ", e);
+		}
+
+	}
 	/* (non-Javadoc)
 	 * @see edu.common.dynamicextensions.entitymanager.EntityManagerInterface#associateEntityRecords(edu.common.dynamicextensions.domaininterface.AssociationInterface, java.lang.Long, java.lang.Long)
 	 */
@@ -1734,28 +1780,43 @@ public class EntityManager extends AbstractMetadataManager implements EntityMana
 			Long sourceEntityRecordId, Long TargetEntityRecordId, SessionDataBean sessionDataBean)
 			throws DynamicExtensionsSystemException
 	{
-		Map<String, Object> map = new HashMap<String, Object>();
-
-		map.put(WebUIManagerConstants.ASSOCIATION, getTempAssociation(associationInterface));
-		map.put(WebUIManagerConstants.STATIC_OBJECT_ID, sourceEntityRecordId);
-		map.put(WebUIManagerConstants.DYNAMIC_OBJECT_ID, TargetEntityRecordId);
-		map.put(WebUIManagerConstants.PACKAGE_NAME, getPackageName(associationInterface
-				.getTargetEntity(), ""));
-		map.put(WebUIManagerConstants.SESSION_DATA_BEAN, sessionDataBean);
-		DataAssociationClient associationClient = new DataAssociationClient();
-		try
+		
+		if(Variables.jbossUrl.isEmpty())
 		{
-			associationClient.setServerUrl(new URL(Variables.jbossUrl
-					+ associationInterface.getTargetEntity().getEntityGroup().getName() + "/"));
-		}
-		catch (MalformedURLException e)
-		{
-			throw new DynamicExtensionsSystemException(
-					"MalformedURLException: address not correct." + e);
-		}
-		associationClient.setParamaterObjectMap(map);
-		associationClient.execute(null);
+			HibernateDAO hibernateDao = DynamicExtensionsUtility
+					.getHibernateDAO(sessionDataBean);
+			associateData(sourceEntityRecordId, TargetEntityRecordId,
+					(Association) associationInterface, getPackageName(associationInterface
+							.getTargetEntity(), ""), hibernateDao);
 
+			DynamicExtensionsUtility.closeDAO(hibernateDao);
+
+		}else
+		{
+			Map<String, Object> map = new HashMap<String, Object>();
+
+			map.put(WebUIManagerConstants.ASSOCIATION, getTempAssociation(associationInterface));
+			map.put(WebUIManagerConstants.STATIC_OBJECT_ID, sourceEntityRecordId);
+			map.put(WebUIManagerConstants.DYNAMIC_OBJECT_ID, TargetEntityRecordId);
+			map.put(WebUIManagerConstants.PACKAGE_NAME, getPackageName(associationInterface
+					.getTargetEntity(), ""));
+			map.put(WebUIManagerConstants.SESSION_DATA_BEAN, sessionDataBean);
+			DataAssociationClient associationClient = new DataAssociationClient();
+			try
+			{
+				associationClient.setServerUrl(new URL(Variables.jbossUrl
+						+ associationInterface.getTargetEntity().getEntityGroup().getName() + "/"));
+			}
+			catch (MalformedURLException e)
+			{
+				throw new DynamicExtensionsSystemException(
+						"MalformedURLException: address not correct." + e);
+			}
+			associationClient.setParamaterObjectMap(map);
+			associationClient.execute(null);
+
+		}
+		
 	}
 
 	/**

@@ -650,10 +650,10 @@ public class FormDataCollectionUtility
 		}
 
 		//remove stack if data is submitted for the subform.
-		if (isSubformSubmitted(request, errorList))
+		/*if (isSubformSubmitted(request, errorList))
 		{
 			popStack(request);
-		}
+		}*/
 		if (!Boolean.valueOf(isDraft))
 		{
 			request.setAttribute(DEConstants.ERRORS_LIST, errorList);

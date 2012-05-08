@@ -1,27 +1,18 @@
 
 package edu.common.dynamicextensions.dem;
 
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 
 import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
 import edu.common.dynamicextensions.domain.Association;
-import edu.common.dynamicextensions.domain.Entity;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
-import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
-import edu.common.dynamicextensions.domaininterface.CategoryInterface;
-import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.entitymanager.AbstractBaseMetadataManager;
-import edu.common.dynamicextensions.entitymanager.CategoryManager;
-import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.entitymanager.EntityManagerInterface;
-import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
-import edu.common.dynamicextensions.entitymanager.FileQueryBean;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.processor.InContextApplyDataEntryProcessor;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.beans.SessionDataBean;
@@ -38,6 +29,7 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 {
 
 	private final DyExtnObjectCloner cloner = new DyExtnObjectCloner();
+	private InContextApplyDataEntryProcessor entryProcessor = new InContextApplyDataEntryProcessor();
 
 	public DyanamicObjectProcessor() throws DAOException
 	{
@@ -65,7 +57,7 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 		ContainerInterface container = (ContainerInterface) paramaterObjectMap
 				.get(WebUIManagerConstants.CONTAINER);
 
-		boolean isEdited;
+		/*boolean isEdited;
 
 		if (container.getAbstractEntity() instanceof EntityInterface)
 		{
@@ -88,8 +80,8 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 			isEdited = CategoryManager.getInstance().editData(
 					(CategoryEntityInterface) container.getAbstractEntity(), attributeValueMap,
 					categoryRecordId, sessionDataBean, userId);
-		}
-		return isEdited;
+		}*/
+		return entryProcessor.editDataEntryForm(container, attributeValueMap, recordIdentifier, sessionDataBean);
 	}
 
 	/**
@@ -110,7 +102,7 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 		ContainerInterface container = (ContainerInterface) paramaterObjectMap
 				.get(WebUIManagerConstants.CONTAINER);
 
-		Long recordIdentifier = null;
+		/*Long recordIdentifier = null;
 
 		if (container.getAbstractEntity() instanceof CategoryEntityInterface)
 		{
@@ -131,8 +123,8 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 					.getAbstractEntity(), map, null, new ArrayList<FileQueryBean>(),
 					sessionDataBean, userId);
 		}
-
-		return recordIdentifier;
+*/
+		return Long.valueOf(entryProcessor.insertDataEntryForm(container, attributeValueMap, sessionDataBean));
 	}
 
 	/**
@@ -159,35 +151,9 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 			hibernateDao = (HibernateDAO) DAOConfigFactory.getInstance()
 					.getDAOFactory(applicationName).getDAO();
 			hibernateDao.openSession(sessionDataBean);
-			Object staticEntity = hibernateDao
-					.retrieveById(tmpPackageName
-							+ "."
-							+ association.getEntity().getName().substring(
-									association.getEntity().getName().lastIndexOf(".") + 1),
-							staticEntityId);
-			Object oldStaticEntity = cloner.clone(staticEntity);
-
-			Object dynamicEntity = hibernateDao.retrieveById(tmpPackageName + "."
-					+ association.getTargetEntity().getName(), dynamicEntityId);
-			Object oldDynamicEntity = cloner.clone(dynamicEntity);
-
-			String sourceRoleName = EntityManagerUtil.getHookAssociationSrcRoleName(association
-					.getEntity(), association.getTargetEntity());
-			Set<Object> containedObjects = (Set<Object>) invokeGetterMethod(
-					staticEntity.getClass(),
-					association.getTargetEntity().getName() + "Collection", staticEntity);
-			containedObjects.add(dynamicEntity);
-
-			invokeSetterMethod(staticEntity.getClass(), association.getTargetEntity().getName()
-					+ "Collection", Class.forName("java.util.Collection"), staticEntity,
-					containedObjects);
-
-			invokeSetterMethod(dynamicEntity.getClass(), sourceRoleName, staticEntity.getClass(),
-					dynamicEntity, staticEntity);
-
-			hibernateDao.update(dynamicEntity, oldDynamicEntity);
-			hibernateDao.update(staticEntity, oldStaticEntity);
-			hibernateDao.commit();
+			EntityManagerInterface entityManagerInterface = EntityManager.getInstance();
+			entityManagerInterface.associateData(staticEntityId, dynamicEntityId, association, tmpPackageName,
+					hibernateDao);
 
 		}
 		catch (DAOException e)
@@ -195,13 +161,11 @@ public class DyanamicObjectProcessor extends AbstractBaseMetadataManager
 			throw new DynamicExtensionsSystemException("Error in associating objects", e);
 		}
 
-		catch (ClassNotFoundException e)
-		{
-			throw new DynamicExtensionsSystemException("Error in associating objects", e);
-		}
 		finally
 		{
 			DynamicExtensionsUtility.closeDAO(hibernateDao);
 		}
 	}
+
+	
 }
