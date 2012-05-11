@@ -1424,7 +1424,7 @@
 	
 	<!-- Create dynamic extensions jar Begins-->
 		<target name="build:jar:core" depends="compile" description="generates the jar with core action classes">
-			<delete file="${interface.dir}/DynamicExtensions.jar" />
+			<delete file="${interface.dir}/DynamicExtensions.jar" failonerror="false"/>
 			<jar taskname="buildJar" jarfile="${interface.dir}/DynamicExtensions.jar">
 
 				<fileset dir="${target.dir}">
@@ -1449,4 +1449,32 @@
 				</manifest>
 			</jar>
 		</target>
+		
+		<target name="build:jar:all" depends="compile" description="generates the jar with core action classes">
+			<delete file="${interface.dir}/DynamicExtensions.jar" />
+			<jar taskname="buildJar" jarfile="${interface.dir}/DynamicExtensions.jar">
+	
+				<fileset dir="${target.dir}">
+					<include name="**/*.*" />
+					<include name="**/*.*" />
+					<exclude name="**/log4j.properties" />
+					<exclude name="**/server.properties" />
+					<exclude name="**/uicontrols-captions.properties" />
+					<exclude name="**/edu/hostApp/**/*.*" />
+					<exclude name="**/edu/common/dynamicextensions/ui/webui/action/*.*" />
+					<exclude name="**/*Test*.class" />
+					<exclude name="**/TestHibernate.cfg.xml" />
+					<exclude name="**/*ApplicationDAOProperties.xml" />
+				</fileset>
+				<manifest>
+					<section name="${DynamicExtensions.jar.details}">
+						<attribute name="Version" value="${DynamicExtensions.jar.version}" />
+						<attribute name="Built-By" value="${user.name}" />
+						<attribute name="Build-on" value="${TODAY_IND}" />
+						<attribute name="SVN-URL" value="${dist.revision}" />
+					</section>
+				</manifest>
+			</jar>
+		</target>
+
 	</project>
