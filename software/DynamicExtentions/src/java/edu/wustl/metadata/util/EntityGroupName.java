@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import edu.common.dynamicextensions.entitymanager.EntityGroupManager;
 import edu.common.dynamicextensions.entitymanager.EntityGroupManagerInterface;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.cab2b.common.exception.RuntimeException;
 import edu.wustl.common.beans.NameValueBean;
@@ -93,7 +94,9 @@ public class EntityGroupName
 		return allEntGrpNames;
 	}
 
-    /**
+   
+
+	/**
      * Adds the only specific entity groups.
      *
      * @param includeEntityGroups
@@ -224,11 +227,13 @@ public class EntityGroupName
 	 * The main method.
 	 *
 	 * @param args the arguments
+	 * @throws DynamicExtensionsApplicationException 
 	 */
-	public static void main(final String[] args)
+	public static void main(final String[] args) throws DynamicExtensionsApplicationException
 	{
 		final EntityGroupName entityGroupName = new EntityGroupName();
 		entityGroupName.getAllEntityGroupBean(args[0], args[1], args[2]);
 	}
 
+	
 }
