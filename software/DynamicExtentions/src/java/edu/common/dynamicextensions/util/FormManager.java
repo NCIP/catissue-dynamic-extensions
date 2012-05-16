@@ -60,13 +60,13 @@ public class FormManager
 		ApplyDataEntryProcessorInterface applyDataEntryFormProcessor;
 		if(Variables.jbossUrl.isEmpty())
 		{
+			applyDataEntryFormProcessor = new InContextApplyDataEntryProcessor();			
 			
+		}else
+		{
 			applyDataEntryFormProcessor = ApplyDataEntryFormProcessor
 			.getInstance();
 		}
-		
-		applyDataEntryFormProcessor = new InContextApplyDataEntryProcessor();
-
 		String userId = (String) CacheManager.getObjectFromCache(request,
 				WebUIManagerConstants.USER_ID);
 		if (userId != null)
