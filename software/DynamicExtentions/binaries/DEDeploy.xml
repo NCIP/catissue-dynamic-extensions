@@ -1464,11 +1464,8 @@
 
 	</target>
 
-	<!-- =================================
-          target:export.xmi.and.generate.cacore
-         ================================= -->
-	<target name="export.xmi.and.generate.cacore" description="Export XMI and generate caCore">
-
+	
+	<target name="generate:package:info" description="generates info required to create caCOREs">
 		<java failonerror="true" classname="edu.wustl.metadata.util.PackageName" fork="yes" maxmemory="1024m">
 			<arg value="${export.dir}/" />
 			<arg value="${xmi.name}" />
@@ -1487,166 +1484,195 @@
 
 		<property file="${export.dir}/Package.properties" />
 
-		<property name="entitygroupname" value="${entity.name}" />
+		
 		<property name="xmi.filename" value="${export.dir}/${entity.name}.xmi" />
 		<property name="version.number" value="1.1" />
-		<property name="war.name" value="dynamicExtensions${default.prifix.war}${entitygroupname}" />
+		
 		<echo message="${default.prifix.war}" />
 		<echo message="${war.name}" />
+	</target>
+
+	<target name="generate:cacore:for:xmi" depends="generate:package:info">
+		<property name="entitygroupname" value="${entity.name}" />
+		<property name="war.name" value="dynamicExtensions${default.prifix.war}${entitygroupname}" />
+		<echo message="${entitygroupname} " />
+		<echo message="-----------------------------------------" />
+		<echo message="Generating caCore for ${entitygroupname}" />
+		<echo message="-----------------------------------------" />
+		<echo message=" " />
+		<available file="${xmi.filename}" property="isExportedFilePresent" />
 		<if>
-			<equals arg1="${import.xmi}" arg2="True" casesensitive="false" />
+			<equals arg1="true" arg2="${isExportedFilePresent}" casesensitive="false" />
 			<then>
+				<echo message="-------------------------------------------------" />
+				<echo message="XMI present hence not exporting XMI for CACORE" />
+				<echo message="-------------------------------------------------" />
 				<echo message=" " />
-				<echo message="-----------------------------------------" />
-				<echo message="Generating caCore for ${entitygroupname}" />
-				<echo message="-----------------------------------------" />
-				<echo message=" " />
-				<available file="${xmi.filename}" property="isExportedFilePresent" />
+			</then>
+			<else>
+				<antcall target="export_xmi">
+					<param name="setup.method.required" value="False" />
+					<param name="groupname" value="${entitygroupname}" />
+					<param name="relative.filename" value="${xmi.filename}" />
+					<param name="version" value="${version.number}" />
+					<param name="hookentity" value="${hook.entity.value}" />
+				</antcall>
+			</else>
+		</if>
+		<property name="ORM1CfgFile" value="${cacore.deployable.dir}/${entitygroupname}.war/orm1.cfg.xml" />
+		<property name="DEWebCfgFile" value="tempWar/${entitygroupname}.war/WEB-INF/classes/demHibernate.cfg.xml" />
+
+		<antcall target="generate.cacore">
+			<param name="entitygroupname" value="${entity.name}" />
+		</antcall>
+		<java classname="edu.wustl.metadata.util.CacoreDEMetadataAppender" fork="true" maxmemory="1024M">
+			<arg value="${DEWebCfgFile}" />
+			<arg value="${ORM1CfgFile}" />
+			<classpath>
+				<pathelement location="${temp.dir.DE}" />
+				<fileset dir="${de.zip.location}/lib/server">
+					<include name="*.jar" />
+					<exclude name="uml-1.3.jar" />
+				</fileset>
+				<fileset dir="${de.zip.location}/lib/extra">
+					<include name="jboss-j2ee.jar" />
+					<include name="jta.jar" />
+				</fileset>
+			</classpath>
+		</java>
+
+		<antcall target="merge.audit.xml" />
+
+		<copy todir="${cacore.deployable.dir}/${entitygroupname}.war">
+			<fileset dir="tempWar/${entitygroupname}.war">
+			</fileset>
+		</copy>
+
+		<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war">
+			<fileset dir="${cacore.deployable.dir}/${entitygroupname}.war" />
+		</copy>
+
+		<antcall target="update.jars.in.caCORE.wars"></antcall>
+
+		<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/classes" overwrite="true">
+			<fileset dir="${de.zip.location}/dem.war/WEB-INF/classes" >
+				<include name="DynamicExtensionDAO.properties" />
+			</fileset>
+		</copy>
+		<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF" overwrite="true">
+			<fileset dir="${de.zip.location}/dem.war/WEB-INF" >
+				<include name="web.xml" />
+			</fileset>
+		</copy>
+
+	</target>
+	<!-- =================================
+          target:export.xmi.and.generate.cacore
+         ================================= -->
+	<target name="export.xmi.and.generate.cacore" description="Export XMI and generate caCore">
+
+		
+		<if>
+		<equals arg1="${import.xmi}" arg2="True" casesensitive="false" />
+			<then>
+				<antcall target="generate:cacore:for:xmi"/>
+			</then>
+		<elseif>
+		<equals arg1="${import.xmi}" arg2="False" casesensitive="false" />
+			<then>
+				<property name="entitygroupname" value="${xmi.name}" />
+				<property name="war.name" value="dynamicExtensions${default.prifix.war}${entitygroupname}" />
+				<available file="${cacore.deployable.dir}/${entitygroupname}.war" property="cacore.present" />
+				<echo message = "${cacore.deployable.dir}/${war.name} *************"/>
 				<if>
-					<equals arg1="true" arg2="${isExportedFilePresent}" casesensitive="false" />
+					<equals arg1="${cacore.present}" arg2="true" />
 					<then>
-						<echo message="-------------------------------------------------" />
-						<echo message="XMI present hence not exporting XMI for CACORE" />
-						<echo message="-------------------------------------------------" />
 						<echo message=" " />
+						<echo message="-----------------------------------------" />
+						<echo message="caCore for ${entitygroupname} already generated" />
+						<echo message="Skipping caCore generation for ${entitygroupname}" />
+						<echo message="-----------------------------------------" />
+						<echo message=" " />
+						<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war">
+							<fileset dir="${cacore.deployable.dir}/${entitygroupname}.war">
+							</fileset>
+						</copy>
+						<antcall target="update.jars.in.caCORE.wars">
+							<param name= "war.name" value="${war.name}"/>
+							<param name="entitygroupname" value="${entitygroupname}"/>
+						</antcall>
 					</then>
 					<else>
-						<antcall target="export_xmi">
-							<param name="setup.method.required" value="False" />
-							<param name="groupname" value="${entitygroupname}" />
-							<param name="relative.filename" value="${xmi.filename}" />
-							<param name="version" value="${version.number}" />
-							<param name="hookentity" value="${hook.entity.value}" />
-						</antcall>
-					</else>
-				</if>
-				<property name="ORM1CfgFile" value="${cacore.deployable.dir}/${entitygroupname}.war/orm1.cfg.xml" />
-				<property name="DEWebCfgFile" value="tempWar/${entitygroupname}.war/WEB-INF/classes/demHibernate.cfg.xml" />
-
-				<antcall target="generate.cacore" />
-				<java classname="edu.wustl.metadata.util.CacoreDEMetadataAppender" fork="true" maxmemory="1024M">
-					<arg value="${DEWebCfgFile}" />
-					<arg value="${ORM1CfgFile}" />
-					<classpath>
-						<pathelement location="${temp.dir.DE}" />
-						<fileset dir="${de.zip.location}/lib/server">
-							<include name="*.jar" />
-							<exclude name="uml-1.3.jar" />
-						</fileset>
-						<fileset dir="${de.zip.location}/lib/extra">
-							<include name="jboss-j2ee.jar" />
-							<include name="jta.jar" />
-						</fileset>
-					</classpath>
-				</java>
-
-				<antcall target="merge.audit.xml" />
-
-				<copy todir="${cacore.deployable.dir}/${entitygroupname}.war">
-					<fileset dir="tempWar/${entitygroupname}.war">
-					</fileset>
-				</copy>
-
-				<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war">
-					<fileset dir="${cacore.deployable.dir}/${entitygroupname}.war" />
-				</copy>
-
-				<antcall target="update.jars.in.caCORE.wars"></antcall>
-
-				<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/classes" overwrite="true">
-					<fileset dir="${de.zip.location}/dem.war/WEB-INF/classes" >
-						<include name="DynamicExtensionDAO.properties" />
-					</fileset>
-				</copy>
-				<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF" overwrite="true">
-					<fileset dir="${de.zip.location}/dem.war/WEB-INF" >
-						<include name="web.xml" />
-					</fileset>
-				</copy>
-
-
-			</then>
-			<elseif>
-				<equals arg1="${import.xmi}" arg2="False" casesensitive="false" />
-				<then>
-					<available file="${cacore.deployable.dir}/${entitygroupname}.war" property="cacore.present" />
-
-					<property name="ORM1CfgFile" value="${cacore.deployable.dir}/${entitygroupname}.war/orm1.cfg.xml" />
-					<property name="DEWebCfgFile" value="${cacore.deployable.dir}/${entitygroupname}.war/WEB-INF/classes/demHibernate.cfg.xml" />
-
-					<echo message="${ORM1CfgFile}" />
-					<echo message="${DEWebCfgFile}" />
-					<if>
-						<equals arg1="${cacore.present}" arg2="true" />
-						<then>
-							<echo message=" " />
-							<echo message="-----------------------------------------" />
-							<echo message="caCore for ${entitygroupname} already generated" />
-							<echo message="Skipping caCore generation for ${entitygroupname}" />
-							<echo message="-----------------------------------------" />
-							<echo message=" " />
-						</then>
-						<else>
-							<antcall target="export_xmi">
-								<param name="setup.method.required" value="False" />
-								<param name="groupname" value="${entitygroupname}" />
-								<param name="relative.filename" value="${xmi.filename}" />
-								<param name="version" value="${version.number}" />
-								<param name="hookentity" value="${hook.entity.value}" />
-							</antcall>
-							<antcall target="generate.cacore" />
-							<antcall target="merge.audit.xml" />
-							<copy todir="${cacore.deployable.dir}/${entitygroupname}.war">
-								<fileset dir="tempWar/${entitygroupname}.war">
-								</fileset>
-							</copy>
-						</else>
+						<antcall target="generate:missing:cacore"/>
+					</else>	
 					</if>
-					<java classname="edu.wustl.metadata.util.CacoreDEMetadataAppender" fork="true" maxmemory="1024M">
-						<arg value="${DEWebCfgFile}" />
-						<arg value="${ORM1CfgFile}" />
-						<classpath>
-							<pathelement location="${temp.dir.DE}" />
-							<fileset dir="${de.zip.location}/lib/server">
-								<include name="*.jar" />
-								<exclude name="uml-1.3.jar" />
-							</fileset>
-							<fileset dir="${de.zip.location}/lib/extra">
-								<include name="jboss-j2ee.jar" />
-								<include name="jta.jar" />
-							</fileset>
-						</classpath>
-					</java>
-					<antcall target="merge.audit.xml" />
-					<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war">
-						<fileset dir="${cacore.deployable.dir}/${entitygroupname}.war">
-						</fileset>
-					</copy>
-
-					<antcall target="update.jars.in.caCORE.wars"></antcall>
-
-					<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/classes" overwrite="true">
-						<fileset dir="${de.zip.location}/dem.war/WEB-INF/classes" >
-							<include name="DynamicExtensionDAO.properties" />
-						</fileset>
-				    </copy>
-					<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF" overwrite="true">
-						<fileset dir="${de.zip.location}/dem.war/WEB-INF" >
-							<include name="web.xml" />
-						</fileset>
-					</copy>
-					<echo message="${ORM1CfgFile}" />
-					<echo message="${DEWebCfgFile}" />
-					<delete>
-						<fileset dir="${export.dir}/">
-							<include name="**/*.txt" />
-							<include name="**/Package.properties" />
-						</fileset>
-					</delete>
-				</then>
-			</elseif>
+			</then>
+		</elseif>
 		</if>
 		<delete dir="tempWar" />
+	</target>
+
+	<target name="generate:missing:cacore" depends="generate:package:info">
+
+		<property name="ORM1CfgFile" value="${cacore.deployable.dir}/${entitygroupname}.war/orm1.cfg.xml" />
+		<property name="DEWebCfgFile" value="${cacore.deployable.dir}/${entitygroupname}.war/WEB-INF/classes/demHibernate.cfg.xml" />
+
+		<echo message="${ORM1CfgFile}" />
+		<echo message="${DEWebCfgFile}" />
+		<antcall target="export_xmi">
+			<param name="setup.method.required" value="False" />
+			<param name="groupname" value="${entitygroupname}" />
+			<param name="relative.filename" value="${xmi.filename}" />
+			<param name="version" value="${version.number}" />
+			<param name="hookentity" value="${hook.entity.value}" />
+		</antcall>
+		<antcall target="generate.cacore" />
+		<antcall target="merge.audit.xml" />
+		<copy todir="${cacore.deployable.dir}/${entitygroupname}.war">
+			<fileset dir="tempWar/${entitygroupname}.war">
+			</fileset>
+		</copy>
+		<java classname="edu.wustl.metadata.util.CacoreDEMetadataAppender" fork="true" maxmemory="1024M">
+			<arg value="${DEWebCfgFile}" />
+			<arg value="${ORM1CfgFile}" />
+			<classpath>
+				<pathelement location="${temp.dir.DE}" />
+				<fileset dir="${de.zip.location}/lib/server">
+					<include name="*.jar" />
+					<exclude name="uml-1.3.jar" />
+				</fileset>
+				<fileset dir="${de.zip.location}/lib/extra">
+					<include name="jboss-j2ee.jar" />
+					<include name="jta.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<antcall target="merge.audit.xml" />
+		<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war">
+			<fileset dir="${cacore.deployable.dir}/${entitygroupname}.war">
+			</fileset>
+		</copy>
+
+		<antcall target="update.jars.in.caCORE.wars"></antcall>
+
+		<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/classes" overwrite="true">
+			<fileset dir="${de.zip.location}/dem.war/WEB-INF/classes" >
+				<include name="DynamicExtensionDAO.properties" />
+			</fileset>
+	    </copy>
+		<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF" overwrite="true">
+			<fileset dir="${de.zip.location}/dem.war/WEB-INF" >
+				<include name="web.xml" />
+			</fileset>
+		</copy>
+		<echo message="${ORM1CfgFile}" />
+		<echo message="${DEWebCfgFile}" />
+		<delete>
+			<fileset dir="${export.dir}/">
+				<include name="**/*.txt" />
+				<include name="**/Package.properties" />
+			</fileset>
+		</delete>
 	</target>
 
 	<!-- =================================
