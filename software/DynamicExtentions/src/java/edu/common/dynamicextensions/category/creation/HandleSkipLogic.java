@@ -15,11 +15,9 @@ import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
-import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.EntityGroupInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
-import edu.common.dynamicextensions.domaininterface.userinterface.CategoryAssociationControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
@@ -153,69 +151,9 @@ public class HandleSkipLogic
 				controlVsAction.put(targetControl, action);
 			}
 		}
-		updateSkipLogicForAbstractContainmentControl(catAttrVsConditionStatements,
-				setOfAbstractContainmentCtrl, controlVsAction);
-
+		
 		return catAttrVsConditionStatements;
 	}
-
-	private void updateSkipLogicForAbstractContainmentControl(
-			Map<ControlInterface, ConditionStatements> catAttrVsConditionStatements,
-			Set<ContainerInterface> setOfAbstractContainmentCtrl,
-			Map<ControlInterface, Action> controlVsAction)
-	{
-		for (ContainerInterface container : setOfAbstractContainmentCtrl)
-		{
-			int showAction = 0;
-			int hideAction = 0;
-			for (ControlInterface control : container.getAllControlsUnderSameDisplayLabel())
-			{
-				Action action = controlVsAction.get(control);
-				if (action instanceof ShowAction)
-				{
-					showAction++;
-				}
-				else if (action instanceof HideAction)
-				{
-					hideAction++;
-				}
-			}
-			int numberOfControls = container.getAllControlsUnderSameDisplayLabel().size();
-			CategoryEntityInterface parentCategoryEntity = ((CategoryEntityInterface) container
-					.getAbstractEntity()).getTreeParentCategoryEntity();
-			if ((showAction == numberOfControls || hideAction == numberOfControls)
-					&& parentCategoryEntity.getTreeParentCategoryEntity() == null)
-			{
-				createSkipLogicForContainmentControl(catAttrVsConditionStatements, container);
-			}
-		}
-	}
-
-	private void createSkipLogicForContainmentControl(
-			Map<ControlInterface, ConditionStatements> catAttrVsConditionStatements,
-			ContainerInterface container)
-	{
-		ControlInterface control = container.getAllControlsUnderSameDisplayLabel().iterator()
-				.next();
-		ContainerInterface parentContainer = container.getParentContainer(container);
-		for (ControlInterface controlInterface : parentContainer
-				.getAllControlsUnderSameDisplayLabel())
-		{
-			if (controlInterface instanceof CategoryAssociationControlInterface)
-			{
-				CategoryAssociationControlInterface assoControl = (CategoryAssociationControlInterface) controlInterface;
-				if (assoControl.getContainer().getAbstractEntity().equals(
-						container.getAbstractEntity()))
-				{
-					catAttrVsConditionStatements.put(controlInterface, catAttrVsConditionStatements
-							.get(control));
-					controlInterface.setIsSkipLogicTargetControl(Boolean.TRUE);
-					break;
-				}
-			}
-		}
-	}
-
 	/**
 	 * Populate control identifier in skip logic.
 	 * @param controlVsConditionStatements the skip logic vs control
