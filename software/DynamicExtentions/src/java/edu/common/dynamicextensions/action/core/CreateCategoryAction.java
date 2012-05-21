@@ -131,7 +131,7 @@ public class CreateCategoryAction extends HttpServlet
 			{
 				setTemplateFilePath(file.getPath(), templateFilePath, mappingXMLFile);
 			}
-			else
+			else if("".equals(templateFilePath.toString()) || "".equals(mappingXMLFile.toString()))
 			{
 				addFilePath(templateFilePath, mappingXMLFile, file);
 			}
@@ -147,12 +147,12 @@ public class CreateCategoryAction extends HttpServlet
 	private void addFilePath(StringBuffer templateFilePath, StringBuffer mappingXMLFile, File file)
 	{
 		if (file.getName().startsWith(MAPPING_PREFIX)
-				&& file.getName().endsWith(DEConstants.XML_SUFFIX))
+				&& file.getName().endsWith(DEConstants.XML_SUFFIX) && "".equals(mappingXMLFile.toString()))
 		{
 			mappingXMLFile.append(file.getPath());
 		}
 		else if (file.getName().startsWith(TEMPLATE_PREFIX)
-				&& file.getName().endsWith(DEConstants.XML_SUFFIX))
+				&& file.getName().endsWith(DEConstants.XML_SUFFIX) && "".equals(templateFilePath.toString()))
 		{
 			templateFilePath.append(file.getPath());
 		}

@@ -187,7 +187,7 @@ public class CategoryProcessor
 				+ category.getName() + DEConstants.CSV_SUFFIX;
 		String xmlFile = tempDirPath + File.separator + DEConstants.TEMPLATE_DIR + File.separator
 				+ category.getName() + DEConstants.XML_SUFFIX;
-		System.setProperty(BulkOperationConstants.CONFIG_DIR, "clinportal-properties");
+		System.setProperty(BulkOperationConstants.CONFIG_DIR, "../server/default/clinportal-properties");
 
 		//import category XML and CSV template created above.
 		try
