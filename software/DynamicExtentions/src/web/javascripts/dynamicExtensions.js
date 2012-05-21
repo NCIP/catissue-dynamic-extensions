@@ -2670,7 +2670,7 @@ function deleteRecordEntry()
 	 if(vConfirm){
 		 var operationElement = document.getElementById('operation');
 		 operationElement.value = "disableRecord";
-		 var url =contextParam + "/DeleteRecordEntryAction.do?";
+		 var url =contextParam + "/DeleteRecordEntryAction?";
 		 var dataEntryForm = document.getElementById('dataEntryForm');
 		 dataEntryForm.action = url;
 		 dataEntryForm.submit();

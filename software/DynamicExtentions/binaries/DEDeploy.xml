@@ -2388,8 +2388,15 @@
 					<url-pattern>/DisplayFormDataInGrid</url-pattern>
 				</servlet-mapping>
 
-				
-				
+				<servlet>
+					<servlet-name>DeleteRecordEntryAction</servlet-name>
+					<servlet-class>edu.common.dynamicextensions.action.core.DeleteRecordEntryAction</servlet-class>
+				</servlet>
+				<servlet-mapping>
+					<servlet-name>DeleteRecordEntryAction</servlet-name>
+					<url-pattern>/DeleteRecordEntryAction</url-pattern>
+				</servlet-mapping>
+
 				<taglib>
 					<taglib-uri>/WEB-INF/dynamicExtensions.tld</taglib-uri>
 					<taglib-location>/WEB-INF/dynamicExtensions.tld</taglib-location>

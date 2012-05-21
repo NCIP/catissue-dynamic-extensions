@@ -3,15 +3,13 @@ package edu.common.dynamicextensions.action.core;
 
 import java.io.IOException;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManager;
+import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.global.DEConstants;
 
 // TODO: Auto-generated Javadoc
@@ -19,8 +17,13 @@ import edu.common.dynamicextensions.util.global.DEConstants;
  * The Class DeleteRecordEntryAction.
  * This Action Class is Called when a delete button on a DE form is clicked.
  */
-public class DeleteRecordEntryAction extends BaseDynamicExtensionsAction
+public class DeleteRecordEntryAction extends BaseServletAction
 {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9089768030439023652L;
 
 	/*
 	 * (non-Javadoc)
@@ -28,23 +31,20 @@ public class DeleteRecordEntryAction extends BaseDynamicExtensionsAction
 	 * (org.apache.struts.action.ActionMapping, org.apache.struts.action.ActionForm,
 	 *  javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
-	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws IOException
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException
 	{
-		ActionForward actionForward = null;
 		String operation = request.getParameter("operation");
 
-		//Perform DE related Stuff here
-
-		//callback the host url
 		boolean isCallBack = redirectCallbackURL(request, response, operation);
 
 		if (!isCallBack)
 		{
-			actionForward = mapping.findForward(DEConstants.SUCCESS);
+			forward(request, response, WebUIManagerConstants.LOAD_DATA_ENTRY_FORM_ACTION_URL);
 		}
 
-		return actionForward;
+		
 	}
 
 	/**
