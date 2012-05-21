@@ -312,7 +312,10 @@ jQuery(document).ready(
 															</td>
 														<!-- BUG 7662 FIXED. Each Cancel should take you one level up in the containment hierarchy and finally the Cancel on Main Class should take you to the Add Records page.-->
 														</c:if>
-														
+														<td align='center'>
+																<input type="image" id="btnDEFormLock" width="62" height="21" align="middle" onClick="return setFormLocking('true')"/>
+																<input type="image" id="btnDEFormUnlock" width="62" height="21" align="middle" onClick="return setFormLocking('false')"/>
+															</td>
 														<input type="hidden" id="dataEntryOperation" name="dataEntryOperation" value="insertChildData"/>
 														<c:if test='${(isTopLevelEntity=="true")}'>
 															<script>
@@ -354,6 +357,7 @@ jQuery(document).ready(
 			<input type="hidden" id="containerIdentifier" name="containerIdentifier" value="${param.containerIdentifier}"/>
 			<input type="hidden" id="childContainerId" name="childContainerId" value=""/>
 			<input type="hidden" id="isDraft" name="isDraft" value="false"/>
+			<input type="hidden" id="isFormLocked" name="isFormLocked" value="false"/>
 			<input type="hidden" id="recordIdentifier123" name="recordIdentifier123" value="{param.recordIdentifier123}"/>
 			<input type="hidden" id="childRowId" name="childRowId" value=""/>
 			<input type="hidden" id="isShowTemplateRecord" name="isShowTemplateRecord" value="${param.isShowTemplateRecord}"/>

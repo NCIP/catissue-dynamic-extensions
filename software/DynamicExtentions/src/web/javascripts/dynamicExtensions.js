@@ -2218,6 +2218,14 @@ function showParentContainerInsertDataPage(isDraft)
     setWaitCursorforAllObjectHierarchy(dataEntryForm);
 }
 
+function setFormLocking(isFormLocked)
+{
+	getValues();
+    document.getElementById('isFormLocked').value = isFormLocked;
+    var dataEntryForm = document.getElementById('dataEntryForm');
+    setWaitCursorforAllObjectHierarchy(dataEntryForm);
+}
+
 function getValues()
 {
 	var frm = document.forms[0];
