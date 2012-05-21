@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.util.ContainerUtility;
@@ -68,6 +69,8 @@ public class DynamicUIGeneratorTag extends TagSupport
 	private void generateHTML() throws IOException, DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
+		ContainerInterface containerInterface = formCache.getContainer();
+		containerInterface.setMode(getMode());
 		ContainerUtility containerUtility = new ContainerUtility((HttpServletRequest) pageContext
 				.getRequest(), formCache.getContainer());
 
