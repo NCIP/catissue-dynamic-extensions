@@ -1706,7 +1706,12 @@
 			<zipfileset src="${de.zip.location}/lib/server/castor-1.3.jar" includes="**/*.*"/>
 			<zipfileset src="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib/${entitygroupname}.jar" includes="**/*.*"/>
 		</jar>
-
+		<copy todir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/classes">
+			<fileset dir="${de.temp.dir}/dem.war/WEB-INF/classes/">
+				<include name="ehcache.xml"/>
+			</fileset>
+		</copy>
+		
 		<delete failonerror="false">
 			<fileset dir="${jboss.home.dir}/server/default/deploy/${war.name}.war/WEB-INF/lib">
 					<exclude name="all.jar"/>
