@@ -123,6 +123,7 @@ public interface WebUIManagerConstants
 	public final String UPDATECACHE = "UpdateCache";
 	
 	public final String ISDRAFT = "isDraft";
+	public final String IS_FORM_LOCKED = "isFormLocked";
 
 	String OVERRIDE_CAPTION = "OverrideCaption";
 }
