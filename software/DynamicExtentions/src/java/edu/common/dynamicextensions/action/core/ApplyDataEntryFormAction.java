@@ -157,10 +157,11 @@ public class ApplyDataEntryFormAction extends HttpServlet
 				calllbackURL = calllbackURL + "&" + WebUIManagerConstants.ISDRAFT + "="
 						+ request.getParameter(WebUIManagerConstants.ISDRAFT);
 			}
-			else if (Boolean.parseBoolean(request.getParameter("isFormLocked")))
+			else if (Boolean.parseBoolean(request
+					.getParameter(WebUIManagerConstants.IS_FORM_LOCKED)))
 			{
-				calllbackURL = calllbackURL + "&isFormLocked="
-						+ request.getParameter("isFormLocked");
+				calllbackURL = calllbackURL + "&" + WebUIManagerConstants.IS_FORM_LOCKED + "="
+						+ request.getParameter(WebUIManagerConstants.IS_FORM_LOCKED);
 			}
 		}
 		return calllbackURL;
