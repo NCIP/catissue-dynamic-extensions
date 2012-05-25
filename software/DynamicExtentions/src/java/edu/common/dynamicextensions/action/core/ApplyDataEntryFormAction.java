@@ -71,8 +71,16 @@ public class ApplyDataEntryFormAction extends HttpServlet
 				
 					DataEntryForm dataEntryForm = DynamicExtensionsUtility
 							.poulateDataEntryForm(request);
-					long recordId = formManager.submitMainFormData(request);
-				
+					long recordId;
+					if (request.getParameter(WebUIManagerConstants.IS_FORM_LOCKED)
+							.equalsIgnoreCase(""))
+					{
+						recordId = formManager.submitMainFormData(request);
+					}
+					else
+					{
+						recordId = Long.valueOf(dataEntryForm.getRecordIdentifier());
+					}
 					response.sendRedirect(getCallbackURL(request, response, String
 							.valueOf(recordId), WebUIManagerConstants.SUCCESS, dataEntryForm
 							.getContainerId()));

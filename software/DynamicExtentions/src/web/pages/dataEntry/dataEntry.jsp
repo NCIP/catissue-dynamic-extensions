@@ -357,7 +357,7 @@ jQuery(document).ready(
 			<input type="hidden" id="containerIdentifier" name="containerIdentifier" value="${param.containerIdentifier}"/>
 			<input type="hidden" id="childContainerId" name="childContainerId" value=""/>
 			<input type="hidden" id="isDraft" name="isDraft" value="false"/>
-			<input type="hidden" id="isFormLocked" name="isFormLocked" value="false"/>
+			<input type="hidden" id="isFormLocked" name="isFormLocked" value=""/>
 			<input type="hidden" id="recordIdentifier123" name="recordIdentifier123" value="{param.recordIdentifier123}"/>
 			<input type="hidden" id="childRowId" name="childRowId" value=""/>
 			<input type="hidden" id="isShowTemplateRecord" name="isShowTemplateRecord" value="${param.isShowTemplateRecord}"/>
