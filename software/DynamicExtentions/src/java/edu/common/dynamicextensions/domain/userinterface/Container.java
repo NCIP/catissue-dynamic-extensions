@@ -1005,4 +1005,16 @@ public class Container extends DynamicExtensionBaseDomainObject
 	{
 		return errorList;
 	}
+
+	@Override
+	public void updateMode(String mode)
+	{
+		setMode(mode);
+		if(getChildContainerCollection() != null)
+		for (ContainerInterface childcContainerInterface : getChildContainerCollection())
+		{
+			childcContainerInterface.setMode(mode);
+		}
+		
+	}
 }

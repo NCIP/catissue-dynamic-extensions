@@ -336,4 +336,6 @@ public interface ContainerInterface extends DynamicExtensionBaseDomainObjectInte
 	 */
 	ContainerInterface getParentContainer(ContainerInterface container);
 	List<String> getErrorList();
+
+	void updateMode(String mode);
 }

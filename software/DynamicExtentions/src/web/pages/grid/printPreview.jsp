@@ -50,9 +50,12 @@ can not be clubbed together with style class specified for the print media --%>
 </body>
 
 <c:forEach var="url" items="${fn:split(param.formUrl, ':')}" varStatus="status">
-    <dynamicExtensions:dynamicUIGeneratorFromId containerId="${fn:split(url,',')[0]}" formRecordId="${fn:split(url,',')[1]}" mode="view"/>
+    	<dynamicExtensions:dynamicUIGenerator
+		containerIdentifier="${fn:split(url,',')[0]}"
+		recordIdentifier="${fn:split(url,',')[1]}"
+		mode="view"/>
 	<c:if test="${not status.last}"><div style="page-break-before: always">&nbsp;</div></c:if>
-	
+
 </c:forEach>
 
 <script type="text/javascript" defer="defer">

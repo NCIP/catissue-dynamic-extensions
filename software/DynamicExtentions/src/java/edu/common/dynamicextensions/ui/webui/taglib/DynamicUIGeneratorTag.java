@@ -70,7 +70,8 @@ public class DynamicUIGeneratorTag extends TagSupport
 			DynamicExtensionsApplicationException
 	{
 		ContainerInterface containerInterface = formCache.getContainer();
-		containerInterface.setMode(getMode());
+		containerInterface.updateMode(getMode());
+		
 		ContainerUtility containerUtility = new ContainerUtility((HttpServletRequest) pageContext
 				.getRequest(), formCache.getContainer());
 

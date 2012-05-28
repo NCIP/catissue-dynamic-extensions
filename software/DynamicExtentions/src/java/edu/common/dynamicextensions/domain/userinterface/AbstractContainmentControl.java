@@ -92,7 +92,7 @@ public abstract class AbstractContainmentControl extends Control
 			}
 			this.getContainer().setShowAssociationControlsAsLink(true);
 			String oldMode = this.getContainer().getMode();
-			updateMode(WebUIManagerConstants.VIEW_MODE);
+			this.getContainer().updateMode(WebUIManagerConstants.VIEW_MODE);
 			subContainerHTML = this.getContainer().generateControlsHTML(null,
 					getDataEntryOperation(), container);
 			this.getContainer().setMode(oldMode);
@@ -100,16 +100,7 @@ public abstract class AbstractContainmentControl extends Control
 		return subContainerHTML;
 	}
 
-	private void updateMode(String mode)
-	{
-		this.getContainer().setMode(mode);
-		if(this.getContainer().getChildContainerCollection() != null)
-		for (ContainerInterface childcContainerInterface : this.getContainer().getChildContainerCollection())
-		{
-			childcContainerInterface.setMode(mode);
-		}
-	}
-
+	
 	/**
 	 * @see edu.common.dynamicextensions.domaininterface.userinterface.ContainmentAssociationControlInterface#generateLinkHTML()
 	 */
