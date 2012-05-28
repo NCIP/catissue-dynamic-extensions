@@ -10,7 +10,7 @@ package edu.common.dynamicextensions.importer.jaxb;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -42,7 +42,7 @@ import javax.xml.bind.annotation.XmlType;
 public class Attribute {
 
     protected String activityStatus;
-    @XmlAttribute(required = true)
+    @XmlElement(required = true)
     protected String name;
 
     /**
