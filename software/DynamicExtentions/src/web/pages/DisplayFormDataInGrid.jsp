@@ -56,7 +56,7 @@ var header = "#master_checkbox,,,";
 				if(dd<10){dd='0'+dd} 
 				if(mm<10){mm='0'+mm} 
 				var today = mm+'-'+dd+'-'+yyyy; 
-				formDataGrid.filterBy(7,today,true);
+				formDataGrid.filterBy(6,today,true);
 			}
 		}
 		
