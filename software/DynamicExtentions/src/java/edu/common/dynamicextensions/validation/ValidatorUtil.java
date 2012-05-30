@@ -797,13 +797,12 @@ public class ValidatorUtil
 	public static Collection<RuleInterface> getRuleCollectionExcludingRequiredRule(
 			BaseAbstractAttributeInterface abstractAttribute)
 	{
-		Collection<RuleInterface> attributeRuleCollection = getRuleCollection(abstractAttribute);
-		for (RuleInterface rule : attributeRuleCollection)
+		Collection<RuleInterface> attributeRuleCollection = new HashSet<RuleInterface>();
+		for (RuleInterface rule : getRuleCollection(abstractAttribute))
 		{
-			if (DEConstants.REQUIRED.equalsIgnoreCase(rule.getName()))
+			if (!DEConstants.REQUIRED.equalsIgnoreCase(rule.getName()))
 			{
-				attributeRuleCollection.remove(rule);
-				break;
+				attributeRuleCollection.add(rule);
 			}
 		}
 		return attributeRuleCollection;
