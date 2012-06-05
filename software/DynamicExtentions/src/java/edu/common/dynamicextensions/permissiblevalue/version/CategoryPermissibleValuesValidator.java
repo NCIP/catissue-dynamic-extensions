@@ -173,7 +173,7 @@ public class CategoryPermissibleValuesValidator
 		Date date = null;
 		for (Date encounteredDate : allEncounteredDate)
 		{
-			if (encounteredDateVsActDate.get(encounteredDate).compareTo(xmlActivationDate) == 0)
+			if (encounteredDateVsActDate.get(encounteredDate)!=null && encounteredDateVsActDate.get(encounteredDate).compareTo(xmlActivationDate) == 0)
 			{
 				date = encounteredDate;
 				break;
