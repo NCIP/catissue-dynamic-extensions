@@ -80,6 +80,8 @@ public class DynamicUIGeneratorTagFromId extends TagSupport
 					.getAbstractEntity(), formRecordId.toString());
 			UserInterfaceiUtility.addPrecisionZeroes(valueMapStack, attributes);
 			UserInterfaceiUtility.setContainerValueMap(containerInterface, valueMapStack);
+			edu.common.dynamicextensions.util.DataValueMapUtility.updateDataValueMapDataLoading(
+					valueMapStack, containerInterface);
 			generateHTML();
 		}
 		catch (DynamicExtensionsSystemException e)
@@ -110,7 +112,7 @@ public class DynamicUIGeneratorTagFromId extends TagSupport
 		pageContext.getSession().setAttribute(Constants.MAP_FOR_VALIDATION, containerMap);
 		final JspWriter out = pageContext.getOut();
 		containerInterface.setPreviousValueMap(valueMapStack);
-		containerInterface.setMode(getMode());
+		containerInterface.updateMode(getMode());
 		out.println(this.containerInterface.generateContainerHTML(caption, mode));
 
 		//This a temporary solution to resolve alignment issue when more than one forms are displayed in  a single page.
