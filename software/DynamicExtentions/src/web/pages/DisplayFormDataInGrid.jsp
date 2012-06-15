@@ -128,6 +128,13 @@ var header = "#master_checkbox,,,";
 				formDataGrid.setColumnHidden(1,true);
 			}
 		}
+
+		//bug fix for 23442
+		function editRecord(editUrl)
+		{
+			window.parent.editClickFromMultiGrid = true;
+			window.location = editUrl;
+		}
 	</script>
 </head>
 

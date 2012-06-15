@@ -3,7 +3,7 @@
 	#foreach( $gridData in $gridPopulateObjectList )
 		<row id="$gridData.recordEntryId">
 			<cell></cell>
-			<cell><![CDATA[<a href='$gridData.formURL'>Edit</a>]]></cell>
+			<cell><![CDATA[<a href="#" onclick="editRecord('$gridData.formURL')">Edit</a>]]></cell>
 			<cell><![CDATA[$gridData.deUrl]]></cell>
 			#set ($map = ${gridData.columns})
 			#set ($headerMap = ${gridData.headers})
