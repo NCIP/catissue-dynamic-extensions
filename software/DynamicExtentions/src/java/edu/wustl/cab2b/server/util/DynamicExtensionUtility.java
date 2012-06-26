@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.common.dynamicextensions.domain.Category;
+import edu.common.dynamicextensions.domain.CategoryEntity;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.SemanticAnnotatableInterface;
 import edu.common.dynamicextensions.domaininterface.AbstractMetadataInterface;
@@ -37,6 +39,7 @@ import edu.common.dynamicextensions.domaininterface.SemanticPropertyInterface;
 import edu.common.dynamicextensions.domaininterface.StringValueInterface;
 import edu.common.dynamicextensions.domaininterface.TaggedValueInterface;
 import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.entitymanager.AbstractMetadataManager;
 import edu.common.dynamicextensions.entitymanager.EntityGroupManager;
 import edu.common.dynamicextensions.entitymanager.EntityGroupManagerInterface;
@@ -47,6 +50,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.skiplogic.SkipLogic;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationDirection;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
@@ -908,6 +912,20 @@ public final class DynamicExtensionUtility
 		clone.setMaximumCardinality(role.getMaximumCardinality());
 		clone.setMinimumCardinality(role.getMinimumCardinality());
 		return clone;
+	}
+
+	/**
+	 * @param containerId
+	 * @return
+	 * @throws DynamicExtensionsCacheException
+	 */
+	public static Category getCategoryByContainerId(String containerId)
+			throws DynamicExtensionsCacheException
+	{
+		ContainerInterface container = DynamicExtensionsUtility
+				.getClonedContainerFromCache(containerId);
+		CategoryEntity categoryEntity = (CategoryEntity) container.getAbstractEntity();
+		return (Category) categoryEntity.getCategory();
 	}
 
 }

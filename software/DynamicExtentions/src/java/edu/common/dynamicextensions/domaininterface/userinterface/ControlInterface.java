@@ -449,4 +449,6 @@ public interface ControlInterface extends DynamicExtensionBaseDomainObjectInterf
 	public void setTaggedValues(Collection<TaggedValue> taggedValues);
 	
 	public Collection<TaggedValue> getTaggedValues();
+	
+	public boolean isEmpty();
 }

@@ -22,6 +22,8 @@ import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.NumericAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.UserDefinedDE;
+import edu.common.dynamicextensions.domain.userinterface.Page;
+import edu.common.dynamicextensions.domain.userinterface.SurveyModeLayout;
 import edu.common.dynamicextensions.domain.userinterface.TextField;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
@@ -38,8 +40,10 @@ import edu.common.dynamicextensions.domaininterface.TaggedValueInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.AbstractContainmentControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.DynamicExtensionLayoutInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.interfaceactions.DynamicExtensionsInterfaceAction;
 import edu.common.dynamicextensions.skiplogic.ConditionStatements;
 import edu.common.dynamicextensions.skiplogic.SkipLogic;
 import edu.common.dynamicextensions.util.CategoryGenerationUtil;
@@ -57,7 +61,7 @@ import edu.wustl.common.util.global.ApplicationProperties;
  * This class creates the category/categories defined in
  * the CSV file.
  */
-public class CategoryGenerator
+public class CategoryGenerator implements CategoryTokenHandler
 {
 
 	private final CategoryFileParser categoryFileParser;
@@ -75,6 +79,9 @@ public class CategoryGenerator
 	private List<ContainerInterface> containerCollection;
 	private Map<String, String> categoryEntityNameInstanceMap;
 	private Map<String, List<AssociationInterface>> entityNameAssociationMap;
+	
+	private SurveyModeLayout layout = null;
+	private Page currentPage = null;
 
 	public CategoryValidator getCategoryValidator()
 	{
@@ -98,6 +105,7 @@ public class CategoryGenerator
 	{
 		categoryFileParser = DomainObjectFactory.getInstance().createCategoryFileParser(filePath,
 				baseDir, stinger);
+		categoryFileParser.setCategoryTokenHandler(this);
 		categoryValidator = new CategoryValidator((CategoryCSVFileParser) categoryFileParser);
 		categoryHelper = new CategoryHelper(categoryFileParser);
 	}
@@ -419,6 +427,10 @@ public class CategoryGenerator
 						}
 					}
 
+					if (currentPage != null) {
+						currentPage.getControlCollection().add(lastControl);
+					}
+
 					lastControl.setControlPosition(controlXPosition, controlYPosition);
 					if (!categoryFileParser.isSingleLineDisplayStarted())
 					{
@@ -491,6 +503,9 @@ public class CategoryGenerator
 		{
 			categoryFileParser.closeResources();
 		}
+		
+		handleParseComplete();
+
 		return category;
 	}
 
@@ -1262,6 +1277,23 @@ public class CategoryGenerator
 		else if(allContainers.contains(control.getParentContainer()))
 		{
 			allContainers.add(control.getParentContainer());
+		}
+	}
+
+	@Override
+	public void handlePageBreak() {
+		if (currentPage == null) {
+			layout = new SurveyModeLayout();
+		}
+		currentPage = new Page();
+		layout.getPageCollection().add(currentPage);
+		currentPage.setLayout(layout);
+		currentPage.setDescription(categoryFileParser.getDisplyLable());
+	}
+	
+	private void handleParseComplete() {
+		if (layout != null) {
+			category.setLayout(layout);
 		}
 	}
 }

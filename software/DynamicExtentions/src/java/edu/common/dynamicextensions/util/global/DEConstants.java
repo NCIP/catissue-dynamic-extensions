@@ -142,9 +142,16 @@ public class DEConstants
 	public static final String CLOSED_ROUND_BRACE = ")";
 	public static final String INDEX = "index";
 	public static final String COMMA = ",";
+	public static final String CATEGORY = "category";
+	public static final String CONTAINER = "container";
+	public static final String SURVEY_MODE = "surveymode";
+	public static final String LAYOUT = "layout";
+	public static final String PAGE_ID = "pageId";
+	public static final String CATEGORY_ID = "categoryId";
 	public static final String CONTAINER_ID = "containerId";
 	public static final int CONTROL_DEFAULT_VALUE = 10;
 	public static final String ATTRIBUTE_IDENTIFIER = "attributeIdentifier";
+	public static final String CONTAINER_IDENTIFIER = "containerIdentifier";
 	public static final String RECORD_IDENTIFIER = "recordIdentifier";
 	public static final String RECORD_IDENTIFIER_URL_PARAM = "&recordIdentifier=";
 	

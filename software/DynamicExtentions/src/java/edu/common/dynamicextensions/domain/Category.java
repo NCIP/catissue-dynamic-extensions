@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface. DynamicExtensionLayoutInterface;
 
 /**
  *
@@ -51,6 +52,8 @@ public class Category extends AbstractCategory implements CategoryInterface
 	 *
 	 */
 	protected Collection<CategoryEntityInterface> relatedAttributeCategoryEntityCollection = new HashSet<CategoryEntityInterface>();
+	
+	private DynamicExtensionLayoutInterface layout;
 
 	/**
 	 *
@@ -263,4 +266,13 @@ public class Category extends AbstractCategory implements CategoryInterface
 		this.processorClass=processorClass;
 
 	}
+	
+	public DynamicExtensionLayoutInterface getLayout () {
+		return this.layout;
+	}
+	
+	public void setLayout(DynamicExtensionLayoutInterface layout) {
+		this.layout = layout;
+	}
+
 }

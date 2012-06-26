@@ -307,6 +307,15 @@
             column="IS_CACHEABLE"
         />
 
+        <many-to-one
+            name="layout"
+            class="edu.common.dynamicextensions.domain.userinterface.DynamicExtensionLayout"
+            cascade="all"
+            update="true"
+            insert="true"
+            column="LAYOUT_ID"
+            unique="true"
+        />
         </joined-subclass>
         <joined-subclass
             name="edu.common.dynamicextensions.domain.StaticCategory"

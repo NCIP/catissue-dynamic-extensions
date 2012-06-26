@@ -82,6 +82,8 @@
 		<mapping resource="edu/common/dynamicextensions/hbm/SkipLogic.hbm.xml"/>
 		<mapping resource="edu/common/dynamicextensions/hbm/AutoLoadXpath.hbm.xml"/>
 		<mapping resource="edu/common/dynamicextensions/hbm/GridViewColumn.hbm.xml" />
+        <mapping resource="edu/common/dynamicextensions/hbm/userinterface/DynamicExtensionLayout.hbm.xml"/>
+        <mapping resource="edu/common/dynamicextensions/hbm/userinterface/Page.hbm.xml"/>
      </session-factory>
 
 </hibernate-configuration>

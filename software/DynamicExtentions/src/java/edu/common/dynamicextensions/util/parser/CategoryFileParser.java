@@ -28,6 +28,8 @@ public abstract class CategoryFileParser extends FileReader
 	protected boolean inSignleLineDisplay;
 
 	protected Stinger stingerValidator;
+	
+	private CategoryTokenHandler tokenHandler;
 
 	/**
 	 * @param filePath path  of the csv file
@@ -155,6 +157,8 @@ public abstract class CategoryFileParser extends FileReader
 	 */
 	public abstract boolean hasFormDefination();
 
+	public abstract boolean hasPageBreak();
+	
 	/**
 	 * @return
 	 */
@@ -360,5 +364,12 @@ public abstract class CategoryFileParser extends FileReader
 	 * @return
 	 */
 	public abstract boolean isLazylyLoadPvs();
+	
+	public  void setCategoryTokenHandler(CategoryTokenHandler tokenHandler) {
+		this.tokenHandler = tokenHandler;
+	}
+	public CategoryTokenHandler getCategoryTokenHandler() {
+		return this.tokenHandler;
+	}
 
 }

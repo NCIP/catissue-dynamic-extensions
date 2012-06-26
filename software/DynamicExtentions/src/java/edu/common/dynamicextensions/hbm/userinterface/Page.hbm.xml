@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN" 
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="false">
+	<class name="edu.common.dynamicextensions.domain.userinterface.Page"
+		table="DYEXTN_PAGE">
+		<id name="id" type="long" column="PAGE_ID" unsaved-value="null">
+			<generator class="native">
+				<param name="sequence">DYEXTN_PAGE_SEQ</param>
+			</generator>
+		</id>
+		<property name="description" type="string" update="true" insert="true"
+			column="PAGE_DESCRIPTION"/>
+		<many-to-one name="layout" class="edu.common.dynamicextensions.domain.userinterface.SurveyModeLayout"
+			column="SURVEY_ID"/>
+		<set name="controlCollection" table="DYEXTN_PAGE_CONTROLS"
+			cascade="all-delete-orphan" sort="unsorted" lazy="false">
+			<key column="PAGE_ID"/>
+			<many-to-many class="edu.common.dynamicextensions.domain.userinterface.Control"
+				column="CONTROL_ID"/>
+		</set>
+	</class>
+</hibernate-mapping>

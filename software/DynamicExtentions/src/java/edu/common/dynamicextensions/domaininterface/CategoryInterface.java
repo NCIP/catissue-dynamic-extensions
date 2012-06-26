@@ -4,6 +4,7 @@ package edu.common.dynamicextensions.domaininterface;
 import java.util.Collection;
 
 import edu.common.dynamicextensions.domain.AutoLoadXpath;
+import edu.common.dynamicextensions.domaininterface.userinterface.DynamicExtensionLayoutInterface;
 
 public interface CategoryInterface extends AbstractMetadataInterface
 {
@@ -99,5 +100,8 @@ public interface CategoryInterface extends AbstractMetadataInterface
 
 	void setProcessorClass(String processorClass);
 	String getProcessorClass();
+	
+	DynamicExtensionLayoutInterface getLayout ();
+	void setLayout(DynamicExtensionLayoutInterface layout);
 
 }

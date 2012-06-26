@@ -115,9 +115,23 @@ public class CategoryCSVFileParser extends CategoryFileParser
 		else
 		{
 			line = processEscapeCharacter(line, null, DEFAULT_ESCAPE_CHARACTER, DEFAULT_SEPERATOR);
+			callTokenHandler();
 		}
+				
 		return flag;
 
+	}
+	
+	private void callTokenHandler() throws DynamicExtensionsSystemException, IOException {
+		boolean handled = false;
+		if (hasPageBreak()) {
+			getCategoryTokenHandler().handlePageBreak();
+			handled = true;
+		}
+		
+		if (handled) {
+			readNext();
+		}
 	}
 
 	/**
@@ -568,6 +582,15 @@ public class CategoryCSVFileParser extends CategoryFileParser
 			flag = true;
 		}
 		return flag;
+	}
+	
+	@Override
+	public boolean hasPageBreak() {
+		if (readLine()[0].trim().startsWith(CategoryCSVConstants.PAGE_BREAK)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**

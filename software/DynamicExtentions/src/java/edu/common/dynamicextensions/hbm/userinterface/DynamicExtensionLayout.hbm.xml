@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN" 
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-lazy="false">
+	<class name="edu.common.dynamicextensions.domain.userinterface.DynamicExtensionLayout"
+		table="DYEXTN_LAYOUT">
+		<id name="id" type="long" column="LAYOUT_ID" unsaved-value="null">
+			<generator class="native">
+				<param name="sequence">DYEXTN_LAYOUT_SEQ</param>
+			</generator>
+		</id>
+		<joined-subclass name="edu.common.dynamicextensions.domain.userinterface.SurveyModeLayout"
+			table="DYEXTN_LAYOUT_SURVEY">
+			<key column="SURVEY_ID"/>
+			<set name="pageCollection" table="DYEXTN_PAGE"
+				cascade="all-delete-orphan" order-by="PAGE_ID asc">
+				<key column="SURVEY_ID"/>
+				<one-to-many class="edu.common.dynamicextensions.domain.userinterface.Page"/>
+			</set>
+		</joined-subclass>
+	</class>
+</hibernate-mapping>

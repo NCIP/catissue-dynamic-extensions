@@ -485,7 +485,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 
 		}
 
-		controlHTML.append("<td class='formRequiredLabel_withoutBorder' title='");
+		controlHTML.append("<td class='formRequiredLabel_withoutBorder'  width='40%' title='");
 
 		BaseAbstractAttribute baseAbstractAttribute = (BaseAbstractAttribute) getBaseAbstractAttribute();
 		if (baseAbstractAttribute instanceof CategoryAttributeInterface
@@ -1378,5 +1378,18 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		this.errorList = errorList;
 	}
 	
+	@Override
+	public boolean isEmpty()
+	{
+		boolean isEmpty = true;
+		if(value instanceof List && !((List)value).isEmpty())
+		{
+			isEmpty = false;
+		}else if(value != null && !"".equals(value.toString()))
+		{
+			isEmpty = false;
+		}
+		return isEmpty;
+	}	
 	
 }

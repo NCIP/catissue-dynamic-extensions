@@ -17,6 +17,11 @@ public class CategoryCSVConstants // NOPMD by gaurav_sawant
 	public static final String FORM_DEFINITION = "Form_Definition";
 
 	/**
+	 * This token is used to group controls by pages
+	 */
+	public static final String PAGE_BREAK = "Page_Break";
+	
+	/**
 	 * This keyword is used before specifying the permissible values.
 	 */
 	public static final String PERMISSIBLE_VALUES = "Permissible_Values";
