@@ -66,6 +66,8 @@
         <mapping resource="edu/common/dynamicextensions/hbm/userinterface/DEContainer.hbm.xml"/>
         <mapping resource="edu/common/dynamicextensions/hbm/userinterface/Control.hbm.xml"/>
         <mapping resource="edu/common/dynamicextensions/hbm/userinterface/View.hbm.xml"/>
+        <mapping resource="edu/common/dynamicextensions/hbm/userinterface/DynamicExtensionLayout.hbm.xml"/>
+        <mapping resource="edu/common/dynamicextensions/hbm/userinterface/Page.hbm.xml"/>
 
         <mapping resource="edu/common/dynamicextensions/hbm/validationrules/Rule.hbm.xml"/>
         <mapping resource="edu/common/dynamicextensions/hbm/validationrules/RuleParameter.hbm.xml"/>

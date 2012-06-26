@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<property name="int.type" value="bigint(20)" dbms="mysql"/>
+	<property name="int.type" value="number(19,0)" dbms="oracle"/>
+	<property name="text.type" value="varchar(1000)" dbms="mysql"/>
+	<property name="text.type" value="varchar2(1000)" dbms="oracle"/>
+
+	<changeSet id="1" author="kulkranr">
+		<createTable tableName="DYEXTN_LAYOUT">
+			<column name="LAYOUT_ID" type="${int.type}">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+		</createTable>
+		<createTable tableName="DYEXTN_LAYOUT_SURVEY">
+			<column name="SURVEY_ID" type="${int.type}">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+		</createTable>
+		<createTable tableName="DYEXTN_PAGE">
+			<column name="PAGE_ID" type="${int.type}">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="SURVEY_ID" type="${int.type}">
+				<constraints nullable="false"/>
+			</column>
+			<column name="PAGE_DESCRIPTION" type="${text.type}">
+			</column>
+		</createTable>
+		<createTable tableName="DYEXTN_PAGE_CONTROLS">
+			<column name="PAGE_ID" type="${int.type}">
+				<constraints nullable="false"/>
+			</column>
+			<column name="CONTROL_ID" type="${int.type}">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+
+		<addPrimaryKey tableName="DYEXTN_PAGE_CONTROLS"
+    		columnNames="PAGE_ID, CONTROL_ID"
+    		constraintName="PK_DYEXTN_PAGE_CONTROLS"/>
+		<addForeignKeyConstraint constraintName="FK_DE_LAYOUT_SURVEY"
+			baseTableName="DYEXTN_LAYOUT_SURVEY" baseColumnNames="SURVEY_ID"
+			referencedTableName="DYEXTN_LAYOUT" referencedColumnNames="LAYOUT_ID"/>
+		<addForeignKeyConstraint constraintName="FK_DE_LAYOUT_PAGE"
+			baseTableName="DYEXTN_PAGE" baseColumnNames="SURVEY_ID"
+			referencedTableName="DYEXTN_LAYOUT_SURVEY" referencedColumnNames="SURVEY_ID"/>
+		<addForeignKeyConstraint constraintName="FK_DE_LAYOUT_PAGE_MM"
+			baseTableName="DYEXTN_PAGE_CONTROLS" baseColumnNames="PAGE_ID"
+			referencedTableName="DYEXTN_PAGE" referencedColumnNames="PAGE_ID"/>
+		<addForeignKeyConstraint constraintName="FK_DE_LAYOUT_CONTROL_MM"
+			baseTableName="DYEXTN_PAGE_CONTROLS" baseColumnNames="CONTROL_ID"
+			referencedTableName="DYEXTN_CONTROL" referencedColumnNames="IDENTIFIER"/>
+
+		<addColumn tableName="DYEXTN_CATEGORY">
+			<column name="LAYOUT_ID" type="${int.type}"/>
+		</addColumn>
+		<addForeignKeyConstraint constraintName="FK_DE_LAYOUT_CATEGORY"
+			baseTableName="DYEXTN_CATEGORY" baseColumnNames="LAYOUT_ID"
+			referencedTableName="DYEXTN_LAYOUT" referencedColumnNames="LAYOUT_ID"/>
+
+		<createSequence sequenceName="DYEXTN_LAYOUT_SEQ"/>
+		<createSequence sequenceName="DYEXTN_PAGE_SEQ"/>
+		
+	</changeSet>
+
+</databaseChangeLog>

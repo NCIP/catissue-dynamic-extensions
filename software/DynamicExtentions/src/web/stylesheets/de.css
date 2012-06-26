@@ -1,0 +1,70 @@
+body {
+	margin:0;
+	padding:0 0 100px 0;
+} 
+div.infobar {
+	background-color: #6E81A6;
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:24px;
+}
+div.navbar {
+	background-color: #6E81A6;
+	
+	align: center;
+	bottom:0;
+	left:0;
+	width:100%;
+	height:30px;
+}
+@media screen {
+	body>div.navbar {
+		position:fixed;
+	}
+	body>div.infobar {
+		position:fixed;
+	}
+}
+* html body {
+	overflow:hidden;
+} 
+* html div.content {
+	height:100%;
+	overflow:auto;
+}
+.navaction {
+	margin: 5;
+}
+
+.content {
+	margin-top:30px;
+}
+
+#sm-category-name {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1em;
+	font-weight: bold;
+	color: white;
+	background-color: #6E81A6;
+}
+
+.sm-page-control {
+	margin: 10;
+}
+
+.sm-page-title {
+	margin-top: 5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: .8em;
+	font-weight: bold;
+	color: white;
+	background-color: #6E81A6;
+}
+
+.sm-page-table {
+	padding: 3;
+	border-spacing: 0;
+	width: 100%;
+}

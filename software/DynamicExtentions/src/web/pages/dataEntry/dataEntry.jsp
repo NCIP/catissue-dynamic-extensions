@@ -123,6 +123,16 @@ jQuery(document).ready(
 	 } );
 </script>
 
+<input type="hidden" id='formSubmitUrl' name='formSubmitUrl'  value="${param.formSubmitUrl}"/>
+<c:set var="formSubmitUrl" value="${param.formSubmitUrl}"/>
+<c:if test='${empty param.formSubmitUrl}'>
+	<script>
+		<c:set var="formSubmitUrl" value="ApplyDataEntryFormAction"/>
+		document.getElementById('formSubmitUrl').value = "ApplyDataEntryFormAction";
+	</script>
+</c:if>
+
+
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
@@ -151,7 +161,7 @@ jQuery(document).ready(
 	</head>
 
 	<body onload="loadPreviewForm('<%=request.getContextPath()%>');executeComboScriptsForSkipLogic();insertBreadCrumbForSubForm(${param.containerIdentifier},'<%=request.getSession().getAttribute("application_name")%>');setFocusOnLoad('<%=request.getAttribute("scrollPostion")%>');" onclick="window.parent.parent.detectApplicationUsageActivity()" onkeydown="window.parent.parent.detectApplicationUsageActivity()">
-		<form id="dataEntryForm" action="ApplyDataEntryFormAction" method="post">
+		<form id="dataEntryForm" action="${formSubmitUrl}" method="post">
 
 		 
 		<input type="hidden" id="mode" name="mode" value="${param.mode}"/>
@@ -298,17 +308,11 @@ jQuery(document).ready(
 															<td align='center'>
 																<input type="image" id="btnDESubmit" src="<%=request.getContextPath()%>/images/de/b_submit.gif" width="62" height="21" align="middle" onClick="return showParentContainerInsertDataPage('false')"/>
 															</td>
-															<td align='center'>
-																<input type="image" id="btnDEDraft" src="<%=request.getContextPath()%>/images/de/b_calculate.gif" width="62" height="21" align="middle" onClick="return showParentContainerInsertDataPage('true');"/>
-															</td>
 														</c:if>
 
 														<c:if test='${(mode=="edit") && (isTopLevelEntity=="true")}'>
 															<td align='center'>
 																<input type="image" id="btnDESubmit" src="<%=request.getContextPath()%>/images/de/b_submit.gif" width="62" height="21" align="middle" onClick="return setInsertDataOperation('false')"/>
-															</td>
-															<td align='center'>
-																<input type="image" id="btnDEDraft" src="<%=request.getContextPath()%>/images/de/b_calculate.gif" width="62" height="21" align="middle" onClick="return setInsertDataOperation('true')"/>
 															</td>
 														<!-- BUG 7662 FIXED. Each Cancel should take you one level up in the containment hierarchy and finally the Cancel on Main Class should take you to the Add Records page.-->
 														</c:if>
@@ -384,7 +388,7 @@ jQuery(document).ready(
 					document.getElementById('isShowInDiv').value = false;
 				</script>
 			</c:if>
-
+		<input type="hidden" name="participantId" value="${param.participantId}"/>
 		</form>
 		<iframe style="display:none" src="about:blank" id="skipLogicIframe" name="skipLogicIframe" onload=""></iframe>
 		<script type="text/javascript" defer="defer">
