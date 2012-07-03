@@ -14,6 +14,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.transaction.InvalidTransactionException;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
+
 import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
 import edu.common.dynamicextensions.dao.impl.DynamicExtensionDBFactory;
 import edu.common.dynamicextensions.dao.impl.IDEDBUtility;
@@ -2510,6 +2517,21 @@ public class DynamicExtensionBaseQueryBuilder
 		try
 		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
+			
+			//DDL queries are transaction on their own. There where we try to execute DDL, trnsaction started 
+			//by the DAO needs to be suspended
+			TransactionManager tm = null;
+			Transaction tr = null;
+			try
+			{
+				tm = getTransactionManager();
+				tr = tm.suspend();
+			}
+			catch (NamingException e)
+			{
+				Logger.out.warn("Process might be running in offline mode, not able to get transaction manager.");
+			}
+			
 
 			if (queries != null && !queries.isEmpty())
 			{
@@ -2526,7 +2548,24 @@ public class DynamicExtensionBaseQueryBuilder
 					}
 				}
 			}
+			//after executing the DDL resume the origina transaction.
+			resumeTransaction(tm, tr);
 			jdbcDao.commit();
+		}
+		catch (SystemException e)
+		{
+			throw new DynamicExtensionsSystemException(
+					"Exception occured while forming the data tables for entity", e, DYEXTN_S_002);
+		}
+		catch (InvalidTransactionException e)
+		{
+			throw new DynamicExtensionsSystemException(
+					"Exception occured while forming the data tables for entity", e, DYEXTN_S_002);
+		}
+		catch (IllegalStateException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		catch (DAOException e)
 		{
@@ -2539,6 +2578,37 @@ public class DynamicExtensionBaseQueryBuilder
 		}
 
 		return rlbkQryStack;
+	}
+
+	private void resumeTransaction(TransactionManager tm, Transaction tr)
+			throws InvalidTransactionException, SystemException
+	{
+		if (tm != null)
+		{
+			tm.resume(tr);
+		}
+	}
+
+	private Transaction suspendTransactioManager(TransactionManager tm) throws SystemException
+	{
+		Transaction tr = null;
+		try
+		{
+			tm = getTransactionManager();
+			tr = tm.suspend();
+		}
+		catch (NamingException e)
+		{
+			Logger.out.warn("Process might be running in offline mode, not able to get transaction manager.");
+		}
+		
+		return tr;
+	}
+
+	private TransactionManager getTransactionManager() throws NamingException
+	{
+		TransactionManager tm=  (TransactionManager) new InitialContext().lookup("java:/TransactionManager");
+		return tm;
 	}
 
 	/**
