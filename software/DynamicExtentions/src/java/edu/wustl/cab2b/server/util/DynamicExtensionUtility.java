@@ -24,6 +24,7 @@ import edu.common.dynamicextensions.domaininterface.AbstractMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.BooleanValueInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.DataElementInterface;
 import edu.common.dynamicextensions.domaininterface.DateValueInterface;
@@ -50,7 +51,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.skiplogic.SkipLogic;
-import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.DELayoutEnum;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationDirection;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
@@ -922,10 +923,24 @@ public final class DynamicExtensionUtility
 	public static Category getCategoryByContainerId(String containerId)
 			throws DynamicExtensionsCacheException
 	{
-		ContainerInterface container = DynamicExtensionsUtility
-				.getClonedContainerFromCache(containerId);
+		ContainerInterface container = EntityCache.getInstance().getContainerById(Long.valueOf(containerId));
 		CategoryEntity categoryEntity = (CategoryEntity) container.getAbstractEntity();
 		return (Category) categoryEntity.getCategory();
 	}
 
+	public static DELayoutEnum getLayout(Long containerId) throws DynamicExtensionsCacheException
+	{
+		DELayoutEnum layout = DELayoutEnum.DEFAULT;
+		ContainerInterface containerInterface = EntityCache.getInstance().getContainerById(containerId);
+		if (containerInterface.getAbstractEntity() instanceof CategoryEntityInterface)
+		{
+			CategoryEntity categoryEntity = (CategoryEntity) containerInterface.getAbstractEntity();
+			if (categoryEntity.getCategory().getLayout() != null)
+			{
+				layout = DELayoutEnum.SURVEY;
+			}
+
+		}
+		return layout;
+	}
 }

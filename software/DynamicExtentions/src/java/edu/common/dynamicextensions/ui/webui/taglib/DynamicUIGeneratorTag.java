@@ -60,7 +60,6 @@ public class DynamicUIGeneratorTag extends TagSupport
 		}
 		catch (DynamicExtensionsApplicationException e)
 		{
-			// TODO Auto-generated catch block
 			Logger.out.debug("IOException. No response generated." + e.getMessage());
 		}
 		return EVAL_PAGE;

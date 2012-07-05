@@ -29,6 +29,8 @@ public interface WebUIManagerConstants
 	 *
 	 */
 	String LOAD_DATA_ENTRY_FORM_ACTION_URL = "/LoadDataEntryFormAction?dataEntryOperation=insertParentData";
+	
+	String FORM_SUMMARY_PAGE = "/pages/de/dataEntry/dataEntrySummary.jsp";
 	/**
 	 *
 	 */

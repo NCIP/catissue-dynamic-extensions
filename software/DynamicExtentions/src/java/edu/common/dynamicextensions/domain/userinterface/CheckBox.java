@@ -12,6 +12,7 @@ import edu.common.dynamicextensions.domaininterface.SkipLogicAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.CheckBoxInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.SummaryControlInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
@@ -25,7 +26,7 @@ import edu.common.dynamicextensions.util.global.DEConstants;
  * @hibernate.joined-subclass table="DYEXTN_CHECK_BOX"
  * @hibernate.joined-subclass-key column="IDENTIFIER"
  */
-public class CheckBox extends Control implements CheckBoxInterface
+public class CheckBox extends Control implements CheckBoxInterface,SummaryControlInterface
 {
 
 	/** The Constant serialVersionUID. */

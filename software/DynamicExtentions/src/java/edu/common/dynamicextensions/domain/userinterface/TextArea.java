@@ -1,6 +1,7 @@
 
 package edu.common.dynamicextensions.domain.userinterface;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import edu.common.dynamicextensions.category.enums.TextAreaEnum;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.SummaryControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.TextAreaInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ValidatableInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
@@ -22,7 +24,7 @@ import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
  * @hibernate.joined-subclass table="DYEXTN_TEXTAREA"
  * @hibernate.joined-subclass-key column="IDENTIFIER"
  */
-public class TextArea extends Control implements TextAreaInterface, ValidatableInterface
+public class TextArea extends Control implements TextAreaInterface, ValidatableInterface,SummaryControlInterface
 {
 
 	/** The Constant serialVersionUID. */
@@ -79,7 +81,9 @@ public class TextArea extends Control implements TextAreaInterface, ValidatableI
 	 */
 	public List<String> getValueAsStrings()
 	{
-		return null;
+		final List<String> values = new ArrayList<String>();
+		values.add(getDefaultValueForControl());
+		return values;
 	}
 
 	/**

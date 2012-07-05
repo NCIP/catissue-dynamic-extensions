@@ -12,6 +12,7 @@ import edu.common.dynamicextensions.domaininterface.AssociationDisplayAttributeI
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.AssociationControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.SelectInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.SummaryControlInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.beans.NameValueBean;
@@ -24,7 +25,7 @@ import edu.wustl.common.beans.NameValueBean;
 public abstract class SelectControl extends Control
 		implements
 			AssociationControlInterface,
-			SelectInterface
+			SelectInterface,SummaryControlInterface
 {
 
 	public static int minQueryChar = 3;

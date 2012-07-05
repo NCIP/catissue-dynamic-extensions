@@ -3,6 +3,7 @@ package edu.common.dynamicextensions.domain.userinterface;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.DateTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.DatePickerInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.SummaryControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ValidatableInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
@@ -33,7 +35,7 @@ import edu.wustl.common.util.global.CommonServiceLocator;
  * @hibernate.joined-subclass table="DYEXTN_DATEPICKER"
  * @hibernate.joined-subclass-key column="IDENTIFIER"
  */
-public class DatePicker extends Control implements DatePickerInterface, ValidatableInterface
+public class DatePicker extends Control implements DatePickerInterface, ValidatableInterface,SummaryControlInterface
 {
 
 	/** default serial UID. */
@@ -575,7 +577,9 @@ public class DatePicker extends Control implements DatePickerInterface, Validata
 	@Override
     public List<String> getValueAsStrings()
 	{
-		return null;
+		final List<String> values = new ArrayList<String>();
+		values.add(getDefaultValueForControl());
+		return values;
 	}
 
 	/**
