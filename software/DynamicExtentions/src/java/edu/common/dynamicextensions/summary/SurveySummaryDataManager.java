@@ -4,6 +4,9 @@ package edu.common.dynamicextensions.summary;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.PageContext;
+
 import edu.common.dynamicextensions.domain.userinterface.Page;
 import edu.common.dynamicextensions.domain.userinterface.SurveyModeLayout;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
@@ -11,6 +14,8 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterfa
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
+import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.cab2b.server.util.DynamicExtensionUtility;
 
 public class SurveySummaryDataManager extends AbstractSummaryDataManager
@@ -19,13 +24,13 @@ public class SurveySummaryDataManager extends AbstractSummaryDataManager
 	private CategoryInterface category;
 	private Long recordIdentifier;
 	private Map<ControlInterface, Long> controlPageIdMap = new HashMap<ControlInterface, Long>();
-	private String contextPath;
+	private PageContext pageContext;
 
-	public SurveySummaryDataManager(Long containerIdentifier, Long recordIdentifier, String contextPath)
+	public SurveySummaryDataManager(Long containerIdentifier, Long recordIdentifier, PageContext pageContext)
 			throws DynamicExtensionsCacheException
 	{
 		this.recordIdentifier = recordIdentifier;
-		this.contextPath = contextPath;
+		this.pageContext = pageContext;
 		category = DynamicExtensionUtility.getCategoryByContainerId(containerIdentifier.toString());
 		for (Page page : ((SurveyModeLayout) category.getLayout()).getPageCollection())
 		{
@@ -62,8 +67,8 @@ public class SurveySummaryDataManager extends AbstractSummaryDataManager
 		StringBuffer controlUrl = new StringBuffer();
 		controlUrl
 				.append("<a href='");
-		controlUrl.append(contextPath);
-				controlUrl.append("/AjaxcodeHandlerAction?ajaxOperation=renderSurveyMode&&categoryId=");
+		controlUrl.append(((HttpServletRequest)pageContext.getRequest()).getContextPath());
+				controlUrl.append(WebUIManagerConstants.SURVEY_MODE_JSP+"?categoryId=");
 		controlUrl.append(category.getId());
 		controlUrl.append("&pageId=");
 		controlUrl.append(controlPageIdMap.get(control));
@@ -71,6 +76,8 @@ public class SurveySummaryDataManager extends AbstractSummaryDataManager
 		controlUrl.append(control.getHTMLComponentName());
 		controlUrl.append("&containerIdentifier=");
 		controlUrl.append(control.getParentContainer().getId());
+		controlUrl.append("&"+DEConstants.CALLBACK_URL+"=");
+		controlUrl.append(pageContext.getRequest().getParameter(DEConstants.CALLBACK_URL));
 
 		if (recordIdentifier != null)
 		{
@@ -78,7 +85,7 @@ public class SurveySummaryDataManager extends AbstractSummaryDataManager
 			controlUrl.append(recordIdentifier);
 
 		}
-		controlUrl.append("'>Edit</a>");
+		controlUrl.append("'>Change</a>");
 		return controlUrl.toString();
 
 	}

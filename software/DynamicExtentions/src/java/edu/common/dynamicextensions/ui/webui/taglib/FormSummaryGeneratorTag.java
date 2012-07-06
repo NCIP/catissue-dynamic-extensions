@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
@@ -65,7 +64,7 @@ public class FormSummaryGeneratorTag extends DynamicExtensionsFormBaseTag
 	{
 		if (DELayoutEnum.SURVEY == DynamicExtensionUtility.getLayout(containerIdentifier))
 		{
-			dataManager = new SurveySummaryDataManager(containerIdentifier,recordIdentifier,((HttpServletRequest)pageContext.getRequest()).getContextPath());
+			dataManager = new SurveySummaryDataManager(containerIdentifier,recordIdentifier,pageContext);
 		}
 		else
 		{

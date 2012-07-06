@@ -19,7 +19,7 @@ public abstract class AbstractSummaryDataManager
 	protected final String SR_NO = "#";
 	protected final String QUESTION = "QUESTION";
 	protected final String RESPONSE = "RESPONSE";
-	protected final String EDIT = "EDIT";
+	protected final String EDIT = "Change";
 
 	protected abstract void populateHeaderList();
 

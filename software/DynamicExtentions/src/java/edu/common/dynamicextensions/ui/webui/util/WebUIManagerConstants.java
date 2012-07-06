@@ -128,4 +128,6 @@ public interface WebUIManagerConstants
 	public final String IS_FORM_LOCKED = "isFormLocked";
 
 	String OVERRIDE_CAPTION = "OverrideCaption";
+
+	public static final String SURVEY_MODE_JSP = "/pages/de/surveymode.jsp";
 }
