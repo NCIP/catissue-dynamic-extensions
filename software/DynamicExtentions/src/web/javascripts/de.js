@@ -2,11 +2,12 @@ var edu = edu || {};
 edu.wustl = edu.wustl || {};
 edu.wustl.de = edu.wustl.de || {};
 edu.wustl.de.sm = {};
-edu.wustl.de.smurl = "AjaxcodeHandlerAction?ajaxOperation=renderSurveyMode";
-
+edu.wustl.de.smurl;
+edu.wustl.de.currentpage;
 edu.wustl.de.defaultValues = {};
 
 $(document).ready(function () {
+	edu.wustl.de.smurl = $("#contextPath").val()+"/AjaxcodeHandlerAction?ajaxOperation=renderSurveyMode";
 	var form = new edu.wustl.de.CategorySurveyMode({ctx: $("#sm-category"),
 		categoryid: $("#categoryId").val()});
 	form.load();
@@ -18,12 +19,13 @@ edu.wustl.de.CategorySurveyMode = function (args) {
 	this.ctx = args.ctx;
 	this.categoryid = args.categoryid;
 	this.pages = new Array();
-	this.currentpage = 0;
+	edu.wustl.de.currentpage = 0;
 	this.navbar = new edu.wustl.de.Navbar({ctx: $("#sm-navbar")});
 	this.progressbar = new edu.wustl.de.ProgressBar({ctx: $("#sm-progressbar")});
 	this.url = edu.wustl.de.smurl +
 		"&categoryId=" + args.categoryid +
 		"&containerIdentifier=" + $("#containerIdentifier").val();
+	
 	if ($("#recordIdentifier").length > 0) {
 		this.url = this.url +"&recordIdentifier=" + $("#recordIdentifier").val();
 	}
@@ -74,14 +76,14 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 	this.navbar.register({type: "button",	label: "Previous",
 		handler: function () {
 			sm.hide();
-			sm.currentpage -= 1;
+			edu.wustl.de.currentpage -= 1;
 			sm.show();
 		}
 	});
 	this.navbar.register({type: "button",	label: "Next",
 		handler: function () {
 			sm.hide();
-			sm.currentpage += 1;
+			edu.wustl.de.currentpage += 1;
 			sm.show();
 		}
 	});
@@ -102,12 +104,12 @@ edu.wustl.de.CategorySurveyMode.prototype.loadAllPages = function () {
 	});
 };
 edu.wustl.de.CategorySurveyMode.prototype.tidyNavbar = function () {
-	if (this.currentpage == 0) {
+	if (edu.wustl.de.currentpage == 0) {
 		this.navbar.disable({label: "Previous"});
 	} else {
 		this.navbar.enable({label: "Previous"});
 	}
-	if (this.currentpage == this.pages.length -1) {
+	if (edu.wustl.de.currentpage == this.pages.length -1) {
 		this.navbar.disable({label: "Next"});
 	} else {
 		this.navbar.enable({label: "Next"});
@@ -135,18 +137,24 @@ edu.wustl.de.CategorySurveyMode.prototype.init = function () {
 	var createpages = function (categoryid, pages) {
 		return function (i, e) {
 			pages.push(new edu.wustl.de.Page({ctx: e, categoryid: categoryid,
-				pageid: $(e).attr("id")}));
+				pageid: $(e).attr("id")}));			
+			if($("#pageId").length > 0 && $("#pageId").val()==$(e).attr("id"))
+			{	
+				edu.wustl.de.currentpage = i;
+				alert(i);
+			}
 		};
 	};
 	$(".sm-page", this.ctx).each(createpages(this.categoryid, this.pages));
+	alert(edu.wustl.de.currentpage);
 };
 edu.wustl.de.CategorySurveyMode.prototype.hide = function () {
-	this.pages[this.currentpage].hide();
+	this.pages[edu.wustl.de.currentpage].hide();
 };
 edu.wustl.de.CategorySurveyMode.prototype.show = function () {
-	this.pages[this.currentpage].show();
-	if (this.currentpage < this.pages.length -1) {
-		this.pages[this.currentpage + 1].load();
+	this.pages[edu.wustl.de.currentpage].show();
+	if (edu.wustl.de.currentpage < this.pages.length -1) {
+		this.pages[edu.wustl.de.currentpage + 1].load();
 	}
 	this.tidyNavbar();
 };
@@ -162,6 +170,7 @@ edu.wustl.de.Page = function (args) {
 	if (args.categoryid == undefined) throw "categoryid undefined";
 	if (args.pageid == undefined) throw "pageid undefined";
 	this.ctx = args.ctx;
+	
 	this.url = edu.wustl.de.smurl +
 		"&categoryId=" + args.categoryid +
 		"&pageId=" + args.pageid +

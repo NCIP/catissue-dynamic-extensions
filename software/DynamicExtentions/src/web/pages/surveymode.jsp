@@ -66,6 +66,10 @@
 				</div>
 				<div class="box" id="sm-form-contents">
 				</div>
+				<input type="hidden" value="${pageContext.request.contextPath}" id="contextPath"/>
+				<c:if test='${not empty param.pageId}'>
+					<input type="hidden" value="${param.pageId}" id="pageId"/>				
+				</c:if>	
 			</form>
 		</div>
 	</div>
