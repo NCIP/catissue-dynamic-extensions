@@ -141,12 +141,10 @@ edu.wustl.de.CategorySurveyMode.prototype.init = function () {
 			if($("#pageId").length > 0 && $("#pageId").val()==$(e).attr("id"))
 			{	
 				edu.wustl.de.currentpage = i;
-				alert(i);
 			}
 		};
 	};
 	$(".sm-page", this.ctx).each(createpages(this.categoryid, this.pages));
-	alert(edu.wustl.de.currentpage);
 };
 edu.wustl.de.CategorySurveyMode.prototype.hide = function () {
 	this.pages[edu.wustl.de.currentpage].hide();
