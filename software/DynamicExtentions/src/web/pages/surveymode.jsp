@@ -48,7 +48,7 @@
 
 	<div class="content">
 		<div id="sm-category">
-			<form id="sm-form" name="sm-form" method="post" action="${param.formSubmitUrl}">
+			<form id="sm-form" name="sm-form" method="post" action="${sessionScope.formSubmitUrl}">
 				<div id="sm-hidden-inputs">
 					<input type="hidden" id="mode" name="mode" value="edit"></input>
 					<input type="hidden" name='<%=DEConstants.CATEGORY_ID%>' id='<%=DEConstants.CATEGORY_ID%>'
@@ -70,6 +70,8 @@
 				<c:if test='${not empty param.pageId}'>
 					<input type="hidden" value="${param.pageId}" id="pageId"/>				
 				</c:if>	
+				<input type="hidden" id="isDraft" name="isDraft" value="false"/>
+				<input type="hidden" id="containerIdentifier" name="containerIdentifier" value="${param.containerIdentifier} "/>
 			</form>
 		</div>
 	</div>
@@ -79,7 +81,7 @@
 </body>
 
 
-<c:if test='${empty param.formSubmitUrl}'>
+<c:if test='${empty sessionScope.formSubmitUrl}'>
 	<script>
 		document.getElementById('sm-form').action = "/clinportal/DEServlet";
 	</script>

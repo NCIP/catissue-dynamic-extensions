@@ -10,7 +10,11 @@
 package edu.common.dynamicextensions.util.global;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 
 /**
  * The Class Variables.
@@ -45,5 +49,14 @@ public class Variables
 	 */
 	public static String jbossUrl = "";
 	public static String serverUrl="";
+	
+	/**
+	 * used for overriding the resource mappings used by DE. 
+	 */
+	public static final Map<String,String> resourceMapping = new HashMap<String, String>(); 
+	static{
+		Variables.resourceMapping.put(WebUIManagerConstants.FORM_SUMMARY_PAGE,"/pages/de/dataEntry/dataEntrySummary.jsp");
+		Variables.resourceMapping.put(WebUIManagerConstants.SURVEY_MODE_JSP,"/pages/de/surveymode.jsp");
+	}
 
 }

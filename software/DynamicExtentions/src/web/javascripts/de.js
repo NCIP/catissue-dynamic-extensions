@@ -89,6 +89,7 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 	});
 	this.navbar.register({type: "button",	label: "Save Draft",
 		handler: function () {
+			$("#isDraft").val("true");
 			$("#sm-form").submit();
 		}
 	});

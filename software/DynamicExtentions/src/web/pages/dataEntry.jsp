@@ -13,8 +13,11 @@
 <%-- Imports --%>
 <%@ page language="java" contentType="text/html;charset=iso-8859-1"%>
 <%@ page import="edu.common.dynamicextensions.util.global.DEConstants"%>
+<%@ page import="edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants" %>
+
 <%@ page import="edu.common.dynamicextensions.domain.Category"%>
 <%@ page import="edu.wustl.cab2b.server.util.DynamicExtensionUtility"%>
+
 
 <%
 	Category category;
@@ -22,7 +25,7 @@
 	try
 	{
 		category = DynamicExtensionUtility.getCategoryByContainerId(request
-				.getParameter(DEConstants.CONTAINER_IDENTIFIER));
+				.getParameter(WebUIManagerConstants.CONTAINER_IDENTIFIER));
 		if (category.getLayout() != null)
 		{
 			request.getSession().setAttribute(DEConstants.CATEGORY, category);
@@ -40,4 +43,8 @@
 		e.printStackTrace();
 	}
 %>
-<jsp:include page="<%=destination%>"></jsp:include>
+
+
+
+<jsp:include page="<%=destination%>"/>
+	

@@ -123,9 +123,9 @@ jQuery(document).ready(
 	 } );
 </script>
 
-<input type="hidden" id='formSubmitUrl' name='formSubmitUrl'  value="${param.formSubmitUrl}"/>
-<c:set var="formSubmitUrl" value="${param.formSubmitUrl}"/>
-<c:if test='${empty param.formSubmitUrl}'>
+<input type="hidden" id='formSubmitUrl' name='formSubmitUrl'  value="${sessionScope.formSubmitUrl}"/>
+<c:set var="formSubmitUrl" value="${sessionScope.formSubmitUrl}"/>
+<c:if test='${empty sessionScope.formSubmitUrl}'>
 	<script>
 		<c:set var="formSubmitUrl" value="ApplyDataEntryFormAction"/>
 		document.getElementById('formSubmitUrl').value = "ApplyDataEntryFormAction";

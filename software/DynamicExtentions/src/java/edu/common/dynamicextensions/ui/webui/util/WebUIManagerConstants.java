@@ -30,7 +30,7 @@ public interface WebUIManagerConstants
 	 */
 	String LOAD_DATA_ENTRY_FORM_ACTION_URL = "/LoadDataEntryFormAction?dataEntryOperation=insertParentData";
 	
-	String FORM_SUMMARY_PAGE = "/pages/de/dataEntry/dataEntrySummary.jsp";
+	String FORM_SUMMARY_PAGE = "summaryPage";
 	/**
 	 *
 	 */
@@ -129,5 +129,5 @@ public interface WebUIManagerConstants
 
 	String OVERRIDE_CAPTION = "OverrideCaption";
 
-	public static final String SURVEY_MODE_JSP = "/pages/de/surveymode.jsp";
+	public static final String SURVEY_MODE_JSP = "surveyModePage";
 }

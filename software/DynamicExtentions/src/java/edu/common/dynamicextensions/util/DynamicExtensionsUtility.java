@@ -2994,4 +2994,20 @@ public class DynamicExtensionsUtility
 		dataEntryForm.setDataEntryOperation(request.getParameter(Constants.DATA_ENTRY_OPERATION));
 		return dataEntryForm;
 	}
+	
+	public static DELayoutEnum getLayout(Long containerId) throws DynamicExtensionsCacheException
+	{
+		DELayoutEnum layout = DELayoutEnum.DEFAULT;
+		ContainerInterface containerInterface = EntityCache.getInstance().getContainerById(containerId);
+		if (containerInterface.getAbstractEntity() instanceof CategoryEntityInterface)
+		{
+			CategoryEntity categoryEntity = (CategoryEntity) containerInterface.getAbstractEntity();
+			if (categoryEntity.getCategory().getLayout() != null)
+			{
+				layout = DELayoutEnum.SURVEY;
+			}
+
+		}
+		return layout;
+	}
 }

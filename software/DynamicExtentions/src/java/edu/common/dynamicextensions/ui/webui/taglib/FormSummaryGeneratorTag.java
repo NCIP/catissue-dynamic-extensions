@@ -17,9 +17,8 @@ import edu.common.dynamicextensions.summary.DefaultSummaryDataManager;
 import edu.common.dynamicextensions.summary.SurveySummaryDataManager;
 import edu.common.dynamicextensions.ui.webui.util.ContainerUtility;
 import edu.common.dynamicextensions.util.DELayoutEnum;
-import edu.wustl.cab2b.server.util.DynamicExtensionUtility;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.util.logger.Logger;
-
 public class FormSummaryGeneratorTag extends DynamicExtensionsFormBaseTag
 {
 
@@ -62,7 +61,7 @@ public class FormSummaryGeneratorTag extends DynamicExtensionsFormBaseTag
 	private void populateTable() throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
-		if (DELayoutEnum.SURVEY == DynamicExtensionUtility.getLayout(containerIdentifier))
+		if (DELayoutEnum.SURVEY == DynamicExtensionsUtility.getLayout(containerIdentifier))
 		{
 			dataManager = new SurveySummaryDataManager(containerIdentifier,recordIdentifier,pageContext);
 		}
