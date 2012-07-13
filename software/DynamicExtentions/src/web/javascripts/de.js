@@ -80,14 +80,7 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 			sm.show();
 		}
 	});
-	this.navbar.register({type: "button",	label: "Next",
-		handler: function () {
-			sm.hide();
-			edu.wustl.de.currentpage += 1;
-			sm.show();
-		}
-	});
-	this.navbar.register({type: "button",	label: "Save Draft",
+	this.navbar.register({type: "button",	label: "Save as Draft",
 		handler: function () {
 			$("#isDraft").val("true");
 			$("#sm-form").submit();
@@ -96,6 +89,13 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 	this.navbar.register({type: "button",	label: "Save",
 		handler: function () {
 			$("#sm-form").submit();
+		}
+	});
+	this.navbar.register({type: "button",	label: "Next",
+		handler: function () {
+			sm.hide();
+			edu.wustl.de.currentpage += 1;
+			sm.show();
 		}
 	});
 };
