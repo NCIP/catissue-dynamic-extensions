@@ -32,7 +32,6 @@ import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.common.dynamicextensions.validation.ValidatorUtil;
 import edu.common.dynamicextensions.validation.category.CategoryValidator;
-import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.dao.exception.DAOException;
@@ -43,6 +42,8 @@ import edu.wustl.dao.exception.DAOException;
 public class CategoryCSVFileParser extends CategoryFileParser
 {
 
+	private static final String OPTION_MARKUP = "(?<!\\\\):";
+	private static final String OPTION_VALUE_SEPARATOR = "(?<!\\\\)=";
 	private static final String PERMISSIBLE_VALUES_FILE_ERROR = "Error while reading permissible values file ";
 	private static final String DEFAULT_SEPERATOR = ",";
 	public static final String DEFAULT_ESCAPE_CHARACTER = "\"";
@@ -1065,22 +1066,25 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	 */
 	private void populateOptionsMap(Map<String, String> controlOptions, String optionConstant)
 	{
-	Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
-	for (String string : readLine())
-	{
-	// Removes the double quote that gets saved with the query in case pvProcessor is specified.
-	string=string.replaceAll(DEFAULT_ESCAPE_CHARACTER, "");
+		Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
+		for (String string : readLine())
+		{
+			// Removes the double quote that gets saved with the query in case pvProcessor is specified.
+			string = string.replaceAll(DEFAULT_ESCAPE_CHARACTER, "");
 
-	if (string.toLowerCase(locale).startsWith(optionConstant.toLowerCase(locale) + "~"))
-	{
-	String[] controlOptionsValue = string.split("~")[1].split(Constants.COLON);
+			if (string.toLowerCase(locale).startsWith(optionConstant.toLowerCase(locale) + "~"))
+			{
+				String[] controlOptionsValue = string.split("~")[1].split(OPTION_MARKUP);
 
-	for (String optionValue : controlOptionsValue)
-	{
-	controlOptions.put(optionValue.split("=")[0], optionValue.split("=")[1]);
-	}
-	}
-	}
+				for (String optionValue : controlOptionsValue)
+				{
+					optionValue = optionValue.replace("\\:", ":");
+					String option = optionValue.split(OPTION_VALUE_SEPARATOR)[0].replace("\\=", "=");
+					String value = optionValue.split(OPTION_VALUE_SEPARATOR)[1].replace("\\=", "=");
+					controlOptions.put(option, value);
+				}
+			}
+		}
 
 	}
 
