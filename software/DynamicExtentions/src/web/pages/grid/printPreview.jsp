@@ -47,6 +47,12 @@
 can not be clubbed together with style class specified for the print media --%>
 <body>
   <label class="NonPrintable" style='font-family: arial,helvetica,verdana,sans-serif;font-size: 1em;font-weight: bold;'>Print Preview</label>
+	<br/>
+		<div id="header"></div>
+	<br />
+  <script>
+	document.getElementById("header").innerHTML = decodeURI("${param.printDetails}");
+  </script>
 </body>
 
 <c:forEach var="url" items="${fn:split(param.formUrl, ':')}" varStatus="status">
