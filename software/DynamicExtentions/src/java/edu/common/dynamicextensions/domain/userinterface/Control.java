@@ -30,6 +30,7 @@ import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.common.dynamicextensions.xmi.XMIConstants;
 import edu.wustl.common.util.logger.Logger;
 
@@ -499,9 +500,18 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 
 		if (showLabel != null && showLabel)
 		{
-			controlHTML.append(((BaseAbstractAttribute) getBaseAbstractAttribute())
-					.getCapitalizedName(DynamicExtensionsUtility
-							.replaceHTMLSpecialCharacters(getCaption())));
+			if (baseAbstractAttribute
+					.getTaggedValue(CategoryConstants.DISPLAY_LABEL)!= null)
+			{
+				controlHTML.append(baseAbstractAttribute
+						.getTaggedValue(CategoryConstants.DISPLAY_LABEL));
+			}else
+			{
+				controlHTML.append(((BaseAbstractAttribute) getBaseAbstractAttribute())
+						.getCapitalizedName(DynamicExtensionsUtility
+								.replaceHTMLSpecialCharacters(getCaption())));	
+			}
+			
 		}
 		controlHTML.append("</td><td class='formField_withoutBorder' valign='center'>");
 

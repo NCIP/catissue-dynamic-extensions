@@ -109,7 +109,11 @@ public class CategoryConstants
 	public static final String DEFAULT_VALUE = "defaultValue";
 
 	public static final String SHOW_IN_GRID = "showingrid";
+	
+	public static final String DISPLAY_LABEL = "displaylabel";
+	
+	
 
 	public static final List<String> ATRRIBUTE_TAG_VALUES = Arrays.asList(SHOW_IN_GRID,
-			DEConstants.PV_TYPE, DEConstants.PV_PROCESSOR);
+			DEConstants.PV_TYPE, DEConstants.PV_PROCESSOR,DISPLAY_LABEL);
 }
