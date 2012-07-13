@@ -220,6 +220,12 @@
 			<rtexprvalue>true</rtexprvalue>
 			<type>java.lang.Long</type>
 		</attribute>
+		<attribute>
+			<name>exclude</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+		</attribute>
 	</tag>
 
 </taglib>

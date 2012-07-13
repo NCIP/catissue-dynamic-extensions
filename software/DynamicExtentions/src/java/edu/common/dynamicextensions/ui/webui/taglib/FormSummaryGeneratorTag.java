@@ -29,6 +29,10 @@ public class FormSummaryGeneratorTag extends DynamicExtensionsFormBaseTag
 	private static final Logger LOGGER = Logger.getCommonLogger(FormSummaryGeneratorTag.class);
 	private AbstractSummaryDataManager dataManager;
 	private List<Map<ControlInterface, Object>> controlValueCollection;
+	/**
+	 * Comma separated list of columns to be excluded
+	 */
+	private String exclude;
 
 	@Override
 	public int doEndTag() throws JspException
@@ -68,6 +72,9 @@ public class FormSummaryGeneratorTag extends DynamicExtensionsFormBaseTag
 		else
 		{
 			dataManager = new DefaultSummaryDataManager();
+		}
+		if(exclude != null && !"".equals(exclude)){
+			dataManager.setExcludeColumns(exclude.split(","));
 		}
 		dataManager.populateTable(controlValueCollection);
 
@@ -116,4 +123,17 @@ public class FormSummaryGeneratorTag extends DynamicExtensionsFormBaseTag
 			LOGGER.error("Error generating table.", e);
 		}
 	}
+
+	
+	public String getExclude()
+	{
+		return exclude;
+	}
+
+	
+	public void setExclude(String exclude)
+	{
+		this.exclude = exclude;
+	}
+	
 }

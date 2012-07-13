@@ -20,6 +20,7 @@ public abstract class AbstractSummaryDataManager
 	protected final String QUESTION = "QUESTION";
 	protected final String RESPONSE = "RESPONSE";
 	protected final String EDIT = "Change";
+	protected String[] excludeColumns;
 
 	protected abstract void populateHeaderList();
 
@@ -31,6 +32,7 @@ public abstract class AbstractSummaryDataManager
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		populateHeaderList();
+		filterHeader();
 		int rowCounter = 1;
 		for (Map<ControlInterface, Object> map : controlValueCollection)
 		{
@@ -43,6 +45,18 @@ public abstract class AbstractSummaryDataManager
 				rowData.add(data);
 			}
 		}
+	}
+
+	private void filterHeader()
+	{
+		if (excludeColumns != null)
+		{
+			for (String string : excludeColumns)
+			{
+				headerList.remove(string);
+			}
+		}
+
 	}
 
 	public List<String> getHeaderList()
@@ -76,11 +90,21 @@ public abstract class AbstractSummaryDataManager
 			value.append(string);
 			value.append(',');
 		}
-		if(value.length() > 0)
+		if (value.length() > 0)
 		{
-			value.deleteCharAt(value.length() - 1);	
+			value.deleteCharAt(value.length() - 1);
 		}
-		
+
 		return value.toString();
+	}
+
+	public String[] getExcludeColumns()
+	{
+		return excludeColumns;
+	}
+
+	public void setExcludeColumns(String[] strings)
+	{
+		this.excludeColumns = strings;
 	}
 }
