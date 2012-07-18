@@ -496,7 +496,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 			controlHTML.append(((CategoryAttributeInterface) getBaseAbstractAttribute())
 					.getAbstractAttribute().getTaggedValue(XMIConstants.TAGGED_KEY_HS));
 		}
-		controlHTML.append("'>");
+		controlHTML.append("'><div class='control_caption'>");
 
 		if (showLabel != null && showLabel)
 		{
@@ -513,7 +513,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 			}
 			
 		}
-		controlHTML.append("</td><td class='formField_withoutBorder' valign='center'>");
+		controlHTML.append("<div></td><td class='formField_withoutBorder' valign='center'>");
 
 		if (getYPosition() <= 1)
 		{

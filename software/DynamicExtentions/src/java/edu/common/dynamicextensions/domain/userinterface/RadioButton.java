@@ -68,18 +68,26 @@ public class RadioButton extends SelectControl implements RadioButtonInterface
 		}
 		nameValueBeanList = ControlsUtility.populateListOfValues(this, sourceControlValues,
 				(Date) container.getContextParameter(Constants.ENCOUNTER_DATE));
-
+		int COLUMN_COUNT = 1;
 		final String htmlComponentName = getHTMLComponentName();
+		htmlString += "<table cellspacing='5'>";
 		if (nameValueBeanList != null && !nameValueBeanList.isEmpty())
 		{
+			int columnNum = 0;
+			
 			for (NameValueBean nameValueBean : nameValueBeanList)
 			{
+				if(columnNum % COLUMN_COUNT == 0)
+				{
+					columnNum = 0;
+					htmlString += "<tr>";
+				}
 				final String optionName = DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean
 						.getName());
 				final String optionValue = nameValueBean.getValue();
 				if (optionValue.equals(defaultValue))
 				{
-					htmlString += "<input type='radio' onClick=\""
+					htmlString += "<td><input type='radio' onClick=\""
 							+ getOnchangeServerCall()
 							+ "\""
 							+ "class='font_bl_nor' "
@@ -92,13 +100,11 @@ public class RadioButton extends SelectControl implements RadioButtonInterface
 									: (((CategoryEntityInterface) getParentContainer()
 											.getAbstractEntity()).getName())) + "' " + "value='"
 							+ optionValue + "' " + "id='" + optionName + "' checked "
-							+ disabled + "  " + "/>" + "<label for=\"" + htmlComponentName + "\" onClick=\"selectRadioButton('"+getHTMLComponentName() +"','"+optionValue+"')\">"
-							+ optionName
-							+ "</label> <img src='images/de/spacer.gif' width='2' height='2'>";
+							+ disabled + "  " + "/></td>";
 				}
 				else
 				{
-					htmlString +="<input type='radio' onClick=\""
+					htmlString +="<td><input type='radio' onClick=\""
 							+ getOnchangeServerCall()
 							+ "\" class='font_bl_nor' "
 							+ "name='"
@@ -111,13 +117,25 @@ public class RadioButton extends SelectControl implements RadioButtonInterface
 											.getAbstractEntity()).getName())) + "' " + "value='"
 							+ optionValue + "' " + "id='" + optionName + "' " + disabled
 
-							+ " />"
-							+"<label for=\"" + htmlComponentName + "\" onClick=\"selectRadioButton('"+getHTMLComponentName() +"','"+optionValue+"')\">"
-							+ optionName
-							+ "</label> <img src='images/de/spacer.gif' width='2' height='2'>";
+							+ " /></td>";
 				}
+				htmlString +="<td class='formRequiredLabel_withoutBorder'>  <label for=\"" + htmlComponentName + "\" onClick=\"selectRadioButton('"+getHTMLComponentName() +"','"+optionValue+"')\">"
+				+ optionName+
+						"</label></td>";
+				if(columnNum % COLUMN_COUNT == COLUMN_COUNT - 1)
+				{
+					htmlString += "</tr>";
+				}
+				columnNum++;
+
 			}
+			if(columnNum % COLUMN_COUNT < COLUMN_COUNT - 1)
+			{
+				htmlString += "</tr>";
+			}
+			
 		}
+		htmlString += "</table>";
 		if (getIsSkipLogicTargetControl())
 		{
 			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"
