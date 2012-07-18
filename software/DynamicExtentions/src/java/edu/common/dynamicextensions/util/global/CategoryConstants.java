@@ -112,8 +112,10 @@ public class CategoryConstants
 	
 	public static final String DISPLAY_LABEL = "displaylabel";
 	
+	public static final String COLUMN = "column";
+	
 	
 
 	public static final List<String> ATRRIBUTE_TAG_VALUES = Arrays.asList(SHOW_IN_GRID,
-			DEConstants.PV_TYPE, DEConstants.PV_PROCESSOR,DISPLAY_LABEL);
+			DEConstants.PV_TYPE, DEConstants.PV_PROCESSOR,DISPLAY_LABEL,COLUMN);
 }

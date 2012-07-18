@@ -22,6 +22,7 @@ import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.wustl.common.beans.NameValueBean;
 
 /**
@@ -68,7 +69,7 @@ public class RadioButton extends SelectControl implements RadioButtonInterface
 		}
 		nameValueBeanList = ControlsUtility.populateListOfValues(this, sourceControlValues,
 				(Date) container.getContextParameter(Constants.ENCOUNTER_DATE));
-		int COLUMN_COUNT = 1;
+		int COLUMN_COUNT = getColumnCount();
 		final String htmlComponentName = getHTMLComponentName();
 		htmlString += "<table cellspacing='5'>";
 		if (nameValueBeanList != null && !nameValueBeanList.isEmpty())
@@ -143,6 +144,21 @@ public class RadioButton extends SelectControl implements RadioButtonInterface
 			htmlString += "</div>";
 		}
 		return htmlString;
+	}
+
+	/**
+	 * @return number columns in which radio buttons needs to divided.
+	 */
+	private int getColumnCount()
+	{
+		int columnCount = 1;
+		
+		if(getBaseAbstractAttribute().getTaggedValue(CategoryConstants.COLUMN) != null )
+		{
+			columnCount = Integer.parseInt(getBaseAbstractAttribute().getTaggedValue(CategoryConstants.COLUMN));		
+		}
+		
+		return columnCount;
 	}
 
 	/**
