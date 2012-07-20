@@ -71,7 +71,7 @@ public class RadioButton extends SelectControl implements RadioButtonInterface
 				(Date) container.getContextParameter(Constants.ENCOUNTER_DATE));
 		int COLUMN_COUNT = getColumnCount();
 		final String htmlComponentName = getHTMLComponentName();
-		htmlString += "<table cellspacing='5'>";
+		htmlString += "<table cellspacing='3'>";
 		if (nameValueBeanList != null && !nameValueBeanList.isEmpty())
 		{
 			int columnNum = 0;

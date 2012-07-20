@@ -7,7 +7,7 @@ edu.wustl.de.currentpage;
 edu.wustl.de.defaultValues = {};
 
 $(document).ready(function () {
-	edu.wustl.de.smurl = $("#contextPath").val()+"/AjaxcodeHandlerAction?ajaxOperation=renderSurveyMode";
+edu.wustl.de.smurl = $("#contextPath").val()+"/AjaxcodeHandlerAction?ajaxOperation=renderSurveyMode";
 	var form = new edu.wustl.de.CategorySurveyMode({ctx: $("#sm-category"),
 		categoryid: $("#categoryId").val()});
 	form.load();
@@ -73,25 +73,25 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 		}		
 	});
 	
-	this.navbar.register({type: "button",	label: "Previous",
+	this.navbar.register({type: "button",	label: "Previous",cssClass:'sm-previous-button',
 		handler: function () {
 			sm.hide();
-			edu.wustl.de.currentpage -= 1;
+			edu.wustl.de.currentpage -= 1;	
 			sm.show();
 		}
 	});
-	this.navbar.register({type: "button",	label: "Save as Draft",
+	this.navbar.register({type: "button",	label: "Save as Draft",cssClass:'sm-draft-button',
 		handler: function () {
 			$("#isDraft").val("true");
 			$("#sm-form").submit();
 		}
 	});
-	this.navbar.register({type: "button",	label: "Save",
+	this.navbar.register({type: "button",	label: "Save",cssClass:'sm-save-button',
 		handler: function () {
 			$("#sm-form").submit();
 		}
 	});
-	this.navbar.register({type: "button",	label: "Next",
+	this.navbar.register({type: "button",	label: "Next",cssClass:'sm-next-button',
 		handler: function () {
 			sm.hide();
 			edu.wustl.de.currentpage += 1;
@@ -228,6 +228,7 @@ edu.wustl.de.Navbar.prototype.register = function (args) {
 		default:
 			var action = $("<input type='button'></input>");
 			$(action).attr("class", "navaction");
+			$(action).addClass(args.cssClass);
 			$(action).attr("id", args.label);
 			$(action).attr("value", args.label);
 			$(action).click(args.handler);
