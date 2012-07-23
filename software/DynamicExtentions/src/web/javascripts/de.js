@@ -107,12 +107,18 @@ edu.wustl.de.CategorySurveyMode.prototype.loadAllPages = function () {
 edu.wustl.de.CategorySurveyMode.prototype.tidyNavbar = function () {
 	if (edu.wustl.de.currentpage == 0) {
 		this.navbar.disable({label: "Previous"});
+		
 	} else {
 		this.navbar.enable({label: "Previous"});
+		
 	}
 	if (edu.wustl.de.currentpage == this.pages.length -1) {
 		this.navbar.disable({label: "Next"});
+		this.navbar.show({label:"Save"});
+		this.navbar.hide({label:"Save as Draft"});
 	} else {
+		this.navbar.show({label:"Save as Draft"});
+		this.navbar.hide({label:"Save"});
 		this.navbar.enable({label: "Next"});
 	}
 };
@@ -243,6 +249,14 @@ edu.wustl.de.Navbar.prototype.get = function (args) {
 edu.wustl.de.Navbar.prototype.disable = function (args) {
 	if (args.label == undefined) throw "label undefined";
 	this.actions[args.label].attr("disabled", "disabled");
+};
+edu.wustl.de.Navbar.prototype.hide = function (args) {
+	if (args.label == undefined) throw "label undefined";
+	this.actions[args.label].hide();
+};
+edu.wustl.de.Navbar.prototype.show = function (args) {
+	if (args.label == undefined) throw "label undefined";
+	this.actions[args.label].show();
 };
 edu.wustl.de.Navbar.prototype.enable = function (args) {
 	if (args.label == undefined) throw "label undefined";
