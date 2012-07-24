@@ -26,11 +26,13 @@ public class SurveySummaryDataManager extends AbstractSummaryDataManager
 	private Long recordIdentifier;
 	private Map<ControlInterface, Long> controlPageIdMap = new HashMap<ControlInterface, Long>();
 	private PageContext pageContext;
+	private Long containerIdentifier;
 
 	public SurveySummaryDataManager(Long containerIdentifier, Long recordIdentifier, PageContext pageContext)
 			throws DynamicExtensionsCacheException
 	{
 		this.recordIdentifier = recordIdentifier;
+		this.containerIdentifier = containerIdentifier;
 		this.pageContext = pageContext;
 		category = DynamicExtensionUtility.getCategoryByContainerId(containerIdentifier.toString());
 		for (Page page : ((SurveyModeLayout) category.getLayout()).getPageCollection())
@@ -76,7 +78,7 @@ public class SurveySummaryDataManager extends AbstractSummaryDataManager
 		controlUrl.append("&controlName=");
 		controlUrl.append(control.getHTMLComponentName());
 		controlUrl.append("&containerIdentifier=");
-		controlUrl.append(control.getParentContainer().getId());
+		controlUrl.append(containerIdentifier);
 		controlUrl.append("&"+DEConstants.CALLBACK_URL+"=");
 		controlUrl.append(pageContext.getRequest().getParameter(DEConstants.CALLBACK_URL));
 
