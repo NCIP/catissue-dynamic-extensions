@@ -181,10 +181,9 @@ public class SurveyModeRenderer extends LayoutRenderer {
 	private String renderPage(String pageId)
 			throws DynamicExtensionsSystemException, IOException,
 			NumberFormatException, DynamicExtensionsApplicationException {
-		String pageHtml = "<div class='sm-page-title'>%s</div><div class='sm-page-contents'>%s</div>";
-		String htmlWrapper = "<table class='sm-page-table'>%s</table>";
+		String pageHtml = "<div class='sm-page-contents'>%s</div>";
+		String htmlWrapper = "<table class='sm-page-table'><th><div class='sm-page-title'>&nbsp;<div></th><th colspan='10'><div class='sm-page-title'>%s</div></th>%s</table>";
 		Page p = getPage(pageId);
-		ContainerInterface container = getContainerWithValueMap();
 		if (p == null) {
 			return renderError("page not found!");
 		} else {
@@ -198,10 +197,10 @@ public class SurveyModeRenderer extends LayoutRenderer {
 					control.setDataEntryOperation("insertParentData");
 				}
 				html
-						.append(String.format(htmlWrapper,
+						.append(String.format(htmlWrapper,p.getDescription(),
 								getControlHTML(control)));
 			}
-			return String.format(pageHtml, p.getDescription(), html.toString());
+			return String.format(pageHtml,html.toString());
 		}
 	}
 
