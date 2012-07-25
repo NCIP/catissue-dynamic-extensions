@@ -38,7 +38,11 @@ var header = "#master_checkbox,,,";
 					formDataGrid.insertColumn(numberOfCol+i,gridHeaderObject[0],"ro",10,getDataType(gridHeaderObject[1]),"center","top",null,null);
 					header = getFilterType(gridHeaderObject[1],header);
 				}
-				formDataGrid.attachHeader(header.substring(0,header.length-1),["text-align:center;padding-right:10px;"]);
+				//if it's an daily assigments grid for the health street study in that case the formUrl will be empty and filters won't be added
+				if('${requestScope.formUrl}' != )
+				{
+					formDataGrid.attachHeader(header.substring(0,header.length-1),["text-align:center;padding-right:10px;"]);
+				}
 			}
 			formUrl = encodeURIComponent('${requestScope.formUrl}');
 			deUrl = encodeURIComponent('${requestScope.deUrl}');
