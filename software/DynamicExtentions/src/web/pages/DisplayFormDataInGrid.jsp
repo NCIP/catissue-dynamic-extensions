@@ -39,7 +39,7 @@ var header = "#master_checkbox,,,";
 					header = getFilterType(gridHeaderObject[1],header);
 				}
 				//if it's an daily assigments grid for the health street study in that case the formUrl will be empty and filters won't be added
-				if('${requestScope.formUrl}' != )
+				if('${requestScope.formUrl}' != "")
 				{
 					formDataGrid.attachHeader(header.substring(0,header.length-1),["text-align:center;padding-right:10px;"]);
 				}
