@@ -72,7 +72,7 @@ jQuery(document).ready(
 				var controlId = this.id;
 				new AjaxUpload(this,
 					{
-					   action: 'UploadFile.do',
+					   action: 'UploadFile',
 					   name: 'upload',
 					   responseType: 'json',
 					   onSubmit : function(file,extension)

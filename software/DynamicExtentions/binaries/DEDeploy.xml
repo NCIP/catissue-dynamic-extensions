@@ -1890,6 +1890,7 @@
 		<!-- =================================
 			Upgrade db from DE_1.4.0.1 to DE_1.4.0.2
 				                    ================================= -->
+		<antcall target="upgrade_db_from_DE_1.5.1_to_DE_1.6.0"/>
 		<antcall target="upgrade_db_from_DE_1.7.0_to_DE_1.9.0"/>
 	</target>
 
@@ -2258,7 +2259,7 @@
 				</servlet>
 				<servlet>
 					<servlet-name>DownloadFileAction</servlet-name>
-					<servlet-class>edu.common.dynamicextensions.ui.webui.action.DownloadFileAction</servlet-class>
+					<servlet-class>edu.common.dynamicextensions.action.core.DownloadFileAction</servlet-class>
 				</servlet>
 				<servlet-mapping>
 					<servlet-name>DynamicExtensionsInterfaceAction</servlet-name>
