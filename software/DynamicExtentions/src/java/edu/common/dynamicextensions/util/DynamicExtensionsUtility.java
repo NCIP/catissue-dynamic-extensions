@@ -191,7 +191,7 @@ public class DynamicExtensionsUtility
 		if (containerIdentifier != null && !"".equals(containerIdentifier))
 		{
 			containerInterface = EntityCache.getInstance().getContainerById(
-					Long.valueOf(containerIdentifier));
+					Long.valueOf(containerIdentifier.trim()));
 		}
 		return containerInterface;
 	}

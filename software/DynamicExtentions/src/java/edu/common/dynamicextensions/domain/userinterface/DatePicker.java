@@ -204,14 +204,14 @@ public class DatePicker extends Control implements DatePickerInterface, Validata
 				outputStringBuffer.append(DATE_FORMAT);
 				outputStringBuffer.append(" [");
 				outputStringBuffer.append(ProcessorConstants.DATE_ONLY_FORMAT);
-				outputStringBuffer.append("]\" src=\"images/de/calendar.gif\" border=0 /></A><DIV id=slcalcod");
+				outputStringBuffer.append("]\" src=\""+getParentContainer().getContextParameter(DEConstants.CONTEXT_PATH)+"/images/de/calendar.gif\" border=0 /></A><DIV id=slcalcod");
 				outputStringBuffer.append(htmlComponentName);
 				outputStringBuffer.append(" style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">");
 				if (getParentContainer().isAjaxRequest())
 				{
 					final StringBuffer imgsrc =new StringBuffer();
-					imgsrc.append(getParentContainer().getRequest().getContextPath());
-					imgsrc.append("/images/de/");
+					imgsrc.append(getParentContainer().getContextParameter(DEConstants.CONTEXT_PATH));
+					imgsrc.append(""+getParentContainer().getContextParameter(DEConstants.CONTEXT_PATH)+"/images/de/");
 					final String filePath = getParentContainer().getRequest().getSession()
 							.getServletContext()
 							.getRealPath("/javascripts/de/CalendarComponent.js");
@@ -288,14 +288,14 @@ public class DatePicker extends Control implements DatePickerInterface, Validata
 				outputStringBuffer.append(DATE_FORMAT);
 				outputStringBuffer.append(" [");
 				outputStringBuffer.append(ProcessorConstants.DATE_TIME_FORMAT);
-				outputStringBuffer.append("]\" src=\"images/de/calendar.gif\" border=0 /></A><DIV id=slcalcod");
+				outputStringBuffer.append("]\" src=\""+getParentContainer().getContextParameter(DEConstants.CONTEXT_PATH)+"/images/de/calendar.gif\" border=0 /></A><DIV id=slcalcod");
 				outputStringBuffer.append(htmlComponentName);
 				outputStringBuffer.append(" style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">");
 				if (getParentContainer().isAjaxRequest())
 				{
 					final StringBuffer imgsrc =new StringBuffer();
-					imgsrc.append(getParentContainer().getRequest().getContextPath());
-					imgsrc.append("/images/de/");
+					imgsrc.append(getParentContainer().getContextParameter(DEConstants.CONTEXT_PATH));
+					imgsrc.append(""+getParentContainer().getContextParameter(DEConstants.CONTEXT_PATH)+"/images/de/");
 					final String filePath = getParentContainer().getRequest().getSession()
 							.getServletContext()
 							.getRealPath("/javascripts/de/CalendarComponent.js");
@@ -377,14 +377,14 @@ public class DatePicker extends Control implements DatePickerInterface, Validata
 				outputStringBuffer.append(DATE_FORMAT);
 				outputStringBuffer.append('[');
 				outputStringBuffer.append(ProcessorConstants.MONTH_YEAR_FORMAT);
-				outputStringBuffer.append("]\" src=\"images/de/calendar.gif\" border=0 /></A><DIV id=slcalcod");
+				outputStringBuffer.append("]\" src=\""+getParentContainer().getContextParameter(DEConstants.CONTEXT_PATH)+"/images/de/calendar.gif\" border=0 /></A><DIV id=slcalcod");
 				outputStringBuffer.append(htmlComponentName);
 				outputStringBuffer.append(" style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">");
 				if (getParentContainer().isAjaxRequest())
 				{
 					final StringBuffer imgsrc =new StringBuffer();
-					imgsrc.append(getParentContainer().getRequest().getContextPath());
-					imgsrc.append("/images/de/");
+					imgsrc.append(getParentContainer().getContextParameter(DEConstants.CONTEXT_PATH));
+					imgsrc.append(""+getParentContainer().getContextParameter(DEConstants.CONTEXT_PATH)+"/images/de/");
 					final String filePath = getParentContainer().getRequest().getSession()
 							.getServletContext()
 							.getRealPath("/javascripts/de/CalendarComponent.js");
@@ -458,14 +458,14 @@ public class DatePicker extends Control implements DatePickerInterface, Validata
 				outputStringBuffer.append(DATE_FORMAT);
 				outputStringBuffer.append(" [");
 				outputStringBuffer.append(ProcessorConstants.YEAR_ONLY_FORMAT);
-				outputStringBuffer.append("]\" src=\"images/de/calendar.gif\" border=0 /></A><DIV id=slcalcod");
+				outputStringBuffer.append("]\" src=\""+getParentContainer().getContextParameter(DEConstants.CONTEXT_PATH)+"/images/de/calendar.gif\" border=0 /></A><DIV id=slcalcod");
 				outputStringBuffer.append(htmlComponentName);
 				outputStringBuffer.append(" style=\"Z-INDEX: 10; LEFT: 100px; VISIBILITY: hidden; POSITION: absolute; TOP: 100px\">");
 				if (getParentContainer().isAjaxRequest())
 				{
 					final StringBuffer imgsrc =new StringBuffer();
-					imgsrc.append(getParentContainer().getRequest().getContextPath());
-					imgsrc.append("/images/de/");
+					imgsrc.append(getParentContainer().getContextParameter(DEConstants.CONTEXT_PATH));
+					imgsrc.append(""+getParentContainer().getContextParameter(DEConstants.CONTEXT_PATH)+"/images/de/");
 					final String filePath = getParentContainer().getRequest().getSession()
 							.getServletContext()
 							.getRealPath("/javascripts/de/CalendarComponent.js");

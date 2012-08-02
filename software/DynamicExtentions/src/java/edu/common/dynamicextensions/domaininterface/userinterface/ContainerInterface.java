@@ -338,4 +338,6 @@ public interface ContainerInterface extends DynamicExtensionBaseDomainObjectInte
 	List<String> getErrorList();
 
 	void updateMode(String mode);
+	
+	public Map<String, Object> getContextParameter();
 }

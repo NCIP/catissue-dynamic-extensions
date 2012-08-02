@@ -863,6 +863,10 @@ public class Container extends DynamicExtensionBaseDomainObject
 	 */
 	public HttpServletRequest getRequest()
 	{
+		if(request == null && getParentContainer(this) != null)
+		{
+			request  = this.getParentContainer(this).getRequest();
+		}
 		return request;
 	}
 
@@ -914,6 +918,13 @@ public class Container extends DynamicExtensionBaseDomainObject
 	public Object getContextParameter(String key)
 	{
 		return contextParameter.get(key);
+	}
+
+	
+	
+	public Map<String, Object> getContextParameter()
+	{
+		return contextParameter;
 	}
 
 	/**
@@ -1016,4 +1027,5 @@ public class Container extends DynamicExtensionBaseDomainObject
 		}
 		
 	}
+	
 }

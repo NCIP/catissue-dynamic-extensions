@@ -185,6 +185,7 @@ public class SurveyModeRenderer extends LayoutRenderer {
 		String htmlWrapper = "<table class='sm-page-table'>%s%s</table>";
 		String pageTitle = "<tr><th><div class='sm-page-title'>&nbsp;<div></th><th colspan='10'><div class='sm-page-title'>%s</div></th></tr>";
 		Page p = getPage(pageId);
+				
 		if (p == null) {
 			return renderError("page not found!");
 		} else {
@@ -195,6 +196,7 @@ public class SurveyModeRenderer extends LayoutRenderer {
 			Collections.sort(controlList);
 			Collections.reverse(controlList);
 			for (ControlInterface control : controlList) {
+				control.getParentContainer().getContextParameter().put(DEConstants.CONTEXT_PATH, req.getContextPath());
 				if (control.getValue() != null) {
 					control.setDataEntryOperation("insertParentData");
 				}
