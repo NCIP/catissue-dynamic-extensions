@@ -32,7 +32,7 @@
 <script src="<%=request.getContextPath()%>/javascripts/de/de.js"></script>
 
 <body>
-
+<form id="dataEntryForm">
 	<div>
 		<table width="100%">
 			<tr>
@@ -78,6 +78,7 @@
 	
 	<div id="sm-navbar" class="navbar" align="center">
 	</div>
+	</form>
 </body>
 
 
