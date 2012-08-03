@@ -11,6 +11,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.renderer.SurveyModeRenderer;
 import edu.common.dynamicextensions.ui.webui.util.FormCache;
+import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.FormManager;
 import edu.common.dynamicextensions.util.global.DEConstants;
 
@@ -49,7 +50,8 @@ public class DEServlet extends HttpServlet {
 			String redirectUrl = callbackUrl + 
 				"?recordIdentifier=" + String.valueOf(recordId) +
 				"&operationStatus=" + DEConstants.SUCCESS +
-				"&containerId=null";
+				"&"+WebUIManagerConstants.CONTAINER_IDENTIFIER+"="+containerIdentifier+"&"+WebUIManagerConstants.ISDRAFT+"="+
+				req.getParameter(WebUIManagerConstants.ISDRAFT);
 
 			res.sendRedirect(redirectUrl);
 
