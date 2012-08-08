@@ -184,13 +184,18 @@ public class SurveyModeRenderer extends LayoutRenderer {
 		String pageHtml = "<div class='sm-page-contents'>%s</div>";
 		String htmlWrapper = "<table class='sm-page-table'>%s%s</table>";
 		String pageTitle = "<tr><th><div class='sm-page-title'>&nbsp;<div></th><th colspan='10'><div class='sm-page-title'>%s</div></th></tr>";
+		String emptyDiv = "<div></div>";
 		Page p = getPage(pageId);
 				
 		if (p == null) {
 			return renderError("page not found!");
 		} else {
 			StringBuffer html = new StringBuffer();
-			pageTitle = String.format(pageTitle,p.getDescription());
+			if (p.getDescription() == null) {
+				pageTitle = emptyDiv;
+			} else {
+				pageTitle = String.format(pageTitle,p.getDescription());
+			}
 			List<ControlInterface> controlList = new ArrayList<ControlInterface>(
 					p.getControlCollection());
 			Collections.sort(controlList);

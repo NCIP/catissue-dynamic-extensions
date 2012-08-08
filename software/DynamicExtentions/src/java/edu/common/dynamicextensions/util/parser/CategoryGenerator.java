@@ -1288,7 +1288,12 @@ public class CategoryGenerator implements CategoryTokenHandler
 		currentPage = new Page();
 		layout.getPageCollection().add(currentPage);
 		currentPage.setLayout(layout);
-		currentPage.setDescription(categoryFileParser.getDisplyLable());
+		String pageLabel = categoryFileParser.getDisplyLable();
+		if (pageLabel.trim().equalsIgnoreCase(CategoryCSVConstants.PAGE_BREAK)) {
+			currentPage.setDescription(null);
+		} else {
+			currentPage.setDescription(pageLabel);
+		}
 	}
 	
 	private void handleParseComplete() {
