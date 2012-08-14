@@ -71,6 +71,7 @@
 				</c:if>	
 				<input type="hidden" id="isDraft" name="isDraft" value="false"/>
 				<input type="hidden" id="containerIdentifier" name="containerIdentifier" value="${param.containerIdentifier} "/>
+				<input type="hidden" id="formLabel" name="formLabel" value="${param.formLabel} "/>
 			</form>
 		</div>
 	</div>

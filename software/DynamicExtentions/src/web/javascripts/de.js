@@ -7,7 +7,7 @@ edu.wustl.de.currentpage;
 edu.wustl.de.defaultValues = {};
 
 $(document).ready(function () {
-edu.wustl.de.smurl = $("#contextPath").val()+"/AjaxcodeHandlerAction?ajaxOperation=renderSurveyMode";
+edu.wustl.de.smurl = $("#contextPath").val()+"/AjaxcodeHandlerAction?ajaxOperation=renderSurveyMode&formLabel="+$("#formLabel").val();
 	var form = new edu.wustl.de.CategorySurveyMode({ctx: $("#sm-category"),
 		categoryid: $("#categoryId").val()});
 	form.load();

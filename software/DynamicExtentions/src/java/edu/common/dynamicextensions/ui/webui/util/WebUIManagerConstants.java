@@ -126,7 +126,7 @@ public interface WebUIManagerConstants
 	
 	public final String ISDRAFT = "isDraft";
 	public final String IS_FORM_LOCKED = "isFormLocked";
-
+	public final String FORM_LABEL = "formLabel";
 	String OVERRIDE_CAPTION = "OverrideCaption";
 
 	public static final String SURVEY_MODE_JSP = "surveyModePage";

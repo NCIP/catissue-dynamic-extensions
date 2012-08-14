@@ -20,6 +20,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.LoadDataEntryFormProcessor;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
+import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
 
@@ -170,10 +171,12 @@ public class SurveyModeRenderer extends LayoutRenderer {
 		String categoryName = "<input type='hidden' id='categoryName' value='%s'></input>";
 		String controlsCount = "<input type='hidden' id='controlsCount' value='%d'></input>";
 		String emptyControlsCount = "<input type='hidden' id='emptyControlsCount' value='%d'></input>";
+		String caption = req.getParameter(WebUIManagerConstants.FORM_LABEL);
+		
 		ContainerInterface container = getContainerFromCategory();
-		Category category = getCategory();
+
 		return String.format(containerIdentifier, container.getId())
-				+ String.format(categoryName, category.getName())
+				+ String.format(categoryName, caption)
 				+ String.format(controlsCount, controlsCount())
 				+ String.format(emptyControlsCount, emptyControlsCount());
 	}

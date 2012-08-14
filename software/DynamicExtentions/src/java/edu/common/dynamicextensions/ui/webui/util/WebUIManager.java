@@ -147,4 +147,18 @@ public class WebUIManager implements WebUIManagerConstants
 		return nextSequenceNumber;
 	}
 
+	
+	/**
+	 * @param url DE form URL
+	 * @param paramName used by DE
+	 * @param value 
+	 * @return
+	 */
+	public static String appendParameter(String url,String paramName,String value)
+	{
+		url = url +"&%s=%s";
+		return String.format(url, paramName,value);
+	}
+	
+	
 }
