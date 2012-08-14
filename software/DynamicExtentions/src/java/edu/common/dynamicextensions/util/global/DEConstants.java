@@ -424,5 +424,6 @@ public class DEConstants
 	public static final String ENDS_WITH = "Ends With";
 	public static final String CONTAINS = "Contains";
 	public static final String CONTEXT_PATH = "contextPath";
+	public static final String UPDATE_RESPONSE = "updateResponse";
 	
 }

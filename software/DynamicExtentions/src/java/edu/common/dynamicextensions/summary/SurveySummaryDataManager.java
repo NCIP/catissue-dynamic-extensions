@@ -79,6 +79,9 @@ public class SurveySummaryDataManager extends AbstractSummaryDataManager
 		controlUrl.append(control.getHTMLComponentName());
 		controlUrl.append("&containerIdentifier=");
 		controlUrl.append(containerIdentifier);
+		controlUrl.append("&");
+		controlUrl.append(DEConstants.UPDATE_RESPONSE);
+		controlUrl.append("=true");
 		controlUrl.append("&"+DEConstants.CALLBACK_URL+"=");
 		controlUrl.append(pageContext.getRequest().getParameter(DEConstants.CALLBACK_URL));
 

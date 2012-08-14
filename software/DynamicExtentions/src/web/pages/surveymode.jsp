@@ -70,8 +70,9 @@
 					<input type="hidden" value="${param.pageId}" id="pageId"/>				
 				</c:if>	
 				<input type="hidden" id="isDraft" name="isDraft" value="false"/>
-				<input type="hidden" id="containerIdentifier" name="containerIdentifier" value="${param.containerIdentifier} "/>
-				<input type="hidden" id="formLabel" name="formLabel" value="${param.formLabel} "/>
+				<input type="hidden" id="containerIdentifier" name="containerIdentifier" value="${param.containerIdentifier}"/>
+				<input type="hidden" id="formLabel" name="formLabel" value="${param.formLabel}"/>
+				<input type="hidden" id="updateResponse" name="updateResponse" value="${param.updateResponse}"/>
 			</form>
 		</div>
 	</div>

@@ -105,19 +105,28 @@ edu.wustl.de.CategorySurveyMode.prototype.loadAllPages = function () {
 	});
 };
 edu.wustl.de.CategorySurveyMode.prototype.tidyNavbar = function () {
-	if (edu.wustl.de.currentpage == 0) {
-		this.navbar.hide({label: "Previous"});
-		
-	} else {
-		this.navbar.show({label: "Previous"});
-		
-	}
-	if (edu.wustl.de.currentpage == this.pages.length -1) {
-		this.navbar.hide({label: "Next"});
+	if($("#updateResponse").val() == "true")
+	{
 		this.navbar.show({label:"Save"});
-	} else {
-		this.navbar.hide({label:"Save"});
-		this.navbar.show({label: "Next"});
+		this.navbar.hide({label: "Previous"});
+		this.navbar.hide({label:"Next"});
+		this.navbar.hide({label:"Save as Draft"});
+	}else
+	{
+		if (edu.wustl.de.currentpage == 0) {
+			this.navbar.hide({label: "Previous"});
+			
+		} else {
+			this.navbar.show({label: "Previous"});
+			
+		}
+		if (edu.wustl.de.currentpage == this.pages.length -1) {
+			this.navbar.hide({label: "Next"});
+			this.navbar.show({label:"Save"});
+		} else {
+			this.navbar.hide({label:"Save"});
+			this.navbar.show({label: "Next"});
+		}
 	}
 };
 edu.wustl.de.CategorySurveyMode.prototype.load = function () {
