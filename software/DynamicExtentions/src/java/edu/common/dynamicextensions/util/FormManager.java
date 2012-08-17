@@ -15,7 +15,6 @@ import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterfa
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.processor.ApplyDataEntryFormProcessor;
 import edu.common.dynamicextensions.processor.ApplyDataEntryProcessorInterface;
 import edu.common.dynamicextensions.processor.InContextApplyDataEntryProcessor;
 import edu.common.dynamicextensions.ui.util.Constants;
@@ -57,16 +56,7 @@ public class FormManager
 		Map<BaseAbstractAttributeInterface, Object> rootValueMap = valueMapStack.firstElement();
 		ContainerInterface rootContainerInterface = containerStack.firstElement();
 		DataValueMapUtility.updateDataValueMapForDataEntry(rootValueMap, rootContainerInterface);
-		ApplyDataEntryProcessorInterface applyDataEntryFormProcessor;
-		if(Variables.jbossUrl.isEmpty())
-		{
-			applyDataEntryFormProcessor = new InContextApplyDataEntryProcessor();			
-			
-		}else
-		{
-			applyDataEntryFormProcessor = ApplyDataEntryFormProcessor
-			.getInstance();
-		}
+		ApplyDataEntryProcessorInterface applyDataEntryFormProcessor = new InContextApplyDataEntryProcessor();
 		String userId = (String) CacheManager.getObjectFromCache(request,
 				WebUIManagerConstants.USER_ID);
 		if (userId != null)

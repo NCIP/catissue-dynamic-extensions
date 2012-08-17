@@ -14,6 +14,7 @@ import edu.common.dynamicextensions.domain.AbstractAttribute;
 import edu.common.dynamicextensions.domain.Attribute;
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.HQLPlaceHolderObject;
+import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
@@ -34,13 +35,13 @@ public final class AbstractMetadataManagerHelper
 	 * The single instance.
 	 */
 	private static AbstractMetadataManagerHelper helper = null;
-
+	
+	
 	/**
 	 * Instantiates a new abstract metadata manager helper.
 	 */
 	private AbstractMetadataManagerHelper()
 	{
-		// private constructor.
 	}
 
 	/**
@@ -166,6 +167,51 @@ public final class AbstractMetadataManagerHelper
 		}
 	}
 
+	public Object getDataValue(AbstractAttribute attribute, Object value)
+	throws ParseException {
+		
+		if (value == null || value.toString().trim().isEmpty()) {
+			return null;
+		}
+		
+		//
+		// TODO: Replace this if-else ladder with a method on AttributeTypeInformation interface
+		//		 getValue(String value)
+		//
+		Object dataValue = null;
+		String dataType = ((AttributeMetadataInterface) attribute).getAttributeTypeInformation().getDataType();
+		
+		if ("Long".equals(dataType)) {
+			dataValue = Long.valueOf(value.toString());
+		}
+		else if ("Float".equals(dataType)) {
+			dataValue = new Float(value.toString());
+		}
+		else if ("Double".equals(dataType))	{
+			dataValue = new Double(value.toString());
+		}
+		else if ("Short".equals(dataType)) {
+			dataValue = Short.valueOf(value.toString());
+		}
+		else if ("Integer".equals(dataType)) {
+			dataValue = Integer.valueOf(value.toString());
+		}
+		else if ("Boolean".equals(dataType)) {
+			String boolVal = ("1".equals(value) || DEConstants.TRUE.equalsIgnoreCase(value
+						.toString())) ? DEConstants.TRUE : DEConstants.FALSE;
+			dataValue = Boolean.valueOf(boolVal);
+		}
+		else if ("Date".equals(dataType)) {
+			Date date = getDateValue(attribute, value);
+			dataValue = new java.sql.Date(date.getTime());
+		}
+		else {
+			dataValue = value.toString();
+		}
+		
+		return dataValue;
+	}
+
 	/**
 	 * Gets the date value.
 	 *
@@ -179,10 +225,10 @@ public final class AbstractMetadataManagerHelper
 	 * @throws ParseException
 	 *             the parse exception
 	 */
-	private Object getDateValue(final AbstractAttribute attribute, final Object value)
+	private Date getDateValue(final AbstractAttribute attribute, final Object value)
 			throws ParseException
 	{
-		Object dataValue;
+		Date dataValue;
 		Attribute attr = (Attribute) attribute;
 		DateAttributeTypeInformation dateAttributeTypeInf = (DateAttributeTypeInformation) attr
 				.getAttributeTypeInformation();
