@@ -21,8 +21,10 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
+import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.common.dynamicextensions.util.global.Variables;
 import edu.wustl.common.beans.NameValueBean;
 
 /**
@@ -333,8 +335,10 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		StringBuffer htmlString = new StringBuffer();
 		if (getIsLazy() || getIsSkipLogicTargetControl())
 		{
+			String EventHandler = "Ext.onReady(function(){ var myUrl= \"%s?%s=%s&controlId=";
+			String DE_AJAX_HANDLER = Variables.resourceMapping.get(WebUIManagerConstants.DE_AJAX_HANDLER);
 			htmlString
-					.append("Ext.onReady(function(){ var myUrl= \"DEComboDataAction?controlId=");
+					.append(String.format(EventHandler, DE_AJAX_HANDLER, WebUIManagerConstants.AJAX_OPERATION, WebUIManagerConstants.DE_COMBO_DATA_ACTION));
 			htmlString.append(identifier);
 			htmlString.append("~containerIdentifier=");
 			htmlString.append(parentContainerId);

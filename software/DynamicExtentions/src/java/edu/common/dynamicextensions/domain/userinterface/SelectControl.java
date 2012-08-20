@@ -15,6 +15,9 @@ import edu.common.dynamicextensions.domaininterface.userinterface.SelectInterfac
 import edu.common.dynamicextensions.domaininterface.userinterface.SummaryControlInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.ui.util.Constants;
+import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
+import edu.common.dynamicextensions.util.global.Variables;
 import edu.wustl.common.beans.NameValueBean;
 
 /**
@@ -180,10 +183,12 @@ public abstract class SelectControl extends Control
 			parentContainerId = getParentContainer().getId().toString();
 			categoryEntityName = getParentContainer().getAbstractEntity().getName();
 		}
+		String Url = "var myUrl= \"%s?%s=%s&controlId=";
 		String attributeName = getBaseAbstractAttribute().getName();
 		StringBuffer comboStringBuffer = new StringBuffer(700);
+		String DE_AJAX_HANDLER = Variables.resourceMapping.get(WebUIManagerConstants.DE_AJAX_HANDLER);
 		comboStringBuffer
-				.append("var myUrl= \"DEComboDataAction?controlId=")
+				.append(String.format(Url, DE_AJAX_HANDLER, WebUIManagerConstants.AJAX_OPERATION, WebUIManagerConstants.DE_COMBO_DATA_ACTION))
 				.append(controlId)
 				.append("~containerIdentifier=")
 				.append(parentContainerId)

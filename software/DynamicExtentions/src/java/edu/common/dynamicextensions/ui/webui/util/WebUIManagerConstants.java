@@ -130,4 +130,9 @@ public interface WebUIManagerConstants
 	String OVERRIDE_CAPTION = "OverrideCaption";
 
 	public static final String SURVEY_MODE_JSP = "surveyModePage";
+	
+	public static final String DE_AJAX_HANDLER = "DE_AJAX_HANDLER";
+	public static final String AJAX_OPERATION = "ajaxOperation";
+	public static final String DE_COMBO_DATA_ACTION = "DEComboDataAction";
+
 }

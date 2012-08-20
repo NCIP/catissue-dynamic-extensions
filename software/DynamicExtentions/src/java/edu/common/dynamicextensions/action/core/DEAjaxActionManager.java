@@ -16,6 +16,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONException;
+
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
@@ -38,7 +40,9 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.GroupProcessor;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.skiplogic.SkipLogic;
+import edu.common.dynamicextensions.ui.renderer.DEComboDataRenderer;
 import edu.common.dynamicextensions.ui.renderer.SurveyModeRenderer;
+import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.util.SemanticPropertyBuilderUtil;
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
@@ -96,7 +100,8 @@ public class DEAjaxActionManager
 	}
 
 	public String manage(HttpServletRequest request) throws DynamicExtensionsSystemException,
-			DynamicExtensionsApplicationException, IOException
+			DynamicExtensionsApplicationException, IOException, NumberFormatException, JSONException,
+			ServletException
 	{
 		String responceString = "";
 		String containerId = request.getParameter("containerId");
@@ -165,6 +170,10 @@ public class DEAjaxActionManager
 			else if (operation.trim().equals("renderSurveyMode"))
 			{
 				responceString = new SurveyModeRenderer(request).render();
+			}
+			else if (operation.trim().equals(WebUIManagerConstants.DE_COMBO_DATA_ACTION))
+			{
+				responceString = new DEComboDataRenderer().render(request);
 			}
 
 		}
