@@ -14,12 +14,15 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 public abstract class AbstractSummaryDataManager
 {
 
-	protected List<String> headerList = new ArrayList<String>();
+	protected List<ColumnFormatter> headerList = new ArrayList<ColumnFormatter>();
 	protected List<Map<String, String>> rowData = new ArrayList<Map<String, String>>();
 	protected final String SR_NO = "#";
 	protected final String QUESTION = "QUESTION";
 	protected final String RESPONSE = "RESPONSE";
 	protected final String EDIT = "Change";
+	public static final String RIGHT = "right";
+	public static final String ALIGN = "align";
+	
 	protected String[] excludeColumns;
 
 	protected abstract void populateHeaderList();
@@ -53,13 +56,13 @@ public abstract class AbstractSummaryDataManager
 		{
 			for (String string : excludeColumns)
 			{
-				headerList.remove(string);
+				headerList.remove(new ColumnFormatter(string));
 			}
 		}
 
 	}
 
-	public List<String> getHeaderList()
+	public List<ColumnFormatter> getHeaderList()
 	{
 		return headerList;
 	}
@@ -74,7 +77,7 @@ public abstract class AbstractSummaryDataManager
 		this.rowData = rowData;
 	}
 
-	public void setHeaderList(List<String> headerList)
+	public void setHeaderList(List<ColumnFormatter> headerList)
 	{
 		this.headerList = headerList;
 	}
@@ -107,4 +110,9 @@ public abstract class AbstractSummaryDataManager
 	{
 		this.excludeColumns = strings;
 	}
+
+	
+	
+	
+	
 }

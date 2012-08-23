@@ -13,9 +13,12 @@ public class DefaultSummaryDataManager extends AbstractSummaryDataManager
 	@Override
 	protected void populateHeaderList()
 	{
-		headerList.add(SR_NO);
-		headerList.add(QUESTION);
-		headerList.add(RESPONSE);
+		headerList.add(new ColumnFormatter(SR_NO, ""));
+		ColumnFormatter question = new ColumnFormatter(QUESTION, "Question");
+		question.getDataFormatter().put(ALIGN, RIGHT);
+		headerList.add(question);
+
+		headerList.add(new ColumnFormatter(RESPONSE, "Response"));
 
 	}
 

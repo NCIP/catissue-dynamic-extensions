@@ -47,11 +47,10 @@ public class SurveySummaryDataManager extends AbstractSummaryDataManager
 	@Override
 	protected void populateHeaderList()
 	{
-		headerList.add(SR_NO);
-		headerList.add(QUESTION);
-		headerList.add(RESPONSE);
-		headerList.add(EDIT);
-
+		headerList.add(new ColumnFormatter(SR_NO,""));
+		headerList.add(new ColumnFormatter(QUESTION, "Question"));
+		headerList.add(new ColumnFormatter(RESPONSE, "Response"));
+		headerList.add(new ColumnFormatter(EDIT, ""));
 	}
 
 	@Override

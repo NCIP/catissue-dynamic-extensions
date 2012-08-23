@@ -13,6 +13,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.summary.AbstractSummaryDataManager;
+import edu.common.dynamicextensions.summary.ColumnFormatter;
 import edu.common.dynamicextensions.summary.DefaultSummaryDataManager;
 import edu.common.dynamicextensions.summary.SurveySummaryDataManager;
 import edu.common.dynamicextensions.ui.webui.util.ContainerUtility;
@@ -87,10 +88,10 @@ public class FormSummaryGeneratorTag extends DynamicExtensionsFormBaseTag
 		{
 			tableString.append("<table cellspacing='3' cellpadding='3' border='0' align='center'>");
 			tableString.append("<tr>");
-			for (String headerString : dataManager.getHeaderList())
+			for (ColumnFormatter columnFmt : dataManager.getHeaderList())
 			{
-				tableString.append("<td class='td_color_6e81a6'>");
-				tableString.append(headerString);
+				tableString.append("<td class='td_color_6e81a6' align='center'>");
+				tableString.append(columnFmt.getHeader());
 				tableString.append("</td>");
 			}
 			tableString.append("</tr>");
@@ -106,10 +107,11 @@ public class FormSummaryGeneratorTag extends DynamicExtensionsFormBaseTag
 					tableString.append("<tr class='formField_withoutBorder'>");	
 				}
 				rowcount++;
-				for (String headerString : dataManager.getHeaderList())
+				for (ColumnFormatter columnFmt : dataManager.getHeaderList())
 				{
-					tableString.append("<td>");
-					tableString.append(map.get(headerString));
+					String td = "<td %s>";
+					tableString.append(String.format(td, columnFmt.getAttributeAsString()));
+					tableString.append(map.get(columnFmt.getKey()));
 					tableString.append("</td>");
 				}
 				tableString.append("</tr>");
