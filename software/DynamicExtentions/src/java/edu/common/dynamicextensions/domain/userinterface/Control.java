@@ -467,7 +467,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		if (yPosition != null && yPosition <= 1)
 		{
 
-			controlHTML.append("<td class='formRequiredNotice_withoutBorder' width='2%' valign='top'>");
+			controlHTML.append("<td class='formRequiredNotice_withoutBorder' width='2%' valign='top' align='right' style='padding-top:7px' >");
 
 			if (isControlRequired)
 			{
