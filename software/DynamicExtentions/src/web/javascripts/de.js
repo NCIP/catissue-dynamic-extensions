@@ -220,24 +220,24 @@ edu.wustl.de.Page.prototype.pretty = function () {
 	}
 	$(".formRequiredLabel_withoutBorder", this.ctx).each(function () {
 		if($(this).is(":visible")) {
-			$(this).wrap('<div class="sm_control_label"/>');
+			$(this).addClass("de_pagebreak");
 		}
 	});
 	$(".formField_withoutBorder", this.ctx).each(function () {
 		if($(this).is(":visible")) {
-			$(this).wrap('<div class="sm_control_td"/>');
+			$(this).addClass("de_pagebreak");
 		}
 	});
 	$("input+label", this.ctx).each(function() {
 		if($(this).is(":visible")) {
-			$(this).prev().andSelf().wrapAll('<div>');
+			$(this).addClass("de_pagebreak");
 		}
 	});
 	this.prettified = true;
 };
 edu.wustl.de.Page.prototype.show = function () {
 	this.load();
-	$(this.ctx).show();
+	$(this.ctx).show(1, this.pretty);
 };
 edu.wustl.de.Page.prototype.hide = function () {
 	$(this.ctx).hide();

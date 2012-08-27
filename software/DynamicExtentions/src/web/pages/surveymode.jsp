@@ -14,6 +14,13 @@
 	var imgsrc="<%=request.getContextPath()%>/images/de/";
 </script>
 
+<style>
+.de_pagebreak {
+	display: block;
+	page-break-after: always;
+}
+</style>
+
 <script src="<%=request.getContextPath()%>/javascripts/de/prototype.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/jquery-1.3.2.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/calendarComponent.js"></script>
