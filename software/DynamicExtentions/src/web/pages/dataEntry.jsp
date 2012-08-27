@@ -17,7 +17,7 @@
 
 <%@ page import="edu.common.dynamicextensions.domain.Category"%>
 <%@ page import="edu.wustl.cab2b.server.util.DynamicExtensionUtility"%>
-
+<%@ page import="edu.common.dynamicextensions.ui.webui.util.FormCache"%>
 
 <%
 	Category category;
@@ -28,6 +28,9 @@
 				.getParameter(WebUIManagerConstants.CONTAINER_IDENTIFIER));
 		if (category.getLayout() != null)
 		{
+			FormCache formCache = new FormCache(request);
+			formCache.onFormLoad();
+			request.getSession().setAttribute("formCache", formCache);
 			request.getSession().setAttribute(DEConstants.CATEGORY, category);
 			request.getSession().setAttribute(DEConstants.CONTAINER, null);
 			String catgeoryId = String.valueOf(category.getId().longValue());
