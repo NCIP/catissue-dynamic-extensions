@@ -10,8 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.renderer.SurveyModeRenderer;
+import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
+import edu.common.dynamicextensions.ui.webui.util.CacheManager;
 import edu.common.dynamicextensions.ui.webui.util.FormCache;
+import edu.common.dynamicextensions.ui.webui.util.FormDataCollectionUtility;
+import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.FormManager;
 import edu.common.dynamicextensions.util.global.DEConstants;
 
@@ -39,9 +44,10 @@ public class DEServlet extends HttpServlet {
 
 		try {
 
-			FormCache formCache = new FormCache(req);
-			formCache.onFormLoad();
-			
+			FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
+			collectionUtility.populateAndValidateValues(req);
+			DataEntryForm dataEntryForm = DynamicExtensionsUtility.poulateDataEntryForm(req);
+
 			FormManager formManager = new FormManager();
 			recordId = formManager.submitMainFormData(req);
 			
@@ -54,6 +60,8 @@ public class DEServlet extends HttpServlet {
 				req.getParameter(WebUIManagerConstants.ISDRAFT);
 
 			res.sendRedirect(redirectUrl);
+			CacheManager.clearCache(req);
+			UserInterfaceiUtility.resetRequestParameterMap(req);
 
 		} catch (DynamicExtensionsSystemException e) {
 			// TODO Auto-generated catch block

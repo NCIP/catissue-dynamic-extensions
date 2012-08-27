@@ -1,5 +1,5 @@
 var DeAjaxHandler = "AjaxcodeHandlerAction";
-if (DE_AJAX_HANDLER) {
+if (typeof DE_AJAX_HANDLER != "undefined") {
 	DeAjaxHandler = DE_AJAX_HANDLER;
 }
 var contextParam = "";

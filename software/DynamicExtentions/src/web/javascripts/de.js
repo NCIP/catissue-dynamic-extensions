@@ -182,6 +182,7 @@ edu.wustl.de.Page = function (args) {
 	if (args.categoryid == undefined) throw "categoryid undefined";
 	if (args.pageid == undefined) throw "pageid undefined";
 	this.ctx = args.ctx;
+	this.prettified = false;
 	
 	this.url = edu.wustl.de.smurl +
 		"&categoryId=" + args.categoryid +
@@ -198,11 +199,6 @@ edu.wustl.de.Page.prototype.load = function () {
 			url:this.url,
 			onsuccess: function(res) {
 				$(p.ctx).append(res);
-				$(".formRequiredLabel_withoutBorder", p.ctx).wrap('<div class="sm_control_label"/>');
-				$(".formField_withoutBorder", p.ctx).wrap('<div class="sm_control_td"/>');
-				$("input+label", p.ctx).each(function() {
-					$(this).prev().andSelf().wrapAll('<div>');
-				});
 				$("input:radio", p.ctx).each(function() {
 					if($(this).attr("checked") == true) {
 						edu.wustl.de.defaultValues[$(this).attr("name")] = $(this).val();
@@ -217,6 +213,27 @@ edu.wustl.de.Page.prototype.load = function () {
 		});
 		this.request.load();
 	}
+};
+edu.wustl.de.Page.prototype.pretty = function () {
+	if (this.prettified == true) {
+		return;
+	}
+	$(".formRequiredLabel_withoutBorder", this.ctx).each(function () {
+		if($(this).is(":visible")) {
+			$(this).wrap('<div class="sm_control_label"/>');
+		}
+	});
+	$(".formField_withoutBorder", this.ctx).each(function () {
+		if($(this).is(":visible")) {
+			$(this).wrap('<div class="sm_control_td"/>');
+		}
+	});
+	$("input+label", this.ctx).each(function() {
+		if($(this).is(":visible")) {
+			$(this).prev().andSelf().wrapAll('<div>');
+		}
+	});
+	this.prettified = true;
 };
 edu.wustl.de.Page.prototype.show = function () {
 	this.load();

@@ -10,7 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.common.dynamicextensions.domain.Category;
+import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
+import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.ui.webui.util.FormCache;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.cab2b.server.util.DynamicExtensionUtility;
 
@@ -57,6 +60,9 @@ public class LoadDataEntryFormAction extends HttpServlet
 		try {
 			category = getCategory(request);
 			if (category.getLayout() != null) {
+				FormCache formCache = new FormCache(request);
+				formCache.onFormLoad();
+				request.getSession().setAttribute("formCache", formCache);
 				request.getSession().setAttribute(DEConstants.CATEGORY, category);
 				request.getSession().setAttribute(DEConstants.CONTAINER, null);
 				destination = "/pages/de/surveymode.jsp?categoryId=" + String.valueOf(category.getId().longValue());
@@ -65,6 +71,12 @@ public class LoadDataEntryFormAction extends HttpServlet
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DynamicExtensionsSystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DynamicExtensionsApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

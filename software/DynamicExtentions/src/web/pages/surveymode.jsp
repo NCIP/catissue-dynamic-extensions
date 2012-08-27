@@ -50,6 +50,7 @@
 			<form id="sm-form" name="sm-form" method="post" action="${sessionScope.formSubmitUrl}">
 				<div id="sm-hidden-inputs">
 					<input type="hidden" id="mode" name="mode" value="edit"></input>
+					<input type="hidden" id="isDirty" name="isDirty" value="false">
 					<input type="hidden" name='<%=DEConstants.CATEGORY_ID%>' id='<%=DEConstants.CATEGORY_ID%>'
 						value='<%=request.getParameter(DEConstants.CATEGORY_ID)%>'></input>
 					<input type="hidden" name='<%=DEConstants.CALLBACK_URL%>' id='<%=DEConstants.CALLBACK_URL%>'
