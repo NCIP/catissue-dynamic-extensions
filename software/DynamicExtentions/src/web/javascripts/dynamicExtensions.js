@@ -3276,7 +3276,7 @@ function updateServerState(controlName, controlId, containerId)
 			}
 			else
 			{
-				isValid = true;
+				isValid = true;				
 				var vRecentControl=document.getElementById(controlName);
 				if(vRecentControl == null)
 				{
@@ -3308,7 +3308,7 @@ function updateServerState(controlName, controlId, containerId)
 						vRecentControl.value = controlValue;
 					}
 				}
-				// vRecentControl.className = "font_bl_nor" ;
+				vRecentControl.className = "font_bl_nor" ;
 				vRecentControl.title = "";
 			}
 		}
