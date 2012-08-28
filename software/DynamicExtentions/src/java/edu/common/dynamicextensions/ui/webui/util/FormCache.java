@@ -24,6 +24,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.LoadDataEntryFormProcessor;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
+import edu.common.dynamicextensions.ui.webui.taglib.TagUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
 
@@ -236,7 +237,17 @@ public class FormCache
 			CacheManager.addObjectToCache(request, DEConstants.CONTAINER_INTERFACE,
 					container);
 		}
+		//Used by live validations for faster container search
+		updateConatinerMap(container,request);
 
+	}
+
+
+	private void updateConatinerMap(ContainerInterface container, HttpServletRequest request)
+	{
+		Map<Long, ContainerInterface> containerMap = new HashMap<Long, ContainerInterface>();
+		TagUtility.setValidationMap(containerMap, container);
+		request.getSession().setAttribute(Constants.MAP_FOR_VALIDATION, containerMap);
 	}
 
 	/**

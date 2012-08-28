@@ -86,7 +86,7 @@ public class FormSummaryGeneratorTag extends DynamicExtensionsFormBaseTag
 		StringBuffer tableString = new StringBuffer();
 		try
 		{
-			tableString.append("<table cellspacing='3' cellpadding='3' border='0' align='center'>");
+			tableString.append("<table cellspacing='3' cellpadding='3' border='0' width='100%' align='center'>");
 			tableString.append("<tr>");
 			for (ColumnFormatter columnFmt : dataManager.getHeaderList())
 			{

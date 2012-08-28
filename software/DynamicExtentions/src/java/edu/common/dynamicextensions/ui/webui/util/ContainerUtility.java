@@ -19,7 +19,6 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
-import edu.common.dynamicextensions.ui.webui.taglib.TagUtility;
 import edu.common.dynamicextensions.util.DataValueMapUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 
@@ -37,8 +36,7 @@ public class ContainerUtility
 		//Used for PV versioning
 		updateActivationDate();
 
-		//Used by live validations for faster container search
-		updateConatinerMap();
+		
 	}
 
 	private void updateActivationDate()
@@ -52,13 +50,6 @@ public class ContainerUtility
 			container.setContextParameter(contextParameter);
 		}
 		DynamicExtensionsUtility.setEncounterDateToChildContainer(container, contextParameter);
-	}
-
-	private void updateConatinerMap()
-	{
-		Map<Long, ContainerInterface> containerMap = new HashMap<Long, ContainerInterface>();
-		TagUtility.setValidationMap(containerMap, container);
-		request.getSession().setAttribute(Constants.MAP_FOR_VALIDATION, containerMap);
 	}
 
 	private void htmlGenerationPreProcess()
