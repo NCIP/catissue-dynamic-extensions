@@ -129,12 +129,20 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 
 		if (nameValueBeans != null && !nameValueBeans.isEmpty())
 		{
+			int COLUMN_COUNT = getColumnCount();
+			htmlString += "<table cellspacing='3'>";
+			int columnNum = 0;
 			for (NameValueBean nameValueBean : nameValueBeans)
 			{
+				if(columnNum % COLUMN_COUNT == 0)
+				{
+					columnNum = 0;
+					htmlString += "<tr>";
+				}
 				if (values != null && !values.isEmpty()
 						&& values.contains(nameValueBean.getValue()))
 				{
-					htmlString += "<input type='checkbox' class="
+					htmlString += "<td><input type='checkbox' class="
 							+ getCSS()
 							+ " name='"
 							+ htmlComponentName
@@ -159,17 +167,17 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 							+ getOnchangeServerCall()
 							+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName + "','"
 									+ identifier + "','" + parentContainerId + "');" : "")
-							+ "\" /><img src='images/de/spacer.gif' width='2' height='2'>"
+							+ "\" /></td><td>"
 							+ "<label for=\""
 							+ htmlComponentName
 							+ "\">"
 							+ DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean
 									.getName())
-							+ "</label> <img src='images/de/spacer.gif' width='3' height='3'>";
+							+ "</label> </td>";
 				}
 				else
 				{
-					htmlString += "<input type='checkbox' class="
+					htmlString += "<td><input type='checkbox' class="
 							+ getCSS()
 							+ " name='"
 							+ htmlComponentName
@@ -193,12 +201,24 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 							+ getOnchangeServerCall()
 							+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName + "','"
 									+ identifier + "','" + parentContainerId + "');" : "")
-							+ "\" /><img src='images/de/spacer.gif' width='2' height='2'>"
+							+ "\" /></td><td>"
 							+ "<label for=\"" + htmlComponentName + "\">" + nameValueBean.getName()
-							+ "</label> <img src='images/de/spacer.gif' width='3' height='3'>";
+							+ "</label> </td>";
 				}
+				if (columnNum % COLUMN_COUNT == COLUMN_COUNT - 1)
+				{
+					htmlString += "</tr>";
+				}
+				columnNum++;
+
 			}
+			if (columnNum % COLUMN_COUNT < COLUMN_COUNT - 1)
+			{
+				htmlString += "</tr>";
+			}
+
 		}
+		htmlString += "</table>";
 		if (getIsSkipLogicTargetControl())
 		{
 			htmlString += "<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '"

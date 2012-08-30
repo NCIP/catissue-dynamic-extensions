@@ -22,7 +22,6 @@ import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
-import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.wustl.common.beans.NameValueBean;
 
 /**
@@ -148,20 +147,7 @@ public class RadioButton extends SelectControl implements RadioButtonInterface
 		return htmlString;
 	}
 
-	/**
-	 * @return number columns in which radio buttons needs to divided.
-	 */
-	private int getColumnCount()
-	{
-		int columnCount = 1;
-		
-		if(getBaseAbstractAttribute().getTaggedValue(CategoryConstants.COLUMN) != null )
-		{
-			columnCount = Integer.parseInt(getBaseAbstractAttribute().getTaggedValue(CategoryConstants.COLUMN));		
-		}
-		
-		return columnCount;
-	}
+	
 
 	/**
 	 * Gets the default value for control.

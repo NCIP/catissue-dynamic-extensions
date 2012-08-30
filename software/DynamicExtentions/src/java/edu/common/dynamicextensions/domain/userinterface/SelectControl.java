@@ -16,6 +16,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.SummaryControl
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
+import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.common.dynamicextensions.util.global.Variables;
 import edu.wustl.common.beans.NameValueBean;
 
@@ -209,5 +210,18 @@ public abstract class SelectControl extends Control
 		return comboStringBuffer.toString();
 	}
 
-
+	/**
+	 * @return number columns in which radio buttons needs to divided.
+	 */
+	protected int getColumnCount()
+	{
+		int columnCount = 1;
+		
+		if(getBaseAbstractAttribute().getTaggedValue(CategoryConstants.COLUMN) != null )
+		{
+			columnCount = Integer.parseInt(getBaseAbstractAttribute().getTaggedValue(CategoryConstants.COLUMN));		
+		}
+		
+		return columnCount;
+	}
 }
