@@ -55,7 +55,7 @@ public class FileUploadControl extends Control implements FileUploadInterface
 					.append(
 							"<input onchange='this.title=this.value;isDataChanged();' type=\"file\" size='47' width='47' name='")
 					.append(controlname);
-			htmlString.append("' id=\"").append(controlname).append("\"'/>");
+			htmlString.append("' class=").append(getCSS()).append("id=\"").append(controlname).append("\"'/>");
 		}
 		else
 		{

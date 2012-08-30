@@ -1,7 +1,9 @@
 
 package edu.common.dynamicextensions.domain.userinterface;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.CategoryAssociationControlInterface;
@@ -44,8 +46,17 @@ public class CategoryAssociationControl extends AbstractContainmentControl
 	 */
 	public List<String> getValueAsStrings()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		List<String> list = new ArrayList<String>();
+		String tValue = null;
+		for (Map valueMap : (List<Map>)value)
+		{	
+			tValue = (String) valueMap.values().iterator().next();
+			if(tValue != null && !"".equals(tValue))
+			{
+				list.add(tValue);
+			}
+		}
+		return list;
 	}
 
 

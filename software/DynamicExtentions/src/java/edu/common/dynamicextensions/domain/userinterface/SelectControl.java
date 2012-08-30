@@ -15,7 +15,6 @@ import edu.common.dynamicextensions.domaininterface.userinterface.SelectInterfac
 import edu.common.dynamicextensions.domaininterface.userinterface.SummaryControlInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.global.Variables;
 import edu.wustl.common.beans.NameValueBean;

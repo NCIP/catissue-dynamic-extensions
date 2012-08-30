@@ -230,7 +230,9 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 			htmlString.append(htmlComponentName);
 			htmlString.append("' name='");
 			htmlString.append(htmlComponentName);
-			htmlString.append("' value =\"");
+			htmlString.append("' class=");
+			htmlString.append(getCSS());
+			htmlString.append("value =\"");
 			htmlString.append(defaultValue);
 			htmlString.append("\" ");
 			htmlString.append("' style='width:");
@@ -306,7 +308,8 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					: (Constants.DEFAULT_COLUMN_SIZE + 1)));
 			htmlString.append("ex' size='");
 			htmlString.append((columnSize > 0 ? columnSize : Constants.DEFAULT_COLUMN_SIZE));
-			htmlString.append("' class='font_bl_nor' />" + "</div>" + "</div>" + "</div>");
+			htmlString.append("'  class="
+					+getCSS() +"/></div>" + "</div>" + "</div>");
 
 		}
 		catch (UnsupportedEncodingException e)

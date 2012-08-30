@@ -47,7 +47,7 @@ public class DatePicker extends Control implements DatePickerInterface, Validata
 	/** The Constant DATE_FORMAT_STRING. */
 	private final static String DATE_FORMAT = "Date format : ";
 
-	private final static String INPUT_CLASS="<input class='font_bl_nor' name='";
+	private String INPUT_CLASS;
 
 	private final static String DARKGRAY="#A9A9A9;\"";
 
@@ -57,6 +57,10 @@ public class DatePicker extends Control implements DatePickerInterface, Validata
 	 */
 	private Boolean showCalendar = true;
 
+	public DatePicker()
+	{
+		INPUT_CLASS="<input class='"+getCSS()+"' name='";
+	}
 	/**
 	 * This method returns the showCalendar of the DatePicker.
 	 *

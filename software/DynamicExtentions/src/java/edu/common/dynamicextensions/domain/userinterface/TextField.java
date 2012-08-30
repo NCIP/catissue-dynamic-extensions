@@ -108,8 +108,9 @@ public class TextField extends Control implements TextFieldInterface, Validatabl
 		else
 		{
 			htmlString += "<INPUT "
-					+ "class='font_bl_nor' "
-					+ "name='"
+					+ "class="
+					+getCSS()
+					+ " name='"
 					+ htmlComponentName
 					+ "' "
 					+ "id='"
@@ -179,6 +180,8 @@ public class TextField extends Control implements TextFieldInterface, Validatabl
 		}
 		return htmlString;
 	}
+
+	
 
 	/**
 	 * This method sets the associated AbstractAttribute of this Control.

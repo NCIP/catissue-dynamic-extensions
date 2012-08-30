@@ -40,15 +40,25 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 			sm.updateProgress();
 		}
 	});	
+	$("input:checkbox").live("change", function () {
+		var defaultValue = edu.wustl.de.defaultValues[$(this).attr("name")];
+		if ($(this).attr("defaultValue") == "" && $(this).val() != "") {
+			edu.wustl.de.defaultValues[$(this).attr("name")] = $(this).val();
+			$("#emptyControlsCount").val($("#emptyControlsCount").val() - 1);
+			sm.updateProgress();
+		}
+	});	
 	$("input").live("change", function () {
 		if ($(this).attr("defaultValue") == "" && $(this).val() != "") {
 			$(this).attr("defaultValue", $(this).val());
+			edu.wustl.de.defaultValues[$(this).attr("name")] = $(this).val();
 			$("#emptyControlsCount").val($("#emptyControlsCount").val() - 1);
 			sm.updateProgress();
 		}else if($(this).val() == "")
 		{
 		$("#emptyControlsCount").val(parseInt($("#emptyControlsCount").val()) + 1);
 			$(this).attr("defaultValue", "");
+			edu.wustl.de.defaultValues[$(this).attr("name")] = "";
 			sm.updateProgress();
 		}		
 	});
@@ -63,39 +73,53 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 	$("textarea").live("change", function () {
 		if ($(this).attr("defaultValue") == "" && $(this).val() != "") {
 			$(this).attr("defaultValue", $(this).val());
+			edu.wustl.de.defaultValues[$(this).attr("name")] = $(this).val();
 			$("#emptyControlsCount").val($("#emptyControlsCount").val() - 1);
 			sm.updateProgress();
 		}else if($(this).val() == "")
 		{
 		$("#emptyControlsCount").val(parseInt($("#emptyControlsCount").val()) + 1);
 			$(this).attr("defaultValue", "");
+			edu.wustl.de.defaultValues[$(this).attr("name")] = "";
 			sm.updateProgress();
 		}		
 	});
 	
-	this.navbar.register({type: "button",	label: "Previous",cssClass:'sm-previous-button',
+	this.navbar.register({type: "button",	label: "Previous",cssClass:'button-secondary',
 		handler: function () {
-			sm.hide();
-			edu.wustl.de.currentpage -= 1;	
-			sm.show();
+			if(!sm.isErrorsExist({skipMandatory:"true"}))
+			{
+				sm.hide();
+				edu.wustl.de.currentpage -= 1;	
+				sm.show();
+			}
 		}
 	});
-	this.navbar.register({type: "button",	label: "Save as Draft",cssClass:'sm-draft-button',
+	this.navbar.register({type: "button",	label: "Save as Draft",cssClass:'button-secondary',
 		handler: function () {
-			$("#isDraft").val("true");
-			$("#sm-form").submit();
+			if(!sm.isErrorsExist({skipMandatory:"true"}))
+			{
+				$("#isDraft").val("true");
+				$("#sm-form").submit();
+			}
 		}
 	});
-	this.navbar.register({type: "button",	label: "Save",cssClass:'sm-save-button',
+	this.navbar.register({type: "button",	label: "Save",cssClass:'button-primary',
 		handler: function () {
-			$("#sm-form").submit();
+			if(!sm.isErrorsExist({skipMandatory:"false"}))
+			{
+				$("#sm-form").submit();
+			}
 		}
 	});
-	this.navbar.register({type: "button",	label: "Next",cssClass:'sm-next-button',
+	this.navbar.register({type: "button",	label: "Next",cssClass:'button-primary',
 		handler: function () {
-			sm.hide();
-			edu.wustl.de.currentpage += 1;
-			sm.show();
+			if(!sm.isErrorsExist({skipMandatory:"false"}))
+			{
+				sm.hide();
+				edu.wustl.de.currentpage += 1;
+				sm.show();
+			}
 		}
 	});
 };
@@ -105,6 +129,7 @@ edu.wustl.de.CategorySurveyMode.prototype.loadAllPages = function () {
 	});
 };
 edu.wustl.de.CategorySurveyMode.prototype.tidyNavbar = function () {
+	
 	if($("#updateResponse").val() == "true")
 	{
 		this.navbar.show({label:"Save"});
@@ -176,6 +201,56 @@ edu.wustl.de.CategorySurveyMode.prototype.updateProgress = function () {
 	var percentageComplete = Math.round(100*(controlsCount - emptyControlsCount)/controlsCount);
 	this.progressbar.set({percentage: percentageComplete});
 };
+/**
+ Used for verifying whether there are any validation errors exists on the form.
+ If validation failed, displays the message.
+**/
+edu.wustl.de.CategorySurveyMode.prototype.isErrorsExist = function (args) {
+	var errors = false;
+	/** Check for fields marked by the live validations **/
+	if($('.font_bl_nor_error').length > 0)
+	{
+		errors = true;
+		alert("Cannot perform action, errors on the form.");
+	}	
+	/** Caller may choose to skip the mandatory field validation, like saving a form in draft mode **/
+	if (args.skipMandatory != "true")
+	{
+		/** Mandatory fields are marked using 'required-field-marker' class **/
+		$(".sm-page", this.ctx).each(function () {
+			if($(this).is(":visible")) {		
+				$(this).find(".required-field-marker").each(function() {
+					var defaultValue = edu.wustl.de.defaultValues[$(this).attr("name")];
+					var controlName = $(this).attr("name");
+	
+					if ((defaultValue == "" || defaultValue == undefined))
+					{
+						if($(this).attr('type') == 'text' || $(this).attr('type') == 'select'
+						|| $(this).attr('type') == 'select-multiple')
+						{
+							if ($(this).val()== "" || $(this).val() == undefined){
+								errors = true;
+								alert("Please enter values for the mandatory fileds.");
+								return false; // break out of the each-loop
+							}
+						}
+						if($(this).attr('type') == 'radio' || $(this).attr('type') == 'checkbox')
+						{
+	
+							if ($('input[name='+controlName+']:checked').val() == undefined){
+								errors = true;
+								alert("Please enter values for the mandatory fileds.");
+								return false; // break out of the each-loop
+							}
+						}
+					}
+				});
+			}
+		});
+	}
+	return errors;
+};
+
 
 edu.wustl.de.Page = function (args) {
 	if (args.ctx == undefined) throw "ctx undefined";

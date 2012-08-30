@@ -162,7 +162,8 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		}
 		htmlString.append("<SELECT ");
 		htmlString.append(strMultiSelect).append(" size=").append(noOfRows).append(
-				" class='font_bl_s' name='").append(getHTMLComponentName()).append("' onchange=\"");
+				"class="
+				+getCSS()+" name='").append(getHTMLComponentName()).append("' onchange=\"");
 
 		htmlString.append(getOnchangeServerCall());
 
@@ -276,7 +277,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 					.append("\t\t<td width=\"50%\" align=\"center\" class=\"black_ar_new1\">\n");
 			multSelWithAutoCmpltHTML.append("\t\t\t<SELECT id=\"" + protocolCoordId + "\" name=\""
 					+ getHTMLComponentName()
-					+ "\" size=\"4\" multiple=\"true\" style=\"width:170\">");
+					+ "\" size=\"4\" multiple=\"true\" class="+getCSS()+" style=\"width:170\">");
 
 			if (nameValueBeans != null && !nameValueBeans.isEmpty())
 			{

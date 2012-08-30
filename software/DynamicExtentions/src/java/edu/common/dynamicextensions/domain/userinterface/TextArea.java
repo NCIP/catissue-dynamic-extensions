@@ -108,7 +108,8 @@ public class TextArea extends Control implements TextAreaInterface, ValidatableI
 			htmlString.append("_div'>");
 		}
 		htmlString.append("<textarea ");
-		htmlString.append("class='font_bl_nor' ");
+		htmlString.append("class="
+				+getCSS());
 		htmlString.append("name='");
 		htmlString.append(htmlComponentName);
 		htmlString.append("' ");

@@ -91,7 +91,8 @@ public class RadioButton extends SelectControl implements RadioButtonInterface
 					htmlString += "<td><input type='radio' onClick=\""
 							+ getOnchangeServerCall()
 							+ "\""
-							+ "class='font_bl_nor' "
+							+ "class="
+							+getCSS()
 							+ "name='"
 							+ htmlComponentName
 							+ (id != null
@@ -107,7 +108,8 @@ public class RadioButton extends SelectControl implements RadioButtonInterface
 				{
 					htmlString +="<td><input type='radio' onClick=\""
 							+ getOnchangeServerCall()
-							+ "\" class='font_bl_nor' "
+							+ "\" class="
+							+getCSS()
 							+ "name='"
 							+ htmlComponentName
 							+ (id != null

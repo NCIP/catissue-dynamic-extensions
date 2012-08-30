@@ -63,9 +63,9 @@ public class CheckBox extends Control implements CheckBoxInterface,SummaryContro
 				&& (checked.equalsIgnoreCase("true") || checked.equals("1") || checked.equals("y") || checked
 						.equals("yes")))
 		{
-			htmlStringBuffer.append("<input type='checkbox' class='");
-			htmlStringBuffer.append(cssClass);
-			htmlStringBuffer.append("' name='");
+			htmlStringBuffer.append("<input type='checkbox' class=");
+			htmlStringBuffer.append(getCSS());
+			htmlStringBuffer.append("name='");
 			htmlStringBuffer.append(htmlComponentName);
 			htmlStringBuffer.append("' checkedValue='");
 			htmlStringBuffer.append(DynamicExtensionsUtility.getValueForCheckBox(true));
@@ -84,9 +84,9 @@ public class CheckBox extends Control implements CheckBoxInterface,SummaryContro
 		}
 		else
 		{
-			htmlStringBuffer.append("<input type='checkbox' class='");
-			htmlStringBuffer.append(cssClass);
-			htmlStringBuffer.append("' name='");
+			htmlStringBuffer.append("<input type='checkbox' class=");
+			htmlStringBuffer.append(getCSS());
+			htmlStringBuffer.append("name='");
 			htmlStringBuffer.append(htmlComponentName);
 			htmlStringBuffer.append("' checkedValue='");
 			htmlStringBuffer.append(DynamicExtensionsUtility.getValueForCheckBox(true));

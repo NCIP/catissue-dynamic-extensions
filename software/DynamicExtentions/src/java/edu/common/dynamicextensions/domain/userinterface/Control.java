@@ -372,6 +372,8 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		else
 		{
 			innerHTML = generateEditModeHTML(container);
+			innerHTML = innerHTML.concat("<script defer='defer'>$('#" + getHTMLComponentName()
+					+ "').addClass('required-field-marker');</script>");
 		}
 
 		if (isSubControl)
@@ -1388,18 +1390,37 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		this.errorList = errorList;
 	}
 	
+
 	@Override
-	public boolean isEmpty()
+	public boolean isEmpty() throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		boolean isEmpty = true;
-		if(value instanceof List && !((List)value).isEmpty())
+		if (value instanceof List)
 		{
-			isEmpty = false;
-		}else if(value != null && !"".equals(value.toString()))
+			if (getValueAsStrings() != null && !getValueAsStrings().isEmpty())
+			{
+				isEmpty = false;
+			}
+		}
+		else if (value != null && !"".equals(value.toString()))
 		{
 			isEmpty = false;
 		}
+
 		return isEmpty;
-	}	
-	
+	}
+
+
+	/**
+	 * @return 
+	 */
+	protected String getCSS()
+	{
+		String css = "'font_bl_nor' ";
+		if(UserInterfaceiUtility.isControlRequired(this))
+		{
+			css = "'font_bl_nor required-field-marker' ";
+		}
+		return css;
+	}
 }

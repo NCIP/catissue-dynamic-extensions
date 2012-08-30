@@ -230,6 +230,7 @@ public class SurveyModeRenderer extends LayoutRenderer {
 					if (c.getId().longValue() == control.getId().longValue())
 					{
 						value = ctr.getContainerValueMap().get(control.getBaseAbstractAttribute());
+						break;
 					}
 				}
 			}

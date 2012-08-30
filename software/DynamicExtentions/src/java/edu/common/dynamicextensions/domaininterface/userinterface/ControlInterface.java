@@ -450,5 +450,5 @@ public interface ControlInterface extends DynamicExtensionBaseDomainObjectInterf
 	
 	public Collection<TaggedValue> getTaggedValues();
 	
-	public boolean isEmpty();
+	public boolean isEmpty() throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
 }

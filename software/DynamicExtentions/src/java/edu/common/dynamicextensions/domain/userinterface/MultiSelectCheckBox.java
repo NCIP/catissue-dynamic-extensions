@@ -134,9 +134,9 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 				if (values != null && !values.isEmpty()
 						&& values.contains(nameValueBean.getValue()))
 				{
-					htmlString += "<input type='checkbox' class='"
-							+ cssClass
-							+ "' name='"
+					htmlString += "<input type='checkbox' class="
+							+ getCSS()
+							+ " name='"
 							+ htmlComponentName
 							+ "' checkedValue='"
 							+ DynamicExtensionsUtility.getValueForCheckBox(true)
@@ -169,9 +169,9 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 				}
 				else
 				{
-					htmlString += "<input type='checkbox' class='"
-							+ cssClass
-							+ "' name='"
+					htmlString += "<input type='checkbox' class="
+							+ getCSS()
+							+ " name='"
 							+ htmlComponentName
 							+ "' checkedValue='"
 							+ DynamicExtensionsUtility.getValueForCheckBox(true)
