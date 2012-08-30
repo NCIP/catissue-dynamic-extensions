@@ -199,7 +199,7 @@ public class DEAjaxActionManager
 		StringBuilder strAllError = new StringBuilder();
 		if (control instanceof ValidatableInterface)
 		{
-			List<String> lstError = DomainObjectFactory.getInstance().getValidatorInstance(null).validateAttributes(control
+			List<String> lstError = DomainObjectFactory.getInstance().getValidatorInstance("true").validateAttributes(control
 					.getBaseAbstractAttribute(), controlValue[0], control.getCaption());
 			for (String strError : lstError)
 			{
