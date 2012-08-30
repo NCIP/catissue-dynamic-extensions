@@ -3269,7 +3269,8 @@ function updateServerState(controlName, controlId, containerId)
 				vPatentControl.innerHTML = vParentOriginal;
 				var vRecentControl=document.getElementById(controlName);
 				vRecentControl.value = controlValue;
-				vRecentControl.className = "font_bl_nor_error";
+				$("#"+controlName).removeClass("font_bl_nor");
+				$("#"+controlName).addClass("font_bl_nor_error");
 				vRecentControl.title =  vMessage;
 				isValid = false;
 				vRecentControl.focus();
@@ -3308,7 +3309,8 @@ function updateServerState(controlName, controlId, containerId)
 						vRecentControl.value = controlValue;
 					}
 				}
-				vRecentControl.className = "font_bl_nor" ;
+				$("#"+controlName).removeClass("font_bl_nor_error");
+				$("#"+controlName).addClass("font_bl_nor");
 				vRecentControl.title = "";
 			}
 		}
