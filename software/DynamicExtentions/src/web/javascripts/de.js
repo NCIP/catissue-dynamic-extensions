@@ -42,13 +42,20 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 	});	
 	$("input:checkbox").live("change", function () {
 		var defaultValue = edu.wustl.de.defaultValues[$(this).attr("name")];
-		if ($(this).attr("defaultValue") == "" && $(this).val() != "") {
+		var controlName = $(this).attr("name");
+		if ($('input[name='+controlName+']:checked').val() == undefined){
+		$("#emptyControlsCount").val(parseInt($("#emptyControlsCount").val()) + 1);
+			$(this).attr("defaultValue", "");
+			edu.wustl.de.defaultValues[$(this).attr("name")] = "";
+			sm.updateProgress();
+		}else if( defaultValue == undefined ||  defaultValue == "")
+		{
 			edu.wustl.de.defaultValues[$(this).attr("name")] = $(this).val();
 			$("#emptyControlsCount").val($("#emptyControlsCount").val() - 1);
 			sm.updateProgress();
 		}
 	});	
-	$("input").live("change", function () {
+	$("input:text").live("change", function () {
 		if ($(this).attr("defaultValue") == "" && $(this).val() != "") {
 			$(this).attr("defaultValue", $(this).val());
 			edu.wustl.de.defaultValues[$(this).attr("name")] = $(this).val();
