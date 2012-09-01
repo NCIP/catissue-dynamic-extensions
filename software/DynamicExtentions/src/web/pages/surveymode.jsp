@@ -10,6 +10,11 @@
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/xtheme-gray.css"/>
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/de.css"/>
 
+<script	src="${pageContext.request.contextPath}/dhtmlx_suite/js/dhtmlxcommon.js"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/dhtmlx_suite/skins/dhtmlxcalendar_dhx_skyblue.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}dhtmlx_suite/css/dhtmlxcalendar.css" />
+<script src="${pageContext.request.contextPath}/dhtmlx_suite/js/dhtmlxcalendar.js"></script>
+
 <script>
 	var imgsrc="<%=request.getContextPath()%>/images/de/";
 </script>

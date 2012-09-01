@@ -3722,6 +3722,24 @@ function printForm()
 		document.formGrid.action='pages/de/grid/printPreview.jsp'; 
 		document.formGrid.submit();
 	}
-	
+}
 
+/**
+ * User to display DHTML calendar
+ * @param objName
+ * @return
+ */
+function showCalendar(objName,dateFormat) {
+	var date = document.getElementById(objName).value;
+
+	cal = new dhtmlxCalendarObject(objName, true, {
+		isMonthEditable : true,
+		isYearEditable : true
+	});
+	
+	cal.setDateFormat(dateFormat);
+	cal.setSkin("dhx_skyblue");
+	if (date.length > 0) {
+		cal.setDate(date);
+	}	
 }

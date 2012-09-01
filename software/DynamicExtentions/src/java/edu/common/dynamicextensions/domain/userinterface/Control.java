@@ -372,8 +372,11 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		else
 		{
 			innerHTML = generateEditModeHTML(container);
-			innerHTML = innerHTML.concat("<script defer='defer'>$('#" + getHTMLComponentName()
-					+ "').addClass('required-field-marker');</script>");
+			if (UserInterfaceiUtility.isControlRequired(this))
+			{
+				innerHTML = innerHTML.concat("<script defer='defer'>$('#" + getHTMLComponentName()
+						+ "').addClass('required-field-marker');</script>");
+			}
 		}
 
 		if (isSubControl)

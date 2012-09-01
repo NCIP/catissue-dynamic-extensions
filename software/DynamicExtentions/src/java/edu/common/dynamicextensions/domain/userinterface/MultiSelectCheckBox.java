@@ -130,7 +130,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 		if (nameValueBeans != null && !nameValueBeans.isEmpty())
 		{
 			int COLUMN_COUNT = getColumnCount();
-			htmlString += "<table cellspacing='3'>";
+			htmlString += "<table cellspacing='7'>";
 			int columnNum = 0;
 			for (NameValueBean nameValueBean : nameValueBeans)
 			{

@@ -23,7 +23,7 @@
 <link href="<%=request.getContextPath()%>/stylesheets/de/calanderComponent.css" type=text/css rel=stylesheet />
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/xtheme-gray.css" />
 
-<script src="<%=request.getContextPath()%>/javascripts/de/calendarComponent.js"></script>
+
 <script src="<%=request.getContextPath()%>/javascripts/de/script.js" type="text/javascript"></script>
 
 <script>var imgsrc="<%=request.getContextPath()%>/images/de/";</script>
@@ -31,9 +31,9 @@
 <script src="<%=request.getContextPath()%>/javascripts/de/form_plugin.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/dynamicExtensions.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/overlib_mini.js" type="text/javascript"></script>
-<script src="<%=request.getContextPath()%>/javascripts/de/calender.js" type="text/javascript"></script>
 
-<script src="<%=request.getContextPath()%>/javascripts/de/calendarComponent.js"></script>
+
+
 <script src="<%=request.getContextPath()%>/javascripts/de/ajax.js"></script>
 
 
@@ -44,6 +44,10 @@
 <script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/combos.js"></script>
 <script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/ajaxupload.js"></script>
 
+<script	src="${pageContext.request.contextPath}/dhtmlx_suite/js/dhtmlxcommon.js"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/dhtmlx_suite/skins/dhtmlxcalendar_dhx_skyblue.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}dhtmlx_suite/css/dhtmlxcalendar.css" />
+<script src="${pageContext.request.contextPath}/dhtmlx_suite/js/dhtmlxcalendar.js"></script>
 
 
 
