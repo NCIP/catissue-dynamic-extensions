@@ -19,10 +19,12 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.LoadDataEntryFormProcessor;
+import edu.common.dynamicextensions.skiplogic.SkipLogic;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.wustl.cab2b.server.cache.EntityCache;
 
 public class SurveyModeRenderer extends LayoutRenderer {
 
@@ -218,13 +220,21 @@ public class SurveyModeRenderer extends LayoutRenderer {
 	}
 
 	private void setControlValue(ContainerInterface container,
-			ControlInterface control) {
+			ControlInterface control) throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException {
+		SkipLogic skipLogic = EntityCache.getInstance().getSkipLogicByContainerIdentifier(container.getId());
+		if (skipLogic != null) {
+			skipLogic.evaluateSkipLogic(container, container.getContainerValueMap());
+		}
 		Object value = container.getContainerValueMap().get(
 				control.getBaseAbstractAttribute());
 		if (value == null)
 		{
 			for (ContainerInterface ctr : container.getChildContainerCollection())
 			{
+				skipLogic = EntityCache.getInstance().getSkipLogicByContainerIdentifier(ctr.getId());
+				if (skipLogic != null) {
+					skipLogic.evaluateSkipLogic(ctr, ctr.getContainerValueMap());
+				}
 				for (ControlInterface c : ctr.getControlCollection())
 				{
 					if (c.getId().longValue() == control.getId().longValue())
@@ -241,8 +251,27 @@ public class SurveyModeRenderer extends LayoutRenderer {
 	protected String getControlHTML(ControlInterface control)
 			throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException {
-		String htmlWrapper = "<tr>%s</table></td></tr>";
-		return String.format(htmlWrapper, control.generateHTML(control
+
+		StringBuffer controlHTML = new StringBuffer(108);
+		controlHTML.append("<tr");
+		if (control.getIsSkipLogicTargetControl()) {
+			controlHTML.append(" id='" + control.getHTMLComponentName() + "_row_div' name='"
+					+ control.getHTMLComponentName() + "_row_div'");
+		}
+		if (control.getIsHidden() != null && control.getIsHidden())	{
+			controlHTML.append(" style='display:none'");
+		} else	{
+			controlHTML.append(" style='display:row'");
+		}
+		controlHTML.append('>');
+		if (control.getIsSkipLogicTargetControl()) {
+			controlHTML
+					.append("<input type='hidden' name='skipLogicHideControls' id='skipLogicHideControls' value = '"
+							+ control.getHTMLComponentName() + "_row_div' />");
+		}
+
+		String htmlWrapper = "<tr><td height='7'></td></tr>%s%s</table></td></tr>";
+		return String.format(htmlWrapper, controlHTML.toString(), control.generateHTML(control
 				.getParentContainer()));
 	}
 

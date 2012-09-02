@@ -83,10 +83,13 @@
 					<input type="hidden" value="${param.pageId}" id="pageId"/>				
 				</c:if>	
 				<input type="hidden" id="isDraft" name="isDraft" value="false"/>
+				<input type="hidden" id="dataEntryOperation" name="dataEntryOperation" value="insertChildData"/>
 				<input type="hidden" id="containerIdentifier" name="containerIdentifier" value="${param.containerIdentifier}"/>
 				<input type="hidden" id="formLabel" name="formLabel" value="${param.formLabel}"/>
 				<input type="hidden" id="updateResponse" name="updateResponse" value="${param.updateResponse}"/>
 			</form>
+			<iframe style="display:none" src="about:blank" id="skipLogicIframe" name="skipLogicIframe" onload=""></iframe>
+			<script type="text/javascript" defer="defer">calculateDefaultAttributesValue();</script>
 		</div>
 	</div>
 	

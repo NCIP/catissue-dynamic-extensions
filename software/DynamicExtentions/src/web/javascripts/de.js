@@ -281,6 +281,7 @@ edu.wustl.de.Page.prototype.load = function () {
 			url:this.url,
 			onsuccess: function(res) {
 				$(p.ctx).append(res);
+				p.pretty();
 				$("input:radio", p.ctx).each(function() {
 					if($(this).attr("checked") == true) {
 						edu.wustl.de.defaultValues[$(this).attr("name")] = $(this).val();
@@ -301,25 +302,19 @@ edu.wustl.de.Page.prototype.pretty = function () {
 		return;
 	}
 	$(".formRequiredLabel_withoutBorder", this.ctx).each(function () {
-		if($(this).is(":visible")) {
-			$(this).addClass("de_pagebreak");
-		}
+		$(this).addClass("de_pagebreak");
 	});
 	$(".formField_withoutBorder", this.ctx).each(function () {
-		if($(this).is(":visible")) {
-			$(this).addClass("de_pagebreak");
-		}
+		$(this).addClass("de_pagebreak");
 	});
 	$("input+label", this.ctx).each(function() {
-		if($(this).is(":visible")) {
-			$(this).addClass("de_pagebreak");
-		}
+		$(this).addClass("de_pagebreak");
 	});
 	this.prettified = true;
 };
 edu.wustl.de.Page.prototype.show = function () {
 	this.load();
-	$(this.ctx).show(1, this.pretty);
+	$(this.ctx).show();
 };
 edu.wustl.de.Page.prototype.hide = function () {
 	$(this.ctx).hide();

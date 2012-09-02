@@ -4,6 +4,7 @@ if (typeof DE_AJAX_HANDLER != "undefined") {
 }
 var contextParam = "";
 var formGridDataInfo={deUrl:"deUrl",checkboxSelect:"select",formUrl:"formUrl"}
+var UpdateServerStateGenerateHtml = DeAjaxHandler + "?ajaxOperation=updateServerStateGenerateHtml"; 
 
 function setContextParameter(contextParameter)
 {
@@ -2266,7 +2267,7 @@ function calculateAttributes()
 	jQuery.ajax(
 	{
 				type :"POST",
-				url :"UpdateServerStateAction",
+				url : UpdateServerStateGenerateHtml,
 				dataType: "html",
 				data :str,
 				success : function(htmlresult)
@@ -2318,7 +2319,7 @@ function calculateDefaultAttributesValue()
 	jQuery.ajax(
 	{
 				type :"POST",
-				url :"UpdateServerStateAction",
+				url : UpdateServerStateGenerateHtml,
 				dataType: "html",
 				data :str,
 				success : function(htmlresult)
@@ -3056,7 +3057,12 @@ function getSkipLogicControl(controlName, controlId, containerId)
 		document.getElementById('isDirty').value = true;
 	}
     document.getElementById('dataEntryOperation').value = "skipLogicAttributes";
-	var str = $("dataEntryForm").serialize();
+	var str = "";
+ 	if ($("#sm-form") != null) {
+   		str = $("#sm-form").serialize();
+ 	} else {
+		str = $("dataEntryForm").serialize();
+ 	}
 	var control = document.getElementById(controlName);
 	var controlValue = "";
 	if (control != null && control.value != null)
@@ -3068,7 +3074,7 @@ function getSkipLogicControl(controlName, controlId, containerId)
 	jQuery.ajax(
 	{
 				type :"POST",
-				url :"UpdateServerStateAction",
+				url : UpdateServerStateGenerateHtml,
 				dataType: "html",
 				data :str,
 				success : function(htmlresult)

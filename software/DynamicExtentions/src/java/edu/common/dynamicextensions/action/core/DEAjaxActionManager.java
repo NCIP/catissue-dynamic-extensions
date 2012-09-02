@@ -15,6 +15,7 @@ import java.util.Stack;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.JspWriter;
 
 import org.json.JSONException;
 
@@ -44,6 +45,9 @@ import edu.common.dynamicextensions.ui.renderer.DEComboDataRenderer;
 import edu.common.dynamicextensions.ui.renderer.SurveyModeRenderer;
 import edu.common.dynamicextensions.ui.util.SemanticPropertyBuilderUtil;
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
+import edu.common.dynamicextensions.ui.webui.util.ContainerUtility;
+import edu.common.dynamicextensions.ui.webui.util.FormCache;
+import edu.common.dynamicextensions.ui.webui.util.FormDataCollectionUtility;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManager;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
@@ -166,6 +170,10 @@ public class DEAjaxActionManager
 			{
 				responceString = updateServerState(request);
 			}
+			else if (operation.trim().equals("updateServerStateGenerateHtml"))
+			{
+				responceString = updateServerStateGenerateHtml(request);
+			}
 			else if (operation.trim().equals("renderSurveyMode"))
 			{
 				responceString = new SurveyModeRenderer(request).render();
@@ -179,6 +187,20 @@ public class DEAjaxActionManager
 		return responceString;
 	}
 
+	private String updateServerStateGenerateHtml (HttpServletRequest request) throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException {
+
+		FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
+		collectionUtility.populateAndValidateValues(request,Boolean.TRUE.toString());
+
+		Stack<ContainerInterface> containerStack = (Stack<ContainerInterface>) CacheManager.
+			getObjectFromCache(request, DEConstants.CONTAINER_STACK);
+		ContainerInterface container = containerStack.peek();
+		ContainerUtility containerUtility = new ContainerUtility((HttpServletRequest) request,
+				container);
+
+		return containerUtility.generateHTML();
+	}
+	
 	@SuppressWarnings("unchecked")
 	private String updateServerState(HttpServletRequest request)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException

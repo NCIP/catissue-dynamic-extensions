@@ -14,6 +14,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.util.FormCache;
+import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.cab2b.server.util.DynamicExtensionUtility;
 
@@ -62,7 +63,6 @@ public class LoadDataEntryFormAction extends HttpServlet
 			if (category.getLayout() != null) {
 				FormCache formCache = new FormCache(request);
 				formCache.onFormLoad();
-				request.getSession().setAttribute("formCache", formCache);
 				request.getSession().setAttribute(DEConstants.CATEGORY, category);
 				request.getSession().setAttribute(DEConstants.CONTAINER, null);
 				destination = "/pages/de/surveymode.jsp?categoryId=" + String.valueOf(category.getId().longValue());
