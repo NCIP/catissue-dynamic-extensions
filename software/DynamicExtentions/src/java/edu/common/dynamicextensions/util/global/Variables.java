@@ -56,7 +56,7 @@ public class Variables
 	public static final Map<String,String> resourceMapping = new HashMap<String, String>(); 
 	static{
 		Variables.resourceMapping.put(WebUIManagerConstants.FORM_SUMMARY_PAGE,"/pages/de/dataEntry/dataEntrySummary.jsp");
-		Variables.resourceMapping.put(WebUIManagerConstants.SURVEY_MODE_JSP,"/pages/de/surveymode.jsp");
+		Variables.resourceMapping.put(WebUIManagerConstants.SURVEY_MODE_JSP,"/pages/de/dataEntry.jsp");
 		Variables.resourceMapping.put(WebUIManagerConstants.DE_AJAX_HANDLER, "AjaxcodeHandlerAction");
 	}
 
