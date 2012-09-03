@@ -70,7 +70,8 @@ public class SurveySummaryDataManager extends AbstractSummaryDataManager
 		controlUrl
 				.append("<a href='");
 		controlUrl.append(((HttpServletRequest)pageContext.getRequest()).getContextPath());
-				controlUrl.append(Variables.resourceMapping.get(WebUIManagerConstants.SURVEY_MODE_JSP)+"?categoryId=");
+				controlUrl.append(Variables.resourceMapping.get(WebUIManagerConstants.SURVEY_MODE_JSP)+"?" +((HttpServletRequest)pageContext.getRequest()).getQueryString()+
+						"&categoryId=");
 		controlUrl.append(category.getId());
 		controlUrl.append("&pageId=");
 		controlUrl.append(controlPageIdMap.get(control));
