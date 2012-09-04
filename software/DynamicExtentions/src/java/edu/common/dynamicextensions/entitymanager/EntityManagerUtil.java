@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -33,64 +32,6 @@ import edu.wustl.dao.query.generator.ColumnValueBean;
 
 public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstantsInterface
 {
-
-	private static Map<String, Long> idMap = new HashMap<String, Long>();
-
-	/**
-	 * @param query
-	 * @param useClnSession
-	 * @return
-	 * @throws DynamicExtensionsSystemException
-	 */
-	/*public static ResultSet executeQuery(String query,DAO dao)
-	 throws DynamicExtensionsSystemException
-	 {
-	 Connection conn = null;
-	 try
-	 {
-	 conn = dao.getCleanConnection();
-	 conn.setAutoCommit(false);
-	 Statement statement = null;
-	 statement = conn.createStatement();
-	 ResultSet resultSet = statement.executeQuery(query);
-	 return resultSet;
-	 }
-	 catch (Exception e)
-	 {
-	 try
-	 {
-	 conn.rollback();
-	 }
-	 catch (SQLException e1)
-	 {
-	 throw new DynamicExtensionsSystemException(e.getMessage(), e);
-	 }
-	 throw new DynamicExtensionsSystemException(e.getMessage(), e);
-	 }
-	 }*/
-
-	/**
-	 * @param inputs list which should be aappended to query
-	 * @param query Query to which append it in its IN clause
-	 * @return LinkedList of column value bean for executing this query using prepared statement
-	 */
-	/*public static LinkedList<ColumnValueBean> appendListToQueryInCluase(List inputs,StringBuffer query)
-	 {
-	 LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
-	 query.append(OPENING_BRACKET);
-	 int index = 0;
-	 query.append(QUESTION_MARK);
-	 queryDataList.add(new ColumnValueBean(IDENTIFIER, inputs.get(index++)));
-	 for(;index<inputs.size();index++)
-	 {
-	 query.append(COMMA);
-	 queryDataList.add(new ColumnValueBean(IDENTIFIER, inputs.get(index++)));
-	 query.append(QUESTION_MARK);
-	 }
-	 query.append(CLOSING_BRACKET);
-
-	 return queryDataList;
-	 }*/
 
 	/**
 	 * This will return the no of records returned by the Query.
@@ -148,39 +89,30 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 		try
 		{
 			Long identifier = null;
-			if (idMap.containsKey(tableName))
+			ResultSet resultSet = null;
+			try
 			{
-				Long newIdentifier = idMap.get(tableName);
-				identifier = newIdentifier + 1;
+				jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
+				resultSet = jdbcDao.getResultSet(query.toString(), null, null);
+				resultSet.next();
+				identifier = resultSet.getLong(1);
+				identifier = identifier + 1;
 			}
-			else
+			finally
 			{
-				ResultSet resultSet = null;
-				try
+				if (resultSet != null)
 				{
-					jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-					resultSet = jdbcDao.getResultSet(query.toString(), null, null);
-					resultSet.next();
-					identifier = resultSet.getLong(1);
-					identifier = identifier + 1;
-				}
-				finally
-				{
-					if (resultSet != null)
+					try
 					{
-						try
-						{
-							jdbcDao.closeStatement(resultSet);
-							DynamicExtensionsUtility.closeDAO(jdbcDao);
-						}
-						catch (DAOException e)
-						{
-							throw new DynamicExtensionsSystemException(e.getMessage(), e);
-						}
+						jdbcDao.closeStatement(resultSet);
+						DynamicExtensionsUtility.closeDAO(jdbcDao);
+					}
+					catch (DAOException e)
+					{
+						throw new DynamicExtensionsSystemException(e.getMessage(), e);
 					}
 				}
 			}
-			idMap.put(tableName, identifier);
 
 			return identifier;
 		}
