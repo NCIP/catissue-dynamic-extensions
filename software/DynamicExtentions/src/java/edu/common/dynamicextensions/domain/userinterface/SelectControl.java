@@ -215,7 +215,7 @@ public abstract class SelectControl extends Control
 	 */
 	protected int getColumnCount()
 	{
-		int columnCount = 1;
+		int columnCount = 3;
 		
 		if(getBaseAbstractAttribute().getTaggedValue(CategoryConstants.COLUMN) != null )
 		{
