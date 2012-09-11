@@ -262,7 +262,6 @@ public abstract class AbstractEntityCache implements IEntityCache
 	public final synchronized void refreshCache(EntityGroupInterface entityGroupInterface)
 	{
 		LOGGER.info("Initializing cache, this may take few minutes...");
-		clearCache();
 
 		Collection entityGroups = new ArrayList();
 		entityGroups.add(entityGroupInterface);
