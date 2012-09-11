@@ -7,7 +7,7 @@
 	<query name="getAllCategoriesInfo">
 		select category.userId,
 		category.id,
-		category.rootCategoryElement.containerCollection.caption,
+		category.name,
 		category.rootCategoryElement.containerCollection.id
 		from
 		edu.common.dynamicextensions.domain.Category category
