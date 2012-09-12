@@ -161,13 +161,13 @@ public class DatePicker extends Control implements DatePickerInterface, Validata
 			outputStringBuffer.append(getHTMLComponentName());
 			outputStringBuffer.append("_div'>");
 		}
-		
 		outputStringBuffer.append("<input type='text' id='");
 		outputStringBuffer.append(getHTMLComponentName());
 		outputStringBuffer.append("' name='");
 		outputStringBuffer.append(getHTMLComponentName());
+		String showCalendarCall = "showCalendar('%s','%s','%s','%s')";
 		outputStringBuffer.append("' value='"+defaultValue+"' onchange=\"" +getOnchangeServerCall()
-				+"\" onclick=\"showCalendar('"+htmlComponentName+"','"+formatSpecifier+"')\"  size='10'/>");
+				+"\" onclick=\""+ String.format(showCalendarCall, htmlComponentName,formatSpecifier,this.id,getParentContainer().getId())+"\"  size='10'/>");
 		outputStringBuffer.append("<span class='date-format'>["+dateFormat+"]</span>");
 		
 		
