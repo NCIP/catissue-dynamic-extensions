@@ -704,7 +704,7 @@
             table="DYEXTN_RULE"
             lazy="false"
             inverse="false"
-            cascade="save-update"
+            cascade="all"
             sort="unsorted"
         >
             <cache
@@ -1124,7 +1124,7 @@
             table="DYEXTN_CONTAINER"
             lazy="false"
             inverse="false"
-            cascade="save-update"
+            cascade="all-delete-orphan"
             sort="unsorted"
         >
             <cache
@@ -1139,6 +1139,7 @@
                   class="edu.common.dynamicextensions.domain.userinterface.Container"
               />
         </set>
+
 
         <joined-subclass
             name="edu.common.dynamicextensions.domain.Entity"
