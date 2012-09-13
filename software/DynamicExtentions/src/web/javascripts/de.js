@@ -250,7 +250,7 @@ edu.wustl.de.CategorySurveyMode.prototype.isErrorsExist = function (args) {
 	
 							if ($('input[name='+controlName+']:checked').val() == undefined){
 								errors = true;
-								alert("Please enter values for the mandatory fileds.");
+								alert("Please enter values for the mandatory field(s).");
 								return false; // break out of the each-loop
 							}
 						}
