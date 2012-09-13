@@ -171,9 +171,13 @@ edu.wustl.de.CategorySurveyMode.prototype.load = function () {
 				$("#sm-category-name").append($("#categoryName").val());
 				sm.init();
 				sm.bind();
-				sm.show();
 				sm.updateProgress();
 				sm.loadAllPages();
+				if($("#updateResponse").val() != "true")
+				{
+					edu.wustl.de.currentpage = parseInt($("#displayPage").val());
+				}
+				sm.show();
 			}
 		});
 		this.request.load();

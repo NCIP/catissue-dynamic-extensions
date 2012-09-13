@@ -28,6 +28,7 @@ import edu.wustl.cab2b.server.cache.EntityCache;
 
 public class SurveyModeRenderer extends LayoutRenderer {
 
+	private int displayPage = 0;
 	public SurveyModeRenderer(HttpServletRequest req) {
 		this.req = req;
 	}
@@ -109,15 +110,21 @@ public class SurveyModeRenderer extends LayoutRenderer {
 			DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException {
 		int count = 0;
-		ContainerInterface container = getContainerWithValueMap();
+		int pageCount = 0;
 		Collection<Page> pageCollection = getPageCollection();
+		ContainerInterface container = getContainerWithValueMap();
 		for (Page page : pageCollection) {
 			for (ControlInterface control : page.getControlCollection()) {
-				setControlValue(container, control);
+				setControlValue(container, control);								
 				if (control.isEmpty()) {
 					count++;
+					if(this.displayPage == 0 && !control.getIsHidden())
+					{
+						displayPage = pageCount;
+					}
 				} 
 			}
+			pageCount++;
 		}
 		return count;
 	}
@@ -174,15 +181,31 @@ public class SurveyModeRenderer extends LayoutRenderer {
 		String controlsCount = "<input type='hidden' id='controlsCount' value='%d'></input>";
 		String emptyControlsCount = "<input type='hidden' id='emptyControlsCount' value='%d'></input>";
 		String caption = req.getParameter(WebUIManagerConstants.FORM_LABEL);
+		int emptyControlsCount2 = emptyControlsCount();
+		String hiddenFields = managePageDisplay();
+		
 		
 		ContainerInterface container = getContainerFromCategory();
-
 		return String.format(containerIdentifier, container.getId())
 				+ String.format(categoryName, caption)
 				+ String.format(controlsCount, controlsCount())
-				+ String.format(emptyControlsCount, emptyControlsCount());
+				+ String.format(emptyControlsCount, emptyControlsCount2)+hiddenFields;
 	}
 
+	/**
+	 * Used to manage hidden variables depending request parameters. Later these hidden variables are used for 
+	 * managing page display
+	 * @return
+	 */
+	private String managePageDisplay()
+	{
+		String displayPage = "";
+		//If use chose to open survey form, always open the first answered question
+		displayPage = "<input type='hidden' id='displayPage' name='displayPage'  value='%d'></input>";
+		displayPage = String.format(displayPage,this.displayPage);
+		
+		return displayPage;
+	}
 	private String renderPage(String pageId)
 			throws DynamicExtensionsSystemException, IOException,
 			NumberFormatException, DynamicExtensionsApplicationException {
@@ -191,7 +214,7 @@ public class SurveyModeRenderer extends LayoutRenderer {
 		String pageTitle = "<tr><th><div class='sm-page-title'>&nbsp;<div></th><th colspan='10'><div class='sm-page-title'>%s</div></th></tr>";
 		String emptyDiv = "<div></div>";
 		Page p = getPage(pageId);
-				
+		ContainerInterface container = getContainerWithValueMap();
 		if (p == null) {
 			return renderError("page not found!");
 		} else {
@@ -210,6 +233,7 @@ public class SurveyModeRenderer extends LayoutRenderer {
 				if (control.getValue() != null) {
 					control.setDataEntryOperation("insertParentData");
 				}
+				setControlValue(container, control);
 				html
 						.append(getControlHTML(control));
 			}
