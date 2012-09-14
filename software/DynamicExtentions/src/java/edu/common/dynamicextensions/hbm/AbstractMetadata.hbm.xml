@@ -90,7 +90,7 @@
             name="semanticPropertyCollection"
             lazy="false"
             inverse="false"
-            cascade="save-update"
+            cascade="all"
             sort="unsorted"
         >
             <cache
@@ -135,7 +135,7 @@
             table="DYEXTN_ENTITY"
             lazy="false"
             inverse="false"
-            cascade="save-update"
+            cascade="all"
             sort="unsorted"
         >
             <cache
