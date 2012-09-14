@@ -2,7 +2,10 @@
 package edu.common.dynamicextensions.skiplogic;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
+import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 
 public enum RelationalOperator {
@@ -91,6 +94,19 @@ public enum RelationalOperator {
 			Boolean intValue = (Boolean) internalValue;
 			Boolean extValue = (Boolean) externalValue;
 			comparisionValue = intValue.compareTo(extValue);
+		}else if (externalValue instanceof List)
+		{
+			for(Map<BaseAbstractAttributeInterface, String> map : (List<Map<BaseAbstractAttributeInterface, String>>)externalValue)
+			{
+				if(map.values().contains(internalValue))
+				{
+					comparisionValue = 0;
+					break;
+				}else
+				{
+					comparisionValue = -1;
+				}
+			}
 		}
 
 		return comparisionValue;
