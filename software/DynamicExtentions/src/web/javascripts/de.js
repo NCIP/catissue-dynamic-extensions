@@ -234,7 +234,7 @@ edu.wustl.de.CategorySurveyMode.prototype.isErrorsExist = function (args) {
 					var defaultValue = edu.wustl.de.defaultValues[$(this).attr("name")];
 					var controlName = $(this).attr("name");
 	
-					if ((defaultValue == "" || defaultValue == undefined))
+					if ($(this).is(":visible") && (defaultValue == "" || defaultValue == undefined))
 					{
 						if($(this).attr('type') == 'text' || $(this).attr('type') == 'select'
 						|| $(this).attr('type') == 'select-multiple')
