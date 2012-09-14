@@ -10,11 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.common.dynamicextensions.domain.Category;
-import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
-import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.ui.webui.util.FormCache;
-import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.cab2b.server.util.DynamicExtensionUtility;
 
@@ -42,46 +38,7 @@ public class LoadDataEntryFormAction extends HttpServlet
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException
 	{
-		
-		/*try
-		{
-		
-		}
-		catch (DynamicExtensionsCacheException cacheException)
-		{
-			List<String> list = new ArrayList<String>();
-			list.add(cacheException.getMessage());
-			dataEntryForm.setErrorList(list);
-			return mapping.findForward(WebUIManagerConstants.CACHE_ERROR);
-		}
-*/
-		String destination = "/pages/de/dataEntry/dataEntry.jsp";
-
-		Category category;
-		try {
-			category = getCategory(request);
-			if (category.getLayout() != null) {
-				FormCache formCache = new FormCache(request);
-				formCache.onFormLoad();
-				request.getSession().setAttribute(DEConstants.CATEGORY, category);
-				request.getSession().setAttribute(DEConstants.CONTAINER, null);
-				destination = "/pages/de/surveymode.jsp?categoryId=" + String.valueOf(category.getId().longValue());
-			}
-		} catch (DynamicExtensionsCacheException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (DynamicExtensionsSystemException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (DynamicExtensionsApplicationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-				 
-		RequestDispatcher rd = getServletContext().getRequestDispatcher(destination);
+		RequestDispatcher rd = getServletContext().getRequestDispatcher("/pages/de/dataEntry.jsp");
 		rd.forward(request, response);
 	}
 	

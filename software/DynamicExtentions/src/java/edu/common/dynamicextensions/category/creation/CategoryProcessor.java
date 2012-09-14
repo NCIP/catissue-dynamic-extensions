@@ -113,7 +113,11 @@ public class CategoryProcessor
 				operations.deleteSkipLogic(containerInterface.getId(),hibernateDAO);
 				EntityCache.getInstance().deleteSkipLogicFromCache(containerInterface.getId());
 			}
-
+			//This is a temporary solution until we don't session.flush
+			//working 
+			hibernateDAO.commit();
+			hibernateDAO.openSession(null);
+			
 			//4: Insert new Skip Logic into database and cache
 			Map<ContainerInterface, SkipLogic> conditionStatements = categoryGenerator
 					.getContainerVsSkipLogicMap();

@@ -36,7 +36,7 @@ import edu.common.dynamicextensions.util.global.DEConstants;
 public class FormCache
 {
 
-	private HttpServletRequest request;
+	protected HttpServletRequest request;
 	private LoadDataEntryFormProcessor loadDataEntryFormProcessor;
 	private DataEntryForm dataEntryForm;
 
@@ -412,7 +412,7 @@ public class FormCache
 		}
 	}
 
-	public ContainerInterface getContainer()
+	public ContainerInterface getContainer() throws DynamicExtensionsSystemException
 	{
 		return containerStack.peek();
 	}
