@@ -245,9 +245,13 @@ public class FormCache
 
 	private void updateConatinerMap(ContainerInterface container, HttpServletRequest request)
 	{
-		Map<Long, ContainerInterface> containerMap = new HashMap<Long, ContainerInterface>();
-		TagUtility.setValidationMap(containerMap, container);
-		request.getSession().setAttribute(Constants.MAP_FOR_VALIDATION, containerMap);
+		//On error condition on the form the container is null
+		if(container != null)
+		{
+			Map<Long, ContainerInterface> containerMap = new HashMap<Long, ContainerInterface>();
+			TagUtility.setValidationMap(containerMap, container);
+			request.getSession().setAttribute(Constants.MAP_FOR_VALIDATION, containerMap);
+		}
 	}
 
 	/**
