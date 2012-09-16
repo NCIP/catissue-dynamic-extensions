@@ -886,7 +886,7 @@ public abstract class AbstractXMIImporter
 			Collection<AssociationInterface> allAssociations = staticEntity.getAllAssociations();
 			for (AssociationInterface association : allAssociations)
 			{
-				if (association.getTargetEntity().getId().compareTo(
+				if (mainContainer.getAbstractEntity().getId() != null && association.getTargetEntity().getId().compareTo(
 						mainContainer.getAbstractEntity().getId()) == 0)
 				{
 					isAssonPresent = true;
