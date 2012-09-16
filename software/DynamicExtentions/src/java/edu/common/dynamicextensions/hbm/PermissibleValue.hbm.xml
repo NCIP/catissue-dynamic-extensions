@@ -19,7 +19,7 @@
         <property name="description" column="DESCRIPTION" type="string" update="true" insert="true" />
 
         <set name="semanticPropertyCollection" lazy="false" inverse="false"
-            cascade="save-update" sort="unsorted" >
+            cascade="all-delete-orphan" sort="unsorted" >
             <cache usage="read-write" />
               <key column="ABSTRACT_VALUE_ID" />
               <one-to-many

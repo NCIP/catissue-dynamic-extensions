@@ -35,7 +35,7 @@
         <many-to-one
             name="attribute"
             class="edu.common.dynamicextensions.domain.Attribute"
-            cascade="save-update"
+            cascade="all"
             outer-join="auto"
             update="true"
             insert="true"

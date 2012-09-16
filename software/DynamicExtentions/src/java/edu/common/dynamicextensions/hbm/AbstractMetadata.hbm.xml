@@ -580,7 +580,7 @@
         <many-to-one
             name="targetEntity"
             class="edu.common.dynamicextensions.domain.Entity"
-            cascade="save-update"
+            cascade="all"
             outer-join="auto"
             update="true"
             insert="true"
@@ -1228,7 +1228,7 @@
         <many-to-one
             name="parentEntity"
             class="edu.common.dynamicextensions.domain.Entity"
-            cascade="save-update"
+            cascade="all"
             outer-join="auto"
             update="true"
             insert="true"

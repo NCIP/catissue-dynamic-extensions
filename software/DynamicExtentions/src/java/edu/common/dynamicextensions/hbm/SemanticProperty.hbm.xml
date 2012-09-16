@@ -36,7 +36,7 @@
             insert="true" column="SEQUENCE_NUMBER" />
 
         <set name="listOfQualifier" lazy="false" inverse="false"
-        	cascade="save-update" sort="unsorted" >
+        	cascade="all" sort="unsorted" >
             <cache usage="read-write" />
               <key column="CONCEPT_DEF_VALUE_ID" />
               <one-to-many
