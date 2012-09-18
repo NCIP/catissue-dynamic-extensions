@@ -167,7 +167,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 							+ getOnchangeServerCall()
 							+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName + "','"
 									+ identifier + "','" + parentContainerId + "');" : "")
-							+ "\" /></td><td>"
+							+ "\" /></td><td class='formRequiredLabel_withoutBorder'>"
 							+ "<label for=\""
 							+ htmlComponentName
 							+ "\">"
@@ -201,7 +201,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 							+ getOnchangeServerCall()
 							+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName + "','"
 									+ identifier + "','" + parentContainerId + "');" : "")
-							+ "\" /></td><td>"
+							+ "\" /></td><td class='formRequiredLabel_withoutBorder'>"
 							+ "<label for=\"" + htmlComponentName + "\">" + nameValueBean.getName()
 							+ "</label> </td>";
 				}
