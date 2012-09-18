@@ -186,7 +186,7 @@ public abstract class SelectControl extends Control
 		String Url = "var myUrl= \"%s?%s=%s&controlId=";
 		String attributeName = getBaseAbstractAttribute().getName();
 		StringBuffer comboStringBuffer = new StringBuffer(700);
-		String DE_AJAX_HANDLER = Variables.resourceMapping.get(WebUIManagerConstants.DE_AJAX_HANDLER);
+		String DE_AJAX_HANDLER = String.valueOf(Variables.resourceMapping.get(WebUIManagerConstants.DE_AJAX_HANDLER));
 		comboStringBuffer
 				.append(String.format(Url, DE_AJAX_HANDLER, WebUIManagerConstants.AJAX_OPERATION, WebUIManagerConstants.DE_COMBO_DATA_ACTION))
 				.append(controlId)

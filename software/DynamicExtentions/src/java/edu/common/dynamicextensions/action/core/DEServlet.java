@@ -2,6 +2,7 @@ package edu.common.dynamicextensions.action.core;
 
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -60,13 +61,13 @@ public class DEServlet extends HttpServlet {
 			UserInterfaceiUtility.resetRequestParameterMap(req);
 
 		} catch (DynamicExtensionsSystemException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (DynamicExtensionsApplicationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			String actionForward;
+			actionForward = "/pages/de/dataEntry.jsp";
+			RequestDispatcher rd = getServletContext().getRequestDispatcher(actionForward);
+			rd.forward(req, res);
 		}
-		res.getOutputStream().print("recordId = " + String.valueOf(recordId));
 	}
 
 }
