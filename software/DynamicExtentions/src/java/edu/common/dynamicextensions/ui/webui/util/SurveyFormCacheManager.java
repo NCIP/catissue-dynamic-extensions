@@ -59,7 +59,14 @@ public class SurveyFormCacheManager extends FormCache
 		Collection<Page> pageCollection = getPageCollection();
 		for (Page page : pageCollection)
 		{
-			count += page.getControlCollection().size();
+			for (ControlInterface control : page.getControlCollection())
+			{
+				if (!control.getIsHidden())
+				{
+					count++;
+					
+				}
+			}
 		}
 		return count;
 	}
