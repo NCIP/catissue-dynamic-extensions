@@ -9,16 +9,19 @@ import javax.servlet.http.HttpServletRequest;
 import edu.common.dynamicextensions.domain.Category;
 import edu.common.dynamicextensions.domain.userinterface.Page;
 import edu.common.dynamicextensions.domain.userinterface.SurveyModeLayout;
+import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.entitymanager.CategoryManager;
 import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
+import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.LoadDataEntryFormProcessor;
 import edu.common.dynamicextensions.skiplogic.SkipLogic;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.cab2b.server.cache.EntityCache;
+import edu.wustl.cab2b.server.util.DynamicExtensionUtility;
 import edu.wustl.metadata.util.DyExtnObjectCloner;
 
 /**
@@ -29,13 +32,28 @@ public class SurveyFormCacheManager extends FormCache
 {
 
 	private int displayPage = -1;
+	private CategoryInterface category;
+	private String recordIdentifier;
 
 	public SurveyFormCacheManager(HttpServletRequest request)
 	{
 		super(request);
+		category = (CategoryInterface) CacheManager.getObjectFromCache(request,
+				DEConstants.CATEGORY);
+		recordIdentifier = request.getParameter(DEConstants.RECORD_IDENTIFIER);
 	}
 
-	public int controlsCount() throws NumberFormatException, DynamicExtensionsSystemException
+	public SurveyFormCacheManager(HttpServletRequest request, Long containerIdentifier,
+			String recordIdentifier) throws DynamicExtensionsCacheException
+	{
+		super(request);
+		CacheManager.clearCache(request);
+		this.recordIdentifier = recordIdentifier;
+		category = DynamicExtensionUtility.getCategoryByContainerId(containerIdentifier.toString());;
+
+	}
+
+	public int controlsCount() throws DynamicExtensionsSystemException
 	{
 		int count = 0;
 		Collection<Page> pageCollection = getPageCollection();
@@ -46,7 +64,7 @@ public class SurveyFormCacheManager extends FormCache
 		return count;
 	}
 
-	public int emptyControlsCount() throws NumberFormatException, DynamicExtensionsSystemException,
+	public int emptyControlsCount() throws DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
 		int count = 0;
@@ -72,10 +90,9 @@ public class SurveyFormCacheManager extends FormCache
 		return count;
 	}
 
-	public Collection<Page> getPageCollection() throws NumberFormatException,
-			DynamicExtensionsSystemException
+	public Collection<Page> getPageCollection() throws DynamicExtensionsSystemException
 	{
-		Category category = getCategory();
+		CategoryInterface category = getCategory();
 		SurveyModeLayout layout = (SurveyModeLayout) category.getLayout();
 		return layout.getPageCollection();
 	}
@@ -97,12 +114,13 @@ public class SurveyFormCacheManager extends FormCache
 
 	public ContainerInterface getContainer() throws DynamicExtensionsSystemException
 	{
-		ContainerInterface container = (ContainerInterface) getCached(DEConstants.CONTAINER);
+		ContainerInterface container = (ContainerInterface) CacheManager.getObjectFromCache(
+				request, DEConstants.CONTAINER);
 		if (container == null)
 		{
 			container = (ContainerInterface) getCategory().getRootCategoryElement()
 					.getContainerCollection().iterator().next();
-			cache(DEConstants.CONTAINER, container);
+			CacheManager.addObjectToCache(request, DEConstants.CONTAINER, container);
 		}
 		return container;
 	}
@@ -110,13 +128,14 @@ public class SurveyFormCacheManager extends FormCache
 	public ContainerInterface getContainerFromCategory() throws NumberFormatException,
 			DynamicExtensionsSystemException
 	{
-		ContainerInterface container = (ContainerInterface) getCached(DEConstants.CONTAINER);
+		ContainerInterface container = (ContainerInterface) CacheManager.getObjectFromCache(
+				request, DEConstants.CONTAINER);
 		if (container == null)
 		{
-			Category category = getCategory();
+			CategoryInterface category = getCategory();
 			container = (ContainerInterface) category.getRootCategoryElement()
 					.getContainerCollection().iterator().next();
-			cache(DEConstants.CONTAINER, container);
+			CacheManager.addObjectToCache(request, DEConstants.CONTAINER, container);
 		}
 		return container;
 	}
@@ -125,7 +144,7 @@ public class SurveyFormCacheManager extends FormCache
 			DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		ContainerInterface container = getContainer();
-		String recordIdentifier = getRecordIdentifier();
+
 		if (recordIdentifier != null && !recordIdentifier.equalsIgnoreCase("null"))
 		{
 			UserInterfaceiUtility.setContainerValueMap(container, LoadDataEntryFormProcessor
@@ -136,14 +155,9 @@ public class SurveyFormCacheManager extends FormCache
 		return container;
 	}
 
-	private String getRecordIdentifier()
+	public CategoryInterface getCategory() throws DynamicExtensionsSystemException
 	{
-		return request.getParameter(DEConstants.RECORD_IDENTIFIER);
-	}
 
-	public Category getCategory() throws DynamicExtensionsSystemException
-	{
-		Category category = (Category) getCached(DEConstants.CATEGORY);
 		if (category == null)
 		{
 			CategoryManagerInterface categoryManager = CategoryManager.getInstance();
@@ -153,19 +167,9 @@ public class SurveyFormCacheManager extends FormCache
 				DyExtnObjectCloner cloner = new DyExtnObjectCloner();
 				category = cloner.clone(category);
 			}
-			cache(DEConstants.CATEGORY, category);
+			CacheManager.addObjectToCache(request, DEConstants.CATEGORY, category);
 		}
 		return category;
-	}
-
-	private Object getCached(String key)
-	{
-		return request.getSession().getAttribute(key);
-	}
-
-	private void cache(String key, Object object)
-	{
-		request.getSession().setAttribute(key, object);
 	}
 
 	private void setControlValue(ContainerInterface container, ControlInterface control)
@@ -221,4 +225,13 @@ public class SurveyFormCacheManager extends FormCache
 		this.displayPage = displayPage;
 	}
 
+	public int getCompletionStatus()
+			throws DynamicExtensionsCacheException, DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
+	{
+		int controlsCount = controlsCount();
+		int percentage = Math.round(100 * (controlsCount - emptyControlsCount())
+				/ controlsCount);
+		return percentage;
+	}
 }
