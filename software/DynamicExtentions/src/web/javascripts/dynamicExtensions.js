@@ -3747,5 +3747,9 @@ function showCalendar(objName,dateFormat) {
 	cal.setSkin("dhx_skyblue");
 	if (date.length > 0) {
 		cal.setDate(date);
-	}	
+	}
+	
+	cal.attachEvent("onClick", function (){
+		updateServerState(objName,controlId,containerId);
+	});
 }
