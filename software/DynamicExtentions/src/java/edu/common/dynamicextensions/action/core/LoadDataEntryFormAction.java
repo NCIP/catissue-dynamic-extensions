@@ -9,11 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.common.dynamicextensions.domain.Category;
-import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
-import edu.common.dynamicextensions.util.global.DEConstants;
-import edu.wustl.cab2b.server.util.DynamicExtensionUtility;
-
 /**
  * @author sujay_narkar, chetan_patil, suhas_khot
  *
@@ -41,11 +36,5 @@ public class LoadDataEntryFormAction extends HttpServlet
 		RequestDispatcher rd = getServletContext().getRequestDispatcher("/pages/de/dataEntry.jsp");
 		rd.forward(request, response);
 	}
-	
-	private Category getCategory (HttpServletRequest request) throws DynamicExtensionsCacheException, NumberFormatException {
-		String containerId = request.getParameter(DEConstants.CONTAINER_IDENTIFIER);
-		return DynamicExtensionUtility.getCategoryByContainerId(containerId);
-	}
-
 	
 }
