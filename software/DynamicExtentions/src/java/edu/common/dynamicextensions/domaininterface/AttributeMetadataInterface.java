@@ -4,6 +4,7 @@ package edu.common.dynamicextensions.domaininterface;
 import java.util.Collection;
 import java.util.Date;
 
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 
@@ -93,4 +94,6 @@ public interface AttributeMetadataInterface extends AbstractMetadataInterface
 	 * @return attributeInterface
 	 */
 	AttributeInterface getAttribute();
+	
+	ContainerInterface getContainer();
 }

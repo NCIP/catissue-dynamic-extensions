@@ -22,6 +22,7 @@ import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.SkipLogicAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.UserDefinedDEInterface;
 import edu.common.dynamicextensions.domaininterface.databaseproperties.ColumnPropertiesInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.validationrules.RuleInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.util.Constants;
@@ -972,5 +973,11 @@ public class CategoryAttribute extends BaseAbstractAttribute
 	public void setIsPopulateFromXml(boolean isPopulateFromXml)
 	{
 		this.isPopulateFromXml = isPopulateFromXml;
+	}
+	
+	@Override
+	public ContainerInterface getContainer()
+	{
+		return (ContainerInterface) categoryEntity.getContainerCollection().iterator().next();
 	}
 }

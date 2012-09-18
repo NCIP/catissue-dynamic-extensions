@@ -13,6 +13,7 @@ import edu.common.dynamicextensions.domaininterface.CaDSRValueDomainInfoInterfac
 import edu.common.dynamicextensions.domaininterface.DataElementInterface;
 import edu.common.dynamicextensions.domaininterface.PermissibleValueInterface;
 import edu.common.dynamicextensions.domaininterface.databaseproperties.ColumnPropertiesInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.entitymanager.DynamicExtensionBaseQueryBuilder;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
@@ -431,5 +432,11 @@ public class Attribute extends AbstractAttribute
 	public AttributeInterface getAttribute()
 	{
 		return this;
+	}
+
+	@Override
+	public ContainerInterface getContainer()
+	{
+		return (ContainerInterface) entity.getContainerCollection().iterator().next();
 	}
 }
