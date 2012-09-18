@@ -178,7 +178,7 @@ edu.wustl.de.CategorySurveyMode.prototype.load = function () {
 					edu.wustl.de.currentpage = parseInt($("#displayPage").val());
 					if(edu.wustl.de.currentpage == -1)
 					{
-						edu.wustl.de.currentpage == 0;
+						edu.wustl.de.currentpage = 0;
 					}
 				}
 				sm.show();

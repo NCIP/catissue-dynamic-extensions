@@ -76,10 +76,10 @@ public class SurveyFormCacheManager extends FormCache
 			for (ControlInterface control : page.getControlCollection())
 			{
 				setControlValue(container, control);
-				if (control.isEmpty())
+				if (control.isEmpty() && !control.getIsHidden())
 				{
 					count++;
-					if (this.displayPage == -1 && !control.getIsHidden())
+					if (this.displayPage == -1)
 					{
 						displayPage = pageCount;
 					}
