@@ -214,7 +214,11 @@ edu.wustl.de.CategorySurveyMode.prototype.updateProgress = function () {
 	var controlsCount = $("#controlsCount").val();
 	var emptyControlsCount = $("#emptyControlsCount").val();
 	var percentageComplete = Math.round(100*(controlsCount - emptyControlsCount)/controlsCount);
-	this.progressbar.set({percentage: percentageComplete});
+	/** Temporary fix, until we fix the percentage**/
+	if(percentageComplete < 100)
+	{
+		this.progressbar.set({percentage: percentageComplete});
+	}
 };
 /**
  Used for verifying whether there are any validation errors exists on the form.
