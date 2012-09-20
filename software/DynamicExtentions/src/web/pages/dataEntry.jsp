@@ -47,7 +47,8 @@
 	}
 %>
 
-
-
+<script>
+var UpdateServerStateGenerateHtml = "${pageContext.request.contextPath}/AjaxcodeHandlerAction?ajaxOperation=updateServerStateGenerateHtml"; 
+</script>
 <jsp:include page="<%=destination%>"/>
 	

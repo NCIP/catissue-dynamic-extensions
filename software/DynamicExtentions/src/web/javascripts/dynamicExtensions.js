@@ -4,7 +4,6 @@ if (typeof DE_AJAX_HANDLER != "undefined") {
 }
 var contextParam = "";
 var formGridDataInfo={deUrl:"deUrl",checkboxSelect:"select",formUrl:"formUrl"}
-var UpdateServerStateGenerateHtml = DeAjaxHandler + "?ajaxOperation=updateServerStateGenerateHtml"; 
 
 function setContextParameter(contextParameter)
 {
