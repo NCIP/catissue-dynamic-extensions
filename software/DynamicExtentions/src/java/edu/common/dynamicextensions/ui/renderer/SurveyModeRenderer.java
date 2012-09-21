@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import edu.common.dynamicextensions.domain.userinterface.Control;
 import edu.common.dynamicextensions.domain.userinterface.Page;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
@@ -165,6 +166,7 @@ public class SurveyModeRenderer extends LayoutRenderer
 		}
 
 		String htmlWrapper = "<tr><td height='7'></td></tr>%s%s</table></td></tr>";
+		control.setAlignment(Control.VERTICAL);
 		return String.format(htmlWrapper, controlHTML.toString(), control.generateHTML(control
 				.getParentContainer()));
 	}

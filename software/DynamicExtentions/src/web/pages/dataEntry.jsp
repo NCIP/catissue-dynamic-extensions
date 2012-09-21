@@ -14,10 +14,12 @@
 <%@ page language="java" contentType="text/html;charset=iso-8859-1"%>
 <%@ page import="edu.common.dynamicextensions.util.global.DEConstants"%>
 <%@ page import="edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants" %>
+<%@ page import="edu.common.dynamicextensions.util.global.Variables"  %>
 
 <%@ page import="edu.common.dynamicextensions.domain.Category"%>
 <%@ page import="edu.wustl.cab2b.server.util.DynamicExtensionUtility"%>
 <%@ page import="edu.common.dynamicextensions.ui.webui.util.FormCache"%>
+
 
 <%
 	Category category;
@@ -47,8 +49,10 @@
 	}
 %>
 
+
 <script>
-var UpdateServerStateGenerateHtml = "${pageContext.request.contextPath}/AjaxcodeHandlerAction?ajaxOperation=updateServerStateGenerateHtml"; 
+var UpdateServerStateGenerateHtml =
+	"${pageContext.request.contextPath}/<%=Variables.resourceMapping.get("DE_AJAX_HANDLER")%>?ajaxOperation=updateServerStateGenerateHtml";
 </script>
+
 <jsp:include page="<%=destination%>"/>
-	

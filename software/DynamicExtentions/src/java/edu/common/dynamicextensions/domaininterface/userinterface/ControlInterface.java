@@ -450,5 +450,11 @@ public interface ControlInterface extends DynamicExtensionBaseDomainObjectInterf
 	
 	public Collection<TaggedValue> getTaggedValues();
 	
-	public boolean isEmpty() throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException;
+	public boolean isEmpty() throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException;
+
+	public String getAlignment();
+
+	public void setAlignment(String alignemnt);
+
 }

@@ -45,6 +45,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 			ControlInterface
 {
 
+	public static final String VERTICAL = "vertical";
 	/**
 	 * @return
 	 * @hibernate.id name="id" column="IDENTIFIER" type="long"
@@ -182,6 +183,8 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	 *
 	 */
 	protected String heading;
+	
+	private String alignment;
 
 	/**
 	 * Decides whether the control should be disabled or not
@@ -518,7 +521,11 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 			}
 			
 		}
-		controlHTML.append("<div></td><td class='formField_withoutBorder' valign='center'>");
+		controlHTML.append("<div>");
+		if(VERTICAL.equals(alignment)){
+			controlHTML.append("</td></tr><tr><td>&nbsp;</td>");
+		}
+		controlHTML.append("<td class='formField_withoutBorder' valign='center'>");
 
 		if (getYPosition() <= 1)
 		{
@@ -1425,5 +1432,19 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 			css = "'font_bl_nor required-field-marker' ";
 		}
 		return css;
+	}
+
+
+	
+	public String getAlignment()
+	{
+		return alignment;
+	}
+
+
+	
+	public void setAlignment(String alignemnt)
+	{
+		this.alignment = alignemnt;
 	}
 }
