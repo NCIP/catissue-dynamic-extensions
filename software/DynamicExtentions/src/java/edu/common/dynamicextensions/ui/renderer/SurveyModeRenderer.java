@@ -96,7 +96,7 @@ public class SurveyModeRenderer extends LayoutRenderer
 		ContainerInterface container = (ContainerInterface) formCache.getCategory()
 				.getRootCategoryElement().getContainerCollection().iterator().next();
 		container.setContainerValueMap(formCache.getContainerWithValueMap().getContainerValueMap());
-
+		
 		SkipLogic skipLogic = EntityCache.getInstance().getSkipLogicByContainerIdentifier(
 				container.getId());
 		if (skipLogic != null)
@@ -167,6 +167,7 @@ public class SurveyModeRenderer extends LayoutRenderer
 
 		String htmlWrapper = "<tr><td height='7'></td></tr>%s%s</table></td></tr>";
 		control.setAlignment(Control.VERTICAL);
+		control.getParentContainer().setRequest(req);
 		return String.format(htmlWrapper, controlHTML.toString(), control.generateHTML(control
 				.getParentContainer()));
 	}

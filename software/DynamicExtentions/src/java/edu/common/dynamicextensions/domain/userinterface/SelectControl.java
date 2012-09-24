@@ -17,7 +17,6 @@ import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.global.CategoryConstants;
-import edu.common.dynamicextensions.util.global.Variables;
 import edu.wustl.common.beans.NameValueBean;
 
 /**
@@ -186,7 +185,7 @@ public abstract class SelectControl extends Control
 		String Url = "var myUrl= \"%s?%s=%s&controlId=";
 		String attributeName = getBaseAbstractAttribute().getName();
 		StringBuffer comboStringBuffer = new StringBuffer(700);
-		String DE_AJAX_HANDLER = String.valueOf(Variables.resourceMapping.get(WebUIManagerConstants.DE_AJAX_HANDLER));
+		String DE_AJAX_HANDLER = getAjaxHandler();
 		comboStringBuffer
 				.append(String.format(Url, DE_AJAX_HANDLER, WebUIManagerConstants.AJAX_OPERATION, WebUIManagerConstants.DE_COMBO_DATA_ACTION))
 				.append(controlId)

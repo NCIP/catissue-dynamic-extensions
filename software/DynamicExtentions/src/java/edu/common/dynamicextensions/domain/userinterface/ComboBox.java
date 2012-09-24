@@ -24,7 +24,6 @@ import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
-import edu.common.dynamicextensions.util.global.Variables;
 import edu.wustl.common.beans.NameValueBean;
 
 /**
@@ -339,7 +338,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		if (getIsLazy() || getIsSkipLogicTargetControl())
 		{
 			String EventHandler = "Ext.onReady(function(){ var myUrl= \"%s?%s=%s&controlId=";
-			String DE_AJAX_HANDLER = Variables.resourceMapping.get(WebUIManagerConstants.DE_AJAX_HANDLER);
+			String DE_AJAX_HANDLER = getAjaxHandler();
 			htmlString
 					.append(String.format(EventHandler, DE_AJAX_HANDLER, WebUIManagerConstants.AJAX_OPERATION, WebUIManagerConstants.DE_COMBO_DATA_ACTION));
 			htmlString.append(identifier);

@@ -15,7 +15,6 @@ import java.util.Stack;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.JspWriter;
 
 import org.json.JSONException;
 
@@ -46,7 +45,6 @@ import edu.common.dynamicextensions.ui.renderer.SurveyModeRenderer;
 import edu.common.dynamicextensions.ui.util.SemanticPropertyBuilderUtil;
 import edu.common.dynamicextensions.ui.webui.util.CacheManager;
 import edu.common.dynamicextensions.ui.webui.util.ContainerUtility;
-import edu.common.dynamicextensions.ui.webui.util.FormCache;
 import edu.common.dynamicextensions.ui.webui.util.FormDataCollectionUtility;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManager;
@@ -197,7 +195,7 @@ public class DEAjaxActionManager
 		ContainerInterface container = containerStack.peek();
 		ContainerUtility containerUtility = new ContainerUtility((HttpServletRequest) request,
 				container);
-
+		container.setRequest(request);
 		return containerUtility.generateHTML();
 	}
 	

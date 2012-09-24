@@ -31,6 +31,7 @@ import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.CategoryConstants;
+import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.xmi.XMIConstants;
 import edu.wustl.common.util.logger.Logger;
 
@@ -522,9 +523,6 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 			
 		}
 		controlHTML.append("<div>");
-		if(VERTICAL.equals(alignment)){
-			controlHTML.append("</td></tr><tr><td>&nbsp;</td>");
-		}
 		controlHTML.append("<td class='formField_withoutBorder' valign='center'>");
 
 		if (getYPosition() <= 1)
@@ -1446,5 +1444,19 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	public void setAlignment(String alignemnt)
 	{
 		this.alignment = alignemnt;
+	}
+	
+	
+	protected String getAjaxHandler()
+	{
+		String ajaxPath = "%s/%s";
+		if(parentContainer.getRequest() != null)
+		{
+			ajaxPath= String.format(ajaxPath, parentContainer.getRequest().getContextPath(),String.valueOf(Variables.resourceMapping.get(WebUIManagerConstants.DE_AJAX_HANDLER)));
+		}else
+		{
+			ajaxPath= String.valueOf(Variables.resourceMapping.get(WebUIManagerConstants.DE_AJAX_HANDLER));
+		}
+		return ajaxPath;
 	}
 }
