@@ -3056,12 +3056,14 @@ function getSkipLogicControl(controlName, controlId, containerId)
 		document.getElementById('isDirty').value = true;
 	}
     document.getElementById('dataEntryOperation').value = "skipLogicAttributes";
+
 	var str = "";
- 	if ($("#sm-form") != null) {
-   		str = $("#sm-form").serialize();
- 	} else {
+	if ($("#sm-form") != null) {
+		str = $("#sm-form").serialize();
+	} else {
 		str = $("dataEntryForm").serialize();
- 	}
+	}
+
 	var control = document.getElementById(controlName);
 	var controlValue = "";
 	if (control != null && control.value != null)
@@ -3141,6 +3143,14 @@ function getSkipLogicControl(controlName, controlId, containerId)
 					            		}
 					            	}
 					            }
+							}
+							if($("#controlsCount") != undefined)
+							{
+								var cc = iframeDocument.getElementById("controlsCount").value;
+								var ecc = iframeDocument.getElementById("emptyControlsCount").value;
+								$("#controlsCount").val(cc);
+								$("#emptyControlsCount").val(ecc);							
+								edu.wustl.de.surveyForm.updateProgress();
 							}
 						}
 					}
@@ -3734,7 +3744,7 @@ function printForm()
  * @param objName
  * @return
  */
-function showCalendar(objName,dateFormat) {
+function showCalendar(objName,dateFormat,controlId,containerId) {
 	var date = document.getElementById(objName).value;
 
 	cal = new dhtmlxCalendarObject(objName, true, {
@@ -3746,8 +3756,7 @@ function showCalendar(objName,dateFormat) {
 	cal.setSkin("dhx_skyblue");
 	if (date.length > 0) {
 		cal.setDate(date);
-	}
-	
+	}	
 	cal.attachEvent("onClick", function (){
 		updateServerState(objName,controlId,containerId);
 	});

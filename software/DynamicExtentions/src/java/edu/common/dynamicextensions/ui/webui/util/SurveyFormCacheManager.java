@@ -18,9 +18,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.LoadDataEntryFormProcessor;
-import edu.common.dynamicextensions.skiplogic.SkipLogic;
 import edu.common.dynamicextensions.util.global.DEConstants;
-import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.cab2b.server.util.DynamicExtensionUtility;
 import edu.wustl.metadata.util.DyExtnObjectCloner;
 
@@ -49,7 +47,7 @@ public class SurveyFormCacheManager extends FormCache
 		super(request);
 		CacheManager.clearCache(request);
 		this.recordIdentifier = recordIdentifier;
-		category = DynamicExtensionUtility.getCategoryByContainerId(containerIdentifier.toString());;
+		category = DynamicExtensionUtility.getCategoryByContainerId(containerIdentifier.toString());
 
 	}
 
@@ -119,7 +117,7 @@ public class SurveyFormCacheManager extends FormCache
 		return null;
 	}
 
-	public ContainerInterface getContainer() throws DynamicExtensionsSystemException
+	public ContainerInterface getContainer() throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		ContainerInterface container = (ContainerInterface) CacheManager.getObjectFromCache(
 				request, DEConstants.CONTAINER);
@@ -127,6 +125,11 @@ public class SurveyFormCacheManager extends FormCache
 		{
 			container = (ContainerInterface) getCategory().getRootCategoryElement()
 					.getContainerCollection().iterator().next();
+			if (recordIdentifier != null && !recordIdentifier.equalsIgnoreCase("null"))
+			{
+				UserInterfaceiUtility.setContainerValueMap(container, LoadDataEntryFormProcessor
+						.getValueMapFromRecordId(container.getAbstractEntity(), recordIdentifier));
+			}
 			CacheManager.addObjectToCache(request, DEConstants.CONTAINER, container);
 		}
 		return container;
@@ -151,12 +154,6 @@ public class SurveyFormCacheManager extends FormCache
 			DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		ContainerInterface container = getContainer();
-
-		if (recordIdentifier != null && !recordIdentifier.equalsIgnoreCase("null"))
-		{
-			UserInterfaceiUtility.setContainerValueMap(container, LoadDataEntryFormProcessor
-					.getValueMapFromRecordId(container.getAbstractEntity(), recordIdentifier));
-		}
 		container.setMode("insertParentData");
 		container.setMode("edit");
 		return container;
@@ -182,23 +179,23 @@ public class SurveyFormCacheManager extends FormCache
 	private void setControlValue(ContainerInterface container, ControlInterface control)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
-		SkipLogic skipLogic = EntityCache.getInstance().getSkipLogicByContainerIdentifier(
+		/*SkipLogic skipLogic = EntityCache.getInstance().getSkipLogicByContainerIdentifier(
 				container.getId());
 		if (skipLogic != null)
 		{
 			skipLogic.evaluateSkipLogic(container, container.getContainerValueMap());
-		}
+		}*/
 		Object value = container.getContainerValueMap().get(control.getBaseAbstractAttribute());
 		if (value == null)
 		{
 			for (ContainerInterface ctr : container.getChildContainerCollection())
 			{
-				skipLogic = EntityCache.getInstance()
+				/*skipLogic = EntityCache.getInstance()
 						.getSkipLogicByContainerIdentifier(ctr.getId());
 				if (skipLogic != null)
 				{
 					skipLogic.evaluateSkipLogic(ctr, ctr.getContainerValueMap());
-				}
+				}*/
 				for (ControlInterface c : ctr.getControlCollection())
 				{
 					if (c.getId().longValue() == control.getId().longValue())

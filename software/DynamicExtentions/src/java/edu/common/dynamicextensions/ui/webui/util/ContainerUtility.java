@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import edu.common.dynamicextensions.domain.userinterface.AbstractContainmentControl;
+import edu.common.dynamicextensions.domain.userinterface.CategoryAssociationControl;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.AbstractContainmentControlInterface;
@@ -27,6 +28,8 @@ public class ContainerUtility
 
 	private ContainerInterface container;
 	private HttpServletRequest request;
+	private int controlCount = 0;
+	private int emptyControlCount = 0;
 
 	public ContainerUtility(HttpServletRequest request, ContainerInterface container)
 	{
@@ -36,7 +39,6 @@ public class ContainerUtility
 		//Used for PV versioning
 		updateActivationDate();
 
-		
 	}
 
 	private void updateActivationDate()
@@ -95,11 +97,12 @@ public class ContainerUtility
 					List<Map<BaseAbstractAttributeInterface, Object>> list = (List<Map<BaseAbstractAttributeInterface, Object>>) dataValueMap
 							.get(control.getBaseAbstractAttribute());
 					AbstractContainmentControlInterface abstractContainmentControl = (AbstractContainmentControlInterface) control;
-					if(list.isEmpty())
+					if (list.isEmpty())
 					{
 						list.add(new HashMap<BaseAbstractAttributeInterface, Object>());
 					}
-					populateControlValueCollection(controlValueCollection, abstractContainmentControl.getContainer(), list.get(0));
+					populateControlValueCollection(controlValueCollection,
+							abstractContainmentControl.getContainer(), list.get(0));
 
 				}
 			}
@@ -112,4 +115,53 @@ public class ContainerUtility
 
 		}
 	}
+
+	/**
+	 * @param containerInterface with data value map updated
+	 * @throws DynamicExtensionsApplicationException 
+	 * @throws DynamicExtensionsSystemException 
+	 */
+	public void initCountrolCounts(ContainerInterface containerInterface)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
+		for (ControlInterface controlInterface : containerInterface.getControlCollection())
+		{
+			if (controlInterface instanceof AbstractContainmentControlInterface)
+			{
+				CategoryAssociationControl containmentControl = (CategoryAssociationControl) controlInterface;
+				if (!containmentControl.isCardinalityOneToMany())
+				{
+					List<Map<BaseAbstractAttributeInterface, Object>> maps = (List<Map<BaseAbstractAttributeInterface, Object>>) containerInterface
+							.getContainerValueMap().get(controlInterface);
+					containmentControl.getContainer().setContainerValueMap(maps.get(0));
+					initCountrolCounts(containmentControl.getContainer());
+				}
+			}
+			else
+			{
+				if (!controlInterface.getIsHidden())
+				{
+					controlInterface.setValue(containerInterface.getContainerValueMap().get(
+							controlInterface.getBaseAbstractAttribute()));
+					controlCount++;
+					if (controlInterface.isEmpty())
+					{
+						emptyControlCount++;
+					}
+				}
+
+			}
+		}
+	}
+
+	public int getControlCount()
+	{
+		return controlCount;
+	}
+
+	public int getEmptyControlCount()
+	{
+		return emptyControlCount;
+	}
+
 }

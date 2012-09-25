@@ -106,6 +106,9 @@ function moveOptions(theSelFromId, theSelToId, operation)
 			addOption(theSelTo, selectedText[i], selectedValues[i]);
 		}
 	}
+	//event needs to be triggered explicitly, required for updating progress bar which are configured on this event
+	theSelTo.click();
+	theSelFrom.click();
 }
 
 function addFromList(theSelFromId, theSelToId, operation)

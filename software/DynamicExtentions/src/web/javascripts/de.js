@@ -5,12 +5,12 @@ edu.wustl.de.sm = {};
 edu.wustl.de.smurl;
 edu.wustl.de.currentpage;
 edu.wustl.de.defaultValues = {};
-
+edu.wustl.de.surveyForm;
 $(document).ready(function () {
-edu.wustl.de.smurl = $("#contextPath").val()+"/AjaxcodeHandlerAction?ajaxOperation=renderSurveyMode&formLabel="+$("#formLabel").val();
-	var form = new edu.wustl.de.CategorySurveyMode({ctx: $("#sm-category"),
+	edu.wustl.de.smurl = $("#contextPath").val()+"/AjaxcodeHandlerAction?ajaxOperation=renderSurveyMode&formLabel="+$("#formLabel").val();
+	edu.wustl.de.surveyForm = new edu.wustl.de.CategorySurveyMode({ctx: $("#sm-category"),
 		categoryid: $("#categoryId").val()});
-	form.load();
+	edu.wustl.de.surveyForm.load();
 });
 
 edu.wustl.de.CategorySurveyMode = function (args) {
@@ -71,11 +71,17 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 	});
 	$("select").live("click", function () {
 		var defaultValue = edu.wustl.de.defaultValues[$(this).attr("name")];
-		if (defaultValue == undefined) {
+		if (defaultValue == undefined || defaultValue == "") {
 			edu.wustl.de.defaultValues[$(this).attr("name")] = $(this).val();
 			$("#emptyControlsCount").val($("#emptyControlsCount").val() - 1);
 			sm.updateProgress();
-		}
+		}else if($(this).val() == null)
+		{
+		$("#emptyControlsCount").val(parseInt($("#emptyControlsCount").val()) + 1);
+			$(this).attr("defaultValue", "");
+			edu.wustl.de.defaultValues[$(this).attr("name")] = "";
+			sm.updateProgress();
+		}		
 	});
 	$("textarea").live("change", function () {
 		if ($(this).attr("defaultValue") == "" && $(this).val() != "") {
@@ -214,11 +220,7 @@ edu.wustl.de.CategorySurveyMode.prototype.updateProgress = function () {
 	var controlsCount = $("#controlsCount").val();
 	var emptyControlsCount = $("#emptyControlsCount").val();
 	var percentageComplete = Math.round(100*(controlsCount - emptyControlsCount)/controlsCount);
-	/** Temporary fix, until we fix the percentage**/
-	if(percentageComplete < 100)
-	{
-		this.progressbar.set({percentage: percentageComplete});
-	}
+	this.progressbar.set({percentage: percentageComplete});
 };
 /**
  Used for verifying whether there are any validation errors exists on the form.

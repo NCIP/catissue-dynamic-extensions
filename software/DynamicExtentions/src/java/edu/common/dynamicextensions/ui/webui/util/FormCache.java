@@ -416,7 +416,7 @@ public class FormCache
 		}
 	}
 
-	public ContainerInterface getContainer() throws DynamicExtensionsSystemException
+	public ContainerInterface getContainer() throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		return containerStack.peek();
 	}

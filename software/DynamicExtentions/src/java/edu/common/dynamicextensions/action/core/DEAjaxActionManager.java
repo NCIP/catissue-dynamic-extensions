@@ -196,7 +196,15 @@ public class DEAjaxActionManager
 		ContainerUtility containerUtility = new ContainerUtility((HttpServletRequest) request,
 				container);
 		container.setRequest(request);
-		return containerUtility.generateHTML();
+		StringBuilder builder =new StringBuilder();
+		builder.append(containerUtility.generateHTML());
+		containerUtility.initCountrolCounts(container);
+		String controlsCount = "<input type='hidden' id='controlsCount' value='%d'></input>";
+		String emptyControlsCount = "<input type='hidden' id='emptyControlsCount' value='%d'></input>";
+		builder.append(String.format(controlsCount, containerUtility.getControlCount()));
+		builder.append(String.format(emptyControlsCount, containerUtility.getEmptyControlCount()));
+		
+		return builder.toString();
 	}
 	
 	@SuppressWarnings("unchecked")
