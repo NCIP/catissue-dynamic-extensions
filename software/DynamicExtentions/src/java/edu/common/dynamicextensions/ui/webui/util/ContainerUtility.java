@@ -18,10 +18,12 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.skiplogic.SkipLogic;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.DataValueMapUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.wustl.cab2b.server.cache.EntityCache;
 
 public class ContainerUtility
 {
@@ -164,4 +166,13 @@ public class ContainerUtility
 		return emptyControlCount;
 	}
 
+	public static void evaluateSkipLogic(ContainerInterface container)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
+		SkipLogic skipLogic = EntityCache.getInstance().getSkipLogicByContainerIdentifier(container.getId());
+		if (skipLogic != null)
+		{
+			skipLogic.evaluateSkipLogic(container, container.getContainerValueMap());
+		}
+	}
 }

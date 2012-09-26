@@ -40,7 +40,7 @@ public abstract class AbstractSummaryDataManager
 		for (Map<ControlInterface, Object> map : controlValueCollection)
 		{
 			ControlInterface control = map.keySet().iterator().next();
-			if (control instanceof SummaryControlInterface)
+			if (control instanceof SummaryControlInterface && !control.getIsHidden())
 			{
 				Map<String, String> data = new HashMap<String, String>();
 				data.put(SR_NO, String.valueOf(rowCounter++));

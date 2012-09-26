@@ -40,10 +40,13 @@ public class FormSummaryGeneratorTag extends DynamicExtensionsFormBaseTag
 	{
 
 		controlValueCollection = new ArrayList<Map<ControlInterface, Object>>();
+		
 		ContainerUtility.populateControlValueCollection(controlValueCollection, container,
 				dataValueMap);
+		
 		try
 		{
+			ContainerUtility.evaluateSkipLogic(container);
 			populateTable();
 			generateTable();
 
