@@ -3324,9 +3324,13 @@ function updateServerState(controlName, controlId, containerId)
 						vRecentControl.value = controlValue;
 					}
 				}
-				$("#"+controlName).removeClass("font_bl_nor_error");
-				$("#"+controlName).addClass("font_bl_nor");
+				if($("#"+controlName) != null)
+				{
+					$("#"+controlName).removeClass("font_bl_nor_error");
+					$("#"+controlName).addClass("font_bl_nor");
+				}
 				vRecentControl.title = "";
+				
 			}
 		}
     }

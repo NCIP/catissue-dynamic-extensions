@@ -337,38 +337,36 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 		StringBuffer htmlString = new StringBuffer();
 		if (getIsLazy() || getIsSkipLogicTargetControl())
 		{
-			String EventHandler = "Ext.onReady(function(){ var myUrl= \"%s?%s=%s&controlId=";
+			String EventHandler = "Ext.onReady(function(){ var myUrl= \"%s?%s=%s";
 			String DE_AJAX_HANDLER = getAjaxHandler();
 			htmlString
 					.append(String.format(EventHandler, DE_AJAX_HANDLER, WebUIManagerConstants.AJAX_OPERATION, WebUIManagerConstants.DE_COMBO_DATA_ACTION));
-			htmlString.append(identifier);
-			htmlString.append("~containerIdentifier=");
-			htmlString.append(parentContainerId);
-			htmlString.append("~sourceControlValues=");
-			htmlString.append(URLEncoder.encode(sourceHtmlComponentValues.toString(), "utf-8"));
-			htmlString.append("~categoryEntityName=");
-			htmlString.append(categoryEntityName);
-			htmlString.append("~attributeName=");
-			htmlString.append(attributeName);
+	/*		StringBuffer controlId = new StringBuffer();
+			controlId.append(identifier);
+			controlId.append("~containerIdentifier=");
+			controlId.append(parentContainerId);
+			controlId.append("~sourceControlValues=");
+			controlId.append(URLEncoder.encode(sourceHtmlComponentValues.toString(), "utf-8"));
+			controlId.append("~categoryEntityName=");
+			controlId.append(categoryEntityName);
+			controlId.append("~attributeName=");
+			controlId.append(attributeName);
 
-			htmlString.append("~encounterDate=");
-			htmlString.append(ControlsUtility.convertDateToString(encounterDate, "yyyy-MM-dd"));
-			htmlString.append("\";");
-			htmlString.append("var ds = new Ext.data.Store({");
-			htmlString.append("proxy: new Ext.data.HttpProxy({url: myUrl}),");
+			controlId.append("~encounterDate=");
+			controlId.append(ControlsUtility.convertDateToString(encounterDate, "yyyy-MM-dd"));*/
+			htmlString.append("\";var ds = new Ext.data.Store({proxy: new Ext.data.HttpProxy({url: myUrl}),baseParams:");
+			String baseParams = "{controlId:'%s',containerIdentifier:'%s',sourceControlValues:'%s',categoryEntityName:'%s',attributeName:'%s',encounterDate:'%s'}";
+			
+			htmlString.append(String.format(baseParams, identifier,parentContainerId,URLEncoder.encode(sourceHtmlComponentValues.toString(), "utf-8"),
+					categoryEntityName,attributeName,ControlsUtility.convertDateToString(encounterDate, "yyyy-MM-dd")));
 			htmlString
-					.append("reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, ");
-			htmlString
-					.append("[{name: 'id', mapping: 'id'},{name: 'excerpt', mapping: 'field'}])});");
+					.append(", reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, [{name: 'id', mapping: 'id'},{name: 'excerpt', mapping: 'field'}])});");
 			//end of code to add the data source string
 		}
 		else
 		{
 			StringBuffer pvDataString = createPvDataString(encounterDate);
-			htmlString.append("Ext.onReady(function(){ ");
-			htmlString.append("var combodata = ").append(pvDataString).append(";");
-			htmlString
-					.append("var ds = new Ext.data.SimpleStore({fields: ['id','excerpt'],data : combodata });");
+			htmlString.append("Ext.onReady(function(){  var combodata = ").append(pvDataString).append("; var ds = new Ext.data.SimpleStore({fields: ['id','excerpt'],data : combodata });");
 		}
 		return htmlString.toString();
 	}

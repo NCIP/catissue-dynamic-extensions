@@ -1,20 +1,15 @@
 
 package edu.common.dynamicextensions.ui.renderer;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Stack;
 import java.util.Map.Entry;
+import java.util.Stack;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,13 +48,8 @@ public class DEComboDataRenderer
 		String query = request.getParameter("query");
 		String start = request.getParameter("start");
 
-		String controlIdStr = request.getParameter(CONTROL_ID);
-
-		// Create a map out of control Id Str
-		Map<String, String> keyMap = extractRequestParameter(controlIdStr);
-
-		String controlId = keyMap.get("controlId");;
-		String containerId = keyMap.get("containerIdentifier");
+		String controlId = request.getParameter("controlId");;
+		String containerId = request.getParameter("containerIdentifier");
 		String[] sourceValues = {};
 
 		String[] sourceHtmlComponentValues = null;
@@ -106,7 +96,7 @@ public class DEComboDataRenderer
 							.getParameter(DEConstants.COMBOBOX_IDENTIFER));
 				}
 				nameValueBeans = ControlsUtility.populateListOfValues(control, sourceControlValues,
-						ControlsUtility.getFormattedDate(keyMap.get(Constants.ENCOUNTER_DATE)));
+						ControlsUtility.getFormattedDate(request.getParameter(Constants.ENCOUNTER_DATE)));
 			}
 		}
 
@@ -144,40 +134,7 @@ public class DEComboDataRenderer
 		return mainJsonObject.toString();
 	}
 
-	/**
-	 * @param controlIdStr
-	 * @return
-	 */
-	private Map<String, String> extractRequestParameter(String controlIdStr)
-	{
-		Map<String, String> keyMap = new HashMap<String, String>();
-
-		if (controlIdStr != null)
-		{
-			String[] params = controlIdStr.split("~");
-			for (int i = 0; i < params.length; i++)
-			{
-				String paramKeyValStr = params[i];
-				if (paramKeyValStr != null && !"".equals(paramKeyValStr.trim()))
-				{
-					String[] paramKeyVal = paramKeyValStr.split("=");
-					if (i == 0)
-					{
-						keyMap.put("controlId", paramKeyVal[0]);
-					}
-					else if (paramKeyVal.length == 1)
-					{
-						keyMap.put(paramKeyVal[0], null);
-					}
-					else
-					{
-						keyMap.put(paramKeyVal[0], paramKeyVal[1]);
-					}
-				}
-			}
-		}
-		return keyMap;
-	}
+	
 
 	/**
 	 * Retrieves the container from the session
