@@ -341,19 +341,6 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 			String DE_AJAX_HANDLER = getAjaxHandler();
 			htmlString
 					.append(String.format(EventHandler, DE_AJAX_HANDLER, WebUIManagerConstants.AJAX_OPERATION, WebUIManagerConstants.DE_COMBO_DATA_ACTION));
-	/*		StringBuffer controlId = new StringBuffer();
-			controlId.append(identifier);
-			controlId.append("~containerIdentifier=");
-			controlId.append(parentContainerId);
-			controlId.append("~sourceControlValues=");
-			controlId.append(URLEncoder.encode(sourceHtmlComponentValues.toString(), "utf-8"));
-			controlId.append("~categoryEntityName=");
-			controlId.append(categoryEntityName);
-			controlId.append("~attributeName=");
-			controlId.append(attributeName);
-
-			controlId.append("~encounterDate=");
-			controlId.append(ControlsUtility.convertDateToString(encounterDate, "yyyy-MM-dd"));*/
 			htmlString.append("\";var ds = new Ext.data.Store({proxy: new Ext.data.HttpProxy({url: myUrl}),baseParams:");
 			String baseParams = "{controlId:'%s',containerIdentifier:'%s',sourceControlValues:'%s',categoryEntityName:'%s',attributeName:'%s',encounterDate:'%s'}";
 			
@@ -361,7 +348,6 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 					categoryEntityName,attributeName,ControlsUtility.convertDateToString(encounterDate, "yyyy-MM-dd")));
 			htmlString
 					.append(", reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, [{name: 'id', mapping: 'id'},{name: 'excerpt', mapping: 'field'}])});");
-			//end of code to add the data source string
 		}
 		else
 		{

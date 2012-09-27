@@ -1,6 +1,7 @@
 
 package edu.common.dynamicextensions.domain.userinterface;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -122,190 +123,208 @@ public class ListBox extends SelectControl implements ListBoxInterface
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		StringBuffer htmlString = new StringBuffer(193);
-		List<NameValueBean> nameValueBeans = null;
-		List<String> values = getValueAsStrings();
-		String identifier = "";
-		if (getId() != null)
+		try
 		{
-			identifier = getId().toString();
-		}
-		//String htmlComponentName = getHTMLComponentName();
-		StringBuffer sourceHtmlComponentValues = null;
-		if (getSourceSkipControl() == null)
-		{
-			sourceHtmlComponentValues = new StringBuffer("~");
-		}
-		else
-		{
-			sourceHtmlComponentValues = new StringBuffer();
-			List<String> sourceControlValues = getSourceSkipControl().getValueAsStrings();
-			if (sourceControlValues != null)
+
+			List<NameValueBean> nameValueBeans = null;
+			List<String> values = getValueAsStrings();
+			String identifier = "";
+			if (getId() != null)
 			{
-				for (String value : sourceControlValues)
+				identifier = getId().toString();
+			}
+			//String htmlComponentName = getHTMLComponentName();
+			StringBuffer sourceHtmlComponentValues = null;
+			if (getSourceSkipControl() == null)
+			{
+				sourceHtmlComponentValues = new StringBuffer("~");
+			}
+			else
+			{
+				sourceHtmlComponentValues = new StringBuffer();
+				List<String> sourceControlValues = getSourceSkipControl().getValueAsStrings();
+				if (sourceControlValues != null)
 				{
-					sourceHtmlComponentValues.append(value);
-					sourceHtmlComponentValues.append('~');
+					for (String value : sourceControlValues)
+					{
+						sourceHtmlComponentValues.append(value);
+						sourceHtmlComponentValues.append('~');
+					}
 				}
 			}
-		}
 
-		String strMultiSelect = "";
-		if ((isMultiSelect != null) && (isMultiSelect.booleanValue()))
-		{
-			strMultiSelect = "MULTIPLE ";
-		}
-
-		if (getIsSkipLogicTargetControl())
-		{
-			htmlString.append("<div id='" + getHTMLComponentName() + "_div' name='"
-					+ getHTMLComponentName() + "_div'>");
-		}
-		htmlString.append("<SELECT ");
-		htmlString.append(strMultiSelect).append(" size=").append(noOfRows).append(
-				"class="
-				+getCSS()+" name='").append(getHTMLComponentName()).append("' onchange=\"");
-
-		htmlString.append(getOnchangeServerCall());
-
-		if ((isReadOnly != null && isReadOnly)
-				|| (isSkipLogicReadOnly != null && isSkipLogicReadOnly))
-		{
-			htmlString.append(" \" disabled='").append(ProcessorConstants.TRUE).append("'style='background:white'");
-		}
-		htmlString.append("\">");
-
-		if (listOfValues == null)
-		{
-			List<String> sourceControlValues = null;
-			if (getSourceSkipControl() != null)
+			String strMultiSelect = "";
+			if ((isMultiSelect != null) && (isMultiSelect.booleanValue()))
 			{
-				sourceControlValues = getSourceSkipControl().getValueAsStrings();
+				strMultiSelect = "MULTIPLE ";
 			}
-			nameValueBeans = ControlsUtility.populateListOfValues(this, sourceControlValues,
-					(Date) container.getContextParameter(Constants.ENCOUNTER_DATE));
-		}
 
-		if (nameValueBeans != null && !nameValueBeans.isEmpty())
-		{
-			for (NameValueBean nameValueBean : nameValueBeans)
-			{
-				if (values != null
-						&& !values.isEmpty()
-						&& (values.contains(nameValueBean.getValue()) || values
-								.contains(DynamicExtensionsUtility
-										.getUnEscapedStringValue(nameValueBean.getValue()))))
-				{
-					htmlString.append("<OPTION title='").append(nameValueBean.getValue()).append(
-							"' value='").append(nameValueBean.getValue()).append("' selected>")
-							.append(
-									DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean
-											.getName()));
-				}
-				else
-				{
-					htmlString.append("<OPTION value='").append(nameValueBean.getValue()).append(
-							"'>").append(
-							DynamicExtensionsUtility.getUnEscapedStringValue(nameValueBean
-									.getName()));
-				}
-			}
-		}
-		htmlString.append("</SELECT>");
-
-		// generate this type of html if multiselect is to be implemented
-		// using an auto complete drop down and list box together.
-		if (IsUsingAutoCompleteDropdown != null && IsUsingAutoCompleteDropdown)
-		{
-			String coordId = "coord_" + getHTMLComponentName();
-			String protocolCoordId = "protocolCoordId_" + getHTMLComponentName();
-
-			StringBuffer multSelWithAutoCmpltHTML = new StringBuffer(42);
 			if (getIsSkipLogicTargetControl())
 			{
-				multSelWithAutoCmpltHTML.append("<div id='" + getHTMLComponentName()
-						+ "_div' name='" + getHTMLComponentName() + "_div'>");
+				htmlString.append("<div id='" + getHTMLComponentName() + "_div' name='"
+						+ getHTMLComponentName() + "_div'>");
 			}
+			htmlString.append("<SELECT ");
+			htmlString.append(strMultiSelect).append(" size=").append(noOfRows)
+					.append("class=" + getCSS() + " name='").append(getHTMLComponentName())
+					.append("' onchange=\"");
 
-			String comboInnerScript = generateScriptTagForAutoComplete(identifier,
-					sourceHtmlComponentValues.toString(), coordId);
-			multSelWithAutoCmpltHTML
-					.append("<script defer='defer'>Ext.onReady(function(){")
-					.append(comboInnerScript)
-					.append(
-							"combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});ds.on('load',function(){if (this.getAt(0) != null && this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50;} else {combo.typeAheadDelay=60000}});});</script>\n");
-			multSelWithAutoCmpltHTML.append("<br><table border=\"0\" width=\"400\">\n");
-			multSelWithAutoCmpltHTML.append("\t<tr>\n");
-			multSelWithAutoCmpltHTML
-					.append("\t\t<td width=\"35%\" class=\"black_ar_new1\" valign=\"TOP\">\n");
-			multSelWithAutoCmpltHTML.append("\t\t\t<input type='text' id='" + coordId + "' name='"
-					+ coordId + "' value =' ' size='20'/>\n");
-			multSelWithAutoCmpltHTML.append("\t\t</td>\n\n");
-			multSelWithAutoCmpltHTML
-					.append("\t\t<td class=\"black_ar_new1\" width=\"20%\" align=\"center\" valign=\"TOP\">\n");
-			multSelWithAutoCmpltHTML
-					.append("\t\t\t<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n");
-			multSelWithAutoCmpltHTML.append("\t\t\t\t<tr>\n");
-			multSelWithAutoCmpltHTML
-					.append("\t\t\t\t\t<td height=\"22\" align=\"center\" valign=\"TOP\">\n");
-			multSelWithAutoCmpltHTML.append("\t\t\t\t\t\t<div id=\"addLink\">\n");
-			multSelWithAutoCmpltHTML
-					.append("\t\t\t\t\t\t\t<a href=\"#\" onclick=\"isDataChanged();moveOptions('"
-							+ coordId + "','" + protocolCoordId + "', 'add');"
-							+ getOnchangeServerCall() + "\">\n");
-			multSelWithAutoCmpltHTML
-					.append("\t\t\t\t\t\t\t\t<img src=\"images/b_add_inact.gif\" alt=\"Add\" height=\"18\" border=\"0\" align=\"absmiddle\"/>\n");
-			multSelWithAutoCmpltHTML.append("\t\t\t\t\t\t\t</a>\n");
-			multSelWithAutoCmpltHTML.append("\t\t\t\t\t\t</div>\n");
-			multSelWithAutoCmpltHTML.append("\t\t\t\t\t</td>\n");
-			multSelWithAutoCmpltHTML.append("\t\t\t\t</tr>\n\n");
-			multSelWithAutoCmpltHTML.append("\t\t\t\t<tr>\n");
-			multSelWithAutoCmpltHTML.append("\t\t\t\t\t<td height=\"22\" align=\"center\">\n");
-			multSelWithAutoCmpltHTML.append("\t\t\t\t\t\t<div id=\"removeLink\">\n");
-			multSelWithAutoCmpltHTML
-					.append("\t\t\t\t\t\t\t<a href=\"#\" onclick=\"isDataChanged();moveOptions('"
-							+ protocolCoordId + "','" + coordId + "', 'edit');"
-							+ getOnchangeServerCall() + "\">\n");
-			multSelWithAutoCmpltHTML
-					.append("\t\t\t\t\t\t\t\t<img src=\"images/b_remove_inact.gif\" alt=\"Remove\" height=\"18\" border=\"0\" align=\"absmiddle\"/>\n");
-			multSelWithAutoCmpltHTML.append("\t\t\t\t\t\t\t</a>\n");
-			multSelWithAutoCmpltHTML.append("\t\t\t\t\t\t</div>\n");
-			multSelWithAutoCmpltHTML.append("\t\t\t\t\t</td>\n");
-			multSelWithAutoCmpltHTML.append("\t\t\t\t</tr>\n");
-			multSelWithAutoCmpltHTML.append("\t\t\t</table>\n");
-			multSelWithAutoCmpltHTML.append("\t\t</td>\n\n");
-			multSelWithAutoCmpltHTML
-					.append("\t\t<td width=\"50%\" align=\"center\" class=\"black_ar_new1\">\n");
-			multSelWithAutoCmpltHTML.append("\t\t\t<SELECT id=\"" + protocolCoordId + "\" name=\""
-					+ getHTMLComponentName()
-					+ "\" size=\"4\" multiple=\"true\" class="+getCSS()+" style=\"width:170\">");
+			htmlString.append(getOnchangeServerCall());
+
+			if ((isReadOnly != null && isReadOnly)
+					|| (isSkipLogicReadOnly != null && isSkipLogicReadOnly))
+			{
+				htmlString.append(" \" disabled='").append(ProcessorConstants.TRUE)
+						.append("'style='background:white'");
+			}
+			htmlString.append("\">");
+
+			if (listOfValues == null)
+			{
+				List<String> sourceControlValues = null;
+				if (getSourceSkipControl() != null)
+				{
+					sourceControlValues = getSourceSkipControl().getValueAsStrings();
+				}
+				nameValueBeans = ControlsUtility.populateListOfValues(this, sourceControlValues,
+						(Date) container.getContextParameter(Constants.ENCOUNTER_DATE));
+			}
 
 			if (nameValueBeans != null && !nameValueBeans.isEmpty())
 			{
 				for (NameValueBean nameValueBean : nameValueBeans)
 				{
-					if (values != null && !values.isEmpty()
-							&& values.contains(nameValueBean.getValue()))
+					if (values != null
+							&& !values.isEmpty()
+							&& (values.contains(nameValueBean.getValue()) || values
+									.contains(DynamicExtensionsUtility
+											.getUnEscapedStringValue(nameValueBean.getValue()))))
 					{
-						multSelWithAutoCmpltHTML.append("<OPTION title='").append(
-								nameValueBean.getValue()).append("' value='").append(
-								nameValueBean.getValue()).append("' selected>").append(
-								nameValueBean.getName());
+						htmlString
+								.append("<OPTION title='")
+								.append(nameValueBean.getValue())
+								.append("' value='")
+								.append(nameValueBean.getValue())
+								.append("' selected>")
+								.append(DynamicExtensionsUtility
+										.getUnEscapedStringValue(nameValueBean.getName()));
+					}
+					else
+					{
+						htmlString
+								.append("<OPTION value='")
+								.append(nameValueBean.getValue())
+								.append("'>")
+								.append(DynamicExtensionsUtility
+										.getUnEscapedStringValue(nameValueBean.getName()));
 					}
 				}
 			}
+			htmlString.append("</SELECT>");
 
-			multSelWithAutoCmpltHTML.append("</SELECT>\n \t\t</td>\n \t</tr>\n </table>");
-			htmlString = multSelWithAutoCmpltHTML;
+			// generate this type of html if multiselect is to be implemented
+			// using an auto complete drop down and list box together.
+			if (IsUsingAutoCompleteDropdown != null && IsUsingAutoCompleteDropdown)
+			{
+				String coordId = "coord_" + getHTMLComponentName();
+				String protocolCoordId = "protocolCoordId_" + getHTMLComponentName();
+
+				StringBuffer multSelWithAutoCmpltHTML = new StringBuffer(42);
+				if (getIsSkipLogicTargetControl())
+				{
+					multSelWithAutoCmpltHTML.append("<div id='" + getHTMLComponentName()
+							+ "_div' name='" + getHTMLComponentName() + "_div'>");
+				}
+
+				String comboInnerScript = generateScriptTagForAutoComplete(identifier,
+						sourceHtmlComponentValues.toString(), coordId);
+				multSelWithAutoCmpltHTML
+						.append("<script defer='defer'>Ext.onReady(function(){")
+						.append(comboInnerScript)
+						.append("combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});ds.on('load',function(){if (this.getAt(0) != null && this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50;} else {combo.typeAheadDelay=60000}});});</script>\n");
+				multSelWithAutoCmpltHTML.append("<br><table border=\"0\" width=\"400\">\n");
+				multSelWithAutoCmpltHTML.append("\t<tr>\n");
+				multSelWithAutoCmpltHTML
+						.append("\t\t<td width=\"35%\" class=\"black_ar_new1\" valign=\"TOP\">\n");
+				multSelWithAutoCmpltHTML.append("\t\t\t<input type='text' id='" + coordId
+						+ "' name='" + coordId + "' value =' ' size='20'/>\n");
+				multSelWithAutoCmpltHTML.append("\t\t</td>\n\n");
+				multSelWithAutoCmpltHTML
+						.append("\t\t<td class=\"black_ar_new1\" width=\"20%\" align=\"center\" valign=\"TOP\">\n");
+				multSelWithAutoCmpltHTML
+						.append("\t\t\t<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n");
+				multSelWithAutoCmpltHTML.append("\t\t\t\t<tr>\n");
+				multSelWithAutoCmpltHTML
+						.append("\t\t\t\t\t<td height=\"22\" align=\"center\" valign=\"TOP\">\n");
+				multSelWithAutoCmpltHTML.append("\t\t\t\t\t\t<div id=\"addLink\">\n");
+				multSelWithAutoCmpltHTML
+						.append("\t\t\t\t\t\t\t<a href=\"#\" onclick=\"isDataChanged();moveOptions('"
+								+ coordId
+								+ "','"
+								+ protocolCoordId
+								+ "', 'add');"
+								+ getOnchangeServerCall() + "\">\n");
+				multSelWithAutoCmpltHTML
+						.append("\t\t\t\t\t\t\t\t<img src=\"images/b_add_inact.gif\" alt=\"Add\" height=\"18\" border=\"0\" align=\"absmiddle\"/>\n");
+				multSelWithAutoCmpltHTML.append("\t\t\t\t\t\t\t</a>\n");
+				multSelWithAutoCmpltHTML.append("\t\t\t\t\t\t</div>\n");
+				multSelWithAutoCmpltHTML.append("\t\t\t\t\t</td>\n");
+				multSelWithAutoCmpltHTML.append("\t\t\t\t</tr>\n\n");
+				multSelWithAutoCmpltHTML.append("\t\t\t\t<tr>\n");
+				multSelWithAutoCmpltHTML.append("\t\t\t\t\t<td height=\"22\" align=\"center\">\n");
+				multSelWithAutoCmpltHTML.append("\t\t\t\t\t\t<div id=\"removeLink\">\n");
+				multSelWithAutoCmpltHTML
+						.append("\t\t\t\t\t\t\t<a href=\"#\" onclick=\"isDataChanged();moveOptions('"
+								+ protocolCoordId
+								+ "','"
+								+ coordId
+								+ "', 'edit');"
+								+ getOnchangeServerCall() + "\">\n");
+				multSelWithAutoCmpltHTML
+						.append("\t\t\t\t\t\t\t\t<img src=\"images/b_remove_inact.gif\" alt=\"Remove\" height=\"18\" border=\"0\" align=\"absmiddle\"/>\n");
+				multSelWithAutoCmpltHTML.append("\t\t\t\t\t\t\t</a>\n");
+				multSelWithAutoCmpltHTML.append("\t\t\t\t\t\t</div>\n");
+				multSelWithAutoCmpltHTML.append("\t\t\t\t\t</td>\n");
+				multSelWithAutoCmpltHTML.append("\t\t\t\t</tr>\n");
+				multSelWithAutoCmpltHTML.append("\t\t\t</table>\n");
+				multSelWithAutoCmpltHTML.append("\t\t</td>\n\n");
+				multSelWithAutoCmpltHTML
+						.append("\t\t<td width=\"50%\" align=\"center\" class=\"black_ar_new1\">\n");
+				multSelWithAutoCmpltHTML.append("\t\t\t<SELECT id=\"" + protocolCoordId
+						+ "\" name=\"" + getHTMLComponentName()
+						+ "\" size=\"4\" multiple=\"true\" class=" + getCSS()
+						+ " style=\"width:170\">");
+
+				if (nameValueBeans != null && !nameValueBeans.isEmpty())
+				{
+					for (NameValueBean nameValueBean : nameValueBeans)
+					{
+						if (values != null && !values.isEmpty()
+								&& values.contains(nameValueBean.getValue()))
+						{
+							multSelWithAutoCmpltHTML.append("<OPTION title='")
+									.append(nameValueBean.getValue()).append("' value='")
+									.append(nameValueBean.getValue()).append("' selected>")
+									.append(nameValueBean.getName());
+						}
+					}
+				}
+
+				multSelWithAutoCmpltHTML.append("</SELECT>\n \t\t</td>\n \t</tr>\n </table>");
+				htmlString = multSelWithAutoCmpltHTML;
+			}
+			if (getIsSkipLogicTargetControl())
+			{
+				htmlString
+						.append("<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '")
+						.append(getHTMLComponentName())
+						.append("_div' /><input type='hidden' name='skipLogicControlScript' id='skipLogicControlScript' value = 'comboScript_")
+						.append(getHTMLComponentName()).append("' />" + "</div>");
+			}
 		}
-		if (getIsSkipLogicTargetControl())
+		catch (UnsupportedEncodingException e)
 		{
-			htmlString
-					.append(
-							"<input type='hidden' name='skipLogicControl' id='skipLogicControl' value = '")
-					.append(getHTMLComponentName())
-					.append(
-							"_div' /><input type='hidden' name='skipLogicControlScript' id='skipLogicControlScript' value = 'comboScript_")
-					.append(getHTMLComponentName()).append("' />" + "</div>");
+			throw new DynamicExtensionsSystemException("Error while encoding url.", e);
 		}
 		return htmlString.toString();
 	}
@@ -385,7 +404,8 @@ public class ListBox extends SelectControl implements ListBoxInterface
 	 *
 	 */
 	@Override
-	public List<String> getValueAsStrings() throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	public List<String> getValueAsStrings() throws DynamicExtensionsSystemException,
+			DynamicExtensionsApplicationException
 	{
 		List<String> values = new ArrayList<String>();
 		AssociationInterface association = getBaseAbstractAttributeAssociation();
@@ -435,10 +455,10 @@ public class ListBox extends SelectControl implements ListBoxInterface
 		}
 		/*List<NameValueBean> nameValueBeans = ControlsUtility.getListOfPermissibleValues(
 				getAttibuteMetadataInterface(), encounterDate);*/
-		List<NameValueBean> nameValueBeans=null;
+		List<NameValueBean> nameValueBeans = null;
 		try
 		{
-			AttributeMetadataInterface attribMeta =getAttibuteMetadataInterface();
+			AttributeMetadataInterface attribMeta = getAttibuteMetadataInterface();
 			nameValueBeans = ControlsUtility.getListOfPermissibleValues(
 					getAttibuteMetadataInterface(), encounterDate);
 		}
@@ -447,7 +467,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		boolean isInavlidVaue = true;
 		for (String value : values)
 		{

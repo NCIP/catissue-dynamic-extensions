@@ -1,8 +1,11 @@
 
 package edu.common.dynamicextensions.domain.userinterface;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +18,8 @@ import edu.common.dynamicextensions.domaininterface.userinterface.SelectInterfac
 import edu.common.dynamicextensions.domaininterface.userinterface.SummaryControlInterface;
 import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.ui.util.Constants;
+import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.wustl.common.beans.NameValueBean;
@@ -170,10 +175,11 @@ public abstract class SelectControl extends Control
 	 * @return the string
 	 *
 	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
+	 * @throws UnsupportedEncodingException 
 	 */
 	protected String generateScriptTagForAutoComplete(String controlId,
 			String sourceHtmlComponentValues, String applyTo)
-			throws DynamicExtensionsSystemException
+			throws DynamicExtensionsSystemException, UnsupportedEncodingException
 	{
 		String parentContainerId = "";
 		String categoryEntityName = "";
@@ -182,23 +188,21 @@ public abstract class SelectControl extends Control
 			parentContainerId = getParentContainer().getId().toString();
 			categoryEntityName = getParentContainer().getAbstractEntity().getName();
 		}
-		String Url = "var myUrl= \"%s?%s=%s&controlId=";
+		String Url = "var myUrl= \"%s?%s=%s";
 		String attributeName = getBaseAbstractAttribute().getName();
 		StringBuffer comboStringBuffer = new StringBuffer(700);
 		String DE_AJAX_HANDLER = getAjaxHandler();
+		Date encounterDate = (Date) parentContainer.getContextParameter(Constants.ENCOUNTER_DATE);
+	
+		String baseParams = "{controlId:'%s',containerIdentifier:'%s',sourceControlValues:'%s',categoryEntityName:'%s',attributeName:'%s',encounterDate:'%s'}";
+		
+		
 		comboStringBuffer
 				.append(String.format(Url, DE_AJAX_HANDLER, WebUIManagerConstants.AJAX_OPERATION, WebUIManagerConstants.DE_COMBO_DATA_ACTION))
-				.append(controlId)
-				.append("~containerIdentifier=")
-				.append(parentContainerId)
-				.append("~sourceControlValues=")
-				.append(sourceHtmlComponentValues)
-				.append("~categoryEntityName=")
-				.append(categoryEntityName)
-				.append("~attributeName=")
-				.append(attributeName)
-				.append(
-						"\";var ds = new Ext.data.Store({proxy: new Ext.data.HttpProxy({url: myUrl}),reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, [{name: 'id', mapping: 'id'},{name: 'excerpt', mapping: 'field'}])});var combo = new Ext.form.ComboBox({store: ds,width:140,listWidth:240,hiddenName: 'CB_coord_")
+				.append("\";var ds = new Ext.data.Store({proxy: new Ext.data.HttpProxy({url: myUrl}),baseParams:").
+				append(String.format(baseParams, getId(),parentContainerId,URLEncoder.encode(sourceHtmlComponentValues.toString(), "utf-8"),
+						categoryEntityName,attributeName,ControlsUtility.convertDateToString(encounterDate, "yyyy-MM-dd"))).
+				append(",reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, [{name: 'id', mapping: 'id'},{name: 'excerpt', mapping: 'field'}])});var combo = new Ext.form.ComboBox({store: ds,width:140,listWidth:240,hiddenName: 'CB_coord_")
 				.append(getHTMLComponentName())
 				.append(
 						"',displayField:'excerpt',valueField: 'id',typeAhead: 'false',pageSize:15,forceSelection: 'true',queryParam : 'query',mode: 'remote',triggerAction: 'all',minChars : ")
