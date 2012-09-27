@@ -103,7 +103,7 @@
         <many-to-one
             name="baseAbstractAttribute"
             class="edu.common.dynamicextensions.domain.BaseAbstractAttribute"
-            cascade="none"
+            cascade="all"
             outer-join="false"
             update="true"
             insert="true"
