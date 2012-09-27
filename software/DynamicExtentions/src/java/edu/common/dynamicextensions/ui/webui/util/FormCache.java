@@ -214,7 +214,7 @@ public class FormCache
 		container = (ContainerInterface) CacheManager
 				.getObjectFromCache(request, DEConstants.CONTAINER_INTERFACE);
 		final String containerIdentifier = getContainerId(request);
-		if (request.getParameter(WebUIManagerConstants.CALLBACK_URL_PARAM_NAME) != null)
+		if (!isDetailsLinkClicked(request))
 		{
 			CacheManager.clearCache(request);
 
@@ -252,6 +252,12 @@ public class FormCache
 			TagUtility.setValidationMap(containerMap, container);
 			request.getSession().setAttribute(Constants.MAP_FOR_VALIDATION, containerMap);
 		}
+	}
+	
+	private boolean isDetailsLinkClicked(HttpServletRequest request)
+	{
+		return Constants.INSERT_CHILD_DATA.equals(request
+				.getParameter(Constants.DATA_ENTRY_OPERATION));
 	}
 
 	/**
