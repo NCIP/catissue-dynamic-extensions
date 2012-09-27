@@ -138,8 +138,12 @@ public class UserDefinedDE extends DataElement implements UserDefinedDEInterface
 				public int compare(PermissibleValueInterface permissibleValueInterface1,
 						PermissibleValueInterface permissibleValueInterface2)
 				{
+					if(permissibleValueInterface1.getId()!=null && permissibleValueInterface2.getId()!=null)
+					{
 					return permissibleValueInterface1.getId().compareTo(
 							permissibleValueInterface2.getId());
+					}
+					return 0;
 				}
 			});
 		}
