@@ -23,7 +23,6 @@ import edu.common.dynamicextensions.ui.webui.util.CacheManager;
 import edu.common.dynamicextensions.ui.webui.util.FormDataCollectionUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.global.DEConstants;
-import edu.common.dynamicextensions.util.global.Variables;
 import edu.wustl.common.beans.SessionDataBean;
 
 public class FormManager

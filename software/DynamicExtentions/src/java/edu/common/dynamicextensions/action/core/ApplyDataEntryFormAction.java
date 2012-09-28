@@ -63,7 +63,10 @@ public class ApplyDataEntryFormAction extends HttpServlet
 				boolean isMainForm = FormCache.isMainForm(request);
 
 				FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
-				collectionUtility.populateAndValidateValues(request);
+				if(!collectionUtility.populateAndValidateValues(request).isEmpty())
+				{
+					throw new DynamicExtensionsApplicationException("Error inserting form data!");
+				}
 
 
 				if(isMainForm)
@@ -89,6 +92,7 @@ public class ApplyDataEntryFormAction extends HttpServlet
 				}
 				else
 				{
+					collectionUtility.popStack(request);
 					defaultForward(request, response);
 				}
 
