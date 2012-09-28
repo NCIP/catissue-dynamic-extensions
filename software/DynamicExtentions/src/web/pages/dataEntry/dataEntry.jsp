@@ -318,6 +318,9 @@ jQuery(document).ready(
 															<td align='center'>
 																<input type="image" id="btnDESubmit" src="<%=request.getContextPath()%>/images/de/b_submit.gif" width="62" height="21" align="middle" onClick="return setInsertDataOperation('false')"/>
 															</td>
+															<td align='center'>
+																<input type="image" id="btnDEDraft" src="<%=request.getContextPath()%>/images/de/b_calculate.gif" width="62" height="21" align="middle" onClick="return setInsertDataOperation('true')"/>
+															</td>
 														<!-- BUG 7662 FIXED. Each Cancel should take you one level up in the containment hierarchy and finally the Cancel on Main Class should take you to the Add Records page.-->
 														</c:if>
 														<td align='center'>
