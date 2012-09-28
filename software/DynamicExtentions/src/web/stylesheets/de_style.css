@@ -124,3 +124,9 @@ A.set1:hover {color: #c8ac1e; Text-Decoration: none;
 
 .required-field-marker {
 }
+
+.date-format {
+    color: #999999;
+    font-family: verdana;
+    font-size: 9px;
+}
