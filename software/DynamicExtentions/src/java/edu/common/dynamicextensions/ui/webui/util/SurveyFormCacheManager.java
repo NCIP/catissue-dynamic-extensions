@@ -233,6 +233,7 @@ public class SurveyFormCacheManager extends FormCache
 			throws DynamicExtensionsCacheException, DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
+		ContainerUtility.evaluateSkipLogic(getContainer());
 		int controlsCount = controlsCount();
 		int percentage = Math.round(100 * (controlsCount - emptyControlsCount())
 				/ controlsCount);
