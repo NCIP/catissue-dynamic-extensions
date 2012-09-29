@@ -47,6 +47,9 @@ public class EntityInsertCommand {
 	
 	public void setAttr(AttributeInterface attr, Object dataValue) {
 		if (attr.getAttributeTypeInformation() instanceof FileAttributeTypeInformation) {
+			if (blobUpdateCommand == null) {
+				blobUpdateCommand = new EntityUpdateCommand();
+			}
 			blobUpdateCommand.setAttr(attr, dataValue);
 			return;
 		}

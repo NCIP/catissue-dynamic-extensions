@@ -146,20 +146,7 @@ public class FormManager
 		DataEntryForm dataEntryForm = DynamicExtensionsUtility
 				.poulateDataEntryForm(request);
 		updateRequestParameter(request, dataEntryForm);
-
-		FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
-		errorList = collectionUtility.populateAndValidateValues(request);
-		
-		String recordIdentifier = null;
-		if (((errorList != null) && errorList.isEmpty()))
-		{
-			recordIdentifier = persistFormData(request);
-			
-		}else
-		{
-			request.setAttribute(DEConstants.ERRORS_LIST, errorList);
-			throw new DynamicExtensionsApplicationException("Validation errors, please insert the values again");
-		}
+		String recordIdentifier = persistFormData(request);
 		return Long.valueOf(recordIdentifier);
 	}
 
