@@ -495,7 +495,14 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 
 		}
 
-		controlHTML.append("<td class='formRequiredLabel_withoutBorder'  width='40%' title='");
+		if(alignment != null && VERTICAL.equals(alignment))
+		{
+			controlHTML.append("<td class='formRequiredLabel_withoutBorder'  title='");
+		}else
+		{
+			controlHTML.append("<td class='formRequiredLabel_withoutBorder'  width='40%' title='");	
+		}
+		
 
 		BaseAbstractAttribute baseAbstractAttribute = (BaseAbstractAttribute) getBaseAbstractAttribute();
 		if (baseAbstractAttribute instanceof CategoryAttributeInterface
