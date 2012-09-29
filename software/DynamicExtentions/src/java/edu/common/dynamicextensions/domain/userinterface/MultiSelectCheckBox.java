@@ -7,7 +7,6 @@ import java.util.List;
 
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
-import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
@@ -324,28 +323,19 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 		{
 			if (values == null || values.isEmpty())
 			{
-				String defaultValue = null;
-				values = new ArrayList<String>();
-				AttributeMetadataInterface attrMetadataInterface = getAttibuteMetadataInterface();
-				if (attrMetadataInterface != null)
+				if (values == null || values.isEmpty())
 				{
-					if (attrMetadataInterface instanceof CategoryAttributeInterface)
-					{
-						AbstractAttributeInterface abstractAttributeInterface = ((CategoryAttributeInterface) attrMetadataInterface)
-								.getAbstractAttribute();
-						if (abstractAttributeInterface instanceof AttributeInterface)
-						{
-							defaultValue = attrMetadataInterface.getDefaultValue(null);
-						}
-					}
-					else
+					values = new ArrayList<String>();
+
+					AttributeMetadataInterface attributeMetadata = getAttibuteMetadataInterface();
+					if (attributeMetadata != null)
 					{
 
-						defaultValue = attrMetadataInterface.getDefaultValue(encounterDate);
-					}
-					if (defaultValue != null && !"".equals(defaultValue.trim()))
-					{
-						values.add(defaultValue);
+						String defaultValue = attributeMetadata.getDefaultValue(encounterDate);
+						if (defaultValue != null && !"".equals(defaultValue.trim()))
+						{
+							values.add(defaultValue);
+						}
 					}
 				}
 			}
