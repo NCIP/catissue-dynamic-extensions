@@ -3619,7 +3619,7 @@ function setJQueryParameters(controlId)
 {
 	new AjaxUpload(controlId,
 		{
-		   action: 'UploadFile.do',
+		   action: 'UploadFile',
 			 name: 'upload1',
 			 responseType: 'json',
 			 onSubmit : function(file,extension)
@@ -3645,7 +3645,7 @@ function setJQueryParameters(controlId)
 						{
 							fileId = jsonResponse.uploadedFile[0].uploadedFileId;
 							contentType = jsonResponse.uploadedFile[0].contentType;
-							var imageSrc = "./images/uIEnhancementImages/error-green.gi";
+							var imageSrc = "./images/uIEnhancementImages/error-green.gif";
 							var deleteImageSrc = "./images/de/deleteIcon.jpg";
 
 							htmlComponent = "<input type='text' disabled name='" +controlId+ "'_1 id='" +controlId+ "_1' value='" +file+ "'/>&nbsp;&nbsp;";
