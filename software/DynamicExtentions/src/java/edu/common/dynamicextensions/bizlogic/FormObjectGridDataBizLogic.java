@@ -66,12 +66,14 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 		DomainObjectFactory factory = DomainObjectFactory.getInstance();
 
 		
-
+		System.out.println(":----------------------------------------------------Within getFormDataForGrid");
 		DEIntegration deItegration = new DEIntegration();
 		Long dynamicRecEntryId = null;
 
 		Long containerId = CategoryManager.getInstance().getContainerIdByFormContextId(
 				formContextId, sessionDataBean);
+		System.out.println(":----------------------------------------------------containerId: "+containerId);
+		
 		final ContainerInterface containerInterface = EntityCache.getInstance().getContainerById(
 				containerId);
 
@@ -80,16 +82,21 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 		List<?> recordEntryIds;
 		if(hookObjectRecordId != null)
 		{
+			System.out.println(":----------------------------------------------------recordEntryIds if hookObjectRecordId is not null");
+	
 			recordEntryIds= recordEntryBizLogic.getRecordEntryId(formContextId,
 				sessionDataBean,hookObjectRecordId);
 		}
 		else
 		{
+			System.out.println(":----------------------------------------------------recordEntryIds if hookObjectRecordId is  null");
+
 			recordEntryIds = recordEntryBizLogic.getRecordEntryId(formContextId,
 					sessionDataBean);
 		}
 		for (Object recordEntryId : recordEntryIds)
 		{
+			System.out.println(":----------------------------------------------------Within recordEntries");
 			ArrayList<?> object = (ArrayList<?>) recordEntryId;
 
 			Long recordEntryIdValue = (Long.valueOf((String) object.get(0)));
@@ -98,8 +105,12 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 					.toString(), containerId, hookEntityId);
 			Map<String, String> headers = getDisplayHeader((CategoryEntityInterface) containerInterface
 					.getAbstractEntity());
+			System.out.println(":----------------------------------------------------map size: "+map.size());
+
 			if (!map.isEmpty())
 			{
+				System.out.println(":----------------------------------------------------Within map");
+
 				FormGridObject gridObject = factory.createFormGridObject();
 				gridObject.setRecordEntryId(recordEntryIdValue);
 				dynamicRecEntryId = map.iterator().next();
@@ -110,6 +121,7 @@ public class FormObjectGridDataBizLogic extends DefaultBizLogic
 						containerInterface));
 				gridObject.setHeaders(headers);
 				gridObjectList.add(gridObject);
+				
 			}
 		}
 		Collections.sort(gridObjectList);
