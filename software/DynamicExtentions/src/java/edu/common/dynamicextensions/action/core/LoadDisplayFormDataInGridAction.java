@@ -66,8 +66,10 @@ public class LoadDisplayFormDataInGridAction extends HttpServlet
 		String responseString = null ;
 		try
 		{
+			System.out.println(":-------------------------------------------------Before fetching data for grid");
 			gridObjectList = displayFormDataInGridBizLogic.getFormDataForGrid(
 					formContextId, hookEntityId, sessionDataBean, formUrl, deUrl, hookObjectRecordId);
+			System.out.println(":-------------------------------------------------After fetching data for grid");
 
 			responseString = VelocityManager.getInstance().evaluate(gridObjectList,
 					Constants.VM_TEMPLATE_FILENAME_FOR_FORM_DATA_GRID);
