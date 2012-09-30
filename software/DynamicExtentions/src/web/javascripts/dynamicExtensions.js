@@ -3284,8 +3284,18 @@ function updateServerState(controlName, controlId, containerId)
 				vPatentControl.innerHTML = vParentOriginal;
 				var vRecentControl=document.getElementById(controlName);
 				vRecentControl.value = controlValue;
-				$("#"+controlName).removeClass("font_bl_nor");
-				$("#"+controlName).addClass("font_bl_nor_error");
+				
+				if($("#"+controlName) != null)
+				{
+					$("#"+controlName).removeClass("font_bl_nor");
+					$("#"+controlName).addClass("font_bl_nor_error");
+					
+				}else
+				{
+					$(controlName).removeClassName("font_bl_nor");
+					$(controlName).addClassName("font_bl_nor_error");
+				}
+				
 				vRecentControl.title =  vMessage;
 				isValid = false;
 				vRecentControl.focus();
@@ -3328,6 +3338,10 @@ function updateServerState(controlName, controlId, containerId)
 				{
 					$("#"+controlName).removeClass("font_bl_nor_error");
 					$("#"+controlName).addClass("font_bl_nor");
+				}else
+				{
+					$(controlName).removeClassName("font_bl_nor_error");
+					$(controlName).addClassName("font_bl_nor");
 				}
 				vRecentControl.title = "";
 				
