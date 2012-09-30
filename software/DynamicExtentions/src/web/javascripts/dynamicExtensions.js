@@ -2262,7 +2262,13 @@ var isValid = true;
 function calculateAttributes()
 {
     document.getElementById('dataEntryOperation').value = "calculateAttributes";
-	var str = $("dataEntryForm").serialize();
+	var str = "";
+	if ($("#sm-form") != null) {
+		str = $("#sm-form").serialize();
+	} else {
+		str = $("dataEntryForm").serialize();
+	}
+
 	jQuery.ajax(
 	{
 				type :"POST",
