@@ -8,8 +8,8 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
@@ -156,6 +156,8 @@ public abstract class AbstractEntityCache implements IEntityCache
 
 	/** The category cache. */
 	private static Map<String, CategoryInterface> categoryCache = new LinkedHashMap<String, CategoryInterface>();
+	
+	private static Map<Long, CategoryInterface> categoryIdCache = new LinkedHashMap<Long, CategoryInterface>();
 
 	/** This set contains all the categories which are in opened at this instance in Edit mode by any user. */
 	protected Set<Long> containerInUse = new HashSet<Long>();
@@ -1105,6 +1107,9 @@ public abstract class AbstractEntityCache implements IEntityCache
 	{
 		categoryCache.remove(category);
 		categoryCache.put(category.getName(), category);
+		
+		categoryIdCache.remove(category);
+		categoryIdCache.put(category.getId(), category);
 	}
 
 	/**
@@ -1117,6 +1122,35 @@ public abstract class AbstractEntityCache implements IEntityCache
 	{
 		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
 		CategoryInterface categoryInterface = categoryCache.get(categoryName);
+		categoryInterface = getCategory(categoryName, categoryManager, categoryInterface);
+		return categoryInterface;
+	}
+
+	/**
+	 * @param categoryName
+	 * @return
+	 * @throws DynamicExtensionsSystemException
+	 */
+	public CategoryInterface getCategoryById(Long categoryId)
+			throws DynamicExtensionsSystemException
+	{
+		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
+		CategoryInterface categoryInterface = categoryIdCache.get(categoryId);
+		if (categoryInterface == null)
+		{
+			categoryInterface = categoryManager.getCategoryById(categoryId);
+			if (categoryInterface != null)
+			{
+				addCategoryToTempCache(categoryInterface);
+			}
+
+		}
+		return categoryInterface;
+	}
+	private CategoryInterface getCategory(String categoryName,
+			CategoryManagerInterface categoryManager, CategoryInterface categoryInterface)
+			throws DynamicExtensionsSystemException
+	{
 		if (categoryInterface == null)
 		{
 			categoryInterface = categoryManager.getCategoryByName(categoryName);

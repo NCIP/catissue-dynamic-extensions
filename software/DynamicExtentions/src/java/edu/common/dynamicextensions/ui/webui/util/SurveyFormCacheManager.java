@@ -12,13 +12,12 @@ import edu.common.dynamicextensions.domain.userinterface.SurveyModeLayout;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
-import edu.common.dynamicextensions.entitymanager.CategoryManager;
-import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.LoadDataEntryFormProcessor;
 import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.cab2b.server.util.DynamicExtensionUtility;
 import edu.wustl.metadata.util.DyExtnObjectCloner;
 
@@ -125,11 +124,6 @@ public class SurveyFormCacheManager extends FormCache
 		{
 			container = (ContainerInterface) getCategory().getRootCategoryElement()
 					.getContainerCollection().iterator().next();
-			if (recordIdentifier != null && !recordIdentifier.equalsIgnoreCase("null"))
-			{
-				UserInterfaceiUtility.setContainerValueMap(container, LoadDataEntryFormProcessor
-						.getValueMapFromRecordId(container.getAbstractEntity(), recordIdentifier));
-			}
 			CacheManager.addObjectToCache(request, DEConstants.CONTAINER, container);
 		}
 		return container;
@@ -154,6 +148,11 @@ public class SurveyFormCacheManager extends FormCache
 			DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		ContainerInterface container = getContainer();
+		if (recordIdentifier != null && !recordIdentifier.equalsIgnoreCase("null"))
+		{
+			UserInterfaceiUtility.setContainerValueMap(container, LoadDataEntryFormProcessor
+					.getValueMapFromRecordId(container.getAbstractEntity(), recordIdentifier));
+		}
 		container.setMode("insertParentData");
 		container.setMode("edit");
 		return container;
@@ -164,8 +163,7 @@ public class SurveyFormCacheManager extends FormCache
 
 		if (category == null)
 		{
-			CategoryManagerInterface categoryManager = CategoryManager.getInstance();
-			category = (Category) categoryManager.getCategoryById(Long.valueOf(getCategoryId()));
+			category = (Category) EntityCache.getInstance().getCategoryById(Long.parseLong(getCategoryId()));
 			if (category.getIsCacheable())
 			{
 				DyExtnObjectCloner cloner = new DyExtnObjectCloner();
