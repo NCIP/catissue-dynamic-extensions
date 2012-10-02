@@ -19,7 +19,6 @@ import edu.common.dynamicextensions.processor.LoadDataEntryFormProcessor;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.cab2b.server.util.DynamicExtensionUtility;
-import edu.wustl.metadata.util.DyExtnObjectCloner;
 
 /**
  * @author Kunal Kamble
@@ -165,11 +164,6 @@ public class SurveyFormCacheManager extends FormCache
 		if (category == null)
 		{
 			category = (Category) EntityCache.getInstance().getCategoryById(Long.parseLong(getCategoryId()));
-			if (category.getIsCacheable())
-			{
-				DyExtnObjectCloner cloner = new DyExtnObjectCloner();
-				category = cloner.clone(category);
-			}
 			CacheManager.addObjectToCache(request, DEConstants.CATEGORY, category);
 		}
 		return category;
