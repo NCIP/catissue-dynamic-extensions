@@ -284,7 +284,7 @@ public abstract class AbstractEntityCache implements IEntityCache
 			    System.err.println("Categories is not null");
 			    for (CategoryInterface category : categories) {
 				    if (category.getIsCacheable()) {
-				    	addCategoryToTempCache(category);
+				    	/*addCategoryToTempCache(category);*/
 					    deCategories.add(category);
 					}
 				}
