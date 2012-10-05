@@ -145,6 +145,8 @@ public class DEConstants
 	public static final String CATEGORY = "category";
 	public static final String CONTAINER = "container";
 	public static final String SURVEY_MODE = "surveymode";
+	public static final String PAGE_COLLECTION = "pageCollection";
+	public static final String RECORD_MAP = "recordMap";
 	public static final String LAYOUT = "layout";
 	public static final String PAGE_ID = "pageId";
 	public static final String CATEGORY_ID = "categoryId";

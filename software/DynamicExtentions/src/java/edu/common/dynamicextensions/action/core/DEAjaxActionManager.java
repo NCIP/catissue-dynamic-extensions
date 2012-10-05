@@ -174,7 +174,9 @@ public class DEAjaxActionManager
 			}
 			else if (operation.trim().equals("renderSurveyMode"))
 			{
+				long time = System.currentTimeMillis();
 				responceString = new SurveyModeRenderer(request).render();
+				System.err.println("Time taken to render page is: " + (System.currentTimeMillis() - time) + " ms");
 			}
 			else if (operation.trim().equals(WebUIManagerConstants.DE_COMBO_DATA_ACTION))
 			{

@@ -2,13 +2,18 @@
 package edu.common.dynamicextensions.ui.webui.util;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import edu.common.dynamicextensions.domain.Category;
 import edu.common.dynamicextensions.domain.userinterface.Page;
 import edu.common.dynamicextensions.domain.userinterface.SurveyModeLayout;
+import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
@@ -19,6 +24,7 @@ import edu.common.dynamicextensions.processor.LoadDataEntryFormProcessor;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.cab2b.server.util.DynamicExtensionUtility;
+import edu.wustl.metadata.util.DyExtnObjectCloner;
 
 /**
  * @author Kunal Kamble
@@ -45,6 +51,7 @@ public class SurveyFormCacheManager extends FormCache
 		super(request);
 		CacheManager.clearCache(request);
 		this.recordIdentifier = recordIdentifier;
+		//category = getClonedObj(DynamicExtensionUtility.getCategoryByContainerId(containerIdentifier.toString()));
 		category = DynamicExtensionUtility.getCategoryByContainerId(containerIdentifier.toString());
 
 	}
@@ -95,9 +102,17 @@ public class SurveyFormCacheManager extends FormCache
 
 	public Collection<Page> getPageCollection() throws DynamicExtensionsSystemException
 	{
-		CategoryInterface category = getCategory();
-		SurveyModeLayout layout = (SurveyModeLayout) category.getLayout();
-		return layout.getPageCollection();
+		Collection<Page> pageCollection = (Collection<Page>) CacheManager.getObjectFromCache(request, DEConstants.PAGE_COLLECTION);
+		if (pageCollection == null) {
+			CategoryInterface category = getCategory();
+			SurveyModeLayout layout = (SurveyModeLayout) category.getLayout();
+			List<Page> sortedPages = new ArrayList(layout.getPageCollection());
+			sortedPages = getClonedObj(sortedPages);
+			Collections.sort(sortedPages);
+			CacheManager.addObjectToCache(request, DEConstants.PAGE_COLLECTION, sortedPages);
+			pageCollection = sortedPages;
+		}
+		return pageCollection;
 	}
 
 	public Page getPage(String pageId) throws NumberFormatException,
@@ -123,6 +138,7 @@ public class SurveyFormCacheManager extends FormCache
 		{
 			container = (ContainerInterface) getCategory().getRootCategoryElement()
 					.getContainerCollection().iterator().next();
+			container = getClonedObj(container);
 			CacheManager.addObjectToCache(request, DEConstants.CONTAINER, container);
 		}
 		return container;
@@ -138,6 +154,7 @@ public class SurveyFormCacheManager extends FormCache
 			CategoryInterface category = getCategory();
 			container = (ContainerInterface) category.getRootCategoryElement()
 					.getContainerCollection().iterator().next();
+			container = getClonedObj(container);
 			CacheManager.addObjectToCache(request, DEConstants.CONTAINER, container);
 		}
 		return container;
@@ -149,8 +166,13 @@ public class SurveyFormCacheManager extends FormCache
 		ContainerInterface container = getContainer();
 		if (recordIdentifier != null && !recordIdentifier.equalsIgnoreCase("null"))
 		{
-			UserInterfaceiUtility.setContainerValueMap(container, LoadDataEntryFormProcessor
-					.getValueMapFromRecordId(container.getAbstractEntity(), recordIdentifier));
+			Map<BaseAbstractAttributeInterface, Object> containerValueMap = 
+				(Map<BaseAbstractAttributeInterface, Object>)CacheManager.getObjectFromCache(request, DEConstants.RECORD_MAP);
+			if (containerValueMap == null) {
+				containerValueMap = LoadDataEntryFormProcessor.getValueMapFromRecordId(container.getAbstractEntity(), recordIdentifier);
+				CacheManager.addObjectToCache(request, DEConstants.RECORD_MAP, containerValueMap);
+			}
+			UserInterfaceiUtility.setContainerValueMap(container, containerValueMap);
 			ContainerUtility.evaluateSkipLogic(getContainer());
 		}
 		container.setMode("insertParentData");
@@ -164,6 +186,11 @@ public class SurveyFormCacheManager extends FormCache
 		if (category == null)
 		{
 			category = (Category) EntityCache.getInstance().getCategoryById(Long.parseLong(getCategoryId()));
+			/*category = getClonedObj(category);
+			SurveyModeLayout layout = (SurveyModeLayout) category.getLayout();
+			List<Page> pages = new ArrayList(layout.getPageCollection());
+			Collections.sort(pages);
+			layout.setPageCollection(pages);*/
 			CacheManager.addObjectToCache(request, DEConstants.CATEGORY, category);
 		}
 		return category;
@@ -231,5 +258,10 @@ public class SurveyFormCacheManager extends FormCache
 		int percentage = Math.round(100 * (controlsCount - emptyControlsCount())
 				/ controlsCount);
 		return percentage;
+	}
+	
+	public <T> T getClonedObj(T obj) {
+		DyExtnObjectCloner cloner = new DyExtnObjectCloner();
+		return cloner.clone(obj);		
 	}
 }

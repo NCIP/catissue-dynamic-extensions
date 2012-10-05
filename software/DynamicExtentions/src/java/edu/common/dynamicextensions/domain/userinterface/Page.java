@@ -8,7 +8,7 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterfa
 import edu.common.dynamicextensions.domaininterface.userinterface.DynamicExtensionLayoutInterface;
 
 public class Page extends DynamicExtensionBaseDomainObject implements
-		Serializable {
+		Serializable, Comparable {
 
 	private String description;
 	private static final long serialVersionUID = 4876029224617194342L;
@@ -42,5 +42,19 @@ public class Page extends DynamicExtensionBaseDomainObject implements
 	public void setControlCollection(
 			final Collection<ControlInterface> controlCollection) {
 		this.controlCollection = controlCollection;
+	}
+	
+	public int compareTo(Object o) {
+		Page otherPage = (Page)o;
+		
+		if (this.id == null && otherPage.id == null) {
+			return 0;
+		} else if (this.id == null) {
+			return 1; // the new id will be greater than existing
+		} else if (otherPage.id == null) {
+			return -1;
+		}
+		
+		return this.id.compareTo(otherPage.id);
 	}
 }

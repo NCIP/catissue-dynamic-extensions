@@ -93,8 +93,9 @@ public class SurveyModeRenderer extends LayoutRenderer
 		String pageTitle = "<tr><th><div class='sm-page-title'>&nbsp;<div></th><th colspan='10'><div class='sm-page-title'>%s</div></th></tr>";
 		String emptyDiv = "<div></div>";
 		Page p = formCache.getPage(pageId);
-		ContainerInterface container = (ContainerInterface) formCache.getCategory()
-				.getRootCategoryElement().getContainerCollection().iterator().next();
+		/*ContainerInterface container = (ContainerInterface) formCache.getCategory()
+				.getRootCategoryElement().getContainerCollection().iterator().next();*/
+		ContainerInterface container = formCache.getContainer();
 		container.setContainerValueMap(formCache.getContainerWithValueMap().getContainerValueMap());
 		
 		SkipLogic skipLogic = EntityCache.getInstance().getSkipLogicByContainerIdentifier(
