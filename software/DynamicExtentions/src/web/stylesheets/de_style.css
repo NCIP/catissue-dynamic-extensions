@@ -130,3 +130,11 @@ A.set1:hover {color: #c8ac1e; Text-Decoration: none;
     font-family: verdana;
     font-size: 9px;
 }
+
+.font_bl_nor_blk{
+	font-family: Arial, Helvetica, sans-serif;
+	/*font-size: .8em;*/
+	border-color: black;
+	background-color:#FFFFFF;
+	color: #333333;
+}

@@ -245,17 +245,17 @@ jQuery(document).ready(
 							</c:if>
 							<tr valign="top">
 								<td colspan="7">
-									<div id ='error_div' style="display:none">${errorList}</div>
-									<table  align='center' width='100%'>
+									<div id ='error_div' style="display:none;align:left">${errorList}</div>
+									<table  align='left' width='100%'>
 										<tr>
 											<td>
-												<table border="0" align="center" cellpadding="1" cellspacing="0" class="td_color_6e81a6">
+												<table border="0" align="left" cellpadding="1" cellspacing="0" class="td_color_6e81a6">
 													<tr>
 														<td>
 															<table width="100%" height="30"  border="0" cellpadding="4" cellspacing="4" class="td_color_FFFFCC">
 																<c:forEach items="${errorList}" var="error">
 																	 <tr>
-																		<th align="center" class="font_bl_nor"><img src="<%=request.getContextPath()%>/images/de/ic_error.gif" alt="Error" width="28" height="25" hspace="3" align="absmiddle">
+																		<th align="left" class="font_bl_nor"><img src="<%=request.getContextPath()%>/images/de/ic_error.gif" alt="Error" width="28" height="25" hspace="3" align="absmiddle">
 																			<c:out value="${error}"/>
 																		</th>
 																	</tr>

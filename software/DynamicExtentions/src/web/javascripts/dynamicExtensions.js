@@ -3212,6 +3212,8 @@ function isDataChanged()
 	}
 }
 
+var errorElements=new Array(); 
+
 // ===================Update Server State=======================
 function updateServerState(controlName, controlId, containerId)
 {
@@ -3305,6 +3307,14 @@ function updateServerState(controlName, controlId, containerId)
 				vRecentControl.title =  vMessage;
 				isValid = false;
 				vRecentControl.focus();
+
+				document.getElementById('error_div').innerHTML="<table width=\"100%\" height=\"30\" cellspacing=\"4\" cellpadding=\"4\" border=\"0\" class=\"td_color_FFFFCC\"><tbody><tr><th align=\"left\" class=\"font_bl_nor\"><img src=\"./images/de/ic_error.gif\" alt=\"Error\" align=\"absmiddle\" height=\"25\" hspace=\"3\" width=\"28\">There are some errors on the form. Please correct your data to enable form saving. Mouse over red highlighted fields to see corrections needed.</th></tr></tbody></table>";
+				document.getElementById('error_div').style.display="block";		
+				if(errorElements.indexOf(controlName)== -1)
+				{
+					errorElements[errorElements.length] = controlName;
+				}
+				document.getElementById("nSubmitButton").disabled="disabled";
 			}
 			else
 			{
@@ -3350,6 +3360,17 @@ function updateServerState(controlName, controlId, containerId)
 					$(controlName).addClassName("font_bl_nor");
 				}
 				vRecentControl.title = "";
+				
+				if(errorElements.indexOf(controlName)!= -1)
+				{
+					errorElements.splice(errorElements.indexOf(controlName),1);
+				}
+				if(errorElements.length ==0)
+				{
+					document.getElementById("nSubmitButton").disabled="";
+					document.getElementById('error_div').innerHTML="";
+					document.getElementById('error_div').style.display="none";					
+				}
 				
 			}
 		}
