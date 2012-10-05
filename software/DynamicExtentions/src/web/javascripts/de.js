@@ -178,7 +178,6 @@ edu.wustl.de.CategorySurveyMode.prototype.load = function () {
 				sm.init();
 				sm.bind();
 				sm.updateProgress();
-				sm.loadAllPages();
 				if($("#updateResponse").val() != "true")
 				{
 					edu.wustl.de.currentpage = parseInt($("#displayPage").val());
@@ -188,6 +187,7 @@ edu.wustl.de.CategorySurveyMode.prototype.load = function () {
 					}
 				}
 				sm.show();
+				sm.loadAllPages();
 			}
 		});
 		this.request.load();
