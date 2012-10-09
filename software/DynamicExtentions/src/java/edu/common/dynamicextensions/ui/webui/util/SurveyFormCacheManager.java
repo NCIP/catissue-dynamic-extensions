@@ -40,8 +40,8 @@ public class SurveyFormCacheManager extends FormCache
 	public SurveyFormCacheManager(HttpServletRequest request)
 	{
 		super(request);
-		category = getClonedObj((CategoryInterface)CacheManager.getObjectFromCache(request,
-				DEConstants.CATEGORY));
+		category = (CategoryInterface)CacheManager.getObjectFromCache(request,
+				DEConstants.CATEGORY);
 		recordIdentifier = request.getParameter(DEConstants.RECORD_IDENTIFIER);
 	}
 
