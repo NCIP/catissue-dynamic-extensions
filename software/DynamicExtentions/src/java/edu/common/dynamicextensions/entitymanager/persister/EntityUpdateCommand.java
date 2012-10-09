@@ -42,7 +42,7 @@ public class EntityUpdateCommand {
 			
 		try {
 			if (attr.getAttributeTypeInformation() instanceof FileAttributeTypeInformation) {
-				setFileColumns(update, attr, (FileAttributeRecordValue) dataValue);
+				setFileColumns(update, attr, dataValue);
 			} else {
 				dataValue = AbstractMetadataManagerHelper.getInstance().getDataValue((AbstractAttribute)attr, dataValue);
 				update.setColumn(attr.getColumnProperties().getName(), dataValue);
@@ -80,7 +80,15 @@ public class EntityUpdateCommand {
 		}
 	}
 	
-	private void setFileColumns(UpdateStatement update, AttributeInterface attr, FileAttributeRecordValue fileValue) {
+	private void setFileColumns(UpdateStatement update, AttributeInterface attr, Object dataValue) {
+		String columnName = attr.getColumnProperties().getName();
+		
+		if (dataValue instanceof String) { 
+			update.setColumn(columnName + FILE_NAME_SUFFIX, (String)dataValue);
+			return;
+		}
+		
+		FileAttributeRecordValue fileValue = (FileAttributeRecordValue) dataValue;
 		String filename = null, contentType = null;
 		byte[] content = null;
 		
@@ -90,10 +98,9 @@ public class EntityUpdateCommand {
 			content = fileValue.getFileContent();
 		}
 		
-		String columnName = attr.getColumnProperties().getName();
+		
 		update.setColumn(columnName + FILE_NAME_SUFFIX, filename);
 		update.setColumn(columnName + CONTENT_TYPE_SUFFIX, contentType);
-		update.setColumn(columnName, content);						
+		update.setColumn(columnName, content);
 	}
-	
 }
