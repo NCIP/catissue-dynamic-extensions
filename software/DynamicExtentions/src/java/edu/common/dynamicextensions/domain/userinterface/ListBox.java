@@ -293,7 +293,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 				multSelWithAutoCmpltHTML.append("\t\t\t<SELECT id=\"" + protocolCoordId
 						+ "\" name=\"" + getHTMLComponentName()
 						+ "\" size=\"4\" multiple=\"true\" class=" + getCSS()
-						+ " style=\"width:170\">");
+						+ " style=\"width:170px\">");
 
 				if (nameValueBeans != null && !nameValueBeans.isEmpty())
 				{
