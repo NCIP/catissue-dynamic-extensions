@@ -1070,18 +1070,17 @@ public class CategoryCSVFileParser extends CategoryFileParser
 		for (String string : readLine())
 		{
 			// Removes the double quote that gets saved with the query in case pvProcessor is specified.
-			string = string.replaceAll(DEFAULT_ESCAPE_CHARACTER, "");
+			//string = string.replaceAll(DEFAULT_ESCAPE_CHARACTER, "");
 
 			if (string.toLowerCase(locale).startsWith(optionConstant.toLowerCase(locale) + "~"))
 			{
-				String[] controlOptionsValue = string.split("~")[1].split(OPTION_MARKUP);
+				String[] controlOptionsValue = processEscapeCharacter(string.split("~")[1].split(":"), string.split("~")[1], DEFAULT_ESCAPE_CHARACTER, ":");
 
 				for (String optionValue : controlOptionsValue)
 				{
-					optionValue = optionValue.replace("\\:", ":");
-					String option = optionValue.split(OPTION_VALUE_SEPARATOR)[0].replace("\\=", "=");
-					String value = optionValue.split(OPTION_VALUE_SEPARATOR)[1].replace("\\=", "=");
-					controlOptions.put(option, value);
+					//optionValue = optionValue.replace("\\:", ":");
+					String[] optionValueToken = processEscapeCharacter(optionValue.split("="), optionValue, DEFAULT_ESCAPE_CHARACTER, "=");
+					controlOptions.put(optionValueToken[0], optionValueToken[1]);
 				}
 			}
 		}
