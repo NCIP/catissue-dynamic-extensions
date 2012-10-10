@@ -200,13 +200,25 @@ public class DEAjaxActionManager
 		container.setRequest(request);
 		StringBuilder builder =new StringBuilder();
 		builder.append(containerUtility.generateHTML());
-		containerUtility.initCountrolCounts(container);
-		String controlsCount = "<input type='hidden' id='controlsCount' value='%d'></input>";
-		String emptyControlsCount = "<input type='hidden' id='emptyControlsCount' value='%d'></input>";
-		builder.append(String.format(controlsCount, containerUtility.getControlCount()));
-		builder.append(String.format(emptyControlsCount, containerUtility.getEmptyControlCount()));
+		surveyFormPostProcess(container, containerUtility, builder);
 		
 		return builder.toString();
+	}
+
+	private void surveyFormPostProcess(ContainerInterface container,
+			ContainerUtility containerUtility, StringBuilder builder)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
+	{
+		if(((CategoryEntityInterface)container.getAbstractEntity()).getCategory() != null &&
+				((CategoryEntityInterface)container.getAbstractEntity()).getCategory().getLayout() != null)
+		{
+			containerUtility.initCountrolCounts(container);
+			String controlsCount = "<input type='hidden' id='controlsCount' value='%d'></input>";
+			String emptyControlsCount = "<input type='hidden' id='emptyControlsCount' value='%d'></input>";
+			builder.append(String.format(controlsCount, containerUtility.getControlCount()));
+			builder.append(String.format(emptyControlsCount, containerUtility.getEmptyControlCount()));
+			
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
