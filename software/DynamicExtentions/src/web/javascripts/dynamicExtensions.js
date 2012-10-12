@@ -2262,16 +2262,17 @@ var isValid = true;
 function calculateAttributes()
 {
     document.getElementById('dataEntryOperation').value = "calculateAttributes";
-    var str = "";
+	var str = "";
 	if ($("#sm-form") != null) {
 		str = $("#sm-form").serialize();
 	} else {
 		str = $("dataEntryForm").serialize();
 	}
+
 	jQuery.ajax(
 	{
 				type :"POST",
-				url :"UpdateServerStateAction",
+				url : UpdateServerStateGenerateHtml,
 				dataType: "html",
 				data :str,
 				success : function(htmlresult)
@@ -2323,7 +2324,7 @@ function calculateDefaultAttributesValue()
 	jQuery.ajax(
 	{
 				type :"POST",
-				url :"UpdateServerStateAction",
+				url : UpdateServerStateGenerateHtml,
 				dataType: "html",
 				data :str,
 				success : function(htmlresult)
@@ -3061,7 +3062,14 @@ function getSkipLogicControl(controlName, controlId, containerId)
 		document.getElementById('isDirty').value = true;
 	}
     document.getElementById('dataEntryOperation').value = "skipLogicAttributes";
-	var str = $("dataEntryForm").serialize();
+
+	var str = "";
+	if ($("#sm-form") != null) {
+		str = $("#sm-form").serialize();
+	} else {
+		str = $("dataEntryForm").serialize();
+	}
+
 	var control = document.getElementById(controlName);
 	var controlValue = "";
 	if (control != null && control.value != null)
@@ -3073,7 +3081,7 @@ function getSkipLogicControl(controlName, controlId, containerId)
 	jQuery.ajax(
 	{
 				type :"POST",
-				url :"UpdateServerStateAction",
+				url : UpdateServerStateGenerateHtml,
 				dataType: "html",
 				data :str,
 				success : function(htmlresult)
@@ -3142,6 +3150,14 @@ function getSkipLogicControl(controlName, controlId, containerId)
 					            	}
 					            }
 							}
+							if($("#controlsCount") != undefined)
+							{
+								var cc = iframeDocument.getElementById("controlsCount").value;
+								var ecc = iframeDocument.getElementById("emptyControlsCount").value;
+								$("#controlsCount").val(cc);
+								$("#emptyControlsCount").val(ecc);							
+								edu.wustl.de.surveyForm.updateProgress();
+							}
 						}
 					}
 				}
@@ -3195,6 +3211,8 @@ function isDataChanged()
 		document.getElementById('isDirty').value = true;
 	}
 }
+
+var errorElements=new Array(); 
 
 // ===================Update Server State=======================
 function updateServerState(controlName, controlId, containerId)
@@ -3274,11 +3292,29 @@ function updateServerState(controlName, controlId, containerId)
 				vPatentControl.innerHTML = vParentOriginal;
 				var vRecentControl=document.getElementById(controlName);
 				vRecentControl.value = controlValue;
-				$("#"+controlName).removeClass("font_bl_nor");
-				$("#"+controlName).addClass("font_bl_nor_error");
+				
+				if($("#"+controlName) != null)
+				{
+					$("#"+controlName).removeClass("font_bl_nor");
+					$("#"+controlName).addClass("font_bl_nor_error");
+					
+				}else
+				{
+					$(controlName).removeClassName("font_bl_nor");
+					$(controlName).addClassName("font_bl_nor_error");
+				}
+				
 				vRecentControl.title =  vMessage;
 				isValid = false;
 				vRecentControl.focus();
+
+				document.getElementById('error_div').innerHTML="<table width=\"100%\" height=\"30\" cellspacing=\"4\" cellpadding=\"4\" border=\"0\" class=\"td_color_FFFFCC\"><tbody><tr><th align=\"left\" class=\"font_bl_nor\"><img src=\"./images/de/ic_error.gif\" alt=\"Error\" align=\"absmiddle\" height=\"25\" hspace=\"3\" width=\"28\">There are some errors on the form. Please correct your data to enable form saving. Mouse over red highlighted fields to see corrections needed.</th></tr></tbody></table>";
+				document.getElementById('error_div').style.display="block";		
+				if(errorElements.indexOf(controlName)== -1)
+				{
+					errorElements[errorElements.length] = controlName;
+				}
+				document.getElementById("nSubmitButton").disabled="disabled";
 			}
 			else
 			{
@@ -3314,9 +3350,28 @@ function updateServerState(controlName, controlId, containerId)
 						vRecentControl.value = controlValue;
 					}
 				}
-				$("#"+controlName).removeClass("font_bl_nor_error");
-				$("#"+controlName).addClass("font_bl_nor");
+				if($("#"+controlName) != null)
+				{
+					$("#"+controlName).removeClass("font_bl_nor_error");
+					$("#"+controlName).addClass("font_bl_nor");
+				}else
+				{
+					$(controlName).removeClassName("font_bl_nor_error");
+					$(controlName).addClassName("font_bl_nor");
+				}
 				vRecentControl.title = "";
+				
+				if(errorElements.indexOf(controlName)!= -1)
+				{
+					errorElements.splice(errorElements.indexOf(controlName),1);
+				}
+				if(errorElements.length ==0)
+				{
+					document.getElementById("nSubmitButton").disabled="";
+					document.getElementById('error_div').innerHTML="";
+					document.getElementById('error_div').style.display="none";					
+				}
+				
 			}
 		}
     }
@@ -3605,7 +3660,7 @@ function setJQueryParameters(controlId)
 {
 	new AjaxUpload(controlId,
 		{
-		   action: 'UploadFile.do',
+		   action: 'UploadFile',
 			 name: 'upload1',
 			 responseType: 'json',
 			 onSubmit : function(file,extension)
@@ -3631,7 +3686,7 @@ function setJQueryParameters(controlId)
 						{
 							fileId = jsonResponse.uploadedFile[0].uploadedFileId;
 							contentType = jsonResponse.uploadedFile[0].contentType;
-							var imageSrc = "./images/uIEnhancementImages/error-green.gi";
+							var imageSrc = "./images/uIEnhancementImages/error-green.gif";
 							var deleteImageSrc = "./images/de/deleteIcon.jpg";
 
 							htmlComponent = "<input type='text' disabled name='" +controlId+ "'_1 id='" +controlId+ "_1' value='" +file+ "'/>&nbsp;&nbsp;";
@@ -3734,7 +3789,7 @@ function printForm()
  * @param objName
  * @return
  */
-function showCalendar(objName,dateFormat) {
+function showCalendar(objName,dateFormat,controlId,containerId) {
 	var date = document.getElementById(objName).value;
 
 	cal = new dhtmlxCalendarObject(objName, true, {
@@ -3747,4 +3802,7 @@ function showCalendar(objName,dateFormat) {
 	if (date.length > 0) {
 		cal.setDate(date);
 	}	
+	cal.attachEvent("onClick", function (){
+		updateServerState(objName,controlId,containerId);
+	});
 }
