@@ -102,9 +102,26 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 		handler: function () {
 			if(!sm.isErrorsExist({skipMandatory:"true"}))
 			{
-				sm.hide();
-				edu.wustl.de.currentpage -= 1;	
-				sm.show();
+				var prevPage = edu.wustl.de.currentpage;
+				while(true)
+				{
+					sm.hide();
+					edu.wustl.de.currentpage -= 1;
+					sm.show();
+					
+					 if($(this.ctx).find(".control_caption:visible").length > 0 || (edu.wustl.de.currentpage <= 0))
+					{
+						if(edu.wustl.de.currentpage <= 0 && $(this.ctx).find(".control_caption:visible").length < 0)
+						{
+							sm.hide();
+							edu.wustl.de.currentpage = prevPage ;
+							sm.show();
+						}
+						break;
+						
+					}
+				}
+				
 			}
 		}
 	});
@@ -129,9 +146,26 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 		handler: function () {
 			if(!sm.isErrorsExist({skipMandatory:"false"}))
 			{
-				sm.hide();
-				edu.wustl.de.currentpage += 1;
-				sm.show();
+				
+				var nextPage = edu.wustl.de.currentpage;
+				while(true)
+				{
+					sm.hide();
+					edu.wustl.de.currentpage += 1;
+					sm.show();
+					
+					if($(this.ctx).find(".control_caption:visible").length > 0 || (edu.wustl.de.currentpage >= sm.pages.length -1))
+					{
+						if(edu.wustl.de.currentpage >= sm.pages.length -1 && $(this.ctx).find(".control_caption:visible").length < 0)
+						{
+							sm.hide();
+							edu.wustl.de.currentpage = nextPage ;
+							sm.show();
+						}
+						break;
+						
+					}
+				}
 			}
 		}
 	});
