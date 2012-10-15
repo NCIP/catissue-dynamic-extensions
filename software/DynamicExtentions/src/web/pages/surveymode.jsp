@@ -3,6 +3,9 @@
 
 <%@ page import="edu.common.dynamicextensions.util.global.DEConstants" %>
 <%@ page isELIgnored ="false" %>
+
+<%@ taglib uri="/WEB-INF/dynamicExtensions.tld" prefix="dynamicExtensions" %>
+
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/styleSheet.css"/>
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/de_style.css"/>
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/ext-all.css"/>
@@ -10,10 +13,12 @@
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/xtheme-gray.css"/>
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/de.css"/>
 
-<script	src="${pageContext.request.contextPath}/dhtmlx_suite/js/dhtmlxcommon.js"></script>
+<!-- script	src="${pageContext.request.contextPath}/dhtmlx_suite/js/dhtmlxcommon.js"></script -->
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/dhtmlx_suite/skins/dhtmlxcalendar_dhx_skyblue.css" />
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}dhtmlx_suite/css/dhtmlxcalendar.css" />
-<script src="${pageContext.request.contextPath}/dhtmlx_suite/js/dhtmlxcalendar.js"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/dhtmlx_suite/css/dhtmlxcalendar.css" />
+<!-- script src="${pageContext.request.contextPath}/dhtmlx_suite/js/dhtmlxcalendar.js"></script -->
+
+<script src="<%=request.getContextPath()%>/javascripts/de/all_de.js"></script>
 
 <script>
 	var imgsrc="<%=request.getContextPath()%>/images/de/";
@@ -26,7 +31,7 @@
 }
 </style>
 
-<script src="<%=request.getContextPath()%>/javascripts/de/prototype.js"></script>
+<!-- script src="<%=request.getContextPath()%>/javascripts/de/prototype.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/jquery-1.3.2.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/calendarComponent.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/script.js"></script>
@@ -41,7 +46,7 @@
 <script src="<%=request.getContextPath()%>/javascripts/de/ext-all.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/combos.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/ajaxupload.js"></script>
-<script src="<%=request.getContextPath()%>/javascripts/de/de.js"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/de.js"></script !-->
 <table border="0" align="center" cellpadding="1" cellspacing="0" class="td_color_6e81a6">
 	<tr>
 		<td>
@@ -91,6 +96,7 @@
 					%>
 				</div>
 				<div class="box" id="sm-form-contents">
+					<dynamicExtensions:surveyFormPages/>
 				</div>
 				<input type="hidden" value="${pageContext.request.contextPath}" id="contextPath"/>
 				<c:if test='${not empty param.pageId}'>
@@ -102,7 +108,9 @@
 				<input type="hidden" id="formLabel" name="formLabel" value="${param.formLabel}"/>
 				<input type="hidden" id="updateResponse" name="updateResponse" value="${param.updateResponse}"/>
 			</form>
-			<iframe style="display:none" src="about:blank" id="skipLogicIframe" name="skipLogicIframe" onload=""></iframe>
+			<iframe style="display:none" src="about:blank" id="skipLogicIframe" name="skipLogicIframe" onload="">
+				<dynamicExtensions:serverStateHtml/>
+			</iframe>
 			<script type="text/javascript" defer="defer">calculateDefaultAttributesValue();</script>
 		</div>
 	</div>
@@ -111,9 +119,13 @@
 	</div>
 </body>
 
-
 <c:if test='${empty sessionScope.formSubmitUrl}'>
 	<script>
 		document.getElementById('sm-form').action = "/clinportal/DEServlet";
 	</script>
 </c:if>	
+
+<script type="text/javascript">
+	edu.wustl.de.initSurveyForm();
+</script>
+

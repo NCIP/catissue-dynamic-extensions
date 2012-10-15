@@ -14,11 +14,9 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.skiplogic.SkipLogic;
 import edu.common.dynamicextensions.ui.webui.util.SurveyFormCacheManager;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.global.DEConstants;
-import edu.wustl.cab2b.server.cache.EntityCache;
 
 public class SurveyModeRenderer extends LayoutRenderer
 {
@@ -31,22 +29,26 @@ public class SurveyModeRenderer extends LayoutRenderer
 		formCache = new SurveyFormCacheManager(req);
 	}
 
-	/*	private String getContainerIdentifier() {
-			return req.getParameter(DEConstants.CONTAINER_IDENTIFIER);
-		}
-	*/
-
 	private String renderCategory(String categoryId) throws IOException, NumberFormatException,
 			DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		String categorydiv = "<div><div id='sm-pages'>%s</div></div>";
-		String pagediv = "<div class='sm-page' id='%d' style='display:none'></div>";
-		StringBuffer html = new StringBuffer();
+		String pagediv = "<div class='sm-page' id='%d' style='display:none'>%s</div>";
+		StringBuilder pages = new StringBuilder();
+		StringBuilder categoryHtml = new StringBuilder(renderHiddenInputs());
+		
+		
+		//ContainerInterface container = (ContainerInterface) formCache.getCategory().getRootCategoryElement().getContainerCollection().iterator().next();
+		ContainerInterface container = formCache.getContainer();
+		container.setContainerValueMap(formCache.getContainerWithValueMap().getContainerValueMap());
+		
 		for (Page p : formCache.getPageCollection())
 		{
-			html.append(String.format(pagediv, p.getId().longValue()));
+			pages.append(String.format(pagediv, p.getId().longValue(), renderPage(p)));
 		}
-		return renderHiddenInputs() + String.format(categorydiv, html.toString());
+		
+		categoryHtml.append(String.format(categorydiv, pages.toString()));
+		return categoryHtml.toString();
 	}
 
 	private String renderHiddenInputs() throws NumberFormatException,
@@ -81,42 +83,24 @@ public class SurveyModeRenderer extends LayoutRenderer
 		//If use chose to open survey form, always open the first answered question
 		displayPage = "<input type='hidden' id='displayPage' name='displayPage'  value='%d'></input>";
 		displayPage = String.format(displayPage, formCache.getDisplayPage());
-
 		return displayPage;
 	}
 
-	private String renderPage(String pageId) throws DynamicExtensionsSystemException, IOException,
+	private String renderPage(Page p) throws DynamicExtensionsSystemException, IOException,
 			NumberFormatException, DynamicExtensionsApplicationException
 	{
 		String pageHtml = "<div class='sm-page-contents'>%s</div>";
 		String htmlWrapper = "<table class='sm-page-table'>%s%s</table>";
-		String pageTitle = "<tr><th><div class='sm-page-title'>&nbsp;<div></th><th colspan='10'><div class='sm-page-title'>%s</div></th></tr>";
+		String pageTitle = "<tr><th><div class='sm-page-title'>&nbsp;</div></th><th colspan='10'><div class='sm-page-title'>%s</div></th></tr>";
 		String emptyDiv = "<div></div>";
-		Page p = formCache.getPage(pageId);
-		/*ContainerInterface container = (ContainerInterface) formCache.getCategory()
-				.getRootCategoryElement().getContainerCollection().iterator().next();*/
-		ContainerInterface container = formCache.getContainer();
-		container.setContainerValueMap(formCache.getContainerWithValueMap().getContainerValueMap());
 		
-		SkipLogic skipLogic = EntityCache.getInstance().getSkipLogicByContainerIdentifier(
-				container.getId());
-		if (skipLogic != null)
-		{
-			skipLogic.evaluateSkipLogic(container, container.getContainerValueMap());
-		}
-		if (p == null)
-		{
+		if (p == null) {
 			return renderError("page not found!");
-		}
-		else
-		{
-			StringBuffer html = new StringBuffer();
-			if (p.getDescription() == null)
-			{
+		} else {
+			StringBuilder html = new StringBuilder();
+			if (p.getDescription() == null)	{
 				pageTitle = emptyDiv;
-			}
-			else
-			{
+			} else {
 				pageTitle = String.format(pageTitle, p.getDescription());
 			}
 			List<ControlInterface> controlList = new ArrayList<ControlInterface>(p
@@ -127,8 +111,7 @@ public class SurveyModeRenderer extends LayoutRenderer
 			{
 				control.getParentContainer().getContextParameter().put(DEConstants.CONTEXT_PATH,
 						req.getContextPath());
-				if (control.getValue() != null)
-				{
+				if (control.getValue() != null)	{
 					control.setDataEntryOperation("insertParentData");
 				}
 				html.append(getControlHTML(control));
@@ -167,6 +150,9 @@ public class SurveyModeRenderer extends LayoutRenderer
 		}
 
 		String htmlWrapper = "<tr><td height='7'></td></tr>%s%s</table></td></tr>";
+		if (control.getYPosition() > 1) {
+			htmlWrapper = "<tr><td height='7'></td></tr>%s%s</td></tr>";
+		}		
 		control.setAlignment(Control.VERTICAL);
 		control.getParentContainer().setRequest(req);
 		return String.format(htmlWrapper, controlHTML.toString(), control.generateHTML(control
@@ -182,21 +168,12 @@ public class SurveyModeRenderer extends LayoutRenderer
 			NumberFormatException, DynamicExtensionsApplicationException
 	{
 		String categoryId = formCache.getCategoryId();
-		String responseString;
-		String pageId = formCache.getPageId();
+		String responseString="";
+
 		if (categoryId != null)
 		{
-			if (pageId != null)
-			{
-				responseString = renderPage(pageId);
-			}
-			else
-			{
-				responseString = renderCategory(categoryId);
-			}
-		}
-		else
-		{
+			responseString = renderCategory(categoryId);
+		} else {
 			responseString = renderError("categoryId cannot be null!");
 		}
 		return responseString;

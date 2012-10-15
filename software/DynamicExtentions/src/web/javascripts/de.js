@@ -2,16 +2,14 @@ var edu = edu || {};
 edu.wustl = edu.wustl || {};
 edu.wustl.de = edu.wustl.de || {};
 edu.wustl.de.sm = {};
-edu.wustl.de.smurl;
 edu.wustl.de.currentpage;
 edu.wustl.de.defaultValues = {};
-edu.wustl.de.surveyForm;
-$(document).ready(function () {
-	edu.wustl.de.smurl = $("#contextPath").val()+"/AjaxcodeHandlerAction?ajaxOperation=renderSurveyMode&formLabel="+$("#formLabel").val();
+
+edu.wustl.de.initSurveyForm = function() {
 	edu.wustl.de.surveyForm = new edu.wustl.de.CategorySurveyMode({ctx: $("#sm-category"),
 		categoryid: $("#categoryId").val()});
 	edu.wustl.de.surveyForm.load();
-});
+}
 
 edu.wustl.de.CategorySurveyMode = function (args) {
 	if (args.ctx == undefined) throw "ctx undefined";
@@ -22,14 +20,8 @@ edu.wustl.de.CategorySurveyMode = function (args) {
 	edu.wustl.de.currentpage = 0;
 	this.navbar = new edu.wustl.de.Navbar({ctx: $("#sm-navbar")});
 	this.progressbar = new edu.wustl.de.ProgressBar({ctx: $("#sm-progressbar")});
-	this.url = edu.wustl.de.smurl +
-		"&categoryId=" + args.categoryid +
-		"&containerIdentifier=" + $("#containerIdentifier").val();
-	
-	if ($("#recordIdentifier").length > 0) {
-		this.url = this.url +"&recordIdentifier=" + $("#recordIdentifier").val();
-	}
 };
+
 edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 	var sm = this;
 	$("input:radio").live("change", function () {
@@ -202,31 +194,23 @@ edu.wustl.de.CategorySurveyMode.prototype.tidyNavbar = function () {
 	}
 };
 edu.wustl.de.CategorySurveyMode.prototype.load = function () {
-	if (this.request == undefined) {
-		var sm = this;
-		this.request = new edu.wustl.de.Request({
-			url:this.url,
-			onsuccess: function (res) {
-				$("#sm-form-contents", sm.ctx).append(res);
-				$("#sm-category-name").append($("#categoryName").val());
-				sm.init();
-				sm.bind();
-				sm.updateProgress();
-				if($("#updateResponse").val() != "true")
-				{
-					edu.wustl.de.currentpage = parseInt($("#displayPage").val());
-					if(edu.wustl.de.currentpage == -1)
-					{
-						edu.wustl.de.currentpage = 0;
-					}
-				}
-				sm.show();
-				sm.loadAllPages();
-			}
-		});
-		this.request.load();
+	var sm = this;
+	$("#sm-category-name").append($("#categoryName").val());
+	this.init();
+	this.bind();
+	this.updateProgress();
+	if($("#updateResponse").val() != "true")
+	{
+		edu.wustl.de.currentpage = parseInt($("#displayPage").val());
+		if(edu.wustl.de.currentpage == -1)
+		{
+			edu.wustl.de.currentpage = 0;
+		}
 	}
+	this.show();
+	this.loadAllPages();
 };
+
 edu.wustl.de.CategorySurveyMode.prototype.init = function () {
 	var createpages = function (categoryid, pages) {
 		return function (i, e) {
@@ -314,36 +298,22 @@ edu.wustl.de.Page = function (args) {
 	this.ctx = args.ctx;
 	this.prettified = false;
 	
-	this.url = edu.wustl.de.smurl +
-		"&categoryId=" + args.categoryid +
-		"&pageId=" + args.pageid +
-		"&containerIdentifier=" + $("#containerIdentifier").val(); 
-	if ($("#recordIdentifier").length > 0) {
-		this.url = this.url +"&recordIdentifier=" + $("#recordIdentifier").val();
-	}
 };
+
 edu.wustl.de.Page.prototype.load = function () {
-	if (this.request == undefined) {
-		var p = this;
-		this.request = new edu.wustl.de.Request({
-			url:this.url,
-			onsuccess: function(res) {
-				$(p.ctx).append(res);
-				p.pretty();
-				$("input:radio", p.ctx).each(function() {
-					if($(this).attr("checked") == true) {
-						edu.wustl.de.defaultValues[$(this).attr("name")] = $(this).val();
-					}
-				});
-				$("select", p.ctx).each(function() {
-					if($(this).val() != null) {
-						edu.wustl.de.defaultValues[$(this).attr("name")] = $(this).val();
-					}
-				});
-			}
-		});
-		this.request.load();
-	}
+	var p = this;
+	p.pretty();
+	$("input:radio", p.ctx).each(function() {
+		if($(this).attr("checked") == true) {
+			edu.wustl.de.defaultValues[$(this).attr("name")] = $(this).val();
+		}
+	});
+	
+	$("select", p.ctx).each(function() {
+		if($(this).val() != null) {
+			edu.wustl.de.defaultValues[$(this).attr("name")] = $(this).val();
+		}
+	});
 };
 
 edu.wustl.de.Page.prototype.pretty = function () {

@@ -2316,6 +2316,36 @@ function calculateAttributes()
 	});
 }
 
+function calculateDefaultAttributesValueLocal()
+{
+	var iframe = document.getElementById("skipLogicIframe");
+	if (iframe != null)
+	{
+		var iframeDocument = getIframeDocument(iframe);
+		if (iframeDocument != null)
+		{
+			var calculatedControlsArray =  iframeDocument.getElementsByName("calculatedControl");
+			if (calculatedControlsArray != null)
+			{
+				var len = calculatedControlsArray.length;
+				for(var inputIndex = 0; inputIndex < len; inputIndex++)
+				{
+					var calculatedControl = calculatedControlsArray[inputIndex];
+					if (calculatedControl != null)
+					{
+						var calculatedControlDiv = calculatedControl.value;
+						var originalDiv = document.getElementById(calculatedControlDiv);
+					    var calculatedDiv = iframeDocument.getElementById(calculatedControlDiv);
+						if (calculatedDiv!= null && originalDiv != null)
+						{
+							originalDiv.innerHTML = calculatedDiv.innerHTML;
+						}
+					}
+				}
+			}
+		}
+	}
+}
 
 function calculateDefaultAttributesValue()
 {

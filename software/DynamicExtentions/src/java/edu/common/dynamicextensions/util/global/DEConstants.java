@@ -58,6 +58,7 @@ public class DEConstants
 	public static final String SHOW_EDIT_RECORDS_PAGE = "showRecordListPage";
 	public static final String SUCCESS = "success";
 	public static final String ADD_SUB_FORM = "addSubForm";
+	public static final String SURVEY_CATEGORY = "surveyCategory";
 
 	public static final String CONTROL_OPERATION = "controlOperation";
 	public static final String SELECTED_CONTROL_ID = "selectedControlId";

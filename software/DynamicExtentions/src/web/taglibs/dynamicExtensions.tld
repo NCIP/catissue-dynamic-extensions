@@ -227,5 +227,14 @@
 			<type>java.lang.String</type>
 		</attribute>
 	</tag>
-
+	
+	<tag>
+		<name>surveyFormPages</name>
+		<tag-class>edu.common.dynamicextensions.ui.webui.taglib.SurveyFormPagesTag</tag-class>
+	</tag>
+	
+	<tag>
+		<name>serverStateHtml</name>
+		<tag-class>edu.common.dynamicextensions.ui.webui.taglib.ServerStateHtmlGeneratorTag</tag-class>
+	</tag>
 </taglib>

@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -40,9 +41,8 @@ public class SurveyFormCacheManager extends FormCache
 	public SurveyFormCacheManager(HttpServletRequest request)
 	{
 		super(request);
-		category = (CategoryInterface)CacheManager.getObjectFromCache(request,
-				DEConstants.CATEGORY);
-		recordIdentifier = request.getParameter(DEConstants.RECORD_IDENTIFIER);
+		category = getCategory();
+		recordIdentifier = request.getParameter(DEConstants.RECORD_IDENTIFIER);			
 	}
 
 	public SurveyFormCacheManager(HttpServletRequest request, Long containerIdentifier,
@@ -52,7 +52,7 @@ public class SurveyFormCacheManager extends FormCache
 		CacheManager.clearCache(request);
 		this.recordIdentifier = recordIdentifier;
 		category = getClonedObj(DynamicExtensionUtility.getCategoryByContainerId(containerIdentifier.toString()));
-
+		request.getSession().setAttribute(DEConstants.SURVEY_CATEGORY, category);
 	}
 
 	public int controlsCount() throws DynamicExtensionsSystemException
@@ -162,12 +162,7 @@ public class SurveyFormCacheManager extends FormCache
 		ContainerInterface container = getContainer();
 		if (recordIdentifier != null && !recordIdentifier.equalsIgnoreCase("null"))
 		{
-			Map<BaseAbstractAttributeInterface, Object> containerValueMap = 
-				(Map<BaseAbstractAttributeInterface, Object>)CacheManager.getObjectFromCache(request, DEConstants.RECORD_MAP);
-			if (containerValueMap == null) {
-				containerValueMap = LoadDataEntryFormProcessor.getValueMapFromRecordId(container.getAbstractEntity(), recordIdentifier);
-				CacheManager.addObjectToCache(request, DEConstants.RECORD_MAP, containerValueMap);
-			}
+			Map<BaseAbstractAttributeInterface, Object> containerValueMap = getValueMap();
 			UserInterfaceiUtility.setContainerValueMap(container, containerValueMap);
 			ContainerUtility.evaluateSkipLogic(container);
 		}
@@ -176,18 +171,46 @@ public class SurveyFormCacheManager extends FormCache
 		return container;
 	}
 
-	public CategoryInterface getCategory() throws DynamicExtensionsSystemException
+	public CategoryInterface getCategory()
 	{
-
-		if (category == null)
-		{
-			category = (Category) EntityCache.getInstance().getCategoryById(Long.parseLong(getCategoryId()));
-			category  = getClonedObj(category);
-			CacheManager.addObjectToCache(request, DEConstants.CATEGORY, category);
+		try {
+			if (category == null) {
+				category = (Category) request.getSession().getAttribute(DEConstants.SURVEY_CATEGORY);
+				if (category == null) {
+					category = (Category) EntityCache.getInstance().getCategoryById(Long.parseLong(getCategoryId()));
+					category  = getClonedObj(category);
+					request.getSession().setAttribute(DEConstants.SURVEY_CATEGORY, category);
+				}
+			}
+			return category;			
+		} catch (Exception e) {
+			throw new RuntimeException("Error obtaining category", e);
 		}
-		return category;
 	}
-
+	
+	private Map<BaseAbstractAttributeInterface, Object> getValueMap() 
+	throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException {
+		Stack<Map<BaseAbstractAttributeInterface, Object>> valueMapStack = (Stack<Map<BaseAbstractAttributeInterface, Object>>) CacheManager
+				.getObjectFromCache(request, DEConstants.VALUE_MAP_STACK);		
+		Map<BaseAbstractAttributeInterface, Object> containerValueMap = null;
+		
+		if (valueMapStack != null) {
+			containerValueMap = valueMapStack.peek();
+		}
+		
+		if (containerValueMap == null) {
+			containerValueMap = (Map<BaseAbstractAttributeInterface, Object>)CacheManager.getObjectFromCache(request, DEConstants.RECORD_MAP); 
+		}
+			
+		if (containerValueMap == null) {
+			ContainerInterface container = getContainer();
+			containerValueMap = LoadDataEntryFormProcessor.getValueMapFromRecordId(container.getAbstractEntity(), recordIdentifier);
+			CacheManager.addObjectToCache(request, DEConstants.RECORD_MAP, containerValueMap);
+		}		
+		
+		return containerValueMap;
+	}
+	
 	private void setControlValue(ContainerInterface container, ControlInterface control)
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
@@ -242,6 +265,7 @@ public class SurveyFormCacheManager extends FormCache
 	
 	public <T> T getClonedObj(T obj) {
 		DyExtnObjectCloner cloner = new DyExtnObjectCloner();
-		return cloner.clone(obj);		
+		T retObj = cloner.clone(obj);
+		return retObj;
 	}
 }

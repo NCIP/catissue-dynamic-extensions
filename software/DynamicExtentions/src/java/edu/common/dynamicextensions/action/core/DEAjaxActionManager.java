@@ -187,7 +187,7 @@ public class DEAjaxActionManager
 		return responceString;
 	}
 
-	private String updateServerStateGenerateHtml (HttpServletRequest request) throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException {
+	public String updateServerStateGenerateHtml (HttpServletRequest request) throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException {
 
 		FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
 		collectionUtility.populateAndValidateValues(request,Boolean.TRUE.toString());
