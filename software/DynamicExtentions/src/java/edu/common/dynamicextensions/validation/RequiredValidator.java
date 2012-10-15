@@ -26,7 +26,7 @@ public class RequiredValidator implements ValidatorRuleInterface
 	{
 		ControlInterface controlInterface = CategoryHelper.getControl(attribute.getContainer(),
 				(BaseAbstractAttributeInterface)attribute);
-		if	(!controlInterface.getIsHidden())
+		if	(controlInterface.getIsHidden()==null || !controlInterface.getIsHidden())
 		{
 			if (valueObject == null)
 			{
