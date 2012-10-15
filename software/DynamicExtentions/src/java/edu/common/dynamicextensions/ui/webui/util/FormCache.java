@@ -214,8 +214,7 @@ public class FormCache
 		container = (ContainerInterface) CacheManager
 				.getObjectFromCache(request, DEConstants.CONTAINER_INTERFACE);
 		final String containerIdentifier = getContainerId(request);
-		if (request
-				.getParameter(WebUIManagerConstants.CALLBACK_URL_PARAM_NAME) != null)
+		if (!isDetailsLinkClicked(request))
 		{
 			CacheManager.clearCache(request);
 
