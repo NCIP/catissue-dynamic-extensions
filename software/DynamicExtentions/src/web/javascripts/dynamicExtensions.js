@@ -1795,7 +1795,10 @@ function setDefaultValues(tableId, obj, containerId)
 	{
 		var childObject = children[j];
 		childObjectName = childObject.name;
-
+		if(childObjectName == undefined)
+		{
+			childObjectName = childObject.getElementsBySelector("input[name^=Control]")[0].getAttribute("name");
+		}
 		// For calender and other controls
 		if (childObjectName == null && childObject.id != null
 				&& childObject.id != "auto_complete_dropdown"
