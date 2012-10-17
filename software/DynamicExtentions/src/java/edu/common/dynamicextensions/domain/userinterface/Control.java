@@ -495,7 +495,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 
 		}
 
-		if(alignment != null && VERTICAL.equals(alignment))
+		if((yPosition != null && yPosition > 0) ||(alignment != null && VERTICAL.equals(alignment)))
 		{
 			controlHTML.append("<td class='formRequiredLabel_withoutBorder'  title='");
 		}else
