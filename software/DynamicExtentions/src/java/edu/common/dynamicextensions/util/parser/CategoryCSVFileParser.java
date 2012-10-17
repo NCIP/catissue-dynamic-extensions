@@ -48,7 +48,7 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	private static final String DEFAULT_SEPERATOR = ",";
 	public static final String DEFAULT_ESCAPE_CHARACTER = "\"";
 	private static final String EQUAL_SIGN = "=";
-	private static final String TILDE = "~";
+	private static final String OPTION_SEPARATOR = "(?<!\\\\)~";
 	protected CSVReader reader;
 
 	private String[] line;
@@ -195,8 +195,8 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	@Override
 	public String getDisplyLable()
 	{
-		return processEscapeCharacter(readLine()[0].split(Constants.COLON), readLine()[0],
-				DEFAULT_ESCAPE_CHARACTER, Constants.COLON)[1].trim();
+		return processEscapeCharacter(readLine()[0].split(OPTION_MARKUP), readLine()[0],
+				DEFAULT_ESCAPE_CHARACTER, Constants.COLON)[1].trim().replace("\\:", ":");
 	}
 
 	/**
@@ -632,8 +632,8 @@ public class CategoryCSVFileParser extends CategoryFileParser
 	@Override
 	public String getTargetContainerCaption()
 	{
-		return processEscapeCharacter(readLine()[0].split(Constants.COLON), readLine()[0],
-				DEFAULT_ESCAPE_CHARACTER, Constants.COLON)[1].trim();
+		return processEscapeCharacter(readLine()[0].split(OPTION_MARKUP), readLine()[0],
+				DEFAULT_ESCAPE_CHARACTER, Constants.COLON)[1].trim().replace("\\:", ":");
 	}
 
 	/**
@@ -1069,18 +1069,16 @@ public class CategoryCSVFileParser extends CategoryFileParser
 		Locale locale = CommonServiceLocator.getInstance().getDefaultLocale();
 		for (String string : readLine())
 		{
-			// Removes the double quote that gets saved with the query in case pvProcessor is specified.
-			//string = string.replaceAll(DEFAULT_ESCAPE_CHARACTER, "");
 
 			if (string.toLowerCase(locale).startsWith(optionConstant.toLowerCase(locale) + "~"))
 			{
-				String[] controlOptionsValue = processEscapeCharacter(string.split("~")[1].split(":"), string.split("~")[1], DEFAULT_ESCAPE_CHARACTER, ":");
+				String[] controlOptionsValue = processEscapeCharacter(string.split(OPTION_SEPARATOR)[1].split(OPTION_MARKUP), string.split(OPTION_SEPARATOR)[1], DEFAULT_ESCAPE_CHARACTER, ":");
 
 				for (String optionValue : controlOptionsValue)
 				{
-					//optionValue = optionValue.replace("\\:", ":");
-					String[] optionValueToken = processEscapeCharacter(optionValue.split("="), optionValue, DEFAULT_ESCAPE_CHARACTER, "=");
-					controlOptions.put(optionValueToken[0], optionValueToken[1]);
+					optionValue = optionValue.replace("\\:", ":");
+					String[] optionValueToken = processEscapeCharacter(optionValue.split(OPTION_VALUE_SEPARATOR), optionValue, DEFAULT_ESCAPE_CHARACTER, "=");
+					controlOptions.put(optionValueToken[0], optionValueToken[1].replace("\\=", "="));
 				}
 			}
 		}
