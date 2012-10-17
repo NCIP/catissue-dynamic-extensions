@@ -1791,56 +1791,50 @@ function setDefaultValues(tableId, obj, containerId)
 	rowIndex = parseInt(rowIndex) - 1;
 
 	var i = 0;
-	for (j = 0; j < children.length; j++)
+	
+	var childObject,childObjectName;
+	
+	if(obj.getElementsBySelector("input[name^=Control]").length >0)
 	{
-		var childObject = children[j];
-		childObjectName = childObject.name;
-		if(childObjectName == undefined)
-		{
-			childObjectName = childObject.getElementsBySelector("input[name^=Control]")[0].getAttribute("name");
-		}
-		// For calender and other controls
-		if (childObjectName == null && childObject.id != null
-				&& childObject.id != "auto_complete_dropdown"
-					&& childObject.id.indexOf('slcalcodControl') == -1)
-		{
-			childObjectName = childObject.id;
-		}
+		childObjectName = obj.getElementsBySelector("input[name^=Control]")[0].getAttribute("name");
+		childObject = obj.getElementsBySelector("input[name^=Control]")[0];
+	}
+		
 
-		if(childObjectName != null && childObjectName.indexOf('_') != -1)
-		{
-			initializeDefaultValue(childObjectName,childObject,obj,i,rowIndex,true);
-			break;
-		}
+	if(childObjectName != null && childObjectName.indexOf('_') != -1)
+	{
+		initializeDefaultValue(childObjectName,childObject,obj,i,rowIndex,true);
+		
+	}
 		// For Combobox
-		if ("auto_complete_dropdown" == childObject.id)
+	if (obj.getElementsBySelector("#auto_complete_dropdown").length >0)
+	{
+		var childNodes2 = obj.getElementsBySelector("#auto_complete_dropdown")[0].childNodes;
+		for(i=0;i<childNodes2.length;i++)
 		{
-			var childNodes2 = childObject.childNodes;
-			for(i=0;i<childNodes2.length;i++)
+			if(childNodes2[i].id == 'comboHtml')
 			{
-				if(childNodes2[i].id == 'comboHtml')
+				var oldName = childNodes2[i].childNodes[0].childNodes[0].name;
+				var newName = oldName + "_" + rowIndex;
+				if(document.getElementById('rightpanel'))
 				{
-					var oldName = childNodes2[i].childNodes[0].childNodes[0].name;
-					var newName = oldName + "_" + rowIndex;
-					if(document.getElementById('rightpanel'))
-					{
-						newName = containerId + "_" + oldName + "_" + rowIndex
-					}
-					var newScript = replaceAll(childNodes2[i-1].innerHTML,
-							oldName, newName);
-					obj.innerHTML = replaceAll(childNodes2[i].innerHTML,
-										oldName, newName);
-					eval(newScript);
-					break;
+					newName = containerId + "_" + oldName + "_" + rowIndex
 				}
+				var newScript = replaceAll(childNodes2[i-1].innerHTML,
+						oldName, newName);
+				obj.innerHTML = replaceAll(childNodes2[i].innerHTML,
+									oldName, newName);
+				eval(newScript);
+				break;
 			}
 		}
-		// Only in case of delete checkbox in addrow
-		if("deleteRow" == childObjectName)
-		{
-			childObject.id = "checkBox_" + containerId + "_" + rowIndex;
-		}
 	}
+	// Only in case of delete checkbox in addrow
+	if("deleteRow" == childObjectName)
+	{
+		childObject.id = "checkBox_" + containerId + "_" + rowIndex;
+	}
+	
 	return obj;
 }
 
