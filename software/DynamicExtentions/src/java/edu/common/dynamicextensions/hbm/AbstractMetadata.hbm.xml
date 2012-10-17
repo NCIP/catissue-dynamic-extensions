@@ -580,11 +580,11 @@
         <many-to-one
             name="targetEntity"
             class="edu.common.dynamicextensions.domain.Entity"
-            cascade="all"
+            cascade="none"
             outer-join="auto"
             update="true"
             insert="true"
-            lazy="false"
+            lazy="proxy"
             column="TARGET_ENTITY_ID"
         />
 
