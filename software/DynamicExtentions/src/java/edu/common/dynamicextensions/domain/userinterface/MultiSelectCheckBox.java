@@ -139,7 +139,9 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 					htmlString += "<tr>";
 				}
 				if (values != null && !values.isEmpty()
-						&& values.contains(nameValueBean.getValue()))
+						&& (values.contains(nameValueBean.getValue()) || values
+								.contains(DynamicExtensionsUtility
+										.getUnEscapedStringValue(nameValueBean.getValue()))))
 				{
 					htmlString += "<td valign='top' style='padding-top:3px'><input type='checkbox' class="
 							+ getCSS()
