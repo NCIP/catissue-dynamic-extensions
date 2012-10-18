@@ -13,12 +13,12 @@
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/xtheme-gray.css"/>
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/stylesheets/de/de.css"/>
 
-<!-- script	src="${pageContext.request.contextPath}/dhtmlx_suite/js/dhtmlxcommon.js"></script -->
+<script	src="${pageContext.request.contextPath}/dhtmlx_suite/js/dhtmlxcommon.js"></script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/dhtmlx_suite/skins/dhtmlxcalendar_dhx_skyblue.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/dhtmlx_suite/css/dhtmlxcalendar.css" />
-<!-- script src="${pageContext.request.contextPath}/dhtmlx_suite/js/dhtmlxcalendar.js"></script -->
+<script src="${pageContext.request.contextPath}/dhtmlx_suite/js/dhtmlxcalendar.js"></script>
 
-<script src="<%=request.getContextPath()%>/javascripts/de/all_de.js"></script>
+<!-- script src="<%=request.getContextPath()%>/javascripts/de/all_de.js"></script -->
 
 <script>
 	var imgsrc="<%=request.getContextPath()%>/images/de/";
@@ -31,7 +31,7 @@
 }
 </style>
 
-<!-- script src="<%=request.getContextPath()%>/javascripts/de/prototype.js"></script>
+<script src="<%=request.getContextPath()%>/javascripts/de/prototype.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/jquery-1.3.2.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/calendarComponent.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/script.js"></script>
@@ -40,13 +40,13 @@
 <script src="<%=request.getContextPath()%>/javascripts/de/overlib_mini.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/calender.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/ajax.js"></script>
-<script src="<%=request.getContextPath()%>/javascripts/de/scriptaculous.js"></script>
+<!-- script src="<%=request.getContextPath()%>/javascripts/de/scriptaculous.js"></script -->
 <script src="<%=request.getContextPath()%>/javascripts/de/scr.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/ext-base.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/ext-all.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/combos.js"></script>
 <script src="<%=request.getContextPath()%>/javascripts/de/ajaxupload.js"></script>
-<script src="<%=request.getContextPath()%>/javascripts/de/de.js"></script !-->
+<script src="<%=request.getContextPath()%>/javascripts/de/de.js"></script>
 <table border="0" align="center" cellpadding="1" cellspacing="0" class="td_color_6e81a6">
 	<tr>
 		<td>
