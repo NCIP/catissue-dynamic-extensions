@@ -2,7 +2,6 @@
 package edu.common.dynamicextensions.messages;
 
 import java.io.StringReader;
-import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,7 +45,6 @@ import edu.common.dynamicextensions.entitymanager.CategoryManagerInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
-import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.xmi.XMIConstants;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.beans.SessionDataBean;
@@ -450,32 +448,24 @@ public class XmlMessageProcessor
 	{
 		CategoryManagerInterface categoryManager = CategoryManager.getInstance();
 		Long insrtedRecordId = null;
-		try
-		{
 
-			ContainerInterface containerInterface = (ContainerInterface) rootCatEntity
-					.getContainerCollection().toArray()[0];
-			if (recordID == null)
-			{// new data insertion.
-				//editedRecordId = categoryManager.insertData(rootCatEntity.getCategory(), recordMap, sessionDataBean);
-				insrtedRecordId = DynamicExtensionsUtility.insertDataUtility(null,
-						containerInterface, recordMap, sessionDataBean);
-				LOGGER.info("Record inserted successfully with id " + insrtedRecordId);
-			}
-			else
-			{// Edit data.
-				//categoryManager.editData(rootCatEntity, recordMap, recordID, sessionDataBean);
-				insrtedRecordId = categoryManager.getEntityRecordIdByRootCategoryEntityRecordId(
-						recordID, rootCatEntity.getTableProperties().getName());
-				DynamicExtensionsUtility.editDataUtility(insrtedRecordId, containerInterface, recordMap,
-						sessionDataBean, sessionDataBean.getUserId());
-				LOGGER.info("Record edited successfully with id  " + insrtedRecordId);
-			}
+		ContainerInterface containerInterface = (ContainerInterface) rootCatEntity
+				.getContainerCollection().toArray()[0];
+		if (recordID == null)
+		{// new data insertion.
+			//editedRecordId = categoryManager.insertData(rootCatEntity.getCategory(), recordMap, sessionDataBean);
+			insrtedRecordId = DynamicExtensionsUtility.insertDataUtility(null, containerInterface,
+					recordMap, sessionDataBean);
+			LOGGER.info("Record inserted successfully with id " + insrtedRecordId);
 		}
-		catch (MalformedURLException malformedURLException)
-		{
-			throw new DynamicExtensionsSystemException("invalid application URL: "
-					+ Variables.jbossUrl, malformedURLException);
+		else
+		{// Edit data.
+			//categoryManager.editData(rootCatEntity, recordMap, recordID, sessionDataBean);
+			insrtedRecordId = categoryManager.getEntityRecordIdByRootCategoryEntityRecordId(
+					recordID, rootCatEntity.getTableProperties().getName());
+			DynamicExtensionsUtility.editDataUtility(insrtedRecordId, containerInterface,
+					recordMap, sessionDataBean, sessionDataBean.getUserId());
+			LOGGER.info("Record edited successfully with id  " + insrtedRecordId);
 		}
 		return insrtedRecordId;
 	}

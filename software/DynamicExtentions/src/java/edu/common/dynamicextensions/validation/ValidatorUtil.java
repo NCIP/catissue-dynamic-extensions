@@ -522,7 +522,13 @@ public class ValidatorUtil
 		String errorMessage;
 		if (valueObject instanceof List)
 		{
-			valueObject = ((List) valueObject).get(0);
+			if(((List) valueObject).size() == 0)
+			{
+				valueObject = new HashMap<BaseAbstractAttributeInterface, Object>();
+			}else
+			{
+				valueObject = ((List) valueObject).get(0);
+			}
 		}
 		Map<String, String> parameterMap = getParamMap(rule);
 		try

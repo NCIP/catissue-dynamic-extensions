@@ -18,8 +18,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,8 +53,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import edu.common.dynamicextensions.bizlogic.BizLogicFactory;
-import edu.common.dynamicextensions.client.DataEditClient;
-import edu.common.dynamicextensions.client.DataEntryClient;
 import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
 import edu.common.dynamicextensions.dao.impl.DynamicExtensionDBFactory;
 import edu.common.dynamicextensions.dao.impl.IDEDBUtility;
@@ -107,6 +103,8 @@ import edu.common.dynamicextensions.entitymanager.EntityManagerUtil;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.processor.ApplyDataEntryProcessorInterface;
+import edu.common.dynamicextensions.processor.InContextApplyDataEntryProcessor;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.webui.actionform.DataEntryForm;
@@ -114,9 +112,9 @@ import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.common.dynamicextensions.util.global.DEConstants;
-import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
 import edu.common.dynamicextensions.util.global.DEConstants.InheritanceStrategy;
+import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.xmi.XMIConfiguration;
 import edu.common.dynamicextensions.xmi.XMIConstants;
 import edu.wustl.cab2b.server.cache.EntityCache;
@@ -2913,44 +2911,39 @@ public class DynamicExtensionsUtility
 			Map<BaseAbstractAttributeInterface, Object> attributeToValueMap, SessionDataBean sessionDataBean)
 			throws DynamicExtensionsApplicationException
 	{
-		String entityGroupName=containerInterface.getAbstractEntity().getEntityGroup().getName();
-
-		Map<String, Object> clientmap = new HashMap<String, Object>();
-		DataEntryClient dataEntryClient=new DataEntryClient();
-		clientmap.put(WebUIManagerConstants.RECORD_ID, recordIdentifier);
-		clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, sessionDataBean);
-		clientmap.put(WebUIManagerConstants.USER_ID, null);
-		clientmap.put(WebUIManagerConstants.CONTAINER, containerInterface);
-		clientmap.put(WebUIManagerConstants.DATA_VALUE_MAP, attributeToValueMap);
+		ApplyDataEntryProcessorInterface applyDataEntryFormProcessor = new InContextApplyDataEntryProcessor();
 		try
 		{
-			dataEntryClient.setServerUrl(new URL(Variables.jbossUrl+entityGroupName+"/"));
+			recordIdentifier = Long.valueOf(applyDataEntryFormProcessor.insertDataEntryForm(containerInterface, attributeToValueMap, sessionDataBean));
 		}
-		catch (MalformedURLException e)
+		catch (NumberFormatException e)
 		{
-			throw new DynamicExtensionsApplicationException("Invalid URL:"+Variables.jbossUrl+entityGroupName+"/");
+			throw new DynamicExtensionsApplicationException(e.getMessage()); 
 		}
-		dataEntryClient.setParamaterObjectMap(clientmap);
-		dataEntryClient.execute(null);
-
-		recordIdentifier=(Long)dataEntryClient.getObject();
+		catch (DynamicExtensionsSystemException e)
+		{
+			throw new DynamicExtensionsApplicationException(e.getMessage());
+		}
 		return recordIdentifier;
 	}
 	public static boolean editDataUtility(Long recordIdentifier, ContainerInterface containerInterface,
-			Map<BaseAbstractAttributeInterface, Object> attributeToValueMap,SessionDataBean sessionDataBean,Long userid) throws MalformedURLException
+			Map<BaseAbstractAttributeInterface, Object> attributeToValueMap,SessionDataBean sessionDataBean,Long userid) throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
-		String entityGroupName=containerInterface.getAbstractEntity().getEntityGroup().getName();
-		Map<String, Object> clientmap = new HashMap<String, Object>();
-		DataEditClient dataEditClient=new DataEditClient();
-		clientmap.put(WebUIManagerConstants.RECORD_ID, recordIdentifier);
-		clientmap.put(WebUIManagerConstants.SESSION_DATA_BEAN, sessionDataBean);
-		clientmap.put(WebUIManagerConstants.USER_ID, userid);
-		clientmap.put(WebUIManagerConstants.CONTAINER, containerInterface);
-		clientmap.put(WebUIManagerConstants.DATA_VALUE_MAP, attributeToValueMap);
-		dataEditClient.setServerUrl(new URL(Variables.jbossUrl+entityGroupName+"/"));
-		dataEditClient.setParamaterObjectMap(clientmap);
-		dataEditClient.execute(null);
-		return true;
+		ApplyDataEntryProcessorInterface applyDataEntryFormProcessor = new InContextApplyDataEntryProcessor();
+		boolean edited = true;
+		try
+		{
+			edited = applyDataEntryFormProcessor.editDataEntryForm(containerInterface, attributeToValueMap,recordIdentifier, sessionDataBean);
+		}
+		catch (NumberFormatException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage()); 
+		}
+		catch (DynamicExtensionsSystemException e)
+		{
+			throw new DynamicExtensionsSystemException(e.getMessage());
+		}
+		return edited;
 	}
 	
 	/**
