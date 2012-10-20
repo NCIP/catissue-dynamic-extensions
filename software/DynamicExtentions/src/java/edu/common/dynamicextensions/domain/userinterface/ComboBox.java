@@ -241,11 +241,13 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 			htmlString.append("ex' size='");
 			htmlString.append((columnSize > 0 ? columnSize : Constants.DEFAULT_COLUMN_SIZE));
 			htmlString.append("'/>");
+
 			htmlString.append("<div id='comboScript_");
 			htmlString.append(getHTMLComponentName());
 			htmlString.append("' name='comboScript_");
 			htmlString.append(getHTMLComponentName());
 			htmlString.append("' style='display:none'>");
+			htmlString.append("<div>");
 			htmlString.append(getDataSourceHtml(encounterDate, sourceHtmlComponentValues,
 					parentContainerId, identifier, categoryEntityName, attributeName));
 			htmlString.append("var combo = new Ext.form.ComboBox({store: ds,hiddenName: '");
@@ -290,7 +292,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 			// "ds.on('load',function(){if (this.getAt(0) != null) {if (this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50} else {combo.typeAheadDelay=60000}}});"
 			htmlString
 					.append("ds.on('load',function(storeObj){var count = storeObj.findExact('id',combo.emptyText);if(count!=-1){var tempVal = combo.emptyText;combo.reset();combo.setValue(tempVal);combo.emptyText='';}if (this.getAt(0) != null) {if (this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50} else {combo.typeAheadDelay=60000}}});");
-			htmlString.append("});</div>");
+			htmlString.append("});</div></div>");
 			htmlString.append("<div name=\"comboHtml\" id=\"comboHtml\" style='display:none'>");
 			htmlString.append("<div>");
 			htmlString.append("<input type='text' onmouseover=\"showToolTip('");

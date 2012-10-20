@@ -1820,9 +1820,9 @@ function setDefaultValues(tableId, obj, containerId)
 				{
 					newName = containerId + "_" + oldName + "_" + rowIndex
 				}
-				var newScript = replaceAll(childNodes2[i-1].innerHTML,
+				var newScript = replaceAll(childNodes2[i-1].getElementsByTagName("div")[0].innerHTML,
 						oldName, newName);
-				obj.innerHTML = replaceAll(childNodes2[i].innerHTML,
+				obj.innerHTML = replaceAll(childNodes2[i].getElementsByTagName("div")[0].innerHTML,
 									oldName, newName);
 				eval(newScript);
 				break;
@@ -3202,9 +3202,19 @@ function executeComboScriptsForSkipLogic()
 			if (comboScriptDiv[i].value != null)
 			{
 				var comboScript = document.getElementById(comboScriptDiv[i].value);
-				if (comboScript != null)
+				
+				if (comboScript != null && comboScript.getElementsBySelector("input[name='isDEComboScriptEvaluated']").length == 0)
 				{
+					var oInput = document.createElement("input");
+					oInput.type = "hidden";
+					oInput.value = 'true';
+					oInput.name = 'isDEComboScriptEvaluated';
+					comboScript.appendChild(oInput);
+					
+					comboScript.getElementsBySelector("input[name='deComboIsSkipShowHideTarget']")[0].value = 'executed';
+					comboScript = comboScript.getElementsByTagName('div')[0];
 					eval(comboScript.innerHTML);
+					
 				}
 			}
 		}
