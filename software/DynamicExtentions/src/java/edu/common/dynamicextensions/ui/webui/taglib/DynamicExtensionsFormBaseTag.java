@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -16,7 +17,10 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.LoadDataEntryFormProcessor;
+import edu.common.dynamicextensions.ui.webui.util.SurveyFormCacheManager;
 import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
+import edu.common.dynamicextensions.util.DELayoutEnum;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.util.logger.Logger;
 
@@ -45,16 +49,23 @@ public abstract class DynamicExtensionsFormBaseTag extends TagSupport
 		cache = EntityCache.getInstance();
 		try
 		{
-			container = cache.getContainerById(containerIdentifier);
-			dataValueMap = LoadDataEntryFormProcessor.getValueMapFromRecordId(container
-					.getAbstractEntity(), recordIdentifier.toString());
+			if (DELayoutEnum.SURVEY == DynamicExtensionsUtility.getLayout(containerIdentifier)) {
+				HttpServletRequest request = (HttpServletRequest)pageContext.getRequest();
+				SurveyFormCacheManager formCache = new SurveyFormCacheManager(request);
+				container = formCache.getContainerWithValueMap();
+				dataValueMap = container.getContainerValueMap();			
+			} else {
+				container = DynamicExtensionsUtility.getClonedContainerFromCache(containerIdentifier.toString()); 
+				dataValueMap = LoadDataEntryFormProcessor.getValueMapFromRecordId(container
+						.getAbstractEntity(), recordIdentifier.toString());				
+			}
+			
 			final Set<AttributeInterface> attributes = new HashSet<AttributeInterface>();
 			UserInterfaceiUtility.addPrecisionZeroes(dataValueMap, attributes);
 			UserInterfaceiUtility.setContainerValueMap(container, dataValueMap);
 			edu.common.dynamicextensions.util.DataValueMapUtility.updateDataValueMapDataLoading(
 					dataValueMap, container);
 			jspWriter = pageContext.getOut();
-
 		}
 		catch (DynamicExtensionsCacheException e)
 		{
