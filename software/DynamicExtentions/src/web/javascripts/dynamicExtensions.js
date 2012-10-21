@@ -728,7 +728,7 @@ function addDynamicData(recordIdentifier)
             document.getElementById('recordIdentifier').value = recordIdentifier;
             document.getElementById('isEdit').value = "true";
         }
-        dataEntryForm.action= contextParam + "/ApplyDataEntryFormAction";
+        dataEntryForm.action= contextParam + "/de/ApplyDataEntryFormAction";
         setWaitCursorforAllObjectHierarchy(dataEntryForm);
     }
 }
@@ -2148,7 +2148,7 @@ function evaluateFormulaForAttribute(controlName)
 		// because we are
 		// assigning a reference to the function and not actually calling it
 		request.onreadystatechange = handlerFunction;
-		request.open("POST", "ApplyDataEntryFormAction", true);
+		request.open("POST", "de/ApplyDataEntryFormAction", true);
 		request.setRequestHeader("Content-Type",
 				"application/x-www-form-urlencoded");
 		request.send(encodeURI("&dataEntryOperation=evaluateFormula&selectedControlId="
@@ -2197,7 +2197,7 @@ function showChildContainerInsertDataPage(containerId,ths)
     }
     else if(mode == "view" || mode == "edit")
     {
-        dataEntryForm.action= contextParam + "/ApplyDataEntryFormAction?scrollTop="+document.getElementById('dataEntryFormDiv').scrollTop;
+        dataEntryForm.action= contextParam + "/de/ApplyDataEntryFormAction?scrollTop="+document.getElementById('dataEntryFormDiv').scrollTop;
         document.getElementById('scrollTop').value = document.getElementById('dataEntryFormDiv').scrollTop;
     }
     setWaitCursorforAllObjectHierarchy(dataEntryForm);
@@ -2705,7 +2705,7 @@ function cancelInsertData()
 {
     var dataEntryForm = document.getElementById('dataEntryForm');
     setWaitCursorforAllObjectHierarchy(dataEntryForm);
-    dataEntryForm.action= contextParam + "/CancelFormData";
+    dataEntryForm.action= contextParam + "/de/CancelFormData";
     dataEntryForm.submit();
 }
 
@@ -2715,7 +2715,7 @@ function deleteRecordEntry()
 	 if(vConfirm){
 		 var operationElement = document.getElementById('operation');
 		 operationElement.value = "disableRecord";
-		 var url =contextParam + "/DeleteRecordEntryAction?";
+		 var url =contextParam + "/de/DeleteRecordEntryAction?";
 		 var dataEntryForm = document.getElementById('dataEntryForm');
 		 dataEntryForm.action = url;
 		 dataEntryForm.submit();
@@ -3211,7 +3211,6 @@ function executeComboScriptsForSkipLogic()
 					oInput.name = 'isDEComboScriptEvaluated';
 					comboScript.appendChild(oInput);
 					
-					comboScript.getElementsBySelector("input[name='deComboIsSkipShowHideTarget']")[0].value = 'executed';
 					comboScript = comboScript.getElementsByTagName('div')[0];
 					eval(comboScript.innerHTML);
 					
