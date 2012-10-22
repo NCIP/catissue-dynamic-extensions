@@ -122,6 +122,7 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 			if(!sm.isErrorsExist({skipMandatory:"true"}))
 			{
 				$("#isDraft").val("true");
+				$(this).attr("disabled","disabled");
 				$("#sm-form").submit();
 			}
 		}
@@ -130,6 +131,7 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 		handler: function () {
 			if(!sm.isErrorsExist({skipMandatory:"false"}))
 			{
+				$(this).attr("disabled","disabled");
 				$("#sm-form").submit();
 			}
 		}
