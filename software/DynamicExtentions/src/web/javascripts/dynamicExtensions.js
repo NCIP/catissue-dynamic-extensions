@@ -3344,13 +3344,16 @@ function updateServerState(controlName, controlId, containerId)
 				isValid = false;
 				vRecentControl.focus();
 
-				document.getElementById('error_div').innerHTML="<table width=\"100%\" height=\"30\" cellspacing=\"4\" cellpadding=\"4\" border=\"0\" class=\"td_color_FFFFCC\"><tbody><tr><th align=\"left\" class=\"font_bl_nor\"><img src=\"./images/de/ic_error.gif\" alt=\"Error\" align=\"absmiddle\" height=\"25\" hspace=\"3\" width=\"28\">There are some errors on the form. Please correct your data to enable form saving. Mouse over red highlighted fields to see corrections needed.</th></tr></tbody></table>";
-				document.getElementById('error_div').style.display="block";		
-				if(errorElements.indexOf(controlName)== -1)
+				if(document.getElementById('error_div') != undefined)
 				{
-					errorElements[errorElements.length] = controlName;
+					document.getElementById('error_div').innerHTML="<table width=\"100%\" height=\"30\" cellspacing=\"4\" cellpadding=\"4\" border=\"0\" class=\"td_color_FFFFCC\"><tbody><tr><th align=\"left\" class=\"font_bl_nor\"><img src=\"./images/de/ic_error.gif\" alt=\"Error\" align=\"absmiddle\" height=\"25\" hspace=\"3\" width=\"28\">There are some errors on the form. Please correct your data to enable form saving. Mouse over red highlighted fields to see corrections needed.</th></tr></tbody></table>";
+					document.getElementById('error_div').style.display="block";		
+					if(errorElements.indexOf(controlName)== -1)
+					{
+						errorElements[errorElements.length] = controlName;
+					}
+					document.getElementById("nSubmitButton").disabled="disabled";
 				}
-				document.getElementById("nSubmitButton").disabled="disabled";
 			}
 			else
 			{
