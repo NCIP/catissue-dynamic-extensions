@@ -17,6 +17,7 @@ import edu.common.dynamicextensions.ui.webui.util.UserInterfaceiUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.FormManager;
 import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.wustl.dao.newdao.ActionStatus;
 
 public class DEServlet extends HttpServlet {
 
@@ -59,6 +60,7 @@ public class DEServlet extends HttpServlet {
 			res.sendRedirect(redirectUrl);
 			CacheManager.clearCache(req);
 			UserInterfaceiUtility.resetRequestParameterMap(req);
+			req.setAttribute(ActionStatus.ACTIONSTAUS, ActionStatus.SUCCESSFUL);
 
 		} catch (DynamicExtensionsSystemException e) {
 			e.printStackTrace();

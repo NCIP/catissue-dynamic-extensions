@@ -20,7 +20,7 @@ public interface WebUIManagerConstants
 	/**
 	 *
 	 */
-	String DYNAMIC_EXTENSIONS_INTERFACE_ACTION_URL = "/DynamicExtensionsInterfaceAction";
+	String DYNAMIC_EXTENSIONS_INTERFACE_ACTION_URL = "/DynamicExtensionsInterfaceAction.de";
 	/**
 	 *
 	 */
@@ -28,7 +28,7 @@ public interface WebUIManagerConstants
 	/**
 	 *
 	 */
-	String LOAD_DATA_ENTRY_FORM_ACTION_URL = "/LoadDataEntryFormAction?dataEntryOperation=insertParentData";
+	String LOAD_DATA_ENTRY_FORM_ACTION_URL = "/LoadDataEntryFormAction.de?dataEntryOperation=insertParentData";
 	
 	String FORM_SUMMARY_PAGE = "summaryPage";
 	/**
@@ -122,12 +122,20 @@ public interface WebUIManagerConstants
 	public final String UPDATE_CACHE = "updateCache";
 	public static final String FILE_RECORD_QUERY_LIST = "fileRecordQueryList";
 	public static final String DYNAMIC_EXTENSIONS="dynamicExtensions";
-	public final String UPDATECACHE = "UpdateCache";
+	public final String UPDATECACHE = "UpdateCache.de";
 	
 	public final String ISDRAFT = "isDraft";
 	public final String IS_FORM_LOCKED = "isFormLocked";
 	public final String FORM_LABEL = "formLabel";
 	String OVERRIDE_CAPTION = "OverrideCaption";
+
+	public static String IMPORT_PV_ACTION = "/ImportPVAction.de?";
+
+	public static String DOWNLOAD_PV_VERSION_ACTION = "/DownloadPVVersionAction.de";
+
+	public static String CREATE_CATEGORY_METADATA_ACTION = "/CreateCategoryMetadataAction.de";
+
+	public static String CREATE_CATEGORY_ACTION = "/CreateCategoryAction.de";
 
 	public static final String SURVEY_MODE_JSP = "surveyModePage";
 	

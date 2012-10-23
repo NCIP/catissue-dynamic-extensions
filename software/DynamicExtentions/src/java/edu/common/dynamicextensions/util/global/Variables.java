@@ -57,7 +57,7 @@ public class Variables
 	static{
 		Variables.resourceMapping.put(WebUIManagerConstants.FORM_SUMMARY_PAGE,"/pages/de/dataEntry/dataEntrySummary.jsp");
 		Variables.resourceMapping.put(WebUIManagerConstants.SURVEY_MODE_JSP,"/pages/de/dataEntry.jsp");
-		Variables.resourceMapping.put(WebUIManagerConstants.DE_AJAX_HANDLER, "AjaxcodeHandlerAction");
+		Variables.resourceMapping.put(WebUIManagerConstants.DE_AJAX_HANDLER, "AjaxcodeHandlerAction.de");
 	}
 
 }

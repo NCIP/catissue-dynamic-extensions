@@ -31,6 +31,7 @@ import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
+import edu.wustl.dao.newdao.ActionStatus;
 
 /**
  * This action class is used by the create_category_meatadata ant target.
@@ -80,7 +81,7 @@ public class CategoryMetadataAction extends HttpServlet
 					+ EntityCache.getInstance().getNextIdForCategoryFileGeneration() + ".csv");
 			createCategoryMetadataFile(catNameList, metadataFile);
 			sendResponse(response, metadataFile);
-
+			request.setAttribute(ActionStatus.ACTIONSTAUS, ActionStatus.SUCCESSFUL);
 			LOGGER.info("Create category metadata action completed successfully");
 		}
 		catch (Exception e)

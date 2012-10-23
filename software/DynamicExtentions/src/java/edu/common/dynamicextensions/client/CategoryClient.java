@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DirOperationsUtility;
 import edu.common.dynamicextensions.util.ZipUtility;
 import edu.common.dynamicextensions.utility.HTTPSConnection;
@@ -65,7 +66,7 @@ public class CategoryClient extends AbstractClient
 			DirOperationsUtility.validateFolderSizeForUpload(args[0], 500000000L);
 			this.zipFile = ZipUtility.zipFolder(args[0], "tempCategoryDir.zip");
 			String url = HTTPSConnection.getCorrectedApplicationURL(args[1])
-					+ "/CreateCategoryAction?";
+					+ WebUIManagerConstants.CREATE_CATEGORY_ACTION+"?";
 			String catFilename = "";
 			if (args.length > 2 && !"".equals(args[2].trim()))
 			{

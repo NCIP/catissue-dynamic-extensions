@@ -11,6 +11,7 @@ import edu.common.dynamicextensions.ui.webui.util.CacheManager;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManager;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.wustl.dao.newdao.ActionStatus;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -43,6 +44,7 @@ public class DeleteRecordEntryAction extends BaseServletAction
 		{
 			forward(request, response, WebUIManagerConstants.LOAD_DATA_ENTRY_FORM_ACTION_URL);
 		}
+		request.setAttribute(ActionStatus.ACTIONSTAUS, ActionStatus.SUCCESSFUL);
 
 		
 	}

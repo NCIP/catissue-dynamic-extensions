@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.common.dynamicextensions.ui.webui.util.FormDataCollectionUtility;
+import edu.wustl.dao.newdao.ActionStatus;
 
 /**
  * @author Kunal
@@ -34,5 +35,6 @@ public class CancelActionServlet extends HttpServlet
 			throws ServletException, IOException
 	{
 		FormDataCollectionUtility.popStack(req);
+		req.setAttribute(ActionStatus.ACTIONSTAUS, ActionStatus.SUCCESSFUL);
 	}
 }

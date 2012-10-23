@@ -31,6 +31,7 @@ import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.newdao.ActionStatus;
 
 /**
  * @author sandeep_chinta
@@ -86,7 +87,7 @@ public class DownloadFileAction extends HttpServlet
 
 			bufStream.close();
 			responseOutputStream.close();
-
+			req.setAttribute(ActionStatus.ACTIONSTAUS, ActionStatus.SUCCESSFUL);
 		}
 		catch (DynamicExtensionsSystemException e)
 		{

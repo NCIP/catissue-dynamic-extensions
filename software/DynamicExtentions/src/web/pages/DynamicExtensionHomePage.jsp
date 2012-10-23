@@ -102,7 +102,7 @@
 										<td>
 											<%
 	 											String cont_Id = containerInterface.getId().toString();
-	 											String target = "setDataEntryOperation('/dynamicExtensions/LoadDataEntryFormAction.do?containerIdentifier=" + cont_Id + "&showFormPreview=false');";
+	 											String target = "setDataEntryOperation('/dynamicExtensions/LoadDataEntryFormAction.de?containerIdentifier=" + cont_Id + "&showFormPreview=false');";
 	 										%>
 											<html:link href='#' onclick="<%=target%>" >
 												&nbsp;<c:out value='${containerInterface.caption}' />

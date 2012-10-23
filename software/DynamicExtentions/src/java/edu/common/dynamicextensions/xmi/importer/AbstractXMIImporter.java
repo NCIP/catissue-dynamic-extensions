@@ -45,10 +45,10 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
-import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationDirection;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
+import edu.common.dynamicextensions.util.global.Variables;
 import edu.common.dynamicextensions.xmi.AnnotationUtil;
 import edu.common.dynamicextensions.xmi.DynamicQueryList;
 import edu.common.dynamicextensions.xmi.PathObject;
@@ -262,7 +262,7 @@ public abstract class AbstractXMIImporter
 		{
 			url.append("/");
 		}
-		url.append("UpdateCache");
+		url.append(WebUIManagerConstants.UPDATECACHE);
 		return new URL(url.toString());
 	}
 

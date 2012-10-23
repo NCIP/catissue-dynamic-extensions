@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
+import edu.wustl.dao.newdao.ActionStatus;
 
 /**
  * @author preeti_munot,suhas_khot
@@ -49,5 +50,7 @@ public class AjaxcodeHandlerAction extends HttpServlet
 	{
 		DEAjaxActionManager actionManager = new DEAjaxActionManager();
 		actionManager.manage(request, response);
+		
+		request.setAttribute(ActionStatus.ACTIONSTAUS, ActionStatus.SUCCESSFUL);
 	}
 }

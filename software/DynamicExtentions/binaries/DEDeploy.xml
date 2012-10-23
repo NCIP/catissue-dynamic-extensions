@@ -2251,7 +2251,7 @@
 	
 				<servlet-mapping>
 					<servlet-name>UpdateCache</servlet-name>
-					<url-pattern>/UpdateCache</url-pattern>
+					<url-pattern>/UpdateCache.de</url-pattern>
 				</servlet-mapping>
 				<servlet>
 					<servlet-name>DynamicExtensionsInterfaceAction</servlet-name>
@@ -2263,7 +2263,7 @@
 				</servlet>
 				<servlet-mapping>
 					<servlet-name>DynamicExtensionsInterfaceAction</servlet-name>
-					<url-pattern>/DynamicExtensionsInterfaceAction</url-pattern>
+					<url-pattern>/DynamicExtensionsInterfaceAction.de</url-pattern>
 				</servlet-mapping>
 				<servlet-mapping>
 					<servlet-name>DownloadFileAction</servlet-name>
@@ -2276,7 +2276,7 @@
 				</servlet>
 				<servlet-mapping>
 					<servlet-name>CreateCategoryAction</servlet-name>
-					<url-pattern>/CreateCategoryAction</url-pattern>
+					<url-pattern>/CreateCategoryAction.de</url-pattern>
 				</servlet-mapping>
 				
 				<servlet>
@@ -2285,7 +2285,7 @@
 				</servlet>
 				<servlet-mapping>
 					<servlet-name>CreateCategoryMetadataAction</servlet-name>
-					<url-pattern>/CreateCategoryMetadataAction</url-pattern>
+					<url-pattern>/CreateCategoryMetadataAction.de</url-pattern>
 				</servlet-mapping>
 				
 
@@ -2295,7 +2295,7 @@
 				</servlet>
 				<servlet-mapping>
 					<servlet-name>AjaxcodeHandlerAction</servlet-name>
-					<url-pattern>/AjaxcodeHandlerAction</url-pattern>
+					<url-pattern>/AjaxcodeHandlerAction.de</url-pattern>
 				</servlet-mapping>
 			
 				<servlet>
@@ -2304,7 +2304,7 @@
 				</servlet>
 				<servlet-mapping>
 					<servlet-name>DownloadPVVersionAction</servlet-name>
-					<url-pattern>/DownloadPVVersionAction</url-pattern>
+					<url-pattern>/DownloadPVVersionAction.de</url-pattern>
 				</servlet-mapping>
 
 				<servlet>
@@ -2313,7 +2313,7 @@
 				</servlet>
 				<servlet-mapping>
 					<servlet-name>ImportPVAction</servlet-name>
-					<url-pattern>/ImportPVAction</url-pattern>
+					<url-pattern>/ImportPVAction.de</url-pattern>
 				</servlet-mapping>
 
 				<servlet>
@@ -2322,7 +2322,7 @@
 				</servlet>
 				<servlet-mapping>
 					<servlet-name>LoadDisplayFormDataInGrid</servlet-name>
-					<url-pattern>/LoadDisplayFormDataInGrid</url-pattern>
+					<url-pattern>/LoadDisplayFormDataInGrid.de</url-pattern>
 				</servlet-mapping>
 
 				<servlet>
@@ -2331,7 +2331,7 @@
 				</servlet>
 				<servlet-mapping>
 					<servlet-name>UploadFile</servlet-name>
-					<url-pattern>/UploadFile</url-pattern>
+					<url-pattern>/UploadFile.de</url-pattern>
 				</servlet-mapping>
 				
 				<servlet>
@@ -2340,7 +2340,7 @@
 				</servlet>
 				<servlet-mapping>
 					<servlet-name>DEComboDataAction</servlet-name>
-					<url-pattern>/DEComboDataAction</url-pattern>
+					<url-pattern>/DEComboDataAction.de</url-pattern>
 				</servlet-mapping>
 
 				<servlet>
@@ -2353,11 +2353,11 @@
 				</servlet>
 				<servlet-mapping>
 					<servlet-name>DEServlet</servlet-name>
-					<url-pattern>/DEServlet</url-pattern>
+					<url-pattern>/DEServlet.de</url-pattern>
 				</servlet-mapping>
 				<servlet-mapping>
 					<servlet-name>LoadDataEntryFormAction</servlet-name>
-					<url-pattern>/LoadDataEntryFormAction</url-pattern>
+					<url-pattern>/LoadDataEntryFormAction.de</url-pattern>
 				</servlet-mapping>
 				
 				<servlet>
@@ -2366,7 +2366,7 @@
 				</servlet>
 				<servlet-mapping>
 					<servlet-name>ApplyDataEntryFormAction</servlet-name>
-					<url-pattern>/ApplyDataEntryFormAction</url-pattern>
+					<url-pattern>/ApplyDataEntryFormAction.de</url-pattern>
 				</servlet-mapping>
 
 
@@ -2376,7 +2376,7 @@
 				</servlet>
 				<servlet-mapping>
 					<servlet-name>CancelFormData</servlet-name>
-					<url-pattern>/CancelFormData</url-pattern>
+					<url-pattern>/CancelFormData.de</url-pattern>
 				</servlet-mapping>
 
 				<servlet>
@@ -2412,9 +2412,20 @@
 				</servlet>
 				<servlet-mapping>
 					<servlet-name>DeleteRecordEntryAction</servlet-name>
-					<url-pattern>/DeleteRecordEntryAction</url-pattern>
+					<url-pattern>/DeleteRecordEntryAction.de</url-pattern>
 				</servlet-mapping>
-
+				<filter>
+					<filter-name>DETransactionFilter</filter-name>
+					<filter-class>edu.wustl.dao.newdao.TransactionFilter</filter-class>
+					<init-param>
+						<param-name>userTransactionJndiName</param-name>
+						<param-value>java:comp/UserTransaction</param-value>
+					</init-param>
+				</filter>
+				<filter-mapping>
+					<filter-name>DETransactionFilter</filter-name>
+					<url-pattern>*.de</url-pattern>
+				</filter-mapping>
 				<taglib>
 					<taglib-uri>/WEB-INF/dynamicExtensions.tld</taglib-uri>
 					<taglib-location>/WEB-INF/dynamicExtensions.tld</taglib-location>

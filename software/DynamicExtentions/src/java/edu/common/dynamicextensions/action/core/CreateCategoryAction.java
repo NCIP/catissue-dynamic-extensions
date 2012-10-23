@@ -31,6 +31,7 @@ import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
+import edu.wustl.dao.newdao.ActionStatus;
 
 /**
  * This action class is used by the create_category ant target.
@@ -101,7 +102,7 @@ public class CreateCategoryAction extends HttpServlet
 				processor.createCategory(name, tempDirName, isPersistMetadataOnly, catNameVsExcep);
 			}
 			sendResponse(response, catNameVsExcep);
-
+			request.setAttribute(ActionStatus.ACTIONSTAUS, ActionStatus.SUCCESSFUL);
 			LOGGER.info("Create category action completed successfully");
 		}
 		catch (Exception e)

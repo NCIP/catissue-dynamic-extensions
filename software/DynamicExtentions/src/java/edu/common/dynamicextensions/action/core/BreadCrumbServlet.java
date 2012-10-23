@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.common.dynamicextensions.util.FormManager;
 import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.wustl.dao.newdao.ActionStatus;
 
 
 public class BreadCrumbServlet extends HttpServlet
@@ -26,6 +27,7 @@ public class BreadCrumbServlet extends HttpServlet
 		FormManager formManager = new FormManager();
 		String breadCrumbPosition = request.getParameter(DEConstants.BREAD_CRUMB_POSITION);
 		formManager.onBreadCrumbClick(request, breadCrumbPosition);
+		request.setAttribute(ActionStatus.ACTIONSTAUS, ActionStatus.SUCCESSFUL);
 		
 	}
 	

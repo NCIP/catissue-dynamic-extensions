@@ -76,7 +76,7 @@ jQuery(document).ready(
 				var controlId = this.id;
 				new AjaxUpload(this,
 					{
-					   action: 'UploadFile',
+					   action: 'UploadFile.de',
 					   name: 'upload',
 					   responseType: 'json',
 					   onSubmit : function(file,extension)
@@ -131,8 +131,8 @@ jQuery(document).ready(
 <c:set var="formSubmitUrl" value="${sessionScope.formSubmitUrl}"/>
 <c:if test='${empty sessionScope.formSubmitUrl}'>
 	<script>
-		<c:set var="formSubmitUrl" value="ApplyDataEntryFormAction"/>
-		document.getElementById('formSubmitUrl').value = "ApplyDataEntryFormAction";
+		<c:set var="formSubmitUrl" value="ApplyDataEntryFormAction.de"/>
+		document.getElementById('formSubmitUrl').value = "ApplyDataEntryFormAction.de";
 	</script>
 </c:if>
 

@@ -24,6 +24,7 @@ import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.newdao.ActionStatus;
 
 public class DisplayFormDataInGridAction extends HttpServlet
 {
@@ -60,6 +61,7 @@ public class DisplayFormDataInGridAction extends HttpServlet
 			String destination = "/pages/de/DisplayFormDataInGrid.jsp";
 
 			RequestDispatcher rd = getServletContext().getRequestDispatcher(destination);
+			request.setAttribute(ActionStatus.ACTIONSTAUS, ActionStatus.SUCCESSFUL);
 			rd.forward(request, response);
 
 		}

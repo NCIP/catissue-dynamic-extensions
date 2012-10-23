@@ -1,4 +1,4 @@
-var DeAjaxHandler = "AjaxcodeHandlerAction";
+var DeAjaxHandler = "AjaxcodeHandlerAction.de";
 if (typeof DE_AJAX_HANDLER != "undefined") {
 	DeAjaxHandler = DE_AJAX_HANDLER;
 }

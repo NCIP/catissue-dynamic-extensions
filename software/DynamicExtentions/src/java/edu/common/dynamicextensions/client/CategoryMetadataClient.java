@@ -11,6 +11,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.utility.HTTPSConnection;
 
 /**
@@ -114,7 +115,7 @@ public class CategoryMetadataClient extends AbstractClient
 		try
 		{
 			String url = HTTPSConnection.getCorrectedApplicationURL(args[1])
-					+ "/CreateCategoryMetadataAction?";
+					+ WebUIManagerConstants.CREATE_CATEGORY_METADATA_ACTION+"?";
 			String catName = URLEncoder.encode(getCategoryFilenameString(args[0]), "UTF-8");
 			serverUrl = new URL(url + "categoryName=" + catName);
 		}

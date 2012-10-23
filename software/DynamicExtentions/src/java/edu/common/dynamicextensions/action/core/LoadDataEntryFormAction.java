@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.wustl.dao.newdao.ActionStatus;
+
 /**
  * @author sujay_narkar, chetan_patil, suhas_khot
  *
@@ -35,6 +37,7 @@ public class LoadDataEntryFormAction extends HttpServlet
 	{
 		RequestDispatcher rd = getServletContext().getRequestDispatcher("/pages/de/dataEntry.jsp");
 		rd.forward(request, response);
+		request.setAttribute(ActionStatus.ACTIONSTAUS, ActionStatus.SUCCESSFUL);
 	}
 	
 }

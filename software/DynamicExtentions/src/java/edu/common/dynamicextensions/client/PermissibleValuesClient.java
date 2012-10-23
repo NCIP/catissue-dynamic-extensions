@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DirOperationsUtility;
 import edu.common.dynamicextensions.util.ZipUtility;
 import edu.common.dynamicextensions.utility.HTTPSConnection;
@@ -58,7 +59,8 @@ public class PermissibleValuesClient extends AbstractClient
 		StringBuffer url = new StringBuffer(35);
 
 		url.append(HTTPSConnection.getCorrectedApplicationURL(args[1]));
-		url.append("/ImportPVAction?");
+		url.append(WebUIManagerConstants.IMPORT_PV_ACTION);
+		url.append("?");
 		url.append(startFolder);
 		url.append('=');
 		url.append(folderName);

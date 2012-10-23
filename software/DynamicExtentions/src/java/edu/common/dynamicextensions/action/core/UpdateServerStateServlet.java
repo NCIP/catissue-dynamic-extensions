@@ -12,6 +12,7 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationExcept
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.util.FormDataCollectionUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
+import edu.wustl.dao.newdao.ActionStatus;
 
 
 /**
@@ -34,7 +35,7 @@ public class UpdateServerStateServlet extends HttpServlet
 			{
 				FormDataCollectionUtility collectionUtility = new FormDataCollectionUtility();
 				collectionUtility.populateAndValidateValues(request,Boolean.TRUE.toString());
-
+				request.setAttribute(ActionStatus.ACTIONSTAUS, ActionStatus.SUCCESSFUL);	
 				forwardRequest(request, response,WebUIManagerConstants.LOAD_DATA_ENTRY_FORM_ACTION_URL);
 			}
 			catch (DynamicExtensionsSystemException e)

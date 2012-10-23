@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DirOperationsUtility;
 import edu.common.dynamicextensions.util.ZipUtility;
 import edu.common.dynamicextensions.utility.HTTPSConnection;
@@ -56,7 +57,8 @@ public class DownloadPVVersionClient extends AbstractClient
 
 		final StringBuffer url = new StringBuffer(50);
 		url.append(HTTPSConnection.getCorrectedApplicationURL(args[1]));
-		url.append("/DownloadPVVersionAction?");
+		url.append(WebUIManagerConstants.DOWNLOAD_PV_VERSION_ACTION);
+		url.append("?");
 		url.append(START_FOLDER);
 		url.append('=');
 		url.append(folderName);

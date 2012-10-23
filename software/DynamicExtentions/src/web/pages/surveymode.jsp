@@ -121,7 +121,7 @@
 
 <c:if test='${empty sessionScope.formSubmitUrl}'>
 	<script>
-		document.getElementById('sm-form').action = "/clinportal/DEServlet";
+		document.getElementById('sm-form').action = "${pageContext.request.contextPath}/DEServlet.de";
 	</script>
 </c:if>	
 

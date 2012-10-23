@@ -36,6 +36,7 @@ import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
+import edu.wustl.dao.newdao.ActionStatus;
 
 /**
  * @author gaurav_mehta
@@ -88,6 +89,7 @@ public class ImportPVAction extends HttpServlet
 				importPVs(file, pvDir, pvFileNameVsExcep, isCategoryImport);
 			}
 			sendResponse(response, pvFileNameVsExcep);
+			request.setAttribute(ActionStatus.ACTIONSTAUS, ActionStatus.SUCCESSFUL);
 		}
 		catch (Exception e)
 		{

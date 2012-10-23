@@ -27,6 +27,7 @@ import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.newdao.ActionStatus;
 
 public class UpdateCache extends HttpServlet
 {
@@ -67,6 +68,7 @@ public class UpdateCache extends HttpServlet
 				relaseForms(paramaterObjectMap);
 				releaseEntity(paramaterObjectMap);
 			}
+			req.setAttribute(ActionStatus.ACTIONSTAUS, ActionStatus.SUCCESSFUL);
 		}
 		catch (DynamicExtensionsApplicationException e)
 		{

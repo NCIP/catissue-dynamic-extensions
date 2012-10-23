@@ -27,6 +27,7 @@ import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.common.util.logger.LoggerConfig;
+import edu.wustl.dao.newdao.ActionStatus;
 
 /**
  * @author gaurav_mehta
@@ -67,6 +68,7 @@ public class DownloadPVVersionAction extends HttpServlet
 				downloadPVs(file, pvDir,request.getParameter("downLoadDirectory"),pvFileNameVsExcep);
 			}
 			sendResponse(response, pvFileNameVsExcep);
+			request.setAttribute(ActionStatus.ACTIONSTAUS, ActionStatus.SUCCESSFUL);
 		}
 		catch (Exception e)
 		{

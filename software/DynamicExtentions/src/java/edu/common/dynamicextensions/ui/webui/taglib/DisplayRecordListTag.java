@@ -91,7 +91,7 @@ public class DisplayRecordListTag extends TagSupport
 					//					stringBuffer.append("</td><td>");
 
 					stringBuffer.append("<span style='cursor:hand' onclick=\"setRecordListTarget(");
-					String target = "'/dynamicExtensions/LoadDataEntryFormAction.do?containerIdentifier="
+					String target = "'/dynamicExtensions/LoadDataEntryFormAction.de?containerIdentifier="
 							+ containerIdentifier
 							+ "&recordIdentifier="
 							+ recordId.toString()

@@ -22,6 +22,7 @@ import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.FormManager;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.newdao.ActionStatus;
 
 /**
  * It populates the Attribute values entered in the dynamically generated controls.
@@ -100,6 +101,7 @@ public class ApplyDataEntryFormAction extends HttpServlet
 				UserInterfaceiUtility.resetRequestParameterMap(request);
 
 			}
+			request.setAttribute(ActionStatus.ACTIONSTAUS, ActionStatus.SUCCESSFUL);
 		}
 		catch (DynamicExtensionsApplicationException e) {
 			Logger.out.error(e.getMessage());

@@ -26,6 +26,7 @@ import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.exception.DAOException;
+import edu.wustl.dao.newdao.ActionStatus;
 
 /**
  * @author Amol Pujari
@@ -106,7 +107,7 @@ public class LoadDisplayFormDataInGridAction extends HttpServlet
 		{
 			Logger.out.error(e);
 		}
-		
+		request.setAttribute(ActionStatus.ACTIONSTAUS, ActionStatus.SUCCESSFUL);
 		response.setContentType(Constants.CONTENT_TYPE_XML);
 		response.getWriter().write(responseString);
 	}

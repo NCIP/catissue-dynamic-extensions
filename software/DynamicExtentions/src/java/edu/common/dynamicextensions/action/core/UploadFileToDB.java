@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import edu.common.dynamicextensions.entitymanager.FileUploadManager;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.util.logger.Logger;
+import edu.wustl.dao.newdao.ActionStatus;
 
 /**
  * The Class UploadFileToDB.
@@ -70,6 +71,7 @@ public class UploadFileToDB  extends HttpServlet
 
 			identifier = fileUploadManager.uploadFile(fileContent);
 			updateResponse(response, identifier, responseList, contentType);
+			request.setAttribute(ActionStatus.ACTIONSTAUS, ActionStatus.SUCCESSFUL);
 		}
 		catch (FileUploadException e)
 		{
