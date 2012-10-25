@@ -495,24 +495,36 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 
 		}
 
-		if((yPosition != null && yPosition > 0) ||(alignment != null && VERTICAL.equals(alignment)))
-		{
-			controlHTML.append("<td class='formRequiredLabel_withoutBorder'  title='");
-		}else
-		{
-			controlHTML.append("<td class='formRequiredLabel_withoutBorder'  width='40%' title='");	
-		}
-		
-
+		String title="";
 		BaseAbstractAttribute baseAbstractAttribute = (BaseAbstractAttribute) getBaseAbstractAttribute();
 		if (baseAbstractAttribute instanceof CategoryAttributeInterface
 				&& ((CategoryAttributeInterface) baseAbstractAttribute).getAbstractAttribute()
 						.getTaggedValue(XMIConstants.TAGGED_KEY_HS) != null)
 		{
-			controlHTML.append(((CategoryAttributeInterface) getBaseAbstractAttribute())
-					.getAbstractAttribute().getTaggedValue(XMIConstants.TAGGED_KEY_HS));
+			title = ((CategoryAttributeInterface) getBaseAbstractAttribute())
+					.getAbstractAttribute().getTaggedValue(XMIConstants.TAGGED_KEY_HS);
 		}
-		controlHTML.append("'><div class='control_caption'>");
+		
+		if(alignment != null && VERTICAL.equals(alignment))
+		{
+			controlHTML.append("<td title='");
+			controlHTML.append(title);
+			controlHTML.append("'><table><tr><td class='formRequiredLabel_withoutBorder'><div class='control_caption'>");
+		}else if(yPosition != null && yPosition > 0)
+		{
+			controlHTML.append("<td class='formRequiredLabel_withoutBorder' title='");
+			controlHTML.append(title);
+			controlHTML.append("'><div class='control_caption'>");
+		}else
+		{
+			controlHTML.append("<td class='formRequiredLabel_withoutBorder'  width='40%' title='");
+			controlHTML.append(title);
+			controlHTML.append("'><div class='control_caption'>");
+		}
+		
+		
+		
+		
 
 		if (showLabel != null && showLabel)
 		{
@@ -529,7 +541,12 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 			}
 			
 		}
-		controlHTML.append("<div>");
+		controlHTML.append("</div>");
+		if(alignment != null && VERTICAL.equals(alignment))
+		{
+			controlHTML.append("</div></td></tr><tr>");
+		}
+		
 		controlHTML.append("<td class='formField_withoutBorder' valign='center'>");
 
 		if (getYPosition() <= 1)
@@ -539,6 +556,11 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		controlHTML.append("<td class='formRequiredLabel_withoutBorder'>");
 		controlHTML.append(htmlString);
 		controlHTML.append("</td>");
+		if(alignment != null && VERTICAL.equals(alignment))
+		{
+			controlHTML.append("</td></td></tr></table>");
+		}
+		
 		return controlHTML.toString();
 	}
 
