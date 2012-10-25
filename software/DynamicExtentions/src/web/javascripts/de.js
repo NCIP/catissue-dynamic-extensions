@@ -24,7 +24,7 @@ edu.wustl.de.CategorySurveyMode = function (args) {
 
 edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 	var sm = this;
-	$("input:radio").live("change", function () {
+	$("input:radio").live("click", function () {
 		var defaultValue = edu.wustl.de.defaultValues[$(this).attr("name")];
 		if (defaultValue == undefined) {
 			edu.wustl.de.defaultValues[$(this).attr("name")] = $(this).val();
@@ -32,7 +32,7 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 			sm.updateProgress();
 		}
 	});	
-	$("input:checkbox").live("change", function () {
+	$("input:checkbox").live("click", function () {
 		var defaultValue = edu.wustl.de.defaultValues[$(this).attr("name")];
 		var controlName = $(this).attr("name");
 		if ($('input[name='+controlName+']:checked').val() == undefined){
@@ -47,7 +47,7 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 			sm.updateProgress();
 		}
 	});	
-	$("input:text").live("change", function () {
+	$("input:text").live("keyup", function () {
 		if ($(this).attr("defaultValue") == "" && $(this).val() != "") {
 			$(this).attr("defaultValue", $(this).val());
 			edu.wustl.de.defaultValues[$(this).attr("name")] = $(this).val();
@@ -75,7 +75,7 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 			sm.updateProgress();
 		}		
 	});
-	$("textarea").live("change", function () {
+	$("textarea").live("keyup", function () {
 		if ($(this).attr("defaultValue") == "" && $(this).val() != "") {
 			$(this).attr("defaultValue", $(this).val());
 			edu.wustl.de.defaultValues[$(this).attr("name")] = $(this).val();
