@@ -87,7 +87,7 @@ public class RadioButton extends SelectControl implements RadioButtonInterface
 				final String optionValue = nameValueBean.getValue();
 				if (optionValue.equals(defaultValue))
 				{
-					htmlString += "<td><input type='radio' onClick=\""
+					htmlString += "<td style='padding-top:3px'><input type='radio' onClick=\""
 							+ getOnchangeServerCall()
 							+ "\""
 							+ "class="
@@ -105,7 +105,7 @@ public class RadioButton extends SelectControl implements RadioButtonInterface
 				}
 				else
 				{
-					htmlString +="<td><input type='radio' onClick=\""
+					htmlString +="<td style='padding-top:3px'><input type='radio' onClick=\""
 							+ getOnchangeServerCall()
 							+ "\" class="
 							+getCSS()

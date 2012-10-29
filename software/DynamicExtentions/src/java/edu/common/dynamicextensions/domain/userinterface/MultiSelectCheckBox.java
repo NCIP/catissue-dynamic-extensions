@@ -143,7 +143,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 								.contains(DynamicExtensionsUtility
 										.getUnEscapedStringValue(nameValueBean.getValue()))))
 				{
-					htmlString += "<td valign='top' style='padding-top:3px'><input type='checkbox' class="
+					htmlString += "<td valign='center'><input type='checkbox' class="
 							+ getCSS()
 							+ " name='"
 							+ htmlComponentName
@@ -168,7 +168,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 							+ getOnchangeServerCall()
 							+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName + "','"
 									+ identifier + "','" + parentContainerId + "');" : "")
-							+ "\" /></td><td class='formRequiredLabel_withoutBorder' valign='top'>"
+							+ "\" /></td><td class='formRequiredLabel_withoutBorder'>"
 							+ "<label for=\""
 							+ htmlComponentName
 							+ "\">"
@@ -178,7 +178,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 				}
 				else
 				{
-					htmlString += "<td valign='top' style='padding-top:3px'><input type='checkbox' class="
+					htmlString += "<td valign='center'><input type='checkbox' class="
 							+ getCSS()
 							+ " name='"
 							+ htmlComponentName
@@ -202,7 +202,7 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 							+ getOnchangeServerCall()
 							+ (isSkipLogic ? "getSkipLogicControl('" + htmlComponentName + "','"
 									+ identifier + "','" + parentContainerId + "');" : "")
-							+ "\" /></td><td class='formRequiredLabel_withoutBorder' valign='top'>"
+							+ "\" /></td><td class='formRequiredLabel_withoutBorder' >"
 							+ "<label for=\"" + htmlComponentName + "\">" + nameValueBean.getName()
 							+ "</label> </td>";
 				}
