@@ -473,27 +473,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 				controlHTML.append("_row_div_cntrl' />");
 			}
 		}
-		if (yPosition != null && yPosition <= 1)
-		{
-
-			controlHTML.append("<td class='formRequiredNotice_withoutBorder' width='2%' valign='top' align='right' style='padding-top:7px' >");
-
-			if (isControlRequired)
-			{
-				controlHTML.append("<span class='font_red'>");
-				controlHTML.append(getParentContainer().getRequiredFieldIndicatior());
-				controlHTML.append("&nbsp; </span> </td> ");
-			}
-			else
-			{
-				controlHTML.append("&nbsp; </td> ");
-			}
-			//			if (this instanceof ComboBox)
-			//			{
-			//				stringBuffer.append("<br/>");
-			//			}
-
-		}
+		
 
 		String title="";
 		BaseAbstractAttribute baseAbstractAttribute = (BaseAbstractAttribute) getBaseAbstractAttribute();
@@ -509,14 +489,18 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		{
 			controlHTML.append("<td title='");
 			controlHTML.append(title);
-			controlHTML.append("'><table><tr><td class='formRequiredLabel_withoutBorder'><div class='control_caption'>");
+			controlHTML.append("'><table><tr>");
+			updateRequiredFieldIndicator(isControlRequired, controlHTML);
+			controlHTML.append("<td class='formRequiredLabel_withoutBorder'><div class='control_caption'>");
 		}else if(yPosition != null && yPosition > 0)
 		{
+			updateRequiredFieldIndicator(isControlRequired, controlHTML);
 			controlHTML.append("<td class='formRequiredLabel_withoutBorder' title='");
 			controlHTML.append(title);
 			controlHTML.append("'><div class='control_caption'>");
 		}else
 		{
+			updateRequiredFieldIndicator(isControlRequired, controlHTML);
 			controlHTML.append("<td class='formRequiredLabel_withoutBorder'  width='40%' title='");
 			controlHTML.append(title);
 			controlHTML.append("'><div class='control_caption'>");
@@ -544,7 +528,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		controlHTML.append("</div>");
 		if(alignment != null && VERTICAL.equals(alignment))
 		{
-			controlHTML.append("</div></td></tr><tr>");
+			controlHTML.append("</div></td></tr><tr><td width='2%'></td>");
 		}
 		
 		controlHTML.append("<td class='formField_withoutBorder' valign='center'>");
@@ -563,6 +547,31 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 		
 		return controlHTML.toString();
 	}
+
+
+	private void updateRequiredFieldIndicator(boolean isControlRequired, StringBuffer controlHTML)
+	{
+		if (yPosition != null && yPosition <= 1)
+		{
+
+			controlHTML.append("<td class='formRequiredNotice_withoutBorder' width='2%' valign='center' align='right' >");
+
+			if (isControlRequired)
+			{
+				controlHTML.append("<span class='font_red'>");
+				controlHTML.append(getParentContainer().getRequiredFieldIndicatior());
+				controlHTML.append("&nbsp; </span> </td> ");
+			}
+			else
+			{
+				controlHTML.append("&nbsp; </td> ");
+			}
+
+		}
+	}
+
+
+
 
 	/**
 	 * @return String html
