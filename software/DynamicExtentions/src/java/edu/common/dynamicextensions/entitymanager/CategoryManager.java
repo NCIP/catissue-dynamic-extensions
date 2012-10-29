@@ -3658,16 +3658,17 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			preProcess(categoryInterface, revQueries, queries);
 
 			saveDynamicExtensionObject(categoryInterface, hibernateDAO, rlbkQryStack);
+			categoryInterface = (CategoryInterface)hibernateDAO.retrieveById(categoryInterface.getClass().getName(), categoryInterface.getId());
 
 			postProcess(queries, revQueries, rlbkQryStack);
 
 			EntityCache.getInstance().addCategoryToCache(categoryInterface);
 		}
-		catch (DynamicExtensionsSystemException e)
+		catch (Exception e)
 		{
 			executeRollbackQueries(rlbkQryStack, null, e);
 			LOGGER.error(e.getMessage());
-			throw e;
+			throw new DynamicExtensionsSystemException("Error persisting category", e);
 		}
 
 		return rlbkQryStack;
