@@ -9,9 +9,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -235,7 +235,7 @@ public final class UserInterfaceiUtility
 			{
 				// Cloning the sub container object to map the UI Object multiple instances of Add more case.
 				ContainerInterface clonedSubContainer = new DyExtnObjectCloner()
-						.clone(subContainer);
+						.clone(EntityCache.getInstance().getContainerById(subContainer.getId()));
 
 				setContainerValueMap(clonedSubContainer, rowValueMap);
 
