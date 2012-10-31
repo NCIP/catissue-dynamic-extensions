@@ -81,10 +81,6 @@
 			<column name="FORM_DATA_XML" type="${clob.type}"/>
 		</createTable>
 		
-		<addPrimaryKey tableName="DYEXTN_AUDIT_EVENT"
-			columnNames="IDENTIFIER"
-			constraintName="PK_DYEXTN_AUDIT_EVENT"/>
-
 		<addForeignKeyConstraint constraintName="FK_AUDIT_EVENT_ID"
 			baseTableName="DYEXTN_AUDIT_EVENT" baseColumnNames="IDENTIFIER"
 			referencedTableName="CATISSUE_AUDIT_EVENT" referencedColumnNames="IDENTIFIER"/>
