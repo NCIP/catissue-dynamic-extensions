@@ -728,7 +728,7 @@ function addDynamicData(recordIdentifier)
             document.getElementById('recordIdentifier').value = recordIdentifier;
             document.getElementById('isEdit').value = "true";
         }
-        dataEntryForm.action= contextParam + "/de/ApplyDataEntryFormAction";
+        dataEntryForm.action= contextParam + "/ApplyDataEntryFormAction.de";
         setWaitCursorforAllObjectHierarchy(dataEntryForm);
     }
 }
@@ -2148,7 +2148,7 @@ function evaluateFormulaForAttribute(controlName)
 		// because we are
 		// assigning a reference to the function and not actually calling it
 		request.onreadystatechange = handlerFunction;
-		request.open("POST", "de/ApplyDataEntryFormAction", true);
+		request.open("POST", "/ApplyDataEntryFormAction.de", true);
 		request.setRequestHeader("Content-Type",
 				"application/x-www-form-urlencoded");
 		request.send(encodeURI("&dataEntryOperation=evaluateFormula&selectedControlId="
@@ -2197,7 +2197,7 @@ function showChildContainerInsertDataPage(containerId,ths)
     }
     else if(mode == "view" || mode == "edit")
     {
-        dataEntryForm.action= contextParam + "/de/ApplyDataEntryFormAction?scrollTop="+document.getElementById('dataEntryFormDiv').scrollTop;
+        dataEntryForm.action= contextParam + "/ApplyDataEntryFormAction.de?scrollTop="+document.getElementById('dataEntryFormDiv').scrollTop;
         document.getElementById('scrollTop').value = document.getElementById('dataEntryFormDiv').scrollTop;
     }
     setWaitCursorforAllObjectHierarchy(dataEntryForm);
@@ -3203,7 +3203,7 @@ function executeComboScriptsForSkipLogic()
 			{
 				var comboScript = document.getElementById(comboScriptDiv[i].value);
 				
-				if (comboScript != null && comboScript.getElementsBySelector("input[name='isDEComboScriptEvaluated']").length == 0)
+				if (comboScript != null && comboScript.getElementsByTagName("input").length == 0)
 				{
 					var oInput = document.createElement("input");
 					oInput.type = "hidden";
