@@ -8,6 +8,7 @@
         <table name="CATISSUE_DATA_AUDIT_EVENT_LOG"/>
         <table name="CATISSUE_LOGIN_AUDIT_EVENT_LOG"/>
         <table name="DYEXTN_SQL_AUDIT"/>
+		<table name="DYEXTN_AUDIT_EVENT"/>
     </exclude-tables>
 </object-factory-cfg>
 
