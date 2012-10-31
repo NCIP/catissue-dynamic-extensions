@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 
+import edu.common.dynamicextensions.dao.impl.FormAuditManager;
 import edu.common.dynamicextensions.domain.Entity;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
@@ -63,6 +64,7 @@ public class InContextApplyDataEntryProcessor extends BaseDynamicExtensionsProce
 					sessionDataBean, userId);
 		}
 
+		audit(sessionDataBean, container, attributeValueMap, recordIdentifier);
 		return recordIdentifier.toString();
 	}
 
@@ -108,6 +110,8 @@ public class InContextApplyDataEntryProcessor extends BaseDynamicExtensionsProce
 					(CategoryEntityInterface) container.getAbstractEntity(), attributeValueMap,
 					categoryRecordId, sessionDataBean, userId);
 		}
+		
+		audit(sessionDataBean, container, attributeValueMap, recordIdentifier);		
 		return isEdited;
 	}
 
@@ -119,5 +123,13 @@ public class InContextApplyDataEntryProcessor extends BaseDynamicExtensionsProce
 	public void setUserId(Long userId)
 	{
 		this.userId = userId;
+	}	
+	
+	private void audit(SessionDataBean sdb, ContainerInterface container, Map<BaseAbstractAttributeInterface, Object> valueMap, Long recId) {
+		try {
+			FormAuditManager.getInstance().audit(sdb, container, valueMap, recId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

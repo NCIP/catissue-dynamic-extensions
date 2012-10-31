@@ -10,6 +10,8 @@
 	<property name="int.type" value="number(19,0)" dbms="oracle"/>
 	<property name="text.type" value="varchar(1000)" dbms="mysql"/>
 	<property name="text.type" value="varchar2(1000)" dbms="oracle"/>
+	<property name="clob.type" value="clob" dbms="oracle"/>
+	<property name="clob.type" value="longtext" dbms="mysql"/>
 
 	<changeSet id="1" author="kulkranr">
 		<createTable tableName="DYEXTN_LAYOUT">
@@ -68,5 +70,26 @@
 		<createSequence sequenceName="DYEXTN_PAGE_SEQ"/>
 		
 	</changeSet>
+	
+	<changeSet id="2" author="DE">
+		<createTable tableName="DYEXTN_AUDIT_EVENT">
+			<column name="IDENTIFIER" type="${int.type}">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="FORM_NAME" type="${text.type}"/>
+			<column name="RECORD_ID" type="${int.type}"/>
+			<column name="FORM_DATA_XML" type="${clob.type}"/>
+		</createTable>
+		
+		<addPrimaryKey tableName="DYEXTN_AUDIT_EVENT"
+			columnNames="IDENTIFIER"
+			constraintName="PK_DYEXTN_AUDIT_EVENT"/>
+
+		<addForeignKeyConstraint constraintName="FK_AUDIT_EVENT_ID"
+			baseTableName="DYEXTN_AUDIT_EVENT" baseColumnNames="IDENTIFIER"
+			referencedTableName="CATISSUE_AUDIT_EVENT" referencedColumnNames="IDENTIFIER"/>
+	</changeSet>
+
+
 
 </databaseChangeLog>
