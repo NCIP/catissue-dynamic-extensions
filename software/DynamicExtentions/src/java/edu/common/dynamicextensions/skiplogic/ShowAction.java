@@ -77,6 +77,7 @@ public class ShowAction implements Action
 	public void resetAction(ControlInterface control)
 	{
 		control.setIsHidden(true);
+		control.setValue(null);
 	}
 
 	/**

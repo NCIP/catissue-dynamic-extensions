@@ -67,6 +67,7 @@ public class HideAction implements Action
 	public void performAction(ControlInterface control)
 	{
 		control.setIsHidden(true);
+		control.setValue(null);
 		if(defaultValue != null)
 		{
 			CategoryAttributeInterface categoryAttribute = (CategoryAttributeInterface)control.getAttibuteMetadataInterface();
