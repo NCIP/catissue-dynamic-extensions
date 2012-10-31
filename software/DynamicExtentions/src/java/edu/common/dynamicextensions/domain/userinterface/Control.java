@@ -1488,7 +1488,7 @@ public abstract class Control extends DynamicExtensionBaseDomainObject
 	protected String getAjaxHandler()
 	{
 		String ajaxPath = "%s/%s";
-		if(parentContainer.getRequest() != null)
+		if(parentContainer.getRequest() != null && parentContainer.getRequest().getContextPath() != null)
 		{
 			ajaxPath= String.format(ajaxPath, parentContainer.getRequest().getContextPath(),String.valueOf(Variables.resourceMapping.get(WebUIManagerConstants.DE_AJAX_HANDLER)));
 		}else
