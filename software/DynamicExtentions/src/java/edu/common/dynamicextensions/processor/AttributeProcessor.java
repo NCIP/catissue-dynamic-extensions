@@ -886,8 +886,14 @@ public class AttributeProcessor extends BaseDynamicExtensionsProcessor
 					{
 						((PermissibleValue) permissibleValueIntf)
 								.setDescription(permissibleValueDesc);
-						((PermissibleValue) permissibleValueIntf)
-								.setSemanticPropertyCollection(pvSemanticPropColln);
+						if(((PermissibleValue) permissibleValueIntf).getSemanticPropertyCollection() == null)
+						{
+							
+						}else
+						{
+							((PermissibleValue) permissibleValueIntf).getSemanticPropertyCollection().clear();
+							((PermissibleValue) permissibleValueIntf).getSemanticPropertyCollection().addAll(pvSemanticPropColln);
+						}
 					}
 				}
 				catch (Exception e)

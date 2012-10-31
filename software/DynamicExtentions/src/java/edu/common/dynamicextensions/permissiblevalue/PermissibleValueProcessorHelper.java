@@ -26,8 +26,8 @@ import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.xml.AttributeType;
 import edu.common.dynamicextensions.util.xml.QualifierType;
 import edu.common.dynamicextensions.util.xml.SourceType;
-import edu.common.dynamicextensions.util.xml.ValueType;
 import edu.common.dynamicextensions.util.xml.SourceType.QualifierDefinition;
+import edu.common.dynamicextensions.util.xml.ValueType;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.logger.Logger;
@@ -208,8 +208,19 @@ public class PermissibleValueProcessorHelper
 						oldPrimarySemnaticPropertyColl = setConceptCode(
 								oldPrimarySemnaticPropertyColl, newPrimarySemnaticPropertyColl,
 								false);
-						oldPermissibleValue
-								.setSemanticPropertyCollection(oldPrimarySemnaticPropertyColl);
+						if(oldPermissibleValue.getSemanticPropertyCollection() == null)
+						{
+							oldPermissibleValue
+							.setSemanticPropertyCollection(oldPrimarySemnaticPropertyColl);	
+						}else
+						{
+							oldPermissibleValue
+							.getSemanticPropertyCollection().clear();
+							oldPermissibleValue
+							.getSemanticPropertyCollection().addAll(oldPrimarySemnaticPropertyColl);
+						}
+							
+						
 						if (attributeTypeInfo.getPermissibleValueForString(newPermissibleValue
 								.getValueAsObject().toString()) == null)
 						{
@@ -394,8 +405,17 @@ public class PermissibleValueProcessorHelper
 
 			if (value.getSource() != null)
 			{
-				permissibleValue.setSemanticPropertyCollection(populateConceptDefinitionObject(
-						value, pvValidator));
+				if(permissibleValue.getSemanticPropertyCollection() == null)
+				{
+					permissibleValue.setSemanticPropertyCollection(populateConceptDefinitionObject(
+							value, pvValidator));	
+				}else
+				{
+					permissibleValue.getSemanticPropertyCollection().clear();
+					permissibleValue.getSemanticPropertyCollection().addAll(populateConceptDefinitionObject(
+							value, pvValidator));
+				}
+				
 			}
 			permissibleValues.add(permissibleValue);
 		}
