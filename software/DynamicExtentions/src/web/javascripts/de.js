@@ -64,9 +64,12 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 	$("select").live("click", function () {
 		var defaultValue = edu.wustl.de.defaultValues[$(this).attr("name")];
 		if (defaultValue == undefined || defaultValue == "") {
-			edu.wustl.de.defaultValues[$(this).attr("name")] = $(this).val();
-			$("#emptyControlsCount").val($("#emptyControlsCount").val() - 1);
-			sm.updateProgress();
+			if($(this).val() != null)
+			{
+				edu.wustl.de.defaultValues[$(this).attr("name")] = $(this).val();
+				$("#emptyControlsCount").val($("#emptyControlsCount").val() - 1);
+				sm.updateProgress();
+			}
 		}else if($(this).val() == null)
 		{
 		$("#emptyControlsCount").val(parseInt($("#emptyControlsCount").val()) + 1);
