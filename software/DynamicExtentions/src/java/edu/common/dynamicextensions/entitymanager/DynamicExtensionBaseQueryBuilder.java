@@ -61,9 +61,9 @@ import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.ConstraintKeyPropertiesComparator;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
-import edu.common.dynamicextensions.util.global.ErrorConstants;
 import edu.common.dynamicextensions.util.global.DEConstants.AssociationType;
 import edu.common.dynamicextensions.util.global.DEConstants.Cardinality;
+import edu.common.dynamicextensions.util.global.ErrorConstants;
 import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.global.Constants;
 import edu.wustl.common.util.global.Status;
@@ -73,6 +73,7 @@ import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dao.daofactory.DAOConfigFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
+import edu.wustl.dao.util.DAOUtility;
 
 /**
  * This class provides the methods that builds the queries that are required for
@@ -2521,11 +2522,11 @@ public class DynamicExtensionBaseQueryBuilder
 			//DDL queries are transaction on their own. There where we try to execute DDL, trnsaction started 
 			//by the DAO needs to be suspended
 			TransactionManager tm = null;
+			DAOUtility daoUtility = DAOUtility.getInstance();
 			Transaction tr = null;
 			try
 			{
-				tm = getTransactionManager();
-				tr = tm.suspend();
+				tr = daoUtility.suspendTransaction();
 			}
 			catch (NamingException e)
 			{
@@ -2541,7 +2542,7 @@ public class DynamicExtensionBaseQueryBuilder
 				{
 					String query = queryIter.next();
 					Logger.out.info("Query: " + query);
-					jdbcDao.executeUpdate(query);
+					daoUtility.executeDDL(DynamicExtensionDAO.getInstance().getAppName(), query);
 					if (revQryIter.hasNext())
 					{
 						rlbkQryStack.push(revQryIter.next());
@@ -2549,7 +2550,15 @@ public class DynamicExtensionBaseQueryBuilder
 				}
 			}
 			//after executing the DDL resume the origina transaction.
-			resumeTransaction(tm, tr);
+			try
+			{
+				daoUtility.resumeTransaction(tr);
+			}
+			catch (NamingException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			jdbcDao.commit();
 		}
 		catch (SystemException e)
