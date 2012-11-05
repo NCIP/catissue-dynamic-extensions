@@ -105,7 +105,7 @@
 	</target>
 
 	<!-- Compile all files, generated and hand-written -->
-	<target name="compile" depends="init,merge_js">
+	<target name="compile" depends="init">
 		<javac destdir="${target.dir}" includes="**/*.*" includeAntRuntime="false" debug="true">
 			<src path="${src.dir}" />
 			<classpath refid="app.classpath" />
