@@ -197,6 +197,11 @@ edu.wustl.de.CategorySurveyMode.prototype.tidyNavbar = function () {
 			this.navbar.show({label: "Next"});
 		}
 	}
+	if($("#ActivityStatus").val() == "Active")
+	{
+		this.navbar.hide({label:"Save as Draft"});
+		this.navbar.show({label:"Save"});
+	}
 };
 edu.wustl.de.CategorySurveyMode.prototype.load = function () {
 	var sm = this;
