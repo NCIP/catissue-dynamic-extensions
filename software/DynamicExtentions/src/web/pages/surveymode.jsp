@@ -127,6 +127,10 @@
 </c:if>	
 
 <script type="text/javascript">
+	if('${param.mode}' != null && '${param.mode}' != '')
+		{
+			document.getElementById("mode").value = '${param.mode}';
+		}
 	edu.wustl.de.initSurveyForm();
 </script>
 

@@ -202,6 +202,12 @@ edu.wustl.de.CategorySurveyMode.prototype.tidyNavbar = function () {
 		this.navbar.hide({label:"Save as Draft"});
 		this.navbar.show({label:"Save"});
 	}
+	if($("#mode").val() == "view")
+	{
+		this.navbar.disable({label:"Save as Draft"});
+		this.navbar.disable({label:"Save"});
+	}
+	
 };
 edu.wustl.de.CategorySurveyMode.prototype.load = function () {
 	var sm = this;
