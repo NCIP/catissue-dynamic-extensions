@@ -142,5 +142,6 @@ public interface WebUIManagerConstants
 	public static final String DE_AJAX_HANDLER = "DE_AJAX_HANDLER";
 	public static final String AJAX_OPERATION = "ajaxOperation";
 	public static final String DE_COMBO_DATA_ACTION = "DEComboDataAction";
+	String ACTIVITY_STATUS = "ActivityStatus";
 
 }

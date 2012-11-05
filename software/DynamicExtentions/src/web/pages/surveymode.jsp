@@ -81,6 +81,7 @@
 			<form id="sm-form" name="sm-form" method="post" action="${sessionScope.formSubmitUrl}">
 				<div id="sm-hidden-inputs">
 					<input type="hidden" id="mode" name="mode" value="edit"></input>
+					<input type="hidden" id="ActivityStatus" name="ActivityStatus" value="${param.ActivityStatus}"></input>
 					<input type="hidden" id="isDirty" name="isDirty" value="false">
 					<input type="hidden" name='<%=DEConstants.CATEGORY_ID%>' id='<%=DEConstants.CATEGORY_ID%>'
 						value='<%=request.getParameter(DEConstants.CATEGORY_ID)%>'></input>
