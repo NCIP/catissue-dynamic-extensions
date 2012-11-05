@@ -200,7 +200,6 @@ edu.wustl.de.CategorySurveyMode.prototype.tidyNavbar = function () {
 	if($("#ActivityStatus").val() == "Active")
 	{
 		this.navbar.hide({label:"Save as Draft"});
-		this.navbar.show({label:"Save"});
 	}
 	if($("#mode").val() == "view")
 	{
