@@ -2715,7 +2715,7 @@ function deleteRecordEntry()
 	 if(vConfirm){
 		 var operationElement = document.getElementById('operation');
 		 operationElement.value = "disableRecord";
-		 var url =contextParam + "/de/DeleteRecordEntryAction?";
+		 var url =contextParam + "/DeleteRecordEntryAction.de?";
 		 var dataEntryForm = document.getElementById('dataEntryForm');
 		 dataEntryForm.action = url;
 		 dataEntryForm.submit();
@@ -3070,7 +3070,7 @@ function getIframeDocument(iframe)
 
 function getSkipLogicControl(controlName, controlId, containerId)
 {
-	// select all values in list box before form is submitted.
+	 // select all values in list box before form is submitted.
 	for (f = 0; f < document.forms[0].elements.length; ++f )
 	{
 		var fld = document.forms[0].elements[f];
@@ -3845,3 +3845,4 @@ function showCalendar(objName,dateFormat,controlId,containerId) {
 		updateServerState(objName,controlId,containerId);
 	});
 }
+
