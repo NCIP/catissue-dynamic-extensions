@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
@@ -119,7 +121,7 @@ public class DateValidator implements ValidatorRuleInterface
 	protected boolean isValidDate(String value, String dateFormat, String controlCaption,
 			boolean... isFromDateRangeValidator) throws DynamicExtensionsValidationException
 	{
-		boolean isValid = !value.endsWith("0000");
+		boolean isValid = !value.endsWith("0000") && isValidDatePattern(value, dateFormat);
 		try
 		{
 			if (isValid)
@@ -166,7 +168,22 @@ public class DateValidator implements ValidatorRuleInterface
 				&& ((attributeTypeInformation != null) && (attributeTypeInformation instanceof DateAttributeTypeInformation));
 	}
 
-	
+	/**
+	 * validates the checkDate date provided according to the regex mentioned for the
+	 * given datePattern.
+	 * @param checkDate date value
+	 * @param datePattern date pattern against which to validate.
+	 * @return valid or not.
+	 */
+	private boolean isValidDatePattern(String checkDate, String datePattern)
+	{
+		Pattern pattern = Pattern.compile(datePatternVsRegexMap.get(datePattern),
+				Pattern.CASE_INSENSITIVE);
+		Matcher mat = pattern.matcher(checkDate);
+		return mat.matches();
+
+	}
+
 	/**
 	 * It will read the ValidDatePatterns.XML & verify that the date patterns
 	 * specified in the ApplicationResources.properties Files is in the given patterns.
