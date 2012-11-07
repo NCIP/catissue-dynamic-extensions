@@ -48,8 +48,8 @@ public class FormAuditManager {
 		
 		xml.append("<form-submit>");	
 		xml.append("<name>").append(formName).append("</name>");
-		xml.append("<user>").append(sdb.getUserName()).append("</user>");
-		xml.append("<ip-address>").append(sdb.getIpAddress()).append("</ip-address>");
+		xml.append("<user>").append((sdb != null) ? sdb.getUserName() : "no-user").append("</user>");
+		xml.append("<ip-address>").append((sdb != null) ? sdb.getIpAddress() : "no-ip").append("</ip-address>");
 		xml.append("<record-identifier>").append(recordIdentifier).append("</record-identifier>");	
 		xml.append(getFieldSetsXml(container, valueMap));
 		xml.append("</form-submit>");
@@ -59,10 +59,10 @@ public class FormAuditManager {
 	
 	private void persist(SessionDataBean sdb, String formName, Long recordId, String xml) {
 		AuditEvent auditEvent = new AuditEvent();
-		auditEvent.setIpAddress(sdb.getIpAddress());
+		auditEvent.setIpAddress((sdb != null) ? sdb.getIpAddress() : "no-ip");
 		auditEvent.setTimestamp(Calendar.getInstance().getTime());
 		auditEvent.setEventType("");
-		auditEvent.setUserId(sdb.getUserId());
+		auditEvent.setUserId((sdb != null) ? sdb.getUserId() : null);
 		
 		try {
 			HibernateDAO hibernateDao = DynamicExtensionsUtility.getHibernateDAO(sdb);
@@ -72,12 +72,12 @@ public class FormAuditManager {
 			formAuditEvent.setIdentifier(auditEvent.getId());
 			formAuditEvent.setFormName(formName);
 			formAuditEvent.setRecordId(recordId);
-			formAuditEvent.setFormDataXml(Hibernate.createClob(xml));			
-			hibernateDao.insert(formAuditEvent);	
-			hibernateDao.commit();			
+			formAuditEvent.setFormDataXml(Hibernate.createClob(xml));
+			hibernateDao.insert(formAuditEvent);
+			hibernateDao.commit();
 		} catch (Exception e) {
-			logger.error("Failed to persist audit data", e);			
-		}				
+			logger.error("Failed to persist audit data", e);
+		}
 	}
 	
 	private String getFieldSetsXml(ContainerInterface curContainer, Map<BaseAbstractAttributeInterface, Object> curValueMap) {
@@ -86,11 +86,15 @@ public class FormAuditManager {
 		List<ContainerInterface> containers = new ArrayList<ContainerInterface>();
 		List<Map<BaseAbstractAttributeInterface, Object>> valueMaps = new ArrayList<Map<BaseAbstractAttributeInterface,Object>>();
 		
-		containers.add(curContainer);		
-		valueMaps.add(curValueMap);		
+		containers.add(curContainer);
+		valueMaps.add(curValueMap);
 		while (!containers.isEmpty()) {
 			curContainer = containers.remove(0);
-			curValueMap = valueMaps.remove(0);		
+			curValueMap = valueMaps.remove(0);
+			if (curValueMap == null) {
+				continue;
+			}
+			
 			xml.append("<field-set>");
 			xml.append("<model-entity>").append(getModelEntityName(curContainer)).append("</model-entity>");
 			xml.append("<db-table>").append(getTableName(curContainer)).append("</db-table>");
@@ -106,7 +110,7 @@ public class FormAuditManager {
 			xml.append("</field-set>");
 		
 			for (ContainerInterface childContainer : curContainer.getChildContainerCollection()) {
-				AssociationMetadataInterface parentChildAssoc = getAssociation(curContainer, childContainer);				
+				AssociationMetadataInterface parentChildAssoc = getAssociation(curContainer, childContainer);
 				List<Map<BaseAbstractAttributeInterface, Object>> childValueMaps = ((List<Map<BaseAbstractAttributeInterface, Object>>)curValueMap.get(parentChildAssoc));
 				if (childValueMaps == null || childValueMaps.isEmpty()) {
 					continue;
@@ -116,7 +120,7 @@ public class FormAuditManager {
 				valueMaps.add(childValueMaps.get(0));
 			}
 		}
-					
+		
 		return xml.toString();
 	}
 	
@@ -128,11 +132,11 @@ public class FormAuditManager {
 			for (Map<BaseAbstractAttributeInterface, Object> map : assocMapList) {
 				containers.add(control.getContainer());
 				valueMaps.add(map);
-			}									
-		} else {
+			}
+		} else if (assocMap != null) {
 			containers.add(control.getContainer());
-			valueMaps.add((Map<BaseAbstractAttributeInterface, Object>)assocMap);									
-		}		
+			valueMaps.add((Map<BaseAbstractAttributeInterface, Object>)assocMap);
+		}
 	}
 	
 	private String getFieldXml(ControlInterface control, Map<BaseAbstractAttributeInterface, Object> valueMap) {
@@ -156,15 +160,15 @@ public class FormAuditManager {
 			   .append("<value>").append(getAttrValue(control, valueMap)).append("</value>");
 		}
 		
-		xml.append("</field>");		
-		return xml.toString();		
+		xml.append("</field>");
+		return xml.toString();
 	}
 	
 	private String getCollectionXml(BaseAbstractAttributeInterface bAttr, AssociationInterface association, Map<BaseAbstractAttributeInterface, Object> valueMap) {
 		StringBuilder xml = new StringBuilder();
 		List<Map<BaseAbstractAttributeInterface, Object>> elementValueMaps = (List<Map<BaseAbstractAttributeInterface, Object>>)valueMap.get(bAttr);
 
-		xml.append("<collection>")						
+		xml.append("<collection>")
 		   .append("<db-table>").append(association.getTargetEntity().getTableProperties().getName()).append("</db-table>");
 		if (elementValueMaps != null) {
 			for (Map<BaseAbstractAttributeInterface, Object> elementValueMap : elementValueMaps) {
@@ -183,7 +187,7 @@ public class FormAuditManager {
 				}
 			}			
 		}
-		xml.append("</collection>");		
+		xml.append("</collection>");
 		return xml.toString();
 	}
 				
@@ -201,7 +205,7 @@ public class FormAuditManager {
 			name = container.getAbstractEntity().getName();
 		}
 		
-		return name;		
+		return name;
 	}
 	
 	private String getModelEntityName(ContainerInterface container) {
@@ -258,6 +262,6 @@ public class FormAuditManager {
 	private String getAttrValue(ControlInterface control, Map<BaseAbstractAttributeInterface, Object> valueMap) {
 		BaseAbstractAttributeInterface attr = control.getBaseAbstractAttribute();
 		Object value = valueMap.get(attr);
-		return (value != null) ? value.toString() : "null";		
-	}	
+		return (value != null) ? value.toString() : "null";
+	}
 }
