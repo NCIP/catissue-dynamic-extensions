@@ -166,7 +166,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 			}
 			htmlString.append("<SELECT ");
 			htmlString.append(strMultiSelect).append(" size=").append(noOfRows)
-					.append("class=" + getCSS() + " name='").append(getHTMLComponentName())
+					.append(" class=" + getCSS() + " name='").append(getHTMLComponentName())
 					.append("' onchange=\"");
 
 			htmlString.append(getOnchangeServerCall());
@@ -241,7 +241,7 @@ public class ListBox extends SelectControl implements ListBoxInterface
 				multSelWithAutoCmpltHTML
 						.append("<script defer='defer'>Ext.onReady(function(){")
 						.append(comboInnerScript)
-						.append("combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});ds.on('load',function(){if (this.getAt(0) != null && this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50;} else {combo.typeAheadDelay=60000}});});</script>\n");
+						.append("combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7 || Ext.isSafari){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{combo.list.setStyle(\"width\", \"auto\");combo.innerList.setStyle(\"width\", \"auto\");}}, {single: true});ds.on('load',function(){if (this.getAt(0) != null && this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50;} else {combo.typeAheadDelay=60000}});});</script>\n");
 				multSelWithAutoCmpltHTML.append("<br><table border=\"0\" width=\"400\">\n");
 				multSelWithAutoCmpltHTML.append("\t<tr>\n");
 				multSelWithAutoCmpltHTML

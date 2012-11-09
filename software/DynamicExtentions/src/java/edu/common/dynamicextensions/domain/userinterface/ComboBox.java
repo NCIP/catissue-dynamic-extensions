@@ -214,7 +214,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 				htmlString.append("combo.on(\"select\", function() {");
 				htmlString.append(getOnchangeServerCall());
 				htmlString
-						.append("}); /*combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7 || Ext.isSafar){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{alert('in else');combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}}, {single: true});*/");
+						.append("}); /*combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7 || Ext.isSafari){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{alert('in else');combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}}, {single: true});*/");
 
 				htmlString
 						.append("ds.on('load',function(storeObj){var count = storeObj.findExact('id',combo.emptyText);if(count!=-1){var tempVal = combo.emptyText;combo.reset();combo.setValue(tempVal);combo.emptyText='';}if (this.getAt(0) != null && this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50;} else {combo.typeAheadDelay=60000}});});");
@@ -287,7 +287,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 			htmlString.append("combo.on(\"select\", function() {");
 			htmlString.append(getOnchangeServerCall());
 			htmlString
-					.append("}); /*combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7 || Ext.isSafar){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}}, {single: true});*/");
+					.append("}); /*combo.on(\"expand\", function() {if(Ext.isIE || Ext.isIE7 || Ext.isSafari){combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}else{combo.list.setStyle(\"width\", \"240\");combo.innerList.setStyle(\"width\", \"240\");}}, {single: true});*/");
 			// +
 			// "ds.on('load',function(){if (this.getAt(0) != null) {if (this.getAt(0).get('excerpt').toLowerCase().startsWith(combo.getRawValue().toLowerCase())) {combo.typeAheadDelay=50} else {combo.typeAheadDelay=60000}}});"
 			htmlString
