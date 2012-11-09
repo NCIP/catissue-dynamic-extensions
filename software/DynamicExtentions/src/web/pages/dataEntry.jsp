@@ -56,3 +56,4 @@ var UpdateServerStateGenerateHtml =
 </script>
 
 <jsp:include page="<%=destination%>"/>
+<div class="modal"><!-- Place at bottom of page --></div>

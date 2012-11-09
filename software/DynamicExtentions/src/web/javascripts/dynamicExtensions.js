@@ -3070,6 +3070,13 @@ function getIframeDocument(iframe)
 
 function getSkipLogicControl(controlName, controlId, containerId)
 {
+	if($("body") == null)
+	{
+		document.getElementsByTagName('body')[0].addClassName('loading')
+	}else
+	{
+		$("body").addClass("loading"); 
+	} 
 	 // select all values in list box before form is submitted.
 	for (f = 0; f < document.forms[0].elements.length; ++f )
 	{
