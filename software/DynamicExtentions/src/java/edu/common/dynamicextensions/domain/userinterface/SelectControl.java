@@ -202,7 +202,7 @@ public abstract class SelectControl extends Control
 				.append("\";var ds = new Ext.data.Store({proxy: new Ext.data.HttpProxy({url: myUrl}),baseParams:").
 				append(String.format(baseParams, getId(),parentContainerId,URLEncoder.encode(sourceHtmlComponentValues.toString(), "utf-8"),
 						categoryEntityName,attributeName,ControlsUtility.convertDateToString(encounterDate, "yyyy-MM-dd"))).
-				append(",reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, [{name: 'id', mapping: 'id'},{name: 'excerpt', mapping: 'field'}])});var combo = new Ext.form.ComboBox({store: ds,width:140,listWidth:240,hiddenName: 'CB_coord_")
+				append(",reader: new Ext.data.JsonReader({root: 'row',totalProperty: 'totalCount',id: 'id'}, [{name: 'id', mapping: 'id'},{name: 'excerpt', mapping: 'field'}])});var combo = new Ext.form.ComboBox({store: ds,width:140,tpl: getTpl(),listWidth:240,hiddenName: 'CB_coord_")
 				.append(getHTMLComponentName())
 				.append(
 						"',displayField:'excerpt',valueField: 'id',typeAhead: 'false',pageSize:15,forceSelection: 'true',queryParam : 'query',mode: 'remote',triggerAction: 'all',minChars : ")
