@@ -59,7 +59,7 @@
         <set
             name="recordEntryCollection"
             table="DYEXTN_ABSTRACT_RECORD_ENTRY"
-            lazy="false"
+            lazy="true"
             inverse="true"
             cascade="save-update"
             sort="unsorted"
