@@ -1541,7 +1541,7 @@ function setDefaultValues(tableId, obj, containerId) {
 	var i = 0;
 
 	var childObject, childObjectName;
-
+	obj = Element.extend(obj);
 	if (obj.getElementsBySelector("input[name^=Control]").length > 0) {
 		childObjectName = obj.getElementsBySelector("input[name^=Control]")[0]
 				.getAttribute("name");
@@ -2655,11 +2655,14 @@ function getIframeDocument(iframe) {
 }
 
 function getSkipLogicControl(controlName, controlId, containerId) {
-	if ($("body") == null) {
-		document.getElementsByTagName('body')[0].addClassName('loading')
-	} else {
-		$("body").addClass("loading");
-	}
+	if($("body") == null)
+	{
+		var body = Element.extend(document.getElementsByTagName('body')[0]);
+		body.addClassName('loading');
+	}else
+	{
+		$("body").addClass("loading"); 
+	} 
 	// select all values in list box before form is submitted.
 	for (f = 0; f < document.forms[0].elements.length; ++f) {
 		var fld = document.forms[0].elements[f];
@@ -2770,7 +2773,8 @@ function getSkipLogicControl(controlName, controlId, containerId) {
 					}
 					if($("body") == null)
 					{
-						document.getElementsByTagName('body')[0].removeClassName('loading')
+						var body = Element.extend(document.getElementsByTagName('body')[0]);
+						body.removeClassName('loading');
 					}else
 					{
 						 $("body").removeClass("loading"); 
@@ -2788,8 +2792,10 @@ function executeComboScriptsForSkipLogic() {
 				var comboScript = document
 						.getElementById(comboScriptDiv[i].value);
 
-				if (comboScript != null
-						&& comboScript.getElementsByTagName("input").length == 0) {
+				var comboScript = Element.extend(document.getElementById(comboScriptDiv[i].value));
+				
+				if (comboScript != null && comboScript.getElementsBySelector("input[name='isDEComboScriptEvaluated']").length == 0)
+				{	
 					var oInput = document.createElement("input");
 					oInput.type = "hidden";
 					oInput.value = 'true';
