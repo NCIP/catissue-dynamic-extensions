@@ -4,12 +4,10 @@
 package edu.common.dynamicextensions.entitymanager.persister;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.JDBCDAO;
-import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
 
 /**
@@ -41,7 +39,7 @@ public class InsertStatement extends DmlStatement {
 		
 		try {
 			if (id == null) {
-				id = generateIdentifier(tableName, jdbcDao);
+				id = generateIdentifier(tableName);
 			}
 			
 			LinkedList<ColumnValueBean> columnValues = new LinkedList<ColumnValueBean>();
@@ -61,25 +59,7 @@ public class InsertStatement extends DmlStatement {
 		this.id = id;
 	}
 
-	@SuppressWarnings("unchecked")
-	protected Long generateIdentifier(String tabName, JDBCDAO jdbcDao) {
-		try {
-			StringBuilder sql = new StringBuilder("SELECT max(IDENTIFIER) FROM ").append(tabName);
-			
-			logger.debug(sql.toString());
-			List<List<String>> result = jdbcDao.executeQuery(sql.toString(), null, null);
-			
-			//
-			// first get to access row, second get to access column within row
-			//
-			Long maxId = 0L;
-			if (!result.isEmpty() && !result.get(0).isEmpty() && !result.get(0).get(0).isEmpty()) {
-				maxId = Long.parseLong(result.get(0).get(0)); 
-			}
-			
-			return maxId + 1L; 			
-		} catch (DAOException daoe) {
-			throw new RuntimeException("Couldn't obtain identifier for " + tabName, daoe);
-		} 
+	protected Long generateIdentifier(String tabName) {
+		return IdGenerator.getInstance().getNextId(tabName);
 	}		
 }

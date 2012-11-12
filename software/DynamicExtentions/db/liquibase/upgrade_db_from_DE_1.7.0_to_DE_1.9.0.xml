@@ -12,6 +12,9 @@
 	<property name="text.type" value="varchar2(1000)" dbms="oracle"/>
 	<property name="clob.type" value="clob" dbms="oracle"/>
 	<property name="clob.type" value="longtext" dbms="mysql"/>
+	<property name="string.type" value="varchar" dbms="mysql" />
+	<property name="string.type" value="varchar2" dbms="oracle" />
+
 
 	<changeSet id="1" author="kulkranr">
 		<createTable tableName="DYEXTN_LAYOUT">
@@ -80,12 +83,19 @@
 			<column name="RECORD_ID" type="${int.type}"/>
 			<column name="FORM_DATA_XML" type="${clob.type}"/>
 		</createTable>
-		
 		<addForeignKeyConstraint constraintName="FK_AUDIT_EVENT_ID"
 			baseTableName="DYEXTN_AUDIT_EVENT" baseColumnNames="IDENTIFIER"
 			referencedTableName="CATISSUE_AUDIT_EVENT" referencedColumnNames="IDENTIFIER"/>
 	</changeSet>
-
-
-
+	
+	<changeSet id="3" author="DE">
+		<createTable tableName="DYEXTN_ID_SEQ">
+			<column name="TABLE_NAME" type="${string.type}(64)">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="LAST_ID" type="${int.type}">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
 </databaseChangeLog>

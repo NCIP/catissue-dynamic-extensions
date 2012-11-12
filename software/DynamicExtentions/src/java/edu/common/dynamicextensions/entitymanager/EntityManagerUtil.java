@@ -19,6 +19,7 @@ import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.RoleInterface;
 import edu.common.dynamicextensions.domaininterface.databaseproperties.ColumnPropertiesInterface;
+import edu.common.dynamicextensions.entitymanager.persister.IdGenerator;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
@@ -79,53 +80,10 @@ public class EntityManagerUtil implements DynamicExtensionsQueryBuilderConstants
 	 * @return next identifier
 	 * @throws DynamicExtensionsSystemException exception.
 	 */
-	synchronized public static Long getNextIdentifier(String tableName)
+	public static Long getNextIdentifier(String tableName)
 			throws DynamicExtensionsSystemException
 	{
-		// Query to get next identifier.
-		StringBuffer query = new StringBuffer("SELECT MAX(IDENTIFIER) FROM ");
-		query.append(tableName);
-		JDBCDAO jdbcDao = null;
-		try
-		{
-			Long identifier = null;
-			ResultSet resultSet = null;
-			try
-			{
-				jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
-				resultSet = jdbcDao.getResultSet(query.toString(), null, null);
-				resultSet.next();
-				identifier = resultSet.getLong(1);
-				identifier = identifier + 1;
-			}
-			finally
-			{
-				if (resultSet != null)
-				{
-					try
-					{
-						jdbcDao.closeStatement(resultSet);
-						DynamicExtensionsUtility.closeDAO(jdbcDao);
-					}
-					catch (DAOException e)
-					{
-						throw new DynamicExtensionsSystemException(e.getMessage(), e);
-					}
-				}
-			}
-
-			return identifier;
-		}
-		catch (DAOException e)
-		{
-			throw new DynamicExtensionsSystemException(
-					"Could not fetch the next identifier for table " + tableName, e);
-		}
-		catch (SQLException e)
-		{
-			throw new DynamicExtensionsSystemException(
-					"Could not fetch the next identifier for table " + tableName, e);
-		}
+		return IdGenerator.getInstance().getNextId(tableName);
 	}
 
 	/**
