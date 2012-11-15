@@ -993,7 +993,7 @@ public abstract class AbstractEntityCache implements IEntityCache
 	 */
 	public synchronized void addCategoryToCache(final CategoryInterface category)
 	{
-		if (deCategories.contains(category))
+		if (deCategories.contains(category) || category.getIsCacheable())
 		{
 			LOGGER.debug("adding category to cache" + category);
 			deCategories.remove(category);

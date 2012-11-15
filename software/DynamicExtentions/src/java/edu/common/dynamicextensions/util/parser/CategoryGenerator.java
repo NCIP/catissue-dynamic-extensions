@@ -505,7 +505,10 @@ public class CategoryGenerator implements CategoryTokenHandler
 		}
 		
 		handleParseComplete();
-
+		
+		if (category.getLayout() instanceof SurveyModeLayout) {
+			category.setIsCacheable(true);
+		}
 		return category;
 	}
 
