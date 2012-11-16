@@ -12,9 +12,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBException;
 
@@ -887,7 +887,11 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		for (CategoryAttributeInterface categoryAttribute : rootCatEntity
 				.getCategoryAttributeCollection())
 		{
-			if ((categoryAttribute.getIsRelatedAttribute() == null)
+			if(categoryAttribute.getAbstractAttribute() instanceof AssociationInterface)
+			{
+				dataValue.put(categoryAttribute, new ArrayList<Map>());
+			}
+			else if ((categoryAttribute.getIsRelatedAttribute() == null)
 					|| !categoryAttribute.getIsRelatedAttribute()
 					&& !dataValue.containsKey(categoryAttribute))
 			{
