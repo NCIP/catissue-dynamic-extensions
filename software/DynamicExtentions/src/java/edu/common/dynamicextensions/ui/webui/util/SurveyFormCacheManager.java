@@ -160,7 +160,7 @@ public class SurveyFormCacheManager extends FormCache
 			DynamicExtensionsSystemException, DynamicExtensionsApplicationException
 	{
 		ContainerInterface container = getContainer();
-		if (recordIdentifier != null && !recordIdentifier.equalsIgnoreCase("null"))
+		if (recordIdentifier != null && !recordIdentifier.trim().isEmpty() && !recordIdentifier.equalsIgnoreCase("null"))
 		{
 			Map<BaseAbstractAttributeInterface, Object> containerValueMap = getValueMap();
 			UserInterfaceiUtility.setContainerValueMap(container, containerValueMap);

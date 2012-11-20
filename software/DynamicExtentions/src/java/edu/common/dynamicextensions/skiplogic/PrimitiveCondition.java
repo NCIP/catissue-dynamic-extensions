@@ -58,6 +58,8 @@ public class PrimitiveCondition implements Condition
 
     /** The action. */
     private Action action;
+    
+    private Object condValue;
 
     /**
      * Sets the identifier.
@@ -124,8 +126,16 @@ public class PrimitiveCondition implements Condition
      * @return the value
      * @throws DynamicExtensionsSystemException
      */
-    public Object getValue() throws DynamicExtensionsSystemException
-    {
+    public Object getValue() 
+    throws DynamicExtensionsSystemException {    	
+    	if (condValue == null) {
+			condValue = createCondValue();
+		}    		
+    	return condValue;
+    }
+    
+    private Object createCondValue() 
+    throws DynamicExtensionsSystemException {
         ObjectInputStream ois = null;
         try
         {
@@ -176,6 +186,7 @@ public class PrimitiveCondition implements Condition
             oos.writeObject(value);
             byte[] buff = bos.toByteArray();
             setObjectValue(Hibernate.createBlob(buff));
+            condValue = null; // rebuild
         }
         catch (IOException e)
         {
