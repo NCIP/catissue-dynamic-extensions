@@ -78,6 +78,7 @@ public class ShowAction implements Action
 	{
 		control.setIsHidden(true);
 		control.setValue(null);
+		control.getParentContainer().getContainerValueMap().put(control.getBaseAbstractAttribute(), null);
 	}
 
 	/**

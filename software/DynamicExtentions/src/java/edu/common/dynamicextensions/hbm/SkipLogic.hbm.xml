@@ -15,7 +15,7 @@
 
 		<property name="containerIdentifier" type="long" update="true" insert="true" column="CONTAINER_IDENTIFIER" />
 
-		<set name="listOfconditionStatements" lazy="false" inverse="false" cascade="all-delete-orphan">
+		<set name="listOfconditionStatements" lazy="false" inverse="false" cascade="all-delete-orphan" order-by="CONDITION_STATEMENT_ID">
 			<cache usage="read-write" />
 
             <key column="SKIP_LOGIC_ID" />
