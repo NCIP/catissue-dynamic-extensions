@@ -887,15 +887,18 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		for (CategoryAttributeInterface categoryAttribute : rootCatEntity
 				.getCategoryAttributeCollection())
 		{
-			if(categoryAttribute.getAbstractAttribute() instanceof AssociationInterface)
-			{
-				dataValue.put(categoryAttribute, new ArrayList<Map>());
-			}
-			else if ((categoryAttribute.getIsRelatedAttribute() == null)
+			if ((categoryAttribute.getIsRelatedAttribute() == null)
 					|| !categoryAttribute.getIsRelatedAttribute()
 					&& !dataValue.containsKey(categoryAttribute))
 			{
-				dataValue.put(categoryAttribute, "");
+				if(categoryAttribute.getAbstractAttribute() instanceof AssociationInterface)
+				{
+					dataValue.put(categoryAttribute, new ArrayList<Map>());
+				}else
+				{
+					dataValue.put(categoryAttribute, "");	
+				}
+				
 			}
 		}
 	}
