@@ -13,4 +13,13 @@
 		edu.common.dynamicextensions.domain.Category category
 		where category.activityStatus like 'ACTIVE'
 	 </query>
+	 <query name="getAllUsersCategoriesInfo">
+		select category.userId,
+		category.id,
+		category.name,
+		category.rootCategoryElement.containerCollection.id
+		from
+		edu.common.dynamicextensions.domain.Category category
+		where category.activityStatus like 'ACTIVE' and category.userId = ?
+	 </query>
 </hibernate-mapping>

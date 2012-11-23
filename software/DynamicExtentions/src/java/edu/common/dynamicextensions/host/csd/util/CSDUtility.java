@@ -3,6 +3,7 @@ package edu.common.dynamicextensions.host.csd.util;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 import edu.common.dynamicextensions.entitymanager.AbstractBaseMetadataManager;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
@@ -21,6 +22,13 @@ public class CSDUtility
 	{
 		Collection categoryDetails = AbstractBaseMetadataManager.executeHQL("getAllCategoriesInfo",
 				new HashMap<String, NamedQueryParam>());
+		return categoryDetails;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static Collection getAllUsersCategoriesInfo(Map<String, NamedQueryParam> param) throws DynamicExtensionsSystemException
+	{
+		Collection categoryDetails = AbstractBaseMetadataManager.executeHQL("getAllUsersCategoriesInfo",param);
 		return categoryDetails;
 	}
 }
