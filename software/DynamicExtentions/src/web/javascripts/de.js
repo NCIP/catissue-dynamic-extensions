@@ -104,7 +104,7 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 					edu.wustl.de.currentpage -= 1;
 					sm.show();
 					
-					 if($(this.ctx).find(".control_caption:visible").length > 0 || (edu.wustl.de.currentpage <= 0))
+					 if(($(this.ctx).find(".control_caption:visible").length > 0 && sm.isEmptyFieldsExist({curPage:this.ctx}))|| (edu.wustl.de.currentpage <= 0))
 					{
 						if(edu.wustl.de.currentpage <= 0 && $(this.ctx).find(".control_caption:visible").length < 0)
 						{
@@ -151,7 +151,7 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 					edu.wustl.de.currentpage += 1;
 					sm.show();
 					
-					if($(this.ctx).find(".control_caption:visible").length > 0 || (edu.wustl.de.currentpage >= sm.pages.length -1))
+					if(($(this.ctx).find(".control_caption:visible").length > 0 && sm.isEmptyFieldsExist({curPage:this.ctx}))|| (edu.wustl.de.currentpage >= sm.pages.length -1))
 					{
 						if(edu.wustl.de.currentpage >= sm.pages.length -1 && $(this.ctx).find(".control_caption:visible").length < 0)
 						{
@@ -438,3 +438,27 @@ edu.wustl.de.Request = function (args) {
 		}	
 	};
 };
+
+edu.wustl.de.CategorySurveyMode.prototype.isEmptyFieldsExist = function (args) {
+	var emptyFields = false;
+	$(args.curPage).find('[name^="Control_"]:visible').each(function() {
+	var controlName = $(this).attr("name");
+	if($(this).attr('type') == 'text' || $(this).attr('type') == 'select' || $(this).attr('type') == 'select-multiple')
+	{
+		if ($(this).val()== "" || $(this).val() == undefined){
+			emptyFields = true;
+			return; // break out of the each-loop
+		}
+	}
+	if($(this).attr('type') == 'radio' || $(this).attr('type') == 'checkbox')
+	{
+
+		if ($('input[name='+controlName+']:checked').val() == undefined){
+			emptyFields = true;	
+			return; // break out of the each-loop
+		}
+	}
+   });
+  
+   return emptyFields;
+}
