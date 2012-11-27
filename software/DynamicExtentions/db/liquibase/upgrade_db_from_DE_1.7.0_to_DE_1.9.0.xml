@@ -98,4 +98,7 @@
 			</column>
 		</createTable>
 	</changeSet>
+	<changeSet id="4" author="kamblek">
+		<addColumn tableName="DYEXTN_CONDITION_STMT"><column name="INSERTION_ORDER" defaultValue="0" type="${int.type}"></column></addColumn>
+	</changeSet>
 </databaseChangeLog>

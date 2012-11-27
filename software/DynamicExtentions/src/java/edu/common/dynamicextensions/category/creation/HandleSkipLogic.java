@@ -6,12 +6,13 @@ package edu.common.dynamicextensions.category.creation;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
@@ -173,7 +174,7 @@ public class HandleSkipLogic
 				if (containerVsSkipLogic.get(currentContainer) == null)
 				{
 					SkipLogic skipLogic = new SkipLogic();
-					skipLogic.setListOfconditionStatements(new HashSet<ConditionStatements>());
+					skipLogic.setListOfconditionStatements(new ArrayList<ConditionStatements>());
 					skipLogic.setContainerIdentifier(currentContainer.getId());
 					containerVsSkipLogic.put(currentContainer, skipLogic);
 				}
