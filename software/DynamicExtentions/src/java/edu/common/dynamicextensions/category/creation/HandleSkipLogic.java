@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -92,7 +93,7 @@ public class HandleSkipLogic
 		 * case of 1. Single control and multiple dependents 2. A control acting
 		 * as dependent as well as controlling
 		 */
-		Map<ControlInterface, ConditionStatements> catAttrVsConditionStatements = new HashMap<ControlInterface, ConditionStatements>();
+		Map<ControlInterface, ConditionStatements> catAttrVsConditionStatements = new LinkedHashMap<ControlInterface, ConditionStatements>();
 
 		Set<ContainerInterface> setOfAbstractContainmentCtrl = new HashSet<ContainerInterface>();
 
