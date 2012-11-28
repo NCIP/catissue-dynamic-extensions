@@ -104,7 +104,7 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 					edu.wustl.de.currentpage -= 1;
 					sm.show();
 					
-					 if(($(this.ctx).find(".control_caption:visible").length > 0 && sm.isEmptyFieldsExist({curPage:this.ctx}))|| (edu.wustl.de.currentpage <= 0))
+					 if($(this.ctx).find(".control_caption:visible").length > 0|| (edu.wustl.de.currentpage <= 0))
 					{
 						if(edu.wustl.de.currentpage <= 0 && $(this.ctx).find(".control_caption:visible").length < 0)
 						{
