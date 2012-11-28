@@ -23,6 +23,7 @@ import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.AbstractContainmentControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.LabelInterface;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.common.beans.SessionDataBean;
 import edu.wustl.common.domain.AuditEvent;
@@ -102,9 +103,10 @@ public class FormAuditManager {
 			for (ControlInterface control : curContainer.getAllControls()) {
 				if (control instanceof AbstractContainmentControlInterface) {
 					addAssociationContainers((AbstractContainmentControlInterface)control, curValueMap, containers, valueMaps);
-				} else {
+				} else if (control != null && !(control instanceof LabelInterface)){
 					xml.append(getFieldXml(control, curValueMap));
 				}
+				
 			}
 			
 			xml.append("</field-set>");
