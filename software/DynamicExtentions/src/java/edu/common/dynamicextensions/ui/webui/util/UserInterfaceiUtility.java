@@ -236,7 +236,7 @@ public final class UserInterfaceiUtility
 				// Cloning the sub container object to map the UI Object multiple instances of Add more case.
 				ContainerInterface clonedSubContainer = new DyExtnObjectCloner()
 						.clone(EntityCache.getInstance().getContainerById(subContainer.getId()));
-
+				clonedSubContainer.setMode(mainContainer.getMode());
 				setContainerValueMap(clonedSubContainer, rowValueMap);
 
 				//Evaluating the Skip Logic for the sub container.
