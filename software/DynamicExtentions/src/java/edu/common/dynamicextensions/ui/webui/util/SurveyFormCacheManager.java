@@ -164,8 +164,9 @@ public class SurveyFormCacheManager extends FormCache
 		{
 			Map<BaseAbstractAttributeInterface, Object> containerValueMap = getValueMap();
 			UserInterfaceiUtility.setContainerValueMap(container, containerValueMap);
-			ContainerUtility.evaluateSkipLogic(container);
+			
 		}
+		ContainerUtility.evaluateSkipLogic(container);
 		container.setMode("insertParentData");
 		container.setMode("edit");
 		return container;

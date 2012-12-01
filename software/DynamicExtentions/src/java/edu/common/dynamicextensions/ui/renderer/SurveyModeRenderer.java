@@ -14,7 +14,6 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.ui.webui.util.ContainerUtility;
 import edu.common.dynamicextensions.ui.webui.util.SurveyFormCacheManager;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.global.DEConstants;
@@ -170,7 +169,7 @@ public class SurveyModeRenderer extends LayoutRenderer
 	{
 		String categoryId = formCache.getCategoryId();
 		String responseString="";
-		ContainerUtility.evaluateSkipLogic(formCache.getContainer());
+
 		if (categoryId != null)
 		{
 			responseString = renderCategory(categoryId);
