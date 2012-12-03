@@ -2963,12 +2963,12 @@ function updateServerState(controlName, controlId, containerId) {
 				if (errorElements.indexOf(controlName) != -1) {
 					errorElements.splice(errorElements.indexOf(controlName), 1);
 				}
-				/*
-				 * if(errorElements.length ==0) {
-				 * document.getElementById("nSubmitButton").disabled="";
-				 * document.getElementById('error_div').innerHTML="";
-				 * document.getElementById('error_div').style.display="none"; }
-				 */
+				if(errorElements.length ==0 && document.getElementById('error_div') != undefined) {
+					 document.getElementById("nSubmitButton").disabled="";
+					 document.getElementById('error_div').innerHTML="";
+					 document.getElementById('error_div').style.display="none"; }
+					 
+				}
 
 			}
 		}
