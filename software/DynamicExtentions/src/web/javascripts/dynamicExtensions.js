@@ -1291,7 +1291,7 @@ function removeCheckedRow(containerId) {
 				for (childNodeIndex = 0; childNodeIndex < childNodes.length; childNodeIndex++) {
 					var childNode = childNodes[childNodeIndex];
 
-					var childObjectName = childNode.name;
+					var childObjectName = childNode.getElementsBySelector("[name^=Control]")[0].getAttribute("name");
 
 					if (childObjectName != null
 							&& "deleteRow" == childObjectName) {
@@ -1554,22 +1554,15 @@ function setDefaultValues(tableId, obj, containerId) {
 
 	}
 	// For Combobox
-	if (obj.getElementsBySelector("div[id='auto_complete_dropdown']").length > 0) {
-		var childNodes2 = obj.getElementsBySelector("div[id='auto_complete_dropdown']")[0].childNodes;
+	if (obj.getElementsBySelector("#auto_complete_dropdown").length > 0) {
+		var childNodes2 = obj.getElementsBySelector("#auto_complete_dropdown")[0].childNodes;
 		for (i = 0; i < childNodes2.length; i++) {
 			if (childNodes2[i].id == 'comboHtml') {
-				var oldName = childNodes2[i].childNodes[0].childNodes[0].name;
-				var newName = oldName + "_" + rowIndex;
-				if (document.getElementById('rightpanel')) {
-					newName = containerId + "_" + oldName + "_" + rowIndex
-				}
-				var newScript = replaceAll(childNodes2[i - 1]
-						.getElementsByTagName("div")[0].innerHTML, oldName,
-						newName);
-				obj.innerHTML = replaceAll(childNodes2[i]
-						.getElementsByTagName("div")[0].innerHTML, oldName,
-						newName);
-				eval(newScript);
+			
+				obj.innerHTML = childNodes2[i]
+						.getElementsByTagName("div")[0].innerHTML;
+				eval(childNodes2[i - 1]
+						.getElementsByTagName("div")[0].innerHTML);
 				break;
 			}
 		}
