@@ -13,7 +13,6 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.domaininterface.userinterface.MultiSelectCheckBoxInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
@@ -93,11 +92,11 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectChe
 		List<NameValueBean> nameValueBeans = null;
 		List<String> values = getValueAsStrings();
 		String disabled = "";
-		//		If control is defined as readonly through category CSV file,make it Disabled
+		//If control is defined as readonly through category CSV file,make it Disabled
 		if ((isReadOnly != null && getIsReadOnly())
 				|| (isSkipLogicReadOnly != null && isSkipLogicReadOnly))
 		{
-			disabled = ProcessorConstants.DISABLED;
+			disabled = " disabled='true' ";
 		}
 		String htmlComponentName = getHTMLComponentName();
 		String parentContainerId = "";

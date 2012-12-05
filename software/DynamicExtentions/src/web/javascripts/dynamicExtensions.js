@@ -1554,16 +1554,17 @@ function setDefaultValues(tableId, obj, containerId) {
 
 	}
 	// For Combobox
-	if (obj.getElementsBySelector("#auto_complete_dropdown").length > 0) {
-		var childNodes2 = obj.getElementsBySelector("#auto_complete_dropdown")[0].childNodes;
-		for (i = 0; i < childNodes2.length; i++) {
-			if (childNodes2[i].id == 'comboHtml') {
+	if (obj.getElementsBySelector("div[id='auto_complete_dropdown']").length > 0) {
+	var childNodes2 = obj.getElementsBySelector("div[id='auto_complete_dropdown']")[0].childNodes;
+	for (i = 0; i < childNodes2.length; i++) {
+		if (childNodes2[i].id == 'comboHtml') {
 			
-				obj.innerHTML = childNodes2[i]
-						.getElementsByTagName("div")[0].innerHTML;
-				eval(childNodes2[i - 1]
-						.getElementsByTagName("div")[0].innerHTML);
-				break;
+			var newScript = childNodes2[i - 1]
+					.getElementsByTagName("div")[0].innerHTML;
+			obj.innerHTML = childNodes2[i]
+					.getElementsByTagName("div")[0].innerHTML;
+			eval(newScript);
+			break;
 			}
 		}
 	}
@@ -2960,9 +2961,6 @@ function updateServerState(controlName, controlId, containerId) {
 					 document.getElementById("nSubmitButton").disabled="";
 					 document.getElementById('error_div').innerHTML="";
 					 document.getElementById('error_div').style.display="none"; }
-					 
-				}
-
 			}
 		}
 	}

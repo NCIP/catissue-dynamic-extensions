@@ -53,7 +53,7 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 			edu.wustl.de.defaultValues[$(this).attr("name")] = $(this).val();
 			$("#emptyControlsCount").val($("#emptyControlsCount").val() - 1);
 			sm.updateProgress();
-		}else if($(this).val() == "")
+		}else if($(this).val() == "" && (!$(this).attr("readonly") && $(this).attr("disabled") != true))
 		{
 		$("#emptyControlsCount").val(parseInt($("#emptyControlsCount").val()) + 1);
 			$(this).attr("defaultValue", "");
@@ -84,7 +84,7 @@ edu.wustl.de.CategorySurveyMode.prototype.bind = function () {
 			edu.wustl.de.defaultValues[$(this).attr("name")] = $(this).val();
 			$("#emptyControlsCount").val($("#emptyControlsCount").val() - 1);
 			sm.updateProgress();
-		}else if($(this).val() == "")
+		}else if($(this).val() == "" && (!$(this).attr("readonly") && $(this).attr("disabled") != true))
 		{
 		$("#emptyControlsCount").val(parseInt($("#emptyControlsCount").val()) + 1);
 			$(this).attr("defaultValue", "");
@@ -277,7 +277,8 @@ edu.wustl.de.CategorySurveyMode.prototype.isErrorsExist = function (args) {
 					var defaultValue = edu.wustl.de.defaultValues[$(this).attr("name")];
 					var controlName = $(this).attr("name");
 	
-					if ($(this).is(":visible") && (defaultValue == "" || defaultValue == undefined))
+					if ($(this).is(":visible") && (defaultValue == "" || defaultValue == undefined) 
+					&& (!$(this).attr("readonly") && $(this).attr("disabled") != true))
 					{
 						if($(this).attr('type') == 'text' || $(this).attr('type') == 'select'
 						|| $(this).attr('type') == 'select-multiple')

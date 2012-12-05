@@ -18,7 +18,6 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.domaininterface.userinterface.RadioButtonInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
@@ -59,7 +58,7 @@ public class RadioButton extends SelectControl implements RadioButtonInterface
 		if ((isReadOnly != null && getIsReadOnly())
 				|| (isSkipLogicReadOnly != null && isSkipLogicReadOnly))
 		{
-			disabled = ProcessorConstants.DISABLED;
+			disabled = " disabled='true' ";
 		}
 		List<String> sourceControlValues = null;
 		if (getSourceSkipControl() != null)

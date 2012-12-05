@@ -63,7 +63,7 @@ public class SurveyFormCacheManager extends FormCache
 		{
 			for (ControlInterface control : page.getControlCollection())
 			{
-				if (!control.getIsHidden())
+				if (!control.getIsHidden() &&  !control.getIsReadOnly())
 				{
 					count++;
 					
@@ -85,7 +85,7 @@ public class SurveyFormCacheManager extends FormCache
 			for (ControlInterface control : page.getControlCollection())
 			{
 				setControlValue(container, control);
-				if (control.isEmpty() && !control.getIsHidden())
+				if (control.isEmpty() && !control.getIsHidden() && !control.getIsReadOnly())
 				{
 					count++;
 					if (this.displayPage == -1)

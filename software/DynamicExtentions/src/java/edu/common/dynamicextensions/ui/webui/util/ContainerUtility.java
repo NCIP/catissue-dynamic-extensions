@@ -141,7 +141,7 @@ public class ContainerUtility
 			}
 			else
 			{
-				if (!controlInterface.getIsHidden())
+				if (!controlInterface.getIsHidden() && !controlInterface.getIsReadOnly())
 				{
 					controlInterface.setValue(containerInterface.getContainerValueMap().get(
 							controlInterface.getBaseAbstractAttribute()));

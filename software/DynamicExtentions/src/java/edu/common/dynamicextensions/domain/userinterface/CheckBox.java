@@ -14,7 +14,6 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.SummaryControlInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
@@ -51,11 +50,11 @@ public class CheckBox extends Control implements CheckBoxInterface,SummaryContro
 			htmlStringBuffer.append("_div'>");
 		}
 		String disabled = "";
-		//		If control is defined as readonly through category CSV file,make it Disabled
+		//If control is defined as readonly through category CSV file,make it Disabled
 		if ((isReadOnly != null && getIsReadOnly())
 				|| (isSkipLogicReadOnly != null && isSkipLogicReadOnly))
 		{
-			disabled = ProcessorConstants.DISABLED;
+			disabled = " disabled='true' ";
 		}
 
 		final String htmlComponentName = getHTMLComponentName();
