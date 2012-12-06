@@ -64,7 +64,7 @@ public class InContextApplyDataEntryProcessor extends BaseDynamicExtensionsProce
 					sessionDataBean, userId);
 		}
 
-		audit(sessionDataBean, container, attributeValueMap, recordIdentifier);
+		audit(sessionDataBean, container, attributeValueMap, recordIdentifier, "INSERT");
 		return recordIdentifier.toString();
 	}
 
@@ -111,7 +111,7 @@ public class InContextApplyDataEntryProcessor extends BaseDynamicExtensionsProce
 					categoryRecordId, sessionDataBean, userId);
 		}
 		
-		audit(sessionDataBean, container, attributeValueMap, recordIdentifier);		
+		audit(sessionDataBean, container, attributeValueMap, recordIdentifier, "UPDATE");		
 		return isEdited;
 	}
 
@@ -125,9 +125,9 @@ public class InContextApplyDataEntryProcessor extends BaseDynamicExtensionsProce
 		this.userId = userId;
 	}	
 	
-	private void audit(SessionDataBean sdb, ContainerInterface container, Map<BaseAbstractAttributeInterface, Object> valueMap, Long recId) {
+	private void audit(SessionDataBean sdb, ContainerInterface container, Map<BaseAbstractAttributeInterface, Object> valueMap, Long recId, String operation) {
 		try {
-			FormAuditManager.getInstance().audit(sdb, container, valueMap, recId);
+			FormAuditManager.getInstance().audit(sdb, container, valueMap, recId, operation);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

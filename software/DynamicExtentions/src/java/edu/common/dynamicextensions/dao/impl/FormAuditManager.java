@@ -43,7 +43,7 @@ public class FormAuditManager {
 		return instance;
 	}
 	
-	public void audit(SessionDataBean sdb, ContainerInterface container, Map<BaseAbstractAttributeInterface, Object> valueMap, Long recordIdentifier) {
+	public void audit(SessionDataBean sdb, ContainerInterface container, Map<BaseAbstractAttributeInterface, Object> valueMap, Long recordIdentifier, String operation) {
 		StringBuilder xml = new StringBuilder();
 		String formName = getFormName(container);
 		
@@ -55,14 +55,14 @@ public class FormAuditManager {
 		xml.append(getFieldSetsXml(container, valueMap));
 		xml.append("</form-submit>");
 		
-		persist(sdb, formName, recordIdentifier, xml.toString());
+		persist(sdb, formName, recordIdentifier, xml.toString(), operation);
 	}
 	
-	private void persist(SessionDataBean sdb, String formName, Long recordId, String xml) {
+	private void persist(SessionDataBean sdb, String formName, Long recordId, String xml, String operation) {
 		AuditEvent auditEvent = new AuditEvent();
 		auditEvent.setIpAddress((sdb != null) ? sdb.getIpAddress() : "no-ip");
 		auditEvent.setTimestamp(Calendar.getInstance().getTime());
-		auditEvent.setEventType("");
+		auditEvent.setEventType((operation != null) ? operation : "");
 		auditEvent.setUserId((sdb != null) ? sdb.getUserId() : null);
 		
 		try {
