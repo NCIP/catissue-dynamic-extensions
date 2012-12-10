@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
+import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
@@ -130,11 +131,11 @@ public class DEComboDataRenderer
 		catch (DynamicExtensionsApplicationException e)
 		{
 			throw new ServletException(e);}
-		
+
 		return mainJsonObject.toString();
 	}
 
-	
+
 
 	/**
 	 * Retrieves the container from the session
@@ -190,7 +191,7 @@ public class DEComboDataRenderer
 	 * @param container the container
 	 * @param valueMap the value map
 	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
-	 * @throws DynamicExtensionsApplicationException 
+	 * @throws DynamicExtensionsApplicationException
 	 */
 	private void executeSkipLogic(ContainerInterface container,
 			Map<BaseAbstractAttributeInterface, Object> valueMap)
@@ -223,7 +224,7 @@ public class DEComboDataRenderer
 	 * @param controlName the control name
 	 * @return the appropriate data value map
 	 * @throws DynamicExtensionsSystemException the dynamic extensions system exception
-	 * @throws DynamicExtensionsApplicationException 
+	 * @throws DynamicExtensionsApplicationException
 	 */
 	@SuppressWarnings("unchecked")
 	private void skipLogicEvaluationForAddMore(ContainerInterface container,
@@ -232,22 +233,24 @@ public class DEComboDataRenderer
 	{
 		for (Entry<BaseAbstractAttributeInterface, Object> entry : valueMap.entrySet())
 		{
-			if (entry.getKey() instanceof CategoryAssociationInterface
-					&& ((CategoryAssociationInterface) entry.getKey()).getTargetCategoryEntity()
-							.getNumberOfEntries() == -1)
+			if (entry.getKey() instanceof CategoryAssociationInterface)
 			{
-				List<Map<BaseAbstractAttributeInterface, Object>> innerMap = (List<Map<BaseAbstractAttributeInterface, Object>>) entry
-				.getValue();
-				// This check is to make sure that the Skip Logic is evaluated only for Add More Combo box and not for any other combo box.
-				if (innerMap.size()>0 && ControlsUtility.isControlPresentInAddMore(controlName))
+				CategoryEntityInterface catEntity = ((CategoryAssociationInterface) entry.getKey()).getTargetCategoryEntity();
+				if(catEntity.getNumberOfEntries() ==-1 && catEntity.equals(container.getAbstractEntity()))
 				{
-					Integer rowIndex = Integer.parseInt(controlName.split("_")[5]);
-					Map<BaseAbstractAttributeInterface, Object> dataValueMap = innerMap
-							.get(rowIndex - 1);
-					if (dataValueMap.containsKey(control.getBaseAbstractAttribute()))
+					List<Map<BaseAbstractAttributeInterface, Object>> innerMap = (List<Map<BaseAbstractAttributeInterface, Object>>) entry
+					.getValue();
+					// This check is to make sure that the Skip Logic is evaluated only for Add More Combo box and not for any other combo box.
+					if (innerMap.size()>0 && ControlsUtility.isControlPresentInAddMore(controlName))
 					{
-						executeSkipLogic(container, dataValueMap);
-						return;
+						Integer rowIndex = Integer.parseInt(controlName.split("_")[5]);
+						Map<BaseAbstractAttributeInterface, Object> dataValueMap = innerMap
+								.get(rowIndex - 1);
+						if (dataValueMap.containsKey(control.getBaseAbstractAttribute()))
+						{
+							executeSkipLogic(container, dataValueMap);
+							return;
+						}
 					}
 				}
 			}
