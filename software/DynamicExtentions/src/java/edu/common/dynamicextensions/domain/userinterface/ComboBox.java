@@ -234,7 +234,7 @@ public class ComboBox extends SelectControl implements ComboBoxInterface
 			htmlString.append("value =\"");
 			htmlString.append(defaultValue);
 			htmlString.append("\" ");
-			htmlString.append("' style='width:");
+			htmlString.append(" style='width:");
 			htmlString.append((columnSize > 0
 					? (columnSize + 1)
 					: (Constants.DEFAULT_COLUMN_SIZE + 1)));
