@@ -1280,7 +1280,7 @@ function removeCheckedRow(containerId) {
 		children = table.rows;
 		rowLength = children.length;
 
-		for ( var rowIndex = 0; rowIndex < children.length; rowIndex++) {
+		for ( var rowIndex = 1; rowIndex < children.length; rowIndex++) {
 			var childObject = children[rowIndex];
 			var cells = childObject.cells;
 
@@ -1291,7 +1291,14 @@ function removeCheckedRow(containerId) {
 				for (childNodeIndex = 0; childNodeIndex < childNodes.length; childNodeIndex++) {
 					var childNode = childNodes[childNodeIndex];
 
-					var childObjectName = childNode.getElementsBySelector("[name^=Control]")[0].getAttribute("name");
+					var childObjectName= null;
+
+					try
+					{
+						childObjectName = childNode.getElementsBySelector("[name^=Control]")[0].getAttribute("name");
+					}catch (ex){
+						childObjectName = childNode.name;					
+					}
 
 					if (childObjectName != null
 							&& "deleteRow" == childObjectName) {
@@ -1314,7 +1321,7 @@ function removeCheckedRow(containerId) {
 								}
 
 								if (Ext.getCmp(oldName) != undefined) {
-									eval(Ext.getCmp(oldName).destroy());
+									
 								}
 								oldName = replaceAll(oldName, "combo", "");
 								var newName = oldName + "_" + rowIndex;
@@ -1329,11 +1336,13 @@ function removeCheckedRow(containerId) {
 									comboValue = document
 											.getElementById(comboId).value;
 								}
-
+								if (Ext.getCmp(newName) != undefined) {
+									eval(Ext.getCmp(newName).destroy());
+								}
 								cell.innerHTML = replaceAll(
-										childNodes2[1].childNodes[1].innerHTML,
+										childNodes2[1].childNodes[2].childNodes[0].innerHTML,
 										oldName, newName);
-
+								
 								eval(newScript);
 								// Added code to catch blur event
 								// to set Combobox value to its empty text if it
