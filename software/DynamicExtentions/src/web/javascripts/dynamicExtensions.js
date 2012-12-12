@@ -1320,9 +1320,6 @@ function removeCheckedRow(containerId) {
 											+ childNodes2[i].childNodes[1].childNodes[0].childNodes[0].id;
 								}
 
-								if (Ext.getCmp(oldName) != undefined) {
-									
-								}
 								oldName = replaceAll(oldName, "combo", "");
 								var newName = oldName + "_" + rowIndex;
 
