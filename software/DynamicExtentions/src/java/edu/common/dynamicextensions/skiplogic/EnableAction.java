@@ -89,7 +89,9 @@ public class EnableAction implements Action
 
 	public void resetAction(ControlInterface control)
 	{
+		control.setValue(null);
 		control.setIsReadOnly(true);
+		control.getParentContainer().getContainerValueMap().put(control.getBaseAbstractAttribute(), null);
 	}
 
 	/**

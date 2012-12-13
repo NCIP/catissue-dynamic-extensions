@@ -66,6 +66,8 @@ public class DisableAction implements Action
 	 */
 	public void performAction(ControlInterface controlInterface)
 	{
+		controlInterface.setValue(null);
+		controlInterface.getParentContainer().getContainerValueMap().put(control.getBaseAbstractAttribute(), null);
 		controlInterface.setIsReadOnly(true);
 		if(defaultValue != null)
 		{
