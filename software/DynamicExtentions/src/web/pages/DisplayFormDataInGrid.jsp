@@ -147,7 +147,7 @@ var header = "#master_checkbox,,,";
 <body onload="doOnLoad();">
 <table border="0" id="table" height="98%" width="100%">
 	<tr>
-		<td><input type="button" value="Add Record" id="addRecord"
+		<td  height="20px"><input type="button" value="Add Record" id="addRecord"
 			onclick="javascript:document.location.href = '${requestScope.formUrl}';" />
 		<input type="button" align="left" value="Print" onclick="printForm();" />
 		</td>
