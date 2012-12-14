@@ -238,7 +238,13 @@ public final class UserInterfaceiUtility
 						.clone(EntityCache.getInstance().getContainerById(subContainer.getId()));
 				clonedSubContainer.setMode(mainContainer.getMode());
 				setContainerValueMap(clonedSubContainer, rowValueMap);
-
+				// This is to avoid over-riding values set by skip logic.
+				for (final ControlInterface control : clonedSubContainer.getControlCollection())
+				{
+					control.setDataEntryOperation(dataEntryOperation);
+					final Object value = rowValueMap.get(control.getBaseAbstractAttribute());
+					control.setValue(value);
+				}
 				//Evaluating the Skip Logic for the sub container.
 				SkipLogic skipLogic = EntityCache.getInstance().getSkipLogicByContainerIdentifier(
 						clonedSubContainer.getId());

@@ -1309,8 +1309,16 @@ function removeCheckedRow(containerId) {
 					if (cell.innerHTML.indexOf("comboControl") != -1) {
 
 						var rowTobeCopied = getRowToBeCopied(containerId);
-						var childNodes2 = rowTobeCopied.cells[cellIndex].childNodes;
-
+						var childNodes2;
+						var isSkipLogicTargetCombo = (rowTobeCopied.cells[cellIndex].childNodes.length == 1);
+								
+						if(isSkipLogicTargetCombo)
+						{
+							childNodes2 = rowTobeCopied.cells[cellIndex].childNodes[0].childNodes;
+						}else
+						{
+							childNodes2 = rowTobeCopied.cells[cellIndex].childNodes;
+						}
 						for (i = 0; i < childNodes2.length; i++) {
 
 							if (childNodes2[i].id == 'auto_complete_dropdown') {
@@ -1323,9 +1331,19 @@ function removeCheckedRow(containerId) {
 								oldName = replaceAll(oldName, "combo", "");
 								var newName = oldName + "_" + rowIndex;
 
-								var newScript = replaceAll(
+								var newScript;
+								if(isSkipLogicTargetCombo)
+								{
+								newScript = replaceAll(
+										childNodes2[0].childNodes[1].childNodes[0].innerHTML, oldName,
+										newName);
+								}else
+								{
+								newScript = replaceAll(
 										childNodes2[i - 1].innerHTML, oldName,
 										newName);
+								}
+								
 
 								var comboValue = "";
 								var comboId = getComboControlName(cell);
@@ -1336,10 +1354,19 @@ function removeCheckedRow(containerId) {
 								if (Ext.getCmp(newName) != undefined) {
 									eval(Ext.getCmp(newName).destroy());
 								}
+								
+								if(isSkipLogicTargetCombo)
+								{
+								cell.innerHTML = replaceAll(
+										childNodes2[i].getElementsBySelector("[id='comboHtml']")[0].firstChild.innerHTML,
+										oldName, newName);
+								}else
+								{
 								cell.innerHTML = replaceAll(
 										childNodes2[1].childNodes[2].childNodes[0].innerHTML,
 										oldName, newName);
-								
+								}
+
 								eval(newScript);
 								// Added code to catch blur event
 								// to set Combobox value to its empty text if it
@@ -1567,7 +1594,7 @@ function setDefaultValues(tableId, obj, containerId) {
 			
 			var newScript = childNodes2[i - 1]
 					.getElementsByTagName("div")[0].innerHTML;
-			obj.innerHTML = childNodes2[i]
+			obj.getElementsBySelector("[id='auto_complete_dropdown']")[0].innerHTML = childNodes2[i]
 					.getElementsByTagName("div")[0].innerHTML;
 			eval(newScript);
 			break;

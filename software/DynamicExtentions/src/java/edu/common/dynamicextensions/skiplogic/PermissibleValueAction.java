@@ -91,6 +91,7 @@ public class PermissibleValueAction implements Action
 		}
 		if(!valuePresent)
 		{
+			selectControl.getParentContainer().getContainerValueMap().put(selectControl.getBaseAbstractAttribute(), "");
 			selectControl.setValue("");
 		}
 	}
