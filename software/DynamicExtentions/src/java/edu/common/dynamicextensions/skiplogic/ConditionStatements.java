@@ -29,6 +29,8 @@ public class ConditionStatements
 
 	/** The map of condition vs actions. */
 	private Set<Condition> listOfConditions;
+	
+	private transient Long insertationOrder;
 
 	/**
 	 * Sets the identifier.
@@ -103,4 +105,17 @@ public class ConditionStatements
 		}
 	}
 
+	
+	public Long getInsertationOrder()
+	{
+		return insertationOrder;
+	}
+
+	
+	public void setInsertationOrder(Long insertationOrder)
+	{
+		this.insertationOrder = insertationOrder;
+	}
+
+	
 }

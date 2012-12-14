@@ -1,8 +1,10 @@
 
 package edu.wustl.cab2b.common.cache;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -39,6 +41,8 @@ import edu.common.dynamicextensions.entitymanager.EntityManager;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsCacheException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.skiplogic.ConditionStatementComparator;
+import edu.common.dynamicextensions.skiplogic.ConditionStatements;
 import edu.common.dynamicextensions.skiplogic.SkipLogic;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.wustl.cab2b.common.beans.MatchedClass;
@@ -47,6 +51,7 @@ import edu.wustl.cab2b.common.exception.RuntimeException;
 import edu.wustl.cab2b.common.util.Utility;
 import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.dao.HibernateDAO;
+import edu.wustl.dao.JDBCDAO;
 import edu.wustl.dynamicextensions.caching.ObjectFactory;
 import edu.wustl.dynamicextensions.caching.ObjectFactoryCfg;
 import edu.wustl.dynamicextensions.caching.impl.ObjectFactoryCfgImpl;
@@ -192,16 +197,53 @@ public abstract class AbstractEntityCache implements IEntityCache
 
 	public final synchronized void cacheSkipLogic()
 	{
+		ResultSet resultSet = null;
+		Map<Long,Long> idMap = new HashMap<Long,Long>();
+		JDBCDAO jdbcDao = null;
+		try
+		{
+			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
+			resultSet = jdbcDao.getResultSet("select CONDITION_STATEMENT_ID csid,INSERTION_ORDER iOrder from DYEXTN_CONDITION_STMT", null, null); //util.executeQuery(entitySql);
+			while (resultSet.next())
+			{
+				idMap.put(resultSet.getLong("csid"),resultSet.getLong("iOrder"));
+			}
+		}
+		catch (final Exception e)
+		{
+			LOGGER.error(ERROR_CREATING_CACHE + e.getMessage());
+			throw new RuntimeException(EXCEPTION_CREATING_CACHE, e);
+		}
+		finally
+		{
+
+			try
+			{
+				jdbcDao.closeStatement(resultSet);
+				DynamicExtensionsUtility.closeDAO(jdbcDao);
+			}
+			catch (final Exception e)
+			{
+				LOGGER.error(ERROR_CREATING_CACHE + e.getMessage());
+				throw new RuntimeException(EXCEPTION_CREATING_CACHE, e);
+			}
+			
+		}
 		try
 		{
 			Collection<SkipLogic> allSkipLogics = (Collection<SkipLogic>)objFactory.getObjects(SkipLogic.class.getName());
 			if (allSkipLogics != null) {
 			    for (SkipLogic skipLogic : allSkipLogics) {
 				    containerIdVsSkipLogic.put(skipLogic.getContainerIdentifier(), skipLogic);
+				    for(ConditionStatements conditionStatement:skipLogic.getListOfconditionStatements())
+				    {
+				    	conditionStatement.setInsertationOrder(idMap.get(conditionStatement.getIdentifier()));
+				    }
+				    Collections.sort((List)skipLogic.getListOfconditionStatements(),new ConditionStatementComparator());
 				}
 				LOGGER.debug("Number of skip logics: " + allSkipLogics.size());
 			}
-			objFactory.removeObjects(SkipLogic.class.getName());			
+			objFactory.removeObjects(SkipLogic.class.getName());
 		}
 		catch (final Exception e)
 		{
