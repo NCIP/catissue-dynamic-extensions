@@ -29,7 +29,7 @@
             table="DYEXTN_PATH_ASSO_REL"
             lazy="false"
             inverse="false"
-            cascade="save-update"
+            cascade="save-update,merge"
             sort="unsorted"
             order-by="PATH_SEQUENCE_NUMBER desc"
         >
