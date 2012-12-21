@@ -11,8 +11,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.owasp.stinger.Stinger;
 
@@ -40,20 +40,17 @@ import edu.common.dynamicextensions.domaininterface.TaggedValueInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.AbstractContainmentControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
-import edu.common.dynamicextensions.domaininterface.userinterface.DynamicExtensionLayoutInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.interfaceactions.DynamicExtensionsInterfaceAction;
 import edu.common.dynamicextensions.skiplogic.ConditionStatements;
 import edu.common.dynamicextensions.skiplogic.SkipLogic;
 import edu.common.dynamicextensions.util.CategoryGenerationUtil;
 import edu.common.dynamicextensions.util.CategoryHelper;
 import edu.common.dynamicextensions.util.CategoryHelperInterface;
-import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.CategoryHelperInterface.ControlEnum;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.CategoryConstants;
 import edu.common.dynamicextensions.validation.category.CategoryValidator;
-import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.global.ApplicationProperties;
 
 /**
@@ -618,8 +615,8 @@ public class CategoryGenerator implements CategoryTokenHandler
 				newCategoryEntityName, false, containerCollection, category);
 		childCategoryEntity.setParentCategoryEntity((CategoryEntityInterface) parentContainer
 				.getAbstractEntity());
-		final CategoryEntity parentCEntity = (CategoryEntity) parentContainer.getAbstractEntity();
-		parentCEntity.addChildCategory(childCategoryEntity);
+		/*final CategoryEntity parentCEntity = (CategoryEntity) parentContainer.getAbstractEntity();
+		parentCEntity.addChildCategory(childCategoryEntity);*/
 
 		final CategoryEntity parentCategoryEntity = (CategoryEntity) childCategoryEntity
 				.getParentCategoryEntity();
