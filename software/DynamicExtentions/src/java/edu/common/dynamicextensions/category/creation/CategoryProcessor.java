@@ -8,9 +8,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
-import java.util.Map.Entry;
 
 import org.owasp.stinger.Stinger;
 
@@ -104,7 +104,10 @@ public class CategoryProcessor
 
 			//2: save category object
 			revQueries = operations.saveCategory(isPersistMetadataOnly, category,hibernateDAO);
-
+			//in case of edit category objects gets merged, due to which new generated ID were not visible. 
+			//As we update new merged object back in cache, we update the reference to the merged object.
+			category = EntityCache.getInstance().getCategoryById(category.getId());
+			
 			//3: Delete existing Skip Logic from database and cache
 			Collection<ContainerInterface> allContainers = categoryGenerator
 			.getAllContainersForCategory(category);
