@@ -3665,7 +3665,6 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			preProcess(categoryInterface, revQueries, queries);
 
 			saveDynamicExtensionObject(categoryInterface, hibernateDAO, rlbkQryStack);
-			categoryInterface = (CategoryInterface)hibernateDAO.retrieveById(categoryInterface.getClass().getName(), categoryInterface.getId());
 
 			postProcess(queries, revQueries, rlbkQryStack);
 
