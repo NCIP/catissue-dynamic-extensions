@@ -537,7 +537,11 @@ public class Container extends DynamicExtensionBaseDomainObject
 			{
 				if (cntr != 0)
 				{
-					controlHTML.append("</table></td></tr><tr><td height='7'></td></tr>");
+					controlHTML.append("</table></td></tr>");
+					if (control.getIsHidden() != null && !control.getIsHidden())
+					{
+						controlHTML.append("<tr><td height='7'></td></tr>");
+					}
 				}
 				controlHTML.append("<tr valign='center' ");
 				if (control.getIsSkipLogicTargetControl())

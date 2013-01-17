@@ -153,6 +153,10 @@ public class SurveyModeRenderer extends LayoutRenderer
 		if (control.getYPosition() > 1) {
 			htmlWrapper = "<tr><td height='7'></td></tr>%s%s</td></tr>";
 		}		
+		if (control.getIsHidden() != null && control.getIsHidden())
+		{
+			htmlWrapper =  "%s%s</table></td></tr>";
+		}
 		control.setAlignment(Control.VERTICAL);
 		control.getParentContainer().setRequest(req);
 		return String.format(htmlWrapper, controlHTML.toString(), control.generateHTML(control
