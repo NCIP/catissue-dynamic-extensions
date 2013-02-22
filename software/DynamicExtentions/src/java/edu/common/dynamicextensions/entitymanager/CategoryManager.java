@@ -2542,11 +2542,21 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
 			DAOException, SQLException
 	{
+		ContainerInterface container = DynamicExtensionsUtility.getContainerByIdentifier(formId.toString());
+		return getRecordByRecordEntryId(container, recordEntryIdList, recordEntryStaticId);
+	}
+		
+	public List<Map<BaseAbstractAttributeInterface, Object>> getRecordByRecordEntryId(ContainerInterface container,
+			List<Long> recordEntryIdList, Long recordEntryStaticId)
+			throws DynamicExtensionsSystemException, DynamicExtensionsApplicationException,
+			DAOException, SQLException			
+	{
 		List<Map<BaseAbstractAttributeInterface, Object>> recordMapList = new ArrayList<Map<BaseAbstractAttributeInterface, Object>>();
 		DEIntegration deIntegration = new DEIntegration();
 		JDBCDAO jdbcDao = null;
-		CategoryEntityInterface rootCatEntity = (CategoryEntityInterface) DynamicExtensionsUtility
-				.getContainerByIdentifier(formId.toString()).getAbstractEntity();
+		Long formId = container.getId();
+		
+		CategoryEntityInterface rootCatEntity = (CategoryEntityInterface)container.getAbstractEntity();
 		try
 		{
 			jdbcDao = DynamicExtensionsUtility.getJDBCDAO();
