@@ -1,17 +1,17 @@
 package edu.wustl.dynamicextensions.caching.impl;
 
 import java.io.InputStream;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.digester.Digester;
-import org.apache.commons.digester.xmlrules.DigesterLoader;
+import org.apache.commons.digester3.Digester;
+import org.apache.commons.digester3.binder.AbstractRulesModule;
+import org.apache.commons.digester3.binder.DigesterLoader;
 
 import edu.wustl.dynamicextensions.caching.ObjectFactoryCfg;
 
 public class ObjectFactoryCfgImpl implements ObjectFactoryCfg {
-	private final static String OBJECT_FACTORY_CFG_RULES = "/objectFactoryCfgRules.xml";
+	private static DigesterLoader loader = DigesterLoader.newLoader(new ObjectFactoryCfgRulesModule());
 	
 	private final static String OBJECT_FACTORY_CFG = "/objectFactoryCfg.xml";
 	
@@ -28,13 +28,25 @@ public class ObjectFactoryCfgImpl implements ObjectFactoryCfg {
 	
 	public static ObjectFactoryCfg getObjectFactoryCfg() {
 		try {
-			URL rulesUrl = ObjectFactoryCfgImpl.class.getResource(OBJECT_FACTORY_CFG_RULES);
-			Digester digester = DigesterLoader.createDigester(rulesUrl);			 			
+			Digester digester = loader.newDigester();			 			
 			InputStream inputStream = ObjectFactoryCfgImpl.class.getResourceAsStream(OBJECT_FACTORY_CFG);
 			return (ObjectFactoryCfg)digester.parse(inputStream);
 		} catch (Exception e) {
 			throw new RuntimeException("Error parsing object factory config", e);
 		}				
+	}
+	
+	public static class ObjectFactoryCfgRulesModule extends AbstractRulesModule {
+
+		@Override
+		protected void configure() {
+			forPattern("object-factory-cfg").createObject().ofType(ObjectFactoryCfgImpl.class);
+			
+			forPattern("object-factory-cfg/exclude-tables/table")			
+			    .callMethod("addExcludeTable").withParamCount(1).withParamTypes(String.class)
+			    .then().callParam().fromAttribute("name");						
+		}
+		
 	}
 	
 	public static void main(String[] args) {
