@@ -1580,6 +1580,18 @@ function setDefaultValues(tableId, obj, containerId) {
 				.getAttribute("name");
 		childObject = obj.getElementsBySelector("input[name^=Control]")[0];
 	}
+	else if (obj.getElementsBySelector("select[name^=Control]").length > 0)
+	{
+		childObjectName = obj.getElementsBySelector("select[name^=Control]")[0]
+				.getAttribute("name");
+		childObject = obj.getElementsBySelector("select[name^=Control]")[0];
+	}
+	else if (obj.getElementsBySelector("textarea[name^=Control]").length > 0)
+	{
+		childObjectName = obj.getElementsBySelector("textarea[name^=Control]")[0]
+				.getAttribute("name");
+		childObject = obj.getElementsBySelector("textarea[name^=Control]")[0];
+	}
 
 	if (childObjectName != null && childObjectName.indexOf('_') != -1) {
 		initializeDefaultValue(childObjectName, childObject, obj, i, rowIndex,
