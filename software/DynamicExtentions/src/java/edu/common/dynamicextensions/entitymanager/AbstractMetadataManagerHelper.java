@@ -3,6 +3,7 @@ package edu.common.dynamicextensions.entitymanager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -185,10 +186,10 @@ public final class AbstractMetadataManagerHelper
 			dataValue = Long.valueOf(value.toString());
 		}
 		else if ("Float".equals(dataType)) {
-			dataValue = new Float(value.toString());
+			dataValue = new BigDecimal(value.toString());
 		}
 		else if ("Double".equals(dataType))	{
-			dataValue = new Double(value.toString());
+			dataValue = (new BigDecimal(value.toString()));
 		}
 		else if ("Short".equals(dataType)) {
 			dataValue = Short.valueOf(value.toString());
