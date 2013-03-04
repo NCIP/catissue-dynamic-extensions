@@ -61,7 +61,7 @@ import edu.wustl.common.util.logger.Logger;
 public class DEAjaxActionManager
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -8401969881356504210L;
 
@@ -87,7 +87,7 @@ public class DEAjaxActionManager
 			throws ServletException, IOException
 	{
 		String responceString = "";
-		
+
 		try
 		{
 			responceString = manage(request);
@@ -96,7 +96,7 @@ public class DEAjaxActionManager
 		catch (final Exception e)
 		{
 			Logger.out.error(e.getMessage());
-			
+
 		}
 	}
 
@@ -195,13 +195,13 @@ public class DEAjaxActionManager
 		Stack<ContainerInterface> containerStack = (Stack<ContainerInterface>) CacheManager.
 			getObjectFromCache(request, DEConstants.CONTAINER_STACK);
 		ContainerInterface container = containerStack.peek();
-		ContainerUtility containerUtility = new ContainerUtility((HttpServletRequest) request,
+		ContainerUtility containerUtility = new ContainerUtility(request,
 				container);
 		container.setRequest(request);
 		StringBuilder builder =new StringBuilder();
 		builder.append(containerUtility.generateHTML());
 		surveyFormPostProcess(container, containerUtility, builder);
-		
+
 		return builder.toString();
 	}
 
@@ -217,16 +217,17 @@ public class DEAjaxActionManager
 			String emptyControlsCount = "<input type='hidden' id='emptyControlsCount' value='%d'></input>";
 			builder.append(String.format(controlsCount, containerUtility.getControlCount()));
 			builder.append(String.format(emptyControlsCount, containerUtility.getEmptyControlCount()));
-			
+
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private String updateServerState(HttpServletRequest request)
 			throws DynamicExtensionsApplicationException, DynamicExtensionsSystemException
 	{
 		Long containerId = Long.valueOf(request.getParameter("containerId"));
 		Long controlId = Long.valueOf(request.getParameter("controlId"));
+		String controlName = request.getParameter("controlName");
 		String[] controlValue = request.getParameter("controlValue").split("~");
 		Map<Long, ContainerInterface> containerMap = (Map<Long, ContainerInterface>) request
 				.getSession().getAttribute("MapForValidation");
@@ -235,6 +236,14 @@ public class DEAjaxActionManager
 		//ControlInterface control = EntityCache.getInstance().getControlById(controlId);
 		ContainerInterface container = containerMap.get(containerId);
 		ControlInterface control = container.getControlById(controlId);
+		String modifiedControlName = controlName.replace(control.getHTMLComponentName(), "");
+		if(modifiedControlName!="")
+		{
+			//this is addmore type of subform control & hence find out row id for this control
+			rowId = Integer.valueOf(modifiedControlName.replace("_", "")) -1;
+
+		}
+
 		Map<BaseAbstractAttributeInterface, Object> valueMap = ((Stack<Map<BaseAbstractAttributeInterface, Object>>) CacheManager
 				.getObjectFromCache(request, DEConstants.VALUE_MAP_STACK)).peek();
 		DataValueMapUtility.updateDataValueMap(valueMap, rowId, control, controlValue, container);
