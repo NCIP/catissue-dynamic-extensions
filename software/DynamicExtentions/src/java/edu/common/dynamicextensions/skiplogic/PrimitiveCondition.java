@@ -11,11 +11,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.sql.Blob;
-
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.hibernate.Hibernate;
 
@@ -58,7 +57,7 @@ public class PrimitiveCondition implements Condition
 
     /** The action. */
     private Action action;
-    
+
     private Object condValue;
 
     /**
@@ -90,7 +89,7 @@ public class PrimitiveCondition implements Condition
     {
         Object categoryAttributeValue = getCategoryObjectValue(controllingContainer
                 .getContainerValueMap());
-        if (categoryAttributeValue == null)
+        if (categoryAttributeValue == null || "".equals(categoryAttributeValue))
         {
             categoryAttributeValue = getCategoryObjectValue(objectValueState);
         }
@@ -126,15 +125,15 @@ public class PrimitiveCondition implements Condition
      * @return the value
      * @throws DynamicExtensionsSystemException
      */
-    public Object getValue() 
-    throws DynamicExtensionsSystemException {    	
+    public Object getValue()
+    throws DynamicExtensionsSystemException {
     	if (condValue == null) {
 			condValue = createCondValue();
-		}    		
+		}
     	return condValue;
     }
-    
-    private Object createCondValue() 
+
+    private Object createCondValue()
     throws DynamicExtensionsSystemException {
         ObjectInputStream ois = null;
         try
@@ -298,7 +297,7 @@ public class PrimitiveCondition implements Condition
     }
 
     //
-    // TODO: Avoid dependency on EntityCache. Instead have a method in DbUtil to 
+    // TODO: Avoid dependency on EntityCache. Instead have a method in DbUtil to
     // retrieve property values from DB
     //
     private byte[] getObjectValueBytes()
@@ -306,7 +305,7 @@ public class PrimitiveCondition implements Condition
     {
         byte[] bytes = null;
         boolean onceAttempted = false;
-        
+
         while (true) {
             try {
                 int length = (int)objectValue.length();
@@ -314,18 +313,18 @@ public class PrimitiveCondition implements Condition
                 break;
             } catch (Exception e) {
             	//Refreshing the Blob object
-            	//Changes Made For Bug#21875 Cannot access a form on UI (If the category is run as Edit Case and has Skip Logic ) 
+            	//Changes Made For Bug#21875 Cannot access a form on UI (If the category is run as Edit Case and has Skip Logic )
             	LOGGER.debug("Refreshing the Blob object.");
             	LOGGER.debug("SkipLogic object Id :: "+identifier);
                 if (onceAttempted) {
                     throw e;
                 }
-                
+
                 onceAttempted = true;
-                objectValue = (Blob)EntityCache.getInstance().getPropertyValue(this.getClass().getName(), "objectValue", identifier);                    
+                objectValue = (Blob)EntityCache.getInstance().getPropertyValue(this.getClass().getName(), "objectValue", identifier);
             }
         }
-        
+
         return bytes;
     }
 }
