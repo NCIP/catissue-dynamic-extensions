@@ -237,11 +237,18 @@ public class DEAjaxActionManager
 		ContainerInterface container = containerMap.get(containerId);
 		ControlInterface control = container.getControlById(controlId);
 		String modifiedControlName = controlName.replace(control.getHTMLComponentName(), "");
-		if(modifiedControlName!="")
+		if(!modifiedControlName.isEmpty())
 		{
+			modifiedControlName = modifiedControlName.replace("_", "");
 			//this is addmore type of subform control & hence find out row id for this control
-			rowId = Integer.valueOf(modifiedControlName.replace("_", "")) -1;
-
+					if(modifiedControlName.isEmpty())
+					{
+						rowId =0;
+					}
+					else
+					{
+						rowId = Integer.valueOf(modifiedControlName) -1;
+					}
 		}
 
 		Map<BaseAbstractAttributeInterface, Object> valueMap = ((Stack<Map<BaseAbstractAttributeInterface, Object>>) CacheManager
