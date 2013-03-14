@@ -4,26 +4,30 @@ package edu.common.dynamicextensions.ui.util;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 
 import org.xml.sax.SAXException;
 
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.processor.ProcessorConstants;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.xml.Controls;
-import edu.common.dynamicextensions.util.xml.DataTypeClass;
-import edu.common.dynamicextensions.util.xml.ValidatorRules;
-import edu.common.dynamicextensions.util.xml.XMLToObjectConverter;
 import edu.common.dynamicextensions.util.xml.Controls.Control;
 import edu.common.dynamicextensions.util.xml.Controls.Control.CommonValidation;
 import edu.common.dynamicextensions.util.xml.Controls.Control.CommonValidation.CommonValidationRule;
+import edu.common.dynamicextensions.util.xml.DataTypeClass;
 import edu.common.dynamicextensions.util.xml.DataTypeClass.DataType;
 import edu.common.dynamicextensions.util.xml.DataTypeClass.DataType.Validations;
+import edu.common.dynamicextensions.util.xml.ValidatorRules;
 import edu.common.dynamicextensions.util.xml.ValidatorRules.ValidationRule;
 import edu.common.dynamicextensions.util.xml.ValidatorRules.ValidationRule.Param;
+import edu.common.dynamicextensions.util.xml.XMLToObjectConverter;
 import edu.common.dynamicextensions.validation.ValidatorRuleInterface;
 import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.util.global.ApplicationProperties;
@@ -255,7 +259,7 @@ public final class ControlConfigurationsFactory
 	 */
 	public List<String> getAllImplicitRules(String controlName, String dataType)
 	{
-		List<String> allImplicitRules = new ArrayList<String>();
+		Set<String> allImplicitRules = new HashSet<String>();
 
 		ControlsConfigurationObject controlsConfiguration = (ControlsConfigurationObject) controlsConfigurationMap
 				.get(controlName);
@@ -267,14 +271,17 @@ public final class ControlConfigurationsFactory
 			{
 				allImplicitRules.addAll(dataTypeImplicitRuleList);
 			}
-
+			if(DynamicExtensionsUtility.isDataTypeNumeric(dataType))
+			{
+				allImplicitRules.addAll((List) dataTypeImplicitRulesMap.get(ProcessorConstants.DATATYPE_NUMBER));
+			}
 			List<String> commonImplicitRuleList = controlsConfiguration.getCommonImplicitRules();
 			if (commonImplicitRuleList != null)
 			{
 				allImplicitRules.addAll(commonImplicitRuleList);
 			}
 		}
-		return allImplicitRules;
+		return new ArrayList<String>(allImplicitRules);
 	}
 
 	/**
