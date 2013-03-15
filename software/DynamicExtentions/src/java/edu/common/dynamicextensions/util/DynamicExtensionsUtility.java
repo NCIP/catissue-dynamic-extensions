@@ -193,7 +193,7 @@ public class DynamicExtensionsUtility
 		}
 		return containerInterface;
 	}
-	
+
 	/**
 	 * Checks if the given string object is not null and not empty string.
 	 * @param value the object name.
@@ -754,7 +754,7 @@ public class DynamicExtensionsUtility
 		}
 		return isNumeric;
 	}
-	
+
 	/**
 	 * @return day form Calendar.
 	 */
@@ -1533,11 +1533,11 @@ public class DynamicExtensionsUtility
 	public static boolean isDataTypeNumeric(String dataType)
 	{
 		boolean isDataTypeNumber = false;
-		if (dataType.equals(ProcessorConstants.DATATYPE_INTEGER)
-				|| dataType.equals(ProcessorConstants.DATATYPE_LONG)
-				|| dataType.equals(ProcessorConstants.DATATYPE_FLOAT)
-				|| dataType.equals(ProcessorConstants.DATATYPE_DOUBLE)
-				|| dataType.equals(ProcessorConstants.DATATYPE_NUMBER))
+		if (ProcessorConstants.DATATYPE_INTEGER.equals(dataType)
+				|| ProcessorConstants.DATATYPE_LONG.equals(dataType)
+				|| ProcessorConstants.DATATYPE_FLOAT.equals(dataType)
+				|| ProcessorConstants.DATATYPE_DOUBLE.equals(dataType)
+				|| ProcessorConstants.DATATYPE_NUMBER.equals(dataType))
 		{
 			isDataTypeNumber = true;
 		}
@@ -2918,7 +2918,7 @@ public class DynamicExtensionsUtility
 		}
 		catch (NumberFormatException e)
 		{
-			throw new DynamicExtensionsApplicationException(e.getMessage()); 
+			throw new DynamicExtensionsApplicationException(e.getMessage());
 		}
 		catch (DynamicExtensionsSystemException e)
 		{
@@ -2937,7 +2937,7 @@ public class DynamicExtensionsUtility
 		}
 		catch (NumberFormatException e)
 		{
-			throw new DynamicExtensionsSystemException(e.getMessage()); 
+			throw new DynamicExtensionsSystemException(e.getMessage());
 		}
 		catch (DynamicExtensionsSystemException e)
 		{
@@ -2945,7 +2945,7 @@ public class DynamicExtensionsUtility
 		}
 		return edited;
 	}
-	
+
 	/**
 	 * @param sessionDataBean
 	 * @return hibernateDao
@@ -2977,7 +2977,7 @@ public class DynamicExtensionsUtility
 		}
 		return hibernateDao;
 	}
-	
+
 	public static DataEntryForm poulateDataEntryForm(HttpServletRequest request)
 	{
 		DataEntryForm dataEntryForm = new DataEntryForm();
@@ -2987,7 +2987,7 @@ public class DynamicExtensionsUtility
 		dataEntryForm.setDataEntryOperation(request.getParameter(Constants.DATA_ENTRY_OPERATION));
 		return dataEntryForm;
 	}
-	
+
 	public static DELayoutEnum getLayout(Long containerId) throws DynamicExtensionsCacheException
 	{
 		DELayoutEnum layout = DELayoutEnum.DEFAULT;
