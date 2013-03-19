@@ -1741,11 +1741,6 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 						.next();
 				value = dataValue.get(attribute);
 
-				if (value == null)
-				{
-					continue;
-				}
-
 				Long entityId = null;
 
 				if ((attribute instanceof CategoryAttributeInterface) && !isCatEntRecIns)
@@ -2242,10 +2237,6 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 						.next();
 				value = dataValue.get(attribute);
 
-				if (value == null)
-				{
-					continue;
-				}
 
 				if ((attribute instanceof CategoryAttributeInterface) && !isCatEntRecIns)
 				{
@@ -3556,7 +3547,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 		{
 			final Entry<BaseAbstractAttributeInterface, Object> nextObject = mapEntrySetIter.next();
 			final BaseAbstractAttributeInterface baseAbstractAttr = nextObject.getKey();
-			if (baseAbstractAttr instanceof CategoryAttributeInterface)
+			if (baseAbstractAttr instanceof CategoryAttributeInterface && nextObject.getValue() != null)
 			{
 				attributes.put(((CategoryAttributeInterface) baseAbstractAttr)
 						.getAbstractAttribute(), nextObject.getValue());
