@@ -49,6 +49,8 @@ import edu.wustl.common.util.global.ApplicationProperties;
 public class ValidatorUtil
 {
 
+	private static final String DYN_EXTN_VALIDATION_EMPTY_FORM = "dynExtn.validation.empty.form";
+
 	/**
 	 * This method validates the entered values for entity.
 	 * @param attributeValueMap  key - AttributeInterface
@@ -96,6 +98,9 @@ public class ValidatorUtil
 							getContainerForAbstractAttribute(association), validateNLevel);
 				}
 			}
+		}else
+		{
+			errorList.add(ApplicationProperties.getValue(DYN_EXTN_VALIDATION_EMPTY_FORM));
 		}
 
 		return errorList;
