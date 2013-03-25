@@ -44,10 +44,10 @@
 <script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/combos.js"></script>
 <script language="JavaScript" type="text/javascript" src="<%=request.getContextPath()%>/javascripts/de/ajaxupload.js"></script>
 
-<script	src="${pageContext.request.contextPath}/dhtmlx_suite/js/dhtmlxcommon.js"></script>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/dhtmlx_suite/skins/dhtmlxcalendar_dhx_skyblue.css" />
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}dhtmlx_suite/css/dhtmlxcalendar.css" />
-<script src="${pageContext.request.contextPath}/dhtmlx_suite/js/dhtmlxcalendar.js"></script>
+
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/dhtmlxSuite_v35/dhtmlxCalendar/codebase/dhtmlxcalendar.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/dhtmlxSuite_v35/dhtmlxCalendar/codebase/skins/dhtmlxcalendar_dhx_terrace.css" />
+<script type="text/javascript" src="${pageContext.request.contextPath}/dhtmlxSuite_v35/dhtmlxCalendar/codebase/dhtmlxcalendar.js"></script>
 
 
 

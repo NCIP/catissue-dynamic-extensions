@@ -1612,6 +1612,13 @@ function setDefaultValues(tableId, obj, containerId) {
 			break;
 			}
 		}
+	}else
+	{
+		var scriptTags = obj.getElementsByTagName('script');
+		for(i=0;i<scriptTags.length;i++)
+		{
+			eval(scriptTags[i].text);
+		}
 	}
 	// Only in case of delete checkbox in addrow
 	if ("deleteRow" == childObjectName) {
@@ -2943,7 +2950,13 @@ function updateServerState(controlName, controlId, containerId) {
 				vPatentControl.innerHTML = vParentOriginal;
 				var vRecentControl = document.getElementById(controlName);
 				vRecentControl.value = controlValue;
-
+				
+				var scriptTags = vPatentControl.getElementsByTagName('script');
+				for(i=0;i<scriptTags.length;i++)
+				{
+					eval(scriptTags[i].text);
+				}
+				
 				if ($("#" + controlName) != null) {
 					$("#" + controlName).removeClass("font_bl_nor");
 					$("#" + controlName).addClass("font_bl_nor_error");
@@ -3413,12 +3426,15 @@ function showCalendar(objName, dateFormat, controlId, containerId) {
 		isYearEditable : true
 	});
 
+	cal.setPosition('right');
 	cal.setDateFormat(dateFormat);
-	cal.setSkin("dhx_skyblue");
+	cal.setSkin("dhx_terrace");
 	if (date.length > 0) {
 		cal.setDate(date);
 	}
 	cal.attachEvent("onClick", function() {
 		updateServerState(objName, controlId, containerId);
 	});
+	cal.hideTime();
 }
+
