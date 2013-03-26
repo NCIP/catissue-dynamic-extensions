@@ -1614,11 +1614,11 @@ function setDefaultValues(tableId, obj, containerId) {
 		}
 	}else
 	{
-		var scriptTags = obj.getElementsByTagName('script');
-		for(i=0;i<scriptTags.length;i++)
+		if(childObject != undefined && obj.getElementsByClassName('de-date-picker').length >0)
 		{
-			eval(scriptTags[i].text);
+			showCalendar(obj.getElementsByClassName('de-date-picker')[0].id);
 		}
+				
 	}
 	// Only in case of delete checkbox in addrow
 	if ("deleteRow" == childObjectName) {
@@ -2951,11 +2951,11 @@ function updateServerState(controlName, controlId, containerId) {
 				var vRecentControl = document.getElementById(controlName);
 				vRecentControl.value = controlValue;
 				
-				var scriptTags = vPatentControl.getElementsByTagName('script');
-				for(i=0;i<scriptTags.length;i++)
+				if($(vRecentControl).hasClassName('de-date-picker'))
 				{
-					eval(scriptTags[i].text);
+					showCalendar(controlName);
 				}
+				
 				
 				if ($("#" + controlName) != null) {
 					$("#" + controlName).removeClass("font_bl_nor");
@@ -3418,8 +3418,12 @@ function printForm() {
  * @param objName
  * @return
  */
-function showCalendar(objName, dateFormat, controlId, containerId) {
+function showCalendar(objName) {
 	var date = document.getElementById(objName).value;
+	
+	var dateFormat = document.getElementById(objName+'dateFormat').value;
+	var controlId = document.getElementById(objName+'controlId').value;
+	var containerId = document.getElementById(objName+'containerId').value;
 
 	cal = new dhtmlxCalendarObject(objName, true, {
 		isMonthEditable : true,

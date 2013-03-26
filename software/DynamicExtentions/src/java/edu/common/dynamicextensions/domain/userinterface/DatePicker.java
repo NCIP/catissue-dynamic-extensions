@@ -37,6 +37,12 @@ import edu.wustl.common.util.global.CommonServiceLocator;
 public class DatePicker extends Control implements DatePickerInterface, ValidatableInterface,SummaryControlInterface
 {
 
+	private static final String INPUT_TYPE_HIDDEN_ID_SCONTAINER_ID_VALUE_S = "<input type='hidden' id='%scontainerId' value='%s'/>";
+
+	private static final String INPUT_TYPE_HIDDEN_ID_SCONTROL_ID_VALUE_S = "<input type='hidden' id='%scontrolId' value='%s'/>";
+
+	private static final String INPUT_TYPE_HIDDEN_ID_SDATE_FORMAT_VALUE_S = "<input type='hidden' id='%sdateFormat' value='%s'/>";
+
 	/** default serial UID. */
 	private static final long serialVersionUID = 1L;
 
@@ -165,11 +171,16 @@ public class DatePicker extends Control implements DatePickerInterface, Validata
 		outputStringBuffer.append(getHTMLComponentName());
 		outputStringBuffer.append("' name='");
 		outputStringBuffer.append(getHTMLComponentName());
-		String showCalendarCall = "showCalendar('%s','%s','%s','%s')";
-		outputStringBuffer.append("' value='"+defaultValue+"' onchange=\"" +getOnchangeServerCall()
+		
+		outputStringBuffer.append("' value='"+defaultValue+"' class='de-date-picker' onchange=\"" +getOnchangeServerCall()
 				+"\" size='10'/>");
 		outputStringBuffer.append("<span class='date-format'>["+dateFormat+"]</span>");
-		outputStringBuffer.append("<script>"+ String.format(showCalendarCall, htmlComponentName,formatSpecifier,this.id,getParentContainer().getId())+";</script>" );
+		
+		outputStringBuffer.append(String.format(INPUT_TYPE_HIDDEN_ID_SDATE_FORMAT_VALUE_S,getHTMLComponentName(), formatSpecifier));
+		outputStringBuffer.append(String.format(INPUT_TYPE_HIDDEN_ID_SCONTROL_ID_VALUE_S,getHTMLComponentName(), this.id));
+		outputStringBuffer.append(String.format(INPUT_TYPE_HIDDEN_ID_SCONTAINER_ID_VALUE_S,getHTMLComponentName(), getParentContainer().getId()));
+		String showCalendarCall = "showCalendar('%s')";
+		outputStringBuffer.append("<script>"+ String.format(showCalendarCall, htmlComponentName)+";</script>" );
 		
 		
 		if (getIsSkipLogicTargetControl())
