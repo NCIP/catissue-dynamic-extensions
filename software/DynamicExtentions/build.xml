@@ -327,8 +327,8 @@
 				<include name="**/*" />
 			</fileset>
 		</copy>
-		<copy todir="${temp.dir}/web/dhtmlx_suite">
-			<fileset dir="src/web/dhtmlx_suite">
+		<copy todir="${temp.dir}/web/dhtmlxSuite_v35">
+			<fileset dir="src/web/dhtmlxSuite_v35">
 				<include name="**/*" />
 			</fileset>
 		</copy>
@@ -490,8 +490,8 @@
 			</fileset>
 			</copy>
 	-->
-		<copy todir="${temp.dir}/dhtmlx_suite">
-					<fileset dir="src/web/dhtmlx_suite">
+		<copy todir="${temp.dir}/dhtmlxSuite_v35">
+					<fileset dir="src/web/dhtmlxSuite_v35">
 						<include name="**/*" />
 					</fileset>
 		</copy>
