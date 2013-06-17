@@ -17,6 +17,7 @@ import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.HQLPlaceHolderObject;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
+import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.dao.DAO;
@@ -204,7 +205,15 @@ public final class AbstractMetadataManagerHelper
 		}
 		else if ("Date".equals(dataType)) {
 			Date date = getDateValue(attribute, value);
-			dataValue = new java.sql.Date(date.getTime());
+			String dateFormat =((DateAttributeTypeInformation) ((AttributeMetadataInterface) attribute).getAttributeTypeInformation()).getFormat();
+			if(ProcessorConstants.DATE_FORMAT_OPTION_DATEANDTIME.equals(dateFormat))
+			{
+				dataValue = new java.sql.Timestamp(date.getTime());
+			}
+			else
+			{
+				dataValue = new java.sql.Date(date.getTime());
+			}
 		}
 		else {
 			dataValue = value.toString();

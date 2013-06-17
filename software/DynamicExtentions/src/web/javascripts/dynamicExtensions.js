@@ -3439,6 +3439,18 @@ function showCalendar(objName) {
 	cal.attachEvent("onClick", function() {
 		updateServerState(objName, controlId, containerId);
 	});
-	cal.hideTime();
+	if(dateFormat.indexOf("%H") > -1 
+		||dateFormat.indexOf("%h") > -1 
+		||dateFormat.indexOf("%i") > -1 
+		||dateFormat.indexOf("%s") > -1 
+		||dateFormat.indexOf("%A") > -1 
+		||dateFormat.indexOf("%a") > -1 )
+	{
+		cal.showTime();
+	}
+	else
+	{
+		cal.hideTime();
+	}
 }
 
