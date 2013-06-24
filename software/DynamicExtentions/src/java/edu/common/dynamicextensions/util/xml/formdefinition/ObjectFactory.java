@@ -9,20 +9,6 @@
 package edu.common.dynamicextensions.util.xml.formdefinition;
 
 import javax.xml.bind.annotation.XmlRegistry;
-import edu.common.dynamicextensions.util.xml.formdefinition.Attribute;
-import edu.common.dynamicextensions.util.xml.formdefinition.ControllingAttribute;
-import edu.common.dynamicextensions.util.xml.formdefinition.DependentAttribute;
-import edu.common.dynamicextensions.util.xml.formdefinition.Form;
-import edu.common.dynamicextensions.util.xml.formdefinition.FormDefinition;
-import edu.common.dynamicextensions.util.xml.formdefinition.Instance;
-import edu.common.dynamicextensions.util.xml.formdefinition.Instances;
-import edu.common.dynamicextensions.util.xml.formdefinition.ObjectFactory;
-import edu.common.dynamicextensions.util.xml.formdefinition.PermissibleValue;
-import edu.common.dynamicextensions.util.xml.formdefinition.Property;
-import edu.common.dynamicextensions.util.xml.formdefinition.SingleLineDisplay;
-import edu.common.dynamicextensions.util.xml.formdefinition.SkipLogic;
-import edu.common.dynamicextensions.util.xml.formdefinition.Subform;
-import edu.common.dynamicextensions.util.xml.formdefinition.Subset;
 
 
 /**

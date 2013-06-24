@@ -21,9 +21,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import edu.common.dynamicextensions.client.DataEditClient;
 import edu.common.dynamicextensions.domain.DateAttributeTypeInformation;

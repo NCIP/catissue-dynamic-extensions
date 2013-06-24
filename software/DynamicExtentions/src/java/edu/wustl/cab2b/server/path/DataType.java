@@ -1,11 +1,5 @@
 package edu.wustl.cab2b.server.path;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.BooleanValueInterface;
@@ -24,6 +18,12 @@ import edu.wustl.common.util.global.CommonServiceLocator;
 import gov.nih.nci.cagrid.metadata.common.Enumeration;
 import gov.nih.nci.cagrid.metadata.common.UMLAttribute;
 import gov.nih.nci.cagrid.metadata.common.ValueDomain;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
 
 /**
  * Enumeration for DataType.

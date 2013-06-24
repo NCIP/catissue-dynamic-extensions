@@ -3,6 +3,7 @@ package edu.common.dynamicextensions.domain.userinterface;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
+
 import edu.common.dynamicextensions.domain.DynamicExtensionBaseDomainObject;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.DynamicExtensionLayoutInterface;

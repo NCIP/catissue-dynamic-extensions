@@ -19,7 +19,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import edu.common.dynamicextensions.dao.impl.DynamicExtensionDAO;
 import edu.common.dynamicextensions.domain.BooleanAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.CategoryAttribute;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
@@ -61,9 +60,6 @@ import edu.wustl.common.beans.NameValueBean;
 import edu.wustl.common.exception.BizLogicException;
 import edu.wustl.common.util.global.CommonServiceLocator;
 import edu.wustl.dao.JDBCDAO;
-import edu.wustl.dao.connectionmanager.IConnectionManager;
-import edu.wustl.dao.daofactory.DAOConfigFactory;
-import edu.wustl.dao.daofactory.IDAOFactory;
 import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.query.generator.ColumnValueBean;
 

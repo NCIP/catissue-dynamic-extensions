@@ -1,6 +1,7 @@
 package edu.wustl.dynamicextensions.caching.util;
 
 import oracle.sql.TIMESTAMP;
+
 import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.converters.DateConverter;
 
@@ -13,7 +14,7 @@ public class CustomDateConverter implements Converter {
     
     public Object convert(Class type, Object value) {
         try {
-            if (value instanceof TIMESTAMP) {
+            if (value!=null && value instanceof TIMESTAMP) {
                 value = ((TIMESTAMP)value).dateValue();
             }
             

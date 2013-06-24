@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import edu.common.dynamicextensions.category.creation.HandleSkipLogic;
 import edu.common.dynamicextensions.domaininterface.AttributeMetadataInterface;
@@ -22,7 +22,6 @@ import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInter
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.entitymanager.AbstractBaseMetadataManager;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.common.dynamicextensions.operations.CategoryOperations;
 import edu.common.dynamicextensions.skiplogic.Action;
 import edu.common.dynamicextensions.skiplogic.Condition;
 import edu.common.dynamicextensions.skiplogic.ConditionStatements;

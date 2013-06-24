@@ -6,7 +6,7 @@ import java.util.HashSet;
 
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryInterface;
-import edu.common.dynamicextensions.domaininterface.userinterface. DynamicExtensionLayoutInterface;
+import edu.common.dynamicextensions.domaininterface.userinterface.DynamicExtensionLayoutInterface;
 
 /**
  *
