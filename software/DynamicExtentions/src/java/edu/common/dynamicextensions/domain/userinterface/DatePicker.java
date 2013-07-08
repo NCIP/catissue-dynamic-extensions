@@ -173,7 +173,7 @@ public class DatePicker extends Control implements DatePickerInterface, Validata
 		outputStringBuffer.append(getHTMLComponentName());
 		
 		outputStringBuffer.append("' value='"+defaultValue+"' class='de-date-picker' onchange=\"" +getOnchangeServerCall()
-				+"\" size='10'/>");
+				+"\" size='13'/>");
 		outputStringBuffer.append("<span class='date-format'>["+dateFormat+"]</span>");
 		
 		outputStringBuffer.append(String.format(INPUT_TYPE_HIDDEN_ID_SDATE_FORMAT_VALUE_S,getHTMLComponentName(), formatSpecifier));
