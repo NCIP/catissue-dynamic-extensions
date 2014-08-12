@@ -207,7 +207,7 @@
 	</target>
 
 	<!-- Creates the Dynamic Extensions zip of the application -->
-	<target name="create_dynamic_extensions_zip" depends="createTestCoverageReport,build:jar:core,version_info,init_zip">
+	<target name="create_dynamic_extensions_zip" depends="build:jar:core,version_info,init_zip">
 		<delete file="binaries/dynamicextensions.zip" />
 		<zip destfile="binaries/dynamicextensions.zip">
 			<fileset dir="${temp.dir}">
@@ -239,6 +239,7 @@
 		<copy todir="${temp.dir}/lib">
 			<fileset dir="${base.dir}/lib">
 				<include name="server/*" />
+				<include name="extra/*" />
 			</fileset>
 		</copy>
 
