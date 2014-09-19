@@ -2206,7 +2206,18 @@ function updateHTML() {
 						var dynamicControlDiv = dynamicControl.value;
 						var originalDiv = document.getElementById(dynamicControlDiv);
 						var dynamicDiv = iframeDocument.getElementById(dynamicControlDiv);
-						originalDiv.innerHTML = dynamicDiv.innerHTML;
+
+						if (navigator.appName == 'Microsoft Internet Explorer')
+						{
+							var temp = originalDiv.ownerDocument.createElement('div');
+							temp.innerHTML = '<table>' + dynamicDiv.innerHTML + '</table>';
+							originalDiv.replaceChild(temp.firstChild.firstChild, originalDiv.firstChild);
+							//temp.parentNode.removeChild(temp);
+						}
+						else
+						{
+							originalDiv.innerHTML = dynamicDiv.innerHTML;
+						}
 					
 						var items = dynamicDiv.getElementsByTagName('script');
 					
