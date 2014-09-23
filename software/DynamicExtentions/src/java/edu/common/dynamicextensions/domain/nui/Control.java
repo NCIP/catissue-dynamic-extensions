@@ -1,6 +1,7 @@
 
 package edu.common.dynamicextensions.domain.nui;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -637,4 +638,10 @@ public abstract class Control extends DynamicExtensionBaseDomainObject implement
 		}
 		return Collections.emptySet();
 	}
+	
+	public List<String> getConditions() {
+		List<String> conditions = new ArrayList<String>();
+		return conditions;
+	}
+	
 }

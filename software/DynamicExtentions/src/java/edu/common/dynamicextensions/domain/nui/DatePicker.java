@@ -15,6 +15,7 @@ import edu.common.dynamicextensions.napi.ControlValue;
 import edu.common.dynamicextensions.napi.impl.FormRenderer.ContextParameter;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.util.DHTMLXDateFormatHandler;
+import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.cab2b.common.exception.RuntimeException;
 import edu.wustl.common.util.Utility;
 import edu.wustl.common.util.global.ApplicationProperties;
@@ -280,5 +281,19 @@ public class DatePicker extends Control {
 					Arrays.asList(getCaption(), getFormat())));
 		}
 		return errorList;
+	}
+	
+	public List<String> getConditions() {
+		List<String> conditions = new ArrayList<String>();
+		conditions.add(DEConstants.EQUALS);
+		conditions.add(DEConstants.NOT_EQUALS);
+		conditions.add(DEConstants.BETWEEN);
+		conditions.add(DEConstants.LESS_THAN);
+		conditions.add(DEConstants.LESS_THAN_OR_EQUAL_TO);
+		conditions.add(DEConstants.GREATER_THAN);
+		conditions.add(DEConstants.GREATER_THAN_OR_EQUAL_TO);
+		conditions.add(DEConstants.IS_PRESENT);
+		conditions.add(DEConstants.IS_NOT_PRESENT);
+		return conditions;
 	}
 }

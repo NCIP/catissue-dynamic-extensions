@@ -5,6 +5,7 @@ package edu.common.dynamicextensions.domain.nui;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import edu.common.dynamicextensions.napi.ControlValue;
+import edu.common.dynamicextensions.util.global.DEConstants;
 
 public abstract class SelectControl extends Control {
 	
@@ -212,5 +214,17 @@ public abstract class SelectControl extends Control {
 		}
 		return pvString;
 
+	}
+	
+	public List<String> getConditions() {
+		List<String> conditions = new ArrayList<String>();
+		conditions.add(DEConstants.STARTS_WITH);
+		conditions.add(DEConstants.ENDS_WITH);
+		conditions.add(DEConstants.EQUALS);
+		conditions.add(DEConstants.NOT_EQUALS);
+		conditions.add(DEConstants.CONTAINS);
+		conditions.add(DEConstants.IS_PRESENT);
+		conditions.add(DEConstants.IS_NOT_PRESENT);
+		return conditions;
 	}
 }

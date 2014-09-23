@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.sql.Clob;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;

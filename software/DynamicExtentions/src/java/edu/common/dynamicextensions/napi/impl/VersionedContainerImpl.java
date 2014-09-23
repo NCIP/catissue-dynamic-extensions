@@ -422,24 +422,27 @@ public class VersionedContainerImpl implements VersionedContainer {
 		
 	public void publishProspective(JdbcDao jdbcDao, UserContext usrCtx, Long formId, Date activationDate) {
 		Container draftContainer = getDraftContainer(formId);
-		nullifyContainerIds(draftContainer);
-		
-		draftContainer.setName(getFormName(draftContainer.getName(), activationDate));
-		Long publishedContainerId = draftContainer.save(usrCtx, jdbcDao, false);
-		activationDate = (activationDate == null) ? Calendar.getInstance().getTime() : activationDate;
-		
-		VersionedContainerInfo vc = new VersionedContainerInfo();
-		vc.setFormId(formId);
-		vc.setContainerId(publishedContainerId);
-		vc.setActivationDate(activationDate);
-		vc.setCreatedBy(usrCtx.getUserId());
-		vc.setCreationTime(Calendar.getInstance().getTime());
-		vc.setStatus("published");
-		
-		VersionedContainerDao vdao = new VersionedContainerDao(jdbcDao);
-		vdao.insertVersionedContainerInfo(vc);
-		
-		runPostHooks(usrCtx, formId);
+		if(draftContainer!=null)
+		{
+			nullifyContainerIds(draftContainer);
+			
+			draftContainer.setName(getFormName(draftContainer.getName(), activationDate));
+			Long publishedContainerId = draftContainer.save(usrCtx, jdbcDao, false);
+			activationDate = (activationDate == null) ? Calendar.getInstance().getTime() : activationDate;
+			
+			VersionedContainerInfo vc = new VersionedContainerInfo();
+			vc.setFormId(formId);
+			vc.setContainerId(publishedContainerId);
+			vc.setActivationDate(activationDate);
+			vc.setCreatedBy(usrCtx.getUserId());
+			vc.setCreationTime(Calendar.getInstance().getTime());
+			vc.setStatus("published");
+			
+			VersionedContainerDao vdao = new VersionedContainerDao(jdbcDao);
+			vdao.insertVersionedContainerInfo(vc);
+			
+			runPostHooks(usrCtx, formId);
+		}
 	}
 	
 	private void runPostHooks(UserContext usrCtx, Long formId) {
@@ -466,9 +469,11 @@ public class VersionedContainerImpl implements VersionedContainer {
 	}
 		
 	private void nullifyContainerIds(Container container) {
-		container.setId(null);
-		for (Container sub : container.getAllSubContainers()) {
-			sub.setId(null);
+		if(container!=null){
+			container.setId(null);
+			for (Container sub : container.getAllSubContainers()) {
+				sub.setId(null);
+			}
 		}
 	}
 

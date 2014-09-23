@@ -16,6 +16,7 @@ import edu.common.dynamicextensions.napi.impl.FormRenderer.ContextParameter;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.global.DEConstants;
 import edu.wustl.common.util.global.ApplicationProperties;
 
 public class NumberField extends TextField {
@@ -256,5 +257,19 @@ public class NumberField extends TextField {
 			numberValue = numberValue.setScale(noOfDigitsAfterDecimal, RoundingMode.HALF_UP).stripTrailingZeros();
 		}
 		return numberValue.toPlainString();
+	}
+	
+	public List<String> getConditions() {
+		List<String> conditions = new ArrayList<String>();
+		conditions.add(DEConstants.EQUALS);
+		conditions.add(DEConstants.NOT_EQUALS);
+		conditions.add(DEConstants.BETWEEN);
+		conditions.add(DEConstants.LESS_THAN);
+		conditions.add(DEConstants.LESS_THAN_OR_EQUAL_TO);
+		conditions.add(DEConstants.GREATER_THAN);
+		conditions.add(DEConstants.GREATER_THAN_OR_EQUAL_TO);
+		conditions.add(DEConstants.IS_PRESENT);
+		conditions.add(DEConstants.IS_NOT_PRESENT);
+		return conditions;
 	}
 }
