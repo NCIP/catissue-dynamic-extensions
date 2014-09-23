@@ -1,6 +1,7 @@
 
 package edu.common.dynamicextensions.domain.nui;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import edu.common.dynamicextensions.napi.impl.FormRenderer.ContextParameter;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.common.dynamicextensions.ui.util.Constants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.global.DEConstants;
 
 public class StringTextField extends TextField {
 
@@ -163,5 +165,17 @@ public class StringTextField extends TextField {
 		}
 
 		return htmlString.toString();
+	}
+	
+	public List<String> getConditions() {
+		List<String> conditions = new ArrayList<String>();
+		conditions.add(DEConstants.STARTS_WITH);
+		conditions.add(DEConstants.ENDS_WITH);
+		conditions.add(DEConstants.EQUALS);
+		conditions.add(DEConstants.NOT_EQUALS);
+		conditions.add(DEConstants.CONTAINS);
+		conditions.add(DEConstants.IS_PRESENT);
+		conditions.add(DEConstants.IS_NOT_PRESENT);
+		return conditions;
 	}
 }

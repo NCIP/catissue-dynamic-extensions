@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 
 import edu.common.dynamicextensions.napi.ControlValue;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
+import edu.common.dynamicextensions.util.global.DEConstants;
 
 public class MultiSelectListBox extends ListBox implements MultiSelectControl {
 
@@ -123,5 +124,17 @@ public class MultiSelectListBox extends ListBox implements MultiSelectControl {
 	@Override
 	protected String getMultiselectString() {
 		return "MULTIPLE";
+	}
+	
+	public List<String> getConditions() {
+		List<String> conditions = new ArrayList<String>();
+		conditions.add(DEConstants.STARTS_WITH);
+		conditions.add(DEConstants.ENDS_WITH);
+		conditions.add(DEConstants.EQUALS);
+		conditions.add(DEConstants.NOT_EQUALS);
+		conditions.add(DEConstants.CONTAINS);
+		conditions.add(DEConstants.IS_PRESENT);
+		conditions.add(DEConstants.IS_NOT_PRESENT);
+		return conditions;
 	}
 }

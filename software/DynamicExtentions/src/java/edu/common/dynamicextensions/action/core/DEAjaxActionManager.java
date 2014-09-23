@@ -210,6 +210,14 @@ public class DEAjaxActionManager
 
 		Map<ContextParameter, String> contextParameter = (Map<ContextParameter, String>) CacheManager
 				.getObjectFromCache(request, FormRenderer.CONTEXT_INFO);
+		
+		// Temp fix
+				if(contextParameter == null){
+					contextParameter = new HashMap<ContextParameter, String>();
+					contextParameter.put(ContextParameter.MODE,
+							WebUIManagerConstants.EDIT_MODE);
+				}
+				
 		FormRenderer layoutRenderer = new FormRenderer(formDataStack, contextParameter);
 		
 		return layoutRenderer.render();
