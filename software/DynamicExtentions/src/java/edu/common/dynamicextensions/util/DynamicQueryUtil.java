@@ -1,22 +1,23 @@
 
 package edu.common.dynamicextensions.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import edu.common.dynamicextensions.domain.PathAssociationRelationInterface;
-import edu.common.dynamicextensions.domaininterface.AbstractEntityInterface;
+import edu.common.dynamicextensions.domain.nui.Container;
+import edu.common.dynamicextensions.domain.nui.Control;
+import edu.common.dynamicextensions.domain.nui.SubFormControl;
 import edu.common.dynamicextensions.domaininterface.AssociationInterface;
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryEntityInterface;
-import edu.common.dynamicextensions.domaininterface.CategoryInterface;
-import edu.common.dynamicextensions.domaininterface.EntityInterface;
 import edu.common.dynamicextensions.domaininterface.databaseproperties.ConstraintKeyPropertiesInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ContainerInterface;
 import edu.common.dynamicextensions.domaininterface.userinterface.ControlInterface;
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
-import edu.wustl.cab2b.server.cache.EntityCache;
 
 public class DynamicQueryUtil
 {
@@ -25,45 +26,56 @@ public class DynamicQueryUtil
 			throws NumberFormatException, DynamicExtensionsSystemException,
 			DynamicExtensionsApplicationException
 	{
-
-		final ContainerInterface container = DynamicExtensionsUtility
-				.getContainerByIdentifier(containerID.toString());
-
-		EntityInterface staticEntity = EntityCache.getInstance().getEntityById(
-				Long.valueOf(bean.getStaticEntityId()));
-
-		AbstractEntityInterface abstractEntity = container.getAbstractEntity();
-		if (abstractEntity instanceof CategoryEntityInterface)
+		Container container = Container.getContainer(containerID);
+		if (container != null)
 		{
-			CategoryInterface category = ((CategoryEntityInterface) abstractEntity).getCategory();
-			CategoryEntityInterface rootCategoryElement = category.getRootCategoryElement();
-			EntityInterface dynamicEntity = rootCategoryElement.getEntity();
-			Collection<AssociationInterface> asntCollection = staticEntity
-					.getAssociationCollection();
-			AssociationInterface asntInterface = null;
-			for (AssociationInterface association : asntCollection)
+
+			String dynamicTableName = container.getDbTableName();
+			bean.getFromPart().append(dynamicTableName);
+			bean.getWherePart().append(
+					" and " + bean.getRecordEntryParamName() + ".IDENTIFIER = " + dynamicTableName
+							+ ".IDENTIFIER ");
+
+			List<Control> subFormCtrls = new ArrayList<Control>();
+
+			for (Control ctrl : container.getControlsMap().values())
 			{
-				if (association.getTargetEntity().equals(dynamicEntity))
+				if (ctrl instanceof SubFormControl)
 				{
-					asntInterface = association;
+					subFormCtrls.add(ctrl);
+				}
+				else if (bean.getControlCaption().equalsIgnoreCase(ctrl.getCaption()))
+				{
+					bean.getWherePart().append(
+							" and " + dynamicTableName + "."
+									+ ctrl.getColumnDefs().iterator().next().getColumnName()
+									+ " = 'Yes'");
 					break;
 				}
 			}
-			String fkName = asntInterface.getConstraintProperties()
-					.getTgtEntityConstraintKeyProperties().getTgtForiegnKeyColumnProperties()
-					.getName();
-			String dynamicTableName = asntInterface.getTargetEntity().getTableProperties()
-					.getName();
-			bean.getFromPart().append(dynamicTableName);
-			bean.getWherePart().append(
-					" and " + bean.getRecordEntryParamName() + "."+((AttributeInterface) asntInterface.getEntity()
-							.getPrimaryKeyAttributeCollection().iterator().next()).getColumnProperties()
-							.getName()+" = " + dynamicTableName
-							+ "." + fkName);
+			for (Control ctrl : subFormCtrls)
+			{
+				SubFormControl subFormCtrl = (SubFormControl) ctrl;
+				Container subFormContainer = subFormCtrl.getSubContainer();
+				String dynamicTableNameOfSubCtrl = subFormContainer.getDbTableName();
+				bean.getFromPart().append(", " + dynamicTableNameOfSubCtrl);
+				bean.getWherePart().append(
+						" and " + dynamicTableNameOfSubCtrl + ".PARENT_RECORD_ID = "
+								+ dynamicTableName + ".IDENTIFIER ");
 
-			getDynamicQueryForCategory(rootCategoryElement, asntInterface, bean);
+				for (Control subCtrl : subFormContainer.getControlsMap().values())
+				{
+					if (bean.getControlCaption().equalsIgnoreCase(subCtrl.getCaption()))
+					{
+						bean.getWherePart().append(
+								" and " + dynamicTableNameOfSubCtrl + "."
+										+ subCtrl.getColumnDefs().iterator().next().getColumnName()
+										+ " = 'Yes'");
+						break;
+					}
+				}
+			}
 		}
-
 		return bean;
 
 	}
@@ -109,9 +121,10 @@ public class DynamicQueryUtil
 							" and "
 									+ tableName
 									+ "."
-									+ DynamicExtensionsUtility.getBaseAttributeOfcategoryAttribute(
-											categoryAttributeInterface).getColumnProperties()
-											.getName() + " = 'Yes'");
+									+ DynamicExtensionsUtility
+											.getBaseAttributeOfcategoryAttribute(
+													categoryAttributeInterface)
+											.getColumnProperties().getName() + " = 'Yes'");
 					break outerloop;
 
 				}
