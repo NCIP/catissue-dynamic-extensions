@@ -56,9 +56,12 @@ public class DynamicQueryUtil
 					.getName();
 			bean.getFromPart().append(dynamicTableName);
 			bean.getWherePart().append(
-					" and " + bean.getRecordEntryParamName() + "."+((AttributeInterface) asntInterface.getEntity()
-							.getPrimaryKeyAttributeCollection().iterator().next()).getColumnProperties()
-							.getName()+" = " + dynamicTableName
+					" and "
+							+ bean.getRecordEntryParamName()
+							+ "."
+							+ ((AttributeInterface) asntInterface.getEntity()
+									.getPrimaryKeyAttributeCollection().iterator().next())
+									.getColumnProperties().getName() + " = " + dynamicTableName
 							+ "." + fkName);
 
 			getDynamicQueryForCategory(rootCategoryElement, asntInterface, bean);
@@ -109,9 +112,10 @@ public class DynamicQueryUtil
 							" and "
 									+ tableName
 									+ "."
-									+ DynamicExtensionsUtility.getBaseAttributeOfcategoryAttribute(
-											categoryAttributeInterface).getColumnProperties()
-											.getName() + " = 'Yes'");
+									+ DynamicExtensionsUtility
+											.getBaseAttributeOfcategoryAttribute(
+													categoryAttributeInterface)
+											.getColumnProperties().getName() + " = 'Yes'");
 					break outerloop;
 
 				}
