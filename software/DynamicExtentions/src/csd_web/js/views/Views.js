@@ -269,6 +269,8 @@ var Views = {
 				setAttributeName : function(event) {
 					var userDefinedName = Utility.toCamelCase($(
 							'#controlCaption').val());
+					var userDefinedNameExcludingSpec = userDefinedName.replace(/[^\w\s]/gi, '');
+					userDefinedName = userDefinedNameExcludingSpec;
 					if (userDefinedName.length > 28) {
 						userDefinedName = userDefinedName.substring(0, 27) + ""
 								+ GlobalMemory.nodeCounter;
