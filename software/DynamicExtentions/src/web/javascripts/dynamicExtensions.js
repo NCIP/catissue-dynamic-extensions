@@ -2324,16 +2324,16 @@ function updateServerState(controlName) {
 	} else{
 		var vControl = controls[0];
 	
-		if (vControl.type == "select-multiple") // for listBox
+		if (vControl != null && vControl != 'undefined' && vControl.type == "select-multiple") // for listBox
 		{
 			for ( var i = 0; i < vControl.options.length; i++) {
 				if (vControl.options[i].selected) {
 						controlValue += "&controlValue=" + vControl.options[i].value;
 				}
 			}
-		} else if (vControl.type == "checkbox"){
+		} else if (vControl != null && vControl != 'undefined' && vControl.type == "checkbox"){
 			controlValue ="&controlValue="+vControl.checked;
-		} else {
+		} else if (vControl != null && vControl != 'undefined') {
 		    controlValue = "&controlValue="+vControl.value;
 		} 
 	}
