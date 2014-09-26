@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import edu.common.dynamicextensions.ndao.JdbcDao;
+import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 
 public class PvDataSource {
 	public static enum Ordering {
@@ -162,7 +163,7 @@ public class PvDataSource {
 					value = rs.getString(2);
 				}
 				PermissibleValue pv = new PermissibleValue();
-				pv.setOptionName(value);
+				pv.setOptionName(DynamicExtensionsUtility.getEscapedStringValue(value));
 				pv.setValue(value);
 				result.add(pv);
 			}
