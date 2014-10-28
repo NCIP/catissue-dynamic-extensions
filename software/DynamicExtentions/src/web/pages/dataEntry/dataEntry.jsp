@@ -93,6 +93,20 @@ jQuery(document).ready(
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<title><bean:message key="table.heading" /></title>
+		 <style type="text/css">
+                        .x-window-pink {
+                                background-color: #f85858 !important;
+                        }
+                        .x-window-pink .x-window-body {
+                                background-color: #ffffff !important;
+                        }
+                        .x-btn-text {
+                                font-weight:bold !important;
+                        }               
+                        .x-btn mc {     
+                                border:1px solid !important;
+                        }                       
+                </style>
 		<script>
 		function setFocusToFirstControl()
 		{
@@ -353,6 +367,22 @@ jQuery(document).ready(
 		<script type="text/javascript" defer="defer">
 			updateHTML();
 			document.getElementById('isDirty').value = false;
+		</script>
+		<script type="text/javascript" defer="defer">
+			<%
+			if(request.getAttribute("formOpened") != null)
+			{
+				boolean str =  Boolean.valueOf(request.getAttribute("formOpened").toString());
+				Object userName = request.getAttribute("userNames");
+                if(str)
+                {
+			%>
+ 			var a =Ext.Msg.alert('<b>Form Status Warning</b>', '<b>\n\nThis form is opened in another session by user <%=userName%></br>\nPlease click OK to continue</b>');
+			a.getDialog().addClass('x-window-pink');                        
+            <%
+				}
+			}
+			%>
 		</script>
 	</body>
 </html>
