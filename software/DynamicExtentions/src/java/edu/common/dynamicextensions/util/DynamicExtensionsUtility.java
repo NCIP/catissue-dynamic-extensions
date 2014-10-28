@@ -2246,7 +2246,7 @@ public class DynamicExtensionsUtility
 		if (value != null)
 		{
 			originalString = replaceUtil(value, "&#39", "'");
-			originalString = replaceUtil(value, "&#34", "\"");
+			originalString = replaceUtil(originalString, "&#34", "\"");
 			originalString = originalString.trim();
 			
 		}

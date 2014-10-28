@@ -227,13 +227,15 @@ public class MultiSelectCheckBox extends SelectControl implements MultiSelectCon
 		
 		if (selectedPvs != null) {
 			
-			if (selectedPvs.contains(pv.getValue())) {
+			if (selectedPvs.contains(pv.getValue())
+					|| selectedPvs.contains(DynamicExtensionsUtility.replaceHTMLSpecialCharacters(pv.getValue()))) {
 					isPVSelected = true;
 			}
 
 		} else if (getDefaultValue() != null) {
 			
-			if (getDefaultValue().getValue().equals(pv.getValue())) {
+			if (getDefaultValue().getValue().equals(pv.getValue())
+					|| getDefaultValue().getValue().equals(DynamicExtensionsUtility.replaceHTMLSpecialCharacters(pv.getValue()))) {
 				isPVSelected = true;
 			}
 		}
