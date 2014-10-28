@@ -94,19 +94,19 @@ jQuery(document).ready(
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<title><bean:message key="table.heading" /></title>
 		 <style type="text/css">
-                        .x-window-pink {
-                                background-color: #f85858 !important;
-                        }
-                        .x-window-pink .x-window-body {
-                                background-color: #ffffff !important;
-                        }
-                        .x-btn-text {
-                                font-weight:bold !important;
-                        }               
-                        .x-btn mc {     
-                                border:1px solid !important;
-                        }                       
-                </style>
+		        .x-window-pink {
+		                background-color: #f85858 !important;
+		        }
+		        .x-window-pink .x-window-body {
+		                background-color: #ffffff !important;
+		        }
+		        .x-btn-text {
+		                font-weight:bold !important;
+		        }               
+		        .x-btn mc {     
+		                border:1px solid !important;
+		        }                       
+		</style>
 		<script>
 		function setFocusToFirstControl()
 		{
