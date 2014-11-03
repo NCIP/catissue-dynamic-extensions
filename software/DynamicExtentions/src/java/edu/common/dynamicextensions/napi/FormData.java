@@ -53,6 +53,14 @@ public class FormData {
 		fieldValues.put(controlValue.getControl().getName(), controlValue);
 	}
 	
+	public void addFieldValueUsingControlId(ControlValue controlValue) {
+		fieldValues.put(controlValue.getControl().getId().toString(), controlValue);
+	}
+	
+	public Map<String, ControlValue> getFieldValuesWithControlId() {
+		return fieldValues;
+	}
+    
 	public ControlValue getFieldValue(String name) {
 		ControlValue cv = fieldValues.get(name);
 		if (cv == null) {
