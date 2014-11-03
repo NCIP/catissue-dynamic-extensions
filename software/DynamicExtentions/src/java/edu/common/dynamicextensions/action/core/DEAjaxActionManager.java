@@ -255,7 +255,7 @@ public class DEAjaxActionManager
 		}
 		subformValue.add(subFormData);
 		FormDataUtility.evaluateSkipLogic(mainFormData);
-		return subForm.getContainerHTMLAsARow(rowId, subFormData, contextParameter);
+		return subForm.getContainerHTMLAsARow(rowId, subFormData, contextParameter).replaceAll("images/", "../../images/").replaceAll("AjaxcodeHandlerAction.de", "/clinportal/AjaxcodeHandlerAction.de");
 
 	}
 
