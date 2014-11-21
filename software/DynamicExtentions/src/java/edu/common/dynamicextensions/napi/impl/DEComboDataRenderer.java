@@ -60,7 +60,7 @@ public class DEComboDataRenderer {
 
 			for (int i = startFetch; i < total && i < filteredList.size(); i++) {
 				JSONObject jsonObject = new JSONObject();
-				jsonObject.put(ID, filteredList.get(i).getOptionName());
+				jsonObject.put(ID, filteredList.get(i).getValue());
 				jsonObject.put(FIELD, filteredList.get(i).getValue());
 				jsonArray.put(jsonObject);
 			}
