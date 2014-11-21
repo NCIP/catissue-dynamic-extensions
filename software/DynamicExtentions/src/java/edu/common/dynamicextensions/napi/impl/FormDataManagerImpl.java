@@ -99,6 +99,26 @@ public class FormDataManagerImpl implements FormDataManager {
 			}
 		}		
 	}
+	public FormData getFormDataWithKeyAsControlId(Container container, Long recordId) {
+		FormData result = null;
+		JdbcDao jdbcDao = null;
+		
+		try {
+			jdbcDao = new JdbcDao();
+			List<FormData> formData = getFormDataWithKeyAsControlId(jdbcDao, container, "IDENTIFIER", recordId);
+			if (formData != null && !formData.isEmpty()) {
+				result = formData.get(0);
+			}
+			
+			return result;
+		} catch (Exception e) {
+			throw new RuntimeException("Error obtaining form data: [" + container.getId() + ", " + recordId  + "]", e);
+		} finally {
+			if (jdbcDao != null) {
+				jdbcDao.close();
+			}
+		}		
+	}
 
 	@Override
 	public Long saveOrUpdateFormData(UserContext userCtxt, FormData formData) {
@@ -201,6 +221,70 @@ public class FormDataManagerImpl implements FormDataManager {
 			}
 		}
 		
+		return formsData;		
+	}
+
+
+	
+	private List<FormData> getFormDataWithKeyAsControlId(JdbcDao jdbcDao, Container container, String identifyingColumn, Long identifier) 
+			throws Exception {
+		List<Control> simpleCtrls = new ArrayList<Control>();
+		List<Control> multiSelectCtrls = new ArrayList<Control>();
+		List<Control> subFormCtrls = new ArrayList<Control>();
+
+		segregateControls(container, simpleCtrls, multiSelectCtrls, subFormCtrls);
+
+		List<FormData> formsData = new ArrayList<FormData>();		
+		ResultSet rs = null;		
+		try {
+			String query = buildQuery(simpleCtrls, container.getDbTableName(), identifyingColumn);
+			rs = jdbcDao.getResultSet(query, Collections.singletonList(identifier));
+
+			while (rs.next()) {
+				Long recordId = rs.getLong("IDENTIFIER");
+				FormData formData = new FormData(container);
+				formData.setRecordId(recordId);
+
+				for (Control ctrl : simpleCtrls) {
+					ControlValue ctrlValue = null;
+
+					if (ctrl instanceof FileUploadControl) {
+						String fileName = rs.getString(ctrl.getDbColumnName() + "_NAME");
+						if (fileName != null) {
+							String type = rs.getString(ctrl.getDbColumnName() + "_TYPE");
+							ctrlValue = new ControlValue(ctrl, new FileControlValue(fileName, type, recordId));
+						} else {
+							ctrlValue = new ControlValue(ctrl, null);
+						}
+
+					} else {
+						String value = ctrl.toString(rs.getObject(ctrl.getDbColumnName()));
+						ctrlValue = new ControlValue(ctrl, value);
+					}
+
+					formData.addFieldValueUsingControlId(ctrlValue);
+				}
+
+				for (Control ctrl : multiSelectCtrls) {
+					List<String> msValues = getMultiSelectValues(jdbcDao, ctrl, recordId);
+					ControlValue ctrlValue = new ControlValue(ctrl, msValues.toArray(new String[0]));					
+					formData.addFieldValueUsingControlId(ctrlValue);					
+				}
+
+				formsData.add(formData);
+			}
+		} finally {
+			jdbcDao.close(rs);
+		}
+
+		for (FormData formData : formsData) {
+			for (Control ctrl : subFormCtrls) {
+				SubFormControl subFormCtrl = (SubFormControl)ctrl;
+				List<FormData> subFormData = getFormData(jdbcDao, subFormCtrl.getSubContainer(), "PARENT_RECORD_ID", formData.getRecordId());				
+				formData.addFieldValueUsingControlId(new ControlValue(subFormCtrl, subFormData));
+			}
+		}
+
 		return formsData;		
 	}
 
