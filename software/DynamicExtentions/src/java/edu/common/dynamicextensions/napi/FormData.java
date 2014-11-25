@@ -54,7 +54,7 @@ public class FormData {
 	}
 	
 	public void addFieldValueUsingControlId(ControlValue controlValue) {
-		fieldValues.put(controlValue.getControl().getId().toString(), controlValue);
+		fieldValues.put(controlValue.getControl().getContainer().getId()+"_"+controlValue.getControl().getId().toString(), controlValue);
 	}
 	
 	public Map<String, ControlValue> getFieldValuesWithControlId() {
