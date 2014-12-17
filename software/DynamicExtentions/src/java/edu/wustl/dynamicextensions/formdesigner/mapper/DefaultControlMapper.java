@@ -39,6 +39,7 @@ public abstract class DefaultControlMapper {
 		if (controlCaption != null) {
 			if (isHTMLLabel) {
 				control.setCustomLabel(controlCaption);
+				control.setCaption(controlCaption);
 			} else {
 				control.setCaption(controlCaption);
 			}
