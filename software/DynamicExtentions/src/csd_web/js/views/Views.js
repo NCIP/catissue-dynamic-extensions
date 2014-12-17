@@ -492,6 +492,7 @@ var Views = {
 								maximumValue : $('#maximumValue').val(),
 								minimumValue : $('#minimumValue').val(),
 								width : $('#width').val(),
+								noOfRows : $('#noOfRows').val(),
 								userDefinedName : $('#userDefinedName').val(),// 
 
 								dataType : $('#dataType').val(),
@@ -549,6 +550,7 @@ var Views = {
 								maximumValue : $('#maximumValue').val(),
 								minimumValue : $('#minimumValue').val(),
 								width : $('#width').val(),
+								noOfRows : $('#noOfRows').val(),
 								userDefinedName : $('#userDefinedName').val(),// 
 
 								dataType : $('#dataType').val(),
