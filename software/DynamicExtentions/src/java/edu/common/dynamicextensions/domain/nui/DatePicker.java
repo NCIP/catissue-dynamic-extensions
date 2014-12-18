@@ -113,8 +113,9 @@ public class DatePicker extends Control {
 	
 	@Override
 	public String toString(Object value) {
+		String dateValue=null;
 		if (value == null) {
-			return null;
+			return dateValue;
 		}
 		
 		try {
@@ -122,8 +123,15 @@ public class DatePicker extends Control {
 			if (fmt == null) {
 				fmt = DEFAULT_FORMAT;
 			}
-			
-			return new SimpleDateFormat(fmt).format((Date)value);
+			if(value instanceof oracle.sql.TIMESTAMP)
+			{
+				dateValue=((oracle.sql.TIMESTAMP) value).stringValue();
+			}
+			else
+			{
+				dateValue=new SimpleDateFormat(fmt).format((Date)value);
+			}
+			return dateValue;
 		} catch (Exception e) {
 			throw new RuntimeException("Error converting date to string: " + value, e);
 		}

@@ -99,13 +99,34 @@ public class FormDataManagerImpl implements FormDataManager {
 			}
 		}		
 	}
-	public FormData getFormDataWithKeyAsControlId(Container container, Long recordId) {
+	public FormData getFormDataWithKeyAsContainerAndControlId(Container container, Long recordId) {
 		FormData result = null;
 		JdbcDao jdbcDao = null;
 		
 		try {
 			jdbcDao = new JdbcDao();
-			List<FormData> formData = getFormDataWithKeyAsControlId(jdbcDao, container, "IDENTIFIER", recordId);
+			List<FormData> formData = getFormDataWithKeyAsContainerAndControlId(jdbcDao, container, "IDENTIFIER", recordId);
+			if (formData != null && !formData.isEmpty()) {
+				result = formData.get(0);
+			}
+			
+			return result;
+		} catch (Exception e) {
+			throw new RuntimeException("Error obtaining form data: [" + container.getId() + ", " + recordId  + "]", e);
+		} finally {
+			if (jdbcDao != null) {
+				jdbcDao.close();
+			}
+		}		
+	}
+	
+	public FormData getStaticFormDataWithKeyAsContainerAndControlId(Container container, Long recordId) {
+		FormData result = null;
+		JdbcDao jdbcDao = null;
+		
+		try {
+			jdbcDao = new JdbcDao();
+			List<FormData> formData = getStaticFormDataWithKeyAsContainerAndControlId(jdbcDao, container, container.getPrimaryKey(), recordId);
 			if (formData != null && !formData.isEmpty()) {
 				result = formData.get(0);
 			}
@@ -226,7 +247,7 @@ public class FormDataManagerImpl implements FormDataManager {
 
 
 	
-	private List<FormData> getFormDataWithKeyAsControlId(JdbcDao jdbcDao, Container container, String identifyingColumn, Long identifier) 
+	private List<FormData> getFormDataWithKeyAsContainerAndControlId(JdbcDao jdbcDao, Container container, String identifyingColumn, Long identifier) 
 			throws Exception {
 		List<Control> simpleCtrls = new ArrayList<Control>();
 		List<Control> multiSelectCtrls = new ArrayList<Control>();
@@ -280,7 +301,70 @@ public class FormDataManagerImpl implements FormDataManager {
 		for (FormData formData : formsData) {
 			for (Control ctrl : subFormCtrls) {
 				SubFormControl subFormCtrl = (SubFormControl)ctrl;
-				List<FormData> subFormData = getFormData(jdbcDao, subFormCtrl.getSubContainer(), "PARENT_RECORD_ID", formData.getRecordId());				
+				List<FormData> subFormData = getFormDataWithKeyAsContainerAndControlId(jdbcDao, subFormCtrl.getSubContainer(), "PARENT_RECORD_ID", formData.getRecordId());				
+				formData.addFieldValueUsingControlId(new ControlValue(subFormCtrl, subFormData));
+			}
+		}
+
+		return formsData;		
+	}
+	
+	private List<FormData> getStaticFormDataWithKeyAsContainerAndControlId(JdbcDao jdbcDao, Container container, String identifyingColumn, Long identifier) 
+			throws Exception {
+		List<Control> simpleCtrls = new ArrayList<Control>();
+		List<Control> multiSelectCtrls = new ArrayList<Control>();
+		List<Control> subFormCtrls = new ArrayList<Control>();
+
+		segregateControls(container, simpleCtrls, multiSelectCtrls, subFormCtrls);
+
+		List<FormData> formsData = new ArrayList<FormData>();		
+		ResultSet rs = null;		
+		try {
+			String query = buildQueryForStaticForm(simpleCtrls, container.getDbTableName(), identifyingColumn);
+			rs = jdbcDao.getResultSet(query, Collections.singletonList(identifier));
+
+			while (rs.next()) {
+				//Long recordId = rs.getLong("IDENTIFIER");
+				Long recordId = rs.getLong(identifyingColumn);
+				FormData formData = new FormData(container);
+				formData.setRecordId(recordId);
+
+				for (Control ctrl : simpleCtrls) {
+					ControlValue ctrlValue = null;
+
+					if (ctrl instanceof FileUploadControl) {
+						String fileName = rs.getString(ctrl.getDbColumnName() + "_NAME");
+						if (fileName != null) {
+							String type = rs.getString(ctrl.getDbColumnName() + "_TYPE");
+							ctrlValue = new ControlValue(ctrl, new FileControlValue(fileName, type, recordId));
+						} else {
+							ctrlValue = new ControlValue(ctrl, null);
+						}
+
+					} else {
+						String value = ctrl.toString(rs.getObject(ctrl.getDbColumnName()));
+						ctrlValue = new ControlValue(ctrl, value);
+					}
+
+					formData.addFieldValueUsingControlId(ctrlValue);
+				}
+
+				for (Control ctrl : multiSelectCtrls) {
+					List<String> msValues = getMultiSelectValuesForStaticForm(jdbcDao, ctrl, recordId);
+					ControlValue ctrlValue = new ControlValue(ctrl, msValues.toArray(new String[0]));					
+					formData.addFieldValueUsingControlId(ctrlValue);					
+				}
+
+				formsData.add(formData);
+			}
+		} finally {
+			jdbcDao.close(rs);
+		}
+
+		for (FormData formData : formsData) {
+			for (Control ctrl : subFormCtrls) {
+				SubFormControl subFormCtrl = (SubFormControl)ctrl;
+				List<FormData> subFormData = getStaticFormDataWithKeyAsContainerAndControlId(jdbcDao, subFormCtrl.getSubContainer(), subFormCtrl.getForeignKey(), formData.getRecordId());				
 				formData.addFieldValueUsingControlId(new ControlValue(subFormCtrl, subFormData));
 			}
 		}
@@ -299,14 +383,31 @@ public class FormDataManagerImpl implements FormDataManager {
 			}
 		}
 		
-		query.append("IDENTIFIER FROM ").append(tableName)
+		query.append(" IDENTIFIER FROM ").append(tableName)
+			.append(" WHERE ").append(identifyingColumn).append(" = ?");		
+		
+		return query.toString();
+	}
+	
+	private String buildQueryForStaticForm(List<Control> simpleCtrls, String tableName, String identifyingColumn) {
+		StringBuilder query = new StringBuilder("SELECT ");
+		for (Control ctrl : simpleCtrls) {
+			if (ctrl instanceof FileUploadControl) {
+				query.append(ctrl.getDbColumnName()).append("_NAME, ")
+					.append(ctrl.getDbColumnName()).append("_TYPE, ");				
+			} else {
+				query.append(ctrl.getDbColumnName()).append(", ");
+			}
+		}
+		query.append(identifyingColumn);
+		query.append(" FROM ").append(tableName)
 			.append(" WHERE ").append(identifyingColumn).append(" = ?");		
 		
 		return query.toString();
 	}
 	
 	
-	private List<String> getMultiSelectValues(JdbcDao jdbcDao, Control ctrl, Long recordId) 
+	private List<String> getMultiSelectValuesWithKeyAsContainerAndControlId(JdbcDao jdbcDao, Control ctrl, Long recordId) 
 	throws Exception {		
 		ResultSet rs = null;
 		
@@ -325,6 +426,46 @@ public class FormDataManagerImpl implements FormDataManager {
 			jdbcDao.close(rs);
 		}		
 	}
+	
+	private List<String> getMultiSelectValues(JdbcDao jdbcDao, Control ctrl, Long recordId) 
+			throws Exception {		
+				ResultSet rs = null;
+				
+				try {
+					MultiSelectControl msCtrl = (MultiSelectControl)ctrl;
+					String query = String.format(GET_MULTI_SELECT_VALUES_SQL, ctrl.getDbColumnName(), msCtrl.getTableName());
+					rs = jdbcDao.getResultSet(query, Collections.singletonList(recordId));
+					
+					List<String> result = new ArrayList<String>();
+					while (rs.next()) {
+						result.add(ctrl.toString(rs.getObject("VALUE")));
+					}
+					
+					return result;
+				} finally {
+					jdbcDao.close(rs);
+				}		
+			}
+	
+	private List<String> getMultiSelectValuesForStaticForm(JdbcDao jdbcDao, Control ctrl, Long recordId) 
+			throws Exception {		
+				ResultSet rs = null;
+				
+				try {
+					MultiSelectControl msCtrl = (MultiSelectControl)ctrl;
+					String query = String.format("SELECT %s FROM %s WHERE %s = ?", ctrl.getDbColumnName(), msCtrl.getTableName(),msCtrl.getForeignKey());
+					rs = jdbcDao.getResultSet(query, Collections.singletonList(recordId));
+					
+					List<String> result = new ArrayList<String>();
+					while (rs.next()) {
+						result.add(ctrl.toString(rs.getObject(ctrl.getDbColumnName())));
+					}
+					
+					return result;
+				} finally {
+					jdbcDao.close(rs);
+				}		
+			}
 	
 	public Blob getFileData(long recordId, FileUploadControl control) {
 
