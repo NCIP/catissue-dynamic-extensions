@@ -168,8 +168,8 @@ var Models = {
 					xPos : 1,
 					sequenceNumber : 0,
 					id : null,
-					width : 8,
-					noOfRows : 3,
+					width : 25,
+					noOfRows : 4,
 					noOfDigits : 6,// based on migration code
 					noOfDigitsAfterDecimal : 2, // based on migration code
 					pvs : {},
