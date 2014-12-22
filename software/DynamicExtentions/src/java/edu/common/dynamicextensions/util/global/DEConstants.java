@@ -12,7 +12,9 @@ package edu.common.dynamicextensions.util.global;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 /**
  * This class stores the constants used in the operations in the application.
@@ -186,7 +188,24 @@ public class DEConstants
 		falseValues.add("0");
 		falseValues.add("NO");
 		FALSE_VALUE_LIST = Collections.unmodifiableCollection(falseValues);
-
+	}
+	
+	public static Map<String,String> OPERATORMAP()
+	{
+		Map<String,String> operatorMap=new HashMap<String,String>();
+		operatorMap.put(DEConstants.STARTS_WITH, "starts with");
+		operatorMap.put(DEConstants.ENDS_WITH,"ends with");
+		operatorMap.put(DEConstants.EQUALS,"=");
+		operatorMap.put(DEConstants.NOT_EQUALS,"!=");
+		operatorMap.put(DEConstants.CONTAINS,"contains");
+		operatorMap.put(DEConstants.IS_PRESENT,"is not null");
+		operatorMap.put(DEConstants.IS_NOT_PRESENT,"is null");
+		operatorMap.put(DEConstants.GREATER_THAN,">");
+		operatorMap.put(DEConstants.BETWEEN,"between");
+		operatorMap.put(DEConstants.GREATER_THAN_OR_EQUAL_TO,">=");
+		operatorMap.put(DEConstants.LESS_THAN,"<");
+		operatorMap.put(DEConstants.LESS_THAN_OR_EQUAL_TO,"<=");
+		return operatorMap;
 	}
 
 	public enum Cardinality {

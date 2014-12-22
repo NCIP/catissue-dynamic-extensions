@@ -120,18 +120,18 @@ public class FormDataManagerImpl implements FormDataManager {
 		}		
 	}
 	
-	public FormData getStaticFormDataWithKeyAsContainerAndControlId(Container container, Long recordId) {
-		FormData result = null;
+	public List<FormData> getStaticFormDataWithKeyAsContainerAndControlId(Container container, Long recordId) {
+		//FormData result = null;
 		JdbcDao jdbcDao = null;
 		
 		try {
 			jdbcDao = new JdbcDao();
 			List<FormData> formData = getStaticFormDataWithKeyAsContainerAndControlId(jdbcDao, container, container.getPrimaryKey(), recordId);
-			if (formData != null && !formData.isEmpty()) {
+			/*if (formData != null && !formData.isEmpty()) {
 				result = formData.get(0);
-			}
+			}*/
 			
-			return result;
+			return formData;
 		} catch (Exception e) {
 			throw new RuntimeException("Error obtaining form data: [" + container.getId() + ", " + recordId  + "]", e);
 		} finally {
@@ -317,8 +317,9 @@ public class FormDataManagerImpl implements FormDataManager {
 
 		segregateControls(container, simpleCtrls, multiSelectCtrls, subFormCtrls);
 
-		List<FormData> formsData = new ArrayList<FormData>();		
-		ResultSet rs = null;		
+		List<FormData> formsData = new ArrayList<FormData>();
+		List<FormData> subFormsData = new ArrayList<FormData>();
+		ResultSet rs = null;
 		try {
 			String query = buildQueryForStaticForm(simpleCtrls, container.getDbTableName(), identifyingColumn);
 			rs = jdbcDao.getResultSet(query, Collections.singletonList(identifier));
@@ -364,10 +365,12 @@ public class FormDataManagerImpl implements FormDataManager {
 		for (FormData formData : formsData) {
 			for (Control ctrl : subFormCtrls) {
 				SubFormControl subFormCtrl = (SubFormControl)ctrl;
-				List<FormData> subFormData = getStaticFormDataWithKeyAsContainerAndControlId(jdbcDao, subFormCtrl.getSubContainer(), subFormCtrl.getForeignKey(), formData.getRecordId());				
-				formData.addFieldValueUsingControlId(new ControlValue(subFormCtrl, subFormData));
+				List<FormData> subFormData = getStaticFormDataWithKeyAsContainerAndControlId(jdbcDao, subFormCtrl.getSubContainer(), subFormCtrl.getForeignKey(), formData.getRecordId());
+				subFormsData.addAll(subFormData);
+				//formData.addFieldValueUsingControlId(new ControlValue(subFormCtrl, subFormData));
 			}
 		}
+		formsData.addAll(subFormsData);
 
 		return formsData;		
 	}
