@@ -733,6 +733,12 @@ var Views = {
 											if (receivedData.status == "saved") {
 												ControlBizLogic
 														.addUploadedPvFileNameToCurrentModel(receivedData.file);
+												Main.currentFieldView
+												.setSuccessMessageHeader();
+												$("#messagesDiv")
+												.append(
+														trail
+																+ "Permissible values file uploaded successfully");
 											} else {
 												var trail = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 												Main.currentFieldView
