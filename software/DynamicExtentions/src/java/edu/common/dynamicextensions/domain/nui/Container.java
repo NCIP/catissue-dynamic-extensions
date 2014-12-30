@@ -716,6 +716,11 @@ public class Container extends DynamicExtensionBaseDomainObject {
 	}
 	
 	public static Long createContainer(String formXml, String pvDir, boolean createTables)
+			throws Exception {
+		return createContainer(formXml, pvDir, true, null);
+	}
+	
+	public static Long createContainer(String formXml, String pvDir, boolean createTables, UserContext userData)
 	throws Exception {
 		ContainerParser parser = new ContainerParser(formXml, pvDir);
 		Container parsedContainer = parser.parse();
@@ -733,7 +738,7 @@ public class Container extends DynamicExtensionBaseDomainObject {
 			container = fromDto(parsedContainer);
 		}
 		
-		return container.save(null, createTables);
+		return container.save(userData, createTables);
 	}
 				
 	public void editContainer(Container newContainer) {

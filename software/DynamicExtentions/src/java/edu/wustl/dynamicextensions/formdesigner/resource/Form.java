@@ -288,7 +288,7 @@ public class Form {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String importForm(@FormDataParam("file") InputStream uploadedInputStream,
-			@FormDataParam("file") FormDataContentDisposition fileDetail) throws JSONException {
+			@FormDataParam("file") FormDataContentDisposition fileDetail, final @Context HttpServletRequest request) throws JSONException {
 		JSONObject output = new JSONObject();
 
 		String tmpDirName = getTmpDirName();
@@ -320,10 +320,12 @@ public class Form {
 			String pvDirPath = new StringBuilder(formDirPath).append("pvs").toString();
 			List<Long> containerIds = new ArrayList<Long>();
 			intializeDao();
+			UserContext userData = CSDProperties.getInstance().getUserContextProvider().getUserContext(request);
 			for (String formFile : formFileNames) {
 				String formFilePath = new StringBuilder(formDirPath).append(formFile).toString();
 
-				Long containerId = Container.createContainer(formFilePath, pvDirPath, createTables);
+				Long containerId = Container.createContainer(formFilePath, pvDirPath, createTables, userData);
+				
 				containerIds.add(containerId);
 			}
 			commitDao();
