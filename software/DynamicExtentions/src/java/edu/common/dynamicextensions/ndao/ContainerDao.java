@@ -23,7 +23,7 @@ public class ContainerDao {
 	private static final Logger logger = Logger.getLogger(ContainerDao.class);
 	
 	private static final String INSERT_CONTAINER_SQL = 
-			"INSERT INTO DYEXTN_CONTAINERS (IDENTIFIER, NAME, CAPTION, CREATED_BY, CREATE_TIME, XML) VALUES(?, ?, ?, ?, ?, empty_blob())";
+			"INSERT INTO DYEXTN_CONTAINERS (IDENTIFIER, NAME, CAPTION, CREATED_BY, CREATE_TIME, LAST_MODIFIED_BY,LAST_MODIFY_TIME, XML) VALUES(?, ?, ?, ?, ?,?,? empty_blob())";
 
 	private static final String UPDATE_CONTAINER_SQL = 
 			"UPDATE DYEXTN_CONTAINERS SET NAME = ?, CAPTION = ?, LAST_MODIFIED_BY = ?, LAST_MODIFY_TIME = ?, XML = empty_blob() " +
@@ -86,8 +86,12 @@ public class ContainerDao {
 		params.add(userCtxt != null ? userCtxt.getUserId() : null);
 		Timestamp createTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
 		params.add(createTime);
+		//added to insert last modified by username and timestamp
+		params.add(userCtxt != null ? userCtxt.getUserId() : null);
+		Timestamp modifiedTime = createTime;
+		params.add(modifiedTime);
 		
-		jdbcDao.executeUpdate(INSERT_CONTAINER_SQL, params);	
+		jdbcDao.executeUpdate("INSERT INTO DYEXTN_CONTAINERS (IDENTIFIER, NAME, CAPTION, CREATED_BY, CREATE_TIME, LAST_MODIFIED_BY,LAST_MODIFY_TIME, XML) VALUES(?, ?, ?, ?, ?,?,?, empty_blob())", params);	
 		updateContainerXml(c.getId(), c.toXml());
 	}
 	
