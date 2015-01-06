@@ -193,11 +193,11 @@ public class DEConstants
 	public static Map<String,String> OPERATORMAP()
 	{
 		Map<String,String> operatorMap=new HashMap<String,String>();
-		operatorMap.put(DEConstants.STARTS_WITH, "starts with");
-		operatorMap.put(DEConstants.ENDS_WITH,"ends with");
+		operatorMap.put(DEConstants.STARTS_WITH, "like");
+		operatorMap.put(DEConstants.ENDS_WITH,"like");
 		operatorMap.put(DEConstants.EQUALS,"=");
 		operatorMap.put(DEConstants.NOT_EQUALS,"!=");
-		operatorMap.put(DEConstants.CONTAINS,"contains");
+		operatorMap.put(DEConstants.CONTAINS,"like");
 		operatorMap.put(DEConstants.IS_PRESENT,"is not null");
 		operatorMap.put(DEConstants.IS_NOT_PRESENT,"is null");
 		operatorMap.put(DEConstants.GREATER_THAN,">");
