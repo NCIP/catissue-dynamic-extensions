@@ -81,7 +81,14 @@ public class DatePicker extends Control {
 
 	@Override
 	public List<ColumnDef> getColumnDefs() {
-		return Collections.singletonList(ColumnDef.get(getDbColumnName(), "DATE"));
+		if(ProcessorConstants.SQL_DATE_TIME_FORMAT.equals(getFormat()))
+		{
+			return Collections.singletonList(ColumnDef.get(getDbColumnName(), "TIMESTAMP"));
+		}
+		else
+		{
+			return Collections.singletonList(ColumnDef.get(getDbColumnName(), "DATE"));
+		}
 	}
 	
 	
@@ -125,7 +132,9 @@ public class DatePicker extends Control {
 			}
 			if(value instanceof oracle.sql.TIMESTAMP)
 			{
-				dateValue=((oracle.sql.TIMESTAMP) value).stringValue();
+				Date date = new Date(((oracle.sql.TIMESTAMP) value).timestampValue().getTime());
+				SimpleDateFormat sdf = new SimpleDateFormat(ProcessorConstants.SQL_DATE_TIME_FORMAT);
+				dateValue=sdf.format(date);
 			}
 			else
 			{
@@ -228,7 +237,7 @@ public class DatePicker extends Control {
 				.append(controlName);
 		outputStringBuilder
 				.append("' value='" + dateString + "' onchange=\"" + getOnchangeServerCall(controlName))
-				.append("\" size='10'");
+				.append("\" size='12'");
 		if (controlValue.getErrorMessage() != null) {
 			outputStringBuilder.append(" title='").append(controlValue.getErrorMessage()).append("' ")
 					.append(" class='").append("font_bl_nor_error").append("' ");
