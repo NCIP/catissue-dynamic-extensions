@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -14,6 +15,7 @@ import org.apache.log4j.Logger;
 
 import edu.common.dynamicextensions.domain.nui.Container;
 import edu.common.dynamicextensions.domain.nui.Control;
+import edu.common.dynamicextensions.domain.nui.DatePicker;
 import edu.common.dynamicextensions.domain.nui.FileUploadControl;
 import edu.common.dynamicextensions.domain.nui.Label;
 import edu.common.dynamicextensions.domain.nui.MultiSelectControl;
@@ -27,6 +29,7 @@ import edu.common.dynamicextensions.napi.FormData;
 import edu.common.dynamicextensions.napi.FormDataManager;
 import edu.common.dynamicextensions.ndao.JdbcDao;
 import edu.common.dynamicextensions.nutility.IoUtil;
+import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.wustl.common.beans.SessionDataBean;
 
 public class FormDataManagerImpl implements FormDataManager {
@@ -535,7 +538,15 @@ public class FormDataManagerImpl implements FormDataManager {
 						params.add(null);
 					} else {
 						Object value = ctrl.fromString(ctrlValue.getValue().toString());
-						params.add(value);
+						if ((ctrl instanceof DatePicker) && (ProcessorConstants.SQL_DATE_TIME_FORMAT.equals(((DatePicker)ctrl).getFormat())))
+						{
+								java.sql.Timestamp time= new Timestamp(((java.util.Date)value).getTime());
+								params.add(time);
+						}
+						else
+						{
+							params.add(value);
+						}
 					}
 				}
 			}

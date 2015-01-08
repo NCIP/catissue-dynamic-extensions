@@ -735,6 +735,7 @@ var Views = {
 														.addUploadedPvFileNameToCurrentModel(receivedData.file);
 												Main.currentFieldView
 												.setSuccessMessageHeader();
+												var trail = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 												$("#messagesDiv")
 												.append(
 														trail
