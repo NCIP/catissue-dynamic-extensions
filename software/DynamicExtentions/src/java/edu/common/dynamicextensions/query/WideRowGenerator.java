@@ -1,9 +1,11 @@
 package edu.common.dynamicextensions.query;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -127,7 +129,21 @@ public class WideRowGenerator {
             Object[] values = new Object[columns.size()];
             int i = 0;
             for (ResultColumn col : columns) {
-            	values[i++] = col.getValue();
+            	if(!(col.getValue() instanceof oracle.sql.TIMESTAMP))
+            	{
+            		values[i++] = col.getValue();
+            	}
+            	else
+            	{
+            		Date date=null;
+            		try {
+						date = new Date(((oracle.sql.TIMESTAMP) col.getValue()).timestampValue().getTime());
+	    				values[i++]=date;
+					} catch (SQLException e) {
+						values[i++] = col.getValue();
+						e.printStackTrace();
+					}
+            	}
             }
             
             resultData.addRow(values);
