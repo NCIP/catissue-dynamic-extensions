@@ -717,7 +717,7 @@ public class Container extends DynamicExtensionBaseDomainObject {
 	
 	public static Long createContainer(String formXml, String pvDir, boolean createTables)
 			throws Exception {
-		return createContainer(formXml, pvDir, true, null);
+		return createContainer(formXml, pvDir, createTables, null);
 	}
 	
 	public static Long createContainer(String formXml, String pvDir, boolean createTables, UserContext userData)
