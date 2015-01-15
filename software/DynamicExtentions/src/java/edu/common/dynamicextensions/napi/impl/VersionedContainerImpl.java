@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 import edu.common.dynamicextensions.domain.nui.Container;
+import edu.common.dynamicextensions.domain.nui.ContainerInfo;
 import edu.common.dynamicextensions.domain.nui.Control;
 import edu.common.dynamicextensions.domain.nui.SubFormControl;
-import edu.common.dynamicextensions.domain.nui.ContainerInfo;
 import edu.common.dynamicextensions.domain.nui.UserContext;
 import edu.common.dynamicextensions.domain.nui.VersionedContainerInfo;
 import edu.common.dynamicextensions.napi.FormPublishHook;
@@ -488,6 +488,38 @@ public class VersionedContainerImpl implements VersionedContainer {
 		
 		return publishedIds;
 	}
+	
+	public List<VersionedContainerInfo> getPublishedContainerInfo(Long formId) {
+		JdbcDao jdbcDao = null;
+		try {
+			jdbcDao = this.jdbcDao != null ? this.jdbcDao : new JdbcDao();
+			VersionedContainerDao vdao = new VersionedContainerDao(jdbcDao);
+			return vdao.getPublishedContainersInfo(formId);
+		} catch (Exception e) {
+			throw new RuntimeException("Error getting published Container info:" + formId, e);
+		} finally {
+			if (this.jdbcDao == null && jdbcDao != null) {
+				jdbcDao.close();
+			}
+		}		
+	}
+	
+	public Date getActivationDate(Long formId) {
+		JdbcDao jdbcDao = null;
+		try {
+			jdbcDao = this.jdbcDao != null ? this.jdbcDao : new JdbcDao();
+			VersionedContainerDao vdao = new VersionedContainerDao(jdbcDao);
+			return vdao.getActivationDateByContainerId(formId);
+		} catch (Exception e) {
+			throw new RuntimeException("Error getting Activation date:" + formId, e);
+		} finally {
+			if (this.jdbcDao == null && jdbcDao != null) {
+				jdbcDao.close();
+			}
+		}
+	}
+	
+	
 	
 	private void applyChangeAndSave(JdbcDao jdbcDao, UserContext usrCtx, Container container, ContainerChangeLog changeLog) {
 		applyChange(container, changeLog);

@@ -1,5 +1,6 @@
 package edu.common.dynamicextensions.ndao;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -97,6 +98,21 @@ public class VersionedContainerDao {
 			jdbcDao.close(rs);
 		}
 	}
+	
+	
+	public Date getActivationDateByContainerId(Long containerId) {
+		
+		ResultSet rs = null;
+		try {
+			rs = jdbcDao.getResultSet(GET_ACTIVATION_DATE_INFO_SQL, Collections.singletonList(containerId));
+			return rs.next() ? rs.getDate("ACTIVATION_DATE") : null;
+		} catch (Exception e) {
+			throw new RuntimeException("Error getting Activation Date: " + containerId, e);
+		} finally {
+			jdbcDao.close(rs);
+		}
+	}
+	
 	
 	public List<VersionedContainerInfo> getPublishedContainersInfo(String formName) {
 		List<VersionedContainerInfo> result = new ArrayList<VersionedContainerInfo>();
@@ -201,6 +217,14 @@ public class VersionedContainerDao {
 			"FROM DYEXTN_VERSIONED_CONTAINERS " +
 			"WHERE IDENTIFIER = ? AND STATUS = 'published' " +
 			"ORDER BY ACTIVATION_DATE";
+	
+	private final static String GET_ACTIVATION_DATE_INFO_SQL =
+			"SELECT ACTIVATION_DATE" +
+			"FROM DYEXTN_VERSIONED_CONTAINERS " +
+			"WHERE CONTAINER_ID = ? AND STATUS = 'published' " +
+			"ORDER BY ACTIVATION_DATE";
+	
+	
 	
 	private final static String GET_PUBLISHED_CONTAINER_INFO_BY_FORM_NAME_SQL =
 			"SELECT VC.IDENTIFIER, CONTAINER_ID, ACTIVATION_DATE, CREATED_BY, CREATE_TIME " +
