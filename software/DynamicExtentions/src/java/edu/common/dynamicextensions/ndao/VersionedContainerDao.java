@@ -219,7 +219,7 @@ public class VersionedContainerDao {
 			"ORDER BY ACTIVATION_DATE";
 	
 	private final static String GET_ACTIVATION_DATE_INFO_SQL =
-			"SELECT ACTIVATION_DATE" +
+			"SELECT ACTIVATION_DATE " +
 			"FROM DYEXTN_VERSIONED_CONTAINERS " +
 			"WHERE CONTAINER_ID = ? AND STATUS = 'published' " +
 			"ORDER BY ACTIVATION_DATE";
