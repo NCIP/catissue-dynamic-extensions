@@ -13,6 +13,7 @@ import edu.common.dynamicextensions.ui.util.ControlsUtility;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.common.dynamicextensions.util.global.Variables;
 
 public class ComboBox extends SelectControl {
 
@@ -148,7 +149,8 @@ public class ComboBox extends SelectControl {
 
 			if (isLazyPvFetchingEnabled() || isSkipLogicTargetControl()) {
 				String EventHandler = "Ext.onReady(function(){ var myUrl= \"%s?%s=%s";
-				String DE_AJAX_HANDLER = getAjaxHandler(contextParameter);
+				String DE_AJAX_HANDLER = String.valueOf(Variables.resourceMapping.get(WebUIManagerConstants.DE_AJAX_HANDLER));
+						//getAjaxHandler(contextParameter);
 				htmlString.append(String.format(EventHandler, DE_AJAX_HANDLER, WebUIManagerConstants.AJAX_OPERATION,
 						WebUIManagerConstants.NEW_DE_COMBO_DATA_ACTION));
 				htmlString
