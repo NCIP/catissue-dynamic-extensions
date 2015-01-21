@@ -1116,11 +1116,19 @@ public class Container extends DynamicExtensionBaseDomainObject {
 				rowHTML.append(String.format(TBODY_TAG, controlName)).append(
 						String.format(CONTROL_ROW_HTML_START_TAG, getRowDisplay(fieldValue)));
 			} 
+			if (lastRow == control.getSequenceNumber())
+			{
+				rowHTML.append("<td><table><tbody id = '").append(controlName).append("_tbody").append("'><tr>");
+			}
 			rowHTML.append(controlHTML);
 
 			if (control.isDynamic()) {
 				rowHTML.append("<input type='hidden' name='dynamicControl'  value = '").append(controlName)
 						.append("_tbody' />");
+			}
+			if (lastRow == control.getSequenceNumber())
+			{
+				rowHTML.append("</tr></tbody></table></td>");
 			}
 			lastControl = control;
 			lastRow = control.getSequenceNumber();
