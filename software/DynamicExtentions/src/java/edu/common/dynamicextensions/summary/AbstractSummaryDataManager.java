@@ -2,7 +2,10 @@
 package edu.common.dynamicextensions.summary;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -81,8 +84,20 @@ public abstract class AbstractSummaryDataManager {
 		filterHeader();
 		int rowCounter = 1;
 		FormDataUtility.evaluateSkipLogic(formData);
+		
+		List<Map.Entry<String, ControlValue>> entries = new ArrayList<Map.Entry<String, ControlValue>>(formData.getFieldValuesMap().entrySet());
+		Collections.sort(entries, new Comparator<Map.Entry<String, ControlValue>>() {
+		  public int compare(Map.Entry<String, ControlValue> a, Map.Entry<String, ControlValue> b){
+		    return a.getValue().getControl().getId().compareTo(b.getValue().getControl().getId());
+		  }
+		});
+		Map<String, ControlValue> sortedMap = new LinkedHashMap<String, ControlValue>();
+		for (Map.Entry<String, ControlValue> entry : entries) {
+		  sortedMap.put(entry.getKey(), entry.getValue());
+		}
+		List<ControlValue> values= new ArrayList<ControlValue>(sortedMap.values());
 
-		for (ControlValue controlValue : formData.getFieldValues()) {
+		for (ControlValue controlValue :values) {
 
 			if (!controlValue.isHidden()) {
 				Map<String, String> data = new HashMap<String, String>();
