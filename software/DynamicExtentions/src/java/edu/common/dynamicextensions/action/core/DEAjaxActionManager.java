@@ -16,7 +16,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import edu.common.dynamicextensions.domain.FileAttributeTypeInformation;
 import edu.common.dynamicextensions.domain.nui.Container;
@@ -483,7 +485,43 @@ public class DEAjaxActionManager
 			}
 		}
 		FormDataUtility.evaluateSkipLogic(mainFormData);
-		return "";
+		
+		Map<ContextParameter, String> contextParameter = (Map<ContextParameter, String>) CacheManager
+				.getObjectFromCache(request, FormRenderer.CONTEXT_INFO);
+		// Temp fix
+		if(contextParameter == null){
+			contextParameter = new HashMap<ContextParameter, String>();
+			contextParameter.put(ContextParameter.MODE,
+					WebUIManagerConstants.EDIT_MODE);
+		}
+		
+		int rowId = 1;
+		JSONObject mainJsonObject = new JSONObject();
+		
+		JSONArray jsonArray = new JSONArray();
+		for (FormData formdata : subFormsData)
+		{
+			try
+			{
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("html", sfCtrl.getSubContainer().getContainerHTMLAsARow(rowId, formdata, contextParameter).replaceAll("images/", "../../images/").replaceAll("AjaxcodeHandlerAction.de", "/clinportal/AjaxcodeHandlerAction.de"));
+				jsonArray.put(jsonObject);
+			}
+			catch (JSONException e)
+			{
+				e.printStackTrace();
+			}
+			rowId = rowId +1;
+		}
+		try
+		{
+			mainJsonObject.put("Row", jsonArray);
+		}
+		catch (JSONException e)
+		{
+			e.printStackTrace();
+		}
+		return mainJsonObject.toString();
 	}
 
 	/**
