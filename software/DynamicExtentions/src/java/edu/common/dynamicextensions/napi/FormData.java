@@ -41,6 +41,10 @@ public class FormData {
 		this.recordId = recordId;
 	}
 
+	public  Map<String, ControlValue> getFieldValuesMap() {
+		return fieldValues;
+	}
+	
 	public Collection<ControlValue> getFieldValues() {
 		return fieldValues.values();
 	}
