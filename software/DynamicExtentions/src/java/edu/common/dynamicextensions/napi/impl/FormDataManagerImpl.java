@@ -476,7 +476,7 @@ public class FormDataManagerImpl implements FormDataManager {
 		}
 		
 		query.append(" IDENTIFIER FROM ").append(tableName)
-			.append(" WHERE ").append(identifyingColumn).append(" = ?");		
+			.append(" WHERE ").append(identifyingColumn).append(" = ? ORDER BY IDENTIFIER ASC");		
 		
 		return query.toString();
 	}
