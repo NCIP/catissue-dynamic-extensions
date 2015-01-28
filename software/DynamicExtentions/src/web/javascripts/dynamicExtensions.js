@@ -2235,32 +2235,23 @@ function updateHTML() {
 						var originalDiv = document.getElementById(dynamicControlDiv);
 						var dynamicDiv = iframeDocument.getElementById(dynamicControlDiv);
 
-						
-						if (navigator.appName == 'Microsoft Internet Explorer')
+						if(originalDiv != null && dynamicDiv != null && dynamicDiv != 'undefined')
 						{
-							var temp = originalDiv.ownerDocument.createElement('div');
-							temp.innerHTML = '<table>' + dynamicDiv.innerHTML + '</table>';
-							originalDiv.replaceChild(temp.firstChild.firstChild, originalDiv.firstChild);
-							//temp.parentNode.removeChild(temp);
-							var items = dynamicDiv.getElementsByTagName('script');
-							
-							for ( var i = 0; i < items.length; i++) {
-								eval(items[i].innerHTML);
+							if (navigator.appName == 'Microsoft Internet Explorer')
+							{
+								var temp = originalDiv.ownerDocument.createElement('div');
+								temp.innerHTML = '<table>' + dynamicDiv.innerHTML + '</table>';
+								originalDiv.replaceChild(temp.firstChild.firstChild, originalDiv.firstChild);
+								//temp.parentNode.removeChild(temp);
 							}
-						}
-						else
-						{
-							if(originalDiv != null && dynamicDiv != null && dynamicDiv != 'undefined')
+							else
 							{
 								originalDiv.innerHTML = dynamicDiv.innerHTML;
 							}
-							if(dynamicDiv != null && dynamicDiv != 'undefined')
-							{
-								var items = dynamicDiv.getElementsByTagName('script');
-							
-								for ( var i = 0; i < items.length; i++) {
-									eval(items[i].innerHTML);
-								}
+							var items = dynamicDiv.getElementsByTagName('script');
+						
+							for ( var i = 0; i < items.length; i++) {
+								eval(items[i].innerHTML);
 							}
 						}
 					}
