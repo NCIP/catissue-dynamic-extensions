@@ -1268,6 +1268,34 @@ function removeCheckedRow(containerId) {
 			var currentCount = initialCount - rowsDeleted;
 			$(containerId + "_rowCount").setValue(parseInt(currentCount));
 			document.getElementById('isDirty').value = true;
+			var tableId = containerId + "_table";
+			var table1 = document.getElementById(tableId);
+			var obj = JSON.parse(rowHTML.responseText);
+			
+			children = table1.rows;
+			for ( var rowIndex = 0; rowIndex < children.length; rowIndex++) 
+			{
+				var inputArray = table1.rows[rowIndex].getElementsByTagName('input');
+				var len = inputArray.length;
+				for ( var inputIndex = 0; inputIndex < len; inputIndex++) 
+				{
+					if ((inputArray[inputIndex] != null)
+							&& (inputArray[inputIndex].name == "deleteRow")) 
+					{
+						table1.deleteRow(rowIndex);
+						children = table1.rows;
+						rowIndex = 0;
+						break;
+					}
+				}
+			}
+			for ( var i = 0; i < obj.Row.length; i++) 
+			{
+				var newRow = $(tableId).insert({bottom:obj.Row[i].html});
+				jQuery('input:file', $(newRow)).each(function(){
+					setJQueryParameters(this.id,this.getAttribute("onclick"));
+				});
+			}
 		}	
 	});
 }
@@ -2207,23 +2235,32 @@ function updateHTML() {
 						var originalDiv = document.getElementById(dynamicControlDiv);
 						var dynamicDiv = iframeDocument.getElementById(dynamicControlDiv);
 
-						if(originalDiv != null && dynamicDiv != null && dynamicDiv != 'undefined')
+						
+						if (navigator.appName == 'Microsoft Internet Explorer')
 						{
-							if (navigator.appName == 'Microsoft Internet Explorer')
-							{
-								var temp = originalDiv.ownerDocument.createElement('div');
-								temp.innerHTML = '<table>' + dynamicDiv.innerHTML + '</table>';
-								originalDiv.replaceChild(temp.firstChild.firstChild, originalDiv.firstChild);
-								//temp.parentNode.removeChild(temp);
+							var temp = originalDiv.ownerDocument.createElement('div');
+							temp.innerHTML = '<table>' + dynamicDiv.innerHTML + '</table>';
+							originalDiv.replaceChild(temp.firstChild.firstChild, originalDiv.firstChild);
+							//temp.parentNode.removeChild(temp);
+							var items = dynamicDiv.getElementsByTagName('script');
+							
+							for ( var i = 0; i < items.length; i++) {
+								eval(items[i].innerHTML);
 							}
-							else
+						}
+						else
+						{
+							if(originalDiv != null && dynamicDiv != null && dynamicDiv != 'undefined')
 							{
 								originalDiv.innerHTML = dynamicDiv.innerHTML;
 							}
-							var items = dynamicDiv.getElementsByTagName('script');
-						
-							for ( var i = 0; i < items.length; i++) {
-								eval(items[i].innerHTML);
+							if(dynamicDiv != null && dynamicDiv != 'undefined')
+							{
+								var items = dynamicDiv.getElementsByTagName('script');
+							
+								for ( var i = 0; i < items.length; i++) {
+									eval(items[i].innerHTML);
+								}
 							}
 						}
 					}
@@ -2749,11 +2786,13 @@ function selectRadioButton(controlName, controlValue) {
 	var htmlElement = document.getElementsByName(controlName);
 	if (htmlElement.length > 0) {
 		for ( var i = 0; i < htmlElement.length; i++) {
-			if (htmlElement[i].value == controlValue) {
+			if (htmlElement[i].value == controlValue && htmlElement[i].checked == false) {
 				htmlElement[i].checked = true;
-				;
 			}
-
+			else
+			{
+				htmlElement[i].checked = false;	
+			}
 		}
 	}
 }
