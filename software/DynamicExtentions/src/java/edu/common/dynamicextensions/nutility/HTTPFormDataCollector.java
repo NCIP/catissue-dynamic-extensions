@@ -189,7 +189,9 @@ public class HTTPFormDataCollector extends AbstractFormDataCollector {
 		FormData rootFormData = formDataStack.peek();
 		FormulaCalculator formulaCalculator = new FormulaCalculator();
 		String value = formulaCalculator.evaluateFormula(rootFormData, (NumberField) control, rowId);
-		formData.addFieldValue(new ControlValue(control, value));
+		ControlValue controlValue = new ControlValue(control, value);
+		validatorUtil.validate(controlValue, errorList);
+		formData.addFieldValue(controlValue);
 	}
 
 	public List<String> getErrorList() {
