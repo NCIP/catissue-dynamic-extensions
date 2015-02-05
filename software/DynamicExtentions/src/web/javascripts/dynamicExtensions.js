@@ -2409,8 +2409,11 @@ function updateServerState(controlName) {
 					$("#" + controlName).removeClass("font_bl_nor_error");
 					$("#" + controlName).addClass("font_bl_nor");
 				} else {
-					$(controlName).removeClassName("font_bl_nor_error");
-					$(controlName).addClassName("font_bl_nor");
+					if(vRecentControl != null && vRecentControl != 'undefined' && vRecentControl.type != 'textarea')
+					{
+						$(controlName).removeClassName("font_bl_nor_error");
+						$(controlName).addClassName("font_bl_nor");
+					}
 				}
 				vRecentControl.title = "";
 
