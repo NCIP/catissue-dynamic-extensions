@@ -2071,7 +2071,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 
 						final String selectQuery = SELECT_KEYWORD + IDENTIFIER + FROM_KEYWORD
 								+ catAssociation.getCategoryEntity().getTableProperties().getName()
-								+ WHERE_KEYWORD + RECORD_ID + EQUAL + QUESTION_MARK;
+								+ WHERE_KEYWORD + RECORD_ID + EQUAL + QUESTION_MARK +" order by IDENTIFIER DESC";
 						final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 						queryDataList.add(new ColumnValueBean(RECORD_ID, previousEntityId));
 						final List<Long> identifiers = getResultIDList(selectQuery, IDENTIFIER,
@@ -2865,7 +2865,8 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			catEntTblName = catEntity.getTableProperties().getName();
 
 			selRecIdQuery = SELECT_KEYWORD + RECORD_ID + FROM_KEYWORD + catEntTblName
-					+ WHERE_KEYWORD + IDENTIFIER + EQUAL + QUESTION_MARK;
+					+ WHERE_KEYWORD + IDENTIFIER + EQUAL + QUESTION_MARK + OREDR_BY
+					+ RECORD_ID;
 			final LinkedList<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 			queryDataList.add(new ColumnValueBean(IDENTIFIER, rootCatEntRecId));
 			final List<Long> identifiers = getResultIDList(selRecIdQuery, RECORD_ID, jdbcDAO,
@@ -2960,8 +2961,39 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				final List<Map<BaseAbstractAttributeInterface, Object>> innerRecords = new ArrayList<Map<BaseAbstractAttributeInterface, Object>>();
 				dataValue.put(catAssociation, innerRecords);
 
-				final List<Long> recordIds = getResultIDList(selRecIdQuery, RECORD_ID, jdbcDAO,
+				List<Long> recordIds = getResultIDList(selRecIdQuery, RECORD_ID, jdbcDAO,
 						queryDataList);
+				/**add patch
+				   *getrootRecordid using old logic if recordIds is empty. then by using old record Id that list populate map :)
+				   *
+				 */
+				/**
+				 * Added patch work. PLEASE DO NOT TOUCH BELOW CODE. STICTLY PROHIBITED BY ORDER.
+				 * This is because of bug CLINPORTAL-7386
+				 * First get the old category record Id 
+				 * Populate association map is empty.
+				 * 
+				 */
+				if(recordIds.isEmpty() && !isRecordIdNull)
+				{
+					String rootCategoryEntityTableName = catEntity.getCategory().getRootCategoryElement().getTableProperties().getName();
+					String oldCatRecIdQuery = SELECT_KEYWORD + IDENTIFIER + FROM_KEYWORD + rootCategoryEntityTableName
+					+ WHERE_KEYWORD + RECORD_ID + EQUAL + QUESTION_MARK ;
+					final List<ColumnValueBean> oldQueryDataList = new LinkedList<ColumnValueBean>();
+					oldQueryDataList.add(new ColumnValueBean(RECORD_ID, recordId));
+					Long oldCategoryRecordId = getEntityRecordId(oldCatRecIdQuery, oldQueryDataList);
+					
+					if(oldCategoryRecordId != null)
+					{
+						String oldSelRecIdQuery =  SELECT_KEYWORD + RECORD_ID + FROM_KEYWORD + catEntTblName
+						+ WHERE_KEYWORD + tgtFkColName + EQUAL + QUESTION_MARK;
+						final LinkedList<ColumnValueBean> oldCatQueryDataList = new LinkedList<ColumnValueBean>();
+						oldCatQueryDataList.add(new ColumnValueBean(tgtFkColName, oldCategoryRecordId));
+	
+						recordIds = getResultIDList(oldSelRecIdQuery, RECORD_ID, jdbcDAO,
+								oldCatQueryDataList);
+					}
+				}
 				for (final Long recId : recordIds)
 				{
 					final Map<BaseAbstractAttributeInterface, Object> innerRecord = new HashMap<BaseAbstractAttributeInterface, Object>();
@@ -3149,6 +3181,39 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 				DynamicExtensionsUtility.executeUpdateQuery(deleteQuery, userId, jdbcDao,
 						colValBeanList);
 				rlbkQryStack.push(deleteQuery);
+				
+				/*
+				 * Clean up of old records.
+				 * 
+				 */
+				try
+				{
+					Long entityRecId = getRootCategoryEntityRecordId(catEntity.getCategory().getRootCategoryElement(), recordId, jdbcDao);
+					String rootCategoryEntityTableName = catEntity.getCategory().getRootCategoryElement().getTableProperties().getName();
+					String oldCatRecIdQuery = SELECT_KEYWORD + IDENTIFIER + FROM_KEYWORD + rootCategoryEntityTableName
+					+ WHERE_KEYWORD + RECORD_ID + EQUAL + QUESTION_MARK ;
+					final List<ColumnValueBean> oldQueryDataList = new LinkedList<ColumnValueBean>();
+					oldQueryDataList.add(new ColumnValueBean(RECORD_ID, entityRecId));
+					Long oldCategoryRecordId = getEntityRecordId(oldCatRecIdQuery, oldQueryDataList);
+					
+					if(oldCategoryRecordId != null)
+					{
+						final String OldDeleteQuery = "DELETE FROM "
+							+ catAssociation.getTargetCategoryEntity().getTableProperties().getName()
+							+ " WHERE " + colName + EQUAL + QUESTION_MARK;
+						final ColumnValueBean OldBean1 = new ColumnValueBean(colName, oldCategoryRecordId);
+						final LinkedList<ColumnValueBean> OldColValBeanList = new LinkedList<ColumnValueBean>();
+						OldColValBeanList.add(OldBean1);
+						DynamicExtensionsUtility.executeUpdateQuery(OldDeleteQuery, userId, jdbcDao,
+								OldColValBeanList);
+						rlbkQryStack.push(OldDeleteQuery);
+					}
+				}
+				catch (SQLException e)
+				{
+					e.printStackTrace();
+				}
+				
 			}
 			else
 			{
@@ -3417,7 +3482,7 @@ public class CategoryManager extends AbstractMetadataManager implements Category
 			throws DynamicExtensionsSystemException
 	{
 		final String query = "select IDENTIFIER from " + rootCategoryTableName
-				+ " where record_Id =?";
+				+ " where record_Id =?  order by IDENTIFIER DESC";
 
 		final List<ColumnValueBean> queryDataList = new LinkedList<ColumnValueBean>();
 		queryDataList.add(new ColumnValueBean(RECORD_ID, rootCategoryEntityRecordId));
