@@ -1,5 +1,6 @@
 package edu.common.dynamicextensions.napi.impl;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -579,4 +580,11 @@ public class VersionedContainerImpl implements VersionedContainer {
 	     }
 	    
 	   }
+
+		public boolean isContainerExpired(Long formId,Timestamp encounterDate) {
+			JdbcDao jdbcDao = null;
+			jdbcDao = this.jdbcDao != null ? this.jdbcDao : new JdbcDao();
+			VersionedContainerDao vDao = new VersionedContainerDao(jdbcDao);
+			return vDao.isContainerExpired(formId,encounterDate);
+		}
 }

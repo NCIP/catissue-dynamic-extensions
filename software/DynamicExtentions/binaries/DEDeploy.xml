@@ -2326,6 +2326,15 @@
 					<url-pattern>/ExportFormAction.de</url-pattern>
 				</servlet-mapping>
 				
+				<servlet>
+					<servlet-name>ExportPermissibleValueAction</servlet-name>
+				 	<servlet-class>edu.common.dynamicextensions.nui.action.ExportPermissibleValueAction</servlet-class>
+				</servlet>
+				<servlet-mapping>
+					<servlet-name>ExportPermissibleValueAction</servlet-name>
+					<url-pattern>/ExportPermissibleValueAction.de</url-pattern>
+				</servlet-mapping>
+				
 				
 				<servlet>
 					<servlet-name>CreateCategoryMetadataAction</servlet-name>

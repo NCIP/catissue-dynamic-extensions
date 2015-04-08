@@ -2,6 +2,7 @@ package edu.common.dynamicextensions.ndao;
 
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -207,6 +208,34 @@ public class VersionedContainerDao {
 			jdbcDao.close(rs);
 		}
 	}
+	
+	public boolean isContainerExpired(Long formId, Timestamp encounterDate) {
+		ResultSet rs = null;
+		Boolean result=Boolean.TRUE;
+		try {
+			List paramList= new ArrayList();
+			paramList.add(formId);
+			paramList.add(encounterDate.toString());
+			rs = jdbcDao.getResultSet(GET_CONTAINER_EXPIRY_SQL,paramList );
+			while (rs.next()) {
+				Long count=rs.getLong(1);
+				if(count > 1L)
+				{
+					result=Boolean.FALSE;
+				}
+			}
+			return result;
+		} catch (Exception e) {
+			throw new RuntimeException("Error getting Form info: " + formId, e);
+		} finally {
+			jdbcDao.close(rs);
+		}
+	}
+	
+	private final static String GET_CONTAINER_EXPIRY_SQL = 
+			"SELECT COUNT(*) FROM DYEXTN_FORMS FRM,DYEXTN_VERSIONED_CONTAINERS VC WHERE FRM.IDENTIFIER=? AND VC.IDENTIFIER=FRM.IDENTIFIER " +
+            " AND VC.EXPIRY_TIME > TO_TIMESTAMP(?, 'YYYY-MM-DD HH24:MI:SS.FF')";
+	
 	private final static String GET_DRAFT_CONTAINER_INFO_SQL = 
 			"SELECT CONTAINER_ID, ACTIVATION_DATE, CREATED_BY, CREATE_TIME " +
 			"FROM DYEXTN_VERSIONED_CONTAINERS " +

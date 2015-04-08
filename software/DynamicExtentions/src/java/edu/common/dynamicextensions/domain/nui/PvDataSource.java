@@ -13,7 +13,7 @@ import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 
 public class PvDataSource {
 	public static enum Ordering {
-		ASC, DESC
+		ASC, DESC, NONE
 	}
 	
 	private List<PvVersion> pvVersions = new ArrayList<PvVersion>();
@@ -22,7 +22,7 @@ public class PvDataSource {
 	
 	private String dateFormat;
 	
-	private Ordering ordering = Ordering.ASC;
+	private Ordering ordering = Ordering.NONE;
 	
 	private String sql;
 
