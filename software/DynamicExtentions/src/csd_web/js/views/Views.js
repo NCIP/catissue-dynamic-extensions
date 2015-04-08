@@ -262,6 +262,7 @@ var Views = {
 					"click #copyControlButtonid" : "copyControl",
 					"click #addPv" : "addPv",
 					"click #deletePv" : "deletePv",
+					"click #deleteAllPv" : "deleteAllPv",
 					"click #changeControlButtonid" : "changeControl",
 					"keyup #controlCaption" : "setAttributeName"
 				},
@@ -331,6 +332,8 @@ var Views = {
 												$('#addPv').prop("disabled",
 														true);
 												$('#deletePv').prop("disabled",
+														true);
+												$('#deleteAllPv').prop("disabled",
 														true);
 												ControlBizLogic
 														.deleteControl(GlobalMemory.currentBufferControlModel);
@@ -853,6 +856,25 @@ var Views = {
 					$("#general-dialog").dialog({
 						buttons : {
 							Yes : function() {
+								Main.currentFieldView.deletePVs();
+								$(this).dialog("close");
+							},
+							No : function() {
+								$(this).dialog("close");
+							}
+						}
+					});
+					$("#general-dialog").dialog("open");
+
+				},
+				deleteAllPv : function() {
+
+					$('#dialogMessageText').html(
+							'Do you wish to delete all the Permissible Values?');
+					$("#general-dialog").dialog({
+						buttons : {
+							Yes : function() {
+								Main.currentFieldView.pvGrid.selectAll()
 								Main.currentFieldView.deletePVs();
 								$(this).dialog("close");
 							},
