@@ -39,12 +39,12 @@ public class PvMapper {
 		}
 
 		String pvOrder = controlProperties.getString("pvOrder");
-		if (pvOrder.equalsIgnoreCase("ASC")) {
+		if ("ASC".equalsIgnoreCase(pvOrder)) {
 			pvDataSource.setOrdering(Ordering.ASC);
-		} else if (pvOrder.equalsIgnoreCase("DESC")) {
+		} else if ("DESC".equalsIgnoreCase(pvOrder)) {
 			pvDataSource.setOrdering(Ordering.DESC);
-		} else if (pvOrder.equalsIgnoreCase("NONE")) {
-			// do not sort
+		} else if ("NONE".equalsIgnoreCase(pvOrder)) {
+			pvDataSource.setOrdering(Ordering.NONE);
 		}
 
 		PvVersion pvVersion = new PvVersion();
