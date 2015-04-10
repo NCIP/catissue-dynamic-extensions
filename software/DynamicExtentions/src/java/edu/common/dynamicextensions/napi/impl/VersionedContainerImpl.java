@@ -581,10 +581,17 @@ public class VersionedContainerImpl implements VersionedContainer {
 	    
 	   }
 
-		public boolean isContainerExpired(Long formId,Timestamp encounterDate) {
+		public boolean isFormActive(Long formId,Timestamp encounterDate) {
 			JdbcDao jdbcDao = null;
 			jdbcDao = this.jdbcDao != null ? this.jdbcDao : new JdbcDao();
 			VersionedContainerDao vDao = new VersionedContainerDao(jdbcDao);
-			return vDao.isContainerExpired(formId,encounterDate);
+			return vDao.isFormActive(formId,encounterDate);
+		}
+		
+		public boolean isOldForm(Long formId,Timestamp encounterDate) {
+			JdbcDao jdbcDao = null;
+			jdbcDao = this.jdbcDao != null ? this.jdbcDao : new JdbcDao();
+			VersionedContainerDao vDao = new VersionedContainerDao(jdbcDao);
+			return vDao.isOldForm(formId,encounterDate);
 		}
 }
