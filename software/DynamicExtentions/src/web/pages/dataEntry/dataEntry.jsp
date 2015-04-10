@@ -76,6 +76,24 @@ jQuery(document).ready(
 		jQuery('input:file', dataEntryForm).each(function(){
 			setJQueryParameters(this.id,this.getAttribute("onclick"));
 		});
+		
+		jQuery(':radio').mousedown(function(e){
+			  var jQueryself = jQuery(this);
+			  if( jQueryself.is(':checked') ){
+			    var uncheck = function(){
+			      setTimeout(function(){jQueryself.removeAttr('checked');},0);
+			    };
+			    var unbind = function(){
+			      jQueryself.unbind('mouseup',up);
+			    };
+			    var up = function(){
+			      uncheck();
+			      unbind();
+			    };
+			    jQueryself.bind('mouseup',up);
+			    jQueryself.one('mouseout', unbind);
+			  }
+			});
 	});
 </script>
 
