@@ -208,18 +208,51 @@ public class VersionedContainerDao {
 			jdbcDao.close(rs);
 		}
 	}
-	
-	public boolean isContainerExpired(Long formId, Timestamp encounterDate) {
+	/**
+	 * This method will verify if form is expired or not.
+	 * @param formId
+	 * @param encounterDate
+	 * @return
+	 */
+	public boolean isFormActive(Long formId, Timestamp encounterDate) {
 		ResultSet rs = null;
 		Boolean result=Boolean.TRUE;
 		try {
 			List paramList= new ArrayList();
 			paramList.add(formId);
 			paramList.add(encounterDate.toString());
-			rs = jdbcDao.getResultSet(GET_CONTAINER_EXPIRY_SQL,paramList );
+			rs = jdbcDao.getResultSet(IS_FORM_ACTIVE_SQL,paramList );
 			while (rs.next()) {
 				Long count=rs.getLong(1);
-				if(count > 1L)
+				if(count==0)
+				{
+					result=Boolean.FALSE;
+				}
+			}
+			return result;
+		} catch (Exception e) {
+			throw new RuntimeException("Error getting Form info: " + formId, e);
+		} finally {
+			jdbcDao.close(rs);
+		}
+	}
+	/**
+	 * This method will verify if the form's activation date is before encountered date.
+	 * @param formId
+	 * @param encounterDate
+	 * @return
+	 */
+	public boolean isOldForm(Long formId, Timestamp encounterDate) {
+		ResultSet rs = null;
+		Boolean result=Boolean.TRUE;
+		try {
+			List paramList= new ArrayList();
+			paramList.add(formId);
+			paramList.add(encounterDate.toString());
+			rs = jdbcDao.getResultSet(IS_OLD_FORM_SQL,paramList );
+			while (rs.next()) {
+				Long count=rs.getLong(1);
+				if(count==0)
 				{
 					result=Boolean.FALSE;
 				}
@@ -232,9 +265,13 @@ public class VersionedContainerDao {
 		}
 	}
 	
-	private final static String GET_CONTAINER_EXPIRY_SQL = 
+	private final static String IS_OLD_FORM_SQL = 
 			"SELECT COUNT(*) FROM DYEXTN_FORMS FRM,DYEXTN_VERSIONED_CONTAINERS VC WHERE FRM.IDENTIFIER=? AND VC.IDENTIFIER=FRM.IDENTIFIER " +
-            " AND VC.EXPIRY_TIME > TO_TIMESTAMP(?, 'YYYY-MM-DD HH24:MI:SS.FF')";
+            " AND TO_TIMESTAMP(?, 'YYYY-MM-DD HH24:MI:SS.FF') >= VC.ACTIVATION_DATE ";
+	
+	private final static String IS_FORM_ACTIVE_SQL = 
+			"SELECT COUNT(*) FROM DYEXTN_FORMS FRM,DYEXTN_VERSIONED_CONTAINERS VC WHERE FRM.IDENTIFIER=? AND VC.IDENTIFIER=FRM.IDENTIFIER " +
+            " AND TO_TIMESTAMP(?, 'YYYY-MM-DD HH24:MI:SS.FF') <= VC.EXPIRY_TIME ";
 	
 	private final static String GET_DRAFT_CONTAINER_INFO_SQL = 
 			"SELECT CONTAINER_ID, ACTIVATION_DATE, CREATED_BY, CREATE_TIME " +
@@ -280,5 +317,7 @@ public class VersionedContainerDao {
 	
 	private final static String GET_NEXT_ID_SQL = 
 			"SELECT DYEXTN_FORMS_SEQ.NEXTVAL FROM DUAL";
+
+	
 
 }
