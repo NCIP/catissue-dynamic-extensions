@@ -13,8 +13,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import edu.common.dynamicextensions.domain.nui.PvDataSource.Ordering;
 import edu.common.dynamicextensions.napi.ControlValue;
 import edu.common.dynamicextensions.util.global.DEConstants;
+import edu.wustl.dynamicextensions.formdesigner.utility.PermissibleValueComparator;
 
 public abstract class SelectControl extends Control {
 	
@@ -183,6 +185,13 @@ public abstract class SelectControl extends Control {
 		List<PermissibleValue> permissibleValues = controlValue.getPermissibleValues();
 		if (permissibleValues == null || permissibleValues.isEmpty()) {
 			permissibleValues = getPvDataSource().getPermissibleValues(encounterDate);
+		}
+		if (Ordering.ASC.equals(getPvDataSource().getOrdering()) ) {
+			Collections.sort(permissibleValues, new PermissibleValueComparator());
+		} 
+		else if (Ordering.DESC.equals(getPvDataSource().getOrdering()) ) {
+			Collections.sort(permissibleValues, new PermissibleValueComparator());
+			Collections.reverse(permissibleValues);
 		}
 		return permissibleValues;
 	}

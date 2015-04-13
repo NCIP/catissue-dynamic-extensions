@@ -70,7 +70,7 @@ public class RadioButton extends SelectControl {
 		}
 		final String htmlComponentName = controlName;
 		htmlString.append("<table cellspacing='3'>");
-		List<PermissibleValue> permissibleValues = getPVList(activationDate, controlValue);;
+		List<PermissibleValue> permissibleValues = getPVList(activationDate, controlValue);
 		if (permissibleValues != null && !permissibleValues.isEmpty()) {
 			int columnNum = 0;
 
