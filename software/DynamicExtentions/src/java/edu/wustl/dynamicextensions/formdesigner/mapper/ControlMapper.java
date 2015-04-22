@@ -21,6 +21,7 @@ import edu.common.dynamicextensions.domain.nui.StringTextField;
 import edu.common.dynamicextensions.domain.nui.SubFormControl;
 import edu.common.dynamicextensions.domain.nui.TextArea;
 import edu.common.dynamicextensions.domain.nui.TextField;
+import edu.common.dynamicextensions.domain.nui.ValidationRule;
 import edu.common.dynamicextensions.processor.ProcessorConstants;
 import edu.wustl.dynamicextensions.formdesigner.utility.CSDConstants;
 
@@ -192,6 +193,13 @@ public class ControlMapper {
 					controlProps.setProperty("formula", rootContainer.getUdnFormula(formula));
 				}
 
+			}
+			if(numericControl.getValidationRules()!=null && !numericControl.getValidationRules().isEmpty())
+			{
+				ValidationRule vr=numericControl.getValidationRule("range");
+				Map values=vr.getParams();
+				controlProps.setProperty("minimumValue", values.get("min"));
+				controlProps.setProperty("maximumValue", values.get("max"));
 			}
 
 			return controlProps;
