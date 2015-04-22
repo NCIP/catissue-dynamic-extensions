@@ -272,6 +272,19 @@ var Views = {
 							'#controlCaption').val());
 					var userDefinedNameExcludingSpec = userDefinedName.replace(/[^\w\s]/gi, '');
 					userDefinedName = userDefinedNameExcludingSpec;
+					var numRegex = /^\d+$/;
+					var size=userDefinedName.length;
+					var i=0;
+					while(i!=size)
+					{
+						var substr=userDefinedName.charAt(i);
+						var result = substr.match(numRegex);
+						if(result== null)
+						break;
+						i++;
+					}
+					var udn=userDefinedName.substring(i,size);
+					userDefinedName=udn;
 					if (userDefinedName.length > 28) {
 						userDefinedName = userDefinedName.substring(0, 27) + ""
 								+ GlobalMemory.nodeCounter;
@@ -1713,6 +1726,12 @@ var Views = {
 					$("#createdOn").text(formInfo.get('createdOn'));
 					$("#lastModifiedBy").text(formInfo.get('lastModifiedBy'));
 					$("#lastModifiedOn").text(formInfo.get('lastModifiedOn'));
+					var readOnly=false;
+					if(formInfo.get('caption')!= null)
+					{
+						readOnly=true;
+					}
+					$("#formCaption").attr('readonly', readOnly);
 				},
 
 				exportForm : function(event) {
