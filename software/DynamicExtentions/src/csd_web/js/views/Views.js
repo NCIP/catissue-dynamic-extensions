@@ -1158,6 +1158,7 @@ var Views = {
 				events : {
 					"click #addFormulaBtn" : "addFormula",
 					"click #addSkipLogicBtn" : "addSkipRule",
+					"click #cancelSkipLogicBtn" : "cancelSkipRule",
 					"click #pvSubSet" : "showPvSubSetDiv",
 					"click #enable" : "hidePvSubSetDiv",
 					"click #show" : "hidePvSubSetDiv",
@@ -1520,7 +1521,13 @@ var Views = {
 
 					};
 				},
-
+				cancelSkipRule : function(){
+					$("select option").prop("selected", false);
+							$("#pvs").trigger("liszt:updated");
+							$("#controlledField").trigger("liszt:updated");
+							$("#subsetPvs").trigger("liszt:updated");
+							$("#controllingValues").val("");
+					},
 				addFormulaToTable : function(controlName, _formula, udn) {
 					var _tr_element_start = "<tr id = '" + controlName + "'>";
 					var _tr_element_end = "</tr>";
