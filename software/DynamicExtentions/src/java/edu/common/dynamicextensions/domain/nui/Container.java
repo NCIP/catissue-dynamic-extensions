@@ -7,9 +7,11 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -35,6 +37,7 @@ import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.IdGeneratorUtil;
 import edu.common.dynamicextensions.util.parser.FormulaParser;
+import edu.wustl.common.beans.NameValueBean;
 
 public class Container extends DynamicExtensionBaseDomainObject {	
 	private static final long serialVersionUID = 449976852456002554L;
@@ -417,10 +420,10 @@ public class Container extends DynamicExtensionBaseDomainObject {
 		addLog.add(control);
 		
 		if (!isDto) {
-			control.setId(++ctrlId);		
-			if (control.getDbColumnName() == null) {
+			control.setId(++ctrlId);
+			/*if (control.getDbColumnName() == null) {
 				control.setDbColumnName(String.format(columnNameFmt, ctrlId)); // set db name here
-			}			
+			}*/			
 						
 			if (control instanceof SubFormControl) {
 				SubFormControl sfCtrl = (SubFormControl)control;
@@ -760,7 +763,7 @@ public class Container extends DynamicExtensionBaseDomainObject {
 				editControl(ctrl.getName(), ctrl, true);				
 			}			
 		}
-		
+		assignColumnNames();
 		deleteRemovedControls(newContainer);
 		
 		//
@@ -1707,4 +1710,98 @@ public class Container extends DynamicExtensionBaseDomainObject {
 
 	private static final String DISPLAY_PAGE = "<input type='hidden' id='displayPage' name='displayPage'  value='%d'></input>";
 
+	public void assignColumnNames() 
+	{
+		Long colCounter=null;
+		Long maxColNumFromUIList=this.getMaxColumnNameFromExistingControl();
+		String tableName=this.getDbTableName();
+		if(tableName==null)
+		{
+			Container cont=ContainerCache.getInstance().get(this.getId());
+			if(cont!=null)
+			{
+				tableName=cont.getDbTableName();
+			}
+		}
+		Long maxColNumFromDB=0L;
+		if(tableName!=null)
+		{
+			maxColNumFromDB=this.getMaxColumnNameFromDatabase(tableName);
+		}
+		if(maxColNumFromUIList>=maxColNumFromDB)
+		{
+			colCounter=maxColNumFromUIList+1;
+		}
+		else
+		{
+			colCounter=maxColNumFromDB+1;
+		}
+		
+		Iterator<Entry<String, Control>> iter=this.controlsMap.entrySet().iterator();
+		while(iter.hasNext())
+		{
+			Entry<String,Control> entry = iter.next();
+			Control nCtrl=entry.getValue();
+			if(nCtrl.getDbColumnName()==null ||StringUtils.isBlank(nCtrl.getDbColumnName()))
+			{
+				nCtrl.setDbColumnName(String.format(columnNameFmt, colCounter));
+				colCounter++;
+			}
+			if (nCtrl instanceof SubFormControl) 
+			{
+				SubFormControl sfCtrl = (SubFormControl)nCtrl;
+				Container sfContainer = sfCtrl.getSubContainer();
+				sfContainer.assignColumnNames();
+			}
+		}
+	}
+
+	public Long getMaxColumnNameFromDatabase(String tableName) 
+	{
+		JdbcDao jdbcDao = null;
+		Long counter=0L;
+		try {
+			jdbcDao = new JdbcDao();
+			ContainerDao containerDao = new ContainerDao(jdbcDao);
+			List<NameValueBean> nvb=containerDao.getColumnNameFromTable(tableName);
+			if(nvb!=null && !nvb.isEmpty())
+			{
+				NameValueBean nv=nvb.get(0);
+				counter=Long.valueOf(nv.getName().substring(5,nv.getName().length()));
+			}
+		} 
+		catch (Exception e) {
+			throw new RuntimeException("Error obtaining container name with id : " + id);
+		}
+		return counter;
+	}
+
+
+	public Long getMaxColumnNameFromExistingControl() 
+	{
+		Long counter=0L;
+		if(!editLog.isEmpty())
+		{
+			Collections.sort(editLog,new ControlDBColumnValueComparator());
+			Collections.reverse(editLog);
+			Control ctrl=editLog.get(0);
+			if(ctrl.getDbColumnName()!=null && !StringUtils.isBlank(ctrl.getDbColumnName()))
+			{
+				counter=Long.valueOf(ctrl.getDbColumnName().substring(5,ctrl.getDbColumnName().length()));
+			}
+		}
+		return counter;
+	}
+	
+	class ControlDBColumnValueComparator implements Comparator<Control>
+	{
+		@Override
+		public int compare(Control ctrl1,
+				Control ctrl2)
+		{
+			Long value1 = Long.valueOf(ctrl1.getDbColumnName().substring(5,ctrl1.getDbColumnName().length()));
+			Long value2 = Long.valueOf(ctrl2.getDbColumnName().substring(5,ctrl2.getDbColumnName().length()));
+			return value1.compareTo(value2);
+		}
+	}
 }

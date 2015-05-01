@@ -42,6 +42,7 @@ public class ContainerFacade {
 	 */
 	public static ContainerFacade createContainer(Properties containerProps, UserContext userContext) throws Exception {
 		Container container = containerMapper.propertiesToContainer(containerProps, userContext);
+		container.assignColumnNames();
 		containerMapper.setRootContainer(container);
 		return new ContainerFacade(container, userContext);
 	}

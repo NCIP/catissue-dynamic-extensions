@@ -294,4 +294,21 @@ public class ContainerDao {
 			jdbcDao.close(rs);
 		}
 	}
+
+	public List<NameValueBean> getColumnNameFromTable(String tableName) throws SQLException {
+		String query="select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME='"+tableName+"' and column_name like 'DE_A_%' order by CAST (SUBSTR(column_name, 6, Length(column_name)) AS INT) DESC";
+		ResultSet rs = null; 
+		try {
+			rs = jdbcDao.getResultSet(query, null);
+			List<NameValueBean> beans = new ArrayList<NameValueBean>();
+			
+			while (rs.next()) {
+				beans.add(new NameValueBean(rs.getString("COLUMN_NAME"), rs.getString("COLUMN_NAME")));
+			}
+			
+			return beans;
+		} finally {
+			jdbcDao.close(rs);
+		}
+	}
 }
