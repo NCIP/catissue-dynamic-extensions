@@ -95,9 +95,11 @@ public class RadioButton extends SelectControl {
 
 															).append(" /></td>");
 				}
-				htmlString.append("<td class='formRequiredLabel_withoutBorder'>  <label for=\"" ).append(htmlComponentName
+				/*htmlString.append("<td class='formRequiredLabel_withoutBorder'>  <label for=\"" ).append(htmlComponentName
 						).append("\" onClick=\"selectRadioButton('" ).append(controlName ).append("','" ).append(optionValue
-								).append("')\">" ).append(optionName ).append("</label></td>");
+								).append("')\">" ).append(optionName ).append("</label></td>");*/
+				htmlString.append("<td class='formRequiredLabel_withoutBorder'>  <label for=\"" ).append(htmlComponentName
+						).append("\">" ).append(optionName ).append("</label></td>");
 				if (columnNum % optionsPerRow == optionsPerRow - 1) {
 					htmlString.append("</tr>");
 				}
