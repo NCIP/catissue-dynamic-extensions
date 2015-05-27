@@ -1759,6 +1759,7 @@ public class Container extends DynamicExtensionBaseDomainObject {
 	public Long getMaxColumnNameFromDatabase(String tableName) 
 	{
 		JdbcDao jdbcDao = null;
+		List<Long> resultList=new ArrayList<Long>();
 		Long counter=0L;
 		try {
 			jdbcDao = new JdbcDao();
@@ -1766,9 +1767,21 @@ public class Container extends DynamicExtensionBaseDomainObject {
 			List<NameValueBean> nvb=containerDao.getColumnNameFromTable(tableName);
 			if(nvb!=null && !nvb.isEmpty())
 			{
-				NameValueBean nv=nvb.get(0);
-				counter=Long.valueOf(nv.getName().substring(5,nv.getName().length()));
+				Iterator<NameValueBean> iter=nvb.iterator();
+				while(iter.hasNext())
+				{
+					NameValueBean nv=iter.next();
+					int index=nv.getValue().indexOf('_');
+					if(new Integer(-1).equals(Integer.valueOf(index)))
+					{
+						index=nv.getValue().length();
+					}
+					resultList.add(Long.valueOf(nv.getValue().substring(0, index)));
+				}
 			}
+			Collections.sort(resultList);
+			Collections.reverse(resultList);
+			counter=resultList.get(0);
 		} 
 		catch (Exception e) {
 			throw new RuntimeException("Error obtaining container name with id : " + id);

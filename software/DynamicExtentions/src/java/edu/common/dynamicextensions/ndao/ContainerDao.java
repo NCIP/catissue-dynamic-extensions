@@ -296,7 +296,8 @@ public class ContainerDao {
 	}
 
 	public List<NameValueBean> getColumnNameFromTable(String tableName) throws SQLException {
-		String query="select COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME='"+tableName+"' and column_name like 'DE_A_%' order by CAST (SUBSTR(column_name, 6, Length(column_name)) AS INT) DESC";
+		String query="select SUBSTR(column_name, 6, Length(column_name)) as COLUMN_NAME from ALL_TAB_COLUMNS where TABLE_NAME='"+tableName+"' and column_name like 'DE_A_%' order by SUBSTR(column_name, 6, Length(column_name)) DESC";
+		//String query="select SUBSTR(column_name, 6, INSTR(column_name, '_', 1, 3)-6) as COLUMN_NUM from ALL_TAB_COLUMNS where TABLE_NAME='"+tableName+"' and column_name like 'DE_A_%' order by CAST (SUBSTR(column_name, 6, INSTR(column_name, '_', 1, 3)-6) AS INT) DESC";
 		ResultSet rs = null; 
 		try {
 			rs = jdbcDao.getResultSet(query, null);
