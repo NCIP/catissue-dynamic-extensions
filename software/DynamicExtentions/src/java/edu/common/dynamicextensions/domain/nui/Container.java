@@ -1795,9 +1795,19 @@ public class Container extends DynamicExtensionBaseDomainObject {
 		Long counter=0L;
 		if(!editLog.isEmpty())
 		{
-			Collections.sort(editLog,new ControlDBColumnValueComparator());
-			Collections.reverse(editLog);
-			Control ctrl=editLog.get(0);
+			List<Control> tempList=new ArrayList<Control>();
+			Iterator<Control> iter=editLog.iterator();
+			while(iter.hasNext())
+			{
+				Control ctrl=iter.next();
+				if(!"VALUE".equals(ctrl.getDbColumnName()))
+				{
+					tempList.add(ctrl);
+				}
+			}
+			Collections.sort(tempList,new ControlDBColumnValueComparator());
+			Collections.reverse(tempList);
+			Control ctrl=tempList.get(0);
 			if(ctrl.getDbColumnName()!=null && !StringUtils.isBlank(ctrl.getDbColumnName()))
 			{
 				counter=Long.valueOf(ctrl.getDbColumnName().substring(5,ctrl.getDbColumnName().length()));
@@ -1812,9 +1822,9 @@ public class Container extends DynamicExtensionBaseDomainObject {
 		public int compare(Control ctrl1,
 				Control ctrl2)
 		{
-			Long value1 = Long.valueOf(ctrl1.getDbColumnName().substring(5,ctrl1.getDbColumnName().length()));
-			Long value2 = Long.valueOf(ctrl2.getDbColumnName().substring(5,ctrl2.getDbColumnName().length()));
-			return value1.compareTo(value2);
+				Long value1 = Long.valueOf(ctrl1.getDbColumnName().substring(5,ctrl1.getDbColumnName().length()));
+				Long value2 = Long.valueOf(ctrl2.getDbColumnName().substring(5,ctrl2.getDbColumnName().length()));
+				return value1.compareTo(value2);			
 		}
 	}
 }
