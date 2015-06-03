@@ -1778,10 +1778,10 @@ public class Container extends DynamicExtensionBaseDomainObject {
 					}
 					resultList.add(Long.valueOf(nv.getValue().substring(0, index)));
 				}
+				Collections.sort(resultList);
+				Collections.reverse(resultList);
+				counter=resultList.get(0);
 			}
-			Collections.sort(resultList);
-			Collections.reverse(resultList);
-			counter=resultList.get(0);
 		} 
 		catch (Exception e) {
 			throw new RuntimeException("Error obtaining container name with id : " + id);
