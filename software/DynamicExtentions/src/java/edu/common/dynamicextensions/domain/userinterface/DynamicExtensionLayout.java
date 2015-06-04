@@ -1,6 +1,7 @@
 package edu.common.dynamicextensions.domain.userinterface;
 
 import java.io.Serializable;
+
 import edu.common.dynamicextensions.domain.DynamicExtensionBaseDomainObject;
 import edu.common.dynamicextensions.domaininterface.userinterface.DynamicExtensionLayoutInterface;
 

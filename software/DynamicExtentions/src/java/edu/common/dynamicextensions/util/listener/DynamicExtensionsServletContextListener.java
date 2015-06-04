@@ -18,7 +18,6 @@ import edu.common.dynamicextensions.nvalidator.DateValidator;
 import edu.common.dynamicextensions.util.DirOperationsUtility;
 import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.global.Variables;
-import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.audit.AuditManager;
 import edu.wustl.common.exception.ErrorKey;
 import edu.wustl.common.util.global.ApplicationProperties;

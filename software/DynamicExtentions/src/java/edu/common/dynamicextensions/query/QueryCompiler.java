@@ -15,13 +15,13 @@ import edu.common.dynamicextensions.napi.VersionedContainer;
 import edu.common.dynamicextensions.napi.impl.VersionedContainerImpl;
 import edu.common.dynamicextensions.query.ast.ArithExpressionNode;
 import edu.common.dynamicextensions.query.ast.DateDiffFuncNode;
-import edu.common.dynamicextensions.query.ast.FilterExpressionNode;
 import edu.common.dynamicextensions.query.ast.ExpressionNode;
 import edu.common.dynamicextensions.query.ast.FieldNode;
+import edu.common.dynamicextensions.query.ast.FilterExpressionNode;
+import edu.common.dynamicextensions.query.ast.FilterExpressionNode.Op;
 import edu.common.dynamicextensions.query.ast.FilterNode;
 import edu.common.dynamicextensions.query.ast.FilterNodeMarker;
 import edu.common.dynamicextensions.query.ast.QueryExpressionNode;
-import edu.common.dynamicextensions.query.ast.FilterExpressionNode.Op;
 import edu.common.dynamicextensions.query.ast.SelectListNode;
 
 public class QueryCompiler

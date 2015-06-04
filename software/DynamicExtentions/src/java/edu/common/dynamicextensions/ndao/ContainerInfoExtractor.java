@@ -1,9 +1,10 @@
 
 package edu.common.dynamicextensions.ndao;
 
-import edu.common.dynamicextensions.domain.nui.ContainerInfo;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import edu.common.dynamicextensions.domain.nui.ContainerInfo;
 
 public class ContainerInfoExtractor
 {

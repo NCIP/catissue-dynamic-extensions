@@ -4,9 +4,8 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import edu.common.dynamicextensions.nutility.IoUtil;
-
 import au.com.bytecode.opencsv.CSVWriter;
+import edu.common.dynamicextensions.nutility.IoUtil;
 
 public class QueryResultCsvExporter implements QueryResultExporter {
 	@Override

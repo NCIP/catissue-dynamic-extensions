@@ -20,13 +20,10 @@ import edu.common.dynamicextensions.domaininterface.databaseproperties.Constrain
 import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.ui.webui.util.WebUIManagerConstants;
-import edu.common.dynamicextensions.util.DynamicExtensionsUtility;
 import edu.common.dynamicextensions.util.EntityGroupManagerUtil;
 import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.util.global.ApplicationProperties;
 import edu.wustl.common.util.logger.Logger;
-import edu.wustl.dao.HibernateDAO;
-import edu.wustl.dao.exception.DAOException;
 import edu.wustl.dao.newdao.ActionStatus;
 
 public class UpdateCache extends HttpServlet

@@ -15,8 +15,8 @@ import edu.common.dynamicextensions.domain.nui.ShowAction;
 import edu.common.dynamicextensions.domain.nui.ShowPvAction;
 import edu.common.dynamicextensions.domain.nui.SkipAction;
 import edu.common.dynamicextensions.domain.nui.SkipCondition;
-import edu.common.dynamicextensions.domain.nui.SkipRule;
 import edu.common.dynamicextensions.domain.nui.SkipCondition.RelationalOp;
+import edu.common.dynamicextensions.domain.nui.SkipRule;
 import edu.common.dynamicextensions.domain.nui.SkipRule.LogicalOp;
 
 public class SkipRuleBuilder {

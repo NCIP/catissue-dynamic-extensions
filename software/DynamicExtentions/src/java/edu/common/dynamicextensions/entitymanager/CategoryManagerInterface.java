@@ -10,9 +10,10 @@ import java.util.Stack;
 
 import javax.xml.bind.JAXBException;
 
+import net.sf.ehcache.CacheException;
+
 import org.xml.sax.SAXException;
 
-import net.sf.ehcache.CacheException;
 import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAssociationInterface;
 import edu.common.dynamicextensions.domaininterface.CategoryAttributeInterface;

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Hibernate;
 
 import edu.common.dynamicextensions.domain.FormAuditEvent;
 import edu.common.dynamicextensions.domaininterface.AbstractAttributeInterface;

@@ -1,12 +1,5 @@
 package edu.wustl.cab2b.server.path;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-
 import edu.wustl.cab2b.common.errorcodes.ErrorCodeConstants;
 import edu.wustl.cab2b.common.exception.RuntimeException;
 import gov.nih.nci.cagrid.common.Utils;
@@ -17,6 +10,13 @@ import gov.nih.nci.cagrid.metadata.dataservice.DomainModelExposedUMLClassCollect
 import gov.nih.nci.cagrid.metadata.dataservice.DomainModelUmlGeneralizationCollection;
 import gov.nih.nci.cagrid.metadata.dataservice.UMLAssociation;
 import gov.nih.nci.cagrid.metadata.dataservice.UMLGeneralization;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
 
 /**
  * This class parses the domain model for an application.<br>

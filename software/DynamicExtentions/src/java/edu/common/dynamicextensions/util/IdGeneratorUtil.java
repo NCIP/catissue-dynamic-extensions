@@ -6,7 +6,6 @@ import java.util.List;
 import edu.common.dynamicextensions.domain.DomainObjectFactory;
 import edu.common.dynamicextensions.domain.IdGenerator;
 import edu.common.dynamicextensions.domaininterface.IdGeneratorInterface;
-import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.wustl.common.util.logger.Logger;
 import edu.wustl.dao.HibernateDAO;
 import edu.wustl.dao.exception.DAOException;

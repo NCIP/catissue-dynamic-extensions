@@ -3,7 +3,6 @@ package edu.common.dynamicextensions.domain;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.List;
 
 import edu.common.dynamicextensions.domaininterface.FloatTypeInformationInterface;
 import edu.common.dynamicextensions.domaininterface.FloatValueInterface;

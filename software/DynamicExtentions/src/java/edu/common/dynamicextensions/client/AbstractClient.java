@@ -10,8 +10,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Map;
 
-import javax.management.RuntimeErrorException;
-
 import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.utility.HTTPSConnection;
 import edu.wustl.common.util.logger.Logger;

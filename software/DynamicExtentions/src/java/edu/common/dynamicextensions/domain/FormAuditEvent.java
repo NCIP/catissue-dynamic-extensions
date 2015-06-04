@@ -3,7 +3,6 @@
  */
 package edu.common.dynamicextensions.domain;
 
-import java.sql.Clob;
 
 /**
  * @author Vinayak Pawar

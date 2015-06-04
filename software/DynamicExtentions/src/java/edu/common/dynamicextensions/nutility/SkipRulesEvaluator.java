@@ -10,8 +10,8 @@ import edu.common.dynamicextensions.domain.nui.Control;
 import edu.common.dynamicextensions.domain.nui.SkipAction;
 import edu.common.dynamicextensions.domain.nui.SkipCondition;
 import edu.common.dynamicextensions.domain.nui.SkipRule;
-import edu.common.dynamicextensions.domain.nui.SubFormControl;
 import edu.common.dynamicextensions.domain.nui.SkipRule.LogicalOp;
+import edu.common.dynamicextensions.domain.nui.SubFormControl;
 import edu.common.dynamicextensions.napi.ControlValue;
 import edu.common.dynamicextensions.napi.FormData;
 

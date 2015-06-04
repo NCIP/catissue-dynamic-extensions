@@ -16,10 +16,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import javax.jmi.model.ModelPackage;
-import javax.jmi.model.MofPackage;
 import javax.jmi.xmi.XmiReader;
 import javax.jmi.xmi.XmiWriter;
 import javax.xml.transform.Result;
@@ -33,10 +30,8 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
-import org.netbeans.api.mdr.CreationFailedException;
 import org.netbeans.api.mdr.MDRepository;
 import org.netbeans.mdr.NBMDRepositoryImpl;
-import org.omg.uml.UmlPackage;
 import org.omg.uml.foundation.core.Attribute;
 import org.omg.uml.foundation.core.Generalization;
 import org.omg.uml.foundation.core.ModelElement;
@@ -44,16 +39,9 @@ import org.omg.uml.foundation.core.UmlClass;
 import org.openide.util.Lookup;
 
 import edu.common.dynamicextensions.domaininterface.AttributeInterface;
-import edu.common.dynamicextensions.domaininterface.BaseAbstractAttributeInterface;
 import edu.common.dynamicextensions.domaininterface.EntityInterface;
-import edu.common.dynamicextensions.entitymanager.EntityManager;
-import edu.common.dynamicextensions.exception.DynamicExtensionsApplicationException;
-import edu.common.dynamicextensions.exception.DynamicExtensionsSystemException;
 import edu.common.dynamicextensions.xmi.importer.AbstractXMIImporter;
-import edu.wustl.cab2b.server.cache.EntityCache;
 import edu.wustl.common.util.logger.Logger;
-import edu.wustl.dao.HibernateDAO;
-import edu.wustl.dao.exception.DAOException;
 
 /**
  * @author preeti_lodha

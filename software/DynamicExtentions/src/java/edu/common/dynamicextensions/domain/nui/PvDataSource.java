@@ -2,7 +2,6 @@ package edu.common.dynamicextensions.domain.nui;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.sql.ResultSetMetaData;
 import java.util.Date;
 import java.util.List;
 

@@ -3,6 +3,8 @@ package edu.wustl.cab2b.common.queryengine.result;
 
 import java.io.Serializable;
 
+import edu.common.dynamicextensions.domaininterface.EntityInterface;
+
 
 public class RecordId implements Serializable
 {
