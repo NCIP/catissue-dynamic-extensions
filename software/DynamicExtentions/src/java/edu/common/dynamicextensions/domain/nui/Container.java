@@ -1807,10 +1807,13 @@ public class Container extends DynamicExtensionBaseDomainObject {
 			}
 			Collections.sort(tempList,new ControlDBColumnValueComparator());
 			Collections.reverse(tempList);
-			Control ctrl=tempList.get(0);
-			if(ctrl.getDbColumnName()!=null && !StringUtils.isBlank(ctrl.getDbColumnName()))
+			if(tempList!=null && !tempList.isEmpty())
 			{
-				counter=Long.valueOf(ctrl.getDbColumnName().substring(5,ctrl.getDbColumnName().length()));
+				Control ctrl=tempList.get(0);
+				if(ctrl.getDbColumnName()!=null && !StringUtils.isBlank(ctrl.getDbColumnName()))
+				{
+					counter=Long.valueOf(ctrl.getDbColumnName().substring(5,ctrl.getDbColumnName().length()));
+				}
 			}
 		}
 		return counter;
