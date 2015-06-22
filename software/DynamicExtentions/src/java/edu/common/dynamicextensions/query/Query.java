@@ -1,7 +1,9 @@
 package edu.common.dynamicextensions.query;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -154,9 +156,24 @@ public class Query {
         while (rs.next()) {
             Object[] row = new Object[columnCount];
             for (int i = 0; i < columnCount; ++i) {
-                row[i] = rs.getObject(i + 1);
+                //row[i] = rs.getObject(i + 1);
+            	Object Obj = rs.getObject(i + 1);        
+            if(!(Obj instanceof oracle.sql.TIMESTAMP))
+        	{
+            	row[i] = Obj;
+        	}
+        	else
+        	{
+        		Date date=null;
+        		try {
+					date = new Date(((oracle.sql.TIMESTAMP) Obj).timestampValue().getTime());
+					row[i]=date;
+				} catch (SQLException e) {
+					row[i] = Obj;
+					e.printStackTrace();
+				}
+        	}
             }
-            
             queryResult.addRow(row);
         }
 
